@@ -369,6 +369,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .tbl-occ-tag{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:2px 9px; border-radius:999px; white-space:nowrap;}
 .occ-birthday{background:#f3d9ec; color:#9b2f74;} .occ-anniversary{background:#e6d4f0; color:#6a3596;}
 .occ-vip{background:#f1e0bd; color:#8a5a18;} .occ-special{background:#cdd9bb; color:#3d6325;}
+.tbl-sec-label{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-mute); margin:14px 0 7px; padding-bottom:4px; border-bottom:.5px solid rgba(205,216,244,.14);}
 .tbl-note{font-size:13px; color:var(--ink-soft); margin-top:3px;}
 .tbl-by{font-size:10.5px; color:var(--ink-mute); font-style:italic; margin-top:2px;}
 .tbl-x{cursor:pointer; color:var(--ink-mute); font-size:15px; padding:0 2px;}
@@ -466,7 +467,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 </section>
 
 <section class="view" id="board">
-  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">The Board</h2>
+  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">Nightly Notes</h2>
     <p class="view-sub">86 list, tonight's specials, and tables to watch.</p></div>
   <div id="boardBody"></div>
 </section>
@@ -514,7 +515,7 @@ function makeStars(){
   sky.innerHTML=h;
 }
 
-const TABS=[['fresh','Fresh Talk'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service'],['board','The Board']];
+const TABS=[['fresh','Fresh Talk'],['board','Nightly Notes'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service']];
 function buildNav(){$('navChips').innerHTML=TABS.map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));}
 function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
@@ -533,10 +534,10 @@ function replaceAllPills(){document.querySelectorAll('.subtabs').forEach(t=>{con
 /* HOME */
 function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
-  const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['schedule','◷','Schedule','This week + the month'],
-    ['seating','▦','Seating','The floor & table numbers'],['duties','☑','Duties','Opening, closing, sidework'],
-    ['compliance','✓','Compliance','Food handlers & MAST'],['directory','✉','Directory','The team & contacts'],
-    ['service','❖','Service','Steps & standards'],['board','☾','The Board','86 · specials · tables']];
+  const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['board','☾','Nightly Notes','86 · specials · tables'],
+    ['schedule','◷','Schedule','This week + the month'],['seating','▦','Seating','The floor & table numbers'],
+    ['duties','☑','Duties','Opening, closing, sidework'],['compliance','✓','Compliance','Food handlers & MAST'],
+    ['directory','✉','Directory','The team & contacts'],['service','❖','Service','Steps & standards']];
   $('homeGrid').innerHTML=cards.map(([id,ic,t,s])=>`<button class="home-card" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
   renderIdBar();
 }
@@ -963,6 +964,18 @@ function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);
 /* TABLES TONIGHT — occasions / VIP notes (maitre d') */
 const OCCASIONS=[['birthday','Birthday'],['anniversary','Anniversary'],['vip','VIP'],['special','Special']];
 function occLabel(o){const f=OCCASIONS.find(x=>x[0]===o);return f?f[1]:o;}
+function tableSection(t){
+  const sec=SF.seating&&SF.seating.sections;if(!sec||!sec.map)return null;
+  const key=String(t).trim().toUpperCase();
+  for(const name of sec.order){if((sec.map[name]||[]).some(x=>String(x).toUpperCase()===key))return name;}
+  return null;
+}
+function tblItemHTML(t,i){
+  return `<div class="tbl-item"><span class="tbl-badge">${esc(t.table)}</span>
+    <div class="tbl-mid"><span class="tbl-occ-tag occ-${esc(t.occasion)}">${esc(occLabel(t.occasion))}</span>
+    ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${t.by?`<div class="tbl-by">added by ${esc(t.by)}</div>`:''}</div>
+    <span class="tbl-x" onclick="rmTable(${i})">✕</span></div>`;
+}
 function tablesColHTML(items){
   let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Tables Tonight</span>
     <div class="tbl-input-row">
@@ -971,11 +984,16 @@ function tablesColHTML(items){
       <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note (e.g. comping dessert)" onkeydown="if(event.key==='Enter')addTable()">
       <button class="board-add" onclick="addTable()">+</button>
     </div>`;
-  if(!items.length)h+=`<div class="board-empty">No tables flagged yet.</div>`;
-  items.forEach((t,i)=>{h+=`<div class="tbl-item"><span class="tbl-badge">${esc(t.table)}</span>
-    <div class="tbl-mid"><span class="tbl-occ-tag occ-${esc(t.occasion)}">${esc(occLabel(t.occasion))}</span>
-    ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${t.by?`<div class="tbl-by">added by ${esc(t.by)}</div>`:''}</div>
-    <span class="tbl-x" onclick="rmTable(${i})">✕</span></div>`;});
+  if(!items.length)return h+`<div class="board-empty">No tables flagged yet.</div></div>`;
+  // group by floor section, preserving each item's original index for removal
+  const groups={};
+  items.forEach((t,i)=>{const s=tableSection(t.table)||'Other';(groups[s]=groups[s]||[]).push({t:t,i:i});});
+  const order=((SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[]).concat(['Other']);
+  order.forEach(secName=>{
+    const g=groups[secName];if(!g||!g.length)return;
+    h+=`<div class="tbl-sec-label">${esc(secName)}</div>`;
+    g.forEach(o=>h+=tblItemHTML(o.t,o.i));
+  });
   return h+`</div>`;
 }
 function addTable(){const numEl=$('tbl-num'),t=(numEl.value||'').trim();
