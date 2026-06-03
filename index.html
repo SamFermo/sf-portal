@@ -514,11 +514,22 @@ function closeModal(){$('promptModal').classList.remove('open');}
 const WTYPE={white:'wt-white',red:'wt-red','rosé':'wt-rose',rose:'wt-rose',orange:'wt-orange',sparkling:'wt-sparkling'};
 let wineFilter={section:'all',glassOnly:false,q:''};
 function pronHTML(arr){if(!arr||!arr.length)return '';return `<div class="pron-guide"><div class="pron-label">Say it right</div>`+arr.map(p=>`<div class="pron-row"><b>${esc(p.term)}</b> — <span class="say">${esc(p.pron)}</span></div>`).join('')+`</div>`;}
+const SPEC_WORDS={
+  Body:['','very light','light','medium','full','rich'],
+  Dryness:['','sweet','off-dry','dry','very dry','bone dry'],
+  Acidity:['','soft','round','medium','bright','racy'],
+  Tannins:['','none','light','moderate','firm','grippy']
+};
+function specWord(s){
+  const m=SPEC_WORDS[s.label]; const r=s.rating;
+  if(m&&r>=1&&r<=5&&m[r]) return m[r];
+  return r>=4?(s.high||''):(s.low||'');   // fallback for any unmapped label
+}
 function specRow(specs){
   if(!specs||!specs.length) return '';
   return `<div class="wine-specs">`+specs.map(s=>{
     let dots=''; for(let i=1;i<=5;i++) dots+=`<span class="dot ${i<=s.rating?'on':''}"></span>`;
-    return `<div class="spec"><div class="spec-label">${esc(s.label)}</div><div class="dots">${dots}</div><div class="spec-range">${esc(s.low)} · ${esc(s.high)}</div></div>`;
+    return `<div class="spec"><div class="spec-label">${esc(s.label)}</div><div class="dots">${dots}</div><div class="spec-range">${esc(specWord(s))}</div></div>`;
   }).join('')+`</div>`;
 }
 function renderWine(){
