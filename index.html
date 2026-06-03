@@ -610,14 +610,20 @@ function sessionValid(){const s=getSession();return !!(s&&s.name&&s.exp&&Date.no
 function currentUserName(){return me?me.name:'';}
 function isAdmin(){return !!(me&&me.admin);}
 
+let profRetry=0, profilesLoaded=false;
 function startProfilesSync(){
   if(fbReady&&fbDb){
     if(profUnsub)profUnsub();
     profUnsub=fbDb.collection('staff').onSnapshot(function(snap){
+      profRetry=0; profilesLoaded=true;
       PROFILES={}; snap.docs.forEach(function(d){var o=d.data()||{}; if(o.name)PROFILES[o.name]=o;});
       onProfiles();
-    },function(){ PROFILES={}; onProfiles(); });
-  } else { PROFILES={}; onProfiles(); }
+    },function(){
+      // listener errors are terminal — retry with backoff instead of giving up
+      if(profRetry<5){ profRetry++; setTimeout(startProfilesSync,1200*profRetry); }
+      else { profilesLoaded='failed'; PROFILES={}; onProfiles(); }
+    });
+  } else { profilesLoaded=true; PROFILES={}; onProfiles(); }
 }
 function onProfiles(){
   if(sessionValid()){ me=PROFILES[getSession().name]; } else { me=null; }
@@ -626,7 +632,11 @@ function onProfiles(){
 function applyAuthGate(){
   const gate=$('loginGate');
   if(me){ if(gate)gate.classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); }
-  else { document.body.classList.add('locked'); openLogin(); }
+  else {
+    document.body.classList.add('locked');
+    if(!gate.classList.contains('open')) openLogin();
+    else if(!loginName) renderLogin();   // refresh the name list, but never clobber someone mid-PIN-entry
+  }
 }
 function refreshAuthUI(){
   buildNav(); renderAccountBar();
@@ -678,7 +688,10 @@ function renderLoginNames(q){q=(q||'').toLowerCase();
   const list=activeProfiles().filter(p=>!q||p.name.toLowerCase().includes(q)||(p.role||'').toLowerCase().includes(q));
   $('loginList').innerHTML = list.length
     ? list.map(p=>`<div class="who-item" onclick="pickLogin('${esc(p.name).replace(/'/g,"\\'")}')"><div><div class="who-name serif">${esc(p.name)}</div><div class="who-role">${esc(p.role||'')}</div></div></div>`).join('')
-    : (profilesArr().length?'<p class="req-empty">No names match.</p>':'<p class="req-empty">Staff list isn\'t set up yet.</p>');
+    : (profilesArr().length?'<p class="req-empty">No names match.</p>'
+      : profilesLoaded==='failed'?'<p class="req-empty">Can\'t reach the server. Check your connection, then close and reopen the app.</p>'
+      : profilesLoaded?'<p class="req-empty">Staff list isn\'t set up yet.</p>'
+      :'<p class="req-empty">Loading the staff list…</p>');
 }
 function pickLogin(n){loginName=n;renderLogin();}
 async function submitLogin(){
@@ -1150,8 +1163,13 @@ function initFirebase(){
   try{
     firebase.initializeApp(window.FIREBASE_CONFIG);
     fbDb=firebase.firestore();
-    firebase.auth().signInAnonymously().catch(function(){});
     fbReady=true;
+    // Attach listeners only once we're actually signed in. On a first launch
+    // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
+    // network round trip; listening before it completes gets permission-denied
+    // and a cancelled listener. Auth-gating the start avoids the race.
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -1231,7 +1249,10 @@ function rmTable(i){const b=getBoard();(b.tables||[]).splice(i,1);persistBoard(b
 
 /* INIT */
 function init(){
-  initFirebase(); startBoardSync(); startTimeoffSync(); startProfilesSync();
+  initFirebase();
+  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); }
+  document.body.classList.add('locked'); openLogin();   // start gated; unlocks once the session checks out
+  setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='failed'; onProfiles(); } },9000);
   $('appDate').textContent=fmtShort(todayISO());
   buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
   renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderAccess();
