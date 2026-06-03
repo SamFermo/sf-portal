@@ -302,6 +302,77 @@ nav.chips::-webkit-scrollbar{display:none;}
 .close-btn{background:rgba(90,58,34,.12); color:var(--wood);}
 .foot{text-align:center; color:var(--ink-mute); font-size:11px; font-style:italic; padding:22px 0 8px;}
 
+/* ---------- identity (who am I + manager) ---------- */
+.id-bar{display:flex; flex-wrap:wrap; gap:9px; justify-content:center; margin:18px 0 2px;}
+.id-chip{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.2); color:var(--ink-soft); border-radius:999px; padding:7px 15px; font-size:12.5px; cursor:pointer; transition:all .15s ease;}
+.id-chip b{color:var(--ink);}
+.id-chip.mgr-on{background:var(--gold); color:#241f15; border-color:var(--gold);}
+.id-chip.mgr-on b{color:#241f15;}
+.who-search{width:100%; padding:10px 13px; border:1px solid var(--moon-edge); border-radius:10px; font-size:14px; background:#fffdf7; color:var(--card-ink); margin:2px 0 8px; -webkit-appearance:none;}
+.who-list{overflow-y:auto; max-height:54vh;}
+.who-item{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:11px 13px; border-radius:10px; background:rgba(90,58,34,.05); margin-bottom:7px; cursor:pointer; border:1px solid var(--moon-edge);}
+.who-item.sel{background:rgba(230,200,120,.24); border-color:var(--gold-deep);}
+.who-name{font-family:'Caladea',Georgia,serif; font-weight:700; color:var(--wood); font-size:14.5px;}
+.who-role{font-size:11.5px; color:var(--card-mute);}
+
+/* ---------- time off ---------- */
+.to-actions{display:flex; justify-content:flex-end; margin-bottom:12px;}
+.to-newbtn{background:var(--gold); color:#241f15; border:none; border-radius:999px; padding:8px 17px; font-size:13px; font-weight:700; cursor:pointer;}
+.to-form{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:13px 15px 15px; margin-bottom:16px; display:none; box-shadow:0 6px 16px rgba(0,0,0,.28);}
+.to-form.open{display:block;}
+.to-form label{display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--gold-deep); margin:9px 0 4px;}
+.to-form input,.to-form textarea{width:100%; border:1px solid var(--moon-edge); border-radius:8px; padding:9px 11px; font-size:14px; background:#fffdf7; color:var(--card-ink); font-family:-apple-system,sans-serif; -webkit-appearance:none;}
+.to-form textarea{min-height:44px; resize:vertical;}
+.to-form .row2{display:flex; gap:10px;}
+.to-form .row2>div{flex:1;}
+.to-form .who-as{font-size:12px; color:var(--card-soft); margin-bottom:2px;}
+.to-form .who-as b{color:var(--wood);}
+.to-submit{margin-top:13px; display:flex; gap:10px;}
+.to-submit button{flex:1; border:none; border-radius:10px; padding:11px; font-size:14px; font-weight:700; cursor:pointer;}
+.to-go{background:var(--accent); color:#eef6e6;} .to-cancel{background:rgba(90,58,34,.12); color:var(--wood);}
+.req-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:13px 15px; margin-bottom:12px; box-shadow:0 5px 13px rgba(0,0,0,.24);}
+.req-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+.req-who{font-family:'Caladea',Georgia,serif; font-weight:700; color:var(--wood); font-size:15.5px;}
+.req-dates{font-size:13px; color:var(--card-soft); margin-top:2px;}
+.req-reason{font-size:13.5px; color:var(--card-ink); margin-top:5px; font-style:italic; font-family:'Caladea',Georgia,serif;}
+.req-status{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 10px; border-radius:999px; white-space:nowrap;}
+.rs-pending{background:#f1e0bd; color:#8a5a18;} .rs-approved{background:#d6e6c4; color:#3d6325;} .rs-denied{background:#f2d2c7; color:#a8311e;}
+.req-decided{font-size:11px; color:var(--card-mute); margin-top:6px;}
+.req-mgr{display:flex; gap:8px; margin-top:11px;}
+.req-mgr button{flex:1; border:none; border-radius:8px; padding:9px; font-size:12.5px; font-weight:700; cursor:pointer;}
+.btn-approve{background:var(--accent); color:#eef6e6;}
+.btn-deny{background:rgba(176,74,26,.14); color:var(--rust); border:1px solid var(--rust);}
+.req-thread{margin-top:12px; padding-top:10px; border-top:.5px dashed var(--moon-edge);}
+.thread-label{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--gold-deep); margin-bottom:7px;}
+.cmt{font-size:13px; color:var(--card-ink); padding:5px 0; line-height:1.45; border-bottom:.5px dotted var(--moon-edge);}
+.cmt:last-of-type{border-bottom:none;}
+.cmt b{color:var(--wood);} .cmt .when{font-size:10.5px; color:var(--card-mute); margin-left:6px;}
+.cmt-none{font-size:12.5px; color:var(--card-mute); font-style:italic; padding:3px 0;}
+.cmt-row{display:flex; gap:8px; margin-top:9px;}
+.cmt-row input{flex:1; border:1px solid var(--moon-edge); border-radius:8px; padding:8px 11px; font-size:13.5px; background:#fffdf7; color:var(--card-ink); -webkit-appearance:none;}
+.cmt-row button{background:var(--gold); color:#241f15; border:none; border-radius:8px; padding:0 15px; font-weight:700; cursor:pointer;}
+.req-x{cursor:pointer; color:var(--card-mute); font-size:15px; padding:0 2px;}
+.req-empty{font-size:13px; color:var(--ink-mute); font-style:italic; text-align:center; padding:16px 2px;}
+.req-hint{font-size:11px; color:var(--ink-mute); font-style:italic; text-align:center; margin:-4px 0 14px;}
+.req-mgrhint{margin-top:10px; font-size:12px; color:var(--card-mute); font-style:italic;}
+.req-mgrhint a{color:var(--gold-deep); font-style:normal; font-weight:700; text-decoration:underline; cursor:pointer;}
+.flash-req{border-color:var(--rust)!important; box-shadow:0 0 0 2px rgba(176,74,26,.4)!important;}
+
+/* ---------- tables tonight (occasions / VIP) ---------- */
+.tbl-input-row{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+.tbl-num{flex:0 0 60px; width:60px; text-align:center;}
+.tbl-occ{flex:0 0 auto; padding:10px 11px; border:1px solid rgba(205,216,244,.2); border-radius:10px; background:rgba(205,216,244,.07); font-size:13px; color:var(--ink); -webkit-appearance:none;}
+.tbl-note-in{flex:1 1 130px; min-width:120px;}
+.tbl-item{display:flex; align-items:center; gap:10px; padding:10px 13px; border-radius:10px; margin-bottom:8px; background:rgba(205,216,244,.05); border-left:3px solid var(--gold);}
+.tbl-badge{font-family:'Cormorant Garamond','Caladea',serif; font-weight:600; font-size:19px; color:var(--ink); min-width:30px; text-align:center; line-height:1;}
+.tbl-mid{flex:1; min-width:0;}
+.tbl-occ-tag{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:2px 9px; border-radius:999px; white-space:nowrap;}
+.occ-birthday{background:#f3d9ec; color:#9b2f74;} .occ-anniversary{background:#e6d4f0; color:#6a3596;}
+.occ-vip{background:#f1e0bd; color:#8a5a18;} .occ-special{background:#cdd9bb; color:#3d6325;}
+.tbl-note{font-size:13px; color:var(--ink-soft); margin-top:3px;}
+.tbl-by{font-size:10.5px; color:var(--ink-mute); font-style:italic; margin-top:2px;}
+.tbl-x{cursor:pointer; color:var(--ink-mute); font-size:15px; padding:0 2px;}
+
 @media(max-width:600px){
   .home-grid{grid-template-columns:1fr 1fr;}
   .glance{grid-template-columns:repeat(4,1fr);}
@@ -330,6 +401,7 @@ nav.chips::-webkit-scrollbar{display:none;}
     <div class="tag" id="homeTag"></div>
   </div>
   <div class="home-grid" id="homeGrid"></div>
+  <div class="id-bar" id="idBar"></div>
   <div class="foot">San Fermo Seattle · staff reference · updates live on reload</div>
 </section>
 
@@ -355,10 +427,10 @@ nav.chips::-webkit-scrollbar{display:none;}
   <div class="view-head"><p class="view-eyebrow">Schedule</p><h2 class="view-title">Who's On</h2>
     <p class="view-sub">Front and back of house, this week and the month ahead.</p></div>
   <div class="subtabs-wrap"><div class="subtabs" id="schedSideTabs"><span class="subpill" id="schedSidePill"></span>
-    <button class="subtab active" data-side="foh">FOH</button><button class="subtab" data-side="boh">BOH</button></div></div>
+    <button class="subtab active" data-side="foh">FOH</button><button class="subtab" data-side="boh">BOH</button><button class="subtab" data-side="timeoff">Time Off</button></div></div>
   <div class="filterbar" id="schedRanges" style="justify-content:center; padding-top:2px;"></div>
   <div id="schedBody"></div>
-  <div class="legend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
+  <div class="legend" id="schedLegend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
 </section>
 
 <section class="view" id="seating">
@@ -394,9 +466,20 @@ nav.chips::-webkit-scrollbar{display:none;}
 </section>
 
 <section class="view" id="board">
-  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">86 Board &amp; Specials</h2></div>
+  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">The Board</h2>
+    <p class="view-sub">86 list, tonight's specials, and tables to watch.</p></div>
   <div id="boardBody"></div>
 </section>
+</div>
+
+<div class="modal" id="whoModal">
+  <div class="modal-card">
+    <h3>Who are you?</h3>
+    <p>Pick your name. It's saved on this device so requests and notes show who they're from.</p>
+    <input class="who-search" id="whoSearch" placeholder="Search your name…">
+    <div class="who-list" id="whoList"></div>
+    <div class="modal-actions"><button class="close-btn" onclick="closeWho()">Close</button></div>
+  </div>
 </div>
 
 <div class="modal" id="promptModal">
@@ -431,7 +514,7 @@ function makeStars(){
   sky.innerHTML=h;
 }
 
-const TABS=[['fresh','Fresh Talk'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service'],['board','86 Board']];
+const TABS=[['fresh','Fresh Talk'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service'],['board','The Board']];
 function buildNav(){$('navChips').innerHTML=TABS.map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));}
 function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
@@ -453,8 +536,41 @@ function renderHome(){
   const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['schedule','◷','Schedule','This week + the month'],
     ['seating','▦','Seating','The floor & table numbers'],['duties','☑','Duties','Opening, closing, sidework'],
     ['compliance','✓','Compliance','Food handlers & MAST'],['directory','✉','Directory','The team & contacts'],
-    ['service','❖','Service','Steps & standards'],['board','☾','86 Board','Tonight’s 86 & specials']];
+    ['service','❖','Service','Steps & standards'],['board','☾','The Board','86 · specials · tables']];
   $('homeGrid').innerHTML=cards.map(([id,ic,t,s])=>`<button class="home-card" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
+  renderIdBar();
+}
+
+/* IDENTITY — who am I (device) + manager mode (PIN) */
+const MANAGER_PIN='1990';   // manager PIN — unlocks time-off approvals
+function getMe(){try{return localStorage.getItem('sf-me')||'';}catch(e){return '';}}
+function setMe(n){try{localStorage.setItem('sf-me',n);}catch(e){}}
+function isMgr(){try{return localStorage.getItem('sf-mgr')==='1';}catch(e){return false;}}
+function setMgr(on){try{localStorage.setItem('sf-mgr',on?'1':'0');}catch(e){}}
+function rosterFull(){const d=(SF.staff&&SF.staff.directory)||{};const m=new Map();
+  ['foh','boh','office'].forEach(k=>(d[k]||[]).forEach(p=>{if(!m.has(p.name))m.set(p.name,p.role);}));
+  (SF.staff&&SF.staff.leads||[]).forEach(p=>{if(!m.has(p.name))m.set(p.name,p.role);});
+  return [...m.entries()].map(([name,role])=>({name,role})).sort((a,b)=>a.name.localeCompare(b.name));}
+function renderIdBar(){const me=getMe(),mgr=isMgr();
+  $('idBar').innerHTML=
+    `<button class="id-chip" onclick="openWho()">${me?`You are <b>${esc(me)}</b>`:'Tap to set who you are'}</button>`+
+    `<button class="id-chip ${mgr?'mgr-on':''}" onclick="toggleMgr()">Manager <b>${mgr?'on':'off'}</b></button>`;
+}
+let whoCb=null;
+function openWho(cb){whoCb=typeof cb==='function'?cb:null;renderWhoList('');$('whoSearch').value='';$('whoModal').classList.add('open');
+  $('whoSearch').oninput=e=>renderWhoList(e.target.value);setTimeout(()=>{try{$('whoSearch').focus();}catch(e){}},50);}
+function closeWho(){$('whoModal').classList.remove('open');const cb=whoCb;whoCb=null;if(cb)cb();}
+function renderWhoList(q){const me=getMe();q=(q||'').toLowerCase();
+  const list=rosterFull().filter(p=>!q||p.name.toLowerCase().includes(q)||(p.role||'').toLowerCase().includes(q));
+  $('whoList').innerHTML=list.length?list.map(p=>
+    `<div class="who-item ${p.name===me?'sel':''}" onclick="pickMe('${esc(p.name).replace(/'/g,"\\'")}')"><div><div class="who-name serif">${esc(p.name)}</div><div class="who-role">${esc(p.role||'')}</div></div>${p.name===me?'<span style="color:var(--gold-deep)">✓</span>':''}</div>`
+  ).join(''):'<p class="req-empty">No names match.</p>';}
+function pickMe(n){setMe(n);renderIdBar();renderBoard();if(schedState.side==='timeoff')renderSchedule();closeWho();}
+function toggleMgr(){
+  if(isMgr()){if(confirm('Turn off manager mode on this device?')){setMgr(false);renderIdBar();if(schedState.side==='timeoff')renderSchedule();}return;}
+  const pin=prompt('Enter the manager PIN to unlock approvals:');if(pin==null)return;
+  if(pin.trim()===MANAGER_PIN){setMgr(true);renderIdBar();if(schedState.side==='timeoff')renderSchedule();}
+  else alert('That PIN didn\'t match.');
 }
 
 /* FRESH — FOOD + corrections mode */
@@ -630,11 +746,105 @@ function schedRanges(){
 function renderRangeChips(){
   $('schedRanges').innerHTML=schedRanges().map(o=>`<button class="fchip${schedState.range===o.key?' active':''}" data-r="${o.key}">${o.label}</button>`).join('');
   $('schedRanges').querySelectorAll('.fchip').forEach(c=>c.onclick=()=>{schedState.range=c.dataset.r;renderRangeChips();renderSchedule();});}
-function renderSchedule(){const weeks=SF.schedule[schedState.side],today=todayISO();let sel;
+function renderSchedule(){
+  const onTimeoff=schedState.side==='timeoff';
+  $('schedRanges').style.display=onTimeoff?'none':'flex';
+  const lg=$('schedLegend');if(lg)lg.style.display=onTimeoff?'none':'block';
+  if(onTimeoff){renderTimeoff();return;}
+  const weeks=SF.schedule[schedState.side],today=todayISO();let sel;
   if(schedState.range==='week'){const w=weeks[currentWeekIndex(weeks)];sel=w?[w]:[];}
   else if(schedState.range.startsWith('m:')){const ym=schedState.range.slice(2);sel=weeks.filter(w=>w.dates.some(d=>d.startsWith(ym)));}
   else sel=weeks;
   $('schedBody').innerHTML = sel.length?sel.map(w=>weekTableHTML(w,today)).join(''):'<p class="board-empty">No weeks in this range.</p>';}
+
+/* TIME OFF — shared requests, live via Firestore (falls back to this device) */
+let toUnsub=null, toState=null, toFormOpen=false;
+function toLsGet(){try{return JSON.parse(localStorage.getItem('sf-timeoff')||'[]');}catch(e){return [];}}
+function toLsSet(a){try{localStorage.setItem('sf-timeoff',JSON.stringify(a));}catch(e){}}
+function getReqs(){return toState||toLsGet();}
+function startTimeoffSync(){
+  if(fbReady&&fbDb){
+    if(toUnsub)toUnsub();
+    toUnsub=fbDb.collection('timeoff').orderBy('createdAt','desc').limit(120).onSnapshot(function(snap){
+      toState=snap.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o;});
+      if(schedState.side==='timeoff')renderTimeoff();
+    },function(){ toState=toLsGet(); if(schedState.side==='timeoff')renderTimeoff(); });
+  }else{ toState=toLsGet(); }
+}
+function reqDates(r){if(!r.end||r.end===r.start)return fmtLong(r.start);return fmtShort(r.start)+' – '+fmtShort(r.end);}
+function toggleToForm(){toFormOpen=!toFormOpen;renderTimeoff();if(toFormOpen)setTimeout(function(){var s=$('to-start');if(s)s.focus();},40);}
+function closeToForm(){toFormOpen=false;renderTimeoff();}
+function submitTimeoff(){
+  var me=getMe();if(!me){openWho(function(){toFormOpen=true;renderTimeoff();});return;}
+  var start=$('to-start').value,end=$('to-end').value||start,reason=($('to-reason').value||'').trim();
+  if(!start){alert('Pick at least a start date.');return;}
+  if(end<start){alert('The end date is before the start date.');return;}
+  var req={name:me,start:start,end:end,reason:reason,status:'pending',createdAt:Date.now(),comments:[]};
+  if(fbReady&&fbDb){ toState=[Object.assign({id:'tmp'+Date.now()},req)].concat(toState||[]); fbDb.collection('timeoff').add(req).catch(function(){toLsAdd(req);}); }
+  else { toLsAdd(req); }
+  toFormOpen=false;renderTimeoff();
+}
+function toLsAdd(req){req.id='ls'+Date.now();var a=toLsGet();a.unshift(req);toLsSet(a);toState=a;}
+function decideTimeoff(id,status){
+  if(!isMgr()){alert('Turn on Manager mode (home screen) to approve or deny.');return;}
+  var patch={status:status,decidedBy:getMe()||'Manager',decidedAt:Date.now()};
+  if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0)Object.assign(r0,patch);}
+  if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).update(patch).catch(function(){}); }
+  else { var a=toLsGet();var r=a.find(function(x){return x.id===id;});if(r)Object.assign(r,patch);toLsSet(a);toState=a; }
+  renderTimeoff();
+}
+function addToComment(id){
+  var me=getMe();if(!me){openWho(function(){addToComment(id);});return;}
+  var inp=$('toc-'+id);if(!inp)return;var v=(inp.value||'').trim();if(!v)return;
+  var c={by:me,text:v,at:Date.now()};
+  if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0){r0.comments=r0.comments||[];r0.comments.push(c);}}
+  if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).update({comments:firebase.firestore.FieldValue.arrayUnion(c)}).catch(function(){}); }
+  else { var a=toLsGet();var r=a.find(function(x){return x.id===id;});if(r){r.comments=r.comments||[];r.comments.push(c);}toLsSet(a);toState=a; }
+  inp.value='';renderTimeoff();
+}
+function rmTimeoff(id){
+  var r=getReqs().find(function(x){return x.id===id;});if(!r)return;
+  if(!(isMgr()||r.name===getMe())){alert('Only the person who requested it, or a manager, can remove it.');return;}
+  if(!confirm('Remove this request?'))return;
+  if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).delete().catch(function(){}); }
+  else { var a=toLsGet().filter(function(x){return x.id!==id;});toLsSet(a);toState=a;renderTimeoff(); }
+}
+function reqCardHTML(r){
+  var sc=r.status==='approved'?'rs-approved':r.status==='denied'?'rs-denied':'rs-pending';
+  var canRm=isMgr()||r.name===getMe();
+  var h=`<div class="req-card"><div class="req-top"><div><div class="req-who serif">${esc(r.name)}</div><div class="req-dates">${esc(reqDates(r))}</div>`;
+  if(r.reason)h+=`<div class="req-reason serif">"${esc(r.reason)}"</div>`;
+  h+=`</div><div style="display:flex;align-items:center;gap:6px;"><span class="req-status ${sc}">${esc(r.status)}</span>${canRm?`<span class="req-x" onclick="rmTimeoff('${esc(r.id)}')">✕</span>`:''}</div></div>`;
+  if(r.status!=='pending'&&r.decidedBy)h+=`<div class="req-decided">${r.status==='approved'?'Approved':'Denied'} by ${esc(r.decidedBy)}</div>`;
+  if(r.status==='pending'){
+    if(isMgr())h+=`<div class="req-mgr"><button class="btn-approve" onclick="decideTimeoff('${esc(r.id)}','approved')">Approve</button><button class="btn-deny" onclick="decideTimeoff('${esc(r.id)}','denied')">Deny</button></div>`;
+    else h+=`<div class="req-mgrhint">Approving needs Manager mode — <a href="javascript:void(0)" onclick="toggleMgr()">unlock</a></div>`;
+  }
+  h+=`<div class="req-thread"><div class="thread-label">Notes</div>`;
+  var cmts=r.comments||[];
+  h+= cmts.length? cmts.map(function(c){return `<div class="cmt"><b>${esc(c.by)}</b> ${esc(c.text)}<span class="when">${esc(fmtShort(new Date(c.at).toISOString().slice(0,10)))}</span></div>`;}).join('') : `<div class="cmt-none">No notes yet — offer to cover or leave a heads-up.</div>`;
+  h+=`<div class="cmt-row"><input id="toc-${esc(r.id)}" placeholder="Add a note… (e.g. I can cover Saturday)" onkeydown="if(event.key==='Enter')addToComment('${esc(r.id)}')"><button onclick="addToComment('${esc(r.id)}')">Post</button></div>`;
+  return h+`</div></div>`;
+}
+function renderTimeoff(){
+  var me=getMe(),today=todayISO();
+  var list=getReqs().filter(function(r){return r.status==='pending'||((r.end||r.start)>=today);});
+  list.sort(function(a,b){var ap=a.status==='pending'?0:1,bp=b.status==='pending'?0:1;if(ap!==bp)return ap-bp;return (a.start||'').localeCompare(b.start||'');});
+  var occVal=toFormOpen&&$('to-reason')?$('to-reason').value:'';
+  var sVal=toFormOpen&&$('to-start')?$('to-start').value:today;
+  var eVal=toFormOpen&&$('to-end')?$('to-end').value:today;
+  var h=`<div class="to-actions"><button class="to-newbtn" onclick="toggleToForm()">${toFormOpen?'Close':'＋ Request off'}</button></div>`;
+  h+=`<div class="to-form ${toFormOpen?'open':''}">`;
+  h+= me?`<div class="who-as">Requesting as <b>${esc(me)}</b> · <a href="javascript:void(0)" onclick="openWho()" style="color:var(--gold-deep)">change</a></div>`
+       :`<div class="who-as"><a href="javascript:void(0)" onclick="openWho()" style="color:var(--gold-deep)">Tap to set who you are</a></div>`;
+  h+=`<div class="row2"><div><label>From</label><input type="date" id="to-start" value="${esc(sVal)}"></div><div><label>To</label><input type="date" id="to-end" value="${esc(eVal)}"></div></div>`;
+  h+=`<label>Reason (optional)</label><textarea id="to-reason" placeholder="Anything the team should know">${esc(occVal)}</textarea>`;
+  h+=`<div class="to-submit"><button class="to-go" onclick="submitTimeoff()">Submit request</button><button class="to-cancel" onclick="closeToForm()">Cancel</button></div></div>`;
+  var live=fbReady?'Live — shared across every device.':'Saved on this device only (offline).';
+  h+=`<p class="req-hint">${esc(live)} Pending requests need a manager to approve.</p>`;
+  h+= list.length? list.map(reqCardHTML).join('') : `<p class="req-empty">No time-off requests right now.</p>`;
+  $('schedBody').innerHTML=h;
+}
 
 /* SEATING */
 function renderSeating(){
@@ -720,7 +930,7 @@ function initFirebase(){
 }
 function boardDocId(){return todayISO();}
 function lsKey(){return 'sf-board-'+todayISO();}
-function lsGetBoard(){try{const s=JSON.parse(localStorage.getItem(lsKey()));if(s)return s;}catch(e){}return {eightySixed:[...(SF.service.board.eightySixed||[])],specials:[...(SF.service.board.specials||[])]};}
+function lsGetBoard(){try{const s=JSON.parse(localStorage.getItem(lsKey()));if(s){s.tables=s.tables||[];return s;}}catch(e){}return {eightySixed:[...(SF.service.board.eightySixed||[])],specials:[...(SF.service.board.specials||[])],tables:[]};}
 function lsSetBoard(b){try{localStorage.setItem(lsKey(),JSON.stringify(b));}catch(e){}}
 function getBoard(){return boardState||lsGetBoard();}
 function startBoardSync(){
@@ -728,7 +938,7 @@ function startBoardSync(){
     if(boardUnsub)boardUnsub();
     boardUnsub=fbDb.collection('board').doc(boardDocId()).onSnapshot(function(snap){
       const d=snap.exists?snap.data():null;
-      boardState=d?{eightySixed:d.eightySixed||[],specials:d.specials||[]}:{eightySixed:[],specials:[]};
+      boardState=d?{eightySixed:d.eightySixed||[],specials:d.specials||[],tables:d.tables||[]}:{eightySixed:[],specials:[],tables:[]};
       renderBoard();
     },function(){ boardState=lsGetBoard(); renderBoard(); });
   }else{ boardState=lsGetBoard(); }
@@ -745,14 +955,40 @@ function renderBoard(){const b=getBoard();
     items.forEach((it,i)=>h+=`<div class="board-item"><span>${esc(it)}</span><span class="x" onclick="rmBoard('${kind}',${i})">✕</span></div>`);
     return h+`</div>`;};
   const live=fbReady?`<span style="color:#bfe0a8">● live</span> — shared across every device.`:`saved on this device only.`;
-  $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`+col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials');
+  $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`+col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials')+tablesColHTML(b.tables||[]);
 }
-function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;const b=getBoard();b[k]=b[k]||[];b[k].push(v);persistBoard(b);if(!fbReady)renderBoard();setTimeout(()=>{const x=$('in-'+k);if(x)x.focus();},0);}
-function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);if(!fbReady)renderBoard();}
+function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;const b=getBoard();b[k]=b[k]||[];b[k].push(v);persistBoard(b);renderBoard();setTimeout(()=>{const x=$('in-'+k);if(x)x.focus();},0);}
+function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);renderBoard();}
+
+/* TABLES TONIGHT — occasions / VIP notes (maitre d') */
+const OCCASIONS=[['birthday','Birthday'],['anniversary','Anniversary'],['vip','VIP'],['special','Special']];
+function occLabel(o){const f=OCCASIONS.find(x=>x[0]===o);return f?f[1]:o;}
+function tablesColHTML(items){
+  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Tables Tonight</span>
+    <div class="tbl-input-row">
+      <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
+      <select class="tbl-occ" id="tbl-occ">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select>
+      <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note (e.g. comping dessert)" onkeydown="if(event.key==='Enter')addTable()">
+      <button class="board-add" onclick="addTable()">+</button>
+    </div>`;
+  if(!items.length)h+=`<div class="board-empty">No tables flagged yet.</div>`;
+  items.forEach((t,i)=>{h+=`<div class="tbl-item"><span class="tbl-badge">${esc(t.table)}</span>
+    <div class="tbl-mid"><span class="tbl-occ-tag occ-${esc(t.occasion)}">${esc(occLabel(t.occasion))}</span>
+    ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${t.by?`<div class="tbl-by">added by ${esc(t.by)}</div>`:''}</div>
+    <span class="tbl-x" onclick="rmTable(${i})">✕</span></div>`;});
+  return h+`</div>`;
+}
+function addTable(){const numEl=$('tbl-num'),t=(numEl.value||'').trim();
+  if(!t){if(numEl){numEl.classList.add('flash-req');numEl.focus();setTimeout(()=>numEl.classList.remove('flash-req'),1200);}return;}
+  const occ=$('tbl-occ').value,note=($('tbl-note').value||'').trim();
+  const b=getBoard();b.tables=b.tables||[];b.tables.push({table:t,occasion:occ,note:note,by:getMe()||''});
+  persistBoard(b);renderBoard();
+  setTimeout(()=>{const x=$('tbl-num');if(x)x.focus();},0);}
+function rmTable(i){const b=getBoard();(b.tables||[]).splice(i,1);persistBoard(b);renderBoard();}
 
 /* INIT */
 function init(){
-  initFirebase(); startBoardSync();
+  initFirebase(); startBoardSync(); startTimeoffSync();
   $('appDate').textContent=fmtShort(todayISO());
   buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
   renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard();
@@ -761,6 +997,7 @@ function init(){
   initPill($('dutyTabs'),$('dutyPill'),'duty',v=>{dutyTab=v;renderDuties();});
   initPill($('compTabs'),$('compPill'),'comp',v=>{compTab=v;renderCompliance();});
   go('home');
+  if(!getMe())setTimeout(()=>openWho(),400);
 }
 function boot(){
   if(window.SF){ SF=window.SF; init(); return; }   // preview: data inlined
