@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>San Fermo · Staff Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caladea:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Night sky */
+  --night-1:#0a1430; --night-2:#0c1c44; --night-3:#050a1c;
+  --ink:#eaf0ff;            /* starlight text on sky */
+  --ink-soft:#b7c4e6; --ink-mute:#7d8cb4;
+  --gold:#e6c878;          /* moonlight gold */
+  --gold-deep:#c9a64e;
+  --silver:#cdd8f4;
+  /* Moon (cream cards) */
+  --moon:#f5efe1; --moon-hi:#fdfaf1; --moon-lo:#e7dcc4; --moon-edge:#d9cbab;
+  --card-ink:#241f15; --card-soft:#5f5540; --card-mute:#9a8c6c;
+  --accent:#4a6a3a; --accent-dark:#2e4624; --accent-soft:#cdd9bb;
+  --rust:#b04a1a; --rust-soft:#f3ddc7;
+  --wood:#5a3a22; --wood-soft:#8a6a4a;
+  --radius:14px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(900px 500px at 78% -8%, rgba(230,200,120,.16), transparent 60%),
+    radial-gradient(1200px 700px at 20% 110%, rgba(60,90,160,.20), transparent 60%),
+    linear-gradient(160deg, var(--night-1) 0%, var(--night-2) 42%, var(--night-3) 100%);
+  background-attachment:fixed;
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
+  font-size:15px; line-height:1.5; padding-bottom:64px;
+}
+.serif{font-family:'Caladea','Cambria',Georgia,serif;}
+#sky{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
+.star{position:absolute; border-radius:50%; background:#fff; opacity:.7; animation:tw 4s ease-in-out infinite;}
+@keyframes tw{0%,100%{opacity:.25;}50%{opacity:.9;}}
+#moon{position:fixed; top:42px; right:30px; width:62px; height:62px; border-radius:50%; z-index:0; pointer-events:none;
+  background:radial-gradient(circle at 36% 34%, #fdfaf1, #efe6cf 58%, #d9cbab 100%);
+  box-shadow:0 0 38px 8px rgba(245,238,222,.30), inset -6px -6px 12px rgba(180,165,130,.5);}
+#app{position:relative; z-index:1;}
+
+/* ---------- Header + nav ---------- */
+header.app{position:sticky; top:0; z-index:50; background:rgba(8,16,40,.78); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid rgba(205,216,244,.14);}
+.app-title-row{display:flex; align-items:center; justify-content:center; gap:9px; padding:11px 16px 7px; position:relative;}
+.app-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:22px; font-weight:600; color:var(--ink); letter-spacing:.06em;}
+.app-dot{color:var(--gold); font-size:13px;}
+.app-date{font-size:11.5px; color:var(--ink-mute); letter-spacing:.05em;}
+.home-btn{position:absolute; left:14px; top:50%; transform:translateY(-50%); background:none; border:none; font-size:20px; color:var(--ink-soft); cursor:pointer; display:none;}
+body.not-home .home-btn{display:block;}
+nav.chips{display:flex; gap:7px; overflow-x:auto; padding:8px 14px 10px; scrollbar-width:none; -webkit-overflow-scrolling:touch;}
+nav.chips::-webkit-scrollbar{display:none;}
+.chip{flex:0 0 auto; background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); color:var(--ink-soft); border-radius:999px; padding:6px 15px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all .15s ease;}
+.chip.active{background:var(--gold); color:#241f15; border-color:var(--gold);}
+
+/* ---------- Layout ---------- */
+.view{display:none; max-width:760px; margin:0 auto; padding:20px 16px 40px;}
+.view.active{display:block;}
+.view-head{margin:2px 0 16px; text-align:center;}
+.view-eyebrow{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.18em; color:var(--gold); margin:0 0 4px;}
+.view-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:30px; font-weight:600; color:var(--ink); margin:0; letter-spacing:.02em;}
+.view-sub{font-size:13px; color:var(--ink-soft); margin:6px auto 0; max-width:560px;}
+.section-label{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--gold); margin:26px 0 11px; padding-bottom:6px; border-bottom:.5px solid rgba(230,200,120,.3); text-align:center;}
+.section-label:first-of-type{margin-top:6px;}
+
+/* ---------- Portal home ---------- */
+.home-hero{text-align:center; padding:22px 0 6px;}
+.home-hero .crest{font-size:13px; letter-spacing:.6em; color:var(--gold); margin-bottom:8px;}
+.home-hero h1{font-family:'Cormorant Garamond','Caladea',serif; font-weight:600; color:var(--ink); font-size:38px; margin:0 0 4px; letter-spacing:.04em;}
+.home-hero .tag{font-size:13px; color:var(--ink-soft); font-style:italic;}
+.glance{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:22px 0 6px;}
+.stat{background:linear-gradient(155deg, var(--moon-hi), var(--moon-lo)); border-radius:14px; padding:13px 8px; text-align:center; box-shadow:0 0 22px rgba(245,238,222,.12), 0 6px 16px rgba(0,0,0,.3);}
+.stat-num{font-family:'Cormorant Garamond','Caladea',serif; font-size:24px; font-weight:600; color:var(--wood); line-height:1;}
+.stat-label{margin-top:4px; font-size:10px; color:var(--card-mute); text-transform:uppercase; letter-spacing:.05em;}
+.home-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:16px;}
+.home-card{position:relative; background:radial-gradient(120% 120% at 30% 22%, var(--moon-hi), var(--moon) 55%, var(--moon-lo)); border:none; border-radius:18px; padding:18px 16px 16px; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; text-align:left; box-shadow:0 0 26px rgba(245,238,222,.13), 0 8px 20px rgba(0,0,0,.34);}
+.home-card:hover{transform:translateY(-2px); box-shadow:0 0 40px rgba(245,238,222,.22), 0 10px 24px rgba(0,0,0,.4);}
+.home-card .hc-icon{font-size:21px; margin-bottom:7px; display:block; color:var(--gold-deep);}
+.home-card .hc-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:20px; font-weight:600; color:var(--wood); margin:0 0 2px;}
+.home-card .hc-sub{font-size:12px; color:var(--card-mute); line-height:1.4;}
+
+/* ---------- Sliding pill sub-tabs ---------- */
+.subtabs-wrap{display:flex; justify-content:center; padding:4px 0 14px;}
+.subtabs{position:relative; display:inline-flex; background:rgba(205,216,244,.07); border:1px solid rgba(205,216,244,.18); border-radius:999px; padding:4px;}
+.subtab{position:relative; z-index:2; background:transparent; border:none; padding:7px 18px; font-family:'Caladea',Georgia,serif; font-size:14px; font-weight:700; color:var(--ink-soft); cursor:pointer; border-radius:999px; transition:color .2s ease; min-width:84px;}
+.subtab.active{color:#241f15;}
+.subpill{position:absolute; top:4px; bottom:4px; left:4px; border-radius:999px; background:linear-gradient(155deg,#fdfaf1,#e7dcc4); box-shadow:0 0 14px rgba(245,238,222,.4); transition:transform .28s cubic-bezier(.4,0,.2,1),width .28s cubic-bezier(.4,0,.2,1); z-index:1;}
+
+/* ---------- Moon cards ---------- */
+.card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 60%, var(--moon-lo)); border-radius:14px; margin:0 0 12px; overflow:hidden; box-shadow:0 0 18px rgba(245,238,222,.08), 0 6px 16px rgba(0,0,0,.28); transition:box-shadow .15s ease;}
+.card.expandable .card-head{cursor:pointer; user-select:none;}
+.card.expanded{box-shadow:0 0 30px rgba(230,200,120,.28), 0 8px 20px rgba(0,0,0,.34);}
+.card-head{padding:14px 16px;}
+.card-details{display:none; padding:4px 17px 17px; border-top:.5px dashed var(--moon-edge);}
+.card.expanded .card-details{display:block;}
+.row-between{display:flex; justify-content:space-between; align-items:baseline; gap:10px;}
+
+/* dish */
+.dish-name{font-family:'Caladea',Georgia,serif; font-size:16.5px; font-weight:700; color:var(--wood);}
+.dish-pron{font-family:'Caladea',Georgia,serif; font-style:italic; font-size:13px; color:var(--gold-deep); margin-left:5px;}
+.dish-price{font-family:'Caladea',Georgia,serif; font-size:15px; color:var(--wood-soft); white-space:nowrap;}
+.dish-desc{font-family:'Caladea',Georgia,serif; font-style:italic; font-size:13.5px; color:var(--card-mute); margin-top:3px;}
+.raw-badge{display:inline-block; margin-left:7px; font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--rust); border:1px solid var(--rust); border-radius:999px; padding:1px 6px; vertical-align:middle;}
+.dish-story{font-family:'Caladea',Georgia,serif; font-size:14.5px; color:var(--card-ink); line-height:1.55; margin:8px 0 0;}
+.itk-label{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--gold-deep); margin:13px 0 6px;}
+.itk{font-family:'Caladea',Georgia,serif; font-size:13.5px; color:var(--card-ink); line-height:1.5; padding:3px 0 3px 14px; position:relative;}
+.itk:before{content:"·"; color:var(--gold-deep); position:absolute; left:2px; font-weight:700;}
+.itk b{color:var(--wood);}
+.itk .pron{font-style:italic; color:var(--gold-deep);}
+.expand-hint{font-size:10.5px; color:var(--card-mute); letter-spacing:.04em; margin-top:9px; text-transform:uppercase;}
+
+/* wine */
+.wine-type{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; padding:2px 9px; border-radius:999px; margin-bottom:7px;}
+.wt-white{background:#f0e3c2; color:var(--wood);} .wt-red{background:#e6ccc2; color:#6b2818;}
+.wt-rose{background:#f0d4d0; color:#9d3551;} .wt-orange{background:#efd6b8; color:#9a5a1e;}
+.wt-sparkling{background:#e6e6cf; color:#5f5a2a;}
+.wine-name{font-family:'Caladea',Georgia,serif; font-size:16.5px; font-weight:700; color:var(--wood);}
+.wine-vintage{font-style:italic; font-size:13px; color:var(--gold-deep); font-weight:400;}
+.wine-price{font-family:'Caladea',Georgia,serif; font-size:14px; color:var(--wood-soft); white-space:nowrap; text-align:right;}
+.wine-origin{font-size:12px; color:var(--card-mute); margin-top:3px;}
+.wine-grapes{font-family:'Caladea',Georgia,serif; font-style:italic; font-size:12.5px; color:var(--card-soft); margin-top:2px;}
+.wine-pour{font-family:'Caladea',Georgia,serif; font-size:14px; color:var(--card-ink); margin-top:8px; line-height:1.5;}
+.wine-specs{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px; padding-top:10px; border-top:.5px dashed var(--moon-edge);}
+.spec{text-align:center;}
+.spec-label{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--card-mute); margin-bottom:4px;}
+.dots{display:inline-flex; gap:3px; align-items:center;}
+.dot{width:7px; height:7px; border-radius:50%; background:var(--moon-edge);}
+.dot.on{background:var(--gold-deep);}
+.spec-range{font-size:9px; color:var(--card-mute); margin-top:3px;}
+.wine-sec-label{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--gold-deep); margin:13px 0 3px;}
+.wine-sec-body{font-family:'Caladea',Georgia,serif; font-size:13.5px; color:var(--card-ink); line-height:1.5;}
+
+/* cocktail */
+.ck-name{font-family:'Caladea',Georgia,serif; font-size:16.5px; font-weight:700; color:var(--wood);}
+.ck-tag{font-family:'Caladea',Georgia,serif; font-style:italic; font-size:13px; color:var(--gold-deep); margin-top:2px;}
+.ck-build{font-family:'Caladea',Georgia,serif; font-style:italic; font-size:13.5px; color:var(--card-soft); margin-top:5px; line-height:1.45;}
+.ck-price{font-family:'Caladea',Georgia,serif; font-size:15px; color:var(--wood-soft);}
+.hl-badge{display:inline-block; margin-left:7px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-dark); background:var(--accent-soft); border:1px solid var(--accent); border-radius:999px; padding:1px 7px; vertical-align:middle;}
+.ck-ing{padding:8px 0; border-bottom:.5px dotted var(--moon-edge);}
+.ck-ing:last-child{border-bottom:none;}
+.ck-ing-head{display:flex; justify-content:space-between; gap:10px;}
+.ck-ing-name{font-family:'Caladea',Georgia,serif; font-weight:700; font-size:14px; color:var(--wood);}
+.ck-ing-amt{font-size:12px; color:var(--card-mute); white-space:nowrap;}
+.ck-ing-desc{font-size:13px; color:var(--card-ink); line-height:1.5; margin-top:3px;}
+.ck-ing.has-hl{border-left:3px solid var(--accent); padding-left:9px; margin-left:-9px; background:linear-gradient(to right, rgba(205,217,187,.25), transparent 65%); border-radius:4px;}
+
+/* price list */
+.plist{display:grid; grid-template-columns:1fr 1fr; gap:0 22px;}
+.listcard{padding:7px 16px;}
+.pl-row{display:flex; justify-content:space-between; gap:10px; padding:7px 0; border-bottom:.5px dotted var(--moon-edge); font-size:13.5px;}
+.listcard .plist .pl-row:last-child,.listcard .plist .pl-row:nth-last-child(2):nth-child(odd){border-bottom:none;}
+.pl-name{color:var(--card-ink);} .pl-price{color:var(--wood-soft); white-space:nowrap;}
+.flist{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 60%, var(--moon-lo)); border-radius:12px; padding:13px 15px; margin-bottom:11px; box-shadow:0 6px 16px rgba(0,0,0,.26);}
+.flname{font-family:'Caladea',Georgia,serif; font-weight:700; color:var(--wood); font-size:15px;}
+.fprice{float:right; color:var(--gold-deep); font-weight:700;}
+.fpour{font-size:13px; color:var(--card-soft); padding:3px 0; border-bottom:.5px dotted var(--moon-edge);}
+.forigin{color:var(--card-mute); font-style:italic;}
+.ad-item{padding:8px 2px; border-bottom:.5px dotted rgba(205,216,244,.16);}
+.ad-row{display:flex; justify-content:space-between; gap:10px;}
+.ad-name{font-size:14px; color:var(--ink);}
+.ad-price{font-size:13.5px; color:var(--ink-soft); white-space:nowrap;}
+.ad-note{font-family:'Caladea',Georgia,serif; font-style:italic; font-size:12.5px; color:var(--ink-mute); margin-top:2px; line-height:1.4;}
+
+/* filter bar (dark) */
+.filterbar{display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin-bottom:14px;}
+.fsearch{flex:1 1 150px; min-width:140px; padding:9px 13px; border:1px solid rgba(205,216,244,.2); border-radius:999px; background:rgba(205,216,244,.07); font-size:13px; color:var(--ink);}
+.fsearch::placeholder{color:var(--ink-mute);}
+.fchip{flex:0 0 auto; background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.2); color:var(--ink-soft); border-radius:999px; padding:6px 13px; font-size:12.5px; font-weight:600; cursor:pointer;}
+.fchip.active{background:var(--gold); color:#241f15; border-color:var(--gold);}
+
+/* schedule */
+.sched-banner{display:inline-block; background:rgba(230,200,120,.16); color:var(--gold); border:1px solid rgba(230,200,120,.4); border-radius:999px; padding:3px 12px; font-size:11.5px; font-weight:700; letter-spacing:.05em; margin-bottom:10px;}
+.sched-week{background:radial-gradient(130% 130% at 28% 12%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:14px; padding:14px 14px 6px; margin-bottom:18px; box-shadow:0 6px 16px rgba(0,0,0,.28);}
+.sched-wk-date{font-family:'Caladea',Georgia,serif; font-size:15px; font-weight:700; color:var(--wood); margin:0 0 6px;}
+.sched-table{width:100%; border-collapse:collapse; font-size:11.5px;}
+.sched-table th,.sched-table td{padding:5px 4px; text-align:center; border-bottom:.5px solid var(--moon-edge); vertical-align:middle;}
+.sched-table thead th{font-size:10px; text-transform:uppercase; letter-spacing:.03em; color:var(--card-mute); font-weight:700; border-bottom:1px solid var(--moon-edge);}
+.sched-table thead th .dnum{display:block; font-family:'Caladea',Georgia,serif; font-size:13px; color:var(--wood); font-weight:700;}
+.sched-table td.nm{text-align:left; font-weight:700; color:var(--wood); white-space:nowrap; font-size:12px;}
+.sched-table td.today,.sched-table th.today{background:rgba(230,200,120,.22);}
+.shift{display:inline-block; font-size:10.5px; line-height:1.2; color:var(--card-ink);}
+.shift.off{color:var(--moon-edge);} .shift.ro{color:var(--rust); font-weight:700;}
+.shift.farm{color:var(--accent-dark); font-weight:700;} .shift.md{color:var(--gold-deep); font-weight:700;}
+.legend{font-size:11px; color:var(--ink-mute); margin-top:8px; line-height:1.7;}
+.legend b{color:var(--ink-soft);}
+
+/* duties */
+.duty-item{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; margin-bottom:9px; padding:12px 14px; box-shadow:0 5px 13px rgba(0,0,0,.24);}
+.duty-main{display:flex; align-items:flex-start; gap:10px; cursor:pointer;}
+.duty-check{flex:0 0 auto; width:19px; height:19px; border:1.5px solid var(--wood-soft); border-radius:5px; margin-top:1px; display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff;}
+.duty-item.done .duty-check{background:var(--accent); border-color:var(--accent);}
+.duty-item.done .duty-task{color:var(--card-mute); text-decoration:line-through;}
+.duty-task{font-family:'Caladea',Georgia,serif; font-size:14.5px; color:var(--wood); font-weight:700;}
+.duty-sub{margin:7px 0 0 29px; padding:0; list-style:none;}
+.duty-sub li{font-size:13px; color:var(--card-soft); padding:3px 0 3px 14px; position:relative; line-height:1.45;}
+.duty-sub li:before{content:"·"; color:var(--gold-deep); position:absolute; left:2px; font-weight:700;}
+.duty-sub li.poison{color:var(--rust);}
+.reset-btn{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.2); color:var(--ink-soft); border-radius:999px; padding:5px 13px; font-size:12px; cursor:pointer;}
+.sidework-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:6px 18px; box-shadow:0 5px 13px rgba(0,0,0,.24);}
+.sidework-card ul{columns:2; column-gap:24px; margin:8px 0; padding-left:18px;}
+.sidework-card li{font-size:13.5px; color:var(--card-ink); padding:4px 0; break-inside:avoid;}
+
+/* compliance */
+.comp-card{background:radial-gradient(130% 130% at 28% 12%, var(--moon-hi), var(--moon) 64%, var(--moon-lo)); border-radius:12px; padding:6px 15px; margin-bottom:12px; box-shadow:0 5px 13px rgba(0,0,0,.24);}
+.comp-row{display:grid; grid-template-columns:1fr auto auto; gap:9px; align-items:center; padding:9px 0; border-bottom:.5px dotted var(--moon-edge);}
+.comp-row:last-child{border-bottom:none;}
+.comp-name{font-weight:700; color:var(--wood); font-size:14px;}
+.comp-role{font-size:11.5px; font-style:italic; color:var(--card-mute);}
+.pill{display:inline-block; font-size:10px; font-weight:700; letter-spacing:.04em; padding:2px 8px; border-radius:999px; white-space:nowrap;}
+.pill .pl{font-variant:small-caps; opacity:.7; margin-right:3px;}
+.st-good{background:#d6e6c4; color:#3d6325;} .st-warn{background:#f1e0bd; color:#8a5a18;}
+.st-alarm{background:#f2d2c7; color:#a8311e;} .st-info{background:#ded7c6; color:#5a4d3c;}
+.comp-cred{font-size:11px; color:var(--card-soft); grid-column:1/-1; margin:-2px 0 0;}
+.comp-cred b{color:var(--wood);}
+.binder-link{display:inline-block; margin:2px 0 10px; padding:9px 16px; background:var(--gold); color:#241f15; text-decoration:none; border-radius:8px; font-size:12px; letter-spacing:.04em; text-transform:uppercase; font-weight:700;}
+.due-row{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; padding:9px 0; border-bottom:.5px dotted var(--moon-edge);}
+.due-when{font-size:11px; font-style:italic; color:var(--card-mute);}
+
+/* directory */
+.lead-row{display:flex; gap:9px; overflow-x:auto; padding:2px 2px 12px; scrollbar-width:none;}
+.lead-row::-webkit-scrollbar{display:none;}
+.lead-card{flex:0 0 auto; background:radial-gradient(130% 130% at 30% 20%, var(--moon-hi), var(--moon-lo)); border-radius:12px; padding:9px 14px; text-align:center; box-shadow:0 0 16px rgba(245,238,222,.12), 0 5px 13px rgba(0,0,0,.26);}
+.lead-card a{text-decoration:none; color:inherit; display:block;}
+.lead-name{font-family:'Caladea',Georgia,serif; font-weight:700; color:var(--wood); font-size:13.5px;}
+.lead-role{font-size:10.5px; color:var(--card-soft); margin:1px 0 2px;}
+.lead-phone{font-size:11px; color:var(--gold-deep);}
+.dir-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
+.dir-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:12px 13px; box-shadow:0 5px 13px rgba(0,0,0,.24);}
+.dir-name{font-family:'Caladea',Georgia,serif; font-size:14.5px; font-weight:700; color:var(--wood);}
+.dir-role{font-size:11.5px; font-style:italic; color:var(--card-mute); margin-bottom:7px;}
+.dir-links{display:flex; gap:8px; flex-wrap:wrap;}
+.dir-links a{font-size:12px; color:var(--accent-dark); text-decoration:none; background:var(--accent-soft); border:1px solid var(--accent); border-radius:999px; padding:3px 11px;}
+
+/* service */
+.intro-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:14px 16px; margin-bottom:16px; font-size:13.5px; color:var(--card-ink); line-height:1.55; font-family:'Caladea',Georgia,serif; box-shadow:0 5px 13px rgba(0,0,0,.24);}
+.step{display:grid; grid-template-columns:auto 1fr; gap:13px; margin-bottom:14px; align-items:start; background:radial-gradient(130% 130% at 24% 18%, var(--moon-hi), var(--moon) 64%, var(--moon-lo)); border-radius:12px; padding:13px 15px; box-shadow:0 5px 13px rgba(0,0,0,.22);}
+.step-n{font-family:'Cormorant Garamond','Caladea',serif; font-size:26px; font-weight:600; color:var(--gold-deep); line-height:1; width:26px; text-align:center;}
+.step-title{font-family:'Caladea',Georgia,serif; font-size:15.5px; font-weight:700; color:var(--wood);}
+.step-detail{font-size:13.5px; color:var(--card-soft); margin-top:2px; line-height:1.5;}
+.std-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-left:3px solid var(--gold-deep); border-radius:0 12px 12px 0; padding:12px 15px; margin-bottom:10px; box-shadow:0 5px 13px rgba(0,0,0,.22);}
+.std-title{font-family:'Caladea',Georgia,serif; font-weight:700; color:var(--wood); font-size:14.5px; margin-bottom:3px;}
+.std-body{font-size:13px; color:var(--card-soft); line-height:1.5;}
+
+/* 86 board */
+.board-note{font-size:12px; color:var(--ink-mute); font-style:italic; line-height:1.5; margin-bottom:16px; text-align:center;}
+.board-col{margin-bottom:22px;}
+.board-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:22px; font-weight:600; text-align:center; display:block; margin-bottom:10px;}
+.board-86 .board-title{color:#f3a98c;} .board-sp .board-title{color:#bfe0a8;}
+.board-input-row{display:flex; gap:8px; margin-bottom:10px;}
+.board-input{flex:1; padding:10px 13px; border:1px solid rgba(205,216,244,.2); border-radius:10px; background:rgba(205,216,244,.07); font-size:14px; color:var(--ink);}
+.board-input::placeholder{color:var(--ink-mute);}
+.board-add{background:var(--gold); color:#241f15; border:none; border-radius:10px; padding:0 17px; font-size:20px; cursor:pointer; font-weight:700;}
+.board-item{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 14px; border-radius:10px; margin-bottom:8px; font-size:14.5px;}
+.board-86 .board-item{background:rgba(176,74,26,.18); border-left:3px solid var(--rust); color:#f3c9b7;}
+.board-sp .board-item{background:rgba(74,106,58,.22); border-left:3px solid var(--accent); color:#d6e6c4;}
+.board-item .x{cursor:pointer; opacity:.6; font-size:16px; padding:0 4px;}
+.board-empty{font-size:13px; color:var(--ink-mute); font-style:italic; padding:8px 2px; text-align:center;}
+
+/* seating */
+.seat-wrap{background:radial-gradient(130% 130% at 28% 14%, var(--moon-hi), var(--moon) 64%, var(--moon-lo)); border-radius:14px; padding:14px; box-shadow:0 6px 16px rgba(0,0,0,.3);}
+.seat-wrap img{width:100%; height:auto; border-radius:8px; display:block;}
+.seat-placeholder{border:2px dashed var(--moon-edge); border-radius:12px; padding:46px 22px; text-align:center; color:var(--card-mute); font-family:'Caladea',Georgia,serif;}
+.seat-placeholder .big{font-size:34px; margin-bottom:8px;}
+.seat-note{font-size:12.5px; color:var(--card-soft); margin-top:12px; line-height:1.5; text-align:center;}
+
+.est-note{font-size:11px; color:var(--ink-mute); font-style:italic; text-align:center; margin-top:6px;}
+/* corrections mode */
+.editbar{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap;}
+.edit-toggle{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.2); color:var(--ink-soft); border-radius:999px; padding:7px 15px; font-size:13px; font-weight:600; cursor:pointer;}
+.edit-toggle.on{background:var(--gold); color:#241f15; border-color:var(--gold);}
+.gen-btn{background:var(--accent); color:#eef6e6; border:none; border-radius:999px; padding:8px 16px; font-size:13px; font-weight:700; cursor:pointer;}
+.gen-btn .badge{background:rgba(255,255,255,.25); border-radius:999px; padding:0 7px; margin-left:6px; font-size:11px;}
+.note-box{padding:10px 14px 12px; border-top:.5px dashed var(--moon-edge);}
+.note-box label{display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--rust); margin-bottom:5px;}
+.note-box textarea{width:100%; min-height:46px; resize:vertical; border:1px solid var(--moon-edge); border-radius:8px; padding:8px 10px; font-family:-apple-system,sans-serif; font-size:13.5px; color:var(--card-ink); background:#fffdf7;}
+.note-box.filled{background:rgba(176,74,26,.06);}
+.modal{position:fixed; inset:0; z-index:200; background:rgba(5,10,28,.7); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; padding:18px;}
+.modal.open{display:flex;}
+.modal-card{background:radial-gradient(140% 140% at 28% 12%, var(--moon-hi), var(--moon) 64%, var(--moon-lo)); border-radius:16px; max-width:620px; width:100%; max-height:84vh; display:flex; flex-direction:column; padding:18px; box-shadow:0 0 50px rgba(245,238,222,.2),0 12px 30px rgba(0,0,0,.5);}
+.modal-card h3{font-family:'Cormorant Garamond','Caladea',serif; font-size:23px; color:var(--wood); margin:0 0 4px; font-weight:600;}
+.modal-card p{font-size:12.5px; color:var(--card-soft); margin:0 0 12px;}
+.modal-card textarea{flex:1; min-height:220px; width:100%; border:1px solid var(--moon-edge); border-radius:10px; padding:12px; font-family:ui-monospace,Menlo,monospace; font-size:12px; color:var(--card-ink); background:#fffdf7; resize:none;}
+.modal-actions{display:flex; gap:10px; margin-top:13px;}
+.modal-actions button{flex:1; border:none; border-radius:10px; padding:11px; font-size:14px; font-weight:700; cursor:pointer;}
+.copy-btn{background:var(--gold); color:#241f15;} .copy-btn.done{background:var(--accent); color:#fff;}
+.close-btn{background:rgba(90,58,34,.12); color:var(--wood);}
+.foot{text-align:center; color:var(--ink-mute); font-size:11px; font-style:italic; padding:22px 0 8px;}
+
+@media(max-width:600px){
+  .home-grid{grid-template-columns:1fr 1fr;}
+  .glance{grid-template-columns:repeat(4,1fr);}
+  .plist{grid-template-columns:1fr;} .dir-grid{grid-template-columns:1fr;}
+  .sidework-card ul{columns:1;}
+  .home-hero h1{font-size:32px;}
+}
+</style>
+</head>
+<body class="not-home">
+<div id="sky"></div>
+<div id="moon"></div>
+<div id="app">
+<header class="app">
+  <div class="app-title-row">
+    <button class="home-btn" onclick="go('home')">‹</button>
+    <span class="app-title">San Fermo</span>
+    <span class="app-dot">☾</span>
+    <span class="app-date" id="appDate"></span>
+  </div>
+  <nav class="chips" id="navChips"></nav>
+</header>
+
+<section class="view" id="home">
+  <div class="home-hero">
+    <div class="crest">☾ · ✦ · ☾</div>
+    <h1>Staff Portal</h1>
+    <div class="tag" id="homeTag"></div>
+  </div>
+  <div class="glance" id="homeGlance"></div>
+  <div class="home-grid" id="homeGrid"></div>
+  <div class="foot">San Fermo Seattle · staff reference · updates live on reload</div>
+</section>
+
+<section class="view" id="fresh">
+  <div class="view-head">
+    <p class="view-eyebrow">Fresh Talk</p>
+    <h2 class="view-title">Tonight's Menu</h2>
+    <p class="view-sub" id="freshSub"></p>
+  </div>
+  <div class="subtabs-wrap">
+    <div class="subtabs" id="freshTabs"><span class="subpill" id="freshPill"></span>
+      <button class="subtab active" data-ft="food">Food</button>
+      <button class="subtab" data-ft="wine">Wine</button>
+      <button class="subtab" data-ft="bar">Cocktails</button>
+    </div>
+  </div>
+  <div id="ftFood"></div>
+  <div id="ftWine" style="display:none;"></div>
+  <div id="ftBar" style="display:none;"></div>
+</section>
+
+<section class="view" id="schedule">
+  <div class="view-head"><p class="view-eyebrow">Schedule</p><h2 class="view-title">Who's On</h2>
+    <p class="view-sub">Front and back of house, this week and the month ahead.</p></div>
+  <div class="subtabs-wrap"><div class="subtabs" id="schedSideTabs"><span class="subpill" id="schedSidePill"></span>
+    <button class="subtab active" data-side="foh">FOH</button><button class="subtab" data-side="boh">BOH</button></div></div>
+  <div class="subtabs-wrap" style="padding-top:0;"><div class="subtabs" id="schedRangeTabs"><span class="subpill" id="schedRangePill"></span>
+    <button class="subtab active" data-range="week">This Week</button><button class="subtab" data-range="month">The Month</button></div></div>
+  <div id="schedBody"></div>
+  <div class="legend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
+</section>
+
+<section class="view" id="seating">
+  <div class="view-head"><p class="view-eyebrow">The Room</p><h2 class="view-title">Seating Chart</h2>
+    <p class="view-sub">Table numbers and the floor, mirrored from the OpenTable floorplan.</p></div>
+  <div id="seatBody"></div>
+</section>
+
+<section class="view" id="duties">
+  <div class="view-head"><p class="view-eyebrow">FOH · Sidework</p><h2 class="view-title">Opening &amp; Closing</h2>
+    <p class="view-sub">Tap to check off. Resets each day.</p></div>
+  <div class="subtabs-wrap"><div class="subtabs" id="dutyTabs"><span class="subpill" id="dutyPill"></span>
+    <button class="subtab active" data-duty="opening">Opening</button><button class="subtab" data-duty="closing">Closing</button><button class="subtab" data-duty="sidework">Sidework</button></div></div>
+  <div id="dutyBody"></div>
+</section>
+
+<section class="view" id="compliance">
+  <div class="view-head"><p class="view-eyebrow">Compliance</p><h2 class="view-title">Food Handlers &amp; MAST</h2>
+    <p class="view-sub" id="compSub"></p></div>
+  <div class="subtabs-wrap"><div class="subtabs" id="compTabs"><span class="subpill" id="compPill"></span>
+    <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button></div></div>
+  <div id="compBody"></div>
+</section>
+
+<section class="view" id="directory">
+  <div class="view-head"><p class="view-eyebrow">Team</p><h2 class="view-title">Directory</h2><p class="view-sub" id="dirSub"></p></div>
+  <div id="dirBody"></div>
+</section>
+
+<section class="view" id="service">
+  <div class="view-head"><p class="view-eyebrow">Standards</p><h2 class="view-title">Steps of Service</h2></div>
+  <div id="svcBody"></div>
+</section>
+
+<section class="view" id="board">
+  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">86 Board &amp; Specials</h2></div>
+  <div id="boardBody"></div>
+</section>
+</div>
+
+<div class="modal" id="promptModal">
+  <div class="modal-card">
+    <h3>Menu Corrections</h3>
+    <p>Copy this and paste it into a new Claude session to deploy the updates.</p>
+    <textarea id="promptText" readonly></textarea>
+    <div class="modal-actions">
+      <button class="copy-btn" id="copyBtn" onclick="copyMenuPrompt()">Copy to clipboard</button>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const SF=window.SF; const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function todayISO(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;}
+const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtLong(iso){const[y,m,d]=iso.split('-').map(Number);const dt=new Date(y,m-1,d);return `${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dt.getDay()]}, ${MON[m-1]} ${d}`;}
+function fmtShort(iso){const[y,m,d]=iso.split('-').map(Number);return `${MON[m-1]} ${d}`;}
+
+/* starfield */
+function makeStars(){
+  const sky=$('sky'); let h='';
+  for(let i=0;i<140;i++){
+    const s=(Math.random()*1.8+0.6).toFixed(1);
+    const x=(Math.random()*100).toFixed(2), y=(Math.random()*100).toFixed(2);
+    const o=(Math.random()*.5+.3).toFixed(2), d=(Math.random()*5).toFixed(1);
+    h+=`<span class="star" style="width:${s}px;height:${s}px;left:${x}%;top:${y}%;opacity:${o};animation-delay:${d}s"></span>`;
+  }
+  sky.innerHTML=h;
+}
+
+const TABS=[['fresh','Fresh Talk'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service'],['board','86 Board']];
+function buildNav(){$('navChips').innerHTML=TABS.map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
+  $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));}
+function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+  document.body.classList.toggle('not-home',id!=='home');
+  $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
+  window.scrollTo(0,0); requestAnimationFrame(replaceAllPills);}
+
+function initPill(tabsEl,pillEl,attr,onSwitch){
+  const btns=[...tabsEl.querySelectorAll('.subtab')];
+  function place(b){pillEl.style.width=b.offsetWidth+'px';pillEl.style.transform=`translateX(${b.offsetLeft-4}px)`;}
+  btns.forEach(b=>b.onclick=()=>{btns.forEach(x=>x.classList.toggle('active',x===b));place(b);onSwitch(b.dataset[attr]);});
+  requestAnimationFrame(()=>{const a=tabsEl.querySelector('.subtab.active');if(a)place(a);});
+}
+function replaceAllPills(){document.querySelectorAll('.subtabs').forEach(t=>{const a=t.querySelector('.subtab.active'),p=t.querySelector('.subpill');if(a&&p){p.style.width=a.offsetWidth+'px';p.style.transform=`translateX(${a.offsetLeft-4}px)`;}});}
+
+/* HOME */
+function renderHome(){
+  $('homeTag').textContent=fmtLong(todayISO())+' · 5–10pm · three turns';
+  const dueSoon=SF.compliance.comingDue.filter(d=>d.urgency!=='info').length;
+  $('homeGlance').innerHTML=[['85','seats'],[String(SF.wines.length),'wines'],[String(SF.bar.cocktails.length),'cocktails'],[String(dueSoon),'renewals']]
+    .map(([n,l])=>`<div class="stat"><div class="stat-num">${n}</div><div class="stat-label">${l}</div></div>`).join('');
+  const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['schedule','◷','Schedule','This week + the month'],
+    ['seating','▦','Seating','The floor & table numbers'],['duties','☑','Duties','Opening, closing, sidework'],
+    ['compliance','✓','Compliance','Food handlers & MAST'],['directory','✉','Directory','The team & contacts'],
+    ['service','❖','Service','Steps & standards'],['board','☾','86 Board','Tonight’s 86 & specials']];
+  $('homeGrid').innerHTML=cards.map(([id,ic,t,s])=>`<button class="home-card" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
+}
+
+/* FRESH — FOOD + corrections mode */
+let menuEdit=false;
+function getMenuNotes(){try{return JSON.parse(localStorage.getItem('sf-menu-notes')||'{}');}catch(e){return {};}}
+function menuNoteCount(){return Object.keys(getMenuNotes()).length;}
+function saveMenuNote(name,val){const n=getMenuNotes();if(val&&val.trim())n[name]=val;else delete n[name];try{localStorage.setItem('sf-menu-notes',JSON.stringify(n));}catch(e){}const b=$('genCount');if(b)b.textContent=menuNoteCount();const box=document.querySelector(`.note-box[data-for="${cssEsc(name)}"]`);if(box)box.classList.toggle('filled',!!(val&&val.trim()));}
+function cssEsc(s){return String(s).replace(/"/g,'\\"');}
+function toggleMenuEdit(){menuEdit=!menuEdit;renderFoodTab();}
+function dishCardHTML(it){
+  const rich = it.story || (it.ingredients&&it.ingredients.length);
+  let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
+    <div class="card-head"><div class="row-between">
+      <span class="dish-name serif">${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}</span>
+      <span class="dish-price serif">${esc(it.price)}</span></div>
+      <div class="dish-desc serif">${esc(it.desc)}</div>`;
+  if(rich) h+=`<div class="expand-hint">Tap for the story &amp; ingredients ›</div>`;
+  h+=`</div>`;
+  if(rich){
+    h+=`<div class="card-details">`;
+    if(it.story) h+=`<p class="dish-story serif">${esc(it.story)}</p>`;
+    if(it.ingredients&&it.ingredients.length){
+      h+=`<div class="itk-label">Ingredients to know</div>`;
+      it.ingredients.forEach(g=>h+=`<div class="itk serif"><b>${esc(g.term)}</b>${g.pronunciation?` <span class="pron">${esc(g.pronunciation)}</span>`:''} — ${esc(g.note)}</div>`);
+    }
+    h+=`</div>`;
+  }
+  if(menuEdit){
+    const note=getMenuNotes()[it.name]||'';
+    h+=`<div class="note-box ${note?'filled':''}" data-for="${esc(it.name)}" onclick="event.stopPropagation()">
+      <label>Correction for ${esc(it.name)}</label>
+      <textarea data-dish="${esc(it.name)}" placeholder="What needs fixing? (e.g. butter is French not Belgian; price is 16)" oninput="saveMenuNote(this.getAttribute('data-dish'),this.value)">${esc(note)}</textarea></div>`;
+  }
+  return h+`</div>`;
+}
+function renderFoodTab(){
+  let f=`<div class="editbar"><button class="edit-toggle ${menuEdit?'on':''}" onclick="toggleMenuEdit()">✎ Corrections${menuEdit?' · on':''}</button>`;
+  if(menuEdit) f+=`<button class="gen-btn" onclick="genMenuPrompt()">Generate deploy prompt<span class="badge" id="genCount">${menuNoteCount()}</span></button>`;
+  f+=`</div>`;
+  if(menuEdit) f+=`<p class="est-note" style="text-align:left;margin:-6px 0 14px;">Notes are saved on this device. Type corrections under any item, then generate a prompt to hand back for deploy.</p>`;
+  SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;sec.items.forEach(it=>f+=dishCardHTML(it));});
+  f+=`<div class="section-label">Dessert</div>`; SF.menu.desserts.forEach(it=>f+=dishCardHTML(it));
+  f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
+  $('ftFood').innerHTML=f;
+}
+function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); }
+function genMenuPrompt(){
+  const notes=getMenuNotes(), keys=Object.keys(notes);
+  if(!keys.length){$('promptText').value='No corrections typed yet. Add notes under menu items first.';$('promptModal').classList.add('open');return;}
+  let p='San Fermo Staff Portal — menu corrections to apply.\n\n';
+  p+='Project folder: Codename: Riker/staff-portal/\n';
+  p+='Apply each correction below to the matching dish in data/menu.json (match by dish name — update story, ingredients, desc, pron, price, or raw flag as the note directs). Keep the Fresh Talk voice. Then rebuild the bundle (python3 build-data.py) and redeploy (deploy-to-github.command).\n\n';
+  p+='Corrections:\n';
+  keys.forEach(k=>{p+=`\n• ${k}:\n  ${notes[k].trim().replace(/\n/g,'\n  ')}\n`;});
+  p+=`\n(Generated ${new Date().toLocaleString()})`;
+  $('promptText').value=p; $('promptModal').classList.add('open');
+}
+function copyMenuPrompt(){const ta=$('promptText');ta.select();let ok=false;try{navigator.clipboard.writeText(ta.value);ok=true;}catch(e){try{ok=document.execCommand('copy');}catch(e2){}}const b=$('copyBtn');if(ok){b.textContent='Copied ✓';b.classList.add('done');setTimeout(()=>{b.textContent='Copy to clipboard';b.classList.remove('done');},1800);}}
+function closeModal(){$('promptModal').classList.remove('open');}
+
+/* FRESH — WINE */
+const WTYPE={white:'wt-white',red:'wt-red','rosé':'wt-rose',rose:'wt-rose',orange:'wt-orange',sparkling:'wt-sparkling'};
+let wineFilter={section:'all',glassOnly:false,q:''};
+function specRow(specs){
+  if(!specs||!specs.length) return '';
+  return `<div class="wine-specs">`+specs.map(s=>{
+    let dots=''; for(let i=1;i<=5;i++) dots+=`<span class="dot ${i<=s.rating?'on':''}"></span>`;
+    return `<div class="spec"><div class="spec-label">${esc(s.label)}</div><div class="dots">${dots}</div><div class="spec-range">${esc(s.low)} · ${esc(s.high)}</div></div>`;
+  }).join('')+`</div>`;
+}
+function renderWine(){
+  const bar=`<div class="filterbar">
+    <input class="fsearch" id="wineSearch" placeholder="Search wine, region, grape…" value="${esc(wineFilter.q)}">
+    <button class="fchip ${wineFilter.section==='all'?'active':''}" data-sec="all">All</button>
+    <button class="fchip ${wineFilter.section==='Bubbles'?'active':''}" data-sec="Bubbles">Bubbles</button>
+    <button class="fchip ${wineFilter.section==='White/Rosé/Orange'?'active':''}" data-sec="White/Rosé/Orange">White/Rosé/Orange</button>
+    <button class="fchip ${wineFilter.section==='Red'?'active':''}" data-sec="Red">Red</button>
+    <button class="fchip ${wineFilter.glassOnly?'active':''}" data-glass="1">By the glass</button></div>
+    <p class="est-note">Scorecards are house tasting estimates to guide guests, not lab values.</p>`;
+  const q=wineFilter.q.toLowerCase();
+  const list=SF.wines.filter(w=>{
+    if(wineFilter.section!=='all'&&w.section!==wineFilter.section)return false;
+    if(wineFilter.glassOnly&&!w.glass)return false;
+    if(q&&!((w.name+' '+w.region+' '+w.grapes+' '+w.pour).toLowerCase().includes(q)))return false;
+    return true;});
+  let cur='',html=bar;
+  if(!list.length)html+='<p class="board-empty">No wines match.</p>';
+  list.forEach(w=>{
+    if(w.section!==cur){cur=w.section;html+=`<div class="section-label">${esc(cur)}</div>`;}
+    const idx=SF.wines.indexOf(w), price=(w.glass?w.glass+' / ':'')+w.bottle;
+    const can=w.has_notes&&(w.producer||w.winemaking);
+    html+=`<div class="card ${can?'expandable':''}" data-wine="${idx}">
+      <div class="card-head" ${can?`onclick="toggleWine(${idx})"`:''}>
+        <span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span>
+        <div class="row-between"><span class="wine-name serif">${esc(w.name)} ${w.vintage?`<span class="wine-vintage">${esc(w.vintage)}</span>`:''}</span><span class="wine-price serif">${esc(price)}</span></div>
+        ${w.region?`<div class="wine-origin">${esc(w.region)}${w.grapes?' · '+esc(w.grapes):''}</div>`:''}
+        ${w.pour?`<div class="wine-pour serif">${esc(w.pour)}</div>`:''}
+        ${specRow(w.specs)}
+        ${can?`<div class="expand-hint">Tap for producer &amp; winemaking ›</div>`:''}
+      </div>
+      ${can?`<div class="card-details">
+        ${w.producer?`<div class="wine-sec-label">Producer</div><div class="wine-sec-body serif">${esc(w.producer)}</div>`:''}
+        ${w.winemaking?`<div class="wine-sec-label">Winemaking</div><div class="wine-sec-body serif">${esc(w.winemaking)}</div>`:''}
+      </div>`:''}</div>`;
+  });
+  $('ftWine').innerHTML=html;
+  $('wineSearch').oninput=e=>{wineFilter.q=e.target.value;const p=e.target.selectionStart;renderWine();const s=$('wineSearch');s.focus();s.setSelectionRange(p,p);};
+  $('ftWine').querySelectorAll('.fchip').forEach(c=>c.onclick=()=>{if(c.dataset.glass){wineFilter.glassOnly=!wineFilter.glassOnly;}else{wineFilter.section=c.dataset.sec;}renderWine();});
+}
+function toggleWine(i){const el=$('ftWine').querySelector(`[data-wine="${i}"]`);if(el)el.classList.toggle('expanded');}
+
+/* FRESH — BAR */
+function ckCardHTML(c){
+  const rich=c.ingredients&&c.ingredients.length;
+  let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
+    <div class="card-head"><div class="row-between">
+      <span class="ck-name serif">${esc(c.name)}${c.highlight?`<span class="hl-badge">${esc(c.highlight)}</span>`:''}</span>
+      <span class="ck-price serif">${esc(c.price)}</span></div>
+      ${c.tagline?`<div class="ck-tag serif">${esc(c.tagline)}</div>`:''}
+      <div class="ck-build serif">${esc(c.build)}</div>`;
+  if(rich)h+=`<div class="expand-hint">Tap for the build &amp; ingredients ›</div>`;
+  h+=`</div>`;
+  if(rich){h+=`<div class="card-details">`;
+    c.ingredients.forEach(g=>h+=`<div class="ck-ing ${g.highlight?'has-hl':''}"><div class="ck-ing-head"><span class="ck-ing-name serif">${esc(g.name)}${g.highlight?`<span class="hl-badge">${esc(g.highlight)}</span>`:''}</span><span class="ck-ing-amt">${esc(g.amount||'')}</span></div><div class="ck-ing-desc">${esc(g.description)}</div></div>`);
+    h+=`</div>`;}
+  return h+`</div>`;
+}
+function renderBar(){
+  let h=`<div class="section-label">Cocktails</div>`;
+  SF.bar.cocktails.forEach(c=>h+=ckCardHTML(c));
+  h+=`<div class="section-label">Non-Alcoholic</div><div class="card listcard"><div class="plist">`;
+  SF.bar.nonAlcoholic.forEach(n=>h+=`<div class="pl-row"><span class="pl-name">${esc(n.name)}</span><span class="pl-price">${esc(n.price)}</span></div>`);
+  h+=`</div></div><div class="section-label">Beer</div><div class="card listcard"><div class="plist">`;
+  SF.bar.beer.forEach(n=>h+=`<div class="pl-row"><span class="pl-name">${esc(n.name)}</span><span class="pl-price">${esc(n.price)}</span></div>`);
+  h+=`</div></div><div class="section-label">Amaro Flights · $18</div>`;
+  SF.bar.amaroFlights.forEach(fl=>{h+=`<div class="flist"><div class="flname serif">${esc(fl.name)}<span class="fprice">$${esc(fl.price)}</span></div>`;
+    fl.pours.forEach(p=>h+=`<div class="fpour">${esc(p.name)} <span class="forigin">— ${esc(p.origin)}</span></div>`);h+=`</div>`;});
+  h+=`<div class="section-label">After-Dinner Libations</div>`;
+  SF.bar.afterDinner.forEach(n=>h+=`<div class="ad-item"><div class="ad-row"><span class="ad-name">${esc(n.name)}</span><span class="ad-price">${esc(n.price)}</span></div>${n.note?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`);
+  $('ftBar').innerHTML=h;
+}
+
+/* SCHEDULE */
+let schedState={side:'foh',range:'week'};
+function currentWeekIndex(weeks){const t=todayISO();for(let i=0;i<weeks.length;i++){if(t>=weeks[i].dates[0]&&t<=weeks[i].dates[6])return i;}let idx=0;for(let i=0;i<weeks.length;i++){if(weeks[i].dates[0]<=t)idx=i;}return idx;}
+function shiftClass(s){if(!s)return 'off';const u=s.toUpperCase();if(u==='R/O')return 'ro';if(u.startsWith('FARM'))return 'farm';if(u==='MD'||u.startsWith('ADMIN'))return 'md';return '';}
+function weekTableHTML(w,today){
+  let h=`<div class="sched-week"><div class="sched-wk-date serif">Week of ${fmtShort(w.dates[0])}</div>`;
+  if(w.label)h+=`<span class="sched-banner">${esc(w.label)}</span>`;
+  h+=`<table class="sched-table"><thead><tr><th></th>`;
+  w.dates.forEach((d,i)=>h+=`<th class="${d===today?'today':''}">${DOW[i]}<span class="dnum">${d.split('-')[2].replace(/^0/,'')}</span></th>`);
+  h+=`</tr></thead><tbody>`;
+  w.rows.forEach(r=>{h+=`<tr><td class="nm">${esc(r.name)}</td>`;
+    r.shifts.forEach((s,i)=>h+=`<td class="${w.dates[i]===today?'today':''}"><span class="shift ${shiftClass(s)}">${s?esc(s):'·'}</span></td>`);h+=`</tr>`;});
+  return h+`</tbody></table></div>`;
+}
+function renderSchedule(){const weeks=SF.schedule[schedState.side],today=todayISO();
+  $('schedBody').innerHTML = schedState.range==='week' ? (weeks[currentWeekIndex(weeks)]?weekTableHTML(weeks[currentWeekIndex(weeks)],today):'<p class="board-empty">No week.</p>') : weeks.map(w=>weekTableHTML(w,today)).join('');}
+
+/* SEATING */
+function renderSeating(){
+  const s=SF.seating;
+  if(s&&s.image){
+    $('seatBody').innerHTML=`<div class="seat-wrap"><img src="${esc(s.image)}" alt="San Fermo floorplan">${s.note?`<div class="seat-note">${esc(s.note)}</div>`:''}</div>`;
+  }else{
+    $('seatBody').innerHTML=`<div class="seat-wrap"><div class="seat-placeholder"><div class="big">▦</div>Floorplan image goes here.<br>Drop the OpenTable floorplan in and it appears here.</div>
+      <div class="seat-note">Once Sam adds the floorplan image to <b>data/floorplan.png</b> (and sets it in <b>service / seating</b> data), this tab shows the room with table numbers.</div></div>`;
+  }
+}
+
+/* DUTIES */
+let dutyTab='opening';
+function dutyKey(){return 'sf-duty-'+todayISO();}
+function getDute(){try{return JSON.parse(localStorage.getItem(dutyKey())||'{}');}catch(e){return {};}}
+function setDute(s){try{localStorage.setItem(dutyKey(),JSON.stringify(s));}catch(e){}}
+function renderDuties(){const D=SF.service.duties;
+  if(dutyTab==='sidework'){$('dutyBody').innerHTML=`<div class="section-label">Running Sidework</div><div class="sidework-card"><ul>${D.sidework.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></div>`;return;}
+  const list=D[dutyTab],state=getDute();
+  let h=`<div style="display:flex;justify-content:flex-end;margin-bottom:8px;"><button class="reset-btn" onclick="resetDuties()">Reset day</button></div>`;
+  list.forEach((d,i)=>{const id=dutyTab+'-'+i,done=state[id];
+    h+=`<div class="duty-item ${done?'done':''}"><div class="duty-main" onclick="toggleDuty('${id}')"><span class="duty-check">${done?'✓':''}</span><span class="duty-task serif">${esc(d.task)}</span></div>`;
+    if(d.sub&&d.sub.length)h+=`<ul class="duty-sub">${d.sub.map(s=>`<li class="${/poison/i.test(s)?'poison':''}">${esc(s)}</li>`).join('')}</ul>`;
+    h+=`</div>`;});
+  $('dutyBody').innerHTML=h;
+}
+function toggleDuty(id){const s=getDute();s[id]=!s[id];setDute(s);renderDuties();}
+function resetDuties(){setDute({});renderDuties();}
+
+/* COMPLIANCE */
+let compTab='roster';
+function ic(st){return st==='good'?'✓':st==='alarm'?'!':'•';}
+function renderCompliance(){const C=SF.compliance;
+  $('compSub').textContent=`Updated ${fmtShort(C.updated)} · ${C.roster.foh.length+C.roster.boh.length} active · FWC & MAST`;
+  if(compTab==='due'){let h=`<p class="view-sub" style="margin-bottom:14px;">Cards expiring in the next nine months. Renewal means re-taking the class.</p><div class="comp-card">`;
+    C.comingDue.forEach(d=>h+=`<div class="due-row"><span class="pill st-${d.urgency==='info'?'info':d.urgency}">${esc(d.window)}</span><div><span class="comp-name">${esc(d.name)}</span> <span class="comp-role">${esc(d.cred)} · ${esc(d.area)}</span></div><span class="due-when">${esc(d.date)}</span></div>`);
+    $('compBody').innerHTML=h+`</div>`;return;}
+  let h=`<a class="binder-link" href="${esc(C.binderUrl)}" target="_blank" rel="noopener">Open Card Binder PDF ›</a><p class="board-note">${esc(C.note)}</p>`;
+  [['Back of House','boh'],['Front of House','foh']].forEach(([lab,key])=>{
+    h+=`<div class="section-label">${lab}</div><div class="comp-card">`;
+    C.roster[key].forEach(p=>h+=`<div class="comp-row"><div><div class="comp-name">${esc(p.name)}</div><div class="comp-role">${esc(p.role)}</div></div>
+      <span class="pill st-${p.fwc?p.fwc.status:'info'}"><span class="pl">FWC</span>${p.fwc?ic(p.fwc.status):'—'}</span>
+      <span class="pill ${p.mast?'st-'+p.mast.status:'st-info'}"><span class="pl">MAST</span>${p.mast?ic(p.mast.status):'—'}</span>
+      <div class="comp-cred">${p.fwc?'<b>FWC</b> '+esc(p.fwc.text):''}${p.mast?' · <b>MAST</b> '+esc(p.mast.text):''}</div></div>`);
+    h+=`</div>`;});
+  $('compBody').innerHTML=h;
+}
+
+/* DIRECTORY */
+function telHref(p){return 'tel:'+String(p).replace(/[^0-9]/g,'');}
+function renderDirectory(){const S=SF.staff; $('dirSub').textContent=S.note;
+  let h=`<div class="lead-row">`;
+  S.leads.forEach(l=>h+=`<div class="lead-card"><a href="${telHref(l.phone)}"><div class="lead-name serif">${esc(l.name)}</div><div class="lead-role">${esc(l.role)}</div><div class="lead-phone">${esc(l.phone)}</div></a></div>`);
+  h+=`</div>`;
+  [['Front of House','foh'],['Back of House','boh'],['Office','office']].forEach(([lab,key])=>{
+    h+=`<div class="section-label">${lab}</div><div class="dir-grid">`;
+    S.directory[key].forEach(p=>h+=`<div class="dir-card"><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${esc(p.role)}</div><div class="dir-links"><a href="${telHref(p.phone)}">Call</a>${p.email?`<a href="mailto:${esc(p.email)}">Email</a>`:''}</div></div>`);
+    h+=`</div>`;});
+  $('dirBody').innerHTML=h;
+}
+
+/* SERVICE */
+function renderService(){const S=SF.service.stepsOfService;
+  let h=`<div class="intro-card serif">${esc(S.intro)}</div><div class="section-label">The Sequence</div>`;
+  S.steps.forEach(s=>h+=`<div class="step"><div class="step-n">${s.n}</div><div><div class="step-title serif">${esc(s.title)}</div><div class="step-detail">${esc(s.detail)}</div></div></div>`);
+  h+=`<div class="section-label">Standards</div>`;
+  S.standards.forEach(st=>h+=`<div class="std-card"><div class="std-title serif">${esc(st.title)}</div><div class="std-body">${esc(st.body)}</div></div>`);
+  $('svcBody').innerHTML=h;
+}
+
+/* 86 BOARD */
+function boardKey(){return 'sf-board-'+todayISO();}
+function getBoard(){try{const s=JSON.parse(localStorage.getItem(boardKey()));if(s)return s;}catch(e){}return {eightySixed:[...SF.service.board.eightySixed],specials:[...SF.service.board.specials]};}
+function setBoard(b){try{localStorage.setItem(boardKey(),JSON.stringify(b));}catch(e){}}
+function renderBoard(){const b=getBoard();
+  const col=(title,cls,items,kind)=>{let h=`<div class="board-col ${cls}"><span class="board-title">${title}</span>
+    <div class="board-input-row"><input class="board-input" id="in-${kind}" placeholder="Add…" onkeydown="if(event.key==='Enter')addBoard('${kind}')"><button class="board-add" onclick="addBoard('${kind}')">+</button></div>`;
+    if(!items.length)h+=`<div class="board-empty">Nothing yet.</div>`;
+    items.forEach((it,i)=>h+=`<div class="board-item"><span>${esc(it)}</span><span class="x" onclick="rmBoard('${kind}',${i})">✕</span></div>`);
+    return h+`</div>`;};
+  $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)}</p>`+col('86 Tonight','board-86',b.eightySixed,'eightySixed')+col('Specials','board-sp',b.specials,'specials');
+}
+function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;const b=getBoard();b[k].push(v);setBoard(b);renderBoard();setTimeout(()=>{const x=$('in-'+k);if(x)x.focus();},0);}
+function rmBoard(k,i){const b=getBoard();b[k].splice(i,1);setBoard(b);renderBoard();}
+
+/* INIT */
+function init(){
+  makeStars();
+  $('appDate').textContent=fmtShort(todayISO());
+  buildNav(); renderHome(); renderFresh(); renderSchedule(); renderSeating();
+  renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard();
+  initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';});
+  initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{schedState.side=v;renderSchedule();});
+  initPill($('schedRangeTabs'),$('schedRangePill'),'range',v=>{schedState.range=v;renderSchedule();});
+  initPill($('dutyTabs'),$('dutyPill'),'duty',v=>{dutyTab=v;renderDuties();});
+  initPill($('compTabs'),$('compPill'),'comp',v=>{compTab=v;renderCompliance();});
+  go('home');
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
