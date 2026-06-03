@@ -356,8 +356,7 @@ nav.chips::-webkit-scrollbar{display:none;}
     <p class="view-sub">Front and back of house, this week and the month ahead.</p></div>
   <div class="subtabs-wrap"><div class="subtabs" id="schedSideTabs"><span class="subpill" id="schedSidePill"></span>
     <button class="subtab active" data-side="foh">FOH</button><button class="subtab" data-side="boh">BOH</button></div></div>
-  <div class="subtabs-wrap" style="padding-top:0;"><div class="subtabs" id="schedRangeTabs"><span class="subpill" id="schedRangePill"></span>
-    <button class="subtab active" data-range="week">This Week</button><button class="subtab" data-range="month">The Month</button></div></div>
+  <div class="filterbar" id="schedRanges" style="justify-content:center; padding-top:2px;"></div>
   <div id="schedBody"></div>
   <div class="legend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
 </section>
@@ -611,8 +610,20 @@ function weekTableHTML(w,today){
     r.shifts.forEach((s,i)=>h+=`<td class="${w.dates[i]===today?'today':''}"><span class="shift ${shiftClass(s)}">${s?esc(s):'·'}</span></td>`);h+=`</tr>`;});
   return h+`</tbody></table></div>`;
 }
-function renderSchedule(){const weeks=SF.schedule[schedState.side],today=todayISO();
-  $('schedBody').innerHTML = schedState.range==='week' ? (weeks[currentWeekIndex(weeks)]?weekTableHTML(weeks[currentWeekIndex(weeks)],today):'<p class="board-empty">No week.</p>') : weeks.map(w=>weekTableHTML(w,today)).join('');}
+function schedRanges(){
+  const[y,m]=todayISO().split('-').map(Number);
+  const cur=`${y}-${String(m).padStart(2,'0')}`;
+  const out=[{key:'week',label:'This Week'},{key:'m:'+cur,label:'This Month'}];
+  for(let i=1;i<=3;i++){let mm=m+i,yy=y;if(mm>12){mm-=12;yy++;}out.push({key:`m:${yy}-${String(mm).padStart(2,'0')}`,label:MON[mm-1]});}
+  return out;}
+function renderRangeChips(){
+  $('schedRanges').innerHTML=schedRanges().map(o=>`<button class="fchip${schedState.range===o.key?' active':''}" data-r="${o.key}">${o.label}</button>`).join('');
+  $('schedRanges').querySelectorAll('.fchip').forEach(c=>c.onclick=()=>{schedState.range=c.dataset.r;renderRangeChips();renderSchedule();});}
+function renderSchedule(){const weeks=SF.schedule[schedState.side],today=todayISO();let sel;
+  if(schedState.range==='week'){const w=weeks[currentWeekIndex(weeks)];sel=w?[w]:[];}
+  else if(schedState.range.startsWith('m:')){const ym=schedState.range.slice(2);sel=weeks.filter(w=>w.dates.some(d=>d.startsWith(ym)));}
+  else sel=weeks;
+  $('schedBody').innerHTML = sel.length?sel.map(w=>weekTableHTML(w,today)).join(''):'<p class="board-empty">No weeks in this range.</p>';}
 
 /* SEATING */
 function renderSeating(){
@@ -731,11 +742,10 @@ function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);
 function init(){
   initFirebase(); startBoardSync();
   $('appDate').textContent=fmtShort(todayISO());
-  buildNav(); renderHome(); renderFresh(); renderSchedule(); renderSeating();
+  buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
   renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard();
   initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';});
   initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{schedState.side=v;renderSchedule();});
-  initPill($('schedRangeTabs'),$('schedRangePill'),'range',v=>{schedState.range=v;renderSchedule();});
   initPill($('dutyTabs'),$('dutyPill'),'duty',v=>{dutyTab=v;renderDuties();});
   initPill($('compTabs'),$('compPill'),'comp',v=>{compTab=v;renderCompliance();});
   go('home');
