@@ -6,7 +6,7 @@
     { "name": "Katie Kuntz", "role": "Bar Manager", "phone": "707-815-6920" },
     { "name": "Chris Hoey", "role": "Chef de Cuisine", "phone": "626-716-1076" },
     { "name": "Jose Agundez", "role": "Sous Chef", "phone": "206-657-3023" },
-    { "name": "Tim Baker", "role": "Bookkeeper", "phone": "206-551-3328" }
+    { "name": "Tim Baker", "role": "Owner", "phone": "206-551-3328" }
   ],
   "directory": {
     "foh": [
@@ -44,7 +44,7 @@
     ],
     "office": [
       { "name": "Sam West", "role": "Executive Chef & GM", "phone": "206-851-3137", "email": "sam@sanfermoseattle.com" },
-      { "name": "Tim Baker", "role": "Bookkeeper", "phone": "206-551-3328", "email": "" }
+      { "name": "Tim Baker", "role": "Owner", "phone": "206-551-3328", "email": "tim@sanfermoseattle.com" }
     ]
   }
 }
