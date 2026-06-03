@@ -5728,7 +5728,7 @@ window.SF = {
      "name": "Manny Dominguez",
      "role": "Line Cook",
      "phone": "206-552-4981",
-     "email": ""
+     "email": "zero.19.10.1989@gmail.com"
     }
    ],
    "office": [
