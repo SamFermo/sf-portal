@@ -408,9 +408,8 @@ nav.chips::-webkit-scrollbar{display:none;}
   </div>
 </div>
 
-<script src="data.js"></script>
 <script>
-const SF=window.SF; const $=id=>document.getElementById(id);
+let SF; const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function todayISO(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;}
 const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -710,7 +709,16 @@ function init(){
   initPill($('compTabs'),$('compPill'),'comp',v=>{compTab=v;renderCompliance();});
   go('home');
 }
-document.addEventListener('DOMContentLoaded',init);
+function boot(){
+  if(window.SF){ SF=window.SF; init(); return; }   // preview: data inlined
+  var s=document.createElement('script');
+  s.src='data.js?v='+Date.now();                    // cache-bust: always fresh
+  s.onload=function(){ SF=window.SF; init(); };
+  s.onerror=function(){ document.body.innerHTML='<p style="color:#eaf0ff;font-family:sans-serif;padding:28px;text-align:center">Couldn’t load menu data. Pull down to refresh.</p>'; };
+  document.head.appendChild(s);
+}
+if(document.readyState!=='loading') boot();
+else document.addEventListener('DOMContentLoaded',boot);
 </script>
 </body>
 </html>
