@@ -4826,7 +4826,7 @@ window.SF = {
      "name": "Adrian Bravo",
      "role": "FOH Manager",
      "phone": "509-979-2060",
-     "email": ""
+     "email": "abravo2060@gmail.com"
     },
     {
      "name": "Katie Kuntz",
