@@ -10352,218 +10352,154 @@ window.SF = {
   ]
  },
  "staff": {
-  "note": "Active roster, pulled from the Employee Contact Sheet 2026 and cross-referenced with employee files. Tap a phone or email to contact. Blank email = none on file.",
+  "note": "Active roster. Contact options appear only as each person opts in (call / text / email) at login.",
   "leads": [
    {
     "name": "Sam West",
-    "role": "Executive Chef & GM",
-    "phone": "206-851-3137"
+    "role": "Executive Chef & GM"
    },
    {
     "name": "Adrian Bravo",
-    "role": "FOH Manager",
-    "phone": "509-979-2060"
+    "role": "FOH Manager"
    },
    {
     "name": "Katie Kuntz",
-    "role": "Bar Manager",
-    "phone": "707-815-6920"
+    "role": "Bar Manager"
    },
    {
     "name": "Chris Hoey",
-    "role": "Chef de Cuisine",
-    "phone": "626-716-1076"
+    "role": "Chef de Cuisine"
    },
    {
     "name": "Jose Agundez",
-    "role": "Sous Chef",
-    "phone": "206-657-3023"
+    "role": "Sous Chef"
    },
    {
     "name": "Tim Baker",
-    "role": "Owner",
-    "phone": "206-551-3328"
+    "role": "Owner"
    }
   ],
   "directory": {
    "foh": [
     {
      "name": "Adrian Bravo",
-     "role": "FOH Manager",
-     "phone": "509-979-2060",
-     "email": "abravo2060@gmail.com"
+     "role": "FOH Manager"
     },
     {
      "name": "Katie Kuntz",
-     "role": "Bar Manager",
-     "phone": "707-815-6920",
-     "email": "katherine.moroney.kuntz@gmail.com"
+     "role": "Bar Manager"
     },
     {
      "name": "Abby Tornquist",
-     "role": "Server",
-     "phone": "320-212-8974",
-     "email": "abbytornquist@gmail.com"
+     "role": "Server"
     },
     {
      "name": "Allegra Dunbar",
-     "role": "Server",
-     "phone": "480-330-9646",
-     "email": "allegradunbarm@gmail.com"
+     "role": "Server"
     },
     {
      "name": "Brittany Hinz",
-     "role": "Server",
-     "phone": "206-670-7064",
-     "email": "brittanyehinz@gmail.com"
+     "role": "Server"
     },
     {
      "name": "Denise Poon",
-     "role": "Server",
-     "phone": "206-679-0386",
-     "email": "dpoon206@gmail.com"
+     "role": "Server"
     },
     {
      "name": "Jackie Hanley",
-     "role": "Server",
-     "phone": "970-596-9856",
-     "email": "jackiehanley06@gmail.com"
+     "role": "Server"
     },
     {
      "name": "Josie Ableman",
-     "role": "Server",
-     "phone": "608-576-0574",
-     "email": "upsidedownck@gmail.com"
+     "role": "Server"
     },
     {
      "name": "Julian Biro",
-     "role": "Server",
-     "phone": "303-808-7564",
-     "email": "julianbiro@comcast.net"
+     "role": "Server"
     },
     {
      "name": "Mac Solomon",
-     "role": "Server",
-     "phone": "760-815-8274",
-     "email": "mstonesolomon@gmail.com"
+     "role": "Server"
     },
     {
      "name": "Sabba Hawash",
-     "role": "Server",
-     "phone": "206-250-1217",
-     "email": "hawash1987@gmail.com"
+     "role": "Server"
     },
     {
      "name": "Sully Baker",
-     "role": "Server",
-     "phone": "206-851-1351",
-     "email": "sullybaker@outlook.com"
+     "role": "Server"
     },
     {
      "name": "Helen Richardson",
-     "role": "Support · Server in training",
-     "phone": "206-718-6309",
-     "email": "hm.richardson@icloud.com"
+     "role": "Support · Server in training"
     }
    ],
    "boh": [
     {
      "name": "Chris Hoey",
-     "role": "Chef de Cuisine",
-     "phone": "626-716-1076",
-     "email": "chrism.hoey@gmail.com"
+     "role": "Chef de Cuisine"
     },
     {
      "name": "Jose Agundez",
-     "role": "Sous Chef",
-     "phone": "206-657-3023",
-     "email": "josejagundez@gmail.com"
+     "role": "Sous Chef"
     },
     {
      "name": "Joseph Steuby",
-     "role": "Pasta Production Lead",
-     "phone": "206-459-5540",
-     "email": "j.steuby@outlook.com"
+     "role": "Pasta Production Lead"
     },
     {
      "name": "Anna Velasco-Ojeda",
-     "role": "Line Cook",
-     "phone": "206-793-4113",
-     "email": "anastasiavelasco257@gmail.com"
+     "role": "Line Cook"
     },
     {
      "name": "Antolin \"Tony\" Reyes",
-     "role": "Line Cook",
-     "phone": "206-407-6551",
-     "email": "garciavasquez25@gmail.com"
+     "role": "Line Cook"
     },
     {
      "name": "Catherine \"Cat\" Cox",
-     "role": "Line Cook",
-     "phone": "509-598-1658",
-     "email": "catcox2112@gmail.com"
+     "role": "Line Cook"
     },
     {
      "name": "Cooper Duke",
-     "role": "Line Cook",
-     "phone": "206-719-8473",
-     "email": "coopernduke@gmail.com"
+     "role": "Line Cook"
     },
     {
      "name": "Darren Mercier",
-     "role": "Line Cook",
-     "phone": "404-394-3414",
-     "email": "dvmercier92@gmail.com"
+     "role": "Line Cook"
     },
     {
      "name": "Gopala Corral",
-     "role": "Line Cook",
-     "phone": "512-888-6475",
-     "email": "gopalacorral@gmail.com"
+     "role": "Line Cook"
     },
     {
      "name": "Ignacio Godinez",
-     "role": "Line Cook",
-     "phone": "313-718-5491",
-     "email": "ignaciogodinez97@gmail.com"
+     "role": "Line Cook"
     },
     {
      "name": "Jackson Partch",
-     "role": "Line Cook",
-     "phone": "831-332-1748",
-     "email": "jacksonpartch@gmail.com"
+     "role": "Line Cook"
     },
     {
      "name": "Jenn Kozora",
-     "role": "Line Cook · In training",
-     "phone": "502-424-3152",
-     "email": "jenniferlkozora@gmail.com"
+     "role": "Line Cook · In training"
     },
     {
      "name": "Kenji Carskaddan",
-     "role": "Line Cook",
-     "phone": "206-683-2356",
-     "email": "kenji.carskaddan@gmail.com"
+     "role": "Line Cook"
     },
     {
      "name": "Manny Dominguez",
-     "role": "Line Cook",
-     "phone": "206-552-4981",
-     "email": "zero.19.10.1989@gmail.com"
+     "role": "Line Cook"
     }
    ],
    "office": [
     {
      "name": "Sam West",
-     "role": "Executive Chef & GM",
-     "phone": "206-851-3137",
-     "email": "sam@sanfermoseattle.com"
+     "role": "Executive Chef & GM"
     },
     {
      "name": "Tim Baker",
-     "role": "Owner",
-     "phone": "206-551-3328",
-     "email": "tim@sanfermoseattle.com"
+     "role": "Owner"
     }
    ]
   }
