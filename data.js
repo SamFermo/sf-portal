@@ -10767,6 +10767,68 @@ window.SF = {
  },
  "seating": {
   "image": "data/floorplan.png",
-  "note": "Mirrors the OpenTable floorplan — Attic, Streetside Cafe, Front Room, Back Six, Bar, and North Deck Patio."
+  "note": "Mirrors the OpenTable floorplan — Attic, Streetside Cafe, Front Room, Back Six, Bar, and North Deck Patio.",
+  "sections": {
+   "order": [
+    "Front Room",
+    "Streetside Cafe",
+    "Attic",
+    "Back Six",
+    "Bar",
+    "North Deck Patio"
+   ],
+   "map": {
+    "Front Room": [
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "37",
+     "38"
+    ],
+    "Streetside Cafe": [
+     "1",
+     "2",
+     "21",
+     "22",
+     "23",
+     "24"
+    ],
+    "Attic": [
+     "51",
+     "52",
+     "53",
+     "54",
+     "55",
+     "57",
+     "58"
+    ],
+    "Back Six": [
+     "11",
+     "12",
+     "13",
+     "14",
+     "15",
+     "16"
+    ],
+    "Bar": [
+     "B1",
+     "B2",
+     "B3",
+     "B4"
+    ],
+    "North Deck Patio": [
+     "31",
+     "32",
+     "33",
+     "34",
+     "36",
+     "39",
+     "40",
+     "41"
+    ]
+   }
+  }
  }
 };
