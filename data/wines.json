@@ -1,46 +1,6 @@
 [
   {
     "section": "Bubbles",
-    "name": "House Prosecco",
-    "vintage": "",
-    "region": "Italy",
-    "type": "sparkling",
-    "glass": "13",
-    "bottle": "50",
-    "grapes": "",
-    "pour": "Our house sparkling by the glass — an easy-drinking Prosecco with fresh apple and white peach, light bubbles, and a clean off-dry finish.",
-    "producer": "",
-    "winemaking": "",
-    "has_notes": false,
-    "specs": [
-      {
-        "label": "Body",
-        "rating": 2,
-        "low": "light",
-        "high": "full"
-      },
-      {
-        "label": "Dryness",
-        "rating": 4,
-        "low": "sweet",
-        "high": "bone dry"
-      },
-      {
-        "label": "Acidity",
-        "rating": 3,
-        "low": "soft",
-        "high": "bright"
-      },
-      {
-        "label": "Tannins",
-        "rating": 1,
-        "low": "none",
-        "high": "grippy"
-      }
-    ]
-  },
-  {
-    "section": "Bubbles",
     "name": "Le Origini dal 1919 \"Passanello\" Lambrusco Grasparossa DOC",
     "vintage": "2024",
     "region": "Castelvetro, Emilia-Romagna, Italy",
@@ -376,46 +336,6 @@
       {
         "term": "La Cuvée",
         "pron": "lah koo-VAY"
-      }
-    ]
-  },
-  {
-    "section": "White/Rosé/Orange",
-    "name": "House White",
-    "vintage": "",
-    "region": "Italy",
-    "type": "white",
-    "glass": "13",
-    "bottle": "50",
-    "grapes": "",
-    "pour": "Our house white by the glass — a fresh, food-friendly Italian white with clean stone fruit and a dry, lively finish.",
-    "producer": "",
-    "winemaking": "",
-    "has_notes": false,
-    "specs": [
-      {
-        "label": "Body",
-        "rating": 2,
-        "low": "light",
-        "high": "full"
-      },
-      {
-        "label": "Dryness",
-        "rating": 4,
-        "low": "sweet",
-        "high": "bone dry"
-      },
-      {
-        "label": "Acidity",
-        "rating": 3,
-        "low": "soft",
-        "high": "bright"
-      },
-      {
-        "label": "Tannins",
-        "rating": 1,
-        "low": "none",
-        "high": "grippy"
       }
     ]
   },
@@ -1038,46 +958,6 @@
       {
         "term": "Kellerei Cantina",
         "pron": "keh-leh-RYE kahn-TEE-nah"
-      }
-    ]
-  },
-  {
-    "section": "Red",
-    "name": "House Red",
-    "vintage": "",
-    "region": "Italy",
-    "type": "red",
-    "glass": "13",
-    "bottle": "50",
-    "grapes": "",
-    "pour": "Our house red by the glass — an approachable Italian red with dark fruit and a smooth, dry finish. Easy-drinking and food-friendly.",
-    "producer": "",
-    "winemaking": "",
-    "has_notes": false,
-    "specs": [
-      {
-        "label": "Body",
-        "rating": 2,
-        "low": "light",
-        "high": "full"
-      },
-      {
-        "label": "Dryness",
-        "rating": 4,
-        "low": "sweet",
-        "high": "bone dry"
-      },
-      {
-        "label": "Acidity",
-        "rating": 3,
-        "low": "soft",
-        "high": "bright"
-      },
-      {
-        "label": "Tannins",
-        "rating": 2,
-        "low": "none",
-        "high": "grippy"
       }
     ]
   },
