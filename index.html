@@ -10,6 +10,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caladea:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<!-- Firebase (86 board live sync). If these are blocked (e.g. preview sandbox), the board falls back to per-device localStorage. -->
+<script>window.FIREBASE_CONFIG={apiKey:"AIzaSyByAhPS7C86jXG-8y9EQGNbMwncmBPl9oc",authDomain:"sf-staff-portal.firebaseapp.com",projectId:"sf-staff-portal",storageBucket:"sf-staff-portal.firebasestorage.app",messagingSenderId:"395019590035",appId:"1:395019590035:web:d7fcccb093b09b9cb67066"};</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <style>
 :root{
   /* Night sky */
@@ -678,23 +683,52 @@ function renderService(){const S=SF.service.stepsOfService;
 }
 
 /* 86 BOARD */
-function boardKey(){return 'sf-board-'+todayISO();}
-function getBoard(){try{const s=JSON.parse(localStorage.getItem(boardKey()));if(s)return s;}catch(e){}return {eightySixed:[...SF.service.board.eightySixed],specials:[...SF.service.board.specials]};}
-function setBoard(b){try{localStorage.setItem(boardKey(),JSON.stringify(b));}catch(e){}}
+let fbReady=false, fbDb=null, boardUnsub=null, boardState=null;
+function initFirebase(){
+  if(!window.firebase||!window.FIREBASE_CONFIG) return;
+  try{
+    firebase.initializeApp(window.FIREBASE_CONFIG);
+    fbDb=firebase.firestore();
+    firebase.auth().signInAnonymously().catch(function(){});
+    fbReady=true;
+  }catch(e){ fbReady=false; }
+}
+function boardDocId(){return todayISO();}
+function lsKey(){return 'sf-board-'+todayISO();}
+function lsGetBoard(){try{const s=JSON.parse(localStorage.getItem(lsKey()));if(s)return s;}catch(e){}return {eightySixed:[...(SF.service.board.eightySixed||[])],specials:[...(SF.service.board.specials||[])]};}
+function lsSetBoard(b){try{localStorage.setItem(lsKey(),JSON.stringify(b));}catch(e){}}
+function getBoard(){return boardState||lsGetBoard();}
+function startBoardSync(){
+  if(fbReady&&fbDb){
+    if(boardUnsub)boardUnsub();
+    boardUnsub=fbDb.collection('board').doc(boardDocId()).onSnapshot(function(snap){
+      const d=snap.exists?snap.data():null;
+      boardState=d?{eightySixed:d.eightySixed||[],specials:d.specials||[]}:{eightySixed:[],specials:[]};
+      renderBoard();
+    },function(){ boardState=lsGetBoard(); renderBoard(); });
+  }else{ boardState=lsGetBoard(); }
+}
+function persistBoard(b){
+  boardState=b;
+  if(fbReady&&fbDb){ fbDb.collection('board').doc(boardDocId()).set(b).catch(function(){lsSetBoard(b);}); }
+  else { lsSetBoard(b); }
+}
 function renderBoard(){const b=getBoard();
   const col=(title,cls,items,kind)=>{let h=`<div class="board-col ${cls}"><span class="board-title">${title}</span>
     <div class="board-input-row"><input class="board-input" id="in-${kind}" placeholder="Add…" onkeydown="if(event.key==='Enter')addBoard('${kind}')"><button class="board-add" onclick="addBoard('${kind}')">+</button></div>`;
     if(!items.length)h+=`<div class="board-empty">Nothing yet.</div>`;
     items.forEach((it,i)=>h+=`<div class="board-item"><span>${esc(it)}</span><span class="x" onclick="rmBoard('${kind}',${i})">✕</span></div>`);
     return h+`</div>`;};
-  $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)}</p>`+col('86 Tonight','board-86',b.eightySixed,'eightySixed')+col('Specials','board-sp',b.specials,'specials');
+  const live=fbReady?`<span style="color:#bfe0a8">● live</span> — shared across every device.`:`saved on this device only.`;
+  $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`+col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials');
 }
-function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;const b=getBoard();b[k].push(v);setBoard(b);renderBoard();setTimeout(()=>{const x=$('in-'+k);if(x)x.focus();},0);}
-function rmBoard(k,i){const b=getBoard();b[k].splice(i,1);setBoard(b);renderBoard();}
+function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;const b=getBoard();b[k]=b[k]||[];b[k].push(v);persistBoard(b);if(!fbReady)renderBoard();setTimeout(()=>{const x=$('in-'+k);if(x)x.focus();},0);}
+function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);if(!fbReady)renderBoard();}
 
 /* INIT */
 function init(){
   makeStars();
+  initFirebase(); startBoardSync();
   $('appDate').textContent=fmtShort(todayISO());
   buildNav(); renderHome(); renderFresh(); renderSchedule(); renderSeating();
   renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard();
