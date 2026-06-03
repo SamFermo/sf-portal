@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <title>San Fermo · Staff Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -324,7 +325,6 @@ nav.chips::-webkit-scrollbar{display:none;}
     <h1>Staff Portal</h1>
     <div class="tag" id="homeTag"></div>
   </div>
-  <div class="glance" id="homeGlance"></div>
   <div class="home-grid" id="homeGrid"></div>
   <div class="foot">San Fermo Seattle · staff reference · updates live on reload</div>
 </section>
@@ -448,9 +448,6 @@ function replaceAllPills(){document.querySelectorAll('.subtabs').forEach(t=>{con
 /* HOME */
 function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO())+' · 5–10pm · three turns';
-  const dueSoon=SF.compliance.comingDue.filter(d=>d.urgency!=='info').length;
-  $('homeGlance').innerHTML=[['85','seats'],[String(SF.wines.length),'wines'],[String(SF.bar.cocktails.length),'cocktails'],[String(dueSoon),'renewals']]
-    .map(([n,l])=>`<div class="stat"><div class="stat-num">${n}</div><div class="stat-label">${l}</div></div>`).join('');
   const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['schedule','◷','Schedule','This week + the month'],
     ['seating','▦','Seating','The floor & table numbers'],['duties','☑','Duties','Opening, closing, sidework'],
     ['compliance','✓','Compliance','Food handlers & MAST'],['directory','✉','Directory','The team & contacts'],
