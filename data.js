@@ -4816,7 +4816,7 @@ window.SF = {
    },
    {
     "name": "Tim Baker",
-    "role": "Bookkeeper",
+    "role": "Owner",
     "phone": "206-551-3328"
    }
   ],
@@ -5008,9 +5008,9 @@ window.SF = {
     },
     {
      "name": "Tim Baker",
-     "role": "Bookkeeper",
+     "role": "Owner",
      "phone": "206-551-3328",
-     "email": ""
+     "email": "tim@sanfermoseattle.com"
     }
    ]
   }
