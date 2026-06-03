@@ -4985,18 +4985,6 @@ window.SF = {
      "role": "Line Cook",
      "phone": "206-552-4981",
      "email": ""
-    },
-    {
-     "name": "Maya Sofer",
-     "role": "Line Cook",
-     "phone": "425-229-9539",
-     "email": "mayaguysofer@gmail.com"
-    },
-    {
-     "name": "Sarah Tribble",
-     "role": "Line Cook",
-     "phone": "505-710-9627",
-     "email": "sarahrosee7123@gmail.com"
     }
    ],
    "office": [
@@ -5213,7 +5201,7 @@ window.SF = {
   }
  },
  "seating": {
-  "image": "",
-  "note": "Mirrors the OpenTable floorplan. Front room, bar, patio, and pergola. (Floorplan image to be added.)"
+  "image": "data/floorplan.png",
+  "note": "Mirrors the OpenTable floorplan — Attic, Streetside Cafe, Front Room, Back Six, Bar, and North Deck Patio."
  }
 };
