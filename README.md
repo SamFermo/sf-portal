@@ -21,8 +21,25 @@ Lives at `Codename: Riker/staff-portal/`. Deploys to GitHub Pages at
 - **Directory** — The team with tap-to-call / tap-to-email, leads pinned on top.
 - **Service** — Steps of service and house standards (service charge, wine
   service, allergens).
-- **86 Board** — Tonight's 86 list and specials. Editable, stored per-day on the
-  device.
+- **The Board** (was "86 Board") — Tonight's 86 list, specials, and **Tables
+  Tonight**: the maître d' flags a table number with an occasion (Birthday /
+  Anniversary / VIP / Special) and a note so servers see it live. Per-day, live
+  across devices via Firebase (per-device fallback if offline).
+- **Schedule → Time Off** — A shared, live time-off board. Any staffer picks
+  their name (saved on the device), submits a date range + reason; it posts as
+  **Pending** for everyone to see. A manager (PIN-gated) approves or denies.
+  Each request has a notes thread so people can offer to cover. Stored in the
+  Firestore `timeoff` collection (per-device fallback if offline).
+
+### Identity & manager mode
+
+- First open asks "Who are you?" — pick from the roster; saved on that device.
+  Change it anytime from the chip on the home screen.
+- **Manager mode** (home screen chip) unlocks Approve/Deny on time-off requests.
+  It's PIN-gated. The PIN lives in `index.html` as `MANAGER_PIN` — change it to
+  your own and share only with whoever should approve. Note: this is friction,
+  not hard security — the site is public-by-URL, so the PIN keeps honest people
+  honest rather than locking the data down.
 
 ## Files
 
