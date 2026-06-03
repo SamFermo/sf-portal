@@ -546,6 +546,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Le Origini",
+     "pron": "leh oh-REE-jee-nee"
+    },
+    {
+     "term": "Passanello",
+     "pron": "pah-sah-NELL-oh"
+    },
+    {
+     "term": "Lambrusco Grasparossa",
+     "pron": "lahm-BROOS-koh grah-spah-ROSS-ah"
+    },
+    {
+     "term": "Castelvetro",
+     "pron": "kah-stel-VEH-troh"
+    }
    ]
   },
   {
@@ -585,6 +603,24 @@ window.SF = {
      "rating": 1,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Domaine Lingot-Martin",
+     "pron": "doh-MEN lan-GOH mar-TAN"
+    },
+    {
+     "term": "Cerdon",
+     "pron": "sehr-DON"
+    },
+    {
+     "term": "Bugey",
+     "pron": "boo-ZHAY"
+    },
+    {
+     "term": "méthode ancestrale",
+     "pron": "meh-TOD ahn-sess-TRAHL"
     }
    ]
   },
@@ -626,6 +662,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Louis Armand",
+     "pron": "lwee ar-MON"
+    },
+    {
+     "term": "Premier Cru",
+     "pron": "pruh-MYAY kroo"
+    },
+    {
+     "term": "Mareuil-sur-Aÿ",
+     "pron": "mah-ROY soor ah-EE"
+    },
+    {
+     "term": "Pinot Meunier",
+     "pron": "pee-noh muh-NYAY"
+    }
    ]
   },
   {
@@ -665,6 +719,20 @@ window.SF = {
      "rating": 1,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Il Ceo",
+     "pron": "eel CHEH-oh"
+    },
+    {
+     "term": "Vespaiola",
+     "pron": "veh-spah-YOH-lah"
+    },
+    {
+     "term": "col fondo",
+     "pron": "kohl FON-doh"
     }
    ]
   },
@@ -706,6 +774,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Pojer e Sandri",
+     "pron": "POH-yehr eh SAHN-dree"
+    },
+    {
+     "term": "Solaris",
+     "pron": "soh-LAH-rees"
+    },
+    {
+     "term": "Alto Adige",
+     "pron": "AHL-toh AH-dee-jeh"
+    },
+    {
+     "term": "Faedo",
+     "pron": "fah-EH-doh"
+    }
    ]
   },
   {
@@ -745,6 +831,20 @@ window.SF = {
      "rating": 1,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Laurent-Perrier",
+     "pron": "loh-RON peh-RYAY"
+    },
+    {
+     "term": "Tours-sur-Marne",
+     "pron": "toor soor MARN"
+    },
+    {
+     "term": "La Cuvée",
+     "pron": "lah koo-VAY"
     }
    ]
   },
@@ -826,6 +926,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Borgo Savaian",
+     "pron": "BOR-goh sah-vah-YAHN"
+    },
+    {
+     "term": "Tocai Friulano",
+     "pron": "toh-KAH-ee free-oo-LAH-noh"
+    },
+    {
+     "term": "Ribolla Gialla",
+     "pron": "ree-BOHL-lah JAHL-lah"
+    },
+    {
+     "term": "Cormons",
+     "pron": "KOR-mohns"
+    }
    ]
   },
   {
@@ -865,6 +983,20 @@ window.SF = {
      "rating": 1,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Pietramore",
+     "pron": "pyeh-trah-MOH-reh"
+    },
+    {
+     "term": "Trebbiano d'Abruzzo",
+     "pron": "treh-BYAH-noh dah-BROOD-zoh"
+    },
+    {
+     "term": "Maiella",
+     "pron": "mah-YEL-lah"
     }
    ]
   },
@@ -906,6 +1038,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Angelo Negro",
+     "pron": "AHN-jeh-loh NEH-groh"
+    },
+    {
+     "term": "Arneis",
+     "pron": "ar-NAY-ss"
+    },
+    {
+     "term": "Roero",
+     "pron": "roh-EH-roh"
+    },
+    {
+     "term": "bâtonnage",
+     "pron": "bah-toh-NAHJ"
+    }
    ]
   },
   {
@@ -945,6 +1095,24 @@ window.SF = {
      "rating": 1,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Le Vigne di Faraone",
+     "pron": "leh VEEN-yeh dee fah-rah-OH-neh"
+    },
+    {
+     "term": "Cerasuolo",
+     "pron": "cheh-rah-ZWOH-loh"
+    },
+    {
+     "term": "Montepulciano",
+     "pron": "mon-teh-pool-CHAH-noh"
+    },
+    {
+     "term": "saignée",
+     "pron": "seh-NYAY"
     }
    ]
   },
@@ -986,6 +1154,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "La Spinetta",
+     "pron": "lah spee-NET-tah"
+    },
+    {
+     "term": "Sangiovese",
+     "pron": "san-joh-VEH-zeh"
+    },
+    {
+     "term": "Prugnolo Gentile",
+     "pron": "proo-NYOH-loh jen-TEE-leh"
+    },
+    {
+     "term": "Terricciola",
+     "pron": "teh-ree-CHOH-lah"
+    }
    ]
   },
   {
@@ -1025,6 +1211,20 @@ window.SF = {
      "rating": 1,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Valle Dell'Acate",
+     "pron": "VAHL-leh del-AH-kah-teh"
+    },
+    {
+     "term": "Vermentino",
+     "pron": "ver-men-TEE-noh"
+    },
+    {
+     "term": "Contrada Biddine",
+     "pron": "kon-TRAH-dah bee-DEE-neh"
     }
    ]
   },
@@ -1066,6 +1266,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Friulano",
+     "pron": "free-oo-LAH-noh"
+    },
+    {
+     "term": "Grüner Veltliner",
+     "pron": "GROO-ner FELT-lee-ner"
+    },
+    {
+     "term": "Malvasia Bianca",
+     "pron": "mal-VAH-zyah BYAHN-kah"
+    },
+    {
+     "term": "Kerner",
+     "pron": "KEHR-ner"
+    }
    ]
   },
   {
@@ -1105,6 +1323,20 @@ window.SF = {
      "rating": 1,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "I Pentri",
+     "pron": "ee PEN-tree"
+    },
+    {
+     "term": "Falanghina",
+     "pron": "fah-lan-GHEE-nah"
+    },
+    {
+     "term": "Sannio Benevento",
+     "pron": "SAHN-nyoh beh-neh-VEN-toh"
     }
    ]
   },
@@ -1146,6 +1378,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Scarpa",
+     "pron": "SKAR-pah"
+    },
+    {
+     "term": "Monferrato",
+     "pron": "mon-feh-RAH-toh"
+    },
+    {
+     "term": "Timorasso",
+     "pron": "tee-moh-RAHS-soh"
+    },
+    {
+     "term": "bâtonnage",
+     "pron": "bah-toh-NAHJ"
+    }
    ]
   },
   {
@@ -1186,6 +1436,20 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Fontodi",
+     "pron": "fon-TOH-dee"
+    },
+    {
+     "term": "Meriggio",
+     "pron": "meh-REED-joh"
+    },
+    {
+     "term": "Colli Toscana Centrale",
+     "pron": "KOHL-lee toh-SKAH-nah chen-TRAH-leh"
+    }
    ]
   },
   {
@@ -1225,6 +1489,24 @@ window.SF = {
      "rating": 1,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Terlan / Terlano",
+     "pron": "tehr-LAHN / tehr-LAH-noh"
+    },
+    {
+     "term": "Terlaner",
+     "pron": "tehr-LAH-ner"
+    },
+    {
+     "term": "Pinot Bianco",
+     "pron": "PEE-noh BYAHN-koh"
+    },
+    {
+     "term": "Kellerei Cantina",
+     "pron": "keh-leh-RYE kahn-TEE-nah"
     }
    ]
   },
@@ -1306,6 +1588,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Copertino",
+     "pron": "koh-pehr-TEE-noh"
+    },
+    {
+     "term": "Negroamaro",
+     "pron": "neh-groh-ah-MAH-roh"
+    },
+    {
+     "term": "Malvasia Nera",
+     "pron": "mal-VAH-zyah NEH-rah"
+    },
+    {
+     "term": "Salento",
+     "pron": "sah-LEN-toh"
+    }
    ]
   },
   {
@@ -1345,6 +1645,24 @@ window.SF = {
      "rating": 2,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Corte Scaletta",
+     "pron": "KOR-teh skah-LET-tah"
+    },
+    {
+     "term": "Valpolicella",
+     "pron": "val-poh-lee-CHEL-lah"
+    },
+    {
+     "term": "Corvina",
+     "pron": "kor-VEE-nah"
+    },
+    {
+     "term": "Rondinella",
+     "pron": "ron-dee-NEL-lah"
     }
    ]
   },
@@ -1386,6 +1704,20 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "La Valentina",
+     "pron": "lah vah-len-TEE-nah"
+    },
+    {
+     "term": "Montepulciano d'Abruzzo",
+     "pron": "mon-teh-pool-CHAH-noh dah-BROOD-zoh"
+    },
+    {
+     "term": "Riserva",
+     "pron": "ree-ZEHR-vah"
+    }
    ]
   },
   {
@@ -1425,6 +1757,20 @@ window.SF = {
      "rating": 3,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Corte Pavone",
+     "pron": "KOR-teh pah-VOH-neh"
+    },
+    {
+     "term": "Rosso di Montalcino",
+     "pron": "ROHS-soh dee mon-tahl-CHEE-noh"
+    },
+    {
+     "term": "Sangiovese",
+     "pron": "san-joh-VEH-zeh"
     }
    ]
   },
@@ -1466,6 +1812,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Boffalora",
+     "pron": "bof-fah-LOH-rah"
+    },
+    {
+     "term": "Chiavennasca",
+     "pron": "kyah-ven-NAHS-kah"
+    },
+    {
+     "term": "Valtellina",
+     "pron": "val-tel-LEE-nah"
+    },
+    {
+     "term": "Castione Andevenno",
+     "pron": "kah-STYOH-neh ahn-deh-VEN-noh"
+    }
    ]
   },
   {
@@ -1505,6 +1869,24 @@ window.SF = {
      "rating": 2,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Podere Ruggeri Corsini",
+     "pron": "poh-DEH-reh rood-JEH-ree kor-SEE-nee"
+    },
+    {
+     "term": "Armujan",
+     "pron": "ar-moo-YAHN"
+    },
+    {
+     "term": "Barbera d'Alba",
+     "pron": "bar-BEH-rah DAL-bah"
+    },
+    {
+     "term": "Monforte d'Alba",
+     "pron": "mon-FOR-teh DAL-bah"
     }
    ]
   },
@@ -1546,6 +1928,20 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "I Pentri",
+     "pron": "ee PEN-tree"
+    },
+    {
+     "term": "Piedirosso",
+     "pron": "pyeh-dee-ROHS-soh"
+    },
+    {
+     "term": "Sannio Benevento",
+     "pron": "SAHN-nyoh beh-neh-VEN-toh"
+    }
    ]
   },
   {
@@ -1585,6 +1981,24 @@ window.SF = {
      "rating": 3,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Felsina",
+     "pron": "fel-SEE-nah"
+    },
+    {
+     "term": "Berardenga",
+     "pron": "beh-rar-DEN-gah"
+    },
+    {
+     "term": "Chianti Classico",
+     "pron": "KYAHN-tee KLAHS-see-koh"
+    },
+    {
+     "term": "Castelnuovo Berardenga",
+     "pron": "kah-stel-NWOH-voh beh-rar-DEN-gah"
     }
    ]
   },
@@ -1626,6 +2040,20 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "La Miraja",
+     "pron": "lah mee-RAH-yah"
+    },
+    {
+     "term": "Ruché",
+     "pron": "roo-KEH"
+    },
+    {
+     "term": "Castagnole Monferrato",
+     "pron": "kah-stahn-YOH-leh mon-feh-RAH-toh"
+    }
    ]
   },
   {
@@ -1665,6 +2093,24 @@ window.SF = {
      "rating": 4,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Franco Molino",
+     "pron": "FRAHN-koh moh-LEE-noh"
+    },
+    {
+     "term": "Cascina Rocca",
+     "pron": "kah-SHEE-nah ROHK-kah"
+    },
+    {
+     "term": "Barolo",
+     "pron": "bah-ROH-loh"
+    },
+    {
+     "term": "Nebbiolo",
+     "pron": "neb-BYOH-loh"
     }
    ]
   },
@@ -1706,6 +2152,20 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Uccelliera",
+     "pron": "oo-chel-LYEH-rah"
+    },
+    {
+     "term": "Rapace",
+     "pron": "rah-PAH-cheh"
+    },
+    {
+     "term": "Castelnuovo dell'Abate",
+     "pron": "kah-stel-NWOH-voh del-AH-bah-teh"
+    }
    ]
   },
   {
@@ -1745,6 +2205,24 @@ window.SF = {
      "rating": 3,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Tenuta delle Terre Nere",
+     "pron": "teh-NOO-tah DEL-leh TER-reh NEH-reh"
+    },
+    {
+     "term": "Bellacolonna",
+     "pron": "bel-lah-koh-LON-nah"
+    },
+    {
+     "term": "Nerello Mascalese",
+     "pron": "neh-REL-loh mah-skah-LEH-zeh"
+    },
+    {
+     "term": "contrada",
+     "pron": "kon-TRAH-dah"
     }
    ]
   },
@@ -1786,6 +2264,16 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Verduno",
+     "pron": "vehr-DOO-noh"
+    },
+    {
+     "term": "Pelaverga",
+     "pron": "peh-lah-VEHR-gah"
+    }
    ]
   },
   {
@@ -1825,6 +2313,20 @@ window.SF = {
      "rating": 4,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Voliero",
+     "pron": "voh-LYEH-roh"
+    },
+    {
+     "term": "Brunello di Montalcino",
+     "pron": "broo-NEL-loh dee mon-tahl-CHEE-noh"
+    },
+    {
+     "term": "Castelnuovo dell'Abate",
+     "pron": "kah-stel-NWOH-voh del-AH-bah-teh"
     }
    ]
   },
@@ -1866,6 +2368,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Castello di Neive",
+     "pron": "kah-STEL-loh dee NAY-veh"
+    },
+    {
+     "term": "Barbaresco",
+     "pron": "bar-bah-RES-koh"
+    },
+    {
+     "term": "Nebbiolo",
+     "pron": "neb-BYOH-loh"
+    },
+    {
+     "term": "Gallina",
+     "pron": "gahl-LEE-nah"
+    }
    ]
   },
   {
@@ -1905,6 +2425,24 @@ window.SF = {
      "rating": 4,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Zenato",
+     "pron": "zeh-NAH-toh"
+    },
+    {
+     "term": "Cresasso",
+     "pron": "kreh-SAHS-soh"
+    },
+    {
+     "term": "Corvina Veronese",
+     "pron": "kor-VEE-nah veh-roh-NEH-zeh"
+    },
+    {
+     "term": "Sant'Ambrogio di Valpolicella",
+     "pron": "sant am-BROH-joh dee val-poh-lee-CHEL-lah"
     }
    ]
   },
@@ -1946,6 +2484,20 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Cantina Terlano",
+     "pron": "kahn-TEE-nah tehr-LAH-noh"
+    },
+    {
+     "term": "Porphyr",
+     "pron": "POR-feer"
+    },
+    {
+     "term": "Lagrein",
+     "pron": "lah-GRYNE"
+    }
    ]
   },
   {
@@ -1985,6 +2537,24 @@ window.SF = {
      "rating": 4,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Ar.Pe.Pe.",
+     "pron": "ar-PEH-peh"
+    },
+    {
+     "term": "Sassella",
+     "pron": "sahs-SEL-lah"
+    },
+    {
+     "term": "Rocce Rosse",
+     "pron": "ROHCH-cheh ROHS-seh"
+    },
+    {
+     "term": "Valtellina Superiore",
+     "pron": "val-tel-LEE-nah soo-peh-RYOH-reh"
     }
    ]
   },
@@ -2026,6 +2596,20 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Amarone della Valpolicella",
+     "pron": "ah-mah-ROH-neh DEL-lah val-poh-lee-CHEL-lah"
+    },
+    {
+     "term": "Corvinone",
+     "pron": "kor-vee-NOH-neh"
+    },
+    {
+     "term": "appassimento",
+     "pron": "ah-pahs-see-MEN-toh"
+    }
    ]
   },
   {
@@ -2065,6 +2649,24 @@ window.SF = {
      "rating": 4,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Canalicchio di Sopra",
+     "pron": "kah-nah-LEE-kyoh dee SOH-prah"
+    },
+    {
+     "term": "Brunello di Montalcino",
+     "pron": "broo-NEL-loh dee mon-tahl-CHEE-noh"
+    },
+    {
+     "term": "Montosoli",
+     "pron": "mon-toh-ZOH-lee"
+    },
+    {
+     "term": "galestro",
+     "pron": "gah-LES-troh"
     }
    ]
   },
@@ -2106,6 +2708,20 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Viberti Giovanni",
+     "pron": "vee-BEHR-tee joh-VAHN-nee"
+    },
+    {
+     "term": "Barolo Riserva",
+     "pron": "bah-ROH-loh ree-ZEHR-vah"
+    },
+    {
+     "term": "Nebbiolo",
+     "pron": "neb-BYOH-loh"
+    }
    ]
   },
   {
@@ -2146,6 +2762,24 @@ window.SF = {
      "low": "none",
      "high": "grippy"
     }
+   ],
+   "pronguide": [
+    {
+     "term": "Vietti",
+     "pron": "VYET-tee"
+    },
+    {
+     "term": "Ravera",
+     "pron": "rah-VEH-rah"
+    },
+    {
+     "term": "Castiglione Falletto",
+     "pron": "kah-steel-YOH-neh fahl-LET-toh"
+    },
+    {
+     "term": "Novello",
+     "pron": "noh-VEL-loh"
+    }
    ]
   },
   {
@@ -2185,6 +2819,24 @@ window.SF = {
      "rating": 4,
      "low": "none",
      "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Marchesi Antinori",
+     "pron": "mar-KEH-zee ahn-tee-NOH-ree"
+    },
+    {
+     "term": "Tignanello",
+     "pron": "teen-yah-NEL-loh"
+    },
+    {
+     "term": "Cabernet Franc",
+     "pron": "kah-behr-NAY FRAHNK"
+    },
+    {
+     "term": "Super Tuscan",
+     "pron": "SOO-pehr TOOS-kahn"
     }
    ]
   }
@@ -2228,6 +2880,12 @@ window.SF = {
       "name": "Soda water",
       "amount": "top",
       "description": "Lifts the drink and adds a gentle effervescence. Keeps it fresh and sessionable."
+     }
+    ],
+    "pronguide": [
+     {
+      "term": "vermouth",
+      "pron": "vehr-MOOTH"
      }
     ]
    },
@@ -2274,6 +2932,24 @@ window.SF = {
       "amount": "2 dashes",
       "description": "Aromatic bitters infused with dried lavender. A few dashes tie the elderflower to the floral top notes and add a soft herbal finish."
      }
+    ],
+    "pronguide": [
+     {
+      "term": "St-Germain",
+      "pron": "san zhehr-MAN"
+     },
+     {
+      "term": "Haute-Savoie",
+      "pron": "oht sah-VWAH"
+     },
+     {
+      "term": "bianco vermouth",
+      "pron": "BYAHN-koh vehr-MOOTH"
+     },
+     {
+      "term": "Prosecco",
+      "pron": "proh-SEK-koh"
+     }
     ]
    },
    {
@@ -2315,6 +2991,20 @@ window.SF = {
       "name": "Fresh basil",
       "amount": "4–5 leaves, expressed",
       "description": "Lightly slapped and expressed, not muddled. Adds an herbal, slightly peppery aroma that bridges the gin's botanicals and the fruit of the maceration."
+     }
+    ],
+    "pronguide": [
+     {
+      "term": "Luxardo Maraschino",
+      "pron": "look-SAR-doh mah-rah-SKEE-noh"
+     },
+     {
+      "term": "Gran Classico",
+      "pron": "grahn KLAHS-see-koh"
+     },
+     {
+      "term": "Padova",
+      "pron": "PAH-doh-vah"
      }
     ]
    },
@@ -2363,6 +3053,24 @@ window.SF = {
       "amount": "2 dashes",
       "description": "Aromatic bitters with grapefruit peel at the center. Adds a bright citrus note on the nose and ties the kumquat liqueur to the lime."
      }
+    ],
+    "pronguide": [
+     {
+      "term": "mezcal",
+      "pron": "mess-KAHL"
+     },
+     {
+      "term": "orgeat",
+      "pron": "or-ZHAT"
+     },
+     {
+      "term": "Brucato",
+      "pron": "broo-KAH-toh"
+     },
+     {
+      "term": "chile de árbol",
+      "pron": "CHEE-leh deh AR-bohl"
+     }
     ]
    },
    {
@@ -2404,6 +3112,24 @@ window.SF = {
       "amount": "garnish",
       "description": "Oils squeezed from a grapefruit peel over the surface — citrus aromatics to greet the first sip."
      }
+    ],
+    "pronguide": [
+     {
+      "term": "Campari",
+      "pron": "kahm-PAH-ree"
+     },
+     {
+      "term": "Amaricano",
+      "pron": "ah-mah-ree-KAH-noh"
+     },
+     {
+      "term": "Yzaguirre",
+      "pron": "ee-thah-GHEE-reh"
+     },
+     {
+      "term": "Negroni",
+      "pron": "neh-GROH-nee"
+     }
     ]
    },
    {
@@ -2439,6 +3165,24 @@ window.SF = {
       "name": "Angostura bitters",
       "amount": "2 dashes",
       "description": "Classic aromatic bitters — clove, cinnamon, and gentian that tie the spirits together."
+     }
+    ],
+    "pronguide": [
+     {
+      "term": "Sazerac",
+      "pron": "SAZ-uh-rak"
+     },
+     {
+      "term": "Yzaguirre",
+      "pron": "ee-thah-GHEE-reh"
+     },
+     {
+      "term": "Bénédictine",
+      "pron": "beh-neh-deek-TEEN"
+     },
+     {
+      "term": "Angostura",
+      "pron": "ang-oh-STOO-rah"
      }
     ]
    }
