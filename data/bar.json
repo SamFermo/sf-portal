@@ -38,6 +38,12 @@
           "amount": "top",
           "description": "Lifts the drink and adds a gentle effervescence. Keeps it fresh and sessionable."
         }
+      ],
+      "pronguide": [
+        {
+          "term": "vermouth",
+          "pron": "vehr-MOOTH"
+        }
       ]
     },
     {
@@ -83,6 +89,24 @@
           "amount": "2 dashes",
           "description": "Aromatic bitters infused with dried lavender. A few dashes tie the elderflower to the floral top notes and add a soft herbal finish."
         }
+      ],
+      "pronguide": [
+        {
+          "term": "St-Germain",
+          "pron": "san zhehr-MAN"
+        },
+        {
+          "term": "Haute-Savoie",
+          "pron": "oht sah-VWAH"
+        },
+        {
+          "term": "bianco vermouth",
+          "pron": "BYAHN-koh vehr-MOOTH"
+        },
+        {
+          "term": "Prosecco",
+          "pron": "proh-SEK-koh"
+        }
       ]
     },
     {
@@ -124,6 +148,20 @@
           "name": "Fresh basil",
           "amount": "4–5 leaves, expressed",
           "description": "Lightly slapped and expressed, not muddled. Adds an herbal, slightly peppery aroma that bridges the gin's botanicals and the fruit of the maceration."
+        }
+      ],
+      "pronguide": [
+        {
+          "term": "Luxardo Maraschino",
+          "pron": "look-SAR-doh mah-rah-SKEE-noh"
+        },
+        {
+          "term": "Gran Classico",
+          "pron": "grahn KLAHS-see-koh"
+        },
+        {
+          "term": "Padova",
+          "pron": "PAH-doh-vah"
         }
       ]
     },
@@ -172,6 +210,24 @@
           "amount": "2 dashes",
           "description": "Aromatic bitters with grapefruit peel at the center. Adds a bright citrus note on the nose and ties the kumquat liqueur to the lime."
         }
+      ],
+      "pronguide": [
+        {
+          "term": "mezcal",
+          "pron": "mess-KAHL"
+        },
+        {
+          "term": "orgeat",
+          "pron": "or-ZHAT"
+        },
+        {
+          "term": "Brucato",
+          "pron": "broo-KAH-toh"
+        },
+        {
+          "term": "chile de árbol",
+          "pron": "CHEE-leh deh AR-bohl"
+        }
       ]
     },
     {
@@ -213,6 +269,24 @@
           "amount": "garnish",
           "description": "Oils squeezed from a grapefruit peel over the surface — citrus aromatics to greet the first sip."
         }
+      ],
+      "pronguide": [
+        {
+          "term": "Campari",
+          "pron": "kahm-PAH-ree"
+        },
+        {
+          "term": "Amaricano",
+          "pron": "ah-mah-ree-KAH-noh"
+        },
+        {
+          "term": "Yzaguirre",
+          "pron": "ee-thah-GHEE-reh"
+        },
+        {
+          "term": "Negroni",
+          "pron": "neh-GROH-nee"
+        }
       ]
     },
     {
@@ -248,6 +322,24 @@
           "name": "Angostura bitters",
           "amount": "2 dashes",
           "description": "Classic aromatic bitters — clove, cinnamon, and gentian that tie the spirits together."
+        }
+      ],
+      "pronguide": [
+        {
+          "term": "Sazerac",
+          "pron": "SAZ-uh-rak"
+        },
+        {
+          "term": "Yzaguirre",
+          "pron": "ee-thah-GHEE-reh"
+        },
+        {
+          "term": "Bénédictine",
+          "pron": "beh-neh-deek-TEEN"
+        },
+        {
+          "term": "Angostura",
+          "pron": "ang-oh-STOO-rah"
         }
       ]
     }
