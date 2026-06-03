@@ -1,0 +1,1665 @@
+{
+  "foh": [
+    {
+      "weekStart": "2026-06-01",
+      "dates": [
+        "2026-06-01",
+        "2026-06-02",
+        "2026-06-03",
+        "2026-06-04",
+        "2026-06-05",
+        "2026-06-06",
+        "2026-06-07"
+      ],
+      "label": "Farm Dinners",
+      "rows": [
+        {
+          "name": "Sam",
+          "shifts": [
+            "MD",
+            "Admin/MD 5-8",
+            "",
+            "",
+            "Farm",
+            "Farm",
+            "Farm"
+          ]
+        },
+        {
+          "name": "Adrian",
+          "shifts": [
+            "Sup Server",
+            "Sup Server",
+            "MD",
+            "MD",
+            "MD",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Katie",
+          "shifts": [
+            "",
+            "",
+            "3:30 Bar",
+            "3:30 Bar",
+            "Sup Server",
+            "MD",
+            "Float"
+          ]
+        },
+        {
+          "name": "Abby",
+          "shifts": [
+            "",
+            "3:30 Bar",
+            "3:30 serve",
+            "Sup Server",
+            "3:30 serve",
+            "Farm",
+            "Farm"
+          ]
+        },
+        {
+          "name": "Allegra",
+          "shifts": [
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Brittany",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 Bar",
+            "3:30 Bar",
+            "3:30 Bar"
+          ]
+        },
+        {
+          "name": "Denise",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            ""
+          ]
+        },
+        {
+          "name": "Helen",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 support",
+            "3:30 support",
+            "3:30 support",
+            "3:30 support"
+          ]
+        },
+        {
+          "name": "Jackie",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Josie",
+          "shifts": [
+            "3:30 serve",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Julian",
+          "shifts": [
+            "",
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "Sup Server"
+          ]
+        },
+        {
+          "name": "Mac",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Sabba",
+          "shifts": [
+            "3:30 Bar",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Sully",
+          "shifts": [
+            "3:30 serve",
+            "",
+            "Sup Server",
+            "",
+            "",
+            "Sup Server",
+            "MD"
+          ]
+        }
+      ]
+    },
+    {
+      "weekStart": "2026-06-08",
+      "dates": [
+        "2026-06-08",
+        "2026-06-09",
+        "2026-06-10",
+        "2026-06-11",
+        "2026-06-12",
+        "2026-06-13",
+        "2026-06-14"
+      ],
+      "label": "Farm Dinners",
+      "rows": [
+        {
+          "name": "Sam",
+          "shifts": [
+            "MD",
+            "Admin/MD 5-8",
+            "",
+            "",
+            "Farm",
+            "Farm",
+            "Farm"
+          ]
+        },
+        {
+          "name": "Adrian",
+          "shifts": [
+            "Sup Server",
+            "Sup Server",
+            "MD",
+            "MD",
+            "MD",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Katie",
+          "shifts": [
+            "",
+            "",
+            "3:30 Bar",
+            "3:30 Bar",
+            "Sup Server",
+            "MD",
+            "Float"
+          ]
+        },
+        {
+          "name": "Abby",
+          "shifts": [
+            "",
+            "3:30 Bar",
+            "3:30 serve",
+            "Sup Server",
+            "3:30 serve",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Allegra",
+          "shifts": [
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Brittany",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 Bar",
+            "3:30 Bar",
+            "3:30 Bar"
+          ]
+        },
+        {
+          "name": "Denise",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            ""
+          ]
+        },
+        {
+          "name": "Helen",
+          "shifts": [
+            "",
+            "",
+            "",
+            "R/O",
+            "R/O",
+            "R/O",
+            "3:30 support"
+          ]
+        },
+        {
+          "name": "Jackie",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Josie",
+          "shifts": [
+            "3:30 serve",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Julian",
+          "shifts": [
+            "",
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "Sup Server"
+          ]
+        },
+        {
+          "name": "Mac",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Sabba",
+          "shifts": [
+            "3:30 Bar",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Sully",
+          "shifts": [
+            "3:30 serve",
+            "",
+            "Sup Server",
+            "",
+            "",
+            "Sup Server",
+            "MD"
+          ]
+        }
+      ]
+    },
+    {
+      "weekStart": "2026-06-15",
+      "dates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18",
+        "2026-06-19",
+        "2026-06-20",
+        "2026-06-21"
+      ],
+      "label": "",
+      "rows": [
+        {
+          "name": "Sam",
+          "shifts": [
+            "MD",
+            "Admin/MD 5-8",
+            "",
+            "",
+            "Expo",
+            "Expo",
+            "Expo"
+          ]
+        },
+        {
+          "name": "Adrian",
+          "shifts": [
+            "Sup Server",
+            "Sup Server",
+            "MD",
+            "MD",
+            "MD",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Katie",
+          "shifts": [
+            "",
+            "",
+            "3:30 Bar",
+            "3:30 Bar",
+            "Sup Server",
+            "MD",
+            "Float/Admin"
+          ]
+        },
+        {
+          "name": "Abby",
+          "shifts": [
+            "",
+            "3:30 Bar",
+            "3:30 serve",
+            "Sup Server",
+            "3:30 serve",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Allegra",
+          "shifts": [
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Brittany",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 Bar",
+            "3:30 Bar",
+            "3:30 Bar"
+          ]
+        },
+        {
+          "name": "Denise",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            ""
+          ]
+        },
+        {
+          "name": "Helen",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 support",
+            "3:30 support",
+            "3:30 support",
+            "3:30 support"
+          ]
+        },
+        {
+          "name": "Jackie",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "R/O"
+          ]
+        },
+        {
+          "name": "Josie",
+          "shifts": [
+            "3:30 serve",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O"
+          ]
+        },
+        {
+          "name": "Julian",
+          "shifts": [
+            "",
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "Sup Server"
+          ]
+        },
+        {
+          "name": "Mac",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "",
+            "",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Sabba",
+          "shifts": [
+            "3:30 Bar",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Sully",
+          "shifts": [
+            "3:30 serve",
+            "",
+            "Sup Server",
+            "",
+            "",
+            "Sup Server",
+            "MD"
+          ]
+        }
+      ]
+    },
+    {
+      "weekStart": "2026-06-22",
+      "dates": [
+        "2026-06-22",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-27",
+        "2026-06-28"
+      ],
+      "label": "",
+      "rows": [
+        {
+          "name": "Sam",
+          "shifts": [
+            "MD",
+            "Admin/MD 5-8",
+            "",
+            "",
+            "MD",
+            "MD",
+            "MD"
+          ]
+        },
+        {
+          "name": "Adrian",
+          "shifts": [
+            "Sup Server",
+            "Sup Server",
+            "MD",
+            "MD",
+            "R/O",
+            "R/O",
+            "R/O"
+          ]
+        },
+        {
+          "name": "Katie",
+          "shifts": [
+            "",
+            "",
+            "3:30 Bar",
+            "3:30 Bar",
+            "Sup Server",
+            "Sup Server",
+            "Sup Server"
+          ]
+        },
+        {
+          "name": "Abby",
+          "shifts": [
+            "",
+            "3:30 Bar",
+            "3:30 serve",
+            "Sup Server",
+            "3:30 serve",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Allegra",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Brittany",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 Bar",
+            "3:30 Bar",
+            "3:30 Bar"
+          ]
+        },
+        {
+          "name": "Denise",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            ""
+          ]
+        },
+        {
+          "name": "Helen",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 support",
+            "3:30 support",
+            "3:30 support",
+            "3:30 support"
+          ]
+        },
+        {
+          "name": "Jackie",
+          "shifts": [
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O"
+          ]
+        },
+        {
+          "name": "Josie",
+          "shifts": [
+            "R/O",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Julian",
+          "shifts": [
+            "",
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Mac",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "",
+            "",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Sabba",
+          "shifts": [
+            "3:30 Bar",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            ""
+          ]
+        },
+        {
+          "name": "Sully",
+          "shifts": [
+            "3:30 serve",
+            "",
+            "Sup Server",
+            "",
+            "",
+            "R/O",
+            "R/O"
+          ]
+        }
+      ]
+    },
+    {
+      "weekStart": "2026-06-29",
+      "dates": [
+        "2026-06-29",
+        "2026-06-30",
+        "2026-07-01",
+        "2026-07-02",
+        "2026-07-03",
+        "2026-07-04",
+        "2026-07-05"
+      ],
+      "label": "July 4!",
+      "rows": [
+        {
+          "name": "Sam",
+          "shifts": [
+            "MD",
+            "Admin/MD 5-8",
+            "",
+            "",
+            "MD",
+            "",
+            "Expo"
+          ]
+        },
+        {
+          "name": "Adrian",
+          "shifts": [
+            "Sup Server",
+            "Sup Server",
+            "MD",
+            "MD",
+            "Sup Server",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Katie",
+          "shifts": [
+            "",
+            "",
+            "3:30 Bar",
+            "3:30 Bar",
+            "3:30 serve",
+            "",
+            "Float"
+          ]
+        },
+        {
+          "name": "Abby",
+          "shifts": [
+            "",
+            "3:30 Bar",
+            "3:30 serve",
+            "Sup Server",
+            "3:30 serve",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Allegra",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Brittany",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 Bar",
+            "",
+            "3:30 Bar"
+          ]
+        },
+        {
+          "name": "Denise",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Helen",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 support",
+            "3:30 support",
+            "",
+            "3:30 support"
+          ]
+        },
+        {
+          "name": "Jackie",
+          "shifts": [
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "",
+            "R/O"
+          ]
+        },
+        {
+          "name": "Josie",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "R/O",
+            "R/O",
+            "R/O",
+            "",
+            "R/O"
+          ]
+        },
+        {
+          "name": "Julian",
+          "shifts": [
+            "",
+            "",
+            "",
+            "",
+            "3:30 serve",
+            "",
+            "Sup Server"
+          ]
+        },
+        {
+          "name": "Mac",
+          "shifts": [
+            "3:30 serve",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Sabba",
+          "shifts": [
+            "3:30 Bar",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "3:30 serve"
+          ]
+        },
+        {
+          "name": "Sully",
+          "shifts": [
+            "R/O",
+            "",
+            "Sup Server",
+            "",
+            "",
+            "",
+            "MD"
+          ]
+        }
+      ]
+    }
+  ],
+  "boh": [
+    {
+      "weekStart": "2026-06-01",
+      "dates": [
+        "2026-06-01",
+        "2026-06-02",
+        "2026-06-03",
+        "2026-06-04",
+        "2026-06-05",
+        "2026-06-06",
+        "2026-06-07"
+      ],
+      "label": "Farm Dinners",
+      "rows": [
+        {
+          "name": "Sam",
+          "shifts": [
+            "MD",
+            "MD",
+            "",
+            "",
+            "Farm Dinner",
+            "Farm Dinner",
+            "Farm Dinner"
+          ]
+        },
+        {
+          "name": "Chris",
+          "shifts": [
+            "",
+            "Farm Dinner",
+            "Farm Dinner",
+            "Farm Dinner",
+            "Expo",
+            "Expo",
+            ""
+          ]
+        },
+        {
+          "name": "Jose",
+          "shifts": [
+            "Expo",
+            "Expo",
+            "Expo",
+            "Expo (4-8)",
+            "",
+            "",
+            "Expo"
+          ]
+        },
+        {
+          "name": "Joe",
+          "shifts": [
+            "",
+            "9-5",
+            "9-5",
+            "9-5",
+            "9-5",
+            "9-5",
+            ""
+          ]
+        },
+        {
+          "name": "Cat",
+          "shifts": [
+            "1-close",
+            "1-close",
+            "1-close",
+            "",
+            "",
+            "12-10",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Cooper",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Darren",
+          "shifts": [
+            "9-5",
+            "9-5",
+            "",
+            "",
+            "9-5",
+            "9-5",
+            "9-5"
+          ]
+        },
+        {
+          "name": "Gopala",
+          "shifts": [
+            "",
+            "1-close",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "Expo Train"
+          ]
+        },
+        {
+          "name": "Ignacio",
+          "shifts": [
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Jackson",
+          "shifts": [
+            "",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Kenji",
+          "shifts": [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "9-7"
+          ]
+        },
+        {
+          "name": "Manny",
+          "shifts": [
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close",
+            ""
+          ]
+        },
+        {
+          "name": "Tony",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Anna",
+          "shifts": [
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close",
+            "",
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "weekStart": "2026-06-08",
+      "dates": [
+        "2026-06-08",
+        "2026-06-09",
+        "2026-06-10",
+        "2026-06-11",
+        "2026-06-12",
+        "2026-06-13",
+        "2026-06-14"
+      ],
+      "label": "Farm Dinners",
+      "rows": [
+        {
+          "name": "Sam",
+          "shifts": [
+            "MD",
+            "MD",
+            "",
+            "",
+            "Farm Dinner",
+            "Farm Dinner",
+            "Farm Dinner"
+          ]
+        },
+        {
+          "name": "Chris",
+          "shifts": [
+            "",
+            "Farm Dinner",
+            "Farm Dinner",
+            "Expo",
+            "Expo",
+            "Expo",
+            ""
+          ]
+        },
+        {
+          "name": "Jose",
+          "shifts": [
+            "Expo",
+            "Expo",
+            "Expo",
+            "",
+            "",
+            "",
+            "Expo"
+          ]
+        },
+        {
+          "name": "Joe",
+          "shifts": [
+            "",
+            "9-5",
+            "9-5",
+            "9-5",
+            "9-5",
+            "9-5",
+            ""
+          ]
+        },
+        {
+          "name": "Cat",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "12-10",
+            "R/O",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Cooper",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Darren",
+          "shifts": [
+            "9-5",
+            "9-5",
+            "",
+            "",
+            "9-5",
+            "9-5",
+            "9-5"
+          ]
+        },
+        {
+          "name": "Gopala",
+          "shifts": [
+            "",
+            "1-close",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "Expo Train"
+          ]
+        },
+        {
+          "name": "Ignacio",
+          "shifts": [
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Jackson",
+          "shifts": [
+            "",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Kenji",
+          "shifts": [
+            "9-7",
+            "1-close",
+            "1-close",
+            "",
+            "",
+            "",
+            "9-7"
+          ]
+        },
+        {
+          "name": "Manny",
+          "shifts": [
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close",
+            ""
+          ]
+        },
+        {
+          "name": "Tony",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Anna",
+          "shifts": [
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close",
+            "",
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "weekStart": "2026-06-15",
+      "dates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18",
+        "2026-06-19",
+        "2026-06-20",
+        "2026-06-21"
+      ],
+      "label": "Mercato",
+      "rows": [
+        {
+          "name": "Sam",
+          "shifts": [
+            "MD",
+            "MD",
+            "",
+            "",
+            "MD",
+            "MD",
+            "MD"
+          ]
+        },
+        {
+          "name": "Chris",
+          "shifts": [
+            "",
+            "Expo",
+            "Expo",
+            "Expo",
+            "Expo",
+            "Expo",
+            ""
+          ]
+        },
+        {
+          "name": "Jose",
+          "shifts": [
+            "Expo",
+            "",
+            "",
+            "",
+            "8-6",
+            "8-6",
+            "8-6"
+          ]
+        },
+        {
+          "name": "Joe",
+          "shifts": [
+            "",
+            "9-5",
+            "9-5",
+            "9-5",
+            "9-5",
+            "9-5",
+            ""
+          ]
+        },
+        {
+          "name": "Cat",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "1-close float",
+            "1-close float",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Cooper",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Darren",
+          "shifts": [
+            "9-5",
+            "9-5",
+            "",
+            "",
+            "9-5",
+            "9-5",
+            "9-5"
+          ]
+        },
+        {
+          "name": "Gopala",
+          "shifts": [
+            "",
+            "1-close",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "Expo"
+          ]
+        },
+        {
+          "name": "Ignacio",
+          "shifts": [
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Jackson",
+          "shifts": [
+            "",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Jenn",
+          "shifts": [
+            "",
+            "",
+            "1-close train",
+            "1-close train",
+            "1-close train",
+            "1-close train",
+            ""
+          ]
+        },
+        {
+          "name": "Kenji",
+          "shifts": [
+            "9-7",
+            "1-close",
+            "1-close",
+            "",
+            "",
+            "",
+            "9-7"
+          ]
+        },
+        {
+          "name": "Manny",
+          "shifts": [
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close",
+            ""
+          ]
+        },
+        {
+          "name": "Tony",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Anna",
+          "shifts": [
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "",
+            "",
+            "8-6"
+          ]
+        }
+      ]
+    },
+    {
+      "weekStart": "2026-06-22",
+      "dates": [
+        "2026-06-22",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-27",
+        "2026-06-28"
+      ],
+      "label": "Mercato",
+      "rows": [
+        {
+          "name": "Sam",
+          "shifts": [
+            "MD",
+            "MD",
+            "",
+            "",
+            "MD",
+            "MD",
+            "Expo"
+          ]
+        },
+        {
+          "name": "Chris",
+          "shifts": [
+            "",
+            "Expo",
+            "Expo",
+            "Expo",
+            "Expo",
+            "Expo",
+            ""
+          ]
+        },
+        {
+          "name": "Jose",
+          "shifts": [
+            "Expo",
+            "",
+            "",
+            "",
+            "8-6",
+            "8-6",
+            "8-6"
+          ]
+        },
+        {
+          "name": "Joe",
+          "shifts": [
+            "",
+            "9-5",
+            "9-5",
+            "9-5",
+            "9-5",
+            "9-5",
+            ""
+          ]
+        },
+        {
+          "name": "Cat",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Cooper",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Darren",
+          "shifts": [
+            "9-5",
+            "9-5",
+            "",
+            "",
+            "9-5",
+            "9-5",
+            "9-5"
+          ]
+        },
+        {
+          "name": "Gopala",
+          "shifts": [
+            "",
+            "1-close",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O"
+          ]
+        },
+        {
+          "name": "Ignacio",
+          "shifts": [
+            "1-close",
+            "1-close",
+            "1-close",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O"
+          ]
+        },
+        {
+          "name": "Jackson",
+          "shifts": [
+            "",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Kenji",
+          "shifts": [
+            "9-7",
+            "1-close",
+            "1-close",
+            "",
+            "",
+            "",
+            "9-7"
+          ]
+        },
+        {
+          "name": "Manny",
+          "shifts": [
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close",
+            ""
+          ]
+        },
+        {
+          "name": "Tony",
+          "shifts": [
+            "1-close",
+            "",
+            "",
+            "",
+            "1-close",
+            "1-close",
+            "1-close"
+          ]
+        },
+        {
+          "name": "Anna",
+          "shifts": [
+            "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "",
+            "",
+            "8-6"
+          ]
+        }
+      ]
+    }
+  ]
+}
