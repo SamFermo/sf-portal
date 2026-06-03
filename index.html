@@ -38,25 +38,22 @@ html,body{margin:0;padding:0;}
 body{
   min-height:100vh;
   background:
-    radial-gradient(900px 500px at 78% -8%, rgba(230,200,120,.16), transparent 60%),
-    radial-gradient(1200px 700px at 20% 110%, rgba(60,90,160,.20), transparent 60%),
-    linear-gradient(160deg, var(--night-1) 0%, var(--night-2) 42%, var(--night-3) 100%);
-  background-attachment:fixed;
+    linear-gradient(rgba(9,15,34,.80), rgba(6,10,24,.88)),
+    url('data/bg.jpg');
+  background-size:cover; background-position:center; background-attachment:fixed; background-repeat:no-repeat;
   color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
   font-size:15px; line-height:1.5; padding-bottom:64px;
 }
 .serif{font-family:'Caladea','Cambria',Georgia,serif;}
-#sky{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
-.star{position:absolute; border-radius:50%; background:#fff; opacity:.7; animation:tw 4s ease-in-out infinite;}
-@keyframes tw{0%,100%{opacity:.25;}50%{opacity:.9;}}
-#moon{position:fixed; top:42px; right:30px; width:62px; height:62px; border-radius:50%; z-index:0; pointer-events:none;
-  background:radial-gradient(circle at 36% 34%, #fdfaf1, #efe6cf 58%, #d9cbab 100%);
-  box-shadow:0 0 38px 8px rgba(245,238,222,.30), inset -6px -6px 12px rgba(180,165,130,.5);}
 #app{position:relative; z-index:1;}
+.home-moon{width:80px; height:80px; border-radius:50%; margin:0 auto 16px;
+  background:radial-gradient(circle at 36% 32%, #fdfaf1, #efe6cf 55%, #cdbf9e 100%);
+  box-shadow:0 0 48px 12px rgba(245,238,222,.36), inset -7px -7px 14px rgba(170,152,118,.55);}
 
 /* ---------- Header + nav ---------- */
 header.app{position:sticky; top:0; z-index:50; background:rgba(8,16,40,.78); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid rgba(205,216,244,.14);}
+body:not(.not-home) header.app{display:none;}   /* home shows just the hero + boxes, no tabs */
 .app-title-row{display:flex; align-items:center; justify-content:center; gap:9px; padding:11px 16px 7px; position:relative;}
 .app-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:22px; font-weight:600; color:var(--ink); letter-spacing:.06em;}
 .app-dot{color:var(--gold); font-size:13px;}
@@ -79,7 +76,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .section-label:first-of-type{margin-top:6px;}
 
 /* ---------- Portal home ---------- */
-.home-hero{text-align:center; padding:22px 0 6px;}
+.home-hero{text-align:center; padding:48px 0 8px;}
 .home-hero .crest{font-size:13px; letter-spacing:.6em; color:var(--gold); margin-bottom:8px;}
 .home-hero h1{font-family:'Cormorant Garamond','Caladea',serif; font-weight:600; color:var(--ink); font-size:38px; margin:0 0 4px; letter-spacing:.04em;}
 .home-hero .tag{font-size:13px; color:var(--ink-soft); font-style:italic;}
@@ -158,6 +155,10 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ck-ing-amt{font-size:12px; color:var(--card-mute); white-space:nowrap;}
 .ck-ing-desc{font-size:13px; color:var(--card-ink); line-height:1.5; margin-top:3px;}
 .ck-ing.has-hl{border-left:3px solid var(--accent); padding-left:9px; margin-left:-9px; background:linear-gradient(to right, rgba(205,217,187,.25), transparent 65%); border-radius:4px;}
+.pron-guide{margin-top:13px; padding-top:10px; border-top:.5px dashed var(--moon-edge);}
+.pron-label{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--gold-deep); margin-bottom:5px;}
+.pron-row{font-family:'Caladea',Georgia,serif; font-size:13.5px; color:var(--card-ink); padding:2px 0; line-height:1.45;}
+.pron-row b{color:var(--wood);} .pron-row .say{font-style:italic; color:var(--gold-deep);}
 
 /* price list */
 .plist{display:grid; grid-template-columns:1fr 1fr; gap:0 22px;}
@@ -311,8 +312,6 @@ nav.chips::-webkit-scrollbar{display:none;}
 </style>
 </head>
 <body class="not-home">
-<div id="sky"></div>
-<div id="moon"></div>
 <div id="app">
 <header class="app">
   <div class="app-title-row">
@@ -326,8 +325,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 
 <section class="view" id="home">
   <div class="home-hero">
-    <div class="crest">☾ · ✦ · ☾</div>
-    <h1>Staff Portal</h1>
+    <div class="home-moon"></div>
+    <h1>San Fermo<br>Staff Portal</h1>
     <div class="tag" id="homeTag"></div>
   </div>
   <div class="home-grid" id="homeGrid"></div>
@@ -515,6 +514,7 @@ function closeModal(){$('promptModal').classList.remove('open');}
 /* FRESH — WINE */
 const WTYPE={white:'wt-white',red:'wt-red','rosé':'wt-rose',rose:'wt-rose',orange:'wt-orange',sparkling:'wt-sparkling'};
 let wineFilter={section:'all',glassOnly:false,q:''};
+function pronHTML(arr){if(!arr||!arr.length)return '';return `<div class="pron-guide"><div class="pron-label">Say it right</div>`+arr.map(p=>`<div class="pron-row"><b>${esc(p.term)}</b> — <span class="say">${esc(p.pron)}</span></div>`).join('')+`</div>`;}
 function specRow(specs){
   if(!specs||!specs.length) return '';
   return `<div class="wine-specs">`+specs.map(s=>{
@@ -542,7 +542,7 @@ function renderWine(){
   list.forEach(w=>{
     if(w.section!==cur){cur=w.section;html+=`<div class="section-label">${esc(cur)}</div>`;}
     const idx=SF.wines.indexOf(w), price=(w.glass?w.glass+' / ':'')+w.bottle;
-    const can=w.has_notes&&(w.producer||w.winemaking);
+    const can=(w.has_notes&&(w.producer||w.winemaking))||(w.pronguide&&w.pronguide.length);
     html+=`<div class="card ${can?'expandable':''}" data-wine="${idx}">
       <div class="card-head" ${can?`onclick="toggleWine(${idx})"`:''}>
         <span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span>
@@ -555,6 +555,7 @@ function renderWine(){
       ${can?`<div class="card-details">
         ${w.producer?`<div class="wine-sec-label">Producer</div><div class="wine-sec-body serif">${esc(w.producer)}</div>`:''}
         ${w.winemaking?`<div class="wine-sec-label">Winemaking</div><div class="wine-sec-body serif">${esc(w.winemaking)}</div>`:''}
+        ${pronHTML(w.pronguide)}
       </div>`:''}${noteBox('wine',w.name)}</div>`;
   });
   $('ftWine').innerHTML=html;
@@ -576,6 +577,7 @@ function ckCardHTML(c){
   h+=`</div>`;
   if(rich){h+=`<div class="card-details">`;
     c.ingredients.forEach(g=>h+=`<div class="ck-ing ${g.highlight?'has-hl':''}"><div class="ck-ing-head"><span class="ck-ing-name serif">${esc(g.name)}${g.highlight?`<span class="hl-badge">${esc(g.highlight)}</span>`:''}</span><span class="ck-ing-amt">${esc(g.amount||'')}</span></div><div class="ck-ing-desc">${esc(g.description)}</div></div>`);
+    h+=pronHTML(c.pronguide);
     h+=`</div>`;}
   h+=noteBox('bar',c.name);
   return h+`</div>`;
@@ -727,7 +729,6 @@ function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);
 
 /* INIT */
 function init(){
-  makeStars();
   initFirebase(); startBoardSync();
   $('appDate').textContent=fmtShort(todayISO());
   buildNav(); renderHome(); renderFresh(); renderSchedule(); renderSeating();
