@@ -446,7 +446,7 @@ function replaceAllPills(){document.querySelectorAll('.subtabs').forEach(t=>{con
 
 /* HOME */
 function renderHome(){
-  $('homeTag').textContent=fmtLong(todayISO())+' · 5–10pm · three turns';
+  $('homeTag').textContent=fmtLong(todayISO());
   const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['schedule','◷','Schedule','This week + the month'],
     ['seating','▦','Seating','The floor & table numbers'],['duties','☑','Duties','Opening, closing, sidework'],
     ['compliance','✓','Compliance','Food handlers & MAST'],['directory','✉','Directory','The team & contacts'],
@@ -455,12 +455,14 @@ function renderHome(){
 }
 
 /* FRESH — FOOD + corrections mode */
-let menuEdit=false;
-function getMenuNotes(){try{return JSON.parse(localStorage.getItem('sf-menu-notes')||'{}');}catch(e){return {};}}
-function menuNoteCount(){return Object.keys(getMenuNotes()).length;}
-function saveMenuNote(name,val){const n=getMenuNotes();if(val&&val.trim())n[name]=val;else delete n[name];try{localStorage.setItem('sf-menu-notes',JSON.stringify(n));}catch(e){}const b=$('genCount');if(b)b.textContent=menuNoteCount();const box=document.querySelector(`.note-box[data-for="${cssEsc(name)}"]`);if(box)box.classList.toggle('filled',!!(val&&val.trim()));}
+let editMode=false;
+function getCorr(){try{return JSON.parse(localStorage.getItem('sf-corrections')||'{}');}catch(e){return {};}}
+function corrCount(){const c=getCorr();return ['food','wine','bar'].reduce((n,k)=>n+Object.keys(c[k]||{}).length,0);}
 function cssEsc(s){return String(s).replace(/"/g,'\\"');}
-function toggleMenuEdit(){menuEdit=!menuEdit;renderFoodTab();}
+function saveCorr(cat,name,val){const c=getCorr();c[cat]=c[cat]||{};if(val&&val.trim())c[cat][name]=val;else delete c[cat][name];try{localStorage.setItem('sf-corrections',JSON.stringify(c));}catch(e){}document.querySelectorAll('.gen-count').forEach(b=>b.textContent=corrCount());const box=document.querySelector(`.note-box[data-cat="${cat}"][data-for="${cssEsc(name)}"]`);if(box)box.classList.toggle('filled',!!(val&&val.trim()));}
+function noteBox(cat,name){if(!editMode)return '';const note=(getCorr()[cat]||{})[name]||'';return `<div class="note-box ${note?'filled':''}" data-cat="${cat}" data-for="${esc(name)}" onclick="event.stopPropagation()"><label>Correction for ${esc(name)}</label><textarea placeholder="What needs fixing?" oninput="saveCorr('${cat}',this.closest('.note-box').getAttribute('data-for'),this.value)">${esc(note)}</textarea></div>`;}
+function editBarHTML(){let h=`<div class="editbar"><button class="edit-toggle ${editMode?'on':''}" onclick="toggleEdit()">✎ Corrections${editMode?' · on':''}</button>`;if(editMode)h+=`<button class="gen-btn" onclick="genPrompt()">Generate deploy prompt<span class="badge gen-count">${corrCount()}</span></button>`;h+=`</div>`;if(editMode)h+=`<p class="est-note" style="text-align:left;margin:-6px 0 14px;">Notes save on this device. Add corrections under any item across Food, Wine &amp; Cocktails, then generate one prompt to hand back for deploy.</p>`;return h;}
+function toggleEdit(){editMode=!editMode;renderFoodTab();renderWine();renderBar();}
 function dishCardHTML(it){
   const rich = it.story || (it.ingredients&&it.ingredients.length);
   let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
@@ -479,34 +481,27 @@ function dishCardHTML(it){
     }
     h+=`</div>`;
   }
-  if(menuEdit){
-    const note=getMenuNotes()[it.name]||'';
-    h+=`<div class="note-box ${note?'filled':''}" data-for="${esc(it.name)}" onclick="event.stopPropagation()">
-      <label>Correction for ${esc(it.name)}</label>
-      <textarea data-dish="${esc(it.name)}" placeholder="What needs fixing? (e.g. butter is French not Belgian; price is 16)" oninput="saveMenuNote(this.getAttribute('data-dish'),this.value)">${esc(note)}</textarea></div>`;
-  }
+  h+=noteBox('food',it.name);
   return h+`</div>`;
 }
 function renderFoodTab(){
-  let f=`<div class="editbar"><button class="edit-toggle ${menuEdit?'on':''}" onclick="toggleMenuEdit()">✎ Corrections${menuEdit?' · on':''}</button>`;
-  if(menuEdit) f+=`<button class="gen-btn" onclick="genMenuPrompt()">Generate deploy prompt<span class="badge" id="genCount">${menuNoteCount()}</span></button>`;
-  f+=`</div>`;
-  if(menuEdit) f+=`<p class="est-note" style="text-align:left;margin:-6px 0 14px;">Notes are saved on this device. Type corrections under any item, then generate a prompt to hand back for deploy.</p>`;
+  let f=editBarHTML();
   SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;sec.items.forEach(it=>f+=dishCardHTML(it));});
   f+=`<div class="section-label">Dessert</div>`; SF.menu.desserts.forEach(it=>f+=dishCardHTML(it));
   f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
   $('ftFood').innerHTML=f;
 }
 function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); }
-function genMenuPrompt(){
-  const notes=getMenuNotes(), keys=Object.keys(notes);
-  if(!keys.length){$('promptText').value='No corrections typed yet. Add notes under menu items first.';$('promptModal').classList.add('open');return;}
-  let p='San Fermo Staff Portal — menu corrections to apply.\n\n';
+function genPrompt(){
+  const c=getCorr();
+  const cats=[['food','data/menu.json','dish'],['wine','data/wines.json','wine'],['bar','data/bar.json','cocktail']];
+  let total=0, body='';
+  cats.forEach(([cat,file,label])=>{const o=c[cat]||{};const keys=Object.keys(o);if(!keys.length)return;total+=keys.length;body+=`\n## ${file} (${label}s)\n`;keys.forEach(k=>{body+=`\n• ${k}:\n  ${o[k].trim().replace(/\n/g,'\n  ')}\n`;});});
+  if(!total){$('promptText').value='No corrections typed yet. Turn on Corrections and add notes under any item.';$('promptModal').classList.add('open');return;}
+  let p='San Fermo Staff Portal — Fresh Talk corrections to apply.\n\n';
   p+='Project folder: Codename: Riker/staff-portal/\n';
-  p+='Apply each correction below to the matching dish in data/menu.json (match by dish name — update story, ingredients, desc, pron, price, or raw flag as the note directs). Keep the Fresh Talk voice. Then rebuild the bundle (python3 build-data.py) and redeploy (deploy-to-github.command).\n\n';
-  p+='Corrections:\n';
-  keys.forEach(k=>{p+=`\n• ${k}:\n  ${notes[k].trim().replace(/\n/g,'\n  ')}\n`;});
-  p+=`\n(Generated ${new Date().toLocaleString()})`;
+  p+='Apply each correction to the matching item in the named data file (match by name): dishes update story / ingredients / desc / pron / price; wines update specs / pour / producer / winemaking / grapes; cocktails update tagline / ingredients. Keep the Fresh Talk voice. Then rebuild (python3 build-data.py) and redeploy (deploy-to-github.command).\n';
+  p+=body+`\n(Generated ${new Date().toLocaleString()})`;
   $('promptText').value=p; $('promptModal').classList.add('open');
 }
 function copyMenuPrompt(){const ta=$('promptText');ta.select();let ok=false;try{navigator.clipboard.writeText(ta.value);ok=true;}catch(e){try{ok=document.execCommand('copy');}catch(e2){}}const b=$('copyBtn');if(ok){b.textContent='Copied ✓';b.classList.add('done');setTimeout(()=>{b.textContent='Copy to clipboard';b.classList.remove('done');},1800);}}
@@ -537,7 +532,7 @@ function renderWine(){
     if(wineFilter.glassOnly&&!w.glass)return false;
     if(q&&!((w.name+' '+w.region+' '+w.grapes+' '+w.pour).toLowerCase().includes(q)))return false;
     return true;});
-  let cur='',html=bar;
+  let cur='',html=editBarHTML()+bar;
   if(!list.length)html+='<p class="board-empty">No wines match.</p>';
   list.forEach(w=>{
     if(w.section!==cur){cur=w.section;html+=`<div class="section-label">${esc(cur)}</div>`;}
@@ -555,7 +550,7 @@ function renderWine(){
       ${can?`<div class="card-details">
         ${w.producer?`<div class="wine-sec-label">Producer</div><div class="wine-sec-body serif">${esc(w.producer)}</div>`:''}
         ${w.winemaking?`<div class="wine-sec-label">Winemaking</div><div class="wine-sec-body serif">${esc(w.winemaking)}</div>`:''}
-      </div>`:''}</div>`;
+      </div>`:''}${noteBox('wine',w.name)}</div>`;
   });
   $('ftWine').innerHTML=html;
   $('wineSearch').oninput=e=>{wineFilter.q=e.target.value;const p=e.target.selectionStart;renderWine();const s=$('wineSearch');s.focus();s.setSelectionRange(p,p);};
@@ -577,10 +572,11 @@ function ckCardHTML(c){
   if(rich){h+=`<div class="card-details">`;
     c.ingredients.forEach(g=>h+=`<div class="ck-ing ${g.highlight?'has-hl':''}"><div class="ck-ing-head"><span class="ck-ing-name serif">${esc(g.name)}${g.highlight?`<span class="hl-badge">${esc(g.highlight)}</span>`:''}</span><span class="ck-ing-amt">${esc(g.amount||'')}</span></div><div class="ck-ing-desc">${esc(g.description)}</div></div>`);
     h+=`</div>`;}
+  h+=noteBox('bar',c.name);
   return h+`</div>`;
 }
 function renderBar(){
-  let h=`<div class="section-label">Cocktails</div>`;
+  let h=editBarHTML()+`<div class="section-label">Cocktails</div>`;
   SF.bar.cocktails.forEach(c=>h+=ckCardHTML(c));
   h+=`<div class="section-label">Non-Alcoholic</div><div class="card listcard"><div class="plist">`;
   SF.bar.nonAlcoholic.forEach(n=>h+=`<div class="pl-row"><span class="pl-name">${esc(n.name)}</span><span class="pl-price">${esc(n.price)}</span></div>`);
