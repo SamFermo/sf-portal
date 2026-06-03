@@ -675,13 +675,14 @@ function renderCompliance(){const C=SF.compliance;
 
 /* DIRECTORY */
 function telHref(p){return 'tel:'+String(p).replace(/[^0-9]/g,'');}
+function smsHref(p){return 'sms:'+String(p).replace(/[^0-9]/g,'');}
 function renderDirectory(){const S=SF.staff; $('dirSub').textContent=S.note;
   let h=`<div class="lead-row">`;
   S.leads.forEach(l=>h+=`<div class="lead-card"><a href="${telHref(l.phone)}"><div class="lead-name serif">${esc(l.name)}</div><div class="lead-role">${esc(l.role)}</div><div class="lead-phone">${esc(l.phone)}</div></a></div>`);
   h+=`</div>`;
   [['Front of House','foh'],['Back of House','boh'],['Office','office']].forEach(([lab,key])=>{
     h+=`<div class="section-label">${lab}</div><div class="dir-grid">`;
-    S.directory[key].forEach(p=>h+=`<div class="dir-card"><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${esc(p.role)}</div><div class="dir-links"><a href="${telHref(p.phone)}">Call</a>${p.email?`<a href="mailto:${esc(p.email)}">Email</a>`:''}</div></div>`);
+    S.directory[key].forEach(p=>h+=`<div class="dir-card"><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${esc(p.role)}</div><div class="dir-links"><a href="${telHref(p.phone)}">Call</a><a href="${smsHref(p.phone)}">Text</a>${p.email?`<a href="mailto:${esc(p.email)}">Email</a>`:''}</div></div>`);
     h+=`</div>`;});
   $('dirBody').innerHTML=h;
 }
