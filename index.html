@@ -43,7 +43,8 @@ body{
   background-size:cover; background-position:center; background-attachment:fixed; background-repeat:no-repeat;
   color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
-  font-size:15px; line-height:1.5; padding-bottom:64px;
+  font-size:15px; line-height:1.5;
+  padding-bottom:calc(64px + env(safe-area-inset-bottom));
 }
 .serif{font-family:'Caladea','Cambria',Georgia,serif;}
 #app{position:relative; z-index:1;}
@@ -52,7 +53,7 @@ body{
   box-shadow:0 0 48px 12px rgba(245,238,222,.36), inset -7px -7px 14px rgba(170,152,118,.55);}
 
 /* ---------- Header + nav ---------- */
-header.app{position:sticky; top:0; z-index:50; background:rgba(8,16,40,.78); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid rgba(205,216,244,.14);}
+header.app{position:sticky; top:0; z-index:50; background:rgba(8,16,40,.78); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid rgba(205,216,244,.14); padding-top:env(safe-area-inset-top);}
 body:not(.not-home) header.app{display:none;}   /* home shows just the hero + boxes, no tabs */
 .app-title-row{display:flex; align-items:center; justify-content:center; gap:9px; padding:11px 16px 7px; position:relative;}
 .app-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:22px; font-weight:600; color:var(--ink); letter-spacing:.06em;}
@@ -76,7 +77,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .section-label:first-of-type{margin-top:6px;}
 
 /* ---------- Portal home ---------- */
-.home-hero{text-align:center; padding:48px 0 8px;}
+.home-hero{text-align:center; padding:calc(48px + env(safe-area-inset-top)) 0 8px;}
 .home-hero .crest{font-size:13px; letter-spacing:.6em; color:var(--gold); margin-bottom:8px;}
 .home-hero h1{font-family:'Cormorant Garamond','Caladea',serif; font-weight:600; color:var(--ink); font-size:38px; margin:0 0 4px; letter-spacing:.04em;}
 .home-hero .tag{font-size:13px; color:var(--ink-soft); font-style:italic;}
@@ -358,6 +359,40 @@ nav.chips::-webkit-scrollbar{display:none;}
 .req-mgrhint a{color:var(--gold-deep); font-style:normal; font-weight:700; text-decoration:underline; cursor:pointer;}
 .flash-req{border-color:var(--rust)!important; box-shadow:0 0 0 2px rgba(176,74,26,.4)!important;}
 
+/* ---------- login gate + consent ---------- */
+body.locked{overflow:hidden;}
+#loginGate .modal-card,#consentModal .modal-card{max-width:440px;}
+.login-as{font-size:13.5px; color:var(--card-soft); margin:2px 0 8px;}
+.login-as b{color:var(--wood);}
+.pin-err{display:none; color:var(--rust); font-size:12.5px; margin:8px 0 0;}
+.pin-note{font-size:12.5px; color:var(--card-soft); line-height:1.5; margin:0 0 10px; background:rgba(176,74,26,.06); border-radius:8px; padding:8px 11px;}
+.pin-note b{color:var(--rust);}
+.consent-lead{font-size:13px; color:var(--card-soft); margin:0 0 12px; line-height:1.5;}
+.consent-row{display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:10px; background:rgba(90,58,34,.05); border:1px solid var(--moon-edge); margin-bottom:8px; font-size:14.5px; color:var(--wood); font-weight:700; cursor:pointer;}
+.consent-row input{width:18px; height:18px; flex:0 0 auto;}
+.consent-val{font-weight:400; font-size:12px; color:var(--card-mute); margin-left:auto;}
+
+/* ---------- staff access (admin) ---------- */
+.acc-add{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:13px 15px 15px; margin-bottom:18px; box-shadow:0 6px 16px rgba(0,0,0,.28);}
+.acc-add-row{display:flex; gap:9px; margin-bottom:9px;}
+.acc-add-row>.acc-in{flex:1; min-width:0;}
+.acc-in{border:1px solid var(--moon-edge); border-radius:8px; padding:9px 11px; font-size:14px; background:#fffdf7; color:var(--card-ink); font-family:-apple-system,sans-serif; -webkit-appearance:none;}
+.acc-chk{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--card-soft); margin:4px 0 12px;}
+.acc-chk input{width:17px; height:17px;}
+.acc-addbtn{width:100%; border:none; border-radius:10px; padding:11px; font-size:14px; font-weight:700; cursor:pointer;}
+.acc-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:12px 14px; margin-bottom:10px; box-shadow:0 5px 13px rgba(0,0,0,.22);}
+.acc-card.off{opacity:.6;}
+.acc-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;}
+.acc-name{font-size:15px; font-weight:700; color:var(--wood);}
+.acc-role{font-size:11.5px; color:var(--card-mute);}
+.acc-badges{display:flex; gap:5px; flex-wrap:wrap;}
+.acc-badge{font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:2px 8px; border-radius:999px;}
+.b-mgr{background:#e6d4f0; color:#6a3596;} .b-pin{background:#d6e6c4; color:#3d6325;} .b-nopin{background:#f1e0bd; color:#8a5a18;} .b-off{background:#f2d2c7; color:#a8311e;}
+.acc-actions{display:flex; gap:7px; flex-wrap:wrap; margin-top:11px;}
+.acc-actions button{flex:1 1 auto; min-width:84px; border:1px solid var(--moon-edge); background:rgba(90,58,34,.06); color:var(--wood); border-radius:8px; padding:8px 10px; font-size:12px; font-weight:700; cursor:pointer;}
+.acc-actions button.acc-del{border-color:var(--rust); color:var(--rust); background:rgba(176,74,26,.06);}
+.dir-nocontact{font-size:11.5px; color:var(--card-mute); font-style:italic; margin-top:2px;}
+
 /* ---------- tables tonight (occasions / VIP) ---------- */
 .tbl-input-row{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
 .tbl-num{flex:0 0 60px; width:60px; text-align:center;}
@@ -471,15 +506,26 @@ nav.chips::-webkit-scrollbar{display:none;}
     <p class="view-sub">86 list, tonight's specials, and tables to watch.</p></div>
   <div id="boardBody"></div>
 </section>
+
+<section class="view" id="access">
+  <div class="view-head"><p class="view-eyebrow">Admin</p><h2 class="view-title">Staff Access</h2>
+    <p class="view-sub">Add people, set or reset PINs, and lock out anyone who leaves.</p></div>
+  <div id="accessBody"></div>
+</section>
 </div>
 
-<div class="modal" id="whoModal">
+<div class="modal" id="loginGate">
   <div class="modal-card">
-    <h3>Who are you?</h3>
-    <p>Pick your name. It's saved on this device so requests and notes show who they're from.</p>
-    <input class="who-search" id="whoSearch" placeholder="Search your name…">
-    <div class="who-list" id="whoList"></div>
-    <div class="modal-actions"><button class="close-btn" onclick="closeWho()">Close</button></div>
+    <h3>San Fermo Staff Portal</h3>
+    <p>Log in to continue.</p>
+    <div id="loginBody"></div>
+  </div>
+</div>
+
+<div class="modal" id="consentModal">
+  <div class="modal-card">
+    <h3>How can the team reach you?</h3>
+    <div id="consentBody"></div>
   </div>
 </div>
 
@@ -516,11 +562,13 @@ function makeStars(){
 }
 
 const TABS=[['fresh','Fresh Talk'],['board','Nightly Notes'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service']];
-function buildNav(){$('navChips').innerHTML=TABS.map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
+function navTabs(){return (typeof isAdmin==='function'&&isAdmin())?TABS.concat([['access','Staff Access']]):TABS;}
+function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));}
 function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory();
   window.scrollTo(0,0); requestAnimationFrame(replaceAllPills);}
 
 function initPill(tabsEl,pillEl,attr,onSwitch){
@@ -539,39 +587,138 @@ function renderHome(){
     ['duties','☑','Duties','Opening, closing, sidework'],['compliance','✓','Compliance','Food handlers & MAST'],
     ['directory','✉','Directory','The team & contacts'],['service','❖','Service','Steps & standards']];
   $('homeGrid').innerHTML=cards.map(([id,ic,t,s])=>`<button class="home-card" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
-  renderIdBar();
+  renderAccountBar();
 }
 
-/* IDENTITY — who am I (device) + manager mode (PIN) */
-const MANAGER_PIN='1990';   // manager PIN — unlocks time-off approvals
-function getMe(){try{return localStorage.getItem('sf-me')||'';}catch(e){return '';}}
-function setMe(n){try{localStorage.setItem('sf-me',n);}catch(e){}}
-function isMgr(){try{return localStorage.getItem('sf-mgr')==='1';}catch(e){return false;}}
-function setMgr(on){try{localStorage.setItem('sf-mgr',on?'1':'0');}catch(e){}}
-function rosterFull(){const d=(SF.staff&&SF.staff.directory)||{};const m=new Map();
-  ['foh','boh','office'].forEach(k=>(d[k]||[]).forEach(p=>{if(!m.has(p.name))m.set(p.name,p.role);}));
-  (SF.staff&&SF.staff.leads||[]).forEach(p=>{if(!m.has(p.name))m.set(p.name,p.role);});
-  return [...m.entries()].map(([name,role])=>({name,role})).sort((a,b)=>a.name.localeCompare(b.name));}
-function renderIdBar(){const me=getMe(),mgr=isMgr();
-  $('idBar').innerHTML=
-    `<button class="id-chip" onclick="openWho()">${me?`You are <b>${esc(me)}</b>`:'Tap to set who you are'}</button>`+
-    `<button class="id-chip ${mgr?'mgr-on':''}" onclick="toggleMgr()">Manager <b>${mgr?'on':'off'}</b></button>`;
+/* ===== AUTH — per-person PIN login, role-based, nightly 3am reset ===== */
+const PIN_SALT='sf-portal-2026';            // changing this invalidates every stored PIN hash
+let PROFILES={};        // name -> {name,area,role,lead,admin,active,pinHash,phone,email,contact{call,text,email},contactSet}
+let profUnsub=null, me=null;                // me = current signed-in profile, or null
+
+async function hashPin(pin){
+  const data=new TextEncoder().encode(PIN_SALT+':'+String(pin).trim());
+  const buf=await crypto.subtle.digest('SHA-256',data);
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-let whoCb=null;
-function openWho(cb){whoCb=typeof cb==='function'?cb:null;renderWhoList('');$('whoSearch').value='';$('whoModal').classList.add('open');
-  $('whoSearch').oninput=e=>renderWhoList(e.target.value);setTimeout(()=>{try{$('whoSearch').focus();}catch(e){}},50);}
-function closeWho(){$('whoModal').classList.remove('open');const cb=whoCb;whoCb=null;if(cb)cb();}
-function renderWhoList(q){const me=getMe();q=(q||'').toLowerCase();
-  const list=rosterFull().filter(p=>!q||p.name.toLowerCase().includes(q)||(p.role||'').toLowerCase().includes(q));
-  $('whoList').innerHTML=list.length?list.map(p=>
-    `<div class="who-item ${p.name===me?'sel':''}" onclick="pickMe('${esc(p.name).replace(/'/g,"\\'")}')"><div><div class="who-name serif">${esc(p.name)}</div><div class="who-role">${esc(p.role||'')}</div></div>${p.name===me?'<span style="color:var(--gold-deep)">✓</span>':''}</div>`
-  ).join(''):'<p class="req-empty">No names match.</p>';}
-function pickMe(n){setMe(n);renderIdBar();renderBoard();if(schedState.side==='timeoff')renderSchedule();closeWho();}
-function toggleMgr(){
-  if(isMgr()){if(confirm('Turn off manager mode on this device?')){setMgr(false);renderIdBar();if(schedState.side==='timeoff')renderSchedule();}return;}
-  const pin=prompt('Enter the manager PIN to unlock approvals:');if(pin==null)return;
-  if(pin.trim()===MANAGER_PIN){setMgr(true);renderIdBar();if(schedState.side==='timeoff')renderSchedule();}
-  else alert('That PIN didn\'t match.');
+function profilesArr(){return Object.keys(PROFILES).map(k=>PROFILES[k]);}
+function activeProfiles(){return profilesArr().filter(p=>p.active!==false).sort((a,b)=>a.name.localeCompare(b.name));}
+function next3am(from){const e=new Date(from);e.setHours(3,0,0,0);if(e.getTime()<=from)e.setDate(e.getDate()+1);return e.getTime();}
+function getSession(){try{return JSON.parse(localStorage.getItem('sf-session')||'null');}catch(e){return null;}}
+function setSession(name){try{localStorage.setItem('sf-session',JSON.stringify({name:name,exp:next3am(Date.now())}));}catch(e){}}
+function clearSession(){try{localStorage.removeItem('sf-session');}catch(e){}}
+function sessionValid(){const s=getSession();return !!(s&&s.name&&s.exp&&Date.now()<s.exp&&PROFILES[s.name]&&PROFILES[s.name].active!==false);}
+function currentUserName(){return me?me.name:'';}
+function isAdmin(){return !!(me&&me.admin);}
+
+function startProfilesSync(){
+  if(fbReady&&fbDb){
+    if(profUnsub)profUnsub();
+    profUnsub=fbDb.collection('staff').onSnapshot(function(snap){
+      PROFILES={}; snap.docs.forEach(function(d){var o=d.data()||{}; if(o.name)PROFILES[o.name]=o;});
+      onProfiles();
+    },function(){ PROFILES={}; onProfiles(); });
+  } else { PROFILES={}; onProfiles(); }
+}
+function onProfiles(){
+  if(sessionValid()){ me=PROFILES[getSession().name]; } else { me=null; }
+  applyAuthGate();
+}
+function applyAuthGate(){
+  const gate=$('loginGate');
+  if(me){ if(gate)gate.classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); }
+  else { document.body.classList.add('locked'); openLogin(); }
+}
+function refreshAuthUI(){
+  buildNav(); renderAccountBar();
+  if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
+  if($('access')&&$('access').classList.contains('active'))renderAccess();
+  renderBoard();
+  if(schedState.side==='timeoff')renderSchedule();
+}
+function renderAccountBar(){
+  if(!$('idBar'))return;
+  $('idBar').innerHTML = me
+    ? `<button class="id-chip" onclick="openConsent()">Signed in as <b>${esc(me.name)}</b></button><button class="id-chip" onclick="logout()">Switch user</button>`
+    : `<button class="id-chip" onclick="openLogin()">Log in</button>`;
+}
+
+/* login (blocking gate when signed out) */
+let loginName=null;
+function openLogin(){loginName=null;renderLogin();$('loginGate').classList.add('open');}
+function renderLogin(){
+  if(!loginName){
+    $('loginBody').innerHTML=`<input class="who-search" id="loginSearch" placeholder="Find your name…"><div class="who-list" id="loginList"></div>`;
+    renderLoginNames('');
+    $('loginSearch').oninput=e=>renderLoginNames(e.target.value);
+    setTimeout(()=>{try{$('loginSearch').focus();}catch(e){}},60);
+  } else {
+    const p=PROFILES[loginName]||{};
+    if(!p.pinHash&&p.mgr){
+      $('loginBody').innerHTML=`<p class="login-as">Set <b>${esc(loginName)}</b>'s PIN</p>
+        <p class="pin-note">First time signing in — create your own 4–6 digit code. <b>Do not use your Revel POS PIN.</b> Pick a different number.</p>
+        <input class="who-search" id="pinNew" type="password" inputmode="numeric" maxlength="6" placeholder="New PIN">
+        <input class="who-search" id="pinNew2" type="password" inputmode="numeric" maxlength="6" placeholder="Confirm PIN" onkeydown="if(event.key==='Enter')submitNewPin()">
+        <p id="pinErr" class="pin-err"></p>
+        <div class="to-submit"><button class="to-go" onclick="submitNewPin()">Set PIN &amp; log in</button><button class="to-cancel" onclick="loginName=null;renderLogin()">Back</button></div>`;
+      setTimeout(()=>{try{$('pinNew').focus();}catch(e){}},60);
+    } else if(!p.pinHash){
+      $('loginBody').innerHTML=`<p class="login-as"><b>${esc(loginName)}</b></p>
+        <p class="pin-note">Your PIN isn't set up yet — see Sam and he'll get you in.</p>
+        <div class="to-submit"><button class="to-cancel" onclick="loginName=null;renderLogin()">Back</button></div>`;
+    } else {
+      $('loginBody').innerHTML=`<p class="login-as">Enter <b>${esc(loginName)}</b>'s PIN</p>
+        <input class="who-search" id="pinInput" type="password" inputmode="numeric" maxlength="6" placeholder="PIN" onkeydown="if(event.key==='Enter')submitLogin()">
+        <p id="pinErr" class="pin-err">That PIN didn't match.</p>
+        <div class="to-submit"><button class="to-go" onclick="submitLogin()">Log in</button><button class="to-cancel" onclick="loginName=null;renderLogin()">Back</button></div>`;
+      setTimeout(()=>{try{$('pinInput').focus();}catch(e){}},60);
+    }
+  }
+}
+function renderLoginNames(q){q=(q||'').toLowerCase();
+  const list=activeProfiles().filter(p=>!q||p.name.toLowerCase().includes(q)||(p.role||'').toLowerCase().includes(q));
+  $('loginList').innerHTML = list.length
+    ? list.map(p=>`<div class="who-item" onclick="pickLogin('${esc(p.name).replace(/'/g,"\\'")}')"><div><div class="who-name serif">${esc(p.name)}</div><div class="who-role">${esc(p.role||'')}</div></div></div>`).join('')
+    : (profilesArr().length?'<p class="req-empty">No names match.</p>':'<p class="req-empty">Staff list isn\'t set up yet.</p>');
+}
+function pickLogin(n){loginName=n;renderLogin();}
+async function submitLogin(){
+  const p=PROFILES[loginName]; if(!p)return;
+  if(!p.pinHash){alert('No PIN has been set for you yet — see Sam.');return;}
+  let h; try{ h=await hashPin(($('pinInput').value||'')); }catch(e){ h=null; }
+  if(h&&h===p.pinHash){ setSession(p.name); me=p; $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); }
+  else { const e=$('pinErr'); if(e)e.style.display='block'; const x=$('pinInput'); if(x){x.value='';x.focus();} }
+}
+async function submitNewPin(){
+  const p=PROFILES[loginName]; if(!p)return;
+  const a=($('pinNew').value||'').trim(), b=($('pinNew2').value||'').trim(), err=$('pinErr');
+  if(!/^\d{4,6}$/.test(a)){ if(err){err.textContent='PIN must be 4–6 digits.';err.style.display='block';} return; }
+  if(a!==b){ if(err){err.textContent="The two PINs don't match.";err.style.display='block';} return; }
+  const h=await hashPin(a);
+  if(fbReady&&fbDb&&p.id){ await fbDb.collection('staff').doc(p.id).update({pinHash:h}).catch(function(){}); }
+  p.pinHash=h; setSession(p.name); me=p;
+  $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent();
+}
+function logout(){clearSession();me=null;document.body.classList.add('locked');openLogin();}
+
+/* contact-consent wall */
+function openConsent(){
+  if(!me)return;
+  const c=me.contact||{call:false,text:false,email:false};
+  $('consentBody').innerHTML=`<p class="consent-lead">Choose how the team can reach you. Only what you check shows in the Directory — you can change this anytime.</p>
+    <label class="consent-row"><input type="checkbox" id="cc-call" ${c.call?'checked':''}> Phone call <span class="consent-val">${esc(me.phone||'no number on file')}</span></label>
+    <label class="consent-row"><input type="checkbox" id="cc-text" ${c.text?'checked':''}> Text <span class="consent-val">${esc(me.phone||'no number on file')}</span></label>
+    <label class="consent-row"><input type="checkbox" id="cc-email" ${c.email?'checked':''}> Email <span class="consent-val">${esc(me.email||'no email on file')}</span></label>
+    <div class="to-submit"><button class="to-go" onclick="saveConsent()">Save</button></div>`;
+  $('consentModal').classList.add('open');
+}
+function closeConsent(){$('consentModal').classList.remove('open');}
+function saveConsent(){
+  if(!me)return;
+  const contact={call:$('cc-call').checked,text:$('cc-text').checked,email:$('cc-email').checked};
+  const patch={contact:contact,contactSet:true};
+  Object.assign(me,patch);
+  if(fbReady&&fbDb&&me.id){ fbDb.collection('staff').doc(me.id).update(patch).catch(function(){}); }
+  closeConsent(); renderAccountBar(); if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
 }
 
 /* FRESH — FOOD + corrections mode */
@@ -776,28 +923,28 @@ function reqDates(r){if(!r.end||r.end===r.start)return fmtLong(r.start);return f
 function toggleToForm(){toFormOpen=!toFormOpen;renderTimeoff();if(toFormOpen)setTimeout(function(){var s=$('to-start');if(s)s.focus();},40);}
 function closeToForm(){toFormOpen=false;renderTimeoff();}
 function submitTimeoff(){
-  var me=getMe();if(!me){openWho(function(){toFormOpen=true;renderTimeoff();});return;}
+  var who=currentUserName();if(!who){openLogin();return;}
   var start=$('to-start').value,end=$('to-end').value||start,reason=($('to-reason').value||'').trim();
   if(!start){alert('Pick at least a start date.');return;}
   if(end<start){alert('The end date is before the start date.');return;}
-  var req={name:me,start:start,end:end,reason:reason,status:'pending',createdAt:Date.now(),comments:[]};
+  var req={name:who,start:start,end:end,reason:reason,status:'pending',createdAt:Date.now(),comments:[]};
   if(fbReady&&fbDb){ toState=[Object.assign({id:'tmp'+Date.now()},req)].concat(toState||[]); fbDb.collection('timeoff').add(req).catch(function(){toLsAdd(req);}); }
   else { toLsAdd(req); }
   toFormOpen=false;renderTimeoff();
 }
 function toLsAdd(req){req.id='ls'+Date.now();var a=toLsGet();a.unshift(req);toLsSet(a);toState=a;}
 function decideTimeoff(id,status){
-  if(!isMgr()){alert('Turn on Manager mode (home screen) to approve or deny.');return;}
-  var patch={status:status,decidedBy:getMe()||'Manager',decidedAt:Date.now()};
+  if(!isAdmin()){alert('Only a manager can approve or deny.');return;}
+  var patch={status:status,decidedBy:currentUserName()||'Manager',decidedAt:Date.now()};
   if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0)Object.assign(r0,patch);}
   if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).update(patch).catch(function(){}); }
   else { var a=toLsGet();var r=a.find(function(x){return x.id===id;});if(r)Object.assign(r,patch);toLsSet(a);toState=a; }
   renderTimeoff();
 }
 function addToComment(id){
-  var me=getMe();if(!me){openWho(function(){addToComment(id);});return;}
+  var who=currentUserName();if(!who){openLogin();return;}
   var inp=$('toc-'+id);if(!inp)return;var v=(inp.value||'').trim();if(!v)return;
-  var c={by:me,text:v,at:Date.now()};
+  var c={by:who,text:v,at:Date.now()};
   if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0){r0.comments=r0.comments||[];r0.comments.push(c);}}
   if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).update({comments:firebase.firestore.FieldValue.arrayUnion(c)}).catch(function(){}); }
   else { var a=toLsGet();var r=a.find(function(x){return x.id===id;});if(r){r.comments=r.comments||[];r.comments.push(c);}toLsSet(a);toState=a; }
@@ -805,21 +952,21 @@ function addToComment(id){
 }
 function rmTimeoff(id){
   var r=getReqs().find(function(x){return x.id===id;});if(!r)return;
-  if(!(isMgr()||r.name===getMe())){alert('Only the person who requested it, or a manager, can remove it.');return;}
+  if(!(isAdmin()||r.name===currentUserName())){alert('Only the person who requested it, or a manager, can remove it.');return;}
   if(!confirm('Remove this request?'))return;
   if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).delete().catch(function(){}); }
   else { var a=toLsGet().filter(function(x){return x.id!==id;});toLsSet(a);toState=a;renderTimeoff(); }
 }
 function reqCardHTML(r){
   var sc=r.status==='approved'?'rs-approved':r.status==='denied'?'rs-denied':'rs-pending';
-  var canRm=isMgr()||r.name===getMe();
+  var canRm=isAdmin()||r.name===currentUserName();
   var h=`<div class="req-card"><div class="req-top"><div><div class="req-who serif">${esc(r.name)}</div><div class="req-dates">${esc(reqDates(r))}</div>`;
   if(r.reason)h+=`<div class="req-reason serif">"${esc(r.reason)}"</div>`;
   h+=`</div><div style="display:flex;align-items:center;gap:6px;"><span class="req-status ${sc}">${esc(r.status)}</span>${canRm?`<span class="req-x" onclick="rmTimeoff('${esc(r.id)}')">✕</span>`:''}</div></div>`;
   if(r.status!=='pending'&&r.decidedBy)h+=`<div class="req-decided">${r.status==='approved'?'Approved':'Denied'} by ${esc(r.decidedBy)}</div>`;
   if(r.status==='pending'){
-    if(isMgr())h+=`<div class="req-mgr"><button class="btn-approve" onclick="decideTimeoff('${esc(r.id)}','approved')">Approve</button><button class="btn-deny" onclick="decideTimeoff('${esc(r.id)}','denied')">Deny</button></div>`;
-    else h+=`<div class="req-mgrhint">Approving needs Manager mode — <a href="javascript:void(0)" onclick="toggleMgr()">unlock</a></div>`;
+    if(isAdmin())h+=`<div class="req-mgr"><button class="btn-approve" onclick="decideTimeoff('${esc(r.id)}','approved')">Approve</button><button class="btn-deny" onclick="decideTimeoff('${esc(r.id)}','denied')">Deny</button></div>`;
+    else h+=`<div class="req-mgrhint">Awaiting Sam's approval.</div>`;
   }
   h+=`<div class="req-thread"><div class="thread-label">Notes</div>`;
   var cmts=r.comments||[];
@@ -828,7 +975,7 @@ function reqCardHTML(r){
   return h+`</div></div>`;
 }
 function renderTimeoff(){
-  var me=getMe(),today=todayISO();
+  var who=currentUserName(),today=todayISO();
   var list=getReqs().filter(function(r){return r.status==='pending'||((r.end||r.start)>=today);});
   list.sort(function(a,b){var ap=a.status==='pending'?0:1,bp=b.status==='pending'?0:1;if(ap!==bp)return ap-bp;return (a.start||'').localeCompare(b.start||'');});
   var occVal=toFormOpen&&$('to-reason')?$('to-reason').value:'';
@@ -836,13 +983,12 @@ function renderTimeoff(){
   var eVal=toFormOpen&&$('to-end')?$('to-end').value:today;
   var h=`<div class="to-actions"><button class="to-newbtn" onclick="toggleToForm()">${toFormOpen?'Close':'＋ Request off'}</button></div>`;
   h+=`<div class="to-form ${toFormOpen?'open':''}">`;
-  h+= me?`<div class="who-as">Requesting as <b>${esc(me)}</b> · <a href="javascript:void(0)" onclick="openWho()" style="color:var(--gold-deep)">change</a></div>`
-       :`<div class="who-as"><a href="javascript:void(0)" onclick="openWho()" style="color:var(--gold-deep)">Tap to set who you are</a></div>`;
+  h+=`<div class="who-as">Requesting as <b>${esc(who||'—')}</b></div>`;
   h+=`<div class="row2"><div><label>From</label><input type="date" id="to-start" value="${esc(sVal)}"></div><div><label>To</label><input type="date" id="to-end" value="${esc(eVal)}"></div></div>`;
   h+=`<label>Reason (optional)</label><textarea id="to-reason" placeholder="Anything the team should know">${esc(occVal)}</textarea>`;
   h+=`<div class="to-submit"><button class="to-go" onclick="submitTimeoff()">Submit request</button><button class="to-cancel" onclick="closeToForm()">Cancel</button></div></div>`;
   var live=fbReady?'Live — shared across every device.':'Saved on this device only (offline).';
-  h+=`<p class="req-hint">${esc(live)} Pending requests need a manager to approve.</p>`;
+  h+=`<p class="req-hint">${esc(live)} Pending requests need Sam's approval.</p>`;
   h+= list.length? list.map(reqCardHTML).join('') : `<p class="req-empty">No time-off requests right now.</p>`;
   $('schedBody').innerHTML=h;
 }
@@ -898,15 +1044,94 @@ function renderCompliance(){const C=SF.compliance;
 /* DIRECTORY */
 function telHref(p){return 'tel:'+String(p).replace(/[^0-9]/g,'');}
 function smsHref(p){return 'sms:'+String(p).replace(/[^0-9]/g,'');}
+function contactLinks(name){
+  const p=PROFILES[name]; if(!p)return '';
+  const c=p.contact||{}; let h='';
+  if(c.call&&p.phone)h+=`<a href="${telHref(p.phone)}">Call</a>`;
+  if(c.text&&p.phone)h+=`<a href="${smsHref(p.phone)}">Text</a>`;
+  if(c.email&&p.email)h+=`<a href="mailto:${esc(p.email)}">Email</a>`;
+  return h;
+}
 function renderDirectory(){const S=SF.staff; $('dirSub').textContent=S.note;
   let h=`<div class="lead-row">`;
-  S.leads.forEach(l=>h+=`<div class="lead-card"><a href="${telHref(l.phone)}"><div class="lead-name serif">${esc(l.name)}</div><div class="lead-role">${esc(l.role)}</div><div class="lead-phone">${esc(l.phone)}</div></a></div>`);
+  S.leads.forEach(l=>{const p=PROFILES[l.name]||{},c=p.contact||{},showPhone=(c.call||c.text)&&p.phone;
+    const inner=`<div class="lead-name serif">${esc(l.name)}</div><div class="lead-role">${esc(l.role)}</div>${showPhone?`<div class="lead-phone">${esc(p.phone)}</div>`:''}`;
+    h+= showPhone?`<div class="lead-card"><a href="${telHref(p.phone)}">${inner}</a></div>`:`<div class="lead-card">${inner}</div>`;});
   h+=`</div>`;
   [['Front of House','foh'],['Back of House','boh'],['Office','office']].forEach(([lab,key])=>{
     h+=`<div class="section-label">${lab}</div><div class="dir-grid">`;
-    S.directory[key].forEach(p=>h+=`<div class="dir-card"><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${esc(p.role)}</div><div class="dir-links"><a href="${telHref(p.phone)}">Call</a><a href="${smsHref(p.phone)}">Text</a>${p.email?`<a href="mailto:${esc(p.email)}">Email</a>`:''}</div></div>`);
+    (S.directory[key]||[]).forEach(p=>{const links=contactLinks(p.name);
+      h+=`<div class="dir-card"><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${esc(p.role)}</div>${links?`<div class="dir-links">${links}</div>`:`<div class="dir-nocontact">No contact shared</div>`}</div>`;});
     h+=`</div>`;});
   $('dirBody').innerHTML=h;
+}
+
+/* ===== STAFF ACCESS — admin-only (add / set PIN / lock out) ===== */
+function jq(s){return esc(s).replace(/'/g,"\\'");}
+function slug(n){return String(n).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
+function accUpdate(p,patch){
+  if(fbReady&&fbDb&&p.id){ fbDb.collection('staff').doc(p.id).update(patch).catch(function(){}); }
+  else { Object.assign(p,patch); renderAccess(); }
+}
+async function accSetPin(name){
+  const p=PROFILES[name]; if(!p)return;
+  const pin=prompt('New PIN for '+name+' (4–6 digits):'); if(pin==null)return;
+  const v=pin.trim(); if(!/^\d{4,6}$/.test(v)){alert('PIN must be 4–6 digits.');return;}
+  const h=await hashPin(v); accUpdate(p,{pinHash:h});
+}
+function accToggleAdmin(name){const p=PROFILES[name];if(!p)return;
+  if(p.name===currentUserName()&&p.admin&&!confirm('Remove your own manager access? You\'ll lose the Staff Access screen.'))return;
+  accUpdate(p,{admin:!p.admin});}
+function accToggleActive(name){const p=PROFILES[name];if(!p)return;const cur=p.active!==false;
+  if(cur&&p.name===currentUserName()&&!confirm('Lock yourself out? You won\'t be able to log back in.'))return;
+  accUpdate(p,{active:!cur});}
+function accRemove(name){const p=PROFILES[name];if(!p)return;
+  if(!confirm('Remove '+name+' completely? To just block login, use Deactivate instead.'))return;
+  if(fbReady&&fbDb&&p.id){ fbDb.collection('staff').doc(p.id).delete().catch(function(){}); }
+  else { delete PROFILES[name]; renderAccess(); }
+}
+async function accAdd(){
+  const name=($('acc-name').value||'').trim(); if(!name){alert('Name is required.');return;}
+  if(PROFILES[name]){alert('Someone with that name already exists.');return;}
+  const pin=($('acc-pin').value||'').trim();
+  if(pin&&!/^\d{4,6}$/.test(pin)){alert('PIN must be 4–6 digits (or leave blank to set later).');return;}
+  const rec={name:name,area:$('acc-area').value,role:($('acc-role').value||'').trim()||'Staff',
+    phone:($('acc-phone').value||'').trim(),email:($('acc-email').value||'').trim(),
+    lead:false,admin:$('acc-admin').checked,active:true,contact:{call:false,text:false,email:false},contactSet:false,pinHash:''};
+  if(pin)rec.pinHash=await hashPin(pin);
+  const id=slug(name)||('p'+Date.now());
+  if(fbReady&&fbDb){ await fbDb.collection('staff').doc(id).set(Object.assign({id:id},rec)).catch(function(){}); }
+  else { rec.id=id; PROFILES[name]=rec; renderAccess(); }
+  ['acc-name','acc-role','acc-phone','acc-email','acc-pin'].forEach(i=>{const el=$(i);if(el)el.value='';});
+  const ad=$('acc-admin'); if(ad)ad.checked=false;
+}
+function renderAccess(){
+  if(!$('accessBody'))return;
+  if(!isAdmin()){$('accessBody').innerHTML='<p class="req-empty">Managers only.</p>';return;}
+  let h=`<div class="acc-add">
+    <div class="section-label" style="margin-top:0">Add someone</div>
+    <div class="acc-add-row"><input id="acc-name" class="acc-in" placeholder="Full name">
+      <select id="acc-area" class="acc-in"><option value="foh">FOH</option><option value="boh">BOH</option><option value="office">Office</option></select></div>
+    <div class="acc-add-row"><input id="acc-role" class="acc-in" placeholder="Role (e.g. Server)">
+      <input id="acc-phone" class="acc-in" placeholder="Phone"></div>
+    <div class="acc-add-row"><input id="acc-email" class="acc-in" placeholder="Email">
+      <input id="acc-pin" class="acc-in" inputmode="numeric" maxlength="6" placeholder="PIN (4–6 digits)"></div>
+    <label class="acc-chk"><input type="checkbox" id="acc-admin"> Manager — can approve time off &amp; manage staff</label>
+    <button class="to-go acc-addbtn" onclick="accAdd()">Add person</button></div>`;
+  const list=profilesArr().sort((a,b)=>((a.active===false)-(b.active===false))||a.name.localeCompare(b.name));
+  h+=`<div class="section-label">Roster (${list.filter(p=>p.active!==false).length} active)</div>`;
+  if(!list.length)h+=`<p class="req-empty">No staff loaded yet.</p>`;
+  list.forEach(p=>{const n=jq(p.name);
+    h+=`<div class="acc-card ${p.active===false?'off':''}">
+      <div class="acc-top"><div><span class="acc-name serif">${esc(p.name)}</span> <span class="acc-role">${esc(p.role||'')} · ${esc((p.area||'').toUpperCase())}</span></div>
+      <div class="acc-badges">${p.admin?'<span class="acc-badge b-mgr">Manager</span>':''}<span class="acc-badge ${p.pinHash?'b-pin':'b-nopin'}">${p.pinHash?'PIN set':'No PIN'}</span>${p.active===false?'<span class="acc-badge b-off">Locked out</span>':''}</div></div>
+      <div class="acc-actions">
+        <button onclick="accSetPin('${n}')">${p.pinHash?'Reset PIN':'Set PIN'}</button>
+        <button onclick="accToggleAdmin('${n}')">${p.admin?'Remove mgr':'Make mgr'}</button>
+        <button onclick="accToggleActive('${n}')">${p.active===false?'Reactivate':'Deactivate'}</button>
+        <button class="acc-del" onclick="accRemove('${n}')">Remove</button>
+      </div></div>`;});
+  $('accessBody').innerHTML=h;
 }
 
 /* SERVICE */
@@ -999,23 +1224,24 @@ function tablesColHTML(items){
 function addTable(){const numEl=$('tbl-num'),t=(numEl.value||'').trim();
   if(!t){if(numEl){numEl.classList.add('flash-req');numEl.focus();setTimeout(()=>numEl.classList.remove('flash-req'),1200);}return;}
   const occ=$('tbl-occ').value,note=($('tbl-note').value||'').trim();
-  const b=getBoard();b.tables=b.tables||[];b.tables.push({table:t,occasion:occ,note:note,by:getMe()||''});
+  const b=getBoard();b.tables=b.tables||[];b.tables.push({table:t,occasion:occ,note:note,by:currentUserName()||''});
   persistBoard(b);renderBoard();
   setTimeout(()=>{const x=$('tbl-num');if(x)x.focus();},0);}
 function rmTable(i){const b=getBoard();(b.tables||[]).splice(i,1);persistBoard(b);renderBoard();}
 
 /* INIT */
 function init(){
-  initFirebase(); startBoardSync(); startTimeoffSync();
+  initFirebase(); startBoardSync(); startTimeoffSync(); startProfilesSync();
   $('appDate').textContent=fmtShort(todayISO());
   buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
-  renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard();
+  renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderAccess();
   initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';});
   initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{schedState.side=v;renderSchedule();});
   initPill($('dutyTabs'),$('dutyPill'),'duty',v=>{dutyTab=v;renderDuties();});
   initPill($('compTabs'),$('compPill'),'comp',v=>{compTab=v;renderCompliance();});
   go('home');
-  if(!getMe())setTimeout(()=>openWho(),400);
+  // nightly expiry: re-check the session whenever the app comes back to the foreground
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden&&me&&!sessionValid()){ me=null; document.body.classList.add('locked'); openLogin(); } });
 }
 function boot(){
   if(window.SF){ SF=window.SF; init(); return; }   // preview: data inlined
