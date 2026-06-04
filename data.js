@@ -3565,6 +3565,15 @@ window.SF = {
      "2026-06-07"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -3748,6 +3757,15 @@ window.SF = {
      "2026-06-14"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -3931,6 +3949,15 @@ window.SF = {
      "2026-06-21"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -4114,6 +4141,15 @@ window.SF = {
      "2026-06-28"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "3:30 serve",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -4297,6 +4333,15 @@ window.SF = {
      "2026-07-05"
     ],
     "label": "July 4!",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -4480,6 +4525,15 @@ window.SF = {
      "2026-07-12"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "3:30 serve",
+     "3:30 serve",
+     "3:30 serve"
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -4663,6 +4717,15 @@ window.SF = {
      "2026-07-19"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -4846,6 +4909,15 @@ window.SF = {
      "2026-07-26"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -5029,6 +5101,15 @@ window.SF = {
      "2026-08-02"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -5212,6 +5293,15 @@ window.SF = {
      "2026-08-09"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -5395,6 +5485,15 @@ window.SF = {
      "2026-08-16"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "3:30 serve",
+     "3:30 serve",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -5578,6 +5677,15 @@ window.SF = {
      "2026-08-23"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "3:30 serve",
+     "3:30 serve",
+     "3:30 serve",
+     "",
+     "3:30 serve"
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -5761,6 +5869,15 @@ window.SF = {
      "2026-08-30"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "3:30 serve",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -5944,6 +6061,15 @@ window.SF = {
      "2026-09-06"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "3:30 serve",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -6127,6 +6253,15 @@ window.SF = {
      "2026-09-13"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -6310,6 +6445,15 @@ window.SF = {
      "2026-09-20"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -6493,6 +6637,15 @@ window.SF = {
      "2026-09-27"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "3:30 Bar",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -6676,6 +6829,15 @@ window.SF = {
      "2026-10-04"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -6861,6 +7023,15 @@ window.SF = {
      "2026-06-07"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -7044,6 +7215,15 @@ window.SF = {
      "2026-06-14"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "12-10",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -7227,6 +7407,15 @@ window.SF = {
      "2026-06-21"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -7422,6 +7611,15 @@ window.SF = {
      "2026-06-28"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "1-close",
+     "1-close",
+     "1-close",
+     "Expo"
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -7605,6 +7803,15 @@ window.SF = {
      "2026-07-05"
     ],
     "label": "Mercato",
+    "coverage": [
+     "1-close",
+     "1-close",
+     "",
+     "",
+     "8-6, 1-close",
+     "8-6, 1-close",
+     "8-6, 1-close"
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -7788,6 +7995,15 @@ window.SF = {
      "2026-07-12"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "1-close",
+     "1-close",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -7971,6 +8187,15 @@ window.SF = {
      "2026-07-19"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -8154,6 +8379,15 @@ window.SF = {
      "2026-07-26"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -8337,6 +8571,15 @@ window.SF = {
      "2026-08-02"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "9-7"
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -8520,6 +8763,15 @@ window.SF = {
      "2026-08-09"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "9-7",
+     "1-close",
+     "1-close",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -8703,6 +8955,15 @@ window.SF = {
      "2026-08-16"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "",
+     "",
+     "",
+     "9-5",
+     "9-5",
+     "9-5",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -8886,6 +9147,15 @@ window.SF = {
      "2026-08-23"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "9-5",
+     "9-5",
+     "9-5",
+     "9-5",
+     "9-5",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -9069,6 +9339,15 @@ window.SF = {
      "2026-08-30"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -9252,6 +9531,15 @@ window.SF = {
      "2026-09-06"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "1-close",
+     "1-close",
+     "1-close",
+     "",
+     "",
+     "",
+     "9-7"
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -9435,6 +9723,15 @@ window.SF = {
      "2026-09-13"
     ],
     "label": "Farm Dinners",
+    "coverage": [
+     "9-7",
+     "1-close",
+     "1-close",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -9618,6 +9915,15 @@ window.SF = {
      "2026-09-20"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -9801,6 +10107,15 @@ window.SF = {
      "2026-09-27"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -9984,6 +10299,15 @@ window.SF = {
      "2026-10-04"
     ],
     "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -10934,5 +11258,5 @@ window.SF = {
    }
   }
  },
- "build": "1780559635"
+ "build": "1780560093"
 };
