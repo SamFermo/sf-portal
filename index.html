@@ -222,6 +222,9 @@ nav.chips::-webkit-scrollbar{display:none;}
 .sched-table thead th .dnum{display:block; font-family:'Caladea',Georgia,serif; font-size:13px; color:var(--wood); font-weight:700;}
 .sched-table td.nm{text-align:left; font-weight:700; color:var(--wood); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:12px;}
 .sched-table td.today,.sched-table th.today{background:rgba(230,200,120,.22);}
+.sched-table tr.me td{background:rgba(230,200,120,.15);}
+.sched-table tr.me td.nm{color:var(--gold-deep);}
+.sched-table tr.me td.today{background:rgba(230,200,120,.36);}
 .shift{display:inline-block; font-size:10.5px; line-height:1.2; color:var(--card-ink);}
 .shift.off{color:var(--moon-edge);} .shift.ro{color:var(--rust); font-weight:700;}
 .shift.farm{color:var(--accent-dark); font-weight:700;} .shift.md{color:var(--gold-deep); font-weight:700;}
@@ -574,7 +577,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780557868';   // stamped by build-data.py at every deploy
+const BUILD='1780558618';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -687,7 +690,7 @@ function refreshAuthUI(){
   if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
   if($('access')&&$('access').classList.contains('active'))renderAccess();
   renderBoard();
-  if(schedState.side==='timeoff')renderSchedule();
+  renderSchedule();   // re-render so the signed-in user's row highlight follows the login
 }
 function renderAccountBar(){
   if(!$('idBar'))return;
@@ -968,13 +971,21 @@ function renderBar(){
 let schedState={side:'foh',range:'week'};
 function currentWeekIndex(weeks){const t=todayISO();for(let i=0;i<weeks.length;i++){if(t>=weeks[i].dates[0]&&t<=weeks[i].dates[6])return i;}let idx=0;for(let i=0;i<weeks.length;i++){if(weeks[i].dates[0]<=t)idx=i;}return idx;}
 function shiftClass(s){if(!s)return 'off';const u=s.toUpperCase();if(u==='R/O')return 'ro';if(u.startsWith('FARM'))return 'farm';if(u==='MD'||u.startsWith('ADMIN'))return 'md';return '';}
+function myRowNames(){
+  if(!me)return[];
+  const full=me.name||'', first=(full.split(' ')[0]||'');
+  const nick=(full.match(/"([^"]+)"/)||[])[1];
+  return [me.schedName,nick,first].filter(Boolean).map(s=>String(s).toLowerCase());
+}
 function weekTableHTML(w,today){
+  const MYN=myRowNames();
   let h=`<div class="sched-week"><div class="sched-wk-date serif">Week of ${fmtShort(w.dates[0])}</div>`;
   if(w.label)h+=`<span class="sched-banner">${esc(w.label)}</span>`;
   h+=`<table class="sched-table"><thead><tr><th></th>`;
   w.dates.forEach((d,i)=>h+=`<th class="${d===today?'today':''}">${DOW[i]}<span class="dnum">${d.split('-')[2].replace(/^0/,'')}</span></th>`);
   h+=`</tr></thead><tbody>`;
-  w.rows.forEach(r=>{h+=`<tr><td class="nm">${esc(r.name)}</td>`;
+  w.rows.forEach(r=>{const mine=MYN.indexOf(String(r.name).trim().toLowerCase())>=0;
+    h+=`<tr class="${mine?'me':''}"><td class="nm">${esc(r.name)}</td>`;
     r.shifts.forEach((s,i)=>h+=`<td class="${w.dates[i]===today?'today':''}"><span class="shift ${shiftClass(s)}">${s?esc(s):'·'}</span></td>`);h+=`</tr>`;});
   return h+`</tbody></table></div>`;
 }
