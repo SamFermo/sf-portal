@@ -230,6 +230,10 @@ nav.chips::-webkit-scrollbar{display:none;}
 .shift.farm{color:var(--accent-dark); font-weight:700;} .shift.md{color:var(--gold-deep); font-weight:700;}
 .legend{font-size:11px; color:var(--ink-mute); margin-top:8px; line-height:1.7;}
 .legend b{color:var(--ink-soft);}
+.ro-claim{display:inline-flex; flex-direction:column; align-items:center; background:rgba(176,74,26,.10); border:1.5px dashed var(--rust); color:var(--rust); border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; cursor:pointer; line-height:1.15; font-family:inherit;}
+.ro-claim small{font-size:8px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;}
+.ro-claimed{display:inline-flex; flex-direction:column; align-items:center; background:rgba(74,106,58,.14); border:1.5px solid var(--accent); color:var(--accent-dark); border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; cursor:pointer; line-height:1.15;}
+.ro-claimed small{font-size:8px;}
 
 /* duties */
 .duty-item{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; margin-bottom:9px; padding:12px 14px; box-shadow:0 5px 13px rgba(0,0,0,.24);}
@@ -500,7 +504,7 @@ body.locked{overflow:hidden;}
     <button class="subtab active" data-side="foh">FOH</button><button class="subtab" data-side="boh">BOH</button><button class="subtab" data-side="timeoff">Time Off</button></div></div>
   <div class="filterbar" id="schedRanges" style="justify-content:center; padding-top:2px;"></div>
   <div id="schedBody"></div>
-  <div class="legend" id="schedLegend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
+  <div class="legend" id="schedLegend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off — tap one to claim the cover (Sam confirms the final schedule) · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
 </section>
 
 <section class="view" id="seating">
@@ -577,7 +581,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780558618';   // stamped by build-data.py at every deploy
+const BUILD='1780559635';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -977,6 +981,38 @@ function myRowNames(){
   const nick=(full.match(/"([^"]+)"/)||[])[1];
   return [me.schedName,nick,first].filter(Boolean).map(s=>String(s).toLowerCase());
 }
+/* COVERAGE CLAIMS — every R/O cell is a tappable "cover?" chip, claimed by whoever's signed in */
+let CLAIMS={}, claimsUnsub=null;
+function claimKey(side,date,name){return (side+'_'+date+'_'+String(name)).toLowerCase().replace(/[^a-z0-9_-]+/g,'-');}
+function clLsGet(){try{return JSON.parse(localStorage.getItem('sf-claims')||'{}');}catch(e){return {};}}
+function clLsSet(){try{localStorage.setItem('sf-claims',JSON.stringify(CLAIMS));}catch(e){}}
+function startClaimsSync(){
+  if(fbReady&&fbDb){
+    if(claimsUnsub)claimsUnsub();
+    claimsUnsub=fbDb.collection('claims').onSnapshot(function(snap){
+      CLAIMS={}; snap.docs.forEach(function(d){CLAIMS[d.id]=d.data();});
+      renderSchedule();
+    },function(){ CLAIMS=clLsGet(); renderSchedule(); });
+  } else { CLAIMS=clLsGet(); }
+}
+function claimShift(side,date,name){
+  if(!me){openLogin();return;}
+  const k=claimKey(side,date,name);
+  if(CLAIMS[k])return;
+  if(!confirm('Claim coverage for '+name+"'s shift on "+fmtLong(date)+'? Sam still confirms the final schedule.'))return;
+  const rec={side:side,date:date,rowName:name,claimedBy:me.name,at:Date.now()};
+  CLAIMS[k]=rec; renderSchedule();
+  if(fbReady&&fbDb){ fbDb.collection('claims').doc(k).set(rec).catch(function(){clLsSet();}); }
+  else clLsSet();
+}
+function unclaimShift(side,date,name){
+  const k=claimKey(side,date,name), c=CLAIMS[k]; if(!c)return;
+  if(!(isAdmin()||c.claimedBy===currentUserName())){alert('Only '+String(c.claimedBy).split(' ')[0]+' or Sam can release this claim.');return;}
+  if(!confirm('Release this coverage claim?'))return;
+  delete CLAIMS[k]; renderSchedule();
+  if(fbReady&&fbDb){ fbDb.collection('claims').doc(k).delete().catch(function(){clLsSet();}); }
+  else clLsSet();
+}
 function weekTableHTML(w,today){
   const MYN=myRowNames();
   let h=`<div class="sched-week"><div class="sched-wk-date serif">Week of ${fmtShort(w.dates[0])}</div>`;
@@ -986,7 +1022,15 @@ function weekTableHTML(w,today){
   h+=`</tr></thead><tbody>`;
   w.rows.forEach(r=>{const mine=MYN.indexOf(String(r.name).trim().toLowerCase())>=0;
     h+=`<tr class="${mine?'me':''}"><td class="nm">${esc(r.name)}</td>`;
-    r.shifts.forEach((s,i)=>h+=`<td class="${w.dates[i]===today?'today':''}"><span class="shift ${shiftClass(s)}">${s?esc(s):'·'}</span></td>`);h+=`</tr>`;});
+    r.shifts.forEach((s,i)=>{
+      const d=w.dates[i]; let cell;
+      if(s&&String(s).trim().toUpperCase()==='R/O'){
+        const k=claimKey(schedState.side,d,r.name), c=CLAIMS[k];
+        if(c){ cell=`<span class="ro-claimed" onclick="unclaimShift('${schedState.side}','${d}','${jq(r.name)}')">R/O<small>✓ ${esc(String(c.claimedBy).split(' ')[0])}</small></span>`; }
+        else { cell=`<button class="ro-claim" onclick="claimShift('${schedState.side}','${d}','${jq(r.name)}')">R/O<small>cover?</small></button>`; }
+      } else cell=`<span class="shift ${shiftClass(s)}">${s?esc(s):'·'}</span>`;
+      h+=`<td class="${d===today?'today':''}">${cell}</td>`;
+    });h+=`</tr>`;});
   return h+`</tbody></table></div>`;
 }
 function schedRanges(){
@@ -1297,8 +1341,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -1379,7 +1423,7 @@ function rmTable(i){const b=getBoard();(b.tables||[]).splice(i,1);persistBoard(b
 /* INIT */
 function init(){
   initFirebase();
-  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); }
+  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); }
   document.body.classList.add('locked'); openLogin();   // start gated; unlocks once the session checks out
   setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='failed'; onProfiles(); } },9000);
   $('appDate').textContent=fmtShort(todayISO());
