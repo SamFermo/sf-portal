@@ -663,7 +663,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780608072';   // stamped by build-data.py at every deploy
+const BUILD='1780608836';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1544,7 +1544,12 @@ function toggleMyTable(t){
 }
 function allTablesInOrder(){
   const sec=SF.seating&&SF.seating.sections; if(!sec)return [];
-  let out=[]; sec.order.forEach(n=>{out=out.concat(sec.map[n]||[]);}); return out;
+  let out=[]; sec.order.forEach(n=>{out=out.concat(sec.map[n]||[]);});
+  // straight numeric order, bar seats at the end — section grouping reads as jumbled here
+  return out.sort((a,b)=>{
+    const ba=/^B/i.test(a)?1:0, bb=/^B/i.test(b)?1:0;
+    const na=parseInt(String(a).replace(/\D/g,''))||999, nb=parseInt(String(b).replace(/\D/g,''))||999;
+    return ba-bb||na-nb;});
 }
 function gridMapHTML(tabs,noted){
   if(!tabs.length)return '';
