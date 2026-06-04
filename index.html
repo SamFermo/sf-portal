@@ -673,7 +673,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780609514';   // stamped by build-data.py at every deploy
+const BUILD='1780609910';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1483,8 +1483,8 @@ function rmStanding(i){
 }
 function standingColHTML(){
   const st=getStanding(), items=st.items||[];
-  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">House Pours · Mocktail</span>`;
-  if(isMgr())h+=`<div class="board-input-row"><input class="board-input" id="in-standing" placeholder="House red — Centine 2022 / Mocktail — strawberry shrub fizz" onkeydown="if(event.key==='Enter')addStanding()"><button class="board-add" onclick="addStanding()">+</button></div>`;
+  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">House Pours · Mocktail · Preserves · Gelato</span>`;
+  if(isMgr())h+=`<div class="board-input-row"><input class="board-input" id="in-standing" placeholder="House red — Centine / Mocktail — shrub fizz / Farinata — apricot preserves / Gelato — fior di latte" onkeydown="if(event.key==='Enter')addStanding()"><button class="board-add" onclick="addStanding()">+</button></div>`;
   if(!items.length)h+=`<div class="board-empty">Not set yet${isMgr()?'':' — a lead sets these'}.</div>`;
   items.forEach((it,i)=>{
     h+=`<div class="board-item"><span>${esc(it)}</span>${isMgr()?`<span class="x" onclick="rmStanding(${i})">✕</span>`:''}</div>`;});
@@ -1525,7 +1525,7 @@ function renderBoard(){const b=getBoard();
   const live=fbReady?`<span style="color:#bfe0a8">● live</span> — shared across every device.`:`saved on this device only.`;
   let h=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`;
   if(boardTab==='board'){
-    h+=col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials')+standingColHTML();
+    h+=standingColHTML()+col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials');
     markSeen86();   // viewing the pane = seeing the items
   }else{
     h+=secChipsHTML()+tablesPaneHTML(b);
