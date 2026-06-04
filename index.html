@@ -297,6 +297,11 @@ nav.chips::-webkit-scrollbar{display:none;}
 .lm-style{background:linear-gradient(155deg,#e8cd79,#c9a64e); color:#241f15;}
 .lm-cancel{background:#e8e0d2; color:#5a5040;}
 .lm-note{font-size:11px; color:var(--card-mute); margin-top:8px; font-style:italic;}
+/* my-tables picker */
+.tpick-wrap{display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 12px;}
+.tpick{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:9px; min-width:38px; padding:6px 0; text-align:center; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
+.tpick.on{background:var(--gold); color:#241f15; border-color:var(--gold);}
+.tpick-label{font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-mute); margin:8px 0 4px;}
 /* crew board */
 .crew-cat{font-size:9.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; border-radius:999px; padding:2px 8px; white-space:nowrap;}
 .cc-heads{background:rgba(176,74,26,.18); color:#eba887; border:1px solid rgba(176,74,26,.55);}
@@ -658,7 +663,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780606694';   // stamped by build-data.py at every deploy
+const BUILD='1780608072';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1437,6 +1442,45 @@ function lsKey(){return 'sf-board-'+todayISO();}
 function lsGetBoard(){try{const s=JSON.parse(localStorage.getItem(lsKey()));if(s){s.tables=s.tables||[];return s;}}catch(e){}return {eightySixed:[...(SF.service.board.eightySixed||[])],specials:[...(SF.service.board.specials||[])],tables:[]};}
 function lsSetBoard(b){try{localStorage.setItem(lsKey(),JSON.stringify(b));}catch(e){}}
 function getBoard(){return boardState||lsGetBoard();}
+let standingState=null, standingUnsub=null;
+function lsGetStanding(){try{return JSON.parse(localStorage.getItem('sf-standing'))||{items:[]};}catch(e){return {items:[]};}}
+function lsSetStanding(){try{localStorage.setItem('sf-standing',JSON.stringify(standingState));}catch(e){}}
+function getStanding(){return standingState||lsGetStanding();}
+function persistStanding(st){
+  standingState=st;
+  if(fbReady&&fbDb){ fbDb.collection('board').doc('standing').set(st).catch(function(){lsSetStanding();}); }
+  else lsSetStanding();
+}
+function startStandingSync(){
+  if(fbReady&&fbDb){
+    if(standingUnsub)standingUnsub();
+    standingUnsub=fbDb.collection('board').doc('standing').onSnapshot(function(snap){
+      standingState=snap.exists?snap.data():{items:[]};
+      renderBoard();
+    },function(){ standingState=lsGetStanding(); renderBoard(); });
+  }else{ standingState=lsGetStanding(); }
+}
+function addStanding(){
+  if(!isMgr())return;
+  const inp=$('in-standing'),v=(inp.value||'').trim();if(!v)return;
+  const st=getStanding();st.items=st.items||[];st.items.push(v);
+  persistStanding(st);renderBoard();
+  setTimeout(function(){const x=$('in-standing');if(x)x.focus();},0);
+}
+function rmStanding(i){
+  if(!isMgr())return;
+  const st=getStanding();(st.items||[]).splice(i,1);persistStanding(st);renderBoard();
+}
+function standingColHTML(){
+  const st=getStanding(), items=st.items||[];
+  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">House Pours · Mocktail</span>`;
+  if(isMgr())h+=`<div class="board-input-row"><input class="board-input" id="in-standing" placeholder="House red — Centine 2022 / Mocktail — strawberry shrub fizz" onkeydown="if(event.key==='Enter')addStanding()"><button class="board-add" onclick="addStanding()">+</button></div>`;
+  if(!items.length)h+=`<div class="board-empty">Not set yet${isMgr()?'':' — a lead sets these'}.</div>`;
+  items.forEach((it,i)=>{
+    h+=`<div class="board-item"><span>${esc(it)}</span>${isMgr()?`<span class="x" onclick="rmStanding(${i})">✕</span>`:''}</div>`;});
+  h+=`<div class="mm-cap" style="text-align:left">These stick until a lead changes them — not cleared nightly.</div></div>`;
+  return h;
+}
 function startBoardSync(){
   if(fbReady&&fbDb){
     if(boardUnsub)boardUnsub();
@@ -1446,6 +1490,7 @@ function startBoardSync(){
       renderBoard();
     },function(){ boardState=lsGetBoard(); renderBoard(); });
   }else{ boardState=lsGetBoard(); }
+  startStandingSync();
 }
 function persistBoard(b){
   boardState=b;
@@ -1470,7 +1515,7 @@ function renderBoard(){const b=getBoard();
   const live=fbReady?`<span style="color:#bfe0a8">● live</span> — shared across every device.`:`saved on this device only.`;
   let h=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`;
   if(boardTab==='board'){
-    h+=col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials');
+    h+=col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials')+standingColHTML();
     markSeen86();   // viewing the pane = seeing the items
   }else{
     h+=secChipsHTML()+tablesPaneHTML(b);
@@ -1483,12 +1528,63 @@ function secChipsHTML(){
   const order=(SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[];
   const cur=boardSecGet();
   return `<div class="sec-chips"><button class="fchip ${cur==='all'?'active':''}" onclick="setBoardSec('all')">Full floor</button>`+
-    order.map(n=>`<button class="fchip ${cur===n?'active':''}" onclick="setBoardSec('${esc(n)}')">${esc(n)}</button>`).join('')+`</div>`;
+    order.map(n=>`<button class="fchip ${cur===n?'active':''}" onclick="setBoardSec('${esc(n)}')">${esc(n)}</button>`).join('')+
+    `<button class="fchip ${cur==='mine'?'active':''}" onclick="setBoardSec('mine')">My tables</button></div>`;
 }
 function setBoardSec(v){boardSecSet(v);renderBoard();}
+/* MY TABLES — per-device, per-night custom table set (sections get split up;
+   tables 1+2 fold into Front Room when Streetside isn't running, etc.) */
+function myTablesKey(){return 'sf-mytables-'+todayISO();}
+function getMyTables(){try{return JSON.parse(localStorage.getItem(myTablesKey()))||[];}catch(e){return [];}}
+function toggleMyTable(t){
+  let m=getMyTables();
+  if(m.indexOf(t)>=0)m=m.filter(x=>x!==t); else m.push(t);
+  try{localStorage.setItem(myTablesKey(),JSON.stringify(m));}catch(e){}
+  renderBoard();
+}
+function allTablesInOrder(){
+  const sec=SF.seating&&SF.seating.sections; if(!sec)return [];
+  let out=[]; sec.order.forEach(n=>{out=out.concat(sec.map[n]||[]);}); return out;
+}
+function gridMapHTML(tabs,noted){
+  if(!tabs.length)return '';
+  const sorted=tabs.slice().sort((a,b)=>{
+    const ba=/^B/i.test(a)?1:0, bb=/^B/i.test(b)?1:0;
+    const na=parseInt(String(a).replace(/\D/g,''))||999, nb=parseInt(String(b).replace(/\D/g,''))||999;
+    return ba-bb||na-nb;});
+  const cols=Math.min(5,Math.max(2,Math.ceil(Math.sqrt(sorted.length))));
+  const S=110,G=18, rows=Math.ceil(sorted.length/cols);
+  const W=cols*S+(cols-1)*G, H=rows*S+(rows-1)*G;
+  let svg=`<svg viewBox="-10 -10 ${W+20} ${H+20}" xmlns="http://www.w3.org/2000/svg">`;
+  sorted.forEach((t,i)=>{const c=i%cols,r=Math.floor(i/cols),x=c*(S+G),y=r*(S+G),hot=noted.indexOf(String(t).toUpperCase())>=0;
+    svg+=`<rect class="${hot?'mm-t mm-noted':'mm-t'}" x="${x}" y="${y}" width="${S}" height="${S}" rx="16"/>`;
+    svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${x+S/2}" y="${y+S/2}" dy="0.36em" style="font-size:34px">${esc(t)}</text>`;});
+  svg+=`</svg>`;
+  return `<div class="mini-map">${svg}<div class="mm-cap">your tables tonight — gold have notes</div></div>`;
+}
 function tablesPaneHTML(b){
   const sec=boardSecGet(), items=b.tables||[];
   if(sec==='all')return tablesColHTML(items);   // MD full-floor view — unchanged
+  if(sec==='mine'){
+    const mine=getMyTables(), mineU=mine.map(t=>String(t).toUpperCase());
+    const inMine=items.map((t,i)=>({t:t,i:i})).filter(o=>mineU.indexOf(String(o.t.table).trim().toUpperCase())>=0);
+    let h=`<div class="tpick-label">Tap the tables you're covering tonight (resets daily)</div><div class="tpick-wrap">`+
+      allTablesInOrder().map(t=>`<button class="tpick${mine.indexOf(t)>=0?' on':''}" onclick="toggleMyTable('${esc(t)}')">${esc(t)}</button>`).join('')+`</div>`;
+    h+=gridMapHTML(mine,inMine.map(o=>String(o.t.table).trim().toUpperCase()));
+    if(mine.length){
+      h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">My Tables — Tonight</span>
+      <div class="tbl-input-row">
+        <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
+        <select class="tbl-occ" id="tbl-occ">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select>
+        <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note" onkeydown="if(event.key==='Enter')addTable()">
+        <button class="board-add" onclick="addTable()">+</button>
+      </div>`;
+      if(!inMine.length)h+=`<div class="board-empty">No notes on your tables tonight.</div>`;
+      inMine.forEach(o=>h+=tblItemHTML(o.t,o.i));
+      h+=`</div>`;
+    }
+    return h;
+  }
   const inSec=items.map((t,i)=>({t:t,i:i})).filter(o=>tableSection(o.t.table)===sec);
   let h=miniMapHTML(sec,inSec.map(o=>String(o.t.table).trim().toUpperCase()));
   h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">${esc(sec)} — Tables Tonight</span>
