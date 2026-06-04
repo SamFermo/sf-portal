@@ -3075,29 +3075,35 @@ window.SF = {
   "nonAlcoholic": [
    {
     "name": "House Mocktail",
-    "price": "9"
+    "price": "9",
+    "note": "Rotates with the season and the walk-in. Ask your bar lead for tonight's build before service so you can speak to it."
    },
    {
     "name": "Pathfinder N/A Negroni",
-    "price": "12"
+    "price": "12",
+    "note": "Seattle-born zero-proof spirit: fermented hemp, distilled in copper pots, layered with wormwood, angelica, sage, ginger, and Douglas fir. Reads like an amaro — earthy, bittersweet, crisp — stirred here into a Negroni-style build. No cannabinoids, nothing psychoactive. First poured at Life on Mars in 2021."
    },
    {
     "name": "Aplos Ginger and Hibiscus \"Sour\"",
-    "price": "13"
+    "price": "13",
+    "note": "Zero-proof sour built on Aplos, a hemp-infused alcohol-free spirit — shaken with hibiscus and fresh ginger over lemon. Tart, floral, with a gingery bite."
    },
    {
     "name": "Noughty N/A Sparkling Chardonnay",
-    "price": "10"
+    "price": "10",
+    "note": "Thomson & Scott's alcohol-free sparkling: 100% organic Spanish chardonnay, dealcoholized under vacuum so the aromatics survive, then lightly carbonated. Crisp green apple, a touch of sweetness, real acidity. 0.0%, organic, vegan."
    }
   ],
   "beer": [
    {
     "name": "Peroni",
-    "price": "6"
+    "price": "6",
+    "note": "Peroni Nastro Azzurro — Italy's flagship pale lager since 1963, named for the Blue Riband speed record won by the Italian ocean liner Rex. Crisp, dry, and light: built for a table full of pasta."
    },
    {
     "name": "Fremont Brewing Lush IPA",
-    "price": "7"
+    "price": "7",
+    "note": "From Fremont Brewing, a few neighborhoods over — family-owned since 2009. Their year-round juicy IPA: Citra and Mosaic hops, tropical and citrus up front, smooth finish. 7%, drinks easier than it is."
    }
   ],
   "amaroFlights": [
@@ -3107,17 +3113,21 @@ window.SF = {
     "pours": [
      {
       "name": "Amaro Chiaro",
-      "origin": "Vancouver, CAN"
+      "origin": "Vancouver, CAN",
+      "note": "The Woods Spirit Co., North Vancouver. Vacuum-distilled to stay water-clear — thirteen botanicals, lemon and star anise up front, gentian for the bite. Delicate for an amaro; chiaro means 'clear.'"
      },
      {
       "name": "Amaro Rucolino",
-      "origin": "Tuscany, IT"
+      "origin": "Tuscany, IT",
+      "note": "An amaro built on rucola — arugula, the salad green. Peppery, green, gently bitter; far stranger on paper than in the glass."
      },
      {
       "name": "Faccia Brutto Fernet",
-      "origin": "Brooklyn, NY"
+      "origin": "Brooklyn, NY",
+      "note": "Brooklyn-made fernet in the old Italian style — bracing, minty, properly bitter. The producer's name means 'ugly face,' which is roughly what the first sip makes."
      }
-    ]
+    ],
+    "desc": "Three amari that wrong-foot you — one pours crystal clear, one is built on arugula, and the fernet is from Brooklyn, not Milan. For the guest who's sure they know amaro."
    },
    {
     "name": "Out of the Woods",
@@ -3125,17 +3135,21 @@ window.SF = {
     "pours": [
      {
       "name": "Amaro Braulio",
-      "origin": "Valtellina, IT"
+      "origin": "Valtellina, IT",
+      "note": "The alpine classic, made in Bormio high in the Italian Alps since 1875 — juniper, gentian, wormwood, and yarrow, rested in oak. Tastes like pine air after snow."
      },
      {
       "name": "Amaro Amorino Reserva",
-      "origin": "Seattle, WA"
+      "origin": "Seattle, WA",
+      "note": "Letterpress Distilling, Seattle. Seville orange peel, baking spice, and florals, with the reserve bottling rested in used whiskey barrels at a fuller proof. Named for the founder's Abruzzo-born grandfather."
      },
      {
       "name": "Brucato Amaro Woodlands",
-      "origin": "S.F., CA"
+      "origin": "S.F., CA",
+      "note": "San Francisco amaro from California botanicals — elderberry, cocoa nib, black fig, and citrus. Dark, woodsy, gently sweet."
      }
-    ]
+    ],
+    "desc": "A walk through three forests: the Italian Alps, a Seattle barrel room, and California woodland. Piney, dark, resinous — the deep end of the genre."
    },
    {
     "name": "The Hill I Die On",
@@ -3143,17 +3157,21 @@ window.SF = {
     "pours": [
      {
       "name": "Brucato Amaro \"Chaparral\"",
-      "origin": "S.F., CA"
+      "origin": "S.F., CA",
+      "note": "Brucato's ode to California's chaparral scrubland — yerba santa, bay laurel, spearmint, cardamom. Green and herbal, pointed in the direction of Chartreuse."
      },
      {
       "name": "Amaro Foro",
-      "origin": "Piedmont, IT"
+      "origin": "Piedmont, IT",
+      "note": "From Piedmont, formulated by a former pharmacist — 25 botanicals over a citrus-peel core, angelica to chamomile. Dark, nutty, bittersweet."
      },
      {
       "name": "California Fernet",
-      "origin": "Petaluma, CA"
+      "origin": "Petaluma, CA",
+      "note": "A California take on the most divisive amaro — long botanical maceration, mint-forward and brighter than its Milanese ancestors, bottled at a full 40%."
      }
-    ]
+    ],
+    "desc": "Hillside botany with strong opinions — California chaparral scrub, a Piedmontese pharmacist's 25-botanical formula, and a fernet that picks a fight. Order it if you have convictions."
    }
   ],
   "afterDinner": [
