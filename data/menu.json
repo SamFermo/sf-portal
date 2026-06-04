@@ -88,7 +88,7 @@
           "price": "13",
           "raw": false,
           "pron": "fah-ree-NAH-tah",
-          "story": "A Ligurian chickpea flatbread with roots in 13th-century Genoa — thin, crisp at the edges, soft and nutty in the center. Made in-house from chickpea flour, rosemary olive oil, and water, finished with fresh thyme and sea salt. The housemade cagliatta and a seasonal preserve come on the side for spreading. Current preserve: rhubarb caramelized onion jam.",
+          "story": "A Ligurian chickpea flatbread with roots in 13th-century Genoa — thin, crisp at the edges, soft and nutty in the center. Made in-house from chickpea flour, rosemary olive oil, and water, finished with fresh thyme and sea salt. The housemade cagliatta and a seasonal preserve sit alongside on the plate. Current preserve: rhubarb caramelized onion jam.",
           "ingredients": [
             {
               "term": "Farinata",
@@ -112,7 +112,7 @@
           "canModify": [
             "dairy"
           ],
-          "allergenNote": "Naturally gluten-free — chickpea flour, no wheat. The cagliatta is served in its own bowl, so dairy-free is simply leaving it off; the preserve stays."
+          "allergenNote": "Naturally gluten-free — chickpea flour, no wheat. The cagliatta is plated alongside; for dairy-free it moves to a bowl on the side or comes off entirely, and the preserve stays."
         },
         {
           "name": "House Caesar",
@@ -263,11 +263,11 @@
       "items": [
         {
           "name": "Swan House Bolognese",
-          "desc": "saffron spaghetti, pork, veal, tomato, fennel, rosemary, parmigiano reggiano",
+          "desc": "saffron spaghetti, swan house beef & pork, tomato, fennel, rosemary, parmigiano reggiano",
           "price": "32",
           "raw": false,
           "pron": "boh-loh-NYEH-zeh",
-          "story": "The family recipe — on the menu since day one, and it never leaves. Pork and veal seasoned with our own spice blend, cooked down slowly with red wine, tomato, fennel, and rosemary, then finished with cream, butter, sherry, and salt. Served over house-made saffron spaghetti — the saffron gives the pasta its golden color and a subtle earthy aroma.",
+          "story": "The family recipe — on the menu since day one, and it never leaves. This run is built on ground beef and pork raised at Swan House Farm; when it's gone, the dish returns to the classic pork-and-veal build. Either way: seasoned with our own spice blend, cooked down slowly with red wine, tomato, fennel, and rosemary, then finished with cream, butter, sherry, and salt. Served over house-made saffron spaghetti — the saffron gives the pasta its golden color and a subtle earthy aroma.",
           "ingredients": [
             {
               "term": "Bolognese",
@@ -333,7 +333,7 @@
             "dairy",
             "allium"
           ],
-          "allergenNote": "No egg in this pasta. Dairy: butter and Parmigiano come off — the sauce leans on olive oil and pasta water, lighter but it holds. Allium: the ramps come off on request. Vegetarian: lamb sausage off, and the morels carry the dish."
+          "allergenNote": "No egg in this pasta. Dairy: butter and Parmigiano come off — the sauce leans on olive oil and pasta water, lighter but it holds. Allium: the ramps come off on request. Vegetarian: lamb sausage off — offer extra morels, or whatever seasonal vegetable the menu is carrying."
         },
         {
           "name": "Tartufo Nero",
@@ -407,7 +407,7 @@
             "dairy",
             "egg"
           ],
-          "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen sometimes subs mushrooms or peas. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish."
+          "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen subs in whatever vegetable is running seasonally on the menu. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish."
         },
         {
           "name": "Risotto Funghi",
@@ -519,7 +519,8 @@
           ],
           "allergenNote": "Dairy: the polenta comes off or swaps to risotto. Allium: the demi is built on onions — the kitchen can sub out the spring onions and the demi entirely, or the guest can keep the demi if cooked-in allium works for them. Ask; don't decide for them."
         }
-      ]
+      ],
+      "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die, like spaghetti, paccheri, and mafaldine — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. The quick tell: egg pasta runs golden and silky, extruded pasta runs pale straw with a rougher surface. New shape on the menu? Sort it with that rule, and confirm with the kitchen if it's borderline."
     }
   ],
   "desserts": [
