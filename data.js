@@ -30,7 +30,12 @@ window.SF = {
         "pronunciation": null,
         "note": "Flaky finishing salt from Essex, England. Prized for its pyramid-shaped crystals, clean flavor, and satisfying crunch."
        }
-      ]
+      ],
+      "allergens": [
+       "gluten",
+       "dairy"
+      ],
+      "canModify": []
      },
      {
       "name": "Castelvetrano Olives",
@@ -50,7 +55,9 @@ window.SF = {
         "pronunciation": null,
         "note": "The fine yellow pollen harvested from wild fennel flowers. Intensely aromatic, floral, and anise-forward — used here as a finishing garnish."
        }
-      ]
+      ],
+      "allergens": [],
+      "canModify": []
      },
      {
       "name": "Marcona Almonds",
@@ -70,7 +77,11 @@ window.SF = {
         "pronunciation": null,
         "note": "Flaky finishing salt from Essex, England — same as on the bread. Tossed on with the rosemary oil after roasting so the crunch stays distinct."
        }
-      ]
+      ],
+      "allergens": [
+       "nuts"
+      ],
+      "canModify": []
      },
      {
       "name": "Farinata",
@@ -95,7 +106,14 @@ window.SF = {
         "pronunciation": null,
         "note": "Seasonal preserve made in-house: rhubarb cooked down with caramelized onions, vinegar, and sugar. Tart, sweet, savory — made to work against the richness of the cagliatta."
        }
-      ]
+      ],
+      "allergens": [
+       "dairy"
+      ],
+      "canModify": [
+       "dairy"
+      ],
+      "allergenNote": "Naturally gluten-free — chickpea flour, no wheat. The cagliatta and preserve come on the side, so skipping them makes it dairy-free."
      },
      {
       "name": "House Caesar",
@@ -124,7 +142,17 @@ window.SF = {
         "pronunciation": null,
         "note": "The dressing is built with egg yolk — emulsified raw with oil and champagne vinegar for a thick, rich, classic Caesar consistency. Not cooked through, similar to mayonnaise."
        }
-      ]
+      ],
+      "allergens": [
+       "fish",
+       "dairy",
+       "gluten",
+       "egg"
+      ],
+      "canModify": [
+       "gluten"
+      ],
+      "allergenNote": "Croutons off = gluten-free. Anchovy and egg are built into the dressing — no mod there."
      },
      {
       "name": "Farm House Salad",
@@ -153,7 +181,9 @@ window.SF = {
         "pronunciation": null,
         "note": "Red onions quick-pickled in vinegar and sugar in-house. Adds a sharp, bright counterpoint to the smoke in the vinaigrette."
        }
-      ]
+      ],
+      "allergens": [],
+      "canModify": []
      },
      {
       "name": "Burrata",
@@ -173,7 +203,15 @@ window.SF = {
         "pronunciation": "breh-zah-OH-lah",
         "note": "air-dried, salted beef from Valtellina in Lombardy, sliced paper-thin. Lean, deep red, faintly sweet."
        }
-      ]
+      ],
+      "allergens": [
+       "dairy",
+       "gluten"
+      ],
+      "canModify": [
+       "gluten"
+      ],
+      "allergenNote": "Skip the crostini for gluten-free."
      },
      {
       "name": "Chilled Nettle Vichyssoise",
@@ -203,7 +241,12 @@ window.SF = {
         "pronunciation": null,
         "note": "Blended chive and neutral oil, strained smooth. Vivid green, herbaceous, and grassy — drizzled over the top for aroma and color."
        }
-      ]
+      ],
+      "allergens": [
+       "dairy"
+      ],
+      "canModify": [],
+      "allergenNote": "Naturally gluten-free."
      }
     ]
    },
@@ -233,7 +276,13 @@ window.SF = {
         "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
         "note": "the aged hard cheese from Emilia-Romagna, the only 'real' Parmesan; nutty, savory, crystalline."
        }
-      ]
+      ],
+      "allergens": [
+       "gluten",
+       "dairy",
+       "egg"
+      ],
+      "canModify": []
      },
      {
       "name": "Mafaldine",
@@ -263,7 +312,13 @@ window.SF = {
         "pronunciation": null,
         "note": "Wild leeks foraged in early spring; the whole plant is edible — leaves, stems, and bulb. Flavor sits between garlic and green onion, with a grassy brightness. One of the most sought-after spring wild ingredients."
        }
-      ]
+      ],
+      "allergens": [
+       "gluten",
+       "dairy",
+       "egg"
+      ],
+      "canModify": []
      },
      {
       "name": "Tartufo Nero",
@@ -288,7 +343,13 @@ window.SF = {
         "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
         "note": "PDO-protected aged Italian hard cheese from the Parma region. Adds a nutty, salty counterpoint to the truffle's earthiness."
        }
-      ]
+      ],
+      "allergens": [
+       "gluten",
+       "egg",
+       "dairy"
+      ],
+      "canModify": []
      },
      {
       "name": "Paccheri alla Carbonara",
@@ -318,7 +379,14 @@ window.SF = {
         "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
         "note": "a hard, salty sheep's-milk cheese from Lazio — sharper than Parmigiano."
        }
-      ]
+      ],
+      "allergens": [
+       "gluten",
+       "egg",
+       "dairy"
+      ],
+      "canModify": [],
+      "allergenNote": "The egg is the dish — no mod."
      },
      {
       "name": "Risotto Funghi",
@@ -343,7 +411,12 @@ window.SF = {
         "pronunciation": "ar-BOR-ee-oh",
         "note": "Short-grain Italian rice that releases starch as it cooks, creating risotto's signature creamy texture. Par-cooked in batches at the restaurant, finished per plate to order."
        }
-      ]
+      ],
+      "allergens": [
+       "dairy"
+      ],
+      "canModify": [],
+      "allergenNote": "Naturally gluten-free."
      },
      {
       "name": "Pan Roasted Halibut",
@@ -372,7 +445,11 @@ window.SF = {
         "pronunciation": null,
         "note": "Purveyor in Port Townsend, WA, focused on Pacific Northwest and Alaskan seafood. Supplies the majority of top Seattle restaurants. We order directly from them for next-day delivery."
        }
-      ]
+      ],
+      "allergens": [
+       "fish"
+      ],
+      "canModify": []
      },
      {
       "name": "Swan House Pork Chop",
@@ -401,7 +478,12 @@ window.SF = {
         "pronunciation": "poh-LEN-tah",
         "note": "Ground cornmeal cooked with cream, chicken stock, and butter until thick and creamy. Serves as the bed for the chop — rich, mild, and soft."
        }
-      ]
+      ],
+      "allergens": [
+       "dairy"
+      ],
+      "canModify": [],
+      "allergenNote": "Polenta is corn — the plate is gluten-free."
      }
     ]
    }
@@ -439,7 +521,13 @@ window.SF = {
       "pronunciation": "mas-car-POH-neh",
       "note": "Italian triple-cream fresh cheese from Lombardy — thick, rich, mildly sweet. The base of the tiramisu cream layer."
      }
-    ]
+    ],
+    "allergens": [
+     "dairy",
+     "gluten",
+     "egg"
+    ],
+    "canModify": []
    },
    {
     "name": "Pavlova",
@@ -463,14 +551,26 @@ window.SF = {
       "pronunciation": null,
       "note": "sugar perfumed with lilac blossoms from Swan House Farm; floral and faintly sweet."
      }
-    ]
+    ],
+    "allergens": [
+     "egg",
+     "dairy"
+    ],
+    "canModify": [],
+    "allergenNote": "No flour in the meringue — gluten-free as built."
    },
    {
     "name": "Seasonal Gelato",
     "desc": "ask the kitchen for tonight's flavor",
-    "price": "8"
+    "price": "8",
+    "allergens": [
+     "dairy"
+    ],
+    "canModify": [],
+    "allergenNote": "Flavors rotate nightly — confirm eggs or nuts with the kitchen before promising anything."
    }
-  ]
+  ],
+  "allergenStatus": "draft"
  },
  "wines": [
   {
