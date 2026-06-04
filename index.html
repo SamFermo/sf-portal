@@ -785,11 +785,11 @@ function dishCardHTML(it){
   if(rich){
     h+=`<div class="card-details">`;
     if(it.story) h+=`<p class="dish-story serif">${esc(it.story)}</p>`;
-    if(it.allergenNote) h+=`<div class="itk-label">Allergy notes</div><div class="alg-note serif" style="padding:0">${esc(it.allergenNote)}</div>`;
     if(it.ingredients&&it.ingredients.length){
       h+=`<div class="itk-label">Ingredients to know</div>`;
       it.ingredients.forEach(g=>h+=`<div class="itk serif"><b>${esc(g.term)}</b>${g.pronunciation?` <span class="pron">${esc(g.pronunciation)}</span>`:''} — ${esc(g.note)}</div>`);
     }
+    if(it.allergenNote) h+=`<div class="itk-label">Allergy notes &amp; mods</div><div class="alg-note serif" style="padding:0">${esc(it.allergenNote)}</div>`;
     h+=`</div>`;
   }
   h+=noteBox('food',it.name);
