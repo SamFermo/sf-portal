@@ -512,6 +512,7 @@ body.locked{overflow:hidden;}
 .occ-birthday{background:#f3d9ec; color:#9b2f74;} .occ-anniversary{background:#e6d4f0; color:#6a3596;}
 .occ-vip{background:#f1e0bd; color:#8a5a18;} .occ-special{background:#cdd9bb; color:#3d6325;}
 .occ-reset{background:#bfe3b0; color:#23501a;} .occ-dragging{background:#f0c5b8; color:#8a2a12;}
+.occ-outby{background:#f5e3b0; color:#7a5410;}
 .tbl-glow-g{border-left-color:#6db657; animation:glowG 1.5s ease-in-out infinite;}
 .tbl-glow-r{border-left-color:#d4654a; animation:glowR 1.5s ease-in-out infinite;}
 @keyframes glowG{0%,100%{box-shadow:0 0 5px rgba(109,182,87,.3);}50%{box-shadow:0 0 16px rgba(109,182,87,.75);}}
@@ -680,7 +681,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780611537';   // stamped by build-data.py at every deploy
+const BUILD='1780611761';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1638,7 +1639,7 @@ function tablesPaneHTML(b){
       h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">My Tables — Tonight</span>
       <div class="tbl-input-row">
         <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
-        <select class="tbl-occ" id="tbl-occ">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select>
+        <select class="tbl-occ" id="tbl-occ" onchange="occChanged()">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select><select class="tbl-occ" id="tbl-outby" style="display:none"></select>
         <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note" onkeydown="if(event.key==='Enter')addTable()">
         <button class="board-add" onclick="addTable()">+</button>
       </div>`;
@@ -1653,7 +1654,7 @@ function tablesPaneHTML(b){
   h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">${esc(sec)} — Tables Tonight</span>
     <div class="tbl-input-row">
       <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
-      <select class="tbl-occ" id="tbl-occ">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select>
+      <select class="tbl-occ" id="tbl-occ" onchange="occChanged()">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select><select class="tbl-occ" id="tbl-outby" style="display:none"></select>
       <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note (e.g. comping dessert)" onkeydown="if(event.key==='Enter')addTable()">
       <button class="board-add" onclick="addTable()">+</button>
     </div>`;
@@ -1696,7 +1697,25 @@ function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;
 function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);renderBoard();}
 
 /* TABLES TONIGHT — occasions / VIP notes (maitre d') */
-const OCCASIONS=[['birthday','Birthday'],['anniversary','Anniversary'],['vip','VIP'],['special','Special'],['reset','Reset'],['dragging','Dragging']];
+const OCCASIONS=[['birthday','Birthday'],['anniversary','Anniversary'],['vip','VIP'],['special','Special'],['reset','Reset'],['dragging','Dragging'],['outby','Out by…']];
+/* OUT BY — 15-min slots, only times still ahead of now */
+function outbyOptionsHTML(){
+  const now=new Date();
+  let mins=(Math.floor((now.getHours()*60+now.getMinutes())/15)+1)*15;
+  let h='';
+  for(;mins<=23*60+45;mins+=15){
+    const hh=Math.floor(mins/60), mm=mins%60;
+    const lbl=`${hh%12||12}:${String(mm).padStart(2,'0')}${hh<12?'am':'pm'}`;
+    h+=`<option value="${lbl}">${lbl}</option>`;
+  }
+  return h;
+}
+function occChanged(){
+  const sel=$('tbl-occ'), tw=$('tbl-outby');
+  if(!sel||!tw)return;
+  if(sel.value==='outby'){tw.innerHTML=outbyOptionsHTML();tw.style.display='';}
+  else tw.style.display='none';
+}
 function occLabel(o){const f=OCCASIONS.find(x=>x[0]===o);return f?f[1]:o;}
 function tableSection(t){
   const sec=SF.seating&&SF.seating.sections;if(!sec||!sec.map)return null;
@@ -1708,7 +1727,8 @@ function tblItemHTML(t,i){
   // reset/dragging are server→MD status flags: they glow until the MD acks
   const isStatus=(t.occasion==='reset'||t.occasion==='dragging');
   const glow=isStatus&&!t.ack?(t.occasion==='reset'?' tbl-glow-g':' tbl-glow-r'):'';
-  let mid=`<span class="tbl-occ-tag occ-${esc(t.occasion)}">${esc(occLabel(t.occasion))}</span>
+  const tagTxt=(t.occasion==='outby'&&t.outby)?('Out by '+t.outby):occLabel(t.occasion);
+  let mid=`<span class="tbl-occ-tag occ-${esc(t.occasion)}">${esc(tagTxt)}</span>
     ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${t.by?`<div class="tbl-by">added by ${esc(t.by)}${isStatus&&t.ack?' · ✓ seen':''}</div>`:''}`;
   let right='';
   if(isStatus&&!t.ack&&isMgr())right+=`<button class="tbl-ack" onclick="ackTable(${i})">ACK</button>`;
@@ -1725,7 +1745,7 @@ function tablesColHTML(items){
   let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Tables Tonight</span>
     <div class="tbl-input-row">
       <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
-      <select class="tbl-occ" id="tbl-occ">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select>
+      <select class="tbl-occ" id="tbl-occ" onchange="occChanged()">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select><select class="tbl-occ" id="tbl-outby" style="display:none"></select>
       <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note (e.g. comping dessert)" onkeydown="if(event.key==='Enter')addTable()">
       <button class="board-add" onclick="addTable()">+</button>
     </div>`;
@@ -1744,7 +1764,12 @@ function tablesColHTML(items){
 function addTable(){const numEl=$('tbl-num'),t=(numEl.value||'').trim();
   if(!t){if(numEl){numEl.classList.add('flash-req');numEl.focus();setTimeout(()=>numEl.classList.remove('flash-req'),1200);}return;}
   const occ=$('tbl-occ').value,note=($('tbl-note').value||'').trim();
-  const b=getBoard();b.tables=b.tables||[];b.tables.push({table:comboPrimary(t),occasion:occ,note:note,by:currentUserName()||''});
+  let outby='';
+  if(occ==='outby'){
+    const o=$('tbl-outby');outby=o?o.value:'';
+    if(!outby){if(o){o.classList.add('flash-req');setTimeout(()=>o.classList.remove('flash-req'),1200);}return;}
+  }
+  const b=getBoard();b.tables=b.tables||[];b.tables.push({table:comboPrimary(t),occasion:occ,note:note,by:currentUserName()||'',outby:outby});
   persistBoard(b);renderBoard();
   setTimeout(()=>{const x=$('tbl-num');if(x)x.focus();},0);}
 function rmTable(i){const b=getBoard();(b.tables||[]).splice(i,1);persistBoard(b);renderBoard();}
