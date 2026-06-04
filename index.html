@@ -234,6 +234,10 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ro-claim small{font-size:8px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;}
 .ro-claimed{display:inline-flex; flex-direction:column; align-items:center; background:rgba(74,106,58,.14); border:1.5px solid var(--accent); color:var(--accent-dark); border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; cursor:pointer; line-height:1.15;}
 .ro-claimed small{font-size:8px;}
+.ro-claim,.ro-claimed{margin:1px 0;}
+.sched-table tr.covrow td{background:rgba(176,74,26,.06); border-top:1.5px solid var(--rust);}
+.sched-table tr.covrow td.today{background:rgba(230,200,120,.25);}
+.cov-nm{color:var(--rust)!important; font-size:10px!important; text-transform:uppercase; letter-spacing:.06em;}
 
 /* duties */
 .duty-item{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; margin-bottom:9px; padding:12px 14px; box-shadow:0 5px 13px rgba(0,0,0,.24);}
@@ -504,7 +508,7 @@ body.locked{overflow:hidden;}
     <button class="subtab active" data-side="foh">FOH</button><button class="subtab" data-side="boh">BOH</button><button class="subtab" data-side="timeoff">Time Off</button></div></div>
   <div class="filterbar" id="schedRanges" style="justify-content:center; padding-top:2px;"></div>
   <div id="schedBody"></div>
-  <div class="legend" id="schedLegend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off — tap one to claim the cover (Sam confirms the final schedule) · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
+  <div class="legend" id="schedLegend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off · <b>Open</b> row = shifts we still need covered — tap one to claim it (Sam confirms the final schedule) · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
 </section>
 
 <section class="view" id="seating">
@@ -581,7 +585,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780559635';   // stamped by build-data.py at every deploy
+const BUILD='1780560093';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -995,18 +999,20 @@ function startClaimsSync(){
     },function(){ CLAIMS=clLsGet(); renderSchedule(); });
   } else { CLAIMS=clLsGet(); }
 }
-function claimShift(side,date,name){
+function doClaim(k,desc,rec){
   if(!me){openLogin();return;}
-  const k=claimKey(side,date,name);
   if(CLAIMS[k])return;
-  if(!confirm('Claim coverage for '+name+"'s shift on "+fmtLong(date)+'? Sam still confirms the final schedule.'))return;
-  const rec={side:side,date:date,rowName:name,claimedBy:me.name,at:Date.now()};
+  if(!confirm('Claim '+desc+'? Sam still confirms the final schedule.'))return;
+  rec.claimedBy=me.name; rec.at=Date.now();
   CLAIMS[k]=rec; renderSchedule();
   if(fbReady&&fbDb){ fbDb.collection('claims').doc(k).set(rec).catch(function(){clLsSet();}); }
   else clLsSet();
 }
-function unclaimShift(side,date,name){
-  const k=claimKey(side,date,name), c=CLAIMS[k]; if(!c)return;
+function claimShiftCv(side,date,label,idx){
+  doClaim(claimKey(side,date,'cv-'+label+'-'+idx),'the '+label+' shift on '+fmtLong(date),{side:side,date:date,shift:label,slot:idx,kind:'coverage'});
+}
+function unclaimByKey(k){
+  const c=CLAIMS[k]; if(!c)return;
   if(!(isAdmin()||c.claimedBy===currentUserName())){alert('Only '+String(c.claimedBy).split(' ')[0]+' or Sam can release this claim.');return;}
   if(!confirm('Release this coverage claim?'))return;
   delete CLAIMS[k]; renderSchedule();
@@ -1022,15 +1028,22 @@ function weekTableHTML(w,today){
   h+=`</tr></thead><tbody>`;
   w.rows.forEach(r=>{const mine=MYN.indexOf(String(r.name).trim().toLowerCase())>=0;
     h+=`<tr class="${mine?'me':''}"><td class="nm">${esc(r.name)}</td>`;
-    r.shifts.forEach((s,i)=>{
-      const d=w.dates[i]; let cell;
-      if(s&&String(s).trim().toUpperCase()==='R/O'){
-        const k=claimKey(schedState.side,d,r.name), c=CLAIMS[k];
-        if(c){ cell=`<span class="ro-claimed" onclick="unclaimShift('${schedState.side}','${d}','${jq(r.name)}')">R/O<small>✓ ${esc(String(c.claimedBy).split(' ')[0])}</small></span>`; }
-        else { cell=`<button class="ro-claim" onclick="claimShift('${schedState.side}','${d}','${jq(r.name)}')">R/O<small>cover?</small></button>`; }
-      } else cell=`<span class="shift ${shiftClass(s)}">${s?esc(s):'·'}</span>`;
-      h+=`<td class="${d===today?'today':''}">${cell}</td>`;
-    });h+=`</tr>`;});
+    r.shifts.forEach((s,i)=>h+=`<td class="${w.dates[i]===today?'today':''}"><span class="shift ${shiftClass(s)}">${s?esc(s):'·'}</span></td>`);h+=`</tr>`;});
+  // coverage needs — the open shifts that get us to full staffing, claimable
+  const cov=w.coverage||[];
+  if(cov.some(x=>x&&String(x).trim())){
+    h+=`<tr class="covrow"><td class="nm cov-nm">Open</td>`;
+    cov.forEach((cell,i)=>{
+      const d=w.dates[i]; let inner='';
+      String(cell||'').split(',').map(x=>x.trim()).filter(Boolean).forEach((lab,j)=>{
+        const k=claimKey(schedState.side,d,'cv-'+lab+'-'+j), c=CLAIMS[k];
+        if(c) inner+=`<span class="ro-claimed" onclick="unclaimByKey('${k}')">${esc(lab)}<small>✓ ${esc(String(c.claimedBy).split(' ')[0])}</small></span>`;
+        else inner+=`<button class="ro-claim" onclick="claimShiftCv('${schedState.side}','${d}','${jq(lab)}',${j})">${esc(lab)}<small>claim</small></button>`;
+      });
+      h+=`<td class="${d===today?'today':''}">${inner||'<span class="shift off">·</span>'}</td>`;
+    });
+    h+=`</tr>`;
+  }
   return h+`</tbody></table></div>`;
 }
 function schedRanges(){
