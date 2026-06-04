@@ -122,6 +122,17 @@ nav.chips::-webkit-scrollbar{display:none;}
 .itk .pron{font-style:italic; color:var(--gold-deep);}
 .expand-hint{font-size:10.5px; color:var(--card-mute); letter-spacing:.04em; margin-top:9px; text-transform:uppercase;}
 
+/* allergen chips */
+.alg-row{display:flex; gap:5px; margin-top:7px; flex-wrap:wrap;}
+.alg{display:inline-flex; align-items:center; justify-content:center; min-width:21px; height:20px; padding:0 6px; border-radius:6px; font-size:10.5px; font-weight:700; letter-spacing:.03em; background:var(--wood-soft); color:#fdfaf1; border:1.5px solid var(--wood-soft); box-sizing:border-box;}
+.alg-mod{background:transparent; color:var(--wood-soft);}
+.alg-note{font-size:12.5px; font-style:italic; color:var(--card-soft); margin-top:6px; line-height:1.5;}
+.alg-legend{font-size:11px; color:var(--ink-soft); text-align:center; margin:0 0 6px; line-height:2;}
+.alg-legend b{color:var(--ink);}
+.alg-legend .alg{vertical-align:middle; background:var(--silver); border-color:var(--silver); color:#241f15;}
+.alg-legend .alg.alg-mod{background:transparent; color:var(--silver);}
+.alg-draft{font-size:11px; color:#f3a98c; font-style:italic; text-align:center; margin:0 0 14px;}
+
 /* wine */
 .wine-type{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; padding:2px 9px; border-radius:999px; margin-bottom:7px;}
 .wt-white{background:#f0e3c2; color:var(--wood);} .wt-red{background:#e6ccc2; color:#6b2818;}
@@ -752,6 +763,14 @@ function saveCorr(cat,name,val){const c=getCorr();c[cat]=c[cat]||{};if(val&&val.
 function noteBox(cat,name){if(!editMode)return '';const note=(getCorr()[cat]||{})[name]||'';return `<div class="note-box ${note?'filled':''}" data-cat="${cat}" data-for="${esc(name)}" onclick="event.stopPropagation()"><label>Correction for ${esc(name)}</label><textarea placeholder="What needs fixing?" oninput="saveCorr('${cat}',this.closest('.note-box').getAttribute('data-for'),this.value)">${esc(note)}</textarea></div>`;}
 function editBarHTML(){let h=`<div class="editbar"><button class="edit-toggle ${editMode?'on':''}" onclick="toggleEdit()">✎ Corrections${editMode?' · on':''}</button>`;if(editMode)h+=`<button class="gen-btn" onclick="genPrompt()">Generate deploy prompt<span class="badge gen-count">${corrCount()}</span></button>`;h+=`</div>`;if(editMode)h+=`<p class="est-note" style="text-align:left;margin:-6px 0 14px;">Notes save on this device. Add corrections under any item across Food, Wine &amp; Cocktails, then generate one prompt to hand back for deploy.</p>`;return h;}
 function toggleEdit(){editMode=!editMode;renderFoodTab();renderWine();renderBar();}
+const ALG={dairy:'D',gluten:'G',egg:'E',fish:'F',nuts:'N',shellfish:'SF',sesame:'SE',soy:'SO',peanut:'P'};
+function allergenChips(it){
+  const a=it.allergens||[],m=it.canModify||[];
+  if(!a.length)return '';
+  let h='<div class="alg-row">';
+  a.forEach(x=>h+=`<span class="alg ${m.indexOf(x)>=0?'alg-mod':''}" title="${esc(x)}">${ALG[x]||esc(x)}</span>`);
+  return h+'</div>';
+}
 function dishCardHTML(it){
   const rich = it.story || (it.ingredients&&it.ingredients.length);
   let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
@@ -759,11 +778,14 @@ function dishCardHTML(it){
       <span class="dish-name serif">${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}</span>
       <span class="dish-price serif">${esc(it.price)}</span></div>
       <div class="dish-desc serif">${esc(it.desc)}</div>`;
+  h+=allergenChips(it);
+  if(!rich&&it.allergenNote)h+=`<div class="alg-note serif">${esc(it.allergenNote)}</div>`;
   if(rich) h+=`<div class="expand-hint">Tap for the story &amp; ingredients ›</div>`;
   h+=`</div>`;
   if(rich){
     h+=`<div class="card-details">`;
     if(it.story) h+=`<p class="dish-story serif">${esc(it.story)}</p>`;
+    if(it.allergenNote) h+=`<div class="itk-label">Allergy notes</div><div class="alg-note serif" style="padding:0">${esc(it.allergenNote)}</div>`;
     if(it.ingredients&&it.ingredients.length){
       h+=`<div class="itk-label">Ingredients to know</div>`;
       it.ingredients.forEach(g=>h+=`<div class="itk serif"><b>${esc(g.term)}</b>${g.pronunciation?` <span class="pron">${esc(g.pronunciation)}</span>`:''} — ${esc(g.note)}</div>`);
@@ -773,8 +795,14 @@ function dishCardHTML(it){
   h+=noteBox('food',it.name);
   return h+`</div>`;
 }
+function allergenLegendHTML(){
+  let h=`<div class="alg-legend"><span class="alg">G</span> contains · <span class="alg alg-mod">G</span> kitchen can modify &nbsp;—&nbsp; `;
+  h+=`<b>D</b> dairy · <b>G</b> gluten · <b>E</b> egg · <b>F</b> fish · <b>N</b> tree nuts · <b>SF</b> shellfish · <b>SE</b> sesame · <b>SO</b> soy · <b>P</b> peanut</div>`;
+  if(SF.menu.allergenStatus==='draft')h+=`<div class="alg-draft">Allergen flags are in chef review — confirm with the kitchen before promising a table.</div>`;
+  return h;
+}
 function renderFoodTab(){
-  let f=editBarHTML();
+  let f=editBarHTML()+allergenLegendHTML();
   SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;sec.items.forEach(it=>f+=dishCardHTML(it));});
   f+=`<div class="section-label">Dessert</div>`; SF.menu.desserts.forEach(it=>f+=dishCardHTML(it));
   f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
