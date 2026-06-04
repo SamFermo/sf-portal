@@ -96,6 +96,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 .home-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:16px;}
 .home-card{position:relative; background:radial-gradient(120% 120% at 30% 22%, var(--moon-hi), var(--moon) 55%, var(--moon-lo)); border:none; border-radius:18px; padding:18px 16px 16px; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; text-align:left; box-shadow:0 0 26px rgba(245,238,222,.13), 0 8px 20px rgba(0,0,0,.34);}
 .home-card:hover{transform:translateY(-2px); box-shadow:0 0 40px rgba(245,238,222,.22), 0 10px 24px rgba(0,0,0,.4);}
+/* odd card count: center the orphan card in its own row (width matches a normal card: 50% minus half the 14px gap) */
+.home-card:last-child:nth-child(odd){grid-column:1/-1; justify-self:center; width:calc(50% - 7px);}
 .home-card .hc-icon{font-size:21px; margin-bottom:7px; display:block; color:var(--gold-deep);}
 .home-card .hc-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:20px; font-weight:600; color:var(--wood); margin:0 0 2px;}
 .home-card .hc-sub{font-size:12px; color:var(--card-mute); line-height:1.4;}
@@ -627,7 +629,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780604107';   // stamped by build-data.py at every deploy
+const BUILD='1780604885';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
