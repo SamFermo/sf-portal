@@ -37,14 +37,22 @@
 html,body{margin:0;padding:0;}
 body{
   min-height:100vh;
-  background:
-    linear-gradient(rgba(9,15,34,.80), rgba(6,10,24,.88)),
-    url('data/bg.jpg');
-  background-size:cover; background-position:center; background-attachment:fixed; background-repeat:no-repeat;
+  background:#0a1430;
   color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
   font-size:15px; line-height:1.5;
   padding-bottom:calc(64px + env(safe-area-inset-bottom));
+}
+/* Background lives on a viewport-fixed layer, not the body — iOS fakes
+   background-attachment:fixed by sizing the image to the full document height,
+   which blows it up and shifts it differently on every tab. This pins one
+   crisp render to the screen everywhere. */
+body::before{
+  content:''; position:fixed; inset:0; z-index:-1;
+  background:
+    linear-gradient(rgba(9,15,34,.80), rgba(6,10,24,.88)),
+    url('data/bg.jpg');
+  background-size:cover; background-position:center; background-repeat:no-repeat;
 }
 .serif{font-family:'Caladea','Cambria',Georgia,serif;}
 #app{position:relative; z-index:1;}
