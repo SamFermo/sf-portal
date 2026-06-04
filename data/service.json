@@ -2,85 +2,195 @@
   "duties": {
     "source": "Server Sidework 2026",
     "opening": [
-      { "task": "Set sani-buckets", "sub": [] },
-      { "task": "Set the patio, front room, bar, and pergola", "sub": [] },
-      { "task": "Check with MD whether any larger tables need to be built", "sub": [] },
-      { "task": "Coffee", "sub": [
-        "Once a week, soak a teaspoon of Puro Caff in the coffee thermos with hot water for 30 minutes. HIGHLY POISONOUS — label it while soaking and wash thoroughly after.",
-        "Brew 1 pot regular and 1 pot decaf, and stock the cream container"
-      ]},
-      { "task": "Silverware", "sub": [
-        "Fill 4 crates with rolled silverware",
-        "Polish any remaining silverware left in the drying rack"
-      ]},
-      { "task": "Stocking", "sub": [
-        "Stock silverware, serviettes, printer paper, to-go containers, etc. in server sections"
-      ]},
-      { "task": "Candles", "sub": [
-        "Clean votives as needed",
-        "Use a little oil at the bottom so candles don't stick",
-        "In summer, keep candles off tables until the sun starts setting"
-      ]},
-      { "task": "Polishing", "sub": [
-        "Polish check presenters",
-        "Detail your section — look for dirty glassware"
-      ]}
+      {
+        "task": "Set sani-buckets",
+        "sub": []
+      },
+      {
+        "task": "Set the patio, front room, bar, and pergola",
+        "sub": []
+      },
+      {
+        "task": "Check with MD whether any larger tables need to be built",
+        "sub": []
+      },
+      {
+        "task": "Coffee",
+        "sub": [
+          "Once a week, soak a teaspoon of Puro Caff in the coffee thermos with hot water for 30 minutes. HIGHLY POISONOUS — label it while soaking and wash thoroughly after.",
+          "Brew 1 pot regular and 1 pot decaf, and stock the cream container"
+        ]
+      },
+      {
+        "task": "Silverware",
+        "sub": [
+          "Fill 4 crates with rolled silverware",
+          "Polish any remaining silverware left in the drying rack"
+        ]
+      },
+      {
+        "task": "Stocking",
+        "sub": [
+          "Stock silverware, serviettes, printer paper, to-go containers, etc. in server sections"
+        ]
+      },
+      {
+        "task": "Candles",
+        "sub": [
+          "Clean votives as needed",
+          "Use a little oil at the bottom so candles don't stick",
+          "In summer, keep candles off tables until the sun starts setting"
+        ]
+      },
+      {
+        "task": "Polishing",
+        "sub": [
+          "Polish check presenters",
+          "Detail your section — look for dirty glassware"
+        ]
+      }
     ],
     "closing": [
-      { "task": "Reset attic and back six tables", "sub": [] },
-      { "task": "Unset and sanitize the front room, patio, and pergola tables", "sub": [] },
-      { "task": "Bring in awnings", "sub": [] },
-      { "task": "TURN OFF outside heaters / indoor space heaters. Close propane tanks", "sub": [] },
-      { "task": "Stock server wine wall, wine \"cellar,\" and low-boy", "sub": [
-        "Red BTG — front entrance, and under tbl 11–12",
-        "White BTG — the \"X\" storage behind tbl 11, under tbl 14–16, and walk-in",
-        "Bubbles — under the back POS, the stairs, and tbl 13",
-        "Bottled reds — far side of attic storage. $100+ bottles stock in the \"cellar\"",
-        "Bottled whites — walk-in"
-      ]},
-      { "task": "Linens / Recycling", "sub": [
-        "Dirty linen bag gets clasped shut and placed in the south deck bin",
-        "Recycling goes out to the large recycling bin behind the building"
-      ]},
-      { "task": "Lock up", "sub": [
-        "Pergola tables — bring in anything that can't be secured with a lock",
-        "All north-deck doors",
-        "South deck gate"
-      ]},
-      { "task": "Drop", "sub": [
-        "Ensure the bank is $400",
-        "Reports and cash drops go in a dated manila envelope in the safe"
-      ]},
-      { "task": "Turn off the lights", "sub": [
-        "Leave the back six chandelier on. Turn off all bar and north deck lights"
-      ]},
-      { "task": "Turn off the front restaurant speakers", "sub": [] }
+      {
+        "task": "Reset attic and back six tables",
+        "sub": []
+      },
+      {
+        "task": "Unset and sanitize the front room, patio, and pergola tables",
+        "sub": []
+      },
+      {
+        "task": "Bring in awnings",
+        "sub": []
+      },
+      {
+        "task": "TURN OFF outside heaters / indoor space heaters. Close propane tanks",
+        "sub": []
+      },
+      {
+        "task": "Stock server wine wall, wine \"cellar,\" and low-boy",
+        "sub": [
+          "Red BTG — front entrance, and under tbl 11–12",
+          "White BTG — the \"X\" storage behind tbl 11, under tbl 14–16, and walk-in",
+          "Bubbles — under the back POS, the stairs, and tbl 13",
+          "Bottled reds — far side of attic storage. $100+ bottles stock in the \"cellar\"",
+          "Bottled whites — walk-in"
+        ]
+      },
+      {
+        "task": "Linens / Recycling",
+        "sub": [
+          "Dirty linen bag gets clasped shut and placed in the south deck bin",
+          "Recycling goes out to the large recycling bin behind the building"
+        ]
+      },
+      {
+        "task": "Lock up",
+        "sub": [
+          "Pergola tables — bring in anything that can't be secured with a lock",
+          "All north-deck doors",
+          "South deck gate"
+        ]
+      },
+      {
+        "task": "Drop",
+        "sub": [
+          "Ensure the bank is $400",
+          "Reports and cash drops go in a dated manila envelope in the safe"
+        ]
+      },
+      {
+        "task": "Turn off the lights",
+        "sub": [
+          "Leave the back six chandelier on. Turn off all bar and north deck lights"
+        ]
+      },
+      {
+        "task": "Turn off the front restaurant speakers",
+        "sub": []
+      }
     ],
     "sidework": [
-      "Run food", "Run drinks", "Run full bus tubs to the dish pit",
-      "Check expo for tables that need resetting", "Flip tables",
-      "Run and polish bar glassware", "Clean the wait station",
-      "Swap out recycling / linen", "Refill water bottles",
-      "Polish silverware", "Run menus back to the host station"
+      "Run food",
+      "Run drinks",
+      "Run full bus tubs to the dish pit",
+      "Check expo for tables that need resetting",
+      "Flip tables",
+      "Run and polish bar glassware",
+      "Clean the wait station",
+      "Swap out recycling / linen",
+      "Refill water bottles",
+      "Polish silverware",
+      "Run menus back to the host station"
     ]
   },
   "stepsOfService": {
     "intro": "San Fermo runs 85 seats (57 indoor + 28 patio), 5pm–10pm, three turns a night (T1 5–7, T2 7–9, T3 9–close). The menu is small and changes daily — the chef asks that each table puts its whole order in at once.",
     "steps": [
-      { "n": 1, "title": "Greet within 2 minutes", "detail": "Welcome the table, offer water (still or sparkling), and set the menu format: a small menu that changes daily, and the chef asks for the whole order at once." },
-      { "n": 2, "title": "Drinks", "detail": "Take the cocktail and wine order. Guide by-the-glass, mention what's notable tonight, and flag anything 86'd before they decide." },
-      { "n": 3, "title": "Full food order at once", "detail": "Per the chef's request, take the entire food order in one pass. Note allergies and call out raw / under-cooked items (marked * on the menu)." },
-      { "n": 4, "title": "Fire & pace", "detail": "Coordinate firing and pacing with expo. Read the table — match the pace to their turn so the next seating lands clean." },
-      { "n": 5, "title": "Mark & maintain", "detail": "Mark the table for each course, crumb between courses, keep water and wine topped, and reset silver as needed." },
-      { "n": 6, "title": "Check back", "detail": "Quality check two bites into each course. Catch problems early, never at the end." },
-      { "n": 7, "title": "Dessert & digestivi", "detail": "Offer dessert, then the after-dinner list — amaro flights, grappa, port, and the digestivi selection." },
-      { "n": 8, "title": "Present the check", "detail": "If asked about the 23% service charge: it replaces tipping, 100% goes to the house, and no additional tip is expected." },
-      { "n": 9, "title": "Reset", "detail": "Reset the table promptly and cleanly for the next turn." }
+      {
+        "n": 1,
+        "title": "Greet within 2 minutes",
+        "detail": "Welcome the table, offer water (still or sparkling), and set the menu format: a small menu that changes daily, and the chef asks for the whole order at once."
+      },
+      {
+        "n": 2,
+        "title": "Set the pace",
+        "detail": "Every table, every time — don't assume they'll volunteer it. As the greeting lands, ask: \"So I can time your courses right — are we settling in for the evening, or keeping an eye on the clock tonight?\" Settling in gets a little air between courses; on the clock gets a tight fire and a word to expo. The whole order goes in at once and the kitchen stacks up fast — nobody tells you they're in a hurry until they already are."
+      },
+      {
+        "n": 3,
+        "title": "Drinks",
+        "detail": "Take the cocktail and wine order. Guide by-the-glass, mention what's notable tonight, and flag anything 86'd before they decide."
+      },
+      {
+        "n": 4,
+        "title": "Full food order at once",
+        "detail": "Per the chef's request, take the entire food order in one pass. Note allergies and call out raw / under-cooked items (marked * on the menu)."
+      },
+      {
+        "n": 5,
+        "title": "Fire & pace",
+        "detail": "Coordinate firing and pacing with expo. Read the table — match the pace to their turn so the next seating lands clean."
+      },
+      {
+        "n": 6,
+        "title": "Mark & maintain",
+        "detail": "Mark the table for each course, crumb between courses, keep water and wine topped, and reset silver as needed."
+      },
+      {
+        "n": 7,
+        "title": "Check back",
+        "detail": "Quality check two bites into each course. Catch problems early, never at the end."
+      },
+      {
+        "n": 8,
+        "title": "Dessert & digestivi",
+        "detail": "Offer dessert, then the after-dinner list — amaro flights, grappa, port, and the digestivi selection."
+      },
+      {
+        "n": 9,
+        "title": "Present the check",
+        "detail": "If asked about the 23% service charge: it replaces tipping, 100% goes to the house, and no additional tip is expected."
+      },
+      {
+        "n": 10,
+        "title": "Reset",
+        "detail": "Reset the table promptly and cleanly for the next turn."
+      }
     ],
     "standards": [
-      { "title": "Service charge", "body": "We've eliminated tipping. A 23% service fee applies to food and beverage; 100% goes to the house. Deliver this plainly and confidently if a guest asks — it's the model, not an apology." },
-      { "title": "Wine service", "body": "Present the bottle to the host, pour a taste, then pour clockwise around the table, women first where it reads naturally, host last. Whites and bubbles in the chiller; reds at cellar temp. Top thoughtfully — don't empty the bottle without offering another." },
-      { "title": "Allergies & raw items", "body": "Items marked * are served raw or under-cooked. Always surface allergies to the kitchen at order, and repeat them on the ticket. When in doubt, ask the chef — never guess." }
+      {
+        "title": "Service charge",
+        "body": "We've eliminated tipping. A 23% service fee applies to food and beverage; 100% goes to the house. Deliver this plainly and confidently if a guest asks — it's the model, not an apology."
+      },
+      {
+        "title": "Wine service",
+        "body": "Present the bottle to the host, pour a taste, then pour clockwise around the table, women first where it reads naturally, host last. Whites and bubbles in the chiller; reds at cellar temp. Top thoughtfully — don't empty the bottle without offering another."
+      },
+      {
+        "title": "Allergies & raw items",
+        "body": "Items marked * are served raw or under-cooked. Always surface allergies to the kitchen at order, and repeat them on the ticket. When in doubt, ask the chef — never guess."
+      }
     ]
   },
   "board": {
