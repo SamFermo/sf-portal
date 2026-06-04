@@ -297,6 +297,10 @@ nav.chips::-webkit-scrollbar{display:none;}
 .lm-style{background:linear-gradient(155deg,#e8cd79,#c9a64e); color:#241f15;}
 .lm-cancel{background:#e8e0d2; color:#5a5040;}
 .lm-note{font-size:11px; color:var(--card-mute); margin-top:8px; font-style:italic;}
+/* table combos (pushed-together tables, nightly) */
+.combo-chip{display:inline-flex; align-items:center; gap:4px; background:rgba(230,200,120,.12); border:1px solid rgba(230,200,120,.5); color:var(--gold); border-radius:999px; padding:4px 10px; font-size:11.5px; font-weight:700; margin:0 6px 6px 0;}
+.combo-chip .x{cursor:pointer; opacity:.75;}
+.mm-combo{stroke-dasharray:10 7;}
 /* my-tables picker */
 .tpick-wrap{display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 12px;}
 .tpick{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:9px; min-width:38px; padding:6px 0; text-align:center; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
@@ -669,7 +673,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780609256';   // stamped by build-data.py at every deploy
+const BUILD='1780609514';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1445,7 +1449,7 @@ function initFirebase(){
 }
 function boardDocId(){return todayISO();}
 function lsKey(){return 'sf-board-'+todayISO();}
-function lsGetBoard(){try{const s=JSON.parse(localStorage.getItem(lsKey()));if(s){s.tables=s.tables||[];return s;}}catch(e){}return {eightySixed:[...(SF.service.board.eightySixed||[])],specials:[...(SF.service.board.specials||[])],tables:[]};}
+function lsGetBoard(){try{const s=JSON.parse(localStorage.getItem(lsKey()));if(s){s.tables=s.tables||[];return s;}}catch(e){}return {eightySixed:[...(SF.service.board.eightySixed||[])],specials:[...(SF.service.board.specials||[])],tables:[],combos:[]};}
 function lsSetBoard(b){try{localStorage.setItem(lsKey(),JSON.stringify(b));}catch(e){}}
 function getBoard(){return boardState||lsGetBoard();}
 let standingState=null, standingUnsub=null;
@@ -1492,7 +1496,7 @@ function startBoardSync(){
     if(boardUnsub)boardUnsub();
     boardUnsub=fbDb.collection('board').doc(boardDocId()).onSnapshot(function(snap){
       const d=snap.exists?snap.data():null;
-      boardState=d?{eightySixed:d.eightySixed||[],specials:d.specials||[],tables:d.tables||[]}:{eightySixed:[],specials:[],tables:[]};
+      boardState=d?{eightySixed:d.eightySixed||[],specials:d.specials||[],tables:d.tables||[],combos:d.combos||[]}:{eightySixed:[],specials:[],tables:[],combos:[]};
       renderBoard();
     },function(){ boardState=lsGetBoard(); renderBoard(); });
   }else{ boardState=lsGetBoard(); }
@@ -1538,6 +1542,40 @@ function secChipsHTML(){
     `<button class="fchip ${cur==='mine'?'active':''}" onclick="setBoardSec('mine')">My tables</button></div>`;
 }
 function setBoardSec(v){boardSecSet(v);renderBoard();}
+/* TABLE COMBOS — MD pushes tables together for tonight (51+52+53 → "51").
+   Lives in the day's board doc, so it syncs live and clears with the nightly reset. */
+function getCombos(){return (getBoard().combos||[]);}
+function comboFor(t){const u=String(t).trim().toUpperCase();return getCombos().find(c=>c.tables.some(x=>String(x).toUpperCase()===u))||null;}
+function comboPrimary(t){const c=comboFor(t);return c?String(c.primary):String(t).trim();}
+let comboPick=null;   // null = idle, [] = picking
+function startCombo(){if(!isMgr())return;comboPick=[];renderBoard();}
+function cancelCombo(){comboPick=null;renderBoard();}
+function toggleComboPick(t){if(!comboPick)return;const i=comboPick.indexOf(t);if(i>=0)comboPick.splice(i,1);else comboPick.push(t);renderBoard();}
+function comboSort(arr){return arr.slice().sort((a,b)=>(parseInt(String(a).replace(/\D/g,''))||999)-(parseInt(String(b).replace(/\D/g,''))||999));}
+function saveCombo(){
+  if(!isMgr()||!comboPick||comboPick.length<2)return;
+  const sorted=comboSort(comboPick);
+  const b=getBoard();b.combos=b.combos||[];b.combos.push({primary:sorted[0],tables:sorted});
+  comboPick=null;persistBoard(b);renderBoard();
+}
+function rmCombo(i){if(!isMgr())return;const b=getBoard();(b.combos||[]).splice(i,1);persistBoard(b);renderBoard();}
+function comboUIHTML(){
+  if(!isMgr())return '';
+  let h=`<div class="combo-wrap">`;
+  getCombos().forEach((c,i)=>h+=`<span class="combo-chip">${esc(c.tables.join('+'))} → ${esc(c.primary)}<span class="x" onclick="rmCombo(${i})">✕</span></span>`);
+  if(comboPick){
+    const taken={};getCombos().forEach(c=>c.tables.forEach(t=>taken[String(t).toUpperCase()]=1));
+    h+=`<div class="tpick-label">Tap the tables being pushed together — lowest number becomes the reference</div><div class="tpick-wrap">`+
+      allTablesInOrder().filter(t=>!taken[String(t).toUpperCase()]).map(t=>`<button class="tpick${comboPick.indexOf(t)>=0?' on':''}" onclick="toggleComboPick('${esc(t)}')">${esc(t)}</button>`).join('')+`</div>`;
+    h+=`<div class="lm-actions" style="margin-top:8px">`;
+    if(comboPick.length>=2)h+=`<button class="lm-post" onclick="saveCombo()">Push ${esc(comboSort(comboPick).join('+'))}</button>`;
+    h+=`<button class="lm-cancel" onclick="cancelCombo()">Cancel</button></div>`;
+  }else{
+    h+=`<button class="addlive-btn" style="margin:6px 0 4px" onclick="startCombo()">⊕ Push tables together (tonight)</button>`;
+  }
+  return h+`</div>`;
+}
+
 /* MY TABLES — per-device, per-night custom table set (sections get split up;
    tables 1+2 fold into Front Room when Streetside isn't running, etc.) */
 function myTablesKey(){return 'sf-mytables-'+todayISO();}
@@ -1559,26 +1597,30 @@ function allTablesInOrder(){
 }
 function gridMapHTML(tabs,noted){
   if(!tabs.length)return '';
-  const sorted=tabs.slice().sort((a,b)=>{
-    const ba=/^B/i.test(a)?1:0, bb=/^B/i.test(b)?1:0;
-    const na=parseInt(String(a).replace(/\D/g,''))||999, nb=parseInt(String(b).replace(/\D/g,''))||999;
+  const seen={},disp=[];
+  tabs.forEach(t=>{const c=comboFor(t),k=c?String(c.primary):String(t),ku=k.toUpperCase();
+    if(seen[ku])return;seen[ku]=1;disp.push({label:k,extra:c?c.tables.length-1:0});});
+  const sorted=disp.sort((a,b)=>{
+    const ba=/^B/i.test(a.label)?1:0, bb=/^B/i.test(b.label)?1:0;
+    const na=parseInt(a.label.replace(/\D/g,''))||999, nb=parseInt(b.label.replace(/\D/g,''))||999;
     return ba-bb||na-nb;});
   const cols=Math.min(5,Math.max(2,Math.ceil(Math.sqrt(sorted.length))));
   const S=110,G=18, rows=Math.ceil(sorted.length/cols);
   const W=cols*S+(cols-1)*G, H=rows*S+(rows-1)*G;
   let svg=`<svg viewBox="-10 -10 ${W+20} ${H+20}" xmlns="http://www.w3.org/2000/svg">`;
-  sorted.forEach((t,i)=>{const c=i%cols,r=Math.floor(i/cols),x=c*(S+G),y=r*(S+G),hot=noted.indexOf(String(t).toUpperCase())>=0;
-    svg+=`<rect class="${hot?'mm-t mm-noted':'mm-t'}" x="${x}" y="${y}" width="${S}" height="${S}" rx="16"/>`;
-    svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${x+S/2}" y="${y+S/2}" dy="0.36em" style="font-size:34px">${esc(t)}</text>`;});
+  sorted.forEach((d,i)=>{const c=i%cols,r=Math.floor(i/cols),x=c*(S+G),y=r*(S+G),hot=noted.indexOf(d.label.toUpperCase())>=0;
+    svg+=`<rect class="${hot?'mm-t mm-noted':'mm-t'}${d.extra?' mm-combo':''}" x="${x}" y="${y}" width="${S}" height="${S}" rx="16"/>`;
+    svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${x+S/2}" y="${y+S/2-(d.extra?8:0)}" dy="0.36em" style="font-size:34px">${esc(d.label)}</text>`;
+    if(d.extra)svg+=`<text class="mm-x" x="${x+S/2}" y="${y+S-22}" style="font-size:19px">+${d.extra}</text>`;});
   svg+=`</svg>`;
   return `<div class="mini-map">${svg}<div class="mm-cap">your tables tonight — gold have notes</div></div>`;
 }
 function tablesPaneHTML(b){
   const sec=boardSecGet(), items=b.tables||[];
-  if(sec==='all')return tablesColHTML(items);   // MD full-floor view — unchanged
+  if(sec==='all')return comboUIHTML()+tablesColHTML(items);   // MD full-floor view + combo controls
   if(sec==='mine'){
-    const mine=getMyTables(), mineU=mine.map(t=>String(t).toUpperCase());
-    const inMine=items.map((t,i)=>({t:t,i:i})).filter(o=>mineU.indexOf(String(o.t.table).trim().toUpperCase())>=0);
+    const mine=getMyTables(), mineU=mine.map(t=>comboPrimary(t).toUpperCase());
+    const inMine=items.map((t,i)=>({t:t,i:i})).filter(o=>mineU.indexOf(comboPrimary(o.t.table).toUpperCase())>=0);
     let h=`<div class="tpick-label">Tap the tables you're covering tonight (resets daily)</div><div class="tpick-wrap">`+
       allTablesInOrder().map(t=>`<button class="tpick${mine.indexOf(t)>=0?' on':''}" onclick="toggleMyTable('${esc(t)}')">${esc(t)}</button>`).join('')+`</div>`;
     h+=gridMapHTML(mine,inMine.map(o=>String(o.t.table).trim().toUpperCase()));
@@ -1596,7 +1638,7 @@ function tablesPaneHTML(b){
     }
     return h;
   }
-  const inSec=items.map((t,i)=>({t:t,i:i})).filter(o=>tableSection(o.t.table)===sec);
+  const inSec=items.map((t,i)=>({t:t,i:i})).filter(o=>tableSection(comboPrimary(o.t.table))===sec);
   let h=miniMapHTML(sec,inSec.map(o=>String(o.t.table).trim().toUpperCase()));
   h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">${esc(sec)} — Tables Tonight</span>
     <div class="tbl-input-row">
@@ -1618,10 +1660,12 @@ function miniMapHTML(sec,noted){
     x0=Math.min(x0,o.x-w/2);y0=Math.min(y0,o.y-hh/2);x1=Math.max(x1,o.x+w/2);y1=Math.max(y1,o.y+hh/2);});
   const pad=50;x0-=pad;y0-=pad;x1+=pad;y1+=pad;
   let svg=`<svg viewBox="0 0 ${Math.round(x1-x0)} ${Math.round(y1-y0)}" xmlns="http://www.w3.org/2000/svg">`;
-  tabs.forEach(t=>{const o=lay[t],hot=noted.indexOf(String(t).toUpperCase())>=0,cls=hot?'mm-t mm-noted':'mm-t';
+  tabs.forEach(t=>{const o=lay[t],c=comboFor(t),lbl=c?String(c.primary):t;
+    const hot=noted.indexOf(String(lbl).toUpperCase())>=0;
+    let cls=hot?'mm-t mm-noted':'mm-t'; if(c&&String(t)!==String(c.primary))cls+=' mm-combo';
     if(o.r)svg+=`<circle class="${cls}" cx="${o.x-x0}" cy="${o.y-y0}" r="${o.r}"/>`;
     else svg+=`<rect class="${cls}" x="${o.x-o.w/2-x0}" y="${o.y-o.h/2-y0}" width="${o.w}" height="${o.h}" rx="12"/>`;
-    svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${o.x-x0}" y="${o.y-y0}" dy="0.36em">${esc(t)}</text>`;});
+    svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${o.x-x0}" y="${o.y-y0}" dy="0.36em">${esc(lbl)}</text>`;});
   svg+=`</svg>`;
   return `<div class="mini-map">${svg}<div class="mm-cap">${esc(sec)} — gold tables have notes tonight</div></div>`;
 }
@@ -1666,7 +1710,7 @@ function tablesColHTML(items){
 function addTable(){const numEl=$('tbl-num'),t=(numEl.value||'').trim();
   if(!t){if(numEl){numEl.classList.add('flash-req');numEl.focus();setTimeout(()=>numEl.classList.remove('flash-req'),1200);}return;}
   const occ=$('tbl-occ').value,note=($('tbl-note').value||'').trim();
-  const b=getBoard();b.tables=b.tables||[];b.tables.push({table:t,occasion:occ,note:note,by:currentUserName()||''});
+  const b=getBoard();b.tables=b.tables||[];b.tables.push({table:comboPrimary(t),occasion:occ,note:note,by:currentUserName()||''});
   persistBoard(b);renderBoard();
   setTimeout(()=>{const x=$('tbl-num');if(x)x.focus();},0);}
 function rmTable(i){const b=getBoard();(b.tables||[]).splice(i,1);persistBoard(b);renderBoard();}
