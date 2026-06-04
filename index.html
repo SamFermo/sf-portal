@@ -673,7 +673,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780609910';   // stamped by build-data.py at every deploy
+const BUILD='1780610309';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1483,7 +1483,7 @@ function rmStanding(i){
 }
 function standingColHTML(){
   const st=getStanding(), items=st.items||[];
-  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">House Pours · Mocktail · Preserves · Gelato</span>`;
+  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Standing Verbals</span>`;
   if(isMgr())h+=`<div class="board-input-row"><input class="board-input" id="in-standing" placeholder="House red — Centine / Mocktail — shrub fizz / Farinata — apricot preserves / Gelato — fior di latte" onkeydown="if(event.key==='Enter')addStanding()"><button class="board-add" onclick="addStanding()">+</button></div>`;
   if(!items.length)h+=`<div class="board-empty">Not set yet${isMgr()?'':' — a lead sets these'}.</div>`;
   items.forEach((it,i)=>{
