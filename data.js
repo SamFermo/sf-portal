@@ -7040,18 +7040,18 @@ window.SF = {
        "MD",
        "",
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner"
+       "Farm",
+       "Farm",
+       "Farm"
       ]
      },
      {
       "name": "Chris",
       "shifts": [
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner",
+       "Farm",
+       "Farm",
+       "Farm",
        "Expo",
        "Expo",
        ""
@@ -7089,7 +7089,7 @@ window.SF = {
        "1-close",
        "",
        "",
-       "12-10",
+       "",
        "1-close"
       ]
      },
@@ -7232,17 +7232,17 @@ window.SF = {
        "MD",
        "",
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner"
+       "Farm",
+       "Farm",
+       "Farm"
       ]
      },
      {
       "name": "Chris",
       "shifts": [
        "",
-       "Farm Dinner",
-       "Farm Dinner",
+       "Farm",
+       "Farm",
        "Expo",
        "Expo",
        "Expo",
@@ -7809,7 +7809,7 @@ window.SF = {
      "",
      "",
      "8-6, 1-close",
-     "8-6, 1-close",
+     "",
      "8-6, 1-close"
     ],
     "rows": [
@@ -7821,7 +7821,7 @@ window.SF = {
        "",
        "",
        "MD",
-       "MD",
+       "",
        "MD"
       ]
      },
@@ -7833,7 +7833,7 @@ window.SF = {
        "Expo",
        "Expo",
        "Expo",
-       "Expo",
+       "",
        ""
       ]
      },
@@ -7845,7 +7845,7 @@ window.SF = {
        "",
        "R/O",
        "R/O",
-       "R/O",
+       "",
        "R/O"
       ]
      },
@@ -7857,7 +7857,7 @@ window.SF = {
        "9-5",
        "9-5",
        "9-5",
-       "9-5",
+       "",
        ""
       ]
      },
@@ -7869,7 +7869,7 @@ window.SF = {
        "",
        "R/O",
        "R/O",
-       "R/O",
+       "",
        "R/O"
       ]
      },
@@ -7893,7 +7893,7 @@ window.SF = {
        "",
        "",
        "9-5",
-       "9-5",
+       "",
        "9-5"
       ]
      },
@@ -7905,7 +7905,7 @@ window.SF = {
        "",
        "",
        "1-close",
-       "1-close",
+       "",
        "Expo"
       ]
      },
@@ -7929,7 +7929,7 @@ window.SF = {
        "",
        "1-close",
        "1-close",
-       "1-close",
+       "",
        "1-close"
       ]
      },
@@ -7953,7 +7953,7 @@ window.SF = {
        "1-close",
        "1-close",
        "1-close",
-       "1-close",
+       "",
        ""
       ]
      },
@@ -7965,7 +7965,7 @@ window.SF = {
        "",
        "",
        "1-close",
-       "1-close",
+       "",
        "1-close"
       ]
      },
@@ -8012,18 +8012,18 @@ window.SF = {
        "MD",
        "",
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner"
+       "Farm",
+       "Farm",
+       "Farm"
       ]
      },
      {
       "name": "Chris",
       "shifts": [
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner",
+       "Farm",
+       "Farm",
+       "Farm",
        "Expo",
        "Expo",
        ""
@@ -8204,18 +8204,18 @@ window.SF = {
        "MD",
        "",
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner"
+       "Farm",
+       "Farm",
+       "Farm"
       ]
      },
      {
       "name": "Chris",
       "shifts": [
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner",
+       "Farm",
+       "Farm",
+       "Farm",
        "Expo",
        "Expo",
        ""
@@ -8780,18 +8780,18 @@ window.SF = {
        "MD",
        "",
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner"
+       "Farm",
+       "Farm",
+       "Farm"
       ]
      },
      {
       "name": "Chris",
       "shifts": [
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner",
+       "Farm",
+       "Farm",
+       "Farm",
        "Expo",
        "Expo",
        ""
@@ -8972,18 +8972,18 @@ window.SF = {
        "MD",
        "",
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner"
+       "Farm",
+       "Farm",
+       "Farm"
       ]
      },
      {
       "name": "Chris",
       "shifts": [
        "",
-       "Farm Dinner",
-       "Farm Dinner",
-       "Farm Dinner",
+       "Farm",
+       "Farm",
+       "Farm",
        "Expo",
        "Expo",
        ""
@@ -11258,5 +11258,5 @@ window.SF = {
    }
   }
  },
- "build": "1780560093"
+ "build": "1780578957"
 };
