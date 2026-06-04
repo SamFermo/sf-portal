@@ -267,7 +267,7 @@
           "price": "32",
           "raw": false,
           "pron": "boh-loh-NYEH-zeh",
-          "story": "The family recipe — on the menu since day one, and it never leaves. This run is built on ground beef and pork raised at Swan House Farm; when it's gone, the dish returns to the classic pork-and-veal build. Either way: seasoned with our own spice blend, cooked down slowly with red wine, tomato, fennel, and rosemary, then finished with cream, butter, sherry, and salt. Served over house-made saffron spaghetti — the saffron gives the pasta its golden color and a subtle earthy aroma.",
+          "story": "The family recipe — on the menu since day one, and it never leaves. This run is built on ground beef and pork raised at Swan House Farm; when it's gone, the dish returns to the classic pork-and-veal build. Either way: seasoned with our own spice blend, cooked down slowly with red wine, tomato, fennel, and rosemary, then finished with cream, butter, sherry, and salt. The saffron spaghetti is extruded with a strained, highly concentrated saffron tea in place of water — that's where the gold color and the subtle earthy aroma come from, no egg involved.",
           "ingredients": [
             {
               "term": "Bolognese",
@@ -277,7 +277,7 @@
             {
               "term": "Saffron",
               "pronunciation": "SAF-ron",
-              "note": "the dried stigma of the crocus flower, hand-harvested and prized; it tints the fresh pasta gold and adds a delicate, hay-like earthiness."
+              "note": "the dried stigma of the crocus flower, hand-harvested and prized. We brew it into a concentrated tea, strain it, and use it in place of water in the extruded dough — gold color, hay-like earthiness, and the reason this golden pasta has no egg."
             },
             {
               "term": "Parmigiano Reggiano",
@@ -520,7 +520,7 @@
           "allergenNote": "Dairy: the polenta comes off or swaps to risotto. Allium: the demi is built on onions — the kitchen can sub out the spring onions and the demi entirely, or the guest can keep the demi if cooked-in allium works for them. Ask; don't decide for them."
         }
       ],
-      "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die, like spaghetti, paccheri, and mafaldine — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. The quick tell: egg pasta runs golden and silky, extruded pasta runs pale straw with a rougher surface. New shape on the menu? Sort it with that rule, and confirm with the kitchen if it's borderline."
+      "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
     }
   ],
   "desserts": [
