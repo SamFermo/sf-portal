@@ -1,611 +1,611 @@
 {
-  "menuDate": "2026-06-02",
-  "note": "We offer a small menu that changes daily. The chef requests that guests put their whole order in at once.",
-  "raw_note": "An asterisk (*) marks dishes served raw or under-cooked. Flag the allergy/raw advisory when guests ask.",
-  "food": [
+ "menuDate": "2026-06-02",
+ "note": "We offer a small menu that changes daily. The chef requests that guests put their whole order in at once.",
+ "raw_note": "An asterisk (*) marks dishes served raw or under-cooked. Flag the allergy/raw advisory when guests ask.",
+ "food": [
+  {
+   "section": "Antipasti",
+   "items": [
     {
-      "section": "Antipasti",
-      "items": [
-        {
-          "name": "Sea Wolf Bakery Baguette",
-          "desc": "les pres sales butter, sea salt",
-          "price": "8",
-          "raw": false,
-          "story": "A baguette from Sea Wolf Bakers in Seattle's Fremont neighborhood, one of the Pacific Northwest's most celebrated naturally leavened bakeries. Baked the same day, served with Belgian-churned les prés salés butter flecked with coarse Camargue sea salt crystals. Simple and non-negotiable — this one never changes.",
-          "ingredients": [
-            {
-              "term": "Sea Wolf Bakers",
-              "pronunciation": null,
-              "note": "Seattle's Fremont neighborhood bakery, founded 2014 by brothers Jesse and Kit Schumann. All breads are naturally leavened using Pacific Northwest grains. Named one of the 100 best bakeries in the U.S. by Food & Wine."
-            },
-            {
-              "term": "Les prés salés butter",
-              "pronunciation": "lay pray sah-LAY",
-              "note": "Belgian-churned cultured butter, 82% butterfat, finished with hand-harvested coarse sea salt crystals from the Camargue — a salt marsh region in the south of France. Richer and more complex than standard salted butter."
-            },
-            {
-              "term": "Maldon sea salt",
-              "pronunciation": null,
-              "note": "Flaky finishing salt from Essex, England. Prized for its pyramid-shaped crystals, clean flavor, and satisfying crunch."
-            }
-          ],
-          "allergens": [
-            "gluten",
-            "dairy"
-          ],
-          "canModify": []
-        },
-        {
-          "name": "Castelvetrano Olives",
-          "desc": "fennel pollen, citrus, rosemary",
-          "price": "6",
-          "raw": false,
-          "pron": "kah-stel-veh-TRAH-noh",
-          "story": "Meaty Nocellara del Belice olives from the Valle del Belice in southwestern Sicily — one of the only olive varieties with a Protected Designation of Origin. Marinated in-house with citrus peel, garlic, chili flake, and olive oil, then finished with a dusting of fennel pollen and rosemary. Bright, buttery, mild.",
-          "ingredients": [
-            {
-              "term": "Castelvetrano olives",
-              "pronunciation": "kah-stel-veh-TRAH-noh",
-              "note": "Nocellara del Belice variety, named for the Sicilian town of Castelvetrano. PDO-protected, so they can only come from the Valle del Belice. Lye-cured for a clean, buttery flavor with no bitterness — the least aggressive olive on any table."
-            },
-            {
-              "term": "Fennel pollen",
-              "pronunciation": null,
-              "note": "The fine yellow pollen harvested from wild fennel flowers. Intensely aromatic, floral, and anise-forward — used here as a finishing garnish."
-            }
-          ],
-          "allergens": [],
-          "canModify": [],
-          "allergenNote": "The marinade carries garlic — Chris is confirming the allium status. Check before promising."
-        },
-        {
-          "name": "Marcona Almonds",
-          "desc": "rosemary olive oil, fried rosemary, maldon sea salt",
-          "price": "6",
-          "raw": false,
-          "pron": "mar-KOH-nah",
-          "story": "Imported Marcona almonds from Spain's Mediterranean coast, roasted until golden, tossed in rosemary olive oil and Maldon sea salt, then finished with crisp fried rosemary. Rounder and softer than a California almond, with a buttery sweetness that makes them genuinely hard to stop eating.",
-          "ingredients": [
-            {
-              "term": "Marcona almonds",
-              "pronunciation": "mar-KOH-nah",
-              "note": "A Spanish almond variety grown along the Mediterranean coast — Alicante, Valencia, and Tarragona. Rounder and plumper than California almonds, with a higher oil content and a naturally sweet, buttery flavor. Spain is the primary producer."
-            },
-            {
-              "term": "Maldon sea salt",
-              "pronunciation": null,
-              "note": "Flaky finishing salt from Essex, England — same as on the bread. Tossed on with the rosemary oil after roasting so the crunch stays distinct."
-            }
-          ],
-          "allergens": [
-            "nuts"
-          ],
-          "canModify": []
-        },
-        {
-          "name": "Farinata",
-          "desc": "chickpea flatbread, house cagliata, seasonal preserve, fresh thyme, sea salt",
-          "price": "13",
-          "raw": false,
-          "pron": "fah-ree-NAH-tah",
-          "story": "A Ligurian chickpea flatbread with roots in 13th-century Genoa — thin, crisp at the edges, soft and nutty in the center. Made in-house from chickpea flour, rosemary olive oil, and water, finished with fresh thyme and sea salt. The housemade cagliatta and a seasonal preserve sit alongside on the plate. Current preserve: rhubarb caramelized onion jam.",
-          "ingredients": [
-            {
-              "term": "Farinata",
-              "pronunciation": "fah-ree-NAH-tah",
-              "note": "Ancient Ligurian flatbread made from chickpea flour, water, olive oil, and salt — baked in a very hot cast iron pan until the edges are crisp and the center is custardy. Also called cecìna in Tuscany. Naturally gluten-free."
-            },
-            {
-              "term": "Cagliatta",
-              "pronunciation": "kal-YAH-tah",
-              "note": "Our housemade fresh cheese — whole milk curdled with lemon juice, then dressed with rosemary-infused olive oil and salt. A fresh, mild, milky curd; closer to a soft ricotta than a mozzarella. Made in-house."
-            },
-            {
-              "term": "Rhubarb caramelized onion jam",
-              "pronunciation": null,
-              "note": "Seasonal preserve made in-house: rhubarb cooked down with caramelized onions, vinegar, and sugar. Tart, sweet, savory — made to work against the richness of the cagliatta."
-            }
-          ],
-          "allergens": [
-            "dairy"
-          ],
-          "canModify": [
-            "dairy"
-          ],
-          "allergenNote": "Naturally gluten-free — chickpea flour, no wheat. The cagliatta is plated alongside; for dairy-free it moves to a bowl on the side or comes off entirely, and the preserve stays."
-        },
-        {
-          "name": "House Caesar",
-          "desc": "anchovy, parmigiano reggiano, red wine croutons",
-          "price": "14",
-          "raw": true,
-          "story": "Romaine dressed with a classic from-scratch Caesar dressing — champagne vinegar, anchovy, garlic, Parmigiano-Reggiano, egg yolk, Worcestershire, Dijon, black pepper. Topped with boquerones white anchovies and red wine croutons: bread soaked in red wine, butter, garlic, and rosemary, then dehydrated until crisp the whole way through. A clean, honest Caesar.",
-          "ingredients": [
-            {
-              "term": "Boquerones",
-              "pronunciation": "boh-keh-ROH-nez",
-              "note": "White anchovies cured in vinegar rather than salt — mild, tender, and bright. Distinct from the oil-packed brown anchovies in the dressing; these sit on top as a finishing garnish."
-            },
-            {
-              "term": "Parmigiano-Reggiano",
-              "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
-              "note": "Aged Italian hard cheese from the Parma region, with PDO protection. Used both in the dressing (grated) and shaved over the top. Nutty, salty, and complex."
-            },
-            {
-              "term": "Red wine croutons",
-              "pronunciation": null,
-              "note": "Made in-house: bread soaked in a red wine, butter, garlic, and rosemary mixture, then dehydrated until crisp all the way through. Deeply savory, and the crunch holds up in the dressing."
-            },
-            {
-              "term": "Coddled egg dressing",
-              "pronunciation": null,
-              "note": "The dressing is built with egg yolk — emulsified raw with oil and champagne vinegar for a thick, rich, classic Caesar consistency. Not cooked through, similar to mayonnaise."
-            }
-          ],
-          "allergens": [
-            "fish",
-            "dairy",
-            "gluten",
-            "egg",
-            "allium"
-          ],
-          "canModify": [
-            "fish",
-            "dairy",
-            "gluten",
-            "egg",
-            "allium"
-          ],
-          "allergenNote": "Every flag has a path: boquerones on the side (fish), croutons on the side (gluten), dressing on the side — or swapped for oil and vinegar — with the cheese on the side (dairy, egg, allium). Fully modified it becomes a clean romaine salad with oil and vinegar; tell the guest what they're getting."
-        },
-        {
-          "name": "Farm House Salad",
-          "desc": "swan house salanova, shaved red onion, pickled onion, charred spring onion, burnt onion vinaigrette",
-          "price": "16",
-          "raw": false,
-          "story": "Built on Salanova lettuces grown at Swan House Farm, layered with an onion study in four forms: shaved raw red onion for sharpness, pickled onion for brightness, charred spring onion for sweetness, and a burnt onion vinaigrette that ties the whole plate together with a deep, smoky backbone. Clean and vegetable-forward — the farm and the technique do the talking.",
-          "ingredients": [
-            {
-              "term": "Salanova",
-              "pronunciation": "sah-lah-NOH-vah",
-              "note": "A lettuce cultivar bred for compact, uniform heads and tender leaves that hold their structure. Ours are grown at Swan House Farm — red and green varieties of summer crisp, oakleaf, and butter. No romaine in the mix."
-            },
-            {
-              "term": "Spring onion",
-              "pronunciation": null,
-              "note": "Young onion harvested before the bulb fully forms — sweeter and milder than a mature onion. Charred on high heat here for caramelized sweetness and a slight bitterness."
-            },
-            {
-              "term": "Burnt onion vinaigrette",
-              "pronunciation": null,
-              "note": "Dressing built from deeply charred onion — taken well past caramel into a dark, smoky-sweet reduction, then emulsified with acid and oil. The technique gives the vinaigrette a savory depth you can't get any other way."
-            },
-            {
-              "term": "Pickled onion",
-              "pronunciation": null,
-              "note": "Red onions quick-pickled in vinegar and sugar in-house. Adds a sharp, bright counterpoint to the smoke in the vinaigrette."
-            }
-          ],
-          "allergens": [
-            "allium"
-          ],
-          "canModify": [],
-          "allergenNote": "Allium is the dish — onions four ways, unavoidable. Chris is still reviewing for anything beyond that; confirm with the kitchen before promising."
-        },
-        {
-          "name": "Burrata",
-          "desc": "spring peas, pea puree, mint, dill, bresaola, crostini",
-          "price": "18",
-          "raw": false,
-          "pron": "boo-RAH-tah",
-          "story": "A whole burrata torn open over a bed of spring peas and silky pea puree, scattered with mint and dill, draped with shaved bresaola, and served with crostini. The cheese's molten cream center pools into the sweet peas — the bresaola adds a savory, cured edge.",
-          "ingredients": [
-            {
-              "term": "Burrata",
-              "pronunciation": "boo-RAH-tah",
-              "note": "a fresh cow's-milk cheese from Puglia: a mozzarella shell holding a center of stracciatella (cheese curds) and cream. Cut into it and the middle should flow."
-            },
-            {
-              "term": "Bresaola",
-              "pronunciation": "breh-zah-OH-lah",
-              "note": "air-dried, salted beef from Valtellina in Lombardy, sliced paper-thin. Lean, deep red, faintly sweet."
-            }
-          ],
-          "allergens": [
-            "dairy",
-            "gluten"
-          ],
-          "canModify": [
-            "gluten"
-          ],
-          "allergenNote": "Gluten: crostini come on the side so the rest of the table can still have them. And heads up — as plated this is not vegetarian: the bresaola is cured beef. Bresaola on the side makes it vegetarian."
-        },
-        {
-          "name": "Chilled Nettle Vichyssoise",
-          "desc": "leek, potato, cream, vegetable stock, creme fraiche, chive oil",
-          "price": "14",
-          "raw": false,
-          "pron": "vee-shee-SWAH",
-          "story": "A cold classic French soup updated with Pacific Northwest wild nettles. The base is leek, potato, cream, and vegetable stock — blended smooth and chilled — with nettles folded in for a vegetal, slightly mineral depth and a vivid green color. Finished with crème fraîche and chive oil.",
-          "ingredients": [
-            {
-              "term": "Vichyssoise",
-              "pronunciation": "vee-shee-SWAH",
-              "note": "Classic French cold leek-and-potato cream soup, traditionally served chilled. Despite the French name, it was likely created in New York in the early 20th century."
-            },
-            {
-              "term": "Nettles",
-              "pronunciation": null,
-              "note": "Wild stinging nettles, foraged in early spring from the Pacific Northwest. Blanching removes the sting completely; the flavor is grassy, mineral, and more complex than spinach. A true spring-only ingredient."
-            },
-            {
-              "term": "Crème fraîche",
-              "pronunciation": "krem FRESH",
-              "note": "French cultured cream — thicker and tangier than sour cream, milder than Greek yogurt. Dolloped over the soup as a cool, rich finish."
-            },
-            {
-              "term": "Chive oil",
-              "pronunciation": null,
-              "note": "Blended chive and neutral oil, strained smooth. Vivid green, herbaceous, and grassy — drizzled over the top for aroma and color."
-            }
-          ],
-          "allergens": [
-            "dairy",
-            "allium"
-          ],
-          "canModify": [],
-          "allergenNote": "Naturally gluten-free. The leeks are the backbone — allium can't come out — and the cream is cooked in."
-        }
-      ]
+     "name": "Sea Wolf Bakery Baguette",
+     "desc": "les pres sales butter, sea salt",
+     "price": "8",
+     "raw": false,
+     "story": "A baguette from Sea Wolf Bakers in Seattle's Fremont neighborhood, one of the Pacific Northwest's most celebrated naturally leavened bakeries. Baked the same day, served with Belgian-churned les prés salés butter flecked with coarse Camargue sea salt crystals. Simple and non-negotiable — this one never changes.",
+     "ingredients": [
+      {
+       "term": "Sea Wolf Bakers",
+       "pronunciation": null,
+       "note": "Seattle's Fremont neighborhood bakery, founded 2014 by brothers Jesse and Kit Schumann. All breads are naturally leavened using Pacific Northwest grains. Named one of the 100 best bakeries in the U.S. by Food & Wine."
+      },
+      {
+       "term": "Les prés salés butter",
+       "pronunciation": "lay pray sah-LAY",
+       "note": "Belgian-churned cultured butter, 82% butterfat, finished with hand-harvested coarse sea salt crystals from the Camargue — a salt marsh region in the south of France. Richer and more complex than standard salted butter."
+      },
+      {
+       "term": "Maldon sea salt",
+       "pronunciation": null,
+       "note": "Flaky finishing salt from Essex, England. Prized for its pyramid-shaped crystals, clean flavor, and satisfying crunch."
+      }
+     ],
+     "allergens": [
+      "gluten",
+      "dairy"
+     ],
+     "canModify": []
     },
     {
-      "section": "Primi & Secondi",
-      "items": [
-        {
-          "name": "Swan House Bolognese",
-          "desc": "saffron spaghetti, swan house beef & pork, tomato, fennel, rosemary, parmigiano reggiano",
-          "price": "32",
-          "raw": false,
-          "pron": "boh-loh-NYEH-zeh",
-          "story": "The family recipe — on the menu since day one, and it never leaves. This run is built on ground beef and pork raised at Swan House Farm; when it's gone, the dish returns to the classic pork-and-veal build. Either way: seasoned with our own spice blend, cooked down slowly with red wine, tomato, fennel, and rosemary, then finished with cream, butter, sherry, and salt. The saffron spaghetti is extruded with a strained, highly concentrated saffron tea in place of water — that's where the gold color and the subtle earthy aroma come from, no egg involved.",
-          "ingredients": [
-            {
-              "term": "Bolognese",
-              "pronunciation": "boh-loh-NYEH-zeh",
-              "note": "a slow-cooked meat ragù from Bologna in Emilia-Romagna — traditionally more meat than tomato."
-            },
-            {
-              "term": "Saffron",
-              "pronunciation": "SAF-ron",
-              "note": "the dried stigma of the crocus flower, hand-harvested and prized. We brew it into a concentrated tea, strain it, and use it in place of water in the extruded dough — gold color, hay-like earthiness, and the reason this golden pasta has no egg."
-            },
-            {
-              "term": "Parmigiano Reggiano",
-              "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
-              "note": "the aged hard cheese from Emilia-Romagna, the only 'real' Parmesan; nutty, savory, crystalline."
-            }
-          ],
-          "allergens": [
-            "gluten",
-            "dairy",
-            "allium"
-          ],
-          "canModify": [
-            "dairy"
-          ],
-          "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
-        },
-        {
-          "name": "Mafaldine",
-          "desc": "swan house lamb sausage, morel mushroom, ramp, lemon, butter, parmigiano reggiano",
-          "price": "31",
-          "raw": false,
-          "pron": "mah-fal-DEE-neh",
-          "story": "Mafaldine — a wide, ruffled ribbon pasta named after Princess Mafalda of Savoy — tossed with house-made lamb sausage, morel mushrooms, ramps, lemon, butter, and Parmigiano. The sausage is ground from Swan House Farm lamb and seasoned Italian-sausage style. Morels and ramps are both spring-only wild ingredients, so this dish has a short window. The ruffled edges hold onto the buttery, mushroom-rich sauce.",
-          "ingredients": [
-            {
-              "term": "Swan House lamb sausage",
-              "pronunciation": null,
-              "note": "Made in-house from ground lamb raised at Swan House Farm — the family farm in the Skagit Valley — seasoned in the classic Italian sausage style. The same lamb that runs through the farm dinner menus."
-            },
-            {
-              "term": "Mafaldine",
-              "pronunciation": "mah-fal-DEE-neh",
-              "note": "Wide, flat pasta with ruffled edges on both sides, from Naples. Named in honor of Princess Mafalda of Savoy — also called reginette (little queens). The wavy edges grip sauce exceptionally well."
-            },
-            {
-              "term": "Morel mushrooms",
-              "pronunciation": "moh-REL",
-              "note": "Wild foraged mushrooms with a honeycomb-shaped cap and an earthy, nutty, almost meaty flavor. Available only in spring — peak season in the Pacific Northwest is April through June. Sourced through Foraged & Found Edibles."
-            },
-            {
-              "term": "Ramps",
-              "pronunciation": null,
-              "note": "Wild leeks foraged in early spring; the whole plant is edible — leaves, stems, and bulb. Flavor sits between garlic and green onion, with a grassy brightness. One of the most sought-after spring wild ingredients."
-            }
-          ],
-          "allergens": [
-            "gluten",
-            "dairy",
-            "allium"
-          ],
-          "canModify": [
-            "dairy",
-            "allium"
-          ],
-          "allergenNote": "No egg in this pasta. Dairy: butter and Parmigiano come off — the sauce leans on olive oil and pasta water, lighter but it holds. Allium: the ramps come off on request. Vegetarian: lamb sausage off — offer extra morels, or whatever seasonal vegetable the menu is carrying."
-        },
-        {
-          "name": "Tartufo Nero",
-          "desc": "fresh egg tagliatelle, summer truffle, butter, parmigiano reggiano",
-          "price": "26",
-          "raw": false,
-          "pron": "tar-TOO-foh NEH-roh",
-          "story": "Fresh egg tagliatelle finished in a butter sauce built from pasta water, a little salt, and lemon — then summer black truffle grated generously over the top, never tossed in. No competing flavors — the technique is restraint. The pasta is made in-house daily. It's the most direct expression of a single ingredient on the menu.",
-          "ingredients": [
-            {
-              "term": "Tartufo nero",
-              "pronunciation": "tar-TOO-foh NEH-roh",
-              "note": "Italian for black truffle. An underground fungus with an intensely earthy, musky, complex aroma. Summer black truffles (Tuber aestivum) are milder than the winter Périgord variety but still highly aromatic."
-            },
-            {
-              "term": "Tagliatelle",
-              "pronunciation": "tal-yah-TEL-eh",
-              "note": "Long, flat egg pasta ribbon from the Emilia-Romagna region of Italy. Made in-house with eggs and 00 flour. The slightly porous surface clings to butter and truffle better than a dried pasta."
-            },
-            {
-              "term": "Parmigiano-Reggiano",
-              "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
-              "note": "PDO-protected aged Italian hard cheese from the Parma region. Adds a nutty, salty counterpoint to the truffle's earthiness."
-            }
-          ],
-          "allergens": [
-            "gluten",
-            "egg",
-            "dairy"
-          ],
-          "canModify": [
-            "dairy"
-          ],
-          "allergenNote": "Egg is in the pasta dough — no way around it. Dairy can technically come off (no butter sauce, no cheese) but it is not recommended; the dish is butter and truffle. Chris is confirming there's no allium — check before promising."
-        },
-        {
-          "name": "Paccheri alla Carbonara",
-          "desc": "guanciale, black pepper, swan house farm egg yolk, pecorino romano",
-          "price": "28",
-          "raw": true,
-          "pron": "pah-KEH-ree",
-          "story": "The Roman classic on paccheri — short pasta tubes, like a snipped rigatoni, that catch the sauce inside. Rendered guanciale, lots of cracked black pepper, Pecorino Romano, and a Swan House Farm egg yolk emulsified into a glossy, peppery sauce. No cream — the silk comes from the egg and cheese. Served with a raw yolk, hence the asterisk.",
-          "ingredients": [
-            {
-              "term": "Paccheri",
-              "pronunciation": "pah-KEH-ree",
-              "note": "smooth tube pasta from Campania. Ours run smaller than the classic cut — closer to a shortened rigatoni — and collapse slightly when cooked to trap the sauce inside."
-            },
-            {
-              "term": "Carbonara",
-              "pronunciation": "kar-boh-NAH-rah",
-              "note": "a Roman sauce of egg, hard cheese, cured pork, and black pepper — emulsified, never creamed."
-            },
-            {
-              "term": "Guanciale",
-              "pronunciation": "gwahn-CHAH-leh",
-              "note": "cured pork jowl, fattier and more delicate than pancetta; renders down into the sauce."
-            },
-            {
-              "term": "Pecorino Romano",
-              "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
-              "note": "a hard, salty sheep's-milk cheese from Lazio — sharper than Parmigiano."
-            }
-          ],
-          "allergens": [
-            "gluten",
-            "egg",
-            "dairy"
-          ],
-          "canModify": [
-            "dairy",
-            "egg"
-          ],
-          "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen subs in whatever vegetable is running seasonally on the menu. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish."
-        },
-        {
-          "name": "Risotto Funghi",
-          "desc": "marinated maitake mushrooms, marjoram, goat cheese, garlic",
-          "price": "29",
-          "raw": false,
-          "pron": "ree-ZOT-toh FOON-gee",
-          "story": "Arborio risotto built with roasted cultivated mushrooms folded into the base, then crowned with maitake mushrooms — hard-roasted and marinated in olive oil, champagne vinegar, and thyme. Finished with goat cheese, fried leeks, and fresh marjoram. Two distinct mushroom preparations in one bowl. Gluten-free.",
-          "ingredients": [
-            {
-              "term": "Maitake mushrooms",
-              "pronunciation": "my-TAH-keh",
-              "note": "Also called hen-of-the-woods. A large, frilly wild mushroom prized for its earthy, woodsy flavor and meaty texture. Here they're hard-roasted, cooled, and marinated — served as a star garnish rather than cooked into the risotto body. Sourced year-round from Foraged & Found Edibles."
-            },
-            {
-              "term": "Marjoram",
-              "pronunciation": "MAR-juh-rum",
-              "note": "A delicate Mediterranean herb in the oregano family, but softer and slightly sweet. Used fresh as a garnish — it wilts quickly in heat, so it goes on last."
-            },
-            {
-              "term": "Arborio",
-              "pronunciation": "ar-BOR-ee-oh",
-              "note": "Short-grain Italian rice that releases starch as it cooks, creating risotto's signature creamy texture. Par-cooked in batches at the restaurant, finished per plate to order."
-            }
-          ],
-          "allergens": [
-            "dairy",
-            "allium"
-          ],
-          "canModify": [
-            "dairy"
-          ],
-          "allergenNote": "Naturally gluten-free. Dairy-free works: butter and goat cheese come off and the marinated maitakes carry it. Allium and the cooked wine can't come out — our risotto base is always par-cooked with onion and white wine in the stock."
-        },
-        {
-          "name": "Pan Roasted Halibut",
-          "desc": "new potatoes, asparagus, ramps, parsley, lovage caper honey",
-          "price": "38",
-          "raw": true,
-          "story": "Pacific halibut from Key City Fish in Port Townsend, pan-roasted. The lovage caper honey goes down first — a purée spread across the plate — with the new potatoes and asparagus built on top of it, the halibut over everything, and ramps and parsley to finish. Herbaceous, briny, floral, and sweet all at once. Halibut season runs March through November; this is a spring dish at its best.",
-          "ingredients": [
-            {
-              "term": "Halibut",
-              "pronunciation": null,
-              "note": "Pacific halibut from WA and AK landings, sourced through Key City Fish Co. in Port Townsend, WA. Large flatfish with firm, mild, white flesh. Season runs March through November — spring fish tend to be leaner and more delicate."
-            },
-            {
-              "term": "Ramps",
-              "pronunciation": null,
-              "note": "Wild spring leeks foraged in the Pacific Northwest. Garlic-onion flavor with a grassy brightness. Spring-only; they appear in April and are usually done by early June."
-            },
-            {
-              "term": "Lovage",
-              "pronunciation": "LUH-vij",
-              "note": "Tall perennial herb with a flavor like intense celery combined with parsley. Used here in the caper-honey purée that's spread on the plate as the base layer — the lovage adds a savory, slightly medicinal depth that plays against the sweetness."
-            },
-            {
-              "term": "Key City Fish",
-              "pronunciation": null,
-              "note": "Purveyor in Port Townsend, WA, focused on Pacific Northwest and Alaskan seafood. Supplies the majority of top Seattle restaurants. We order directly from them for next-day delivery."
-            }
-          ],
-          "allergens": [
-            "fish",
-            "dairy",
-            "allium"
-          ],
-          "canModify": [
-            "dairy",
-            "allium"
-          ],
-          "allergenNote": "Dairy-free is technically possible: the butter-braised potatoes come off — extra asparagus or another veg in their place — and the kitchen can skip the butter baste. Ramps come off to dodge allium, but Chris is confirming whether the lovage caper purée carries allium; don't promise that one until it's settled."
-        },
-        {
-          "name": "Swan House Pork Chop",
-          "desc": "polenta, charred spring onion, rhubarb mostarda",
-          "price": "42",
-          "raw": true,
-          "story": "Berkshire pork raised at Swan House Farm — and these are the last chops of the run, so once they're gone, they're gone. Pan-roasted and served over creamy polenta, with charred spring onion and a rhubarb mostarda: a Northern Italian fruit-and-mustard condiment that cuts the richness.",
-          "ingredients": [
-            {
-              "term": "Swan House Farm",
-              "pronunciation": null,
-              "note": "The family farm in the Skagit Valley — the same farm behind the farm dinners, the lamb in the mafaldine, and the egg yolks in the carbonara. These chops are from pigs raised there."
-            },
-            {
-              "term": "Berkshire pork",
-              "pronunciation": null,
-              "note": "A heritage hog breed prized for heavy marbling and darker, richer meat than commodity pork — the breed the Japanese call Kurobuta. Slower-growing, and worth it."
-            },
-            {
-              "term": "Mostarda",
-              "pronunciation": "moh-STAR-dah",
-              "note": "A Northern Italian condiment made from fruit — here rhubarb — preserved in a sweet, mustard-oil-spiked syrup. Simultaneously sweet, sharp, fruity, and savory. Traditionally served with rich meats to cut through fat. Despite the name, it's not mustard."
-            },
-            {
-              "term": "Polenta",
-              "pronunciation": "poh-LEN-tah",
-              "note": "Ground cornmeal cooked with cream, chicken stock, and butter until thick and creamy. Serves as the bed for the chop — rich, mild, and soft."
-            }
-          ],
-          "allergens": [
-            "dairy",
-            "allium"
-          ],
-          "canModify": [
-            "dairy",
-            "allium"
-          ],
-          "allergenNote": "Dairy: the polenta comes off or swaps to risotto. Allium: the demi is built on onions — the kitchen can sub out the spring onions and the demi entirely, or the guest can keep the demi if cooked-in allium works for them. Ask; don't decide for them."
-        }
-      ],
-      "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
+     "name": "Castelvetrano Olives",
+     "desc": "fennel pollen, citrus, rosemary",
+     "price": "6",
+     "raw": false,
+     "pron": "kah-stel-veh-TRAH-noh",
+     "story": "Meaty Nocellara del Belice olives from the Valle del Belice in southwestern Sicily — one of the only olive varieties with a Protected Designation of Origin. Marinated in-house with citrus peel, garlic, chili flake, and olive oil, then finished with a dusting of fennel pollen and rosemary. Bright, buttery, mild.",
+     "ingredients": [
+      {
+       "term": "Castelvetrano olives",
+       "pronunciation": "kah-stel-veh-TRAH-noh",
+       "note": "Nocellara del Belice variety, named for the Sicilian town of Castelvetrano. PDO-protected, so they can only come from the Valle del Belice. Lye-cured for a clean, buttery flavor with no bitterness — the least aggressive olive on any table."
+      },
+      {
+       "term": "Fennel pollen",
+       "pronunciation": null,
+       "note": "The fine yellow pollen harvested from wild fennel flowers. Intensely aromatic, floral, and anise-forward — used here as a finishing garnish."
+      }
+     ],
+     "allergens": [],
+     "canModify": [],
+     "allergenNote": "The marinade carries garlic — Chris is confirming the allium status. Check before promising."
+    },
+    {
+     "name": "Marcona Almonds",
+     "desc": "rosemary olive oil, fried rosemary, maldon sea salt",
+     "price": "6",
+     "raw": false,
+     "pron": "mar-KOH-nah",
+     "story": "Imported Marcona almonds from Spain's Mediterranean coast, roasted until golden, tossed in rosemary olive oil and Maldon sea salt, then finished with crisp fried rosemary. Rounder and softer than a California almond, with a buttery sweetness that makes them genuinely hard to stop eating.",
+     "ingredients": [
+      {
+       "term": "Marcona almonds",
+       "pronunciation": "mar-KOH-nah",
+       "note": "A Spanish almond variety grown along the Mediterranean coast — Alicante, Valencia, and Tarragona. Rounder and plumper than California almonds, with a higher oil content and a naturally sweet, buttery flavor. Spain is the primary producer."
+      },
+      {
+       "term": "Maldon sea salt",
+       "pronunciation": null,
+       "note": "Flaky finishing salt from Essex, England — same as on the bread. Tossed on with the rosemary oil after roasting so the crunch stays distinct."
+      }
+     ],
+     "allergens": [
+      "nuts"
+     ],
+     "canModify": []
+    },
+    {
+     "name": "Farinata",
+     "desc": "chickpea flatbread, house cagliata, seasonal preserve, fresh thyme, sea salt",
+     "price": "13",
+     "raw": false,
+     "pron": "fah-ree-NAH-tah",
+     "story": "A Ligurian chickpea flatbread with roots in 13th-century Genoa — thin, crisp at the edges, soft and nutty in the center. Made in-house from chickpea flour, rosemary olive oil, and water, finished with fresh thyme and sea salt. The housemade cagliatta and a seasonal preserve sit alongside on the plate. Current preserve: rhubarb caramelized onion jam.",
+     "ingredients": [
+      {
+       "term": "Farinata",
+       "pronunciation": "fah-ree-NAH-tah",
+       "note": "Ancient Ligurian flatbread made from chickpea flour, water, olive oil, and salt — baked in a very hot cast iron pan until the edges are crisp and the center is custardy. Also called cecìna in Tuscany. Naturally gluten-free."
+      },
+      {
+       "term": "Cagliatta",
+       "pronunciation": "kal-YAH-tah",
+       "note": "Our housemade fresh cheese — whole milk curdled with lemon juice, then dressed with rosemary-infused olive oil and salt. A fresh, mild, milky curd; closer to a soft ricotta than a mozzarella. Made in-house."
+      },
+      {
+       "term": "Rhubarb caramelized onion jam",
+       "pronunciation": null,
+       "note": "Seasonal preserve made in-house: rhubarb cooked down with caramelized onions, vinegar, and sugar. Tart, sweet, savory — made to work against the richness of the cagliatta."
+      }
+     ],
+     "allergens": [
+      "dairy"
+     ],
+     "canModify": [
+      "dairy"
+     ],
+     "allergenNote": "Naturally gluten-free — chickpea flour, no wheat. The cagliatta is plated alongside; for dairy-free it moves to a bowl on the side or comes off entirely, and the preserve stays."
+    },
+    {
+     "name": "House Caesar",
+     "desc": "anchovy, parmigiano reggiano, red wine croutons",
+     "price": "14",
+     "raw": true,
+     "story": "Romaine dressed with a classic from-scratch Caesar dressing — champagne vinegar, anchovy, garlic, Parmigiano-Reggiano, egg yolk, Worcestershire, Dijon, black pepper. Topped with boquerones white anchovies and red wine croutons: bread soaked in red wine, butter, garlic, and rosemary, then dehydrated until crisp the whole way through. A clean, honest Caesar.",
+     "ingredients": [
+      {
+       "term": "Boquerones",
+       "pronunciation": "boh-keh-ROH-nez",
+       "note": "White anchovies cured in vinegar rather than salt — mild, tender, and bright. Distinct from the oil-packed brown anchovies in the dressing; these sit on top as a finishing garnish."
+      },
+      {
+       "term": "Parmigiano-Reggiano",
+       "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
+       "note": "Aged Italian hard cheese from the Parma region, with PDO protection. Used both in the dressing (grated) and shaved over the top. Nutty, salty, and complex."
+      },
+      {
+       "term": "Red wine croutons",
+       "pronunciation": null,
+       "note": "Made in-house: bread soaked in a red wine, butter, garlic, and rosemary mixture, then dehydrated until crisp all the way through. Deeply savory, and the crunch holds up in the dressing."
+      },
+      {
+       "term": "Coddled egg dressing",
+       "pronunciation": null,
+       "note": "The dressing is built with egg yolk — emulsified raw with oil and champagne vinegar for a thick, rich, classic Caesar consistency. Not cooked through, similar to mayonnaise. It also carries the anchovy: for fish allergies the dressing has to go, not just the boquerones on top."
+      }
+     ],
+     "allergens": [
+      "fish",
+      "dairy",
+      "gluten",
+      "egg",
+      "allium"
+     ],
+     "canModify": [
+      "fish",
+      "dairy",
+      "gluten",
+      "egg",
+      "allium"
+     ],
+     "allergenNote": "Every flag has a path, but fish takes two cuts: the dressing itself has anchovy in it, so pulling the boquerones alone doesn't clear it — omit the boquerones AND swap the dressing for oil and vinegar. Croutons on the side handles gluten. The same oil-and-vinegar swap with cheese on the side covers dairy, egg, and allium. Fully modified it becomes a clean romaine salad with oil and vinegar; tell the guest what they're getting."
+    },
+    {
+     "name": "Farm House Salad",
+     "desc": "swan house salanova, shaved red onion, pickled onion, charred spring onion, burnt onion vinaigrette",
+     "price": "16",
+     "raw": false,
+     "story": "Built on Salanova lettuces grown at Swan House Farm, layered with an onion study in four forms: shaved raw red onion for sharpness, pickled onion for brightness, charred spring onion for sweetness, and a burnt onion vinaigrette that ties the whole plate together with a deep, smoky backbone. Clean and vegetable-forward — the farm and the technique do the talking.",
+     "ingredients": [
+      {
+       "term": "Salanova",
+       "pronunciation": "sah-lah-NOH-vah",
+       "note": "A lettuce cultivar bred for compact, uniform heads and tender leaves that hold their structure. Ours are grown at Swan House Farm — red and green varieties of summer crisp, oakleaf, and butter. No romaine in the mix."
+      },
+      {
+       "term": "Spring onion",
+       "pronunciation": null,
+       "note": "Young onion harvested before the bulb fully forms — sweeter and milder than a mature onion. Charred on high heat here for caramelized sweetness and a slight bitterness."
+      },
+      {
+       "term": "Burnt onion vinaigrette",
+       "pronunciation": null,
+       "note": "Dressing built from deeply charred onion — taken well past caramel into a dark, smoky-sweet reduction, then emulsified with acid and oil. The technique gives the vinaigrette a savory depth you can't get any other way."
+      },
+      {
+       "term": "Pickled onion",
+       "pronunciation": null,
+       "note": "Red onions quick-pickled in vinegar and sugar in-house. Adds a sharp, bright counterpoint to the smoke in the vinaigrette."
+      }
+     ],
+     "allergens": [
+      "allium"
+     ],
+     "canModify": [],
+     "allergenNote": "Allium is the dish — onions four ways, unavoidable. Chris is still reviewing for anything beyond that; confirm with the kitchen before promising."
+    },
+    {
+     "name": "Burrata",
+     "desc": "spring peas, pea puree, mint, dill, bresaola, crostini",
+     "price": "18",
+     "raw": false,
+     "pron": "boo-RAH-tah",
+     "story": "A whole burrata torn open over a bed of spring peas and silky pea puree, scattered with mint and dill, draped with shaved bresaola, and served with crostini. The cheese's molten cream center pools into the sweet peas — the bresaola adds a savory, cured edge.",
+     "ingredients": [
+      {
+       "term": "Burrata",
+       "pronunciation": "boo-RAH-tah",
+       "note": "a fresh cow's-milk cheese from Puglia: a mozzarella shell holding a center of stracciatella (cheese curds) and cream. Cut into it and the middle should flow."
+      },
+      {
+       "term": "Bresaola",
+       "pronunciation": "breh-zah-OH-lah",
+       "note": "air-dried, salted beef from Valtellina in Lombardy, sliced paper-thin. Lean, deep red, faintly sweet."
+      }
+     ],
+     "allergens": [
+      "dairy",
+      "gluten"
+     ],
+     "canModify": [
+      "gluten"
+     ],
+     "allergenNote": "Gluten: crostini come on the side so the rest of the table can still have them. And heads up — as plated this is not vegetarian: the bresaola is cured beef. Bresaola on the side makes it vegetarian."
+    },
+    {
+     "name": "Chilled Nettle Vichyssoise",
+     "desc": "leek, potato, cream, vegetable stock, creme fraiche, chive oil",
+     "price": "14",
+     "raw": false,
+     "pron": "vee-shee-SWAH",
+     "story": "A cold classic French soup updated with Pacific Northwest wild nettles. The base is leek, potato, cream, and vegetable stock — blended smooth and chilled — with nettles folded in for a vegetal, slightly mineral depth and a vivid green color. Finished with crème fraîche and chive oil.",
+     "ingredients": [
+      {
+       "term": "Vichyssoise",
+       "pronunciation": "vee-shee-SWAH",
+       "note": "Classic French cold leek-and-potato cream soup, traditionally served chilled. Despite the French name, it was likely created in New York in the early 20th century."
+      },
+      {
+       "term": "Nettles",
+       "pronunciation": null,
+       "note": "Wild stinging nettles, foraged in early spring from the Pacific Northwest. Blanching removes the sting completely; the flavor is grassy, mineral, and more complex than spinach. A true spring-only ingredient."
+      },
+      {
+       "term": "Crème fraîche",
+       "pronunciation": "krem FRESH",
+       "note": "French cultured cream — thicker and tangier than sour cream, milder than Greek yogurt. Dolloped over the soup as a cool, rich finish."
+      },
+      {
+       "term": "Chive oil",
+       "pronunciation": null,
+       "note": "Blended chive and neutral oil, strained smooth. Vivid green, herbaceous, and grassy — drizzled over the top for aroma and color."
+      }
+     ],
+     "allergens": [
+      "dairy",
+      "allium"
+     ],
+     "canModify": [],
+     "allergenNote": "Naturally gluten-free. The leeks are the backbone — allium can't come out — and the cream is cooked in."
     }
-  ],
-  "desserts": [
+   ]
+  },
+  {
+   "section": "Primi & Secondi",
+   "items": [
     {
-      "name": "Earl Grey Tiramisu",
-      "desc": "mascarpone, ladyfingers, miro tea, planteray dark rum, bergamot agrumato",
-      "price": "15",
-      "pron": "tee-rah-mee-SOO",
-      "story": "A San Fermo riff on the Italian classic. Instead of espresso, the ladyfingers are soaked in Earl Grey from Miro Tea — Ballard's 200-variety loose leaf tea shop — which swaps coffee's bitterness for bergamot's floral citrus. Planteray dark rum in the mascarpone cream; bergamot agrumato oil at the finish.",
-      "ingredients": [
-        {
-          "term": "Tiramisu",
-          "pronunciation": "tee-rah-mee-SOO",
-          "note": "Classic Northern Italian dessert — ladyfinger biscuits soaked in liquid, layered with sweetened mascarpone cream, finished with cocoa. The name means \"pick me up\" in Italian."
-        },
-        {
-          "term": "Miro Tea",
-          "pronunciation": null,
-          "note": "Ballard neighborhood tea shop, Seattle, founded 2005. Carries over 200 varieties of loose leaf tea. We use their Earl Grey for the ladyfinger soak — clean, bergamot-forward, and bright."
-        },
-        {
-          "term": "Bergamot agrumato",
-          "pronunciation": "BEHR-gah-mot ag-roo-MAH-toh",
-          "note": "Extra virgin olive oil co-milled with whole bergamot fruit at the press — the citrus oils are captured inside the olive oil rather than infused afterward. Bergamot is the citrus that gives Earl Grey its distinctive floral-bitter aroma. Used as a finishing drizzle here."
-        },
-        {
-          "term": "Planteray dark rum",
-          "pronunciation": "PLAN-teh-ray",
-          "note": "Formerly Plantation Rum — rebranded to Planteray in 2024. French-Caribbean aged rum from Maison Ferrand, known for its dual aging: first in the tropics, then finished in cognac barrels in France. Rich, smooth, and molasses-forward."
-        },
-        {
-          "term": "Mascarpone",
-          "pronunciation": "mas-car-POH-neh",
-          "note": "Italian triple-cream fresh cheese from Lombardy — thick, rich, mildly sweet. The base of the tiramisu cream layer."
-        }
-      ],
-      "allergens": [
-        "dairy",
-        "gluten",
-        "egg"
-      ],
-      "canModify": []
+     "name": "Swan House Bolognese",
+     "desc": "saffron spaghetti, swan house beef & pork, tomato, fennel, rosemary, parmigiano reggiano",
+     "price": "32",
+     "raw": false,
+     "pron": "boh-loh-NYEH-zeh",
+     "story": "The family recipe — on the menu since day one, and it never leaves. This run is built on ground beef and pork raised at Swan House Farm; when it's gone, the dish returns to the classic pork-and-veal build. Either way: seasoned with our own spice blend, cooked down slowly with red wine, tomato, fennel, and rosemary, then finished with cream, butter, sherry, and salt. The saffron spaghetti is extruded with a strained, highly concentrated saffron tea in place of water — that's where the gold color and the subtle earthy aroma come from, no egg involved.",
+     "ingredients": [
+      {
+       "term": "Bolognese",
+       "pronunciation": "boh-loh-NYEH-zeh",
+       "note": "a slow-cooked meat ragù from Bologna in Emilia-Romagna — traditionally more meat than tomato."
+      },
+      {
+       "term": "Saffron",
+       "pronunciation": "SAF-ron",
+       "note": "the dried stigma of the crocus flower, hand-harvested and prized. We brew it into a concentrated tea, strain it, and use it in place of water in the extruded dough — gold color, hay-like earthiness, and the reason this golden pasta has no egg."
+      },
+      {
+       "term": "Parmigiano Reggiano",
+       "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
+       "note": "the aged hard cheese from Emilia-Romagna, the only 'real' Parmesan; nutty, savory, crystalline."
+      }
+     ],
+     "allergens": [
+      "gluten",
+      "dairy",
+      "allium"
+     ],
+     "canModify": [
+      "dairy"
+     ],
+     "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
     },
     {
-      "name": "Pavlova",
-      "desc": "meringue, vanilla pastry cream, rhubarb compote, lilac sugar",
-      "price": "13",
-      "pron": "pav-LOH-vah",
-      "story": "A crisp-outside, marshmallow-inside meringue, named for the Russian ballerina Anna Pavlova. Topped with vanilla pastry cream, tart rhubarb compote, and a dusting of lilac sugar — the lilac is a nod to Swan House Farm, where it perfumes the spring menu.",
-      "ingredients": [
-        {
-          "term": "Pavlova",
-          "pronunciation": "pav-LOH-vah",
-          "note": "a meringue-based dessert with a crisp crust and soft center, named for ballerina Anna Pavlova."
-        },
-        {
-          "term": "Meringue",
-          "pronunciation": "meh-RANG",
-          "note": "whipped egg whites and sugar, baked low and slow until crisp."
-        },
-        {
-          "term": "Lilac sugar",
-          "pronunciation": null,
-          "note": "sugar perfumed with lilac blossoms from Swan House Farm; floral and faintly sweet."
-        }
-      ],
-      "allergens": [
-        "egg",
-        "dairy"
-      ],
-      "canModify": [
-        "dairy"
-      ],
-      "allergenNote": "No flour in the meringue — gluten-free as built. The pastry cream rides on the side for dairy-free; the meringue and rhubarb compote stand on their own."
+     "name": "Mafaldine",
+     "desc": "swan house lamb sausage, morel mushroom, ramp, lemon, butter, parmigiano reggiano",
+     "price": "31",
+     "raw": false,
+     "pron": "mah-fal-DEE-neh",
+     "story": "Mafaldine — a wide, ruffled ribbon pasta named after Princess Mafalda of Savoy — tossed with house-made lamb sausage, morel mushrooms, ramps, lemon, butter, and Parmigiano. The sausage is ground from Swan House Farm lamb and seasoned Italian-sausage style. Morels and ramps are both spring-only wild ingredients, so this dish has a short window. The ruffled edges hold onto the buttery, mushroom-rich sauce.",
+     "ingredients": [
+      {
+       "term": "Swan House lamb sausage",
+       "pronunciation": null,
+       "note": "Made in-house from ground lamb raised at Swan House Farm — the family farm in the Skagit Valley — seasoned in the classic Italian sausage style. The same lamb that runs through the farm dinner menus."
+      },
+      {
+       "term": "Mafaldine",
+       "pronunciation": "mah-fal-DEE-neh",
+       "note": "Wide, flat pasta with ruffled edges on both sides, from Naples. Named in honor of Princess Mafalda of Savoy — also called reginette (little queens). The wavy edges grip sauce exceptionally well."
+      },
+      {
+       "term": "Morel mushrooms",
+       "pronunciation": "moh-REL",
+       "note": "Wild foraged mushrooms with a honeycomb-shaped cap and an earthy, nutty, almost meaty flavor. Available only in spring — peak season in the Pacific Northwest is April through June. Sourced through Foraged & Found Edibles."
+      },
+      {
+       "term": "Ramps",
+       "pronunciation": null,
+       "note": "Wild leeks foraged in early spring; the whole plant is edible — leaves, stems, and bulb. Flavor sits between garlic and green onion, with a grassy brightness. One of the most sought-after spring wild ingredients."
+      }
+     ],
+     "allergens": [
+      "gluten",
+      "dairy",
+      "allium"
+     ],
+     "canModify": [
+      "dairy",
+      "allium"
+     ],
+     "allergenNote": "No egg in this pasta. Dairy: butter and Parmigiano come off — the sauce leans on olive oil and pasta water, lighter but it holds. Allium: the ramps come off on request. Vegetarian: lamb sausage off — offer extra morels, or whatever seasonal vegetable the menu is carrying."
     },
     {
-      "name": "Seasonal Gelato",
-      "desc": "ask the kitchen for tonight's flavor",
-      "price": "8",
-      "allergens": [
-        "dairy"
-      ],
-      "canModify": [],
-      "allergenNote": "Flavors rotate nightly — confirm eggs or nuts with the kitchen before promising anything."
+     "name": "Tartufo Nero",
+     "desc": "fresh egg tagliatelle, summer truffle, butter, parmigiano reggiano",
+     "price": "26",
+     "raw": false,
+     "pron": "tar-TOO-foh NEH-roh",
+     "story": "Fresh egg tagliatelle finished in a butter sauce built from pasta water, a little salt, and lemon — then summer black truffle grated generously over the top, never tossed in. No competing flavors — the technique is restraint. The pasta is made in-house daily. It's the most direct expression of a single ingredient on the menu.",
+     "ingredients": [
+      {
+       "term": "Tartufo nero",
+       "pronunciation": "tar-TOO-foh NEH-roh",
+       "note": "Italian for black truffle. An underground fungus with an intensely earthy, musky, complex aroma. Summer black truffles (Tuber aestivum) are milder than the winter Périgord variety but still highly aromatic."
+      },
+      {
+       "term": "Tagliatelle",
+       "pronunciation": "tal-yah-TEL-eh",
+       "note": "Long, flat egg pasta ribbon from the Emilia-Romagna region of Italy. Made in-house with eggs and 00 flour. The slightly porous surface clings to butter and truffle better than a dried pasta."
+      },
+      {
+       "term": "Parmigiano-Reggiano",
+       "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
+       "note": "PDO-protected aged Italian hard cheese from the Parma region. Adds a nutty, salty counterpoint to the truffle's earthiness."
+      }
+     ],
+     "allergens": [
+      "gluten",
+      "egg",
+      "dairy"
+     ],
+     "canModify": [
+      "dairy"
+     ],
+     "allergenNote": "Egg is in the pasta dough — no way around it. Dairy can technically come off (no butter sauce, no cheese) but it is not recommended; the dish is butter and truffle. Chris is confirming there's no allium — check before promising."
+    },
+    {
+     "name": "Paccheri alla Carbonara",
+     "desc": "guanciale, black pepper, swan house farm egg yolk, pecorino romano",
+     "price": "28",
+     "raw": true,
+     "pron": "pah-KEH-ree",
+     "story": "The Roman classic on paccheri — short pasta tubes, like a snipped rigatoni, that catch the sauce inside. Rendered guanciale, lots of cracked black pepper, Pecorino Romano, and a Swan House Farm egg yolk emulsified into a glossy, peppery sauce. No cream — the silk comes from the egg and cheese. Served with a raw yolk, hence the asterisk.",
+     "ingredients": [
+      {
+       "term": "Paccheri",
+       "pronunciation": "pah-KEH-ree",
+       "note": "smooth tube pasta from Campania. Ours run smaller than the classic cut — closer to a shortened rigatoni — and collapse slightly when cooked to trap the sauce inside."
+      },
+      {
+       "term": "Carbonara",
+       "pronunciation": "kar-boh-NAH-rah",
+       "note": "a Roman sauce of egg, hard cheese, cured pork, and black pepper — emulsified, never creamed."
+      },
+      {
+       "term": "Guanciale",
+       "pronunciation": "gwahn-CHAH-leh",
+       "note": "cured pork jowl, fattier and more delicate than pancetta; renders down into the sauce."
+      },
+      {
+       "term": "Pecorino Romano",
+       "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
+       "note": "a hard, salty sheep's-milk cheese from Lazio — sharper than Parmigiano."
+      }
+     ],
+     "allergens": [
+      "gluten",
+      "egg",
+      "dairy"
+     ],
+     "canModify": [
+      "dairy",
+      "egg"
+     ],
+     "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen subs in whatever vegetable is running seasonally on the menu. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish."
+    },
+    {
+     "name": "Risotto Funghi",
+     "desc": "marinated maitake mushrooms, marjoram, goat cheese, garlic",
+     "price": "29",
+     "raw": false,
+     "pron": "ree-ZOT-toh FOON-gee",
+     "story": "Arborio risotto built with roasted cultivated mushrooms folded into the base, then crowned with maitake mushrooms — hard-roasted and marinated in olive oil, champagne vinegar, and thyme. Finished with goat cheese, fried leeks, and fresh marjoram. Two distinct mushroom preparations in one bowl. Gluten-free.",
+     "ingredients": [
+      {
+       "term": "Maitake mushrooms",
+       "pronunciation": "my-TAH-keh",
+       "note": "Also called hen-of-the-woods. A large, frilly wild mushroom prized for its earthy, woodsy flavor and meaty texture. Here they're hard-roasted, cooled, and marinated — served as a star garnish rather than cooked into the risotto body. Sourced year-round from Foraged & Found Edibles."
+      },
+      {
+       "term": "Marjoram",
+       "pronunciation": "MAR-juh-rum",
+       "note": "A delicate Mediterranean herb in the oregano family, but softer and slightly sweet. Used fresh as a garnish — it wilts quickly in heat, so it goes on last."
+      },
+      {
+       "term": "Arborio",
+       "pronunciation": "ar-BOR-ee-oh",
+       "note": "Short-grain Italian rice that releases starch as it cooks, creating risotto's signature creamy texture. Par-cooked in batches at the restaurant, finished per plate to order."
+      }
+     ],
+     "allergens": [
+      "dairy",
+      "allium"
+     ],
+     "canModify": [
+      "dairy"
+     ],
+     "allergenNote": "Naturally gluten-free. Dairy-free works: butter and goat cheese come off and the marinated maitakes carry it. Allium and the cooked wine can't come out — our risotto base is always par-cooked with onion and white wine in the stock."
+    },
+    {
+     "name": "Pan Roasted Halibut",
+     "desc": "new potatoes, asparagus, ramps, parsley, lovage caper honey",
+     "price": "38",
+     "raw": true,
+     "story": "Pacific halibut from Key City Fish in Port Townsend, pan-roasted. The lovage caper honey goes down first — a purée spread across the plate — with the new potatoes and asparagus built on top of it, the halibut over everything, and ramps and parsley to finish. Herbaceous, briny, floral, and sweet all at once. Halibut season runs March through November; this is a spring dish at its best.",
+     "ingredients": [
+      {
+       "term": "Halibut",
+       "pronunciation": null,
+       "note": "Pacific halibut from WA and AK landings, sourced through Key City Fish Co. in Port Townsend, WA. Large flatfish with firm, mild, white flesh. Season runs March through November — spring fish tend to be leaner and more delicate."
+      },
+      {
+       "term": "Ramps",
+       "pronunciation": null,
+       "note": "Wild spring leeks foraged in the Pacific Northwest. Garlic-onion flavor with a grassy brightness. Spring-only; they appear in April and are usually done by early June."
+      },
+      {
+       "term": "Lovage",
+       "pronunciation": "LUH-vij",
+       "note": "Tall perennial herb with a flavor like intense celery combined with parsley. Used here in the caper-honey purée that's spread on the plate as the base layer — the lovage adds a savory, slightly medicinal depth that plays against the sweetness."
+      },
+      {
+       "term": "Key City Fish",
+       "pronunciation": null,
+       "note": "Purveyor in Port Townsend, WA, focused on Pacific Northwest and Alaskan seafood. Supplies the majority of top Seattle restaurants. We order directly from them for next-day delivery."
+      }
+     ],
+     "allergens": [
+      "fish",
+      "dairy",
+      "allium"
+     ],
+     "canModify": [
+      "dairy",
+      "allium"
+     ],
+     "allergenNote": "Dairy-free is technically possible: the butter-braised potatoes come off — extra asparagus or another veg in their place — and the kitchen can skip the butter baste. Ramps come off to dodge allium, but Chris is confirming whether the lovage caper purée carries allium; don't promise that one until it's settled."
+    },
+    {
+     "name": "Swan House Pork Chop",
+     "desc": "polenta, charred spring onion, rhubarb mostarda",
+     "price": "42",
+     "raw": true,
+     "story": "Berkshire pork raised at Swan House Farm — and these are the last chops of the run, so once they're gone, they're gone. Pan-roasted and served over creamy polenta, with charred spring onion and a rhubarb mostarda: a Northern Italian fruit-and-mustard condiment that cuts the richness.",
+     "ingredients": [
+      {
+       "term": "Swan House Farm",
+       "pronunciation": null,
+       "note": "The family farm in the Skagit Valley — the same farm behind the farm dinners, the lamb in the mafaldine, and the egg yolks in the carbonara. These chops are from pigs raised there."
+      },
+      {
+       "term": "Berkshire pork",
+       "pronunciation": null,
+       "note": "A heritage hog breed prized for heavy marbling and darker, richer meat than commodity pork — the breed the Japanese call Kurobuta. Slower-growing, and worth it."
+      },
+      {
+       "term": "Mostarda",
+       "pronunciation": "moh-STAR-dah",
+       "note": "A Northern Italian condiment made from fruit — here rhubarb — preserved in a sweet, mustard-oil-spiked syrup. Simultaneously sweet, sharp, fruity, and savory. Traditionally served with rich meats to cut through fat. Despite the name, it's not mustard."
+      },
+      {
+       "term": "Polenta",
+       "pronunciation": "poh-LEN-tah",
+       "note": "Ground cornmeal cooked with cream, chicken stock, and butter until thick and creamy. Serves as the bed for the chop — rich, mild, and soft."
+      }
+     ],
+     "allergens": [
+      "dairy",
+      "allium"
+     ],
+     "canModify": [
+      "dairy",
+      "allium"
+     ],
+     "allergenNote": "Dairy: the polenta comes off or swaps to risotto. Allium: the demi is built on onions — the kitchen can sub out the spring onions and the demi entirely, or the guest can keep the demi if cooked-in allium works for them. Ask; don't decide for them."
     }
-  ],
-  "allergenStatus": "draft"
+   ],
+   "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
+  }
+ ],
+ "desserts": [
+  {
+   "name": "Earl Grey Tiramisu",
+   "desc": "mascarpone, ladyfingers, miro tea, planteray dark rum, bergamot agrumato",
+   "price": "15",
+   "pron": "tee-rah-mee-SOO",
+   "story": "A San Fermo riff on the Italian classic. Instead of espresso, the ladyfingers are soaked in Earl Grey from Miro Tea — Ballard's 200-variety loose leaf tea shop — which swaps coffee's bitterness for bergamot's floral citrus. Planteray dark rum in the mascarpone cream; bergamot agrumato oil at the finish.",
+   "ingredients": [
+    {
+     "term": "Tiramisu",
+     "pronunciation": "tee-rah-mee-SOO",
+     "note": "Classic Northern Italian dessert — ladyfinger biscuits soaked in liquid, layered with sweetened mascarpone cream, finished with cocoa. The name means \"pick me up\" in Italian."
+    },
+    {
+     "term": "Miro Tea",
+     "pronunciation": null,
+     "note": "Ballard neighborhood tea shop, Seattle, founded 2005. Carries over 200 varieties of loose leaf tea. We use their Earl Grey for the ladyfinger soak — clean, bergamot-forward, and bright."
+    },
+    {
+     "term": "Bergamot agrumato",
+     "pronunciation": "BEHR-gah-mot ag-roo-MAH-toh",
+     "note": "Extra virgin olive oil co-milled with whole bergamot fruit at the press — the citrus oils are captured inside the olive oil rather than infused afterward. Bergamot is the citrus that gives Earl Grey its distinctive floral-bitter aroma. Used as a finishing drizzle here."
+    },
+    {
+     "term": "Planteray dark rum",
+     "pronunciation": "PLAN-teh-ray",
+     "note": "Formerly Plantation Rum — rebranded to Planteray in 2024. French-Caribbean aged rum from Maison Ferrand, known for its dual aging: first in the tropics, then finished in cognac barrels in France. Rich, smooth, and molasses-forward."
+    },
+    {
+     "term": "Mascarpone",
+     "pronunciation": "mas-car-POH-neh",
+     "note": "Italian triple-cream fresh cheese from Lombardy — thick, rich, mildly sweet. The base of the tiramisu cream layer."
+    }
+   ],
+   "allergens": [
+    "dairy",
+    "gluten",
+    "egg"
+   ],
+   "canModify": []
+  },
+  {
+   "name": "Pavlova",
+   "desc": "meringue, vanilla pastry cream, rhubarb compote, lilac sugar",
+   "price": "13",
+   "pron": "pav-LOH-vah",
+   "story": "A crisp-outside, marshmallow-inside meringue, named for the Russian ballerina Anna Pavlova. Topped with vanilla pastry cream, tart rhubarb compote, and a dusting of lilac sugar — the lilac is a nod to Swan House Farm, where it perfumes the spring menu.",
+   "ingredients": [
+    {
+     "term": "Pavlova",
+     "pronunciation": "pav-LOH-vah",
+     "note": "a meringue-based dessert with a crisp crust and soft center, named for ballerina Anna Pavlova."
+    },
+    {
+     "term": "Meringue",
+     "pronunciation": "meh-RANG",
+     "note": "whipped egg whites and sugar, baked low and slow until crisp."
+    },
+    {
+     "term": "Lilac sugar",
+     "pronunciation": null,
+     "note": "sugar perfumed with lilac blossoms from Swan House Farm; floral and faintly sweet."
+    }
+   ],
+   "allergens": [
+    "egg",
+    "dairy"
+   ],
+   "canModify": [
+    "dairy"
+   ],
+   "allergenNote": "No flour in the meringue — gluten-free as built. The pastry cream rides on the side for dairy-free; the meringue and rhubarb compote stand on their own."
+  },
+  {
+   "name": "Seasonal Gelato",
+   "desc": "ask the kitchen for tonight's flavor",
+   "price": "8",
+   "allergens": [
+    "dairy"
+   ],
+   "canModify": [],
+   "allergenNote": "Flavors rotate nightly — confirm eggs or nuts with the kitchen before promising anything."
+  }
+ ],
+ "allergenStatus": "draft"
 }
