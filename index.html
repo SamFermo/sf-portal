@@ -271,7 +271,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 .sec-chips{display:flex; gap:7px; flex-wrap:wrap; margin:10px 0 12px;}
 .mini-map{background:rgba(8,12,26,.55); border:1px solid rgba(205,216,244,.16); border-radius:14px; padding:10px; margin:2px 0 14px;}
 .mini-map svg{width:100%; height:auto; display:block; max-height:300px; margin:0 auto;}
-.mm-t{fill:rgba(205,216,244,.12); stroke:rgba(205,216,244,.34); stroke-width:3;}
+.mm-t{fill:rgba(205,216,244,.12); stroke:rgba(205,216,244,.34); stroke-width:3; cursor:pointer;}
+.mini-map text{pointer-events:none;}
 .mm-noted{fill:rgba(230,200,120,.30); stroke:var(--gold); stroke-width:5;}
 .mm-x{fill:rgba(205,216,244,.8); font-size:36px; font-weight:700; text-anchor:middle;}
 .mm-xn{fill:#f5e3b0;}
@@ -679,7 +680,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780610674';   // stamped by build-data.py at every deploy
+const BUILD='1780611537';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1615,7 +1616,7 @@ function gridMapHTML(tabs,noted){
   const W=cols*S+(cols-1)*G, H=rows*S+(rows-1)*G;
   let svg=`<svg viewBox="-10 -10 ${W+20} ${H+20}" xmlns="http://www.w3.org/2000/svg">`;
   sorted.forEach((d,i)=>{const c=i%cols,r=Math.floor(i/cols),x=c*(S+G),y=r*(S+G),hot=noted.indexOf(d.label.toUpperCase())>=0;
-    svg+=`<rect class="${hot?'mm-t mm-noted':'mm-t'}${d.extra?' mm-combo':''}" x="${x}" y="${y}" width="${S}" height="${S}" rx="16"/>`;
+    svg+=`<rect class="${hot?'mm-t mm-noted':'mm-t'}${d.extra?' mm-combo':''}" onclick="selectTblFromMap('${esc(d.label)}')" x="${x}" y="${y}" width="${S}" height="${S}" rx="16"/>`;
     svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${x+S/2}" y="${y+S/2-(d.extra?8:0)}" dy="0.36em" style="font-size:34px">${esc(d.label)}</text>`;
     if(d.extra)svg+=`<text class="mm-x" x="${x+S/2}" y="${y+S-22}" style="font-size:19px">+${d.extra}</text>`;});
   svg+=`</svg>`;
@@ -1623,7 +1624,10 @@ function gridMapHTML(tabs,noted){
 }
 function tablesPaneHTML(b){
   const sec=boardSecGet(), items=b.tables||[];
-  if(sec==='all')return comboUIHTML()+tablesColHTML(items);   // MD full-floor view + combo controls
+  if(sec==='all'){
+    const notedAll=items.map(t=>comboPrimary(t.table).toUpperCase());
+    return comboUIHTML()+fullMapHTML(notedAll)+tablesColHTML(items);   // MD full-floor view + combo controls
+  }
   if(sec==='mine'){
     const mine=getMyTables(), mineU=mine.map(t=>comboPrimary(t).toUpperCase());
     const inMine=items.map((t,i)=>({t:t,i:i})).filter(o=>mineU.indexOf(comboPrimary(o.t.table).toUpperCase())>=0);
@@ -1657,10 +1661,22 @@ function tablesPaneHTML(b){
   inSec.forEach(o=>h+=tblItemHTML(o.t,o.i));
   return h+`</div>`;
 }
+function selectTblFromMap(t){
+  const num=$('tbl-num'); if(!num)return;
+  num.value=comboPrimary(t);
+  const note=$('tbl-note'); if(note)note.focus();
+}
 function miniMapHTML(sec,noted){
-  const lay=SF.seating&&SF.seating.layout, map=SF.seating&&SF.seating.sections&&SF.seating.sections.map;
-  if(!lay||!map||!map[sec])return '';
-  const tabs=map[sec].filter(t=>lay[t]); if(!tabs.length)return '';
+  const map=SF.seating&&SF.seating.sections&&SF.seating.sections.map;
+  if(!map||!map[sec])return '';
+  return tableMapHTML(map[sec],noted,sec+' — tap a table to start a note · gold have notes');
+}
+function fullMapHTML(noted){
+  return tableMapHTML(allTablesInOrder(),noted,'tap a table to start a note · gold have notes');
+}
+function tableMapHTML(tabsIn,noted,cap){
+  const lay=SF.seating&&SF.seating.layout; if(!lay)return '';
+  const tabs=tabsIn.filter(t=>lay[t]); if(!tabs.length)return '';
   let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   tabs.forEach(t=>{const o=lay[t],w=o.r?o.r*2:o.w,hh=o.r?o.r*2:o.h;
     x0=Math.min(x0,o.x-w/2);y0=Math.min(y0,o.y-hh/2);x1=Math.max(x1,o.x+w/2);y1=Math.max(y1,o.y+hh/2);});
@@ -1669,11 +1685,12 @@ function miniMapHTML(sec,noted){
   tabs.forEach(t=>{const o=lay[t],c=comboFor(t),lbl=c?String(c.primary):t;
     const hot=noted.indexOf(String(lbl).toUpperCase())>=0;
     let cls=hot?'mm-t mm-noted':'mm-t'; if(c&&String(t)!==String(c.primary))cls+=' mm-combo';
-    if(o.r)svg+=`<circle class="${cls}" cx="${o.x-x0}" cy="${o.y-y0}" r="${o.r}"/>`;
-    else svg+=`<rect class="${cls}" x="${o.x-o.w/2-x0}" y="${o.y-o.h/2-y0}" width="${o.w}" height="${o.h}" rx="12"/>`;
+    const tap=`onclick="selectTblFromMap('${esc(t)}')"`;
+    if(o.r)svg+=`<circle class="${cls}" ${tap} cx="${o.x-x0}" cy="${o.y-y0}" r="${o.r}"/>`;
+    else svg+=`<rect class="${cls}" ${tap} x="${o.x-o.w/2-x0}" y="${o.y-o.h/2-y0}" width="${o.w}" height="${o.h}" rx="12"/>`;
     svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${o.x-x0}" y="${o.y-y0}" dy="0.36em">${esc(lbl)}</text>`;});
   svg+=`</svg>`;
-  return `<div class="mini-map">${svg}<div class="mm-cap">${esc(sec)} — gold tables have notes tonight</div></div>`;
+  return `<div class="mini-map">${svg}<div class="mm-cap">${esc(cap)}</div></div>`;
 }
 function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;const b=getBoard();b[k]=b[k]||[];b[k].push(v);persistBoard(b);renderBoard();setTimeout(()=>{const x=$('in-'+k);if(x)x.focus();},0);}
 function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);renderBoard();}
