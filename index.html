@@ -392,6 +392,12 @@ nav.chips::-webkit-scrollbar{display:none;}
 .modal-card p{font-size:12.5px; color:var(--card-soft); margin:0 0 12px;}
 .modal-card textarea{flex:1; min-height:220px; width:100%; border:1px solid var(--moon-edge); border-radius:10px; padding:12px; font-family:ui-monospace,Menlo,monospace; font-size:12px; color:var(--card-ink); background:#fffdf7; resize:none;}
 .modal-actions{display:flex; gap:10px; margin-top:13px;}
+/* live-add modal: the generic .modal-card textarea rule (flex:1, 220px) is meant for
+   the corrections promptModal and blows this form past the viewport on phones.
+   ID-scoped overrides win on specificity. */
+#liveModal .modal-card{max-height:84dvh;}
+#liveBody{overflow-y:auto; -webkit-overflow-scrolling:touch; min-height:0; flex:1;}
+#liveModal textarea{flex:none; min-height:64px; max-height:140px; font-family:inherit; font-size:13.5px; resize:vertical;}
 .modal-actions button{flex:1; border:none; border-radius:10px; padding:11px; font-size:14px; font-weight:700; cursor:pointer;}
 .copy-btn{background:var(--gold); color:#241f15;} .copy-btn.done{background:var(--accent); color:#fff;}
 .close-btn{background:rgba(90,58,34,.12); color:var(--wood);}
@@ -663,7 +669,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780608836';   // stamped by build-data.py at every deploy
+const BUILD='1780609256';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
