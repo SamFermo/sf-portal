@@ -264,6 +264,9 @@ nav.chips::-webkit-scrollbar{display:none;}
 .comp-name{font-weight:700; color:var(--wood); font-size:14px;}
 .comp-role{font-size:11.5px; font-style:italic; color:var(--card-mute);}
 .pill{display:inline-block; font-size:10px; font-weight:700; letter-spacing:.04em; padding:2px 8px; border-radius:999px; white-space:nowrap;}
+/* gold attention: nav chip + home card when new 86 items are unseen on this device */
+.chip.attn-chip{background:linear-gradient(155deg,#e8cd79,#c9a64e); color:#241f15; border-color:transparent; animation:goldPulse 1.7s ease-in-out infinite;}
+.home-card.attn-card{animation:goldPulse 1.7s ease-in-out infinite;}
 /* gold attention state on an inactive subtab (new 86 items unseen on this device) */
 .subtab.attn{background:linear-gradient(155deg,#e8cd79,#c9a64e); color:#241f15; border-radius:999px; animation:goldPulse 1.7s ease-in-out infinite;}
 @keyframes goldPulse{0%,100%{box-shadow:0 0 6px rgba(230,200,120,.35);}50%{box-shadow:0 0 16px rgba(230,200,120,.75);}}
@@ -517,7 +520,14 @@ body.locked{overflow:hidden;}
 .tbl-glow-r{border-left-color:#d4654a; animation:glowR 1.5s ease-in-out infinite;}
 @keyframes glowG{0%,100%{box-shadow:0 0 5px rgba(109,182,87,.3);}50%{box-shadow:0 0 16px rgba(109,182,87,.75);}}
 @keyframes glowR{0%,100%{box-shadow:0 0 5px rgba(212,101,74,.35);}50%{box-shadow:0 0 16px rgba(212,101,74,.8);}}
+.tbl-glow-a{border-left-color:#e0b14e; animation:glowA 1.5s ease-in-out infinite;}
+@keyframes glowA{0%,100%{box-shadow:0 0 5px rgba(224,177,78,.35);}50%{box-shadow:0 0 16px rgba(224,177,78,.8);}}
 .tbl-ack{background:rgba(205,216,244,.1); border:1px solid rgba(205,216,244,.3); color:var(--ink); border-radius:8px; padding:4px 10px; font-size:10.5px; font-weight:800; letter-spacing:.05em; cursor:pointer; font-family:inherit;}
+/* map status glows — colored pulsing border on top of the gold noted fill */
+.mm-glow-g{stroke:#6db657 !important; animation:mmPulse 1.5s ease-in-out infinite;}
+.mm-glow-r{stroke:#d4654a !important; animation:mmPulse 1.5s ease-in-out infinite;}
+.mm-glow-a{stroke:#e0b14e !important; animation:mmPulse 1.5s ease-in-out infinite;}
+@keyframes mmPulse{0%,100%{stroke-width:4; stroke-opacity:1;}50%{stroke-width:9; stroke-opacity:.55;}}
 .tbl-sec-label{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-mute); margin:14px 0 7px; padding-bottom:4px; border-bottom:.5px solid rgba(205,216,244,.14);}
 .tbl-note{font-size:13px; color:var(--ink-soft); margin-top:3px;}
 .tbl-by{font-size:10.5px; color:var(--ink-mute); font-style:italic; margin-top:2px;}
@@ -616,14 +626,17 @@ body.locked{overflow:hidden;}
 </section>
 
 <section class="view" id="board">
-  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">Nightly Notes</h2>
-    <p class="view-sub">86 list, tonight's specials, and tables to watch.</p>
-    <div class="subtabs" id="boardTabs"><span class="subpill" id="boardPill"></span>
-      <button class="subtab active" data-bt="tables">Tables</button>
-      <button class="subtab" data-bt="board">86 · Specials</button>
-    </div>
+  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">Tables</h2>
+    <p class="view-sub">Notes and statuses on tonight's tables — tap the map to start one.</p>
   </div>
   <div id="boardBody"></div>
+</section>
+
+<section class="view" id="verbals">
+  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">Verbals</h2>
+    <p class="view-sub">Standing verbals, the 86 list, and tonight's specials.</p>
+  </div>
+  <div id="verbalsBody"></div>
 </section>
 
 <section class="view" id="crew">
@@ -681,7 +694,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780611761';   // stamped by build-data.py at every deploy
+const BUILD='1780612425';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -712,7 +725,7 @@ function makeStars(){
   sky.innerHTML=h;
 }
 
-const TABS=[['fresh','Fresh Talk'],['board','Nightly Notes'],['crew','Crew Board'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service']];
+const TABS=[['fresh','Fresh Talk'],['board','Tables'],['verbals','Verbals'],['crew','Crew Board'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service']];
 function navTabs(){return (typeof isAdmin==='function'&&isAdmin())?TABS.concat([['access','Staff Access']]):TABS;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));}
@@ -720,6 +733,7 @@ function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
   if(id==='access')renderAccess(); if(id==='directory')renderDirectory();
+  if(id==='verbals'){markSeen86();updateVerbalsAttn();}
   window.scrollTo(0,0); requestAnimationFrame(replaceAllPills);}
 
 function initPill(tabsEl,pillEl,attr,onSwitch){
@@ -733,12 +747,13 @@ function replaceAllPills(){document.querySelectorAll('.subtabs').forEach(t=>{con
 /* HOME */
 function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
-  const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['board','☾','Nightly Notes','86 · specials · tables'],
+  const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['board','⌗','Tables','Tonight\'s table notes & statuses'],
+    ['verbals','☾','Verbals','Standing · 86 · specials'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
     ['schedule','◷','Schedule','This week + the month'],['seating','▦','Seating','The floor & table numbers'],
     ['duties','☑','Duties','Opening, closing, sidework'],['compliance','✓','Compliance','Food handlers & MAST'],
     ['directory','✉','Directory','The team & contacts'],['service','❖','Service','Steps & standards']];
-  $('homeGrid').innerHTML=cards.map(([id,ic,t,s])=>`<button class="home-card" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
+  $('homeGrid').innerHTML=cards.map(([id,ic,t,s])=>`<button class="home-card" data-card="${id}" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
   renderAccountBar();
 }
 
@@ -1515,7 +1530,6 @@ function persistBoard(b){
   if(fbReady&&fbDb){ fbDb.collection('board').doc(boardDocId()).set(b).catch(function(){lsSetBoard(b);}); }
   else { lsSetBoard(b); }
 }
-let boardTab='tables';
 function boardSecGet(){try{return localStorage.getItem('sf-board-section')||'all';}catch(e){return 'all';}}
 function boardSecSet(v){try{localStorage.setItem('sf-board-section',v);}catch(e){}}
 /* per-device "seen" tracking for 86 items — drives the gold pill. Day-keyed so it
@@ -1531,16 +1545,19 @@ function renderBoard(){const b=getBoard();
     items.forEach((it,i)=>h+=`<div class="board-item"><span>${esc(it)}</span><span class="x" onclick="rmBoard('${kind}',${i})">✕</span></div>`);
     return h+`</div>`;};
   const live=fbReady?`<span style="color:#bfe0a8">● live</span> — shared across every device.`:`saved on this device only.`;
-  let h=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`;
-  if(boardTab==='board'){
-    h+=standingColHTML()+col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials');
-    markSeen86();   // viewing the pane = seeing the items
-  }else{
-    h+=secChipsHTML()+tablesPaneHTML(b);
-  }
-  $('boardBody').innerHTML=h;
-  const pb=document.querySelector('#boardTabs .subtab[data-bt="board"]');
-  if(pb)pb.classList.toggle('attn',boardTab!=='board'&&newCount86()>0);
+  $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`+secChipsHTML()+tablesPaneHTML(b);
+  $('verbalsBody').innerHTML=`<p class="board-note">Standing verbals stick until a lead changes them; 86 and specials clear nightly. ${live}</p>`+
+    standingColHTML()+col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials');
+  const vActive=$('verbals')&&$('verbals').classList.contains('active');
+  if(vActive)markSeen86();   // viewing the tab = seeing the items
+  updateVerbalsAttn();
+}
+function updateVerbalsAttn(){
+  const on=newCount86()>0&&!($('verbals')&&$('verbals').classList.contains('active'));
+  const chip=document.querySelector('#navChips .chip[data-go="verbals"]');
+  if(chip)chip.classList.toggle('attn-chip',on);
+  const card=document.querySelector('.home-card[data-card="verbals"]');
+  if(card)card.classList.toggle('attn-card',on);
 }
 function secChipsHTML(){
   const order=(SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[];
@@ -1603,7 +1620,8 @@ function allTablesInOrder(){
     const na=parseInt(String(a).replace(/\D/g,''))||999, nb=parseInt(String(b).replace(/\D/g,''))||999;
     return ba-bb||na-nb;});
 }
-function gridMapHTML(tabs,noted){
+function gridMapHTML(tabs,noted,glows){
+  glows=glows||{};
   if(!tabs.length)return '';
   const seen={},disp=[];
   tabs.forEach(t=>{const c=comboFor(t),k=c?String(c.primary):String(t),ku=k.toUpperCase();
@@ -1617,7 +1635,8 @@ function gridMapHTML(tabs,noted){
   const W=cols*S+(cols-1)*G, H=rows*S+(rows-1)*G;
   let svg=`<svg viewBox="-10 -10 ${W+20} ${H+20}" xmlns="http://www.w3.org/2000/svg">`;
   sorted.forEach((d,i)=>{const c=i%cols,r=Math.floor(i/cols),x=c*(S+G),y=r*(S+G),hot=noted.indexOf(d.label.toUpperCase())>=0;
-    svg+=`<rect class="${hot?'mm-t mm-noted':'mm-t'}${d.extra?' mm-combo':''}" onclick="selectTblFromMap('${esc(d.label)}')" x="${x}" y="${y}" width="${S}" height="${S}" rx="16"/>`;
+    const gl=glows[d.label.toUpperCase()];
+    svg+=`<rect class="${hot?'mm-t mm-noted':'mm-t'}${d.extra?' mm-combo':''}${gl?' mm-glow-'+gl:''}" onclick="selectTblFromMap('${esc(d.label)}')" x="${x}" y="${y}" width="${S}" height="${S}" rx="16"/>`;
     svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${x+S/2}" y="${y+S/2-(d.extra?8:0)}" dy="0.36em" style="font-size:34px">${esc(d.label)}</text>`;
     if(d.extra)svg+=`<text class="mm-x" x="${x+S/2}" y="${y+S-22}" style="font-size:19px">+${d.extra}</text>`;});
   svg+=`</svg>`;
@@ -1627,14 +1646,14 @@ function tablesPaneHTML(b){
   const sec=boardSecGet(), items=b.tables||[];
   if(sec==='all'){
     const notedAll=items.map(t=>comboPrimary(t.table).toUpperCase());
-    return comboUIHTML()+fullMapHTML(notedAll)+tablesColHTML(items);   // MD full-floor view + combo controls
+    return comboUIHTML()+fullMapHTML(notedAll,glowMapFor(items))+tablesColHTML(items);   // MD full-floor view + combo controls
   }
   if(sec==='mine'){
     const mine=getMyTables(), mineU=mine.map(t=>comboPrimary(t).toUpperCase());
     const inMine=items.map((t,i)=>({t:t,i:i})).filter(o=>mineU.indexOf(comboPrimary(o.t.table).toUpperCase())>=0);
     let h=`<div class="tpick-label">Tap the tables you're covering tonight (resets daily)</div><div class="tpick-wrap">`+
       allTablesInOrder().map(t=>`<button class="tpick${mine.indexOf(t)>=0?' on':''}" onclick="toggleMyTable('${esc(t)}')">${esc(t)}</button>`).join('')+`</div>`;
-    h+=gridMapHTML(mine,inMine.map(o=>String(o.t.table).trim().toUpperCase()));
+    h+=gridMapHTML(mine,inMine.map(o=>comboPrimary(o.t.table).toUpperCase()),glowMapFor(inMine.map(o=>o.t)));
     if(mine.length){
       h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">My Tables — Tonight</span>
       <div class="tbl-input-row">
@@ -1650,7 +1669,7 @@ function tablesPaneHTML(b){
     return h;
   }
   const inSec=items.map((t,i)=>({t:t,i:i})).filter(o=>tableSection(comboPrimary(o.t.table))===sec);
-  let h=miniMapHTML(sec,inSec.map(o=>String(o.t.table).trim().toUpperCase()));
+  let h=miniMapHTML(sec,inSec.map(o=>comboPrimary(o.t.table).toUpperCase()),glowMapFor(inSec.map(o=>o.t)));
   h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">${esc(sec)} — Tables Tonight</span>
     <div class="tbl-input-row">
       <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
@@ -1662,20 +1681,32 @@ function tablesPaneHTML(b){
   inSec.forEach(o=>h+=tblItemHTML(o.t,o.i));
   return h+`</div>`;
 }
+function glowMapFor(items){
+  const g={},pri={r:3,a:2,g:1};
+  (items||[]).forEach(t=>{
+    if(t.ack)return;
+    const c=t.occasion==='dragging'?'r':(t.occasion==='outby'?'a':(t.occasion==='reset'?'g':''));
+    if(!c)return;
+    const key=comboPrimary(t.table).toUpperCase();
+    if(!g[key]||pri[c]>pri[g[key]])g[key]=c;
+  });
+  return g;
+}
 function selectTblFromMap(t){
   const num=$('tbl-num'); if(!num)return;
   num.value=comboPrimary(t);
   const note=$('tbl-note'); if(note)note.focus();
 }
-function miniMapHTML(sec,noted){
+function miniMapHTML(sec,noted,glows){
   const map=SF.seating&&SF.seating.sections&&SF.seating.sections.map;
   if(!map||!map[sec])return '';
-  return tableMapHTML(map[sec],noted,sec+' — tap a table to start a note · gold have notes');
+  return tableMapHTML(map[sec],noted,sec+' — tap a table to start a note · gold have notes',glows);
 }
-function fullMapHTML(noted){
-  return tableMapHTML(allTablesInOrder(),noted,'tap a table to start a note · gold have notes');
+function fullMapHTML(noted,glows){
+  return tableMapHTML(allTablesInOrder(),noted,'tap a table to start a note · gold have notes',glows);
 }
-function tableMapHTML(tabsIn,noted,cap){
+function tableMapHTML(tabsIn,noted,cap,glows){
+  glows=glows||{};
   const lay=SF.seating&&SF.seating.layout; if(!lay)return '';
   const tabs=tabsIn.filter(t=>lay[t]); if(!tabs.length)return '';
   let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
@@ -1686,6 +1717,7 @@ function tableMapHTML(tabsIn,noted,cap){
   tabs.forEach(t=>{const o=lay[t],c=comboFor(t),lbl=c?String(c.primary):t;
     const hot=noted.indexOf(String(lbl).toUpperCase())>=0;
     let cls=hot?'mm-t mm-noted':'mm-t'; if(c&&String(t)!==String(c.primary))cls+=' mm-combo';
+    const gl=glows[String(lbl).toUpperCase()]; if(gl)cls+=' mm-glow-'+gl;
     const tap=`onclick="selectTblFromMap('${esc(t)}')"`;
     if(o.r)svg+=`<circle class="${cls}" ${tap} cx="${o.x-x0}" cy="${o.y-y0}" r="${o.r}"/>`;
     else svg+=`<rect class="${cls}" ${tap} x="${o.x-o.w/2-x0}" y="${o.y-o.h/2-y0}" width="${o.w}" height="${o.h}" rx="12"/>`;
@@ -1724,21 +1756,28 @@ function tableSection(t){
   return null;
 }
 function tblItemHTML(t,i){
-  // reset/dragging are server→MD status flags: they glow until the MD acks
+  // reset/dragging are server→MD flags (MD acks); out-by is MD→server (anyone acks)
   const isStatus=(t.occasion==='reset'||t.occasion==='dragging');
-  const glow=isStatus&&!t.ack?(t.occasion==='reset'?' tbl-glow-g':' tbl-glow-r'):'';
+  const isOutby=t.occasion==='outby';
+  let glow='';
+  if(!t.ack){
+    if(isStatus)glow=(t.occasion==='reset'?' tbl-glow-g':' tbl-glow-r');
+    else if(isOutby)glow=' tbl-glow-a';
+  }
   const tagTxt=(t.occasion==='outby'&&t.outby)?('Out by '+t.outby):occLabel(t.occasion);
   let mid=`<span class="tbl-occ-tag occ-${esc(t.occasion)}">${esc(tagTxt)}</span>
-    ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${t.by?`<div class="tbl-by">added by ${esc(t.by)}${isStatus&&t.ack?' · ✓ seen':''}</div>`:''}`;
+    ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${t.by?`<div class="tbl-by">added by ${esc(t.by)}${(isStatus||isOutby)&&t.ack?' · ✓ seen':''}</div>`:''}`;
   let right='';
-  if(isStatus&&!t.ack&&isMgr())right+=`<button class="tbl-ack" onclick="ackTable(${i})">ACK</button>`;
+  if(!t.ack&&((isStatus&&isMgr())||(isOutby&&me)))right+=`<button class="tbl-ack" onclick="ackTable(${i})">ACK</button>`;
   right+=`<span class="tbl-x" onclick="rmTable(${i})">✕</span>`;
   return `<div class="tbl-item${glow}"><span class="tbl-badge">${esc(t.table)}</span>
     <div class="tbl-mid">${mid}</div>${right}</div>`;
 }
 function ackTable(i){
-  if(!isMgr())return;
   const b=getBoard();if(!(b.tables&&b.tables[i]))return;
+  const t=b.tables[i];
+  const allowed=(t.occasion==='outby')?!!me:isMgr();
+  if(!allowed)return;
   b.tables[i].ack=true;persistBoard(b);renderBoard();
 }
 function tablesColHTML(items){
@@ -1949,7 +1988,6 @@ function init(){
   $('appDate').textContent=fmtShort(todayISO());
   buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
   renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderCrew(); renderAccess();
-  initPill($('boardTabs'),$('boardPill'),'bt',v=>{boardTab=v;renderBoard();});
   initPill($('crewTabs'),$('crewPill'),'ct',v=>{crewTab=v;renderCrew();});
   initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';});
   initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{schedState.side=v;renderSchedule();});
