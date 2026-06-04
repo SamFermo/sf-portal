@@ -276,6 +276,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 /* seating */
 .seat-wrap{background:radial-gradient(130% 130% at 28% 14%, var(--moon-hi), var(--moon) 64%, var(--moon-lo)); border-radius:14px; padding:14px; box-shadow:0 6px 16px rgba(0,0,0,.3);}
 .seat-wrap img{width:100%; height:auto; border-radius:8px; display:block;}
+.zoom-wrap{overflow:hidden; border-radius:8px; touch-action:none; cursor:grab;}
+.zoom-wrap img{transform-origin:center center; will-change:transform; -webkit-user-select:none; user-select:none; -webkit-user-drag:none;}
 .seat-placeholder{border:2px dashed var(--moon-edge); border-radius:12px; padding:46px 22px; text-align:center; color:var(--card-mute); font-family:'Caladea',Georgia,serif;}
 .seat-placeholder .big{font-size:34px; margin-bottom:8px;}
 .seat-note{font-size:12.5px; color:var(--card-soft); margin-top:12px; line-height:1.5; text-align:center;}
@@ -1007,10 +1009,48 @@ function renderTimeoff(){
 }
 
 /* SEATING */
+function attachZoom(wrap,img){
+  let scale=1,tx=0,ty=0,lastTap=0;
+  const ptrs=new Map(); let pinch=null,pan=null;
+  function apply(){img.style.transform='translate('+tx+'px,'+ty+'px) scale('+scale+')';}
+  function clamp(){scale=Math.min(4,Math.max(1,scale));
+    const r=wrap.getBoundingClientRect(),mx=(scale-1)*r.width/2,my=(scale-1)*r.height/2;
+    tx=Math.min(mx,Math.max(-mx,tx));ty=Math.min(my,Math.max(-my,ty));
+    if(scale===1){tx=0;ty=0;}}
+  wrap.addEventListener('pointerdown',function(e){
+    wrap.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(ptrs.size===2){const a=[...ptrs.values()];pinch={d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),s:scale,mx:(a[0].x+a[1].x)/2,my:(a[0].y+a[1].y)/2,tx:tx,ty:ty};pan=null;}
+    else if(ptrs.size===1){pan={x:e.clientX,y:e.clientY,tx:tx,ty:ty,moved:false};}
+    e.preventDefault();
+  });
+  wrap.addEventListener('pointermove',function(e){
+    if(!ptrs.has(e.pointerId))return;
+    ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(ptrs.size===2&&pinch){const a=[...ptrs.values()];
+      scale=pinch.s*(Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)/pinch.d);
+      const mx=(a[0].x+a[1].x)/2,my=(a[0].y+a[1].y)/2;
+      tx=pinch.tx+(mx-pinch.mx);ty=pinch.ty+(my-pinch.my);clamp();apply();}
+    else if(ptrs.size===1&&pan){
+      if(Math.hypot(e.clientX-pan.x,e.clientY-pan.y)>10)pan.moved=true;
+      if(scale>1){tx=pan.tx+(e.clientX-pan.x);ty=pan.ty+(e.clientY-pan.y);clamp();apply();}}
+  });
+  function up(e){
+    if(ptrs.size===1&&pan&&!pan.moved){
+      const now=Date.now();
+      if(now-lastTap<320){ if(scale>1){scale=1;}else{scale=2.5;} clamp();apply(); lastTap=0; }
+      else lastTap=now;
+    }
+    ptrs.delete(e.pointerId);pinch=null;pan=null;
+  }
+  wrap.addEventListener('pointerup',up);
+  wrap.addEventListener('pointercancel',function(e){ptrs.delete(e.pointerId);pinch=null;pan=null;});
+}
 function renderSeating(){
   const s=SF.seating;
   if(s&&s.image){
-    $('seatBody').innerHTML=`<div class="seat-wrap"><img src="${esc(s.image)}" alt="San Fermo floorplan">${s.note?`<div class="seat-note">${esc(s.note)}</div>`:''}</div>`;
+    $('seatBody').innerHTML=`<div class="seat-wrap"><div class="zoom-wrap" id="zoomWrap"><img id="seatImg" src="${esc(s.image)}" alt="San Fermo floorplan"></div>
+      <div class="seat-note">Pinch to zoom, drag to pan, double-tap to reset.</div></div>`;
+    attachZoom($('zoomWrap'),$('seatImg'));
   }else{
     $('seatBody').innerHTML=`<div class="seat-wrap"><div class="seat-placeholder"><div class="big">▦</div>Floorplan image goes here.<br>Drop the OpenTable floorplan in and it appears here.</div>
       <div class="seat-note">Once Sam adds the floorplan image to <b>data/floorplan.png</b> (and sets it in <b>service / seating</b> data), this tab shows the room with table numbers.</div></div>`;
