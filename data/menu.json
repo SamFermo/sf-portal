@@ -55,7 +55,8 @@
             }
           ],
           "allergens": [],
-          "canModify": []
+          "canModify": [],
+          "allergenNote": "The marinade carries garlic — Chris is confirming the allium status. Check before promising."
         },
         {
           "name": "Marcona Almonds",
@@ -185,9 +186,11 @@
               "note": "Red onions quick-pickled in vinegar and sugar in-house. Adds a sharp, bright counterpoint to the smoke in the vinaigrette."
             }
           ],
-          "allergens": [],
+          "allergens": [
+            "allium"
+          ],
           "canModify": [],
-          "allergenNote": "Chris is reviewing this one for allergens — confirm with the kitchen before promising anything."
+          "allergenNote": "Allium is the dish — onions four ways, unavoidable. Chris is still reviewing for anything beyond that; confirm with the kitchen before promising."
         },
         {
           "name": "Burrata",
@@ -476,7 +479,7 @@
             "dairy",
             "allium"
           ],
-          "allergenNote": "Dairy hides in the potatoes — par-cooked in butter, no changing that — but the kitchen can substitute them for a dairy-free plate. Ramps come off to dodge allium, but Chris is confirming whether the lovage caper purée carries allium; don't promise until that's settled."
+          "allergenNote": "Dairy-free is technically possible: the butter-braised potatoes come off — extra asparagus or another veg in their place — and the kitchen can skip the butter baste. Ramps come off to dodge allium, but Chris is confirming whether the lovage caper purée carries allium; don't promise that one until it's settled."
         },
         {
           "name": "Swan House Pork Chop",
