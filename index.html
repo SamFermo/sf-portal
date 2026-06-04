@@ -694,7 +694,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780612425';   // stamped by build-data.py at every deploy
+const BUILD='1780612759';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1530,8 +1530,16 @@ function persistBoard(b){
   if(fbReady&&fbDb){ fbDb.collection('board').doc(boardDocId()).set(b).catch(function(){lsSetBoard(b);}); }
   else { lsSetBoard(b); }
 }
-function boardSecGet(){try{return localStorage.getItem('sf-board-section')||'all';}catch(e){return 'all';}}
-function boardSecSet(v){try{localStorage.setItem('sf-board-section',v);}catch(e){}}
+function boardSecGet(){
+  // 'all' | 'mine' | array of section names (multi-select for shared iPads)
+  try{
+    const v=localStorage.getItem('sf-board-section')||'all';
+    if(v==='all'||v==='mine')return v;
+    if(v.charAt(0)==='[')return JSON.parse(v);
+    return [v];   // legacy single-section string
+  }catch(e){return 'all';}
+}
+function boardSecSet(v){try{localStorage.setItem('sf-board-section',typeof v==='string'?v:JSON.stringify(v));}catch(e){}}
 /* per-device "seen" tracking for 86 items — drives the gold pill. Day-keyed so it
    resets naturally with the nightly board clear. */
 function seen86Key(){return 'sf-86seen-'+todayISO();}
@@ -1561,12 +1569,20 @@ function updateVerbalsAttn(){
 }
 function secChipsHTML(){
   const order=(SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[];
-  const cur=boardSecGet();
+  const cur=boardSecGet(), arr=Array.isArray(cur)?cur:[];
   return `<div class="sec-chips"><button class="fchip ${cur==='all'?'active':''}" onclick="setBoardSec('all')">Full floor</button>`+
-    order.map(n=>`<button class="fchip ${cur===n?'active':''}" onclick="setBoardSec('${esc(n)}')">${esc(n)}</button>`).join('')+
+    order.map(n=>`<button class="fchip ${arr.indexOf(n)>=0?'active':''}" onclick="setBoardSec('${esc(n)}')">${esc(n)}</button>`).join('')+
     `<button class="fchip ${cur==='mine'?'active':''}" onclick="setBoardSec('mine')">My tables</button></div>`;
 }
-function setBoardSec(v){boardSecSet(v);renderBoard();}
+function setBoardSec(v){
+  if(v==='all'||v==='mine'){boardSecSet(v);renderBoard();return;}   // exclusive — clears any section picks
+  const cur=boardSecGet();
+  const arr=Array.isArray(cur)?cur.slice():[];   // coming from all/mine starts a fresh pick
+  const i=arr.indexOf(v);
+  if(i>=0)arr.splice(i,1);else arr.push(v);
+  boardSecSet(arr.length?arr:'all');
+  renderBoard();
+}
 /* TABLE COMBOS — MD pushes tables together for tonight (51+52+53 → "51").
    Lives in the day's board doc, so it syncs live and clears with the nightly reset. */
 function getCombos(){return (getBoard().combos||[]);}
@@ -1668,16 +1684,26 @@ function tablesPaneHTML(b){
     }
     return h;
   }
-  const inSec=items.map((t,i)=>({t:t,i:i})).filter(o=>tableSection(comboPrimary(o.t.table))===sec);
-  let h=miniMapHTML(sec,inSec.map(o=>comboPrimary(o.t.table).toUpperCase()),glowMapFor(inSec.map(o=>o.t)));
-  h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">${esc(sec)} — Tables Tonight</span>
+  const secs=Array.isArray(sec)?sec:[sec];
+  const inSec=items.map((t,i)=>({t:t,i:i})).filter(o=>secs.indexOf(tableSection(comboPrimary(o.t.table)))>=0);
+  const noted=inSec.map(o=>comboPrimary(o.t.table).toUpperCase()), glows=glowMapFor(inSec.map(o=>o.t));
+  const title=secs.join(' + ');
+  let h;
+  if(secs.length===1){
+    h=miniMapHTML(secs[0],noted,glows);   // single section keeps the real room shape
+  }else{
+    const map=(SF.seating&&SF.seating.sections&&SF.seating.sections.map)||{};
+    let tabs=[]; secs.forEach(n=>{tabs=tabs.concat(map[n]||[]);});
+    h=gridMapHTML(tabs,noted,glows);      // combined sections use the numeric grid, like My tables
+  }
+  h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">${esc(title)} — Tables Tonight</span>
     <div class="tbl-input-row">
       <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
       <select class="tbl-occ" id="tbl-occ" onchange="occChanged()">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select><select class="tbl-occ" id="tbl-outby" style="display:none"></select>
       <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note (e.g. comping dessert)" onkeydown="if(event.key==='Enter')addTable()">
       <button class="board-add" onclick="addTable()">+</button>
     </div>`;
-  if(!inSec.length)h+=`<div class="board-empty">No notes for ${esc(sec)} tonight.</div>`;
+  if(!inSec.length)h+=`<div class="board-empty">No notes for ${esc(title)} tonight.</div>`;
   inSec.forEach(o=>h+=tblItemHTML(o.t,o.i));
   return h+`</div>`;
 }
