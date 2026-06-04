@@ -510,6 +510,12 @@ body.locked{overflow:hidden;}
 .tbl-occ-tag{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:2px 9px; border-radius:999px; white-space:nowrap;}
 .occ-birthday{background:#f3d9ec; color:#9b2f74;} .occ-anniversary{background:#e6d4f0; color:#6a3596;}
 .occ-vip{background:#f1e0bd; color:#8a5a18;} .occ-special{background:#cdd9bb; color:#3d6325;}
+.occ-reset{background:#bfe3b0; color:#23501a;} .occ-dragging{background:#f0c5b8; color:#8a2a12;}
+.tbl-glow-g{border-left-color:#6db657; animation:glowG 1.5s ease-in-out infinite;}
+.tbl-glow-r{border-left-color:#d4654a; animation:glowR 1.5s ease-in-out infinite;}
+@keyframes glowG{0%,100%{box-shadow:0 0 5px rgba(109,182,87,.3);}50%{box-shadow:0 0 16px rgba(109,182,87,.75);}}
+@keyframes glowR{0%,100%{box-shadow:0 0 5px rgba(212,101,74,.35);}50%{box-shadow:0 0 16px rgba(212,101,74,.8);}}
+.tbl-ack{background:rgba(205,216,244,.1); border:1px solid rgba(205,216,244,.3); color:var(--ink); border-radius:8px; padding:4px 10px; font-size:10.5px; font-weight:800; letter-spacing:.05em; cursor:pointer; font-family:inherit;}
 .tbl-sec-label{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-mute); margin:14px 0 7px; padding-bottom:4px; border-bottom:.5px solid rgba(205,216,244,.14);}
 .tbl-note{font-size:13px; color:var(--ink-soft); margin-top:3px;}
 .tbl-by{font-size:10.5px; color:var(--ink-mute); font-style:italic; margin-top:2px;}
@@ -673,7 +679,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780610309';   // stamped by build-data.py at every deploy
+const BUILD='1780610674';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1673,7 +1679,7 @@ function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;
 function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);renderBoard();}
 
 /* TABLES TONIGHT — occasions / VIP notes (maitre d') */
-const OCCASIONS=[['birthday','Birthday'],['anniversary','Anniversary'],['vip','VIP'],['special','Special']];
+const OCCASIONS=[['birthday','Birthday'],['anniversary','Anniversary'],['vip','VIP'],['special','Special'],['reset','Reset'],['dragging','Dragging']];
 function occLabel(o){const f=OCCASIONS.find(x=>x[0]===o);return f?f[1]:o;}
 function tableSection(t){
   const sec=SF.seating&&SF.seating.sections;if(!sec||!sec.map)return null;
@@ -1682,10 +1688,21 @@ function tableSection(t){
   return null;
 }
 function tblItemHTML(t,i){
-  return `<div class="tbl-item"><span class="tbl-badge">${esc(t.table)}</span>
-    <div class="tbl-mid"><span class="tbl-occ-tag occ-${esc(t.occasion)}">${esc(occLabel(t.occasion))}</span>
-    ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${t.by?`<div class="tbl-by">added by ${esc(t.by)}</div>`:''}</div>
-    <span class="tbl-x" onclick="rmTable(${i})">✕</span></div>`;
+  // reset/dragging are server→MD status flags: they glow until the MD acks
+  const isStatus=(t.occasion==='reset'||t.occasion==='dragging');
+  const glow=isStatus&&!t.ack?(t.occasion==='reset'?' tbl-glow-g':' tbl-glow-r'):'';
+  let mid=`<span class="tbl-occ-tag occ-${esc(t.occasion)}">${esc(occLabel(t.occasion))}</span>
+    ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${t.by?`<div class="tbl-by">added by ${esc(t.by)}${isStatus&&t.ack?' · ✓ seen':''}</div>`:''}`;
+  let right='';
+  if(isStatus&&!t.ack&&isMgr())right+=`<button class="tbl-ack" onclick="ackTable(${i})">ACK</button>`;
+  right+=`<span class="tbl-x" onclick="rmTable(${i})">✕</span>`;
+  return `<div class="tbl-item${glow}"><span class="tbl-badge">${esc(t.table)}</span>
+    <div class="tbl-mid">${mid}</div>${right}</div>`;
+}
+function ackTable(i){
+  if(!isMgr())return;
+  const b=getBoard();if(!(b.tables&&b.tables[i]))return;
+  b.tables[i].ack=true;persistBoard(b);renderBoard();
 }
 function tablesColHTML(items){
   let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Tables Tonight</span>
