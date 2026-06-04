@@ -806,7 +806,9 @@ function allergenLegendHTML(){
 }
 function renderFoodTab(){
   let f=editBarHTML()+allergenLegendHTML();
-  SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;sec.items.forEach(it=>f+=dishCardHTML(it));});
+  SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;
+    if(sec.intro)f+=`<div class="intro-card serif">${esc(sec.intro)}</div>`;
+    sec.items.forEach(it=>f+=dishCardHTML(it));});
   f+=`<div class="section-label">Dessert</div>`; SF.menu.desserts.forEach(it=>f+=dishCardHTML(it));
   f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
   $('ftFood').innerHTML=f;
