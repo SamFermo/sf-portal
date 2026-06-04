@@ -54,11 +54,11 @@ window.SF = {
      },
      {
       "name": "Marcona Almonds",
-      "desc": "rosemary olive oil, maldon sea salt",
+      "desc": "rosemary olive oil, fried rosemary, maldon sea salt",
       "price": "6",
       "raw": false,
       "pron": "mar-KOH-nah",
-      "story": "Imported Marcona almonds from Spain's Mediterranean coast, roasted until golden, then tossed in rosemary olive oil and finished with Maldon sea salt. Rounder and softer than a California almond, with a buttery sweetness that makes them genuinely hard to stop eating.",
+      "story": "Imported Marcona almonds from Spain's Mediterranean coast, roasted until golden, tossed in rosemary olive oil and Maldon sea salt, then finished with crisp fried rosemary. Rounder and softer than a California almond, with a buttery sweetness that makes them genuinely hard to stop eating.",
       "ingredients": [
        {
         "term": "Marcona almonds",
