@@ -167,6 +167,13 @@ nav.chips::-webkit-scrollbar{display:none;}
 .pl-row{display:flex; justify-content:space-between; gap:10px; padding:7px 0; border-bottom:.5px dotted var(--moon-edge); font-size:13.5px;}
 .listcard .plist .pl-row:last-child,.listcard .plist .pl-row:nth-last-child(2):nth-child(odd){border-bottom:none;}
 .pl-name{color:var(--card-ink);} .pl-price{color:var(--wood-soft); white-space:nowrap;}
+.pl-item{padding:9px 0; border-bottom:.5px dotted var(--moon-edge);}
+.pl-item:last-child{border-bottom:none;}
+.pl-item .pl-row{border-bottom:none; padding:0;}
+.pl-item .pl-name{font-family:'Caladea',Georgia,serif; font-weight:700; color:var(--wood); font-size:14px;}
+.pl-note{font-size:13px; font-style:italic; color:var(--card-soft); margin-top:3px; line-height:1.5;}
+.fl-desc{font-size:13px; font-style:italic; color:var(--card-soft); margin:4px 0 9px; line-height:1.5;}
+.fpour-note{font-size:12.5px; color:var(--card-mute); margin:1px 0 7px; line-height:1.45;}
 .flist{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 60%, var(--moon-lo)); border-radius:12px; padding:13px 15px; margin-bottom:11px; box-shadow:0 6px 16px rgba(0,0,0,.26);}
 .flname{font-family:'Caladea',Georgia,serif; font-weight:700; color:var(--wood); font-size:15px;}
 .fprice{float:right; color:var(--gold-deep); font-weight:700;}
@@ -874,13 +881,17 @@ function ckCardHTML(c){
 function renderBar(){
   let h=editBarHTML()+`<div class="section-label">Cocktails</div>`;
   SF.bar.cocktails.forEach(c=>h+=ckCardHTML(c));
-  h+=`<div class="section-label">Non-Alcoholic</div><div class="card listcard"><div class="plist">`;
-  SF.bar.nonAlcoholic.forEach(n=>h+=`<div class="pl-row"><span class="pl-name">${esc(n.name)}</span><span class="pl-price">${esc(n.price)}</span></div>`);
-  h+=`</div></div><div class="section-label">Beer</div><div class="card listcard"><div class="plist">`;
-  SF.bar.beer.forEach(n=>h+=`<div class="pl-row"><span class="pl-name">${esc(n.name)}</span><span class="pl-price">${esc(n.price)}</span></div>`);
-  h+=`</div></div><div class="section-label">Amaro Flights · $18</div>`;
+  const listSec=items=>{let s=`<div class="card listcard">`;
+    items.forEach(n=>{s+=`<div class="pl-item"><div class="pl-row"><span class="pl-name">${esc(n.name)}</span><span class="pl-price">${esc(n.price)}</span></div>${n.note?`<div class="pl-note serif">${esc(n.note)}</div>`:''}${noteBox('bar',n.name)}</div>`;});
+    return s+`</div>`;};
+  h+=`<div class="section-label">Non-Alcoholic</div>`+listSec(SF.bar.nonAlcoholic);
+  h+=`<div class="section-label">Beer</div>`+listSec(SF.bar.beer);
+  h+=`<div class="section-label">Amaro Flights · $18</div>`;
   SF.bar.amaroFlights.forEach(fl=>{h+=`<div class="flist"><div class="flname serif">${esc(fl.name)}<span class="fprice">$${esc(fl.price)}</span></div>`;
-    fl.pours.forEach(p=>h+=`<div class="fpour">${esc(p.name)} <span class="forigin">— ${esc(p.origin)}</span></div>`);h+=`</div>`;});
+    if(fl.desc)h+=`<div class="fl-desc serif">${esc(fl.desc)}</div>`;
+    fl.pours.forEach(p=>{h+=`<div class="fpour">${esc(p.name)} <span class="forigin">— ${esc(p.origin)}</span></div>`;
+      if(p.note)h+=`<div class="fpour-note">${esc(p.note)}</div>`;});
+    h+=noteBox('bar',fl.name)+`</div>`;});
   h+=`<div class="section-label">After-Dinner Libations</div>`;
   SF.bar.afterDinner.forEach(n=>h+=`<div class="ad-item"><div class="ad-row"><span class="ad-name">${esc(n.name)}</span><span class="ad-price">${esc(n.price)}</span></div>${n.note?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`);
   $('ftBar').innerHTML=h;
