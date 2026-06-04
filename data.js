@@ -113,7 +113,7 @@ window.SF = {
       "canModify": [
        "dairy"
       ],
-      "allergenNote": "Naturally gluten-free — chickpea flour, no wheat. The cagliatta and preserve come on the side, so skipping them makes it dairy-free."
+      "allergenNote": "Naturally gluten-free — chickpea flour, no wheat. The cagliatta is served in its own bowl, so dairy-free is simply leaving it off; the preserve stays."
      },
      {
       "name": "House Caesar",
@@ -147,12 +147,17 @@ window.SF = {
        "fish",
        "dairy",
        "gluten",
-       "egg"
+       "egg",
+       "allium"
       ],
       "canModify": [
-       "gluten"
+       "fish",
+       "dairy",
+       "gluten",
+       "egg",
+       "allium"
       ],
-      "allergenNote": "Croutons off = gluten-free. Anchovy and egg are built into the dressing — no mod there."
+      "allergenNote": "Every flag has a path: boquerones on the side (fish), croutons on the side (gluten), dressing on the side — or swapped for oil and vinegar — with the cheese on the side (dairy, egg, allium). Fully modified it becomes a clean romaine salad with oil and vinegar; tell the guest what they're getting."
      },
      {
       "name": "Farm House Salad",
@@ -183,7 +188,8 @@ window.SF = {
        }
       ],
       "allergens": [],
-      "canModify": []
+      "canModify": [],
+      "allergenNote": "Chris is reviewing this one for allergens — confirm with the kitchen before promising anything."
      },
      {
       "name": "Burrata",
@@ -211,7 +217,7 @@ window.SF = {
       "canModify": [
        "gluten"
       ],
-      "allergenNote": "Skip the crostini for gluten-free."
+      "allergenNote": "Gluten: crostini come on the side so the rest of the table can still have them. And heads up — as plated this is not vegetarian: the bresaola is cured beef. Bresaola on the side makes it vegetarian."
      },
      {
       "name": "Chilled Nettle Vichyssoise",
@@ -243,10 +249,11 @@ window.SF = {
        }
       ],
       "allergens": [
-       "dairy"
+       "dairy",
+       "allium"
       ],
       "canModify": [],
-      "allergenNote": "Naturally gluten-free."
+      "allergenNote": "Naturally gluten-free. The leeks are the backbone — allium can't come out — and the cream is cooked in."
      }
     ]
    },
@@ -280,9 +287,12 @@ window.SF = {
       "allergens": [
        "gluten",
        "dairy",
-       "egg"
+       "allium"
       ],
-      "canModify": []
+      "canModify": [
+       "dairy"
+      ],
+      "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
      },
      {
       "name": "Mafaldine",
@@ -316,9 +326,13 @@ window.SF = {
       "allergens": [
        "gluten",
        "dairy",
-       "egg"
+       "allium"
       ],
-      "canModify": []
+      "canModify": [
+       "dairy",
+       "allium"
+      ],
+      "allergenNote": "No egg in this pasta. Dairy: butter and Parmigiano come off — the sauce leans on olive oil and pasta water, lighter but it holds. Allium: the ramps come off on request. Vegetarian: lamb sausage off, and the morels carry the dish."
      },
      {
       "name": "Tartufo Nero",
@@ -349,7 +363,10 @@ window.SF = {
        "egg",
        "dairy"
       ],
-      "canModify": []
+      "canModify": [
+       "dairy"
+      ],
+      "allergenNote": "Egg is in the pasta dough — no way around it. Dairy can technically come off (no butter sauce, no cheese) but it is not recommended; the dish is butter and truffle. Chris is confirming there's no allium — check before promising."
      },
      {
       "name": "Paccheri alla Carbonara",
@@ -385,8 +402,11 @@ window.SF = {
        "egg",
        "dairy"
       ],
-      "canModify": [],
-      "allergenNote": "The egg is the dish — no mod."
+      "canModify": [
+       "dairy",
+       "egg"
+      ],
+      "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen sometimes subs mushrooms or peas. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish."
      },
      {
       "name": "Risotto Funghi",
@@ -413,10 +433,13 @@ window.SF = {
        }
       ],
       "allergens": [
+       "dairy",
+       "allium"
+      ],
+      "canModify": [
        "dairy"
       ],
-      "canModify": [],
-      "allergenNote": "Naturally gluten-free."
+      "allergenNote": "Naturally gluten-free. Dairy-free works: butter and goat cheese come off and the marinated maitakes carry it. Allium and the cooked wine can't come out — our risotto base is always par-cooked with onion and white wine in the stock."
      },
      {
       "name": "Pan Roasted Halibut",
@@ -447,9 +470,15 @@ window.SF = {
        }
       ],
       "allergens": [
-       "fish"
+       "fish",
+       "dairy",
+       "allium"
       ],
-      "canModify": []
+      "canModify": [
+       "dairy",
+       "allium"
+      ],
+      "allergenNote": "Dairy hides in the potatoes — par-cooked in butter, no changing that — but the kitchen can substitute them for a dairy-free plate. Ramps come off to dodge allium, but Chris is confirming whether the lovage caper purée carries allium; don't promise until that's settled."
      },
      {
       "name": "Swan House Pork Chop",
@@ -480,10 +509,14 @@ window.SF = {
        }
       ],
       "allergens": [
-       "dairy"
+       "dairy",
+       "allium"
       ],
-      "canModify": [],
-      "allergenNote": "Polenta is corn — the plate is gluten-free."
+      "canModify": [
+       "dairy",
+       "allium"
+      ],
+      "allergenNote": "Dairy: the polenta comes off or swaps to risotto. Allium: the demi is built on onions — the kitchen can sub out the spring onions and the demi entirely, or the guest can keep the demi if cooked-in allium works for them. Ask; don't decide for them."
      }
     ]
    }
@@ -556,8 +589,10 @@ window.SF = {
      "egg",
      "dairy"
     ],
-    "canModify": [],
-    "allergenNote": "No flour in the meringue — gluten-free as built."
+    "canModify": [
+     "dairy"
+    ],
+    "allergenNote": "No flour in the meringue — gluten-free as built. The pastry cream rides on the side for dairy-free; the meringue and rhubarb compote stand on their own."
    },
    {
     "name": "Seasonal Gelato",
