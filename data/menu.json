@@ -52,11 +52,11 @@
         },
         {
           "name": "Marcona Almonds",
-          "desc": "fried rosemary, sea salt",
+          "desc": "rosemary olive oil, maldon sea salt",
           "price": "6",
           "raw": false,
           "pron": "mar-KOH-nah",
-          "story": "Imported Marcona almonds from Spain's Mediterranean coast, pan-fried in rosemary oil until golden and fragrant, then finished with Maldon sea salt. Rounder and softer than a California almond, with a buttery sweetness that makes them genuinely hard to stop eating.",
+          "story": "Imported Marcona almonds from Spain's Mediterranean coast, roasted until golden, then tossed in rosemary olive oil and finished with Maldon sea salt. Rounder and softer than a California almond, with a buttery sweetness that makes them genuinely hard to stop eating.",
           "ingredients": [
             {
               "term": "Marcona almonds",
@@ -66,17 +66,17 @@
             {
               "term": "Maldon sea salt",
               "pronunciation": null,
-              "note": "Flaky finishing salt from Essex, England — same as on the bread. Added after frying so the crunch stays distinct."
+              "note": "Flaky finishing salt from Essex, England — same as on the bread. Tossed on with the rosemary oil after roasting so the crunch stays distinct."
             }
           ]
         },
         {
           "name": "Farinata",
-          "desc": "chickpea flatbread, house cagliata, seasonal preserve, sea salt",
+          "desc": "chickpea flatbread, house cagliata, seasonal preserve, fresh thyme, sea salt",
           "price": "13",
           "raw": false,
           "pron": "fah-ree-NAH-tah",
-          "story": "A Ligurian chickpea flatbread with roots in 13th-century Genoa — thin, crisp at the edges, soft and nutty in the center. Made in-house from chickpea flour, rosemary olive oil, and water, then topped with housemade cagliatta fresh cheese and a seasonal preserve. Currently: rhubarb caramelized onion jam.",
+          "story": "A Ligurian chickpea flatbread with roots in 13th-century Genoa — thin, crisp at the edges, soft and nutty in the center. Made in-house from chickpea flour, rosemary olive oil, and water, finished with fresh thyme and sea salt. The housemade cagliatta and a seasonal preserve come on the side for spreading. Current preserve: rhubarb caramelized onion jam.",
           "ingredients": [
             {
               "term": "Farinata",
@@ -100,7 +100,7 @@
           "desc": "anchovy, parmigiano reggiano, red wine croutons",
           "price": "14",
           "raw": true,
-          "story": "Romaine dressed with a classic from-scratch Caesar dressing — champagne vinegar, anchovy, garlic, Parmigiano-Reggiano, egg yolk, Worcestershire, Dijon, black pepper. Topped with boquerones white anchovies and red wine croutons, which are butter-toasted with red wine, garlic, and rosemary. A clean, honest Caesar.",
+          "story": "Romaine dressed with a classic from-scratch Caesar dressing — champagne vinegar, anchovy, garlic, Parmigiano-Reggiano, egg yolk, Worcestershire, Dijon, black pepper. Topped with boquerones white anchovies and red wine croutons: bread soaked in red wine, butter, garlic, and rosemary, then dehydrated until crisp the whole way through. A clean, honest Caesar.",
           "ingredients": [
             {
               "term": "Boquerones",
@@ -115,7 +115,7 @@
             {
               "term": "Red wine croutons",
               "pronunciation": null,
-              "note": "Made in-house: bread butter-toasted with red wine, garlic, and rosemary until deeply savory and a little chewy at the center."
+              "note": "Made in-house: bread soaked in a red wine, butter, garlic, and rosemary mixture, then dehydrated until crisp all the way through. Deeply savory, and the crunch holds up in the dressing."
             },
             {
               "term": "Coddled egg dressing",
@@ -126,11 +126,16 @@
         },
         {
           "name": "Farm House Salad",
-          "desc": "shaved red onion, pickled onion, charred spring onion, burnt onion vinaigrette",
+          "desc": "swan house salanova, shaved red onion, pickled onion, charred spring onion, burnt onion vinaigrette",
           "price": "16",
           "raw": false,
-          "story": "An onion study in four forms: shaved raw red onion for sharpness, pickled onion for brightness, charred spring onion for sweetness, and a burnt onion vinaigrette that ties the whole plate together with a deep, smoky backbone. Clean and vegetable-forward — let the technique do the talking.",
+          "story": "Built on Salanova lettuces grown at Swan House Farm, layered with an onion study in four forms: shaved raw red onion for sharpness, pickled onion for brightness, charred spring onion for sweetness, and a burnt onion vinaigrette that ties the whole plate together with a deep, smoky backbone. Clean and vegetable-forward — the farm and the technique do the talking.",
           "ingredients": [
+            {
+              "term": "Salanova",
+              "pronunciation": "sah-lah-NOH-vah",
+              "note": "A lettuce cultivar bred for compact, uniform heads and tender leaves that hold their structure. Ours are grown at Swan House Farm — red and green varieties of summer crisp, oakleaf, and butter. No romaine in the mix."
+            },
             {
               "term": "Spring onion",
               "pronunciation": null,
@@ -165,11 +170,6 @@
               "term": "Bresaola",
               "pronunciation": "breh-zah-OH-lah",
               "note": "air-dried, salted beef from Valtellina in Lombardy, sliced paper-thin. Lean, deep red, faintly sweet."
-            },
-            {
-              "term": "Crostini",
-              "pronunciation": "kroh-STEE-nee",
-              "note": "small toasted bread slices for scooping the cheese and peas."
             }
           ]
         },
@@ -210,11 +210,11 @@
       "items": [
         {
           "name": "Swan House Bolognese",
-          "desc": "saffron spaghetti, pork, beef, rosemary, fennel, tomato, parmigiano reggiano",
+          "desc": "saffron spaghetti, pork, veal, tomato, fennel, rosemary, parmigiano reggiano",
           "price": "32",
           "raw": false,
           "pron": "boh-loh-NYEH-zeh",
-          "story": "Our take on the classic ragù alla bolognese, built on house-made saffron spaghetti. Pork and beef are cooked down slowly with rosemary, fennel, and tomato into a rich meat sauce, finished with Parmigiano Reggiano. The saffron gives the pasta its golden color and a subtle earthy aroma.",
+          "story": "The family recipe — on the menu since day one, and it never leaves. Pork and veal seasoned with our own spice blend, cooked down slowly with red wine, tomato, fennel, and rosemary, then finished with cream, butter, sherry, and salt. Served over house-made saffron spaghetti — the saffron gives the pasta its golden color and a subtle earthy aroma.",
           "ingredients": [
             {
               "term": "Bolognese",
@@ -235,12 +235,17 @@
         },
         {
           "name": "Mafaldine",
-          "desc": "italian sausage, morel mushroom, ramp, lemon, butter, parmigiano reggiano",
+          "desc": "swan house lamb sausage, morel mushroom, ramp, lemon, butter, parmigiano reggiano",
           "price": "31",
           "raw": false,
           "pron": "mah-fal-DEE-neh",
-          "story": "Mafaldine — a wide, ruffled ribbon pasta named after Princess Mafalda of Savoy — tossed with Italian sausage, morel mushrooms, ramps, lemon, butter, and Parmigiano. Morels and ramps are both spring-only wild ingredients, so this dish has a short window. The ruffled edges hold onto the buttery, mushroom-rich sauce.",
+          "story": "Mafaldine — a wide, ruffled ribbon pasta named after Princess Mafalda of Savoy — tossed with house-made lamb sausage, morel mushrooms, ramps, lemon, butter, and Parmigiano. The sausage is ground from Swan House Farm lamb and seasoned Italian-sausage style. Morels and ramps are both spring-only wild ingredients, so this dish has a short window. The ruffled edges hold onto the buttery, mushroom-rich sauce.",
           "ingredients": [
+            {
+              "term": "Swan House lamb sausage",
+              "pronunciation": null,
+              "note": "Made in-house from ground lamb raised at Swan House Farm — the family farm in the Skagit Valley — seasoned in the classic Italian sausage style. The same lamb that runs through the farm dinner menus."
+            },
             {
               "term": "Mafaldine",
               "pronunciation": "mah-fal-DEE-neh",
@@ -264,7 +269,7 @@
           "price": "26",
           "raw": false,
           "pron": "tar-TOO-foh NEH-roh",
-          "story": "Fresh egg tagliatelle tossed simply with summer black truffle, butter, and Parmigiano-Reggiano. No competing flavors — the technique is restraint. The pasta is made in-house daily; the truffle is shaved tableside. It's the most direct expression of a single ingredient on the menu.",
+          "story": "Fresh egg tagliatelle finished in a butter sauce built from pasta water, a little salt, and lemon — then summer black truffle grated generously over the top, never tossed in. No competing flavors — the technique is restraint. The pasta is made in-house daily. It's the most direct expression of a single ingredient on the menu.",
           "ingredients": [
             {
               "term": "Tartufo nero",
@@ -289,12 +294,12 @@
           "price": "28",
           "raw": true,
           "pron": "pah-KEH-ree",
-          "story": "The Roman classic, scaled up to paccheri — big, ridged pasta tubes that catch the sauce. Rendered guanciale, lots of cracked black pepper, Pecorino Romano, and a Swan House Farm egg yolk emulsified into a glossy, peppery sauce. No cream — the silk comes from the egg and cheese. Served with a raw yolk, hence the asterisk.",
+          "story": "The Roman classic on paccheri — short pasta tubes, like a snipped rigatoni, that catch the sauce inside. Rendered guanciale, lots of cracked black pepper, Pecorino Romano, and a Swan House Farm egg yolk emulsified into a glossy, peppery sauce. No cream — the silk comes from the egg and cheese. Served with a raw yolk, hence the asterisk.",
           "ingredients": [
             {
               "term": "Paccheri",
               "pronunciation": "pah-KEH-ree",
-              "note": "large smooth pasta tubes from Campania; they collapse slightly when cooked to wrap the sauce."
+              "note": "smooth tube pasta from Campania. Ours run smaller than the classic cut — closer to a shortened rigatoni — and collapse slightly when cooked to trap the sauce inside."
             },
             {
               "term": "Carbonara",
@@ -343,7 +348,7 @@
           "desc": "new potatoes, asparagus, ramps, parsley, lovage caper honey",
           "price": "38",
           "raw": true,
-          "story": "Pacific Northwest halibut from Key City Fish in Port Townsend — pan-roasted and plated over new potatoes and asparagus, with ramps and parsley. Finished with a lovage caper honey: herbaceous, briny, floral, and sweet all at once. Halibut season runs March through November; this is a spring dish at its best.",
+          "story": "Pacific halibut from Key City Fish in Port Townsend, pan-roasted. The lovage caper honey goes down first — a purée spread across the plate — with the new potatoes and asparagus built on top of it, the halibut over everything, and ramps and parsley to finish. Herbaceous, briny, floral, and sweet all at once. Halibut season runs March through November; this is a spring dish at its best.",
           "ingredients": [
             {
               "term": "Halibut",
@@ -358,7 +363,7 @@
             {
               "term": "Lovage",
               "pronunciation": "LUH-vij",
-              "note": "Tall perennial herb with a flavor like intense celery combined with parsley. Used here in a caper-honey sauce — the lovage adds a savory, slightly medicinal depth that plays against the sweetness."
+              "note": "Tall perennial herb with a flavor like intense celery combined with parsley. Used here in the caper-honey purée that's spread on the plate as the base layer — the lovage adds a savory, slightly medicinal depth that plays against the sweetness."
             },
             {
               "term": "Key City Fish",
@@ -368,21 +373,21 @@
           ]
         },
         {
-          "name": "Pure Country Pork Chop",
+          "name": "Swan House Pork Chop",
           "desc": "polenta, charred spring onion, rhubarb mostarda",
           "price": "42",
           "raw": true,
-          "story": "Dry-aged pork chop from Pure Country Farms in Moses Lake, Washington — 21 days of dry-aging concentrates the flavor and firms the texture in a way a fresh-cut chop can't match. Pan-roasted and served over creamy polenta, with charred spring onion and a rhubarb mostarda: a Northern Italian fruit-and-mustard condiment that cuts the richness.",
+          "story": "Berkshire pork raised at Swan House Farm — and these are the last chops of the run, so once they're gone, they're gone. Pan-roasted and served over creamy polenta, with charred spring onion and a rhubarb mostarda: a Northern Italian fruit-and-mustard condiment that cuts the richness.",
           "ingredients": [
             {
-              "term": "Pure Country Farms",
+              "term": "Swan House Farm",
               "pronunciation": null,
-              "note": "Family farm and USDA processing facility in Moses Lake, WA. All animals are naturally raised, antibiotic and hormone-free. They dry-age pork for 21 days — a relatively rare practice that develops deeper flavor and better texture."
+              "note": "The family farm in the Skagit Valley — the same farm behind the farm dinners, the lamb in the mafaldine, and the egg yolks in the carbonara. These chops are from pigs raised there."
             },
             {
-              "term": "Dry-aged pork",
+              "term": "Berkshire pork",
               "pronunciation": null,
-              "note": "Pork held in a controlled environment for 21 days after slaughter. Moisture evaporates and enzymes break down muscle fibers, concentrating the flavor and producing a firmer, more complex chop than fresh-cut pork."
+              "note": "A heritage hog breed prized for heavy marbling and darker, richer meat than commodity pork — the breed the Japanese call Kurobuta. Slower-growing, and worth it."
             },
             {
               "term": "Mostarda",
