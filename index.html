@@ -276,6 +276,27 @@ nav.chips::-webkit-scrollbar{display:none;}
 .mm-x{fill:rgba(205,216,244,.8); font-size:36px; font-weight:700; text-anchor:middle;}
 .mm-xn{fill:#f5e3b0;}
 .mm-cap{font-size:10.5px; color:var(--ink-mute); text-align:center; margin-top:6px; letter-spacing:.03em;}
+/* live menu overlay (menu-live) */
+.live-card{position:relative; background:rgba(230,200,120,.07); border:1.5px dashed var(--gold); border-radius:14px; padding:12px 14px; margin-bottom:10px;}
+.live-chip{display:inline-block; font-size:9px; font-weight:800; letter-spacing:.08em; background:var(--gold); color:#241f15; border-radius:999px; padding:2px 7px; margin-right:7px; vertical-align:2px;}
+.live-name{font-family:'Cormorant Garamond','Caladea',serif; font-size:18px; font-weight:600; color:var(--ink); display:inline;}
+.live-price{float:right; font-size:13px; color:var(--gold); font-weight:700;}
+.live-sub{font-size:12px; color:var(--ink-soft); margin-top:3px; font-style:italic;}
+.live-body{font-size:13px; color:var(--ink-soft); margin-top:6px; line-height:1.5;}
+.live-pron{font-size:11.5px; color:var(--ink-mute); margin-top:5px;}
+.live-by{font-size:10.5px; color:var(--ink-mute); margin-top:7px;}
+.live-x{position:absolute; top:9px; right:11px; cursor:pointer; color:var(--ink-mute); font-size:13px;}
+.addlive-btn{display:block; width:100%; background:rgba(230,200,120,.08); border:1.5px dashed rgba(230,200,120,.55); color:var(--gold); border-radius:12px; padding:9px; font-size:12.5px; font-weight:700; cursor:pointer; margin-bottom:12px; font-family:inherit;}
+.lm-field{margin-bottom:9px;}
+.lm-field label{display:block; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--card-mute); margin-bottom:3px;}
+.lm-field input,.lm-field textarea,.lm-field select{width:100%; box-sizing:border-box; background:#fff; border:1px solid #d8cfc0; border-radius:8px; padding:8px 9px; font-size:13.5px; font-family:inherit; color:#2a2419;}
+.lm-field textarea{min-height:64px; resize:vertical;}
+.lm-actions{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+.lm-actions button{flex:1; min-width:110px; border:none; border-radius:9px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;}
+.lm-post{background:#4a6a3a; color:#fff;}
+.lm-style{background:linear-gradient(155deg,#e8cd79,#c9a64e); color:#241f15;}
+.lm-cancel{background:#e8e0d2; color:#5a5040;}
+.lm-note{font-size:11px; color:var(--card-mute); margin-top:8px; font-style:italic;}
 /* crew board */
 .crew-cat{font-size:9.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; border-radius:999px; padding:2px 8px; white-space:nowrap;}
 .cc-heads{background:rgba(176,74,26,.18); color:#eba887; border:1px solid rgba(176,74,26,.55);}
@@ -615,6 +636,14 @@ body.locked{overflow:hidden;}
   </div>
 </div>
 
+<div class="modal" id="liveModal">
+  <div class="modal-card">
+    <h3>Add a live item</h3>
+    <p>Goes to every device now. Tonight it shows in its own "Added live" block; tomorrow morning it gets the full Fresh Talk treatment and moves into the list proper.</p>
+    <div id="liveBody"></div>
+  </div>
+</div>
+
 <div class="modal" id="promptModal">
   <div class="modal-card">
     <h3>Menu Corrections</h3>
@@ -629,7 +658,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780604885';   // stamped by build-data.py at every deploy
+const BUILD='1780606622';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -888,7 +917,7 @@ function renderFoodTab(){
     sec.items.forEach(it=>f+=dishCardHTML(it));});
   f+=`<div class="section-label">Dessert</div>`; SF.menu.desserts.forEach(it=>f+=dishCardHTML(it));
   f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
-  $('ftFood').innerHTML=f;
+  $('ftFood').innerHTML=liveBlockHTML('dish')+f;
 }
 function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); }
 let corrCopied=false;
@@ -977,7 +1006,7 @@ function renderWine(){
         ${pronHTML(w.pronguide)}
       </div>`:''}${noteBox('wine',w.name)}</div>`;
   });
-  $('ftWine').innerHTML=html;
+  $('ftWine').innerHTML=liveBlockHTML('wine')+html;
   $('wineSearch').oninput=e=>{wineFilter.q=e.target.value;const p=e.target.selectionStart;renderWine();const s=$('wineSearch');s.focus();s.setSelectionRange(p,p);};
   $('ftWine').querySelectorAll('.fchip').forEach(c=>c.onclick=()=>{if(c.dataset.glass){wineFilter.glassOnly=!wineFilter.glassOnly;}else{wineFilter.section=c.dataset.sec;}renderWine();});
 }
@@ -1017,7 +1046,7 @@ function renderBar(){
     h+=noteBox('bar',fl.name)+`</div>`;});
   h+=`<div class="section-label">After-Dinner Libations</div>`;
   SF.bar.afterDinner.forEach(n=>h+=`<div class="ad-item"><div class="ad-row"><span class="ad-name">${esc(n.name)}</span><span class="ad-price">${esc(n.price)}</span></div>${n.note?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`);
-  $('ftBar').innerHTML=h;
+  $('ftBar').innerHTML=liveBlockHTML('cocktail')+(h);
 }
 
 /* SCHEDULE */
@@ -1399,8 +1428,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -1535,6 +1564,106 @@ function addTable(){const numEl=$('tbl-num'),t=(numEl.value||'').trim();
   setTimeout(()=>{const x=$('tbl-num');if(x)x.focus();},0);}
 function rmTable(i){const b=getBoard();(b.tables||[]).splice(i,1);persistBoard(b);renderBoard();}
 
+/* MENU-LIVE OVERLAY — manager-posted items that show instantly, baked into the
+   canonical JSONs by the 6am run (full Fresh Talk treatment) and cleared. */
+const GEN_URL='https://remy-outreach.sam-d1f.workers.dev/freshtalk-card';
+const LIVE_TYPES=[['dish','Food'],['wine','Wine'],['cocktail','Cocktail']];
+let MLIVE={}, mliveUnsub=null;
+function isMgr(){return !!(me&&(me.admin||me.mgr));}
+function mliveLsGet(){try{return JSON.parse(localStorage.getItem('sf-mlive')||'{}');}catch(e){return {};}}
+function mliveLsSet(){try{localStorage.setItem('sf-mlive',JSON.stringify(MLIVE));}catch(e){}}
+function startMenuLiveSync(){
+  if(fbReady&&fbDb){
+    if(mliveUnsub)mliveUnsub();
+    mliveUnsub=fbDb.collection('menu-live').onSnapshot(function(snap){
+      MLIVE={};snap.docs.forEach(function(d){MLIVE[d.id]=d.data();});renderFresh();
+    },function(){ MLIVE=mliveLsGet();renderFresh(); });
+  }else{ MLIVE=mliveLsGet(); }
+}
+function liveItems(type){return Object.keys(MLIVE).map(k=>Object.assign({id:k},MLIVE[k])).filter(p=>p.type===type).sort((a,b)=>b.at-a.at);}
+function liveBlockHTML(type){
+  const items=liveItems(type);
+  let h='';
+  if(isMgr())h+=`<button class="addlive-btn" onclick="openLiveModal('${type}')">+ Add a ${type==='dish'?'dish':type} live</button>`;
+  items.forEach(p=>{
+    h+=`<div class="live-card"><span class="live-chip">LIVE</span><span class="live-name">${esc(p.name)}</span>`;
+    if(p.price)h+=`<span class="live-price">${esc(p.price)}</span>`;
+    if(isMgr())h+=`<span class="live-x" onclick="rmLive('${p.id}')">✕</span>`;
+    if(p.sub)h+=`<div class="live-sub">${esc(p.sub)}</div>`;
+    if(p.body)h+=`<div class="live-body">${esc(p.body)}</div>`;
+    if(p.pron)h+=`<div class="live-pron">Say it right: ${esc(p.pron)}</div>`;
+    h+=`<div class="live-by">added live by ${esc(p.by||'a manager')} · ${crewWhen(p.at)} — in the books tomorrow</div></div>`;});
+  return h;
+}
+let liveType='wine';
+function openLiveModal(type){
+  if(!isMgr())return;
+  liveType=type||'wine';
+  $('liveBody').innerHTML=`
+    <div class="lm-field"><label>Type</label><select id="lm-type">${LIVE_TYPES.map(t=>`<option value="${t[0]}"${t[0]===liveType?' selected':''}>${t[1]}</option>`).join('')}</select></div>
+    <div class="lm-field"><label>Name</label><input id="lm-name" placeholder="Producer + wine, or dish name"></div>
+    <div class="lm-field"><label>Price / pour</label><input id="lm-price" placeholder="e.g. 16 / 64 or 14"></div>
+    <div class="lm-field"><label>Notes (rough is fine)</label><textarea id="lm-notes" placeholder="Grapes, region, what it tastes like, what's in it — whatever you've got"></textarea></div>
+    <div class="lm-field" id="lm-styled-wrap" style="display:none">
+      <label>Styled card — read it before you post</label>
+      <input id="lm-sub" placeholder="One-line sub (grapes · region / build)" style="margin-bottom:6px">
+      <textarea id="lm-body" placeholder="Body copy"></textarea>
+      <input id="lm-pron" placeholder="Pronunciation (optional)" style="margin-top:6px">
+    </div>
+    <div class="lm-actions">
+      <button class="lm-style" id="lm-style-btn" onclick="styleLive()">Style with Remy</button>
+      <button class="lm-post" onclick="postLive()">Post</button>
+      <button class="lm-cancel" onclick="$('liveModal').classList.remove('open')">Cancel</button>
+    </div>
+    <div class="lm-note" id="lm-status">Post as-is for speed, or let Remy style it first. Styled copy is a draft — you read it, you post it.</div>`;
+  const ts=$('lm-type');ts.onchange=function(){liveType=ts.value;};
+  $('liveModal').classList.add('open');
+}
+async function styleLive(){
+  const name=($('lm-name').value||'').trim(), notes=($('lm-notes').value||'').trim();
+  if(!name){$('lm-status').textContent='Needs a name before Remy can style it.';return;}
+  const btn=$('lm-style-btn');btn.disabled=true;btn.textContent='Styling…';
+  $('lm-status').textContent='Asking Remy…';
+  try{
+    const r=await fetch(GEN_URL,{method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({type:$('lm-type').value,name:name,price:($('lm-price').value||'').trim(),notes:notes})});
+    if(!r.ok)throw new Error('worker '+r.status);
+    const d=await r.json();
+    if(!d.card)throw new Error(d.error||'no card returned');
+    $('lm-styled-wrap').style.display='block';
+    if(d.card.name)$('lm-name').value=d.card.name;
+    if(d.card.price&&!$('lm-price').value)$('lm-price').value=d.card.price;
+    $('lm-sub').value=d.card.sub||'';$('lm-body').value=d.card.body||'';$('lm-pron').value=d.card.pron||'';
+    $('lm-status').textContent='Remy\'s draft is in the box. Edit anything, then Post.';
+  }catch(e){
+    $('lm-status').textContent='Styling failed ('+e.message+'). Post as-is instead, or try again.';
+  }
+  btn.disabled=false;btn.textContent='Style with Remy';
+}
+function postLive(){
+  if(!isMgr())return;
+  const name=($('lm-name').value||'').trim();
+  if(!name){$('lm-status').textContent='Needs a name.';return;}
+  const styled=$('lm-styled-wrap').style.display!=='none';
+  const at=Date.now(), id=todayISO()+'_'+at+'_'+Math.random().toString(36).slice(2,7);
+  const rec={type:$('lm-type').value,name:name,price:($('lm-price').value||'').trim(),
+    sub:styled?($('lm-sub').value||'').trim():'',
+    body:styled?($('lm-body').value||'').trim():($('lm-notes').value||'').trim(),
+    pron:styled?($('lm-pron').value||'').trim():'',
+    rawNotes:($('lm-notes').value||'').trim(),
+    by:currentUserName(),at:at,day:todayISO(),styled:styled};
+  MLIVE[id]=rec;renderFresh();
+  if(fbReady&&fbDb){ fbDb.collection('menu-live').doc(id).set(rec).catch(function(){mliveLsSet();}); } else mliveLsSet();
+  $('liveModal').classList.remove('open');
+}
+function rmLive(id){
+  const p=MLIVE[id];if(!p)return;
+  if(!isMgr())return;
+  if(!confirm('Remove "'+p.name+'" from the live block?'))return;
+  delete MLIVE[id];renderFresh();
+  if(fbReady&&fbDb){ fbDb.collection('menu-live').doc(id).delete().catch(function(){mliveLsSet();}); } else mliveLsSet();
+}
+
 /* CREW BOARD — staff message board, Firestore `crew` collection.
    Tonight posts are day-keyed and stop showing after the 3am reset rolls the date.
    Pinboard posts show for 30 days, longer if a manager pins them. Author or admin deletes. */
@@ -1604,7 +1733,7 @@ function pinCrew(id){
 /* INIT */
 function init(){
   initFirebase();
-  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); }
+  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); }
   document.body.classList.add('locked'); openLogin();   // start gated; unlocks once the session checks out
   setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='failed'; onProfiles(); } },9000);
   $('appDate').textContent=fmtShort(todayISO());
