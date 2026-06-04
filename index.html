@@ -321,6 +321,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 .modal-actions button{flex:1; border:none; border-radius:10px; padding:11px; font-size:14px; font-weight:700; cursor:pointer;}
 .copy-btn{background:var(--gold); color:#241f15;} .copy-btn.done{background:var(--accent); color:#fff;}
 .close-btn{background:rgba(90,58,34,.12); color:var(--wood);}
+.clear-btn{background:rgba(176,74,26,.12); color:var(--rust); border:1px solid var(--rust)!important;}
+.clear-btn:disabled{opacity:.35; cursor:not-allowed;}
 .foot{text-align:center; color:var(--ink-mute); font-size:11px; font-style:italic; padding:22px 0 8px;}
 
 /* ---------- identity (who am I + manager) ---------- */
@@ -552,10 +554,11 @@ body.locked{overflow:hidden;}
 <div class="modal" id="promptModal">
   <div class="modal-card">
     <h3>Menu Corrections</h3>
-    <p>Copy this and paste it into a new Claude session to deploy the updates.</p>
+    <p>Copied to your clipboard automatically — paste it into a Claude chat to apply. Clear wipes the note boxes once you've copied.</p>
     <textarea id="promptText" readonly></textarea>
     <div class="modal-actions">
       <button class="copy-btn" id="copyBtn" onclick="copyMenuPrompt()">Copy to clipboard</button>
+      <button class="clear-btn" id="clearBtn" onclick="clearCorrections()" disabled>Clear notes</button>
       <button class="close-btn" onclick="closeModal()">Close</button>
     </div>
   </div>
@@ -763,7 +766,7 @@ function saveCorr(cat,name,val){const c=getCorr();c[cat]=c[cat]||{};if(val&&val.
 function noteBox(cat,name){if(!editMode)return '';const note=(getCorr()[cat]||{})[name]||'';return `<div class="note-box ${note?'filled':''}" data-cat="${cat}" data-for="${esc(name)}" onclick="event.stopPropagation()"><label>Correction for ${esc(name)}</label><textarea placeholder="What needs fixing?" oninput="saveCorr('${cat}',this.closest('.note-box').getAttribute('data-for'),this.value)">${esc(note)}</textarea></div>`;}
 function editBarHTML(){let h=`<div class="editbar"><button class="edit-toggle ${editMode?'on':''}" onclick="toggleEdit()">✎ Corrections${editMode?' · on':''}</button>`;if(editMode)h+=`<button class="gen-btn" onclick="genPrompt()">Generate deploy prompt<span class="badge gen-count">${corrCount()}</span></button>`;h+=`</div>`;if(editMode)h+=`<p class="est-note" style="text-align:left;margin:-6px 0 14px;">Notes save on this device. Add corrections under any item across Food, Wine &amp; Cocktails, then generate one prompt to hand back for deploy.</p>`;return h;}
 function toggleEdit(){editMode=!editMode;renderFoodTab();renderWine();renderBar();}
-const ALG={dairy:'D',gluten:'G',egg:'E',fish:'F',nuts:'N',shellfish:'SF',sesame:'SE',soy:'SO',peanut:'P'};
+const ALG={dairy:'D',gluten:'G',egg:'E',fish:'F',nuts:'N',shellfish:'SF',sesame:'SE',soy:'SO',peanut:'P',allium:'AL'};
 function allergenChips(it){
   const a=it.allergens||[],m=it.canModify||[];
   if(!a.length)return '';
@@ -784,12 +787,12 @@ function dishCardHTML(it){
   h+=`</div>`;
   if(rich){
     h+=`<div class="card-details">`;
+    if(it.allergenNote) h+=`<div class="itk-label" style="margin-top:8px">Allergy notes &amp; mods</div><div class="alg-note serif" style="padding:0">${esc(it.allergenNote)}</div>`;
     if(it.story) h+=`<p class="dish-story serif">${esc(it.story)}</p>`;
     if(it.ingredients&&it.ingredients.length){
       h+=`<div class="itk-label">Ingredients to know</div>`;
       it.ingredients.forEach(g=>h+=`<div class="itk serif"><b>${esc(g.term)}</b>${g.pronunciation?` <span class="pron">${esc(g.pronunciation)}</span>`:''} — ${esc(g.note)}</div>`);
     }
-    if(it.allergenNote) h+=`<div class="itk-label">Allergy notes &amp; mods</div><div class="alg-note serif" style="padding:0">${esc(it.allergenNote)}</div>`;
     h+=`</div>`;
   }
   h+=noteBox('food',it.name);
@@ -797,7 +800,7 @@ function dishCardHTML(it){
 }
 function allergenLegendHTML(){
   let h=`<div class="alg-legend"><span class="alg">G</span> contains · <span class="alg alg-mod">G</span> kitchen can modify &nbsp;—&nbsp; `;
-  h+=`<b>D</b> dairy · <b>G</b> gluten · <b>E</b> egg · <b>F</b> fish · <b>N</b> tree nuts · <b>SF</b> shellfish · <b>SE</b> sesame · <b>SO</b> soy · <b>P</b> peanut</div>`;
+  h+=`<b>D</b> dairy · <b>G</b> gluten · <b>E</b> egg · <b>F</b> fish · <b>N</b> tree nuts · <b>SF</b> shellfish · <b>SE</b> sesame · <b>SO</b> soy · <b>P</b> peanut · <b>AL</b> allium</div>`;
   if(SF.menu.allergenStatus==='draft')h+=`<div class="alg-draft">Allergen flags are in chef review — confirm with the kitchen before promising a table.</div>`;
   return h;
 }
@@ -809,20 +812,33 @@ function renderFoodTab(){
   $('ftFood').innerHTML=f;
 }
 function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); }
+let corrCopied=false;
 function genPrompt(){
   const c=getCorr();
-  const cats=[['food','data/menu.json','dish'],['wine','data/wines.json','wine'],['bar','data/bar.json','cocktail']];
+  const cats=[['food','data/menu.json','dish'],['wine','data/wines.json','wine'],['bar','data/bar.json','bar item']];
   let total=0, body='';
   cats.forEach(([cat,file,label])=>{const o=c[cat]||{};const keys=Object.keys(o);if(!keys.length)return;total+=keys.length;body+=`\n## ${file} (${label}s)\n`;keys.forEach(k=>{body+=`\n• ${k}:\n  ${o[k].trim().replace(/\n/g,'\n  ')}\n`;});});
-  if(!total){$('promptText').value='No corrections typed yet. Turn on Corrections and add notes under any item.';$('promptModal').classList.add('open');return;}
+  if(!total){$('promptText').value='No corrections typed yet. Turn on Corrections and add notes under any item.';corrCopied=false;updateClearBtn();$('promptModal').classList.add('open');return;}
   let p='San Fermo Staff Portal — Fresh Talk corrections to apply.\n\n';
   p+='Project folder: Codename: Riker/staff-portal/\n';
-  p+='Apply each correction to the matching item in the named data file (match by name): dishes update story / ingredients / desc / pron / price; wines update specs / pour / producer / winemaking / grapes; cocktails update tagline / ingredients. Keep the Fresh Talk voice. Then rebuild (python3 build-data.py) and redeploy (deploy-to-github.command).\n';
+  p+='Apply each correction to the matching item in the named data file (match by name): dishes update story / ingredients / desc / pron / price / allergens; wines update specs / pour / producer / winemaking / grapes; bar items update notes / flight descriptions. Keep the Fresh Talk voice. Then rebuild (python3 build-data.py) and redeploy (deploy-to-github.command).\n';
   p+=body+`\n(Generated ${new Date().toLocaleString()})`;
-  $('promptText').value=p; $('promptModal').classList.add('open');
+  $('promptText').value=p;
+  corrCopied=false; updateClearBtn();
+  try{ navigator.clipboard.writeText(p).then(function(){corrCopied=true;markCopied(true);},function(){}); }catch(e){}
+  $('promptModal').classList.add('open');
 }
-function copyMenuPrompt(){const ta=$('promptText');ta.select();let ok=false;try{navigator.clipboard.writeText(ta.value);ok=true;}catch(e){try{ok=document.execCommand('copy');}catch(e2){}}const b=$('copyBtn');if(ok){b.textContent='Copied ✓';b.classList.add('done');setTimeout(()=>{b.textContent='Copy to clipboard';b.classList.remove('done');},1800);}}
-function closeModal(){$('promptModal').classList.remove('open');}
+function markCopied(auto){const b=$('copyBtn');if(b){b.textContent=auto?'Copied automatically ✓':'Copied ✓';b.classList.add('done');}updateClearBtn();}
+function updateClearBtn(){const c=$('clearBtn');if(c){c.disabled=!corrCopied;}}
+function copyMenuPrompt(){const ta=$('promptText');ta.select();let ok=false;try{navigator.clipboard.writeText(ta.value);ok=true;}catch(e){try{ok=document.execCommand('copy');}catch(e2){}}if(ok){corrCopied=true;markCopied(false);}}
+function clearCorrections(){
+  if(!corrCopied)return;
+  if(!confirm('Clear every correction note? Make sure the copied prompt made it to Claude first.'))return;
+  try{localStorage.removeItem('sf-corrections');}catch(e){}
+  corrCopied=false; closeModal();
+  renderFoodTab(); renderWine(); renderBar();
+}
+function closeModal(){const b=$('copyBtn');if(b){b.textContent='Copy to clipboard';b.classList.remove('done');}$('promptModal').classList.remove('open');}
 
 /* FRESH — WINE */
 const WTYPE={white:'wt-white',red:'wt-red','rosé':'wt-rose',rose:'wt-rose',orange:'wt-orange',sparkling:'wt-sparkling'};
