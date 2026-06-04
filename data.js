@@ -10663,41 +10663,46 @@ window.SF = {
     },
     {
      "n": 2,
+     "title": "Set the pace",
+     "detail": "Every table, every time — don't assume they'll volunteer it. As the greeting lands, ask: \"So I can time your courses right — are we settling in for the evening, or keeping an eye on the clock tonight?\" Settling in gets a little air between courses; on the clock gets a tight fire and a word to expo. The whole order goes in at once and the kitchen stacks up fast — nobody tells you they're in a hurry until they already are."
+    },
+    {
+     "n": 3,
      "title": "Drinks",
      "detail": "Take the cocktail and wine order. Guide by-the-glass, mention what's notable tonight, and flag anything 86'd before they decide."
     },
     {
-     "n": 3,
+     "n": 4,
      "title": "Full food order at once",
      "detail": "Per the chef's request, take the entire food order in one pass. Note allergies and call out raw / under-cooked items (marked * on the menu)."
     },
     {
-     "n": 4,
+     "n": 5,
      "title": "Fire & pace",
      "detail": "Coordinate firing and pacing with expo. Read the table — match the pace to their turn so the next seating lands clean."
     },
     {
-     "n": 5,
+     "n": 6,
      "title": "Mark & maintain",
      "detail": "Mark the table for each course, crumb between courses, keep water and wine topped, and reset silver as needed."
     },
     {
-     "n": 6,
+     "n": 7,
      "title": "Check back",
      "detail": "Quality check two bites into each course. Catch problems early, never at the end."
     },
     {
-     "n": 7,
+     "n": 8,
      "title": "Dessert & digestivi",
      "detail": "Offer dessert, then the after-dinner list — amaro flights, grappa, port, and the digestivi selection."
     },
     {
-     "n": 8,
+     "n": 9,
      "title": "Present the check",
      "detail": "If asked about the 23% service charge: it replaces tipping, 100% goes to the house, and no additional tip is expected."
     },
     {
-     "n": 9,
+     "n": 10,
      "title": "Reset",
      "detail": "Reset the table promptly and cleanly for the next turn."
     }
