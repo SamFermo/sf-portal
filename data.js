@@ -141,7 +141,7 @@ window.SF = {
        {
         "term": "Coddled egg dressing",
         "pronunciation": null,
-        "note": "The dressing is built with egg yolk — emulsified raw with oil and champagne vinegar for a thick, rich, classic Caesar consistency. Not cooked through, similar to mayonnaise."
+        "note": "The dressing is built with egg yolk — emulsified raw with oil and champagne vinegar for a thick, rich, classic Caesar consistency. Not cooked through, similar to mayonnaise. It also carries the anchovy: for fish allergies the dressing has to go, not just the boquerones on top."
        }
       ],
       "allergens": [
@@ -158,7 +158,7 @@ window.SF = {
        "egg",
        "allium"
       ],
-      "allergenNote": "Every flag has a path: boquerones on the side (fish), croutons on the side (gluten), dressing on the side — or swapped for oil and vinegar — with the cheese on the side (dairy, egg, allium). Fully modified it becomes a clean romaine salad with oil and vinegar; tell the guest what they're getting."
+      "allergenNote": "Every flag has a path, but fish takes two cuts: the dressing itself has anchovy in it, so pulling the boquerones alone doesn't clear it — omit the boquerones AND swap the dressing for oil and vinegar. Croutons on the side handles gluten. The same oil-and-vinegar swap with cheese on the side covers dairy, egg, and allium. Fully modified it becomes a clean romaine salad with oil and vinegar; tell the guest what they're getting."
      },
      {
       "name": "Farm House Salad",
@@ -11258,5 +11258,5 @@ window.SF = {
    }
   }
  },
- "build": "1780578957"
+ "build": "1780603298"
 };
