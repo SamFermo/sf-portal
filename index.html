@@ -262,6 +262,32 @@ nav.chips::-webkit-scrollbar{display:none;}
 .comp-name{font-weight:700; color:var(--wood); font-size:14px;}
 .comp-role{font-size:11.5px; font-style:italic; color:var(--card-mute);}
 .pill{display:inline-block; font-size:10px; font-weight:700; letter-spacing:.04em; padding:2px 8px; border-radius:999px; white-space:nowrap;}
+/* gold attention state on an inactive subtab (new 86 items unseen on this device) */
+.subtab.attn{background:linear-gradient(155deg,#e8cd79,#c9a64e); color:#241f15; border-radius:999px; animation:goldPulse 1.7s ease-in-out infinite;}
+@keyframes goldPulse{0%,100%{box-shadow:0 0 6px rgba(230,200,120,.35);}50%{box-shadow:0 0 16px rgba(230,200,120,.75);}}
+/* nightly notes — section chips + mini map */
+.sec-chips{display:flex; gap:7px; flex-wrap:wrap; margin:10px 0 12px;}
+.mini-map{background:rgba(8,12,26,.55); border:1px solid rgba(205,216,244,.16); border-radius:14px; padding:10px; margin:2px 0 14px;}
+.mini-map svg{width:100%; height:auto; display:block; max-height:300px; margin:0 auto;}
+.mm-t{fill:rgba(205,216,244,.12); stroke:rgba(205,216,244,.34); stroke-width:3;}
+.mm-noted{fill:rgba(230,200,120,.30); stroke:var(--gold); stroke-width:5;}
+.mm-x{fill:rgba(205,216,244,.8); font-size:36px; font-weight:700; text-anchor:middle;}
+.mm-xn{fill:#f5e3b0;}
+.mm-cap{font-size:10.5px; color:var(--ink-mute); text-align:center; margin-top:6px; letter-spacing:.03em;}
+/* crew board */
+.crew-cat{font-size:9.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; border-radius:999px; padding:2px 8px; white-space:nowrap;}
+.cc-heads{background:rgba(176,74,26,.18); color:#eba887; border:1px solid rgba(176,74,26,.55);}
+.cc-event{background:rgba(230,200,120,.14); color:#ecd49b; border:1px solid rgba(230,200,120,.45);}
+.cc-shifts{background:rgba(96,140,76,.18); color:#bfe0a8; border:1px solid rgba(96,140,76,.55);}
+.cc-general{background:rgba(205,216,244,.08); color:var(--ink-soft); border:1px solid rgba(205,216,244,.25);}
+.crew-item{display:flex; gap:9px; align-items:flex-start; padding:9px 2px; border-bottom:1px solid rgba(205,216,244,.09);}
+.crew-mid{flex:1; min-width:0;}
+.crew-txt{font-size:13.5px; line-height:1.45;}
+.crew-by{font-size:10.5px; color:var(--ink-mute); margin-top:3px;}
+.crew-pin{cursor:pointer; font-size:14px; opacity:.55;}
+.crew-pin.on{opacity:1; color:var(--gold);}
+.crew-row{display:flex; gap:7px; margin:8px 0 4px;}
+.crew-row select{background:rgba(205,216,244,.07); border:1px solid rgba(205,216,244,.22); color:var(--ink); border-radius:9px; padding:7px 8px; font-size:12.5px; font-family:inherit;}
 .pill .pl{font-variant:small-caps; opacity:.7; margin-right:3px;}
 .st-good{background:#d6e6c4; color:#3d6325;} .st-warn{background:#f1e0bd; color:#8a5a18;}
 .st-alarm{background:#f2d2c7; color:#a8311e;} .st-info{background:#ded7c6; color:#5a4d3c;}
@@ -545,8 +571,24 @@ body.locked{overflow:hidden;}
 
 <section class="view" id="board">
   <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">Nightly Notes</h2>
-    <p class="view-sub">86 list, tonight's specials, and tables to watch.</p></div>
+    <p class="view-sub">86 list, tonight's specials, and tables to watch.</p>
+    <div class="subtabs" id="boardTabs"><span class="subpill" id="boardPill"></span>
+      <button class="subtab active" data-bt="tables">Tables</button>
+      <button class="subtab" data-bt="board">86 · Specials</button>
+    </div>
+  </div>
   <div id="boardBody"></div>
+</section>
+
+<section class="view" id="crew">
+  <div class="view-head"><p class="view-eyebrow">The Crew</p><h2 class="view-title">Crew Board</h2>
+    <p class="view-sub">From the team, for the team. Tonight clears with the 3am reset; the pinboard keeps.</p>
+    <div class="subtabs" id="crewTabs"><span class="subpill" id="crewPill"></span>
+      <button class="subtab active" data-ct="tonight">Tonight</button>
+      <button class="subtab" data-ct="pin">Pinboard</button>
+    </div>
+  </div>
+  <div id="crewBody"></div>
 </section>
 
 <section class="view" id="access">
@@ -585,7 +627,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780603298';   // stamped by build-data.py at every deploy
+const BUILD='1780604107';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -616,7 +658,7 @@ function makeStars(){
   sky.innerHTML=h;
 }
 
-const TABS=[['fresh','Fresh Talk'],['board','Nightly Notes'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service']];
+const TABS=[['fresh','Fresh Talk'],['board','Nightly Notes'],['crew','Crew Board'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service']];
 function navTabs(){return (typeof isAdmin==='function'&&isAdmin())?TABS.concat([['access','Staff Access']]):TABS;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));}
@@ -638,6 +680,7 @@ function replaceAllPills(){document.querySelectorAll('.subtabs').forEach(t=>{con
 function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
   const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['board','☾','Nightly Notes','86 · specials · tables'],
+    ['crew','⚑','Crew Board','Events · shifts · heads up'],
     ['schedule','◷','Schedule','This week + the month'],['seating','▦','Seating','The floor & table numbers'],
     ['duties','☑','Duties','Opening, closing, sidework'],['compliance','✓','Compliance','Food handlers & MAST'],
     ['directory','✉','Directory','The team & contacts'],['service','❖','Service','Steps & standards']];
@@ -1354,8 +1397,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -1378,6 +1421,15 @@ function persistBoard(b){
   if(fbReady&&fbDb){ fbDb.collection('board').doc(boardDocId()).set(b).catch(function(){lsSetBoard(b);}); }
   else { lsSetBoard(b); }
 }
+let boardTab='tables';
+function boardSecGet(){try{return localStorage.getItem('sf-board-section')||'all';}catch(e){return 'all';}}
+function boardSecSet(v){try{localStorage.setItem('sf-board-section',v);}catch(e){}}
+/* per-device "seen" tracking for 86 items — drives the gold pill. Day-keyed so it
+   resets naturally with the nightly board clear. */
+function seen86Key(){return 'sf-86seen-'+todayISO();}
+function getSeen86(){try{return JSON.parse(localStorage.getItem(seen86Key())||'[]');}catch(e){return [];}}
+function markSeen86(){try{localStorage.setItem(seen86Key(),JSON.stringify(getBoard().eightySixed||[]));}catch(e){}}
+function newCount86(){const seen=getSeen86();return (getBoard().eightySixed||[]).filter(x=>seen.indexOf(x)<0).length;}
 function renderBoard(){const b=getBoard();
   const col=(title,cls,items,kind)=>{let h=`<div class="board-col ${cls}"><span class="board-title">${title}</span>
     <div class="board-input-row"><input class="board-input" id="in-${kind}" placeholder="Add…" onkeydown="if(event.key==='Enter')addBoard('${kind}')"><button class="board-add" onclick="addBoard('${kind}')">+</button></div>`;
@@ -1385,7 +1437,55 @@ function renderBoard(){const b=getBoard();
     items.forEach((it,i)=>h+=`<div class="board-item"><span>${esc(it)}</span><span class="x" onclick="rmBoard('${kind}',${i})">✕</span></div>`);
     return h+`</div>`;};
   const live=fbReady?`<span style="color:#bfe0a8">● live</span> — shared across every device.`:`saved on this device only.`;
-  $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`+col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials')+tablesColHTML(b.tables||[]);
+  let h=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`;
+  if(boardTab==='board'){
+    h+=col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials');
+    markSeen86();   // viewing the pane = seeing the items
+  }else{
+    h+=secChipsHTML()+tablesPaneHTML(b);
+  }
+  $('boardBody').innerHTML=h;
+  const pb=document.querySelector('#boardTabs .subtab[data-bt="board"]');
+  if(pb)pb.classList.toggle('attn',boardTab!=='board'&&newCount86()>0);
+}
+function secChipsHTML(){
+  const order=(SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[];
+  const cur=boardSecGet();
+  return `<div class="sec-chips"><button class="fchip ${cur==='all'?'active':''}" onclick="setBoardSec('all')">Full floor</button>`+
+    order.map(n=>`<button class="fchip ${cur===n?'active':''}" onclick="setBoardSec('${esc(n)}')">${esc(n)}</button>`).join('')+`</div>`;
+}
+function setBoardSec(v){boardSecSet(v);renderBoard();}
+function tablesPaneHTML(b){
+  const sec=boardSecGet(), items=b.tables||[];
+  if(sec==='all')return tablesColHTML(items);   // MD full-floor view — unchanged
+  const inSec=items.map((t,i)=>({t:t,i:i})).filter(o=>tableSection(o.t.table)===sec);
+  let h=miniMapHTML(sec,inSec.map(o=>String(o.t.table).trim().toUpperCase()));
+  h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">${esc(sec)} — Tables Tonight</span>
+    <div class="tbl-input-row">
+      <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
+      <select class="tbl-occ" id="tbl-occ">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select>
+      <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note (e.g. comping dessert)" onkeydown="if(event.key==='Enter')addTable()">
+      <button class="board-add" onclick="addTable()">+</button>
+    </div>`;
+  if(!inSec.length)h+=`<div class="board-empty">No notes for ${esc(sec)} tonight.</div>`;
+  inSec.forEach(o=>h+=tblItemHTML(o.t,o.i));
+  return h+`</div>`;
+}
+function miniMapHTML(sec,noted){
+  const lay=SF.seating&&SF.seating.layout, map=SF.seating&&SF.seating.sections&&SF.seating.sections.map;
+  if(!lay||!map||!map[sec])return '';
+  const tabs=map[sec].filter(t=>lay[t]); if(!tabs.length)return '';
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  tabs.forEach(t=>{const o=lay[t],w=o.r?o.r*2:o.w,hh=o.r?o.r*2:o.h;
+    x0=Math.min(x0,o.x-w/2);y0=Math.min(y0,o.y-hh/2);x1=Math.max(x1,o.x+w/2);y1=Math.max(y1,o.y+hh/2);});
+  const pad=50;x0-=pad;y0-=pad;x1+=pad;y1+=pad;
+  let svg=`<svg viewBox="0 0 ${Math.round(x1-x0)} ${Math.round(y1-y0)}" xmlns="http://www.w3.org/2000/svg">`;
+  tabs.forEach(t=>{const o=lay[t],hot=noted.indexOf(String(t).toUpperCase())>=0,cls=hot?'mm-t mm-noted':'mm-t';
+    if(o.r)svg+=`<circle class="${cls}" cx="${o.x-x0}" cy="${o.y-y0}" r="${o.r}"/>`;
+    else svg+=`<rect class="${cls}" x="${o.x-o.w/2-x0}" y="${o.y-o.h/2-y0}" width="${o.w}" height="${o.h}" rx="12"/>`;
+    svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${o.x-x0}" y="${o.y-y0}" dy="0.36em">${esc(t)}</text>`;});
+  svg+=`</svg>`;
+  return `<div class="mini-map">${svg}<div class="mm-cap">${esc(sec)} — gold tables have notes tonight</div></div>`;
 }
 function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;const b=getBoard();b[k]=b[k]||[];b[k].push(v);persistBoard(b);renderBoard();setTimeout(()=>{const x=$('in-'+k);if(x)x.focus();},0);}
 function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);renderBoard();}
@@ -1433,15 +1533,83 @@ function addTable(){const numEl=$('tbl-num'),t=(numEl.value||'').trim();
   setTimeout(()=>{const x=$('tbl-num');if(x)x.focus();},0);}
 function rmTable(i){const b=getBoard();(b.tables||[]).splice(i,1);persistBoard(b);renderBoard();}
 
+/* CREW BOARD — staff message board, Firestore `crew` collection.
+   Tonight posts are day-keyed and stop showing after the 3am reset rolls the date.
+   Pinboard posts show for 30 days, longer if a manager pins them. Author or admin deletes. */
+const CREW_CATS=[['heads','Heads up'],['event','Event'],['shifts','Shifts wanted'],['general','General']];
+let CREW={}, crewUnsub=null, crewTab='tonight', crewLive=false;
+function crewLsGet(){try{return JSON.parse(localStorage.getItem('sf-crew')||'{}');}catch(e){return {};}}
+function crewLsSet(){try{localStorage.setItem('sf-crew',JSON.stringify(CREW));}catch(e){}}
+function startCrewSync(){
+  if(fbReady&&fbDb){
+    if(crewUnsub)crewUnsub();
+    crewUnsub=fbDb.collection('crew').onSnapshot(function(snap){
+      CREW={};snap.docs.forEach(function(d){CREW[d.id]=d.data();});crewLive=true;renderCrew();
+    },function(){ crewLive=false;CREW=crewLsGet();renderCrew(); });
+  }else{ crewLive=false;CREW=crewLsGet(); }
+}
+function catChip(c){const f=CREW_CATS.find(x=>x[0]===c);return `<span class="crew-cat cc-${esc(c)}">${esc(f?f[1]:c)}</span>`;}
+function crewWhen(at){const d=new Date(at);return `${MON[d.getMonth()]} ${d.getDate()}, ${d.getHours()%12||12}:${String(d.getMinutes()).padStart(2,'0')}${d.getHours()<12?'am':'pm'}`;}
+function crewPosts(){
+  const now=Date.now(), cutoff=now-30*86400000, today=todayISO();
+  return Object.keys(CREW).map(k=>Object.assign({id:k},CREW[k]))
+    .filter(p=>crewTab==='tonight' ? (p.kind==='tonight'&&p.day===today) : (p.kind==='pin'&&(p.pinned||p.at>cutoff)))
+    .sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||b.at-a.at);
+}
+function renderCrew(){
+  const liveNote=crewLive?`<span style="color:#bfe0a8">● live</span> — shared across every device.`
+    :`<span style="color:var(--gold)">device-only</span> — live sync needs the crew rule published in Firebase.`;
+  let h=`<p class="board-note">Post it here instead of hoping word gets around. ${liveNote}</p>
+    <div class="board-col"><span class="board-title">${crewTab==='tonight'?'Tonight':'Pinboard'}</span>
+    <div class="crew-row">
+      <select id="crew-cat">${CREW_CATS.map(c=>`<option value="${c[0]}">${c[1]}</option>`).join('')}</select>
+      <input class="board-input" id="crew-in" placeholder="${crewTab==='tonight'?'What does the crew need to know tonight?':'Post for the long haul…'}" onkeydown="if(event.key==='Enter')addCrew()" style="flex:1">
+      <button class="board-add" onclick="addCrew()">+</button>
+    </div>`;
+  const posts=crewPosts();
+  if(!posts.length)h+=`<div class="board-empty">${crewTab==='tonight'?'Nothing yet tonight.':'Nothing on the pinboard.'}</div>`;
+  posts.forEach(p=>{
+    const mine=p.by===currentUserName();
+    h+=`<div class="crew-item">${catChip(p.cat)}<div class="crew-mid"><div class="crew-txt">${esc(p.text)}</div>
+      <div class="crew-by">${esc(p.by||'someone')} · ${crewWhen(p.at)}${p.pinned?' · pinned':''}</div></div>`;
+    if(crewTab==='pin'&&isAdmin())h+=`<span class="crew-pin${p.pinned?' on':''}" title="Pin" onclick="pinCrew('${p.id}')">${p.pinned?'★':'☆'}</span>`;
+    if(mine||isAdmin())h+=`<span class="tbl-x" onclick="rmCrew('${p.id}')">✕</span>`;
+    h+=`</div>`;});
+  $('crewBody').innerHTML=h+`</div>`;
+}
+function addCrew(){
+  if(!me){openLogin();return;}
+  const inp=$('crew-in'),v=(inp.value||'').trim();if(!v)return;
+  const at=Date.now(), id=todayISO()+'_'+at+'_'+Math.random().toString(36).slice(2,7);
+  const rec={text:v,cat:$('crew-cat').value,by:currentUserName(),at:at,day:todayISO(),kind:crewTab==='tonight'?'tonight':'pin',pinned:false};
+  CREW[id]=rec;renderCrew();
+  if(fbReady&&fbDb){ fbDb.collection('crew').doc(id).set(rec).catch(function(){crewLsSet();}); } else crewLsSet();
+  setTimeout(function(){const x=$('crew-in');if(x)x.focus();},0);
+}
+function rmCrew(id){
+  const p=CREW[id];if(!p)return;
+  if(!(isAdmin()||p.by===currentUserName())){alert('Only '+String(p.by).split(' ')[0]+' or a manager can remove this.');return;}
+  delete CREW[id];renderCrew();
+  if(fbReady&&fbDb){ fbDb.collection('crew').doc(id).delete().catch(function(){crewLsSet();}); } else crewLsSet();
+}
+function pinCrew(id){
+  if(!isAdmin())return;
+  const p=CREW[id];if(!p)return;
+  p.pinned=!p.pinned;renderCrew();
+  if(fbReady&&fbDb){ fbDb.collection('crew').doc(id).set(p).catch(function(){crewLsSet();}); } else crewLsSet();
+}
+
 /* INIT */
 function init(){
   initFirebase();
-  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); }
+  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); }
   document.body.classList.add('locked'); openLogin();   // start gated; unlocks once the session checks out
   setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='failed'; onProfiles(); } },9000);
   $('appDate').textContent=fmtShort(todayISO());
   buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
-  renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderAccess();
+  renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderCrew(); renderAccess();
+  initPill($('boardTabs'),$('boardPill'),'bt',v=>{boardTab=v;renderBoard();});
+  initPill($('crewTabs'),$('crewPill'),'ct',v=>{crewTab=v;renderCrew();});
   initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';});
   initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{schedState.side=v;renderSchedule();});
   initPill($('dutyTabs'),$('dutyPill'),'duty',v=>{dutyTab=v;renderDuties();});
