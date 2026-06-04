@@ -573,7 +573,19 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
+const BUILD='1780556942';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
+function staleCheck(){
+  // iOS home-screen apps cache index.html hard but data.js always loads fresh.
+  // If the data carries a newer build than this HTML, hop to a cache-busted URL once.
+  try{
+    if(!SF||!SF.build||BUILD==='dev')return false;
+    if(String(SF.build)===String(BUILD))return false;
+    if(new URLSearchParams(location.search).get('u')===String(SF.build))return false; // already tried — don't loop
+    location.replace(location.pathname+'?u='+SF.build);
+    return true;
+  }catch(e){return false;}
+}
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function todayISO(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;}
 const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1370,10 +1382,10 @@ function init(){
   document.addEventListener('visibilitychange',function(){ if(!document.hidden&&me&&!sessionValid()){ me=null; document.body.classList.add('locked'); openLogin(); } });
 }
 function boot(){
-  if(window.SF){ SF=window.SF; init(); return; }   // preview: data inlined
+  if(window.SF){ SF=window.SF; if(staleCheck())return; init(); return; }   // preview: data inlined
   var s=document.createElement('script');
   s.src='data.js?v='+Date.now();                    // cache-bust: always fresh
-  s.onload=function(){ SF=window.SF; init(); };
+  s.onload=function(){ SF=window.SF; if(staleCheck())return; init(); };
   s.onerror=function(){ document.body.innerHTML='<p style="color:#eaf0ff;font-family:sans-serif;padding:28px;text-align:center">Couldn’t load menu data. Pull down to refresh.</p>'; };
   document.head.appendChild(s);
 }
