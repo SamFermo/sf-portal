@@ -2863,6 +2863,85 @@ window.SF = {
      "pron": "SOO-pehr TOOS-kahn"
     }
    ]
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "Terre Nere Etna Bianco DOC",
+   "vintage": "",
+   "region": "Etna, Sicily, Italy",
+   "type": "white",
+   "glass": "",
+   "bottle": "",
+   "grapes": "Carricante, Catarratto, Inzolia, Grecanico, and Minnella",
+   "pour": "Fresh and floral with a streak of white pepper and an assertive, smoky minerality. Light-bodied, silky-textured, with zesty but integrated acidity. Organically grown on the volcanic northern slope of Etna. Drink now or hold.",
+   "producer": "Tenuta delle Terre Nere sits on the northern slope of Etna between 600 and 900 meters, with roughly 43 hectares of vineyards and 150 olive trees. Its crus tell the story of the mountain: the Calderara Cru (11 to 12 hectares, some of it pre-phylloxera, the rest 40 to 50 years old), the Guardiola Cru (2.1 hectares, almost entirely pre-phylloxera and the highest-altitude red-grape vineyards in Europe), and Feudo di Mezzo. 500,000 years of eruptions have left endlessly varied soils, mostly volcanic ash flecked with black pumice and rock. The high elevation drives dramatic day-to-night temperature swings, giving Etna's wines their elegance and lift, free of the heat and overripeness of typical southern bottlings.",
+   "has_notes": true,
+   "pronguide": [
+    {
+     "term": "Terre Nere",
+     "pron": "TEH-reh NEH-reh"
+    },
+    {
+     "term": "Carricante",
+     "pron": "kar-ree-KAHN-teh"
+    },
+    {
+     "term": "Catarratto",
+     "pron": "kah-tah-RAH-toh"
+    },
+    {
+     "term": "Inzolia",
+     "pron": "een-ZOH-lee-ah"
+    },
+    {
+     "term": "Grecanico",
+     "pron": "greh-KAH-nee-koh"
+    },
+    {
+     "term": "Minnella",
+     "pron": "mee-NEL-lah"
+    }
+   ]
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "Viberti \"Derthona\" Timorasso, Colli Tortonesi DOC",
+   "vintage": "2023",
+   "region": "Monleale, Colli Tortonesi, Piedmont, Italy",
+   "type": "white",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Timorasso",
+   "pour": "Straw yellow in youth, turning golden with age. Peach, acacia flower and hawthorn up front, with the hydrocarbon and mineral notes Timorasso is famous for emerging after a few years in bottle. High acidity and low pH keep it taut and long-lived, with no malolactic. Serve around 14°C, and don't be afraid to cellar it 15 years or more.",
+   "producer": "Viberti Giovanni farms 9.5 hectares in the upper part of Monleale, a medieval hill town central to the Timorasso revival of the 1980s led by Walter Massa. The vineyards sit at around 400 meters with east to southeast exposure on light, clay-limestone soils ideal for the grape. \"Derthona\" is the ancient Latin name for nearby Tortona, heart of the four valleys that have always grown this rare Piedmontese white, one of the oldest and among the few capable of great long-aging wines.",
+   "winemaking": "Grapes are harvested in mid-September from the upper part of Monleale at 350 meters and trucked refrigerated to the Barolo winery. Pneumatic pressing, cold settling, and fermentation at 12°C for 10 to 14 days, then storage on fine lees. Malolactic does not occur, blocked by the cold and the grape's naturally high acidity and low pH. The wine then matures on its lees for 10 to 12 months with weekly batonnage.",
+   "has_notes": true,
+   "pronguide": [
+    {
+     "term": "Viberti",
+     "pron": "vee-BEHR-tee"
+    },
+    {
+     "term": "Derthona",
+     "pron": "der-TOH-nah"
+    },
+    {
+     "term": "Timorasso",
+     "pron": "tee-moh-RAH-soh"
+    },
+    {
+     "term": "Colli Tortonesi",
+     "pron": "KOH-lee tor-toh-NEH-zee"
+    },
+    {
+     "term": "Monleale",
+     "pron": "mohn-leh-AH-leh"
+    },
+    {
+     "term": "batonnage",
+     "pron": "bah-toh-NAHZH"
+    }
+   ]
   }
  ],
  "bar": {
@@ -7472,8 +7551,8 @@ window.SF = {
        "",
        "",
        "",
-       "1-close float",
-       "1-close float",
+       "12-10",
+       "12-10",
        "1-close"
       ]
      },
@@ -7615,9 +7694,9 @@ window.SF = {
      "",
      "",
      "",
-     "1-close",
-     "1-close",
-     "1-close",
+     "",
+     "",
+     "",
      "Expo"
     ],
     "rows": [
@@ -7652,8 +7731,8 @@ window.SF = {
        "",
        "",
        "",
-       "8-6",
-       "8-6",
+       "11-9",
+       "11-9",
        "8-6"
       ]
      },
@@ -7675,7 +7754,7 @@ window.SF = {
        "1-close",
        "",
        "",
-       "",
+       "1-close",
        "1-close",
        "1-close",
        "1-close"
@@ -11479,5 +11558,5 @@ window.SF = {
    }
   }
  },
- "build": "1780612759"
+ "build": "1780752392"
 };
