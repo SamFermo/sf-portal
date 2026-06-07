@@ -291,6 +291,9 @@ nav.chips::-webkit-scrollbar{display:none;}
 .live-by{font-size:10.5px; color:var(--ink-mute); margin-top:7px;}
 .live-x{position:absolute; top:9px; right:11px; cursor:pointer; color:var(--ink-mute); font-size:13px;}
 .addlive-btn{display:block; width:100%; background:rgba(230,200,120,.08); border:1.5px dashed rgba(230,200,120,.55); color:var(--gold); border-radius:12px; padding:9px; font-size:12.5px; font-weight:700; cursor:pointer; margin-bottom:12px; font-family:inherit;}
+.live-replaces{font-size:11px; color:var(--gold); margin-top:3px; font-weight:600; letter-spacing:.02em;}
+.card.replaced{opacity:.35; pointer-events:none; position:relative;}
+.replaced-banner{background:rgba(230,200,120,.12); border:1px dashed var(--gold); border-radius:10px; padding:8px 12px; margin-bottom:8px; font-size:12px; color:var(--gold); font-weight:600; text-align:center;}
 .lm-field{margin-bottom:9px;}
 .lm-field label{display:block; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--card-mute); margin-bottom:3px;}
 .lm-field input,.lm-field textarea,.lm-field select{width:100%; box-sizing:border-box; background:#fff; border:1px solid #d8cfc0; border-radius:8px; padding:8px 9px; font-size:13.5px; font-family:inherit; color:#2a2419;}
@@ -694,7 +697,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780838266';   // stamped by build-data.py at every deploy
+const BUILD='1780870534';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -920,6 +923,8 @@ function allergenChips(it){
 }
 function dishCardHTML(it){
   const rich = it.story || (it.ingredients&&it.ingredients.length);
+  const rpl=replacedByLive(it.name);
+  if(rpl)return `<div class="card replaced"><div class="card-head"><div class="row-between"><span class="dish-name serif">${esc(it.name)}</span><span class="dish-price serif">${esc(it.price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(rpl)}</div></div></div>`;
   let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
       <span class="dish-name serif">${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}</span>
@@ -1028,6 +1033,8 @@ function renderWine(){
   list.forEach(w=>{
     if(w.section!==cur){cur=w.section;html+=`<div class="section-label">${esc(cur)}</div>`;}
     const idx=SF.wines.indexOf(w), price=(w.glass?w.glass+' / ':'')+w.bottle;
+    const wrpl=replacedByLive(w.name);
+    if(wrpl){html+=`<div class="card replaced" data-wine="${idx}"><div class="card-head"><span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span><div class="row-between"><span class="wine-name serif">${esc(w.name)}</span><span class="wine-price serif">${esc(price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(wrpl)}</div></div></div>`;return;}
     const can=(w.has_notes&&(w.producer||w.winemaking))||(w.pronguide&&w.pronguide.length);
     html+=`<div class="card ${can?'expandable':''}" data-wine="${idx}">
       <div class="card-head" ${can?`onclick="toggleWine(${idx})"`:''}>
@@ -1052,6 +1059,8 @@ function toggleWine(i){const el=$('ftWine').querySelector(`[data-wine="${i}"]`);
 
 /* FRESH — BAR */
 function ckCardHTML(c){
+  const crpl=replacedByLive(c.name);
+  if(crpl)return `<div class="card replaced"><div class="card-head"><div class="row-between"><span class="ck-name serif">${esc(c.name)}</span><span class="ck-price serif">${esc(c.price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(crpl)}</div></div></div>`;
   const rich=c.ingredients&&c.ingredients.length;
   let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
@@ -1845,6 +1854,21 @@ const GEN_URL='https://remy-outreach.sam-d1f.workers.dev/freshtalk-card';
 const LIVE_TYPES=[['dish','Food'],['wine','Wine'],['cocktail','Cocktail']];
 let MLIVE={}, mliveUnsub=null;
 function isMgr(){return !!(me&&(me.admin||me.mgr));}
+function currentItemNames(type){
+  if(type==='dish'){const n=[];SF.menu.food.forEach(s=>s.items.forEach(i=>n.push(i.name)));SF.menu.desserts.forEach(i=>n.push(i.name));return n;}
+  if(type==='wine')return SF.wines.map(w=>w.name);
+  if(type==='cocktail'){const n=[];SF.bar.cocktails.forEach(c=>n.push(c.name));return n;}
+  return [];
+}
+function replacedByLive(name){
+  const items=Object.values(MLIVE);
+  for(let i=0;i<items.length;i++){if(items[i].replaces===name)return items[i].name;}
+  return null;
+}
+function replaceOptsHTML(type){
+  const names=currentItemNames(type);
+  return '<option value="">(none — add alongside)</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+}
 function mliveLsGet(){try{return JSON.parse(localStorage.getItem('sf-mlive')||'{}');}catch(e){return {};}}
 function mliveLsSet(){try{localStorage.setItem('sf-mlive',JSON.stringify(MLIVE));}catch(e){}}
 function startMenuLiveSync(){
@@ -1864,6 +1888,7 @@ function liveBlockHTML(type){
     h+=`<div class="live-card"><span class="live-chip">LIVE</span><span class="live-name">${esc(p.name)}</span>`;
     if(p.price)h+=`<span class="live-price">${esc(p.price)}</span>`;
     if(isMgr())h+=`<span class="live-x" onclick="rmLive('${p.id}')">✕</span>`;
+    if(p.replaces)h+=`<div class="live-replaces">replaces ${esc(p.replaces)}</div>`;
     if(p.sub)h+=`<div class="live-sub">${esc(p.sub)}</div>`;
     if(p.body)h+=`<div class="live-body">${esc(p.body)}</div>`;
     if(p.pron)h+=`<div class="live-pron">Say it right: ${esc(p.pron)}</div>`;
@@ -1876,6 +1901,7 @@ function openLiveModal(type){
   liveType=type||'wine';
   $('liveBody').innerHTML=`
     <div class="lm-field"><label>Type</label><select id="lm-type">${LIVE_TYPES.map(t=>`<option value="${t[0]}"${t[0]===liveType?' selected':''}>${t[1]}</option>`).join('')}</select></div>
+    <div class="lm-field"><label>Replaces (optional)</label><select id="lm-replaces">${replaceOptsHTML(liveType)}</select></div>
     <div class="lm-field"><label>Name</label><input id="lm-name" placeholder="Producer + wine, or dish name"></div>
     <div class="lm-field"><label>Price / pour</label><input id="lm-price" placeholder="e.g. 16 / 64 or 14"></div>
     <div class="lm-field"><label>Notes (rough is fine)</label><textarea id="lm-notes" placeholder="Grapes, region, what it tastes like, what's in it — whatever you've got"></textarea></div>
@@ -1891,7 +1917,7 @@ function openLiveModal(type){
       <button class="lm-cancel" onclick="$('liveModal').classList.remove('open')">Cancel</button>
     </div>
     <div class="lm-note" id="lm-status">Post as-is for speed, or let Remy style it first. Styled copy is a draft — you read it, you post it.</div>`;
-  const ts=$('lm-type');ts.onchange=function(){liveType=ts.value;};
+  const ts=$('lm-type');ts.onchange=function(){liveType=ts.value;$('lm-replaces').innerHTML=replaceOptsHTML(liveType);};
   $('liveModal').classList.add('open');
 }
 async function styleLive(){
@@ -1921,11 +1947,13 @@ function postLive(){
   if(!name){$('lm-status').textContent='Needs a name.';return;}
   const styled=$('lm-styled-wrap').style.display!=='none';
   const at=Date.now(), id=todayISO()+'_'+at+'_'+Math.random().toString(36).slice(2,7);
+  const replaces=($('lm-replaces').value||'').trim();
   const rec={type:$('lm-type').value,name:name,price:($('lm-price').value||'').trim(),
     sub:styled?($('lm-sub').value||'').trim():'',
     body:styled?($('lm-body').value||'').trim():($('lm-notes').value||'').trim(),
     pron:styled?($('lm-pron').value||'').trim():'',
     rawNotes:($('lm-notes').value||'').trim(),
+    replaces:replaces,
     by:currentUserName(),at:at,day:todayISO(),styled:styled};
   MLIVE[id]=rec;renderFresh();
   if(fbReady&&fbDb){ fbDb.collection('menu-live').doc(id).set(rec).catch(function(){mliveLsSet();}); } else mliveLsSet();
