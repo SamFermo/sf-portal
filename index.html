@@ -303,11 +303,17 @@ nav.chips::-webkit-scrollbar{display:none;}
 .fd-detail:last-child{border-bottom:none;}
 .fd-dlabel{font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--card-mute); flex-shrink:0; margin-right:12px;}
 .fd-dval{font-size:13px; color:var(--ink); text-align:right; word-break:break-all; font-family:'SF Mono',ui-monospace,monospace;}
+.fd-quick{color:var(--gold); text-decoration:none; border-bottom:1px dashed rgba(230,200,120,.4);}
+.fd-quick:hover{border-bottom-style:solid;}
 .fd-details{margin-top:8px; padding-top:6px; border-top:1px solid rgba(200,190,170,.2);}
 .fd-actions{display:flex; gap:6px; margin-top:10px; justify-content:flex-end;}
 .fd-actions button{background:none; border:1px solid rgba(200,190,170,.3); border-radius:8px; padding:5px 12px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; color:var(--ink-soft);}
 .fd-actions button:hover{border-color:var(--gold); color:var(--gold);}
 .fd-actions button.fd-del{color:#b44;}
+.fd-search-wrap{margin-bottom:14px;}
+.fd-search{width:100%; box-sizing:border-box; background:rgba(255,255,255,.06); border:1.5px solid rgba(200,190,170,.25); border-radius:12px; padding:12px 14px; font-size:15px; color:var(--ink); font-family:inherit; outline:none; transition:border-color .2s;}
+.fd-search::placeholder{color:var(--ink-soft); font-style:italic;}
+.fd-search:focus{border-color:var(--gold);}
 .fd-add-btn{display:block; width:100%; background:rgba(230,200,120,.08); border:1.5px dashed rgba(230,200,120,.55); color:var(--gold); border-radius:12px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; margin-bottom:14px; font-family:inherit;}
 .fd-form{background:var(--card-bg); border-radius:14px; padding:16px; margin-bottom:12px; border:1.5px solid var(--gold);}
 .fd-form label{display:block; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--card-mute); margin:8px 0 3px;}
@@ -730,7 +736,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780943789';   // stamped by build-data.py at every deploy
+const BUILD='1780945963';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1134,7 +1140,7 @@ function renderBar(){
 /* FRONT DESK — manager-only Firestore-backed contacts/passwords/vendor info.
    Collection: `frontdesk`. Each doc: {name, desc, cat, items:[{label,value}], order, updatedBy, updatedAt}
    Manager CRUD: add, edit, delete. Not in data.js (sensitive). */
-const FD_CATS=['Devices & Access','Reservations & POS','Online & Social','Accounts & Services','Utilities & Vendors','Equipment & Troubleshooting'];
+const FD_CATS=['Logins & Passwords','Contacts & Support','Troubleshooting'];
 let FDDATA={}, fdUnsub=null, fdEditId=null;
 function startFrontDeskSync(){
   if(!fbReady||!fbDb||!isMgr())return;
@@ -1145,11 +1151,20 @@ function startFrontDeskSync(){
   },function(){});
 }
 function fdSorted(){return Object.keys(FDDATA).map(k=>Object.assign({id:k},FDDATA[k])).sort((a,b)=>(a.order||99)-(b.order||99)||(a.name||'').localeCompare(b.name||''));}
-function renderFrontDesk(){
+function fdMatchesQuery(e,q){
+  if(!q)return true;
+  const t=(e.name+' '+e.desc+' '+(e.items||[]).map(d=>d.label+' '+d.value).join(' ')).toLowerCase();
+  return q.split(/\s+/).every(w=>t.includes(w));
+}
+function renderFrontDesk(keepSearch){
   if(!isMgr()){$('fdBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
-  const all=fdSorted();
-  let h=`<button class="fd-add-btn" onclick="fdShowForm()">+ Add entry</button>`;
+  const prev=keepSearch&&$('fd-search')?$('fd-search').value:'';
+  const q=(prev||'').toLowerCase().trim();
+  const all=fdSorted().filter(e=>fdMatchesQuery(e,q));
+  let h=`<div class="fd-search-wrap"><input id="fd-search" class="fd-search" placeholder="What do you need help with?" value="${esc(prev)}" oninput="renderFrontDesk(true)"></div>`;
+  h+=`<button class="fd-add-btn" onclick="fdShowForm()">+ Add entry</button>`;
   h+=`<div id="fdFormSlot"></div>`;
+  if(!all.length&&q){h+=`<p class="board-empty">No matches for "${esc(prev)}". Try different keywords.</p>`;$('fdBody').innerHTML=h;$('fd-search').focus();return;}
   if(!all.length){h+='<p class="board-empty">No entries yet. Tap + to add one.</p>';$('fdBody').innerHTML=h;return;}
   let curCat='';
   all.forEach(e=>{
@@ -1158,12 +1173,21 @@ function renderFrontDesk(){
     if(e.desc)h+=`<div class="fd-desc">${esc(e.desc)}</div>`;
     if(e.items&&e.items.length){
       h+=`<div class="fd-details">`;
-      e.items.forEach(d=>h+=`<div class="fd-detail"><span class="fd-dlabel">${esc(d.label)}</span><span class="fd-dval">${esc(d.value)}</span></div>`);
+      e.items.forEach(d=>{
+        const v=d.value||'';
+        const ph=v.match(/^[\d(+][\d\s()\-+.]+$/);
+        const em=v.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+        let valH=esc(v);
+        if(ph){const digits=v.replace(/[^\d+]/g,'');valH=`<a href="tel:${digits}" class="fd-quick">${esc(v)}</a>`;}
+        else if(em)valH=`<a href="mailto:${v}" class="fd-quick">${esc(v)}</a>`;
+        h+=`<div class="fd-detail"><span class="fd-dlabel">${esc(d.label)}</span><span class="fd-dval">${valH}</span></div>`;
+      });
       h+=`</div>`;
     }
     h+=`<div class="fd-actions"><button onclick="fdShowForm('${e.id}')">Edit</button><button class="fd-del" onclick="fdDelete('${e.id}','${esc(e.name).replace(/'/g,"\\'")}')">Delete</button></div></div>`;
   });
   $('fdBody').innerHTML=h;
+  if(keepSearch&&$('fd-search')){const s=$('fd-search');s.focus();s.setSelectionRange(s.value.length,s.value.length);}
 }
 function fdShowForm(editId){
   fdEditId=editId||null;
