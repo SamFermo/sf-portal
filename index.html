@@ -302,7 +302,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .fd-detail{display:flex; justify-content:space-between; align-items:baseline; padding:4px 0; border-bottom:1px solid rgba(200,190,170,.15);}
 .fd-detail:last-child{border-bottom:none;}
 .fd-dlabel{font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--card-mute); flex-shrink:0; margin-right:12px;}
-.fd-dval{font-size:13px; color:var(--ink); text-align:right; word-break:break-all; font-family:'SF Mono',ui-monospace,monospace;}
+.fd-dval{font-size:13px; color:var(--ink); text-align:right; overflow-wrap:break-word; word-wrap:break-word; word-break:normal; font-family:'SF Mono',ui-monospace,monospace; min-width:0;}
 .fd-quick{color:var(--gold); text-decoration:none; border-bottom:1px dashed rgba(230,200,120,.4);}
 .fd-quick:hover{border-bottom-style:solid;}
 .fd-details{margin-top:8px; padding-top:6px; border-top:1px solid rgba(200,190,170,.2);}
@@ -736,7 +736,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780946063';   // stamped by build-data.py at every deploy
+const BUILD='1780948817';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1175,11 +1175,17 @@ function renderFrontDesk(keepSearch){
       h+=`<div class="fd-details">`;
       e.items.forEach(d=>{
         const v=d.value||'';
-        const ph=v.match(/^[\d(+][\d\s()\-+.]+$/);
-        const em=v.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+        const isContact=e.cat==='Contacts & Support';
+        const lbl=(d.label||'').toLowerCase();
+        const contactLabel=/phone|support|contact|rep|call|alt/.test(lbl);
         let valH=esc(v);
-        if(ph){const digits=v.replace(/[^\d+]/g,'');valH=`<a href="tel:${digits}" class="fd-quick">${esc(v)}</a>`;}
-        else if(em)valH=`<a href="mailto:${v}" class="fd-quick">${esc(v)}</a>`;
+        /* Phone: linkify inline phone patterns (handles compound "X or Y" and "Name - 555-1234") */
+        valH=valH.replace(/(\+?1?\s*)?(\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4})/g,function(m){
+          const digits=m.replace(/[^\d+]/g,'');return'<a href="tel:'+digits+'" class="fd-quick">'+m+'</a>';});
+        /* Email: only linkify in Contacts category or on contact-labeled fields */
+        if(isContact||contactLabel){
+          valH=valH.replace(/([^\s@<]+@[^\s@>]+\.[^\s@>,]+)/g,'<a href="mailto:$1" class="fd-quick">$1</a>');
+        }
         h+=`<div class="fd-detail"><span class="fd-dlabel">${esc(d.label)}</span><span class="fd-dval">${valH}</span></div>`;
       });
       h+=`</div>`;
