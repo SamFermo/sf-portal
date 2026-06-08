@@ -294,6 +294,33 @@ nav.chips::-webkit-scrollbar{display:none;}
 .live-replaces{font-size:11px; color:var(--gold); margin-top:3px; font-weight:600; letter-spacing:.02em;}
 .card.replaced{opacity:.35; pointer-events:none; position:relative;}
 .replaced-banner{background:rgba(230,200,120,.12); border:1px dashed var(--gold); border-radius:10px; padding:8px 12px; margin-bottom:8px; font-size:12px; color:var(--gold); font-weight:600; text-align:center;}
+/* front desk */
+.fd-cat{font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); margin:18px 0 8px; padding-left:2px;}
+.fd-card{background:var(--card-bg); border-radius:14px; padding:14px 16px; margin-bottom:10px; position:relative;}
+.fd-name{font-family:'Cormorant Garamond','Caladea',serif; font-size:17px; font-weight:600; color:var(--ink);}
+.fd-desc{font-size:12.5px; color:var(--ink-soft); margin-top:2px;}
+.fd-detail{display:flex; justify-content:space-between; align-items:baseline; padding:4px 0; border-bottom:1px solid rgba(200,190,170,.15);}
+.fd-detail:last-child{border-bottom:none;}
+.fd-dlabel{font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--card-mute); flex-shrink:0; margin-right:12px;}
+.fd-dval{font-size:13px; color:var(--ink); text-align:right; word-break:break-all; font-family:'SF Mono',ui-monospace,monospace;}
+.fd-details{margin-top:8px; padding-top:6px; border-top:1px solid rgba(200,190,170,.2);}
+.fd-actions{display:flex; gap:6px; margin-top:10px; justify-content:flex-end;}
+.fd-actions button{background:none; border:1px solid rgba(200,190,170,.3); border-radius:8px; padding:5px 12px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; color:var(--ink-soft);}
+.fd-actions button:hover{border-color:var(--gold); color:var(--gold);}
+.fd-actions button.fd-del{color:#b44;}
+.fd-add-btn{display:block; width:100%; background:rgba(230,200,120,.08); border:1.5px dashed rgba(230,200,120,.55); color:var(--gold); border-radius:12px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; margin-bottom:14px; font-family:inherit;}
+.fd-form{background:var(--card-bg); border-radius:14px; padding:16px; margin-bottom:12px; border:1.5px solid var(--gold);}
+.fd-form label{display:block; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--card-mute); margin:8px 0 3px;}
+.fd-form label:first-child{margin-top:0;}
+.fd-form input,.fd-form select,.fd-form textarea{width:100%; box-sizing:border-box; background:#fff; border:1px solid #d8cfc0; border-radius:8px; padding:7px 9px; font-size:13px; font-family:inherit; color:#2a2419;}
+.fd-form textarea{min-height:40px; resize:vertical;}
+.fd-detail-row{display:flex; gap:6px; margin-bottom:4px;}
+.fd-detail-row input{flex:1;}
+.fd-detail-row button{flex-shrink:0; background:none; border:none; color:#b44; cursor:pointer; font-size:16px; padding:0 4px;}
+.fd-form-actions{display:flex; gap:8px; margin-top:12px;}
+.fd-form-actions button{flex:1; border:none; border-radius:9px; padding:9px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;}
+.fd-form-actions .fd-save{background:var(--gold); color:#241f15;}
+.fd-form-actions .fd-cancel{background:rgba(200,190,170,.15); color:var(--ink-soft);}
 .lm-field{margin-bottom:9px;}
 .lm-field label{display:block; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--card-mute); margin-bottom:3px;}
 .lm-field input,.lm-field textarea,.lm-field select{width:100%; box-sizing:border-box; background:#fff; border:1px solid #d8cfc0; border-radius:8px; padding:8px 9px; font-size:13.5px; font-family:inherit; color:#2a2419;}
@@ -658,6 +685,12 @@ body.locked{overflow:hidden;}
     <p class="view-sub">Add people, set or reset PINs, and lock out anyone who leaves.</p></div>
   <div id="accessBody"></div>
 </section>
+
+<section class="view" id="frontdesk">
+  <div class="view-head"><p class="view-eyebrow">Managers Only</p><h2 class="view-title">Front Desk</h2>
+    <p class="view-sub">Passwords, vendor contacts, and account info. Managers can add, edit, or remove entries.</p></div>
+  <div id="fdBody"></div>
+</section>
 </div>
 
 <div class="modal" id="loginGate">
@@ -697,7 +730,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780924720';   // stamped by build-data.py at every deploy
+const BUILD='1780943789';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -729,13 +762,13 @@ function makeStars(){
 }
 
 const TABS=[['fresh','Fresh Talk'],['board','Tables'],['verbals','Verbals'],['crew','Crew Board'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service']];
-function navTabs(){return (typeof isAdmin==='function'&&isAdmin())?TABS.concat([['access','Staff Access']]):TABS;}
+function navTabs(){let t=isMgr()?TABS.concat([['frontdesk','Front Desk']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));}
 function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk();
   if(id==='verbals'){markSeen86();updateVerbalsAttn();}
   window.scrollTo(0,0); requestAnimationFrame(replaceAllPills);}
 
@@ -756,6 +789,7 @@ function renderHome(){
     ['schedule','◷','Schedule','This week + the month'],['seating','▦','Seating','The floor & table numbers'],
     ['duties','☑','Duties','Opening, closing, sidework'],['compliance','✓','Compliance','Food handlers & MAST'],
     ['directory','✉','Directory','The team & contacts'],['service','❖','Service','Steps & standards']];
+  if(isMgr())cards.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);
   $('homeGrid').innerHTML=cards.map(([id,ic,t,s])=>`<button class="home-card" data-card="${id}" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
   renderAccountBar();
 }
@@ -809,11 +843,12 @@ function applyAuthGate(){
   }
 }
 function refreshAuthUI(){
-  buildNav(); renderAccountBar();
+  buildNav(); renderAccountBar(); renderHome();
   if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
   if($('access')&&$('access').classList.contains('active'))renderAccess();
   renderBoard();
   renderSchedule();   // re-render so the signed-in user's row highlight follows the login
+  startFrontDeskSync();
 }
 function renderAccountBar(){
   if(!$('idBar'))return;
@@ -1094,6 +1129,78 @@ function renderBar(){
   h+=`<div class="section-label">After-Dinner Libations</div>`;
   SF.bar.afterDinner.forEach(n=>h+=`<div class="ad-item"><div class="ad-row"><span class="ad-name">${esc(n.name)}</span><span class="ad-price">${esc(n.price)}</span></div>${n.note?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`);
   $('ftBar').innerHTML=liveBlockHTML('cocktail')+(h);
+}
+
+/* FRONT DESK — manager-only Firestore-backed contacts/passwords/vendor info.
+   Collection: `frontdesk`. Each doc: {name, desc, cat, items:[{label,value}], order, updatedBy, updatedAt}
+   Manager CRUD: add, edit, delete. Not in data.js (sensitive). */
+const FD_CATS=['Devices & Access','Reservations & POS','Online & Social','Accounts & Services','Utilities & Vendors','Equipment & Troubleshooting'];
+let FDDATA={}, fdUnsub=null, fdEditId=null;
+function startFrontDeskSync(){
+  if(!fbReady||!fbDb||!isMgr())return;
+  if(fdUnsub)fdUnsub();
+  fdUnsub=fbDb.collection('frontdesk').onSnapshot(function(snap){
+    FDDATA={};snap.docs.forEach(function(d){FDDATA[d.id]=d.data();});
+    if(document.querySelector('#frontdesk.active'))renderFrontDesk();
+  },function(){});
+}
+function fdSorted(){return Object.keys(FDDATA).map(k=>Object.assign({id:k},FDDATA[k])).sort((a,b)=>(a.order||99)-(b.order||99)||(a.name||'').localeCompare(b.name||''));}
+function renderFrontDesk(){
+  if(!isMgr()){$('fdBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
+  const all=fdSorted();
+  let h=`<button class="fd-add-btn" onclick="fdShowForm()">+ Add entry</button>`;
+  h+=`<div id="fdFormSlot"></div>`;
+  if(!all.length){h+='<p class="board-empty">No entries yet. Tap + to add one.</p>';$('fdBody').innerHTML=h;return;}
+  let curCat='';
+  all.forEach(e=>{
+    if(e.cat!==curCat){curCat=e.cat;h+=`<div class="fd-cat">${esc(curCat||'Uncategorized')}</div>`;}
+    h+=`<div class="fd-card"><div class="fd-name">${esc(e.name)}</div>`;
+    if(e.desc)h+=`<div class="fd-desc">${esc(e.desc)}</div>`;
+    if(e.items&&e.items.length){
+      h+=`<div class="fd-details">`;
+      e.items.forEach(d=>h+=`<div class="fd-detail"><span class="fd-dlabel">${esc(d.label)}</span><span class="fd-dval">${esc(d.value)}</span></div>`);
+      h+=`</div>`;
+    }
+    h+=`<div class="fd-actions"><button onclick="fdShowForm('${e.id}')">Edit</button><button class="fd-del" onclick="fdDelete('${e.id}','${esc(e.name).replace(/'/g,"\\'")}')">Delete</button></div></div>`;
+  });
+  $('fdBody').innerHTML=h;
+}
+function fdShowForm(editId){
+  fdEditId=editId||null;
+  const e=editId?FDDATA[editId]:null;
+  const items=e&&e.items?e.items:[{label:'',value:''}];
+  let h=`<div class="fd-form" id="fdForm">
+    <label>Category</label><select id="fd-cat">${FD_CATS.map(c=>`<option${e&&e.cat===c?' selected':''}>${c}</option>`).join('')}</select>
+    <label>Name</label><input id="fd-name" value="${e?esc(e.name):''}" placeholder="e.g. OpenTable, Revel, Airgas">
+    <label>Description</label><input id="fd-desc" value="${e?esc(e.desc||''):''}" placeholder="What is this for?">
+    <label>Details</label><div id="fd-items">${items.map((d,i)=>`<div class="fd-detail-row"><input placeholder="Label" value="${esc(d.label)}"><input placeholder="Value" value="${esc(d.value)}"><button onclick="this.parentElement.remove()">✕</button></div>`).join('')}</div>
+    <button class="fd-add-btn" style="margin:6px 0 0;padding:6px;font-size:11px" onclick="fdAddRow()">+ Add detail row</button>
+    <div class="fd-form-actions"><button class="fd-save" onclick="fdSave()">${editId?'Update':'Add'}</button><button class="fd-cancel" onclick="fdCancelForm()">Cancel</button></div></div>`;
+  $('fdFormSlot').innerHTML=h;
+  $('fdFormSlot').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function fdAddRow(){
+  const d=document.createElement('div');d.className='fd-detail-row';
+  d.innerHTML='<input placeholder="Label"><input placeholder="Value"><button onclick="this.parentElement.remove()">✕</button>';
+  $('fd-items').appendChild(d);
+}
+function fdCancelForm(){$('fdFormSlot').innerHTML='';fdEditId=null;}
+function fdSave(){
+  const name=($('fd-name').value||'').trim();
+  if(!name){alert('Name is required.');return;}
+  const rows=[...$('fd-items').querySelectorAll('.fd-detail-row')];
+  const items=rows.map(r=>{const ins=r.querySelectorAll('input');return{label:(ins[0].value||'').trim(),value:(ins[1].value||'').trim()};}).filter(d=>d.label||d.value);
+  const catSel=$('fd-cat');
+  const rec={name:name,desc:($('fd-desc').value||'').trim(),cat:catSel.value,items:items,order:FD_CATS.indexOf(catSel.value)*100,updatedBy:currentUserName(),updatedAt:Date.now()};
+  if(fdEditId){
+    fbDb.collection('frontdesk').doc(fdEditId).update(rec).then(()=>{fdCancelForm();}).catch(e=>alert('Save failed: '+e.message));
+  }else{
+    fbDb.collection('frontdesk').add(rec).then(()=>{fdCancelForm();}).catch(e=>alert('Save failed: '+e.message));
+  }
+}
+function fdDelete(id,name){
+  if(!confirm('Delete "'+name+'"?'))return;
+  fbDb.collection('frontdesk').doc(id).delete().catch(e=>alert('Delete failed: '+e.message));
 }
 
 /* SCHEDULE */
@@ -1475,8 +1582,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -2036,7 +2143,7 @@ function pinCrew(id){
 /* INIT */
 function init(){
   initFirebase();
-  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); }
+  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); }
   document.body.classList.add('locked'); openLogin();   // start gated; unlocks once the session checks out
   setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='failed'; onProfiles(); } },9000);
   $('appDate').textContent=fmtShort(todayISO());
