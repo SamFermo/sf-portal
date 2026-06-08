@@ -124,6 +124,13 @@ nav.chips::-webkit-scrollbar{display:none;}
 .dish-price{font-family:'Caladea',Georgia,serif; font-size:15px; color:var(--wood-soft); white-space:nowrap;}
 .dish-desc{font-family:'Caladea',Georgia,serif; font-style:italic; font-size:13.5px; color:var(--card-mute); margin-top:3px;}
 .raw-badge{display:inline-block; margin-left:7px; font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--rust); border:1px solid var(--rust); border-radius:999px; padding:1px 6px; vertical-align:middle;}
+.new-badge{display:inline-block; margin-right:6px; font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#2d6a4f; background:rgba(45,106,79,.12); border:1px solid rgba(45,106,79,.35); border-radius:999px; padding:1px 7px; vertical-align:middle; font-family:system-ui,sans-serif;}
+.recent-block{background:rgba(45,106,79,.06); border:1.5px solid rgba(45,106,79,.2); border-radius:14px; padding:14px 16px; margin-bottom:16px;}
+.recent-head{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#2d6a4f; margin-bottom:10px;}
+.recent-item{display:flex; align-items:baseline; gap:8px; padding:5px 0; border-bottom:1px solid rgba(45,106,79,.08);}
+.recent-item:last-child{border-bottom:none;}
+.recent-name{font-size:14px; font-weight:600; color:var(--ink); white-space:nowrap;}
+.recent-desc{font-size:12px; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .dish-story{font-family:'Caladea',Georgia,serif; font-size:14.5px; color:var(--card-ink); line-height:1.55; margin:8px 0 0;}
 .itk-label{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--gold-deep); margin:13px 0 6px;}
 .itk{font-family:'Caladea',Georgia,serif; font-size:13.5px; color:var(--card-ink); line-height:1.5; padding:3px 0 3px 14px; position:relative;}
@@ -736,7 +743,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780948817';   // stamped by build-data.py at every deploy
+const BUILD='1780949052';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -962,13 +969,27 @@ function allergenChips(it){
   a.forEach(x=>h+=`<span class="alg ${m.indexOf(x)>=0?'alg-mod':''}" title="${esc(x)}">${ALG[x]||esc(x)}</span>`);
   return h+'</div>';
 }
+const NEW_DAYS=14;
+function isNew(item){if(!item||!item.added)return false;const d=new Date(item.added+'T00:00:00');const now=new Date();return(now-d)/(864e5)<=NEW_DAYS;}
+function newBadge(){return '<span class="new-badge">NEW</span>';}
+function recentBlockHTML(items,type){
+  if(!items.length)return '';
+  let h='<div class="recent-block"><div class="recent-head">Recently Added</div>';
+  items.forEach(it=>{
+    if(type==='dish')h+=`<div class="recent-item"><span class="recent-name serif">${esc(it.name)}</span><span class="recent-desc">${esc(it.desc||'')}</span></div>`;
+    else if(type==='wine')h+=`<div class="recent-item"><span class="wine-type ${WTYPE[it.type]||'wt-white'}">${esc(it.type)}</span><span class="recent-name serif">${esc(it.name)}</span><span class="recent-desc">${esc(it.region||'')}</span></div>`;
+    else h+=`<div class="recent-item"><span class="recent-name serif">${esc(it.name)}</span><span class="recent-desc">${esc(it.build||it.tagline||'')}</span></div>`;
+  });
+  return h+'</div>';
+}
+
 function dishCardHTML(it){
   const rich = it.story || (it.ingredients&&it.ingredients.length);
   const rpl=replacedByLive(it.name);
   if(rpl)return `<div class="card replaced"><div class="card-head"><div class="row-between"><span class="dish-name serif">${esc(it.name)}</span><span class="dish-price serif">${esc(it.price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(rpl)}</div></div></div>`;
   let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
-      <span class="dish-name serif">${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}</span>
+      <span class="dish-name serif">${isNew(it)?newBadge():''}${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}</span>
       <span class="dish-price serif">${esc(it.price)}</span></div>
       <div class="dish-desc serif">${esc(it.desc)}</div>`;
   h+=allergenChips(it);
@@ -995,7 +1016,10 @@ function allergenLegendHTML(){
   return h;
 }
 function renderFoodTab(){
-  let f=editBarHTML()+allergenLegendHTML();
+  const newDishes=[];
+  SF.menu.food.forEach(sec=>sec.items.forEach(it=>{if(isNew(it))newDishes.push(it);}));
+  SF.menu.desserts.forEach(it=>{if(isNew(it))newDishes.push(it);});
+  let f=editBarHTML()+recentBlockHTML(newDishes,'dish')+allergenLegendHTML();
   SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;
     if(sec.intro)f+=`<div class="intro-card serif">${esc(sec.intro)}</div>`;
     sec.items.forEach(it=>f+=dishCardHTML(it));});
@@ -1069,7 +1093,8 @@ function renderWine(){
     if(wineFilter.glassOnly&&!w.glass)return false;
     if(q&&!((w.name+' '+w.region+' '+w.grapes+' '+w.pour).toLowerCase().includes(q)))return false;
     return true;});
-  let cur='',html=editBarHTML()+bar;
+  const newWines=SF.wines.filter(w=>isNew(w));
+  let cur='',html=editBarHTML()+recentBlockHTML(newWines,'wine')+bar;
   if(!list.length)html+='<p class="board-empty">No wines match.</p>';
   list.forEach(w=>{
     if(w.section!==cur){cur=w.section;html+=`<div class="section-label">${esc(cur)}</div>`;}
@@ -1080,7 +1105,7 @@ function renderWine(){
     html+=`<div class="card ${can?'expandable':''}" data-wine="${idx}">
       <div class="card-head" ${can?`onclick="toggleWine(${idx})"`:''}>
         <span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span>
-        <div class="row-between"><span class="wine-name serif">${esc(w.name)} ${w.vintage?`<span class="wine-vintage">${esc(w.vintage)}</span>`:''}</span><span class="wine-price serif">${esc(price)}</span></div>
+        <div class="row-between"><span class="wine-name serif">${isNew(w)?newBadge():''}${esc(w.name)} ${w.vintage?`<span class="wine-vintage">${esc(w.vintage)}</span>`:''}</span><span class="wine-price serif">${esc(price)}</span></div>
         ${w.region?`<div class="wine-origin">${esc(w.region)}${w.grapes?' · '+esc(w.grapes):''}</div>`:''}
         ${w.pour?`<div class="wine-pour serif">${esc(w.pour)}</div>`:''}
         ${specRow(w.specs)}
@@ -1105,7 +1130,7 @@ function ckCardHTML(c){
   const rich=c.ingredients&&c.ingredients.length;
   let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
-      <span class="ck-name serif">${esc(c.name)}${c.highlight?`<span class="hl-badge">${esc(c.highlight)}</span>`:''}</span>
+      <span class="ck-name serif">${isNew(c)?newBadge():''}${esc(c.name)}${c.highlight?`<span class="hl-badge">${esc(c.highlight)}</span>`:''}</span>
       <span class="ck-price serif">${esc(c.price)}</span></div>
       ${c.tagline?`<div class="ck-tag serif">${esc(c.tagline)}</div>`:''}
       <div class="ck-build serif">${esc(c.build)}</div>`;
@@ -1119,7 +1144,8 @@ function ckCardHTML(c){
   return h+`</div>`;
 }
 function renderBar(){
-  let h=editBarHTML()+`<div class="section-label">Cocktails</div>`;
+  const newCk=SF.bar.cocktails.filter(c=>isNew(c));
+  let h=editBarHTML()+recentBlockHTML(newCk,'cocktail')+`<div class="section-label">Cocktails</div>`;
   SF.bar.cocktails.forEach(c=>h+=ckCardHTML(c));
   const listSec=items=>{let s=`<div class="card listcard">`;
     items.forEach(n=>{s+=`<div class="pl-item"><div class="pl-row"><span class="pl-name">${esc(n.name)}</span><span class="pl-price">${esc(n.price)}</span></div>${n.note?`<div class="pl-note serif">${esc(n.note)}</div>`:''}${noteBox('bar',n.name)}</div>`;});
