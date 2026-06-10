@@ -583,6 +583,35 @@ body.locked{overflow:hidden;}
   .sidework-card ul{columns:1;}
   .home-hero h1{font-size:32px;}
 }
+/* ---------- FARM ORDER (Swan House order loop) ---------- */
+.ord-stamp{font-size:12px; color:var(--ink-mute); margin:0 0 12px;}
+.ord-stamp.stale{color:#d39140;}
+.ord-cart{position:sticky; top:8px; z-index:5; background:rgba(20,26,48,.92); backdrop-filter:blur(8px); border:1px solid rgba(230,200,120,.4); border-radius:14px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.ord-cart .ord-count{font-weight:700; color:var(--gold); font-size:14px; flex:1;}
+.ord-cart input[type=date]{background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:8px; padding:6px 8px; font-size:13px; font-family:inherit; color-scheme:dark;}
+.ord-send{background:var(--gold); color:#241f15; border:none; border-radius:999px; padding:9px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit;}
+.ord-send:disabled{opacity:.4; cursor:default;}
+.ord-group{margin:18px 0 6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.18em; color:var(--gold);}
+.ord-group.muted{color:var(--ink-mute);}
+.ord-item{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.14); border-radius:12px; padding:10px 12px; margin-bottom:8px; cursor:pointer; transition:border-color .15s ease;}
+.ord-item.sel{border-color:var(--gold); background:rgba(230,200,120,.08);}
+.ord-item .oi-name{font-size:14.5px; font-weight:600; color:var(--ink);}
+.ord-item .oi-note{font-size:11.5px; color:var(--ink-mute); margin-top:2px; line-height:1.35;}
+.ord-item .oi-peak{color:var(--gold); font-size:10.5px; font-weight:700; letter-spacing:.1em; margin-left:6px;}
+.ord-qty{display:flex; align-items:center; gap:8px; margin-top:9px;}
+.ord-qty button{width:34px; height:34px; border-radius:10px; background:rgba(205,216,244,.1); border:1px solid rgba(205,216,244,.25); color:var(--ink); font-size:17px; font-weight:700; cursor:pointer;}
+.ord-qty input{width:54px; text-align:center; background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:8px; padding:7px 4px; font-size:14.5px; font-weight:700; font-family:inherit;}
+.ord-qty .ord-unit{background:rgba(230,200,120,.12); border:1px solid rgba(230,200,120,.45); color:var(--gold); border-radius:999px; padding:7px 13px; font-size:12.5px; font-weight:700; cursor:pointer;}
+.ord-qty .oi-remove{margin-left:auto; background:none; border:none; color:var(--ink-mute); font-size:12px; cursor:pointer; text-decoration:underline;}
+.ord-free-btn{display:block; width:100%; background:rgba(230,200,120,.08); border:1.5px dashed rgba(230,200,120,.55); color:var(--gold); border-radius:12px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; margin:10px 0 14px; font-family:inherit;}
+.ord-free input[type=text]{width:100%; background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:8px; padding:8px 10px; font-size:14px; font-family:inherit; margin-bottom:2px;}
+.ord-free select{background:rgba(205,216,244,.1); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:8px; padding:7px 8px; font-size:13px; font-family:inherit;}
+.ord-note textarea{width:100%; background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:10px; padding:9px 11px; font-size:13.5px; font-family:inherit; resize:vertical; min-height:42px;}
+.ord-recent{margin-top:22px;}
+.ord-recent .ord-ro{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.12); border-radius:12px; padding:10px 12px; margin-bottom:8px;}
+.ord-recent .ord-ro .ro-head{display:flex; justify-content:space-between; font-size:12px; color:var(--ink-mute); margin-bottom:4px;}
+.ord-recent .ord-ro .ro-lines{font-size:13px; color:var(--ink-soft); line-height:1.5;}
+.ord-recent .ord-ro button{background:none; border:1px solid rgba(230,200,120,.45); color:var(--gold); border-radius:999px; padding:4px 12px; font-size:11.5px; font-weight:700; cursor:pointer; margin-top:7px;}
 </style>
 </head>
 <body class="not-home">
@@ -704,6 +733,12 @@ body.locked{overflow:hidden;}
     <p class="view-sub">Passwords, vendor contacts, and account info. Managers can add, edit, or remove entries.</p></div>
   <div id="fdBody"></div>
 </section>
+
+<section class="view" id="orders">
+  <div class="view-head"><p class="view-eyebrow">Managers Only · Swan House Farm</p><h2 class="view-title">Farm Order</h2>
+    <p class="view-sub" id="ordSub">Tap items from Kelly's list, set quantities, send. The text announces it; this page remembers it.</p></div>
+  <div id="ordBody"></div>
+</section>
 </div>
 
 <div class="modal" id="loginGate">
@@ -743,7 +778,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1780950754';   // stamped by build-data.py at every deploy
+const BUILD='1781073458';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -775,13 +810,13 @@ function makeStars(){
 }
 
 const TABS=[['fresh','Fresh Talk'],['board','Tables'],['verbals','Verbals'],['crew','Crew Board'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service']];
-function navTabs(){let t=isMgr()?TABS.concat([['frontdesk','Front Desk']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
+function navTabs(){let t=isMgr()?TABS.concat([['orders','Farm Order'],['frontdesk','Front Desk']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));}
 function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders();
   if(id==='verbals'){markSeen86();updateVerbalsAttn();}
   window.scrollTo(0,0); requestAnimationFrame(replaceAllPills);}
 
@@ -802,7 +837,7 @@ function renderHome(){
     ['schedule','◷','Schedule','This week + the month'],['seating','▦','Seating','The floor & table numbers'],
     ['duties','☑','Duties','Opening, closing, sidework'],['compliance','✓','Compliance','Food handlers & MAST'],
     ['directory','✉','Directory','The team & contacts'],['service','❖','Service','Steps & standards']];
-  if(isMgr())cards.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);
+  if(isMgr()){cards.push(['orders','✾','Farm Order','Order from Swan House']);cards.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);}
   $('homeGrid').innerHTML=cards.map(([id,ic,t,s])=>`<button class="home-card" data-card="${id}" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
   renderAccountBar();
 }
@@ -2153,6 +2188,146 @@ function crewPosts(){
     .filter(p=>crewTab==='tonight' ? (p.kind==='tonight'&&p.day===today) : (p.kind==='pin'&&(p.pinned||p.at>cutoff)))
     .sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||b.at-a.at);
 }
+/* ===== FARM ORDER — Swan House order loop, Phase 1 v0 (sms-announce mode) =====
+   Availability feed: published to the seasonal-tracker Pages repo by the Neelix
+   morning sweep (same origin, plain fetch). Orders save to localStorage as the
+   record and open a pre-filled SMS as the announce/delivery channel.
+   When the remy-orders Firebase project exists, set REMY_ORDERS_CONFIG below and
+   placed orders also write to Firestore (system of record upgrade, Phase 1 wiring).
+   Plan: Codename: Neelix/docs/farm-order-loop-build-plan.md */
+const ORD_AVAIL_URL='https://samfermo.github.io/seasonal-tracker/availability-swan-house.json';
+const ORD_SMS_TO=['2065513328'];      // Tim. TODO(Sam): confirm + add Kelly's cell.
+window.REMY_ORDERS_CONFIG=null;        // remy-orders Firebase web config goes here (Phase 1 wiring)
+let ordAvail=null, ordAvailAt=0, ordLines=[], ordDate='', ordNote='';
+
+function ordStaleDays(d){if(!d)return null;return Math.round((Date.now()-new Date(d+'T12:00:00').getTime())/86400000);}
+function ordFetchAvail(){
+  if(ordAvail&&Date.now()-ordAvailAt<600000)return Promise.resolve(ordAvail);
+  return fetch(ORD_AVAIL_URL+'?t='+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(d=>{ordAvail=d;ordAvailAt=Date.now();return d;});
+}
+function ordGetOrders(){try{return JSON.parse(localStorage.getItem('sfFarmOrders')||'[]');}catch(e){return [];}}
+function ordSaveOrders(a){try{localStorage.setItem('sfFarmOrders',JSON.stringify(a.slice(0,30)));}catch(e){}}
+function ordLine(name){return ordLines.find(l=>l.name===name&&!l.free);}
+function ordToggle(name,display,units){
+  const i=ordLines.findIndex(l=>l.name===name&&!l.free);
+  if(i>=0)ordLines.splice(i,1);
+  else ordLines.push({name:name,display:display,qty:1,unit:(units&&units[0])||'#',units:units&&units.length?units:['#'],free:false});
+  renderOrdersBody();
+}
+function ordQty(name,delta){const l=ordLine(name);if(!l)return;l.qty=Math.max(1,(parseFloat(l.qty)||1)+delta);renderOrdersBody();}
+function ordQtyInput(name,v){const l=ordLine(name);if(l)l.qty=Math.max(0.5,parseFloat(v)||1);}
+function ordCycleUnit(name){const l=ordLine(name);if(!l)return;const u=l.units;l.unit=u[(u.indexOf(l.unit)+1)%u.length];renderOrdersBody();}
+function ordAddFree(){ordLines.push({name:'',display:'',qty:1,unit:'#',units:(ordAvail&&ordAvail.all_units)||['#'],free:true});renderOrdersBody();
+  const inp=document.querySelector('#ordBody .ord-free:last-of-type input[type=text]');if(inp)inp.focus();}
+function ordFreeEdit(idx,field,v){const l=ordLines[idx];if(l){if(field==='display'){l.display=v;l.name=v;}else l[field]=v;}}
+function ordRemove(idx){ordLines.splice(idx,1);renderOrdersBody();}
+function ordText(){
+  const d=ordDate?new Date(ordDate+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'}):'';
+  let t='Farm order'+(d?' — needed by '+d:'')+':\n';
+  t+=ordLines.filter(l=>l.display).map(l=>l.qty+(l.unit==='#'?'# ':' '+l.unit+' ')+l.display).join('\n');
+  if(ordNote.trim())t+='\nNote: '+ordNote.trim();
+  t+='\n— '+(currentUserName()||'San Fermo')+' via portal';
+  return t;
+}
+function ordPlace(){
+  const lines=ordLines.filter(l=>l.display);
+  if(!lines.length)return;
+  const now=new Date();
+  const order={order_id:now.toISOString().slice(0,10)+'-'+now.getTime().toString().slice(-5),
+    status:'placed',placed_by:currentUserName()||'unknown',placed_at:now.toISOString(),
+    requested_date:ordDate||null,confirmed_date:null,
+    lines:lines.map(l=>({item:l.display,seasonal_ref:l.free?null:{name:l.name,vendor:'Swan House Farms'},
+      qty:l.qty,unit:l.unit,free_text:!!l.free,farm_status:null,farm_note:'',packed:false})),
+    order_note:ordNote.trim(),channel:'sms-v0',synced:false};
+  const all=ordGetOrders();all.unshift(order);ordSaveOrders(all);
+  /* Firestore write-through once remy-orders exists (Phase 1 wiring) */
+  if(window.REMY_ORDERS_CONFIG&&window.firebase){
+    try{const app=firebase.apps.find(a=>a.name==='remy')||firebase.initializeApp(window.REMY_ORDERS_CONFIG,'remy');
+      app.firestore().collection('orders').doc(order.order_id).set(order)
+        .then(()=>{order.synced=true;ordSaveOrders(all);}).catch(()=>{});}catch(e){}
+  }
+  const body=encodeURIComponent(ordText());
+  const to=ORD_SMS_TO.filter(Boolean).join(',');
+  window.location.href='sms:'+to+(to?'&':'?')+'body='+body;
+  ordLines=[];ordNote='';ordDate='';
+  setTimeout(renderOrdersBody,400);
+}
+function ordReload(id){
+  const o=ordGetOrders().find(x=>x.order_id===id);if(!o)return;
+  ordLines=o.lines.map(l=>{const av=ordAvail&&ordAvail.items.find(i=>i.name===(l.seasonal_ref&&l.seasonal_ref.name));
+    return {name:(l.seasonal_ref&&l.seasonal_ref.name)||l.item,display:l.item,qty:l.qty,unit:l.unit,
+      units:(av&&av.units)||((ordAvail&&ordAvail.all_units)||['#']),free:l.free_text};});
+  renderOrdersBody();window.scrollTo(0,0);
+}
+function renderOrders(){
+  if(!isMgr()){$('ordBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
+  $('ordBody').innerHTML='<p class="board-empty">Loading Kelly’s list…</p>';
+  ordFetchAvail().then(renderOrdersBody).catch(err=>{
+    ordAvail=null;renderOrdersBody();
+    const s=document.querySelector('#ordBody .ord-stamp');
+    if(s){s.classList.add('stale');s.textContent='Availability feed unreachable ('+err.message+') — free-type your items below; the order still sends.';}
+  });
+}
+function renderOrdersBody(){
+  if(!$('ordBody'))return;
+  let h='';
+  const days=ordAvail?ordStaleDays(ordAvail.kelly_last_touch):null;
+  if(ordAvail)h+='<p class="ord-stamp'+(days!==null&&days>10?' stale':'')+'">Kelly’s list · updated '+(ordAvail.kelly_last_touch||'?')+(days!==null?' · '+days+'d ago':'')+(days!==null&&days>10?' · getting stale, confirm by text':'')+'</p>';
+  else h+='<p class="ord-stamp stale">Availability feed unreachable — free-type your items below; the order still sends.</p>';
+  const n=ordLines.filter(l=>l.display).length;
+  h+='<div class="ord-cart"><span class="ord-count">'+(n?n+' item'+(n>1?'s':'')+' in this order':'Tap items to start an order')+'</span>'+
+     '<input type="date" value="'+ordDate+'" min="'+todayISO()+'" onchange="ordDate=this.value" aria-label="Needed by">'+
+     '<button class="ord-send" '+(n?'':'disabled')+' onclick="ordPlace()">Review text & send</button></div>';
+  /* free-text lines */
+  ordLines.forEach((l,idx)=>{
+    if(!l.free)return;
+    h+='<div class="ord-item sel ord-free"><input type="text" placeholder="Item (anything not on the list)" value="'+(l.display||'').replace(/"/g,'&quot;')+'" oninput="ordFreeEdit('+idx+',\'display\',this.value)">'+
+       '<div class="ord-qty"><button onclick="ordLines['+idx+'].qty=Math.max(0.5,(parseFloat(ordLines['+idx+'].qty)||1)-1);renderOrdersBody()">−</button>'+
+       '<input type="number" step="0.5" value="'+l.qty+'" onchange="ordLines['+idx+'].qty=Math.max(0.5,parseFloat(this.value)||1)">'+
+       '<button onclick="ordLines['+idx+'].qty=(parseFloat(ordLines['+idx+'].qty)||1)+1;renderOrdersBody()">+</button>'+
+       '<select onchange="ordLines['+idx+'].unit=this.value">'+l.units.map(u=>'<option'+(u===l.unit?' selected':'')+'>'+u+'</option>').join('')+'</select>'+
+       '<button class="oi-remove" onclick="ordRemove('+idx+')">remove</button></div></div>';
+  });
+  h+='<button class="ord-free-btn" onclick="ordAddFree()">+ Something not on the list</button>';
+  if(ordAvail){
+    const groups=[['At peak',i=>i.score===2,''],['Available',i=>i.score===1,''],['Coming soon',i=>i.coming,' muted']];
+    groups.forEach(([label,test,cls])=>{
+      const items=ordAvail.items.filter(test);
+      if(!items.length)return;
+      h+='<div class="ord-group'+cls+'">'+label+'</div>';
+      items.forEach(it=>{
+        const sel=ordLine(it.name);
+        h+='<div class="ord-item'+(sel?' sel':'')+'" onclick="ordToggle(\''+it.name.replace(/'/g,"\\'")+'\',\''+it.display.replace(/'/g,"\\'")+'\','+JSON.stringify(it.units).replace(/"/g,'&quot;')+')">'+
+           '<span class="oi-name">'+it.display+(it.score===2?'<span class="oi-peak">PEAK</span>':'')+'</span>'+
+           (it.kelly_note?'<div class="oi-note">'+it.kelly_note+(it.last_touch?' · '+it.last_touch.slice(5).replace('-','/'):'')+'</div>':'');
+        if(sel){
+          h+='<div class="ord-qty" onclick="event.stopPropagation()">'+
+             '<button onclick="ordQty(\''+it.name.replace(/'/g,"\\'")+'\',-1)">−</button>'+
+             '<input type="number" step="0.5" value="'+sel.qty+'" onchange="ordQtyInput(\''+it.name.replace(/'/g,"\\'")+'\',this.value)">'+
+             '<button onclick="ordQty(\''+it.name.replace(/'/g,"\\'")+'\',1)">+</button>'+
+             '<span class="ord-unit" onclick="ordCycleUnit(\''+it.name.replace(/'/g,"\\'")+'\')">'+sel.unit+' ▾</span>'+
+             '<button class="oi-remove" onclick="ordToggle(\''+it.name.replace(/'/g,"\\'")+'\',\''+it.display.replace(/'/g,"\\'")+'\',null)">remove</button></div>';
+        }
+        h+='</div>';
+      });
+    });
+  }
+  h+='<div class="ord-note" style="margin-top:12px"><textarea placeholder="Note to Kelly & Tim (optional)" oninput="ordNote=this.value">'+ordNote+'</textarea></div>';
+  const recent=ordGetOrders();
+  if(recent.length){
+    h+='<div class="ord-recent"><div class="ord-group">Recent orders</div>';
+    recent.slice(0,6).forEach(o=>{
+      const d=new Date(o.placed_at).toLocaleDateString('en-US',{month:'numeric',day:'numeric'});
+      h+='<div class="ord-ro"><div class="ro-head"><span>'+d+' · '+(o.placed_by||'')+(o.requested_date?' · needed '+o.requested_date.slice(5).replace('-','/'):'')+'</span><span>'+(o.synced?'synced':'sent by text')+'</span></div>'+
+         '<div class="ro-lines">'+o.lines.map(l=>l.qty+' '+l.unit+' '+l.item).join(' · ')+'</div>'+
+         '<button onclick="ordReload(\''+o.order_id+'\')">Load again</button></div>';
+    });
+    h+='</div>';
+  }
+  $('ordBody').innerHTML=h;
+}
+
 function renderCrew(){
   const liveNote=crewLive?`<span style="color:#bfe0a8">● live</span> — shared across every device.`
     :`<span style="color:var(--gold)">device-only</span> — live sync needs the crew rule published in Firebase.`;
