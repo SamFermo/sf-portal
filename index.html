@@ -739,6 +739,18 @@ body.locked{overflow:hidden;}
     <p class="view-sub" id="ordSub">Tap items from Kelly's list, set quantities, send. The text announces it; this page remembers it.</p></div>
   <div id="ordBody"></div>
 </section>
+
+<div class="modal" id="ordReview">
+  <div class="modal-card">
+    <h3>Review order</h3>
+    <p id="ordRevTo"></p>
+    <pre id="ordRevText" style="background:rgba(36,31,21,.07);border-radius:10px;padding:12px;font-size:14px;line-height:1.6;color:var(--card-ink);white-space:pre-wrap;font-family:inherit;margin:0;overflow-y:auto"></pre>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+      <button class="chip" style="color:var(--card-soft);border-color:var(--card-mute)" onclick="$('ordReview').classList.remove('open')">Back</button>
+      <button class="ord-send" onclick="ordPlace()">Send text</button>
+    </div>
+  </div>
+</div>
 </div>
 
 <div class="modal" id="loginGate">
@@ -778,7 +790,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781073458';   // stamped by build-data.py at every deploy
+const BUILD='1781074290';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2196,9 +2208,9 @@ function crewPosts(){
    placed orders also write to Firestore (system of record upgrade, Phase 1 wiring).
    Plan: Codename: Neelix/docs/farm-order-loop-build-plan.md */
 const ORD_AVAIL_URL='https://samfermo.github.io/seasonal-tracker/availability-swan-house.json';
-const ORD_SMS_TO=['2065513328'];      // Tim. TODO(Sam): confirm + add Kelly's cell.
+const ORD_SMS_TO=['2065513328','2062509433'];   // Tim, Kelly (confirmed by Sam 2026-06-10)
 window.REMY_ORDERS_CONFIG=null;        // remy-orders Firebase web config goes here (Phase 1 wiring)
-let ordAvail=null, ordAvailAt=0, ordLines=[], ordDate='', ordNote='';
+let ordAvail=null, ordAvailAt=0, ordLines=[], ordDate='', ordNote='', ordFilter='all';
 
 function ordStaleDays(d){if(!d)return null;return Math.round((Date.now()-new Date(d+'T12:00:00').getTime())/86400000);}
 function ordFetchAvail(){
@@ -2215,9 +2227,15 @@ function ordToggle(name,display,units){
   else ordLines.push({name:name,display:display,qty:1,unit:(units&&units[0])||'#',units:units&&units.length?units:['#'],free:false});
   renderOrdersBody();
 }
-function ordQty(name,delta){const l=ordLine(name);if(!l)return;l.qty=Math.max(1,(parseFloat(l.qty)||1)+delta);renderOrdersBody();}
+/* qty/unit changes update the DOM in place — full re-renders made the screen jump */
+function ordEsc(s){return String(s).replace(/\\/g,'\\\\').replace(/"/g,'\\"');}
+function ordQty(name,delta){const l=ordLine(name);if(!l)return;l.qty=Math.max(.5,(parseFloat(l.qty)||1)+delta);
+  const inp=document.querySelector('input[data-oq="'+ordEsc(name)+'"]');if(inp)inp.value=l.qty;else renderOrdersBody();}
 function ordQtyInput(name,v){const l=ordLine(name);if(l)l.qty=Math.max(0.5,parseFloat(v)||1);}
-function ordCycleUnit(name){const l=ordLine(name);if(!l)return;const u=l.units;l.unit=u[(u.indexOf(l.unit)+1)%u.length];renderOrdersBody();}
+function ordCycleUnit(name){const l=ordLine(name);if(!l)return;const u=l.units;l.unit=u[(u.indexOf(l.unit)+1)%u.length];
+  const chip=document.querySelector('[data-ou="'+ordEsc(name)+'"]');if(chip)chip.textContent=l.unit+' ▾';else renderOrdersBody();}
+function ordFreeQty(idx,delta){const l=ordLines[idx];if(!l)return;l.qty=Math.max(.5,(parseFloat(l.qty)||1)+delta);
+  const inp=document.querySelector('input[data-oqf="'+idx+'"]');if(inp)inp.value=l.qty;}
 function ordAddFree(){ordLines.push({name:'',display:'',qty:1,unit:'#',units:(ordAvail&&ordAvail.all_units)||['#'],free:true});renderOrdersBody();
   const inp=document.querySelector('#ordBody .ord-free:last-of-type input[type=text]');if(inp)inp.focus();}
 function ordFreeEdit(idx,field,v){const l=ordLines[idx];if(l){if(field==='display'){l.display=v;l.name=v;}else l[field]=v;}}
@@ -2230,7 +2248,14 @@ function ordText(){
   t+='\n— '+(currentUserName()||'San Fermo')+' via portal';
   return t;
 }
+function ordReview(){
+  if(!ordLines.filter(l=>l.display).length)return;
+  $('ordRevTo').textContent='Text to: Tim & Kelly';
+  $('ordRevText').textContent=ordText();
+  $('ordReview').classList.add('open');
+}
 function ordPlace(){
+  $('ordReview').classList.remove('open');
   const lines=ordLines.filter(l=>l.display);
   if(!lines.length)return;
   const now=new Date();
@@ -2271,6 +2296,7 @@ function renderOrders(){
 }
 function renderOrdersBody(){
   if(!$('ordBody'))return;
+  const _sy=window.scrollY;
   let h='';
   const days=ordAvail?ordStaleDays(ordAvail.kelly_last_touch):null;
   if(ordAvail)h+='<p class="ord-stamp'+(days!==null&&days>10?' stale':'')+'">Kelly’s list · updated '+(ordAvail.kelly_last_touch||'?')+(days!==null?' · '+days+'d ago':'')+(days!==null&&days>10?' · getting stale, confirm by text':'')+'</p>';
@@ -2278,14 +2304,21 @@ function renderOrdersBody(){
   const n=ordLines.filter(l=>l.display).length;
   h+='<div class="ord-cart"><span class="ord-count">'+(n?n+' item'+(n>1?'s':'')+' in this order':'Tap items to start an order')+'</span>'+
      '<input type="date" value="'+ordDate+'" min="'+todayISO()+'" onchange="ordDate=this.value" aria-label="Needed by">'+
-     '<button class="ord-send" '+(n?'':'disabled')+' onclick="ordPlace()">Review text & send</button></div>';
+     '<button class="ord-send" '+(n?'':'disabled')+' onclick="ordReview()">Review & send</button></div>';
+  if(ordAvail){
+    const cats=[['all','All'],['green','Greens'],['produce','Produce'],['protein','Proteins'],['flower','Flowers'],['berry','Berries'],['mushroom','Mushrooms'],['sea','Sea']];
+    const present=new Set(ordAvail.items.map(i=>i.category));
+    h+='<nav class="chips" style="margin:0 0 2px;padding:0">'+cats.filter(([c])=>c==='all'||present.has(c)).map(([c,l])=>
+       '<button class="chip'+(ordFilter===c?' active':'')+'" onclick="ordFilter=\''+c+'\';renderOrdersBody()">'+l+'</button>').join('')+'</nav>';
+    if(ordFilter==='protein')h+='<p class="ord-stamp stale">Freezer counts run on Tim’s updates — confirm by text until his tab is flowing weekly.</p>';
+  }
   /* free-text lines */
   ordLines.forEach((l,idx)=>{
     if(!l.free)return;
     h+='<div class="ord-item sel ord-free"><input type="text" placeholder="Item (anything not on the list)" value="'+(l.display||'').replace(/"/g,'&quot;')+'" oninput="ordFreeEdit('+idx+',\'display\',this.value)">'+
-       '<div class="ord-qty"><button onclick="ordLines['+idx+'].qty=Math.max(0.5,(parseFloat(ordLines['+idx+'].qty)||1)-1);renderOrdersBody()">−</button>'+
-       '<input type="number" step="0.5" value="'+l.qty+'" onchange="ordLines['+idx+'].qty=Math.max(0.5,parseFloat(this.value)||1)">'+
-       '<button onclick="ordLines['+idx+'].qty=(parseFloat(ordLines['+idx+'].qty)||1)+1;renderOrdersBody()">+</button>'+
+       '<div class="ord-qty"><button onclick="ordFreeQty('+idx+',-1)">−</button>'+
+       '<input type="number" step="0.5" data-oqf="'+idx+'" value="'+l.qty+'" onchange="ordLines['+idx+'].qty=Math.max(0.5,parseFloat(this.value)||1)">'+
+       '<button onclick="ordFreeQty('+idx+',1)">+</button>'+
        '<select onchange="ordLines['+idx+'].unit=this.value">'+l.units.map(u=>'<option'+(u===l.unit?' selected':'')+'>'+u+'</option>').join('')+'</select>'+
        '<button class="oi-remove" onclick="ordRemove('+idx+')">remove</button></div></div>';
   });
@@ -2293,7 +2326,7 @@ function renderOrdersBody(){
   if(ordAvail){
     const groups=[['At peak',i=>i.score===2,''],['Available',i=>i.score===1,''],['Coming soon',i=>i.coming,' muted']];
     groups.forEach(([label,test,cls])=>{
-      const items=ordAvail.items.filter(test);
+      const items=ordAvail.items.filter(test).filter(i=>ordFilter==='all'||i.category===ordFilter);
       if(!items.length)return;
       h+='<div class="ord-group'+cls+'">'+label+'</div>';
       items.forEach(it=>{
@@ -2304,9 +2337,9 @@ function renderOrdersBody(){
         if(sel){
           h+='<div class="ord-qty" onclick="event.stopPropagation()">'+
              '<button onclick="ordQty(\''+it.name.replace(/'/g,"\\'")+'\',-1)">−</button>'+
-             '<input type="number" step="0.5" value="'+sel.qty+'" onchange="ordQtyInput(\''+it.name.replace(/'/g,"\\'")+'\',this.value)">'+
+             '<input type="number" step="0.5" data-oq="'+it.name.replace(/"/g,'&quot;')+'" value="'+sel.qty+'" onchange="ordQtyInput(\''+it.name.replace(/'/g,"\\'")+'\',this.value)">'+
              '<button onclick="ordQty(\''+it.name.replace(/'/g,"\\'")+'\',1)">+</button>'+
-             '<span class="ord-unit" onclick="ordCycleUnit(\''+it.name.replace(/'/g,"\\'")+'\')">'+sel.unit+' ▾</span>'+
+             '<span class="ord-unit" data-ou="'+it.name.replace(/"/g,'&quot;')+'" onclick="ordCycleUnit(\''+it.name.replace(/'/g,"\\'")+'\')">'+sel.unit+' ▾</span>'+
              '<button class="oi-remove" onclick="ordToggle(\''+it.name.replace(/'/g,"\\'")+'\',\''+it.display.replace(/'/g,"\\'")+'\',null)">remove</button></div>';
         }
         h+='</div>';
@@ -2326,6 +2359,7 @@ function renderOrdersBody(){
     h+='</div>';
   }
   $('ordBody').innerHTML=h;
+  window.scrollTo(0,_sy);
 }
 
 function renderCrew(){
