@@ -296,44 +296,52 @@
      "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
     },
     {
-     "name": "Mafaldine",
-     "desc": "swan house lamb sausage, morel mushroom, ramp, lemon, butter, parmigiano reggiano",
+     "name": "Paccheri",
+     "desc": "Italian pork sausage, morel mushroom, sea bean pesto, pistachio, lemon, parmigiano reggiano",
      "price": "31",
      "raw": false,
-     "pron": "mah-fal-DEE-neh",
-     "story": "Mafaldine — a wide, ruffled ribbon pasta named after Princess Mafalda of Savoy — tossed with house-made lamb sausage, morel mushrooms, ramps, lemon, butter, and Parmigiano. The sausage is ground from Swan House Farm lamb and seasoned Italian-sausage style. Morels and ramps are both spring-only wild ingredients, so this dish has a short window. The ruffled edges hold onto the buttery, mushroom-rich sauce.",
+     "pron": "pah-KEH-ree",
+     "story": "Paccheri — smooth tube pasta from Campania, like a snipped rigatoni — tossed with house-made Italian pork sausage, morel mushrooms, and a sea bean pesto made with toasted pistachios and Parmigiano. Finished with lemon and garnished with raw sea beans for a bright, saline crunch. The sea bean pesto is blended from blanched sea beans, toasted pistachios, Parmigiano, olive oil, and a touch of chili — the same recipe from the Swan House Farm dinners.",
      "ingredients": [
       {
-       "term": "Swan House lamb sausage",
-       "pronunciation": null,
-       "note": "Made in-house from ground lamb raised at Swan House Farm — the family farm in the Skagit Valley — seasoned in the classic Italian sausage style. The same lamb that runs through the farm dinner menus."
+       "term": "Paccheri",
+       "pronunciation": "pah-KEH-ree",
+       "note": "Smooth tube pasta from Campania. Ours run smaller than the classic cut — closer to a shortened rigatoni — and collapse slightly when cooked to trap the sauce inside."
       },
       {
-       "term": "Mafaldine",
-       "pronunciation": "mah-fal-DEE-neh",
-       "note": "Wide, flat pasta with ruffled edges on both sides, from Naples. Named in honor of Princess Mafalda of Savoy — also called reginette (little queens). The wavy edges grip sauce exceptionally well."
+       "term": "Italian pork sausage",
+       "pronunciation": null,
+       "note": "House-made pork sausage seasoned in the classic Italian style — fennel seed, garlic, red pepper flake, black pepper. Ground and formed fresh."
       },
       {
        "term": "Morel mushrooms",
        "pronunciation": "moh-REL",
-       "note": "Wild foraged mushrooms with a honeycomb-shaped cap and an earthy, nutty, almost meaty flavor. Available only in spring — peak season in the Pacific Northwest is April through June. Sourced through Foraged & Found Edibles."
+       "note": "Wild foraged mushrooms with a honeycomb-shaped cap and an earthy, nutty, almost meaty flavor. Available only in spring — peak season in the Pacific Northwest is April through June."
       },
       {
-       "term": "Ramps",
+       "term": "Sea bean pesto",
        "pronunciation": null,
-       "note": "Wild leeks foraged in early spring; the whole plant is edible — leaves, stems, and bulb. Flavor sits between garlic and green onion, with a grassy brightness. One of the most sought-after spring wild ingredients."
+       "note": "Blended from blanched sea beans (salicornia), toasted pistachios, Parmigiano, olive oil, chili flake, and a touch of ascorbic acid to hold the color. The same recipe used at Swan House Farm dinners. Bright, saline, nutty."
+      },
+      {
+       "term": "Sea beans (salicornia)",
+       "pronunciation": "sal-ih-KOR-nee-ah",
+       "note": "A crisp, salty succulent that grows in coastal salt marshes and tidal flats. Also called samphire or pickleweed. Used raw as a garnish here for a bright, briny crunch."
       }
      ],
      "allergens": [
       "gluten",
       "dairy",
+      "nuts",
       "allium"
      ],
      "canModify": [
+      "nuts",
       "dairy",
       "allium"
      ],
-     "allergenNote": "No egg in this pasta. Dairy: butter and Parmigiano come off — the sauce leans on olive oil and pasta water, lighter but it holds. Allium: the ramps come off on request. Vegetarian: lamb sausage off — offer extra morels, or whatever seasonal vegetable the menu is carrying."
+     "allergenNote": "Tree nuts: pistachios in the pesto. Nut free without pesto — the dish still works with just the sausage, morels, and lemon. Dairy: Parmigiano in the pesto and finish. Allium: garlic in the sausage. Vegetarian: sausage off, extra mushrooms.",
+     "added": "2026-06-10"
     },
     {
      "name": "Tartufo Nero",
@@ -370,17 +378,17 @@
      "allergenNote": "Egg is in the pasta dough — no way around it. Dairy can technically come off (no butter sauce, no cheese) but it is not recommended; the dish is butter and truffle. Chris is confirming there's no allium — check before promising."
     },
     {
-     "name": "Paccheri alla Carbonara",
+     "name": "Mafaldine alla Carbonara",
      "desc": "guanciale, black pepper, swan house farm egg yolk, pecorino romano",
      "price": "28",
      "raw": true,
-     "pron": "pah-KEH-ree",
-     "story": "The Roman classic on paccheri — short pasta tubes, like a snipped rigatoni, that catch the sauce inside. Rendered guanciale, lots of cracked black pepper, Pecorino Romano, and a Swan House Farm egg yolk emulsified into a glossy, peppery sauce. No cream — the silk comes from the egg and cheese. Served with a raw yolk, hence the asterisk.",
+     "pron": "mah-fal-DEE-neh",
+     "story": "The Roman classic on mafaldine — wide, ruffled ribbon pasta named after Princess Mafalda of Savoy — whose wavy edges catch and hold the glossy sauce. Rendered guanciale, lots of cracked black pepper, Pecorino Romano, and a Swan House Farm egg yolk emulsified into a peppery, silky coating. No cream — the silk comes from the egg and cheese. Served with a raw yolk, hence the asterisk.",
      "ingredients": [
       {
-       "term": "Paccheri",
-       "pronunciation": "pah-KEH-ree",
-       "note": "smooth tube pasta from Campania. Ours run smaller than the classic cut — closer to a shortened rigatoni — and collapse slightly when cooked to trap the sauce inside."
+       "term": "Mafaldine",
+       "pronunciation": "mah-fal-DEE-neh",
+       "note": "Wide, flat pasta with ruffled edges on both sides, from Naples. Named in honor of Princess Mafalda of Savoy — also called reginette (little queens). The wavy edges grip the carbonara sauce exceptionally well."
       },
       {
        "term": "Carbonara",
@@ -407,7 +415,8 @@
       "dairy",
       "egg"
      ],
-     "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen subs in whatever vegetable is running seasonally on the menu. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish."
+     "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen subs in whatever vegetable is running seasonally on the menu. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish.",
+     "added": "2026-06-10"
     },
     {
      "name": "Risotto Funghi",
@@ -607,5 +616,5 @@
    "allergenNote": "Flavors rotate nightly — confirm eggs or nuts with the kitchen before promising anything."
   }
  ],
- "allergenStatus": "draft"
+ "allergenStatus": "confirmed"
 }
