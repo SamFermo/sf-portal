@@ -301,6 +301,31 @@ nav.chips::-webkit-scrollbar{display:none;}
 .live-replaces{font-size:11px; color:var(--gold); margin-top:3px; font-weight:600; letter-spacing:.02em;}
 .card.replaced{opacity:.35; pointer-events:none; position:relative;}
 .replaced-banner{background:rgba(230,200,120,.12); border:1px dashed var(--gold); border-radius:10px; padding:8px 12px; margin-bottom:8px; font-size:12px; color:var(--gold); font-weight:600; text-align:center;}
+/* menu-edit overlay (menu-edits) */
+.edit-btn{display:inline-block; background:none; border:none; cursor:pointer; color:var(--gold); font-size:12px; padding:2px 6px; margin-left:6px; vertical-align:2px; opacity:.7; transition:opacity .15s;}
+.edit-btn:hover{opacity:1;}
+.edited-chip{display:inline-block; font-size:8px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); background:rgba(230,200,120,.12); border:1px solid rgba(230,200,120,.35); border-radius:999px; padding:1px 6px; margin-left:5px; vertical-align:2px;}
+#editModal .modal-card{max-height:88dvh;}
+#editBody{overflow-y:auto; -webkit-overflow-scrolling:touch; min-height:0; flex:1;}
+#editModal textarea{flex:none; min-height:48px; max-height:120px; font-family:inherit; font-size:13.5px; resize:vertical;}
+.em-field{margin-bottom:9px;}
+.em-field label{display:block; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--card-mute); margin-bottom:3px;}
+.em-field input,.em-field textarea,.em-field select{width:100%; box-sizing:border-box; background:#fff; border:1px solid #d8cfc0; border-radius:8px; padding:8px 9px; font-size:13.5px; font-family:inherit; color:#2a2419;}
+.em-row{display:flex; gap:8px;}
+.em-row .em-field{flex:1;}
+.em-alg-grid{display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;}
+.em-alg-item{display:flex; align-items:center; gap:4px; background:rgba(90,58,34,.06); border:1px solid rgba(90,58,34,.12); border-radius:8px; padding:4px 8px; font-size:12px; color:var(--card-ink); cursor:pointer; user-select:none; transition:all .15s;}
+.em-alg-item.on{background:rgba(176,74,26,.12); border-color:var(--rust); color:var(--rust); font-weight:600;}
+.em-alg-item.mod{background:rgba(74,106,58,.12); border-color:#4a6a3a; color:#4a6a3a; font-weight:600;}
+.em-toggle{display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px; color:var(--card-ink);}
+.em-toggle input{width:18px; height:18px; accent-color:var(--gold);}
+.em-actions{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+.em-actions button{flex:1; min-width:100px; border:none; border-radius:9px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;}
+.em-save{background:#4a6a3a; color:#fff;}
+.em-save:disabled{opacity:.5; cursor:not-allowed;}
+.em-revert{background:rgba(176,74,26,.12); color:var(--rust);}
+.em-cancel{background:#e8e0d2; color:#5a5040;}
+.em-status{font-size:11px; color:var(--card-mute); margin-top:8px; font-style:italic;}
 /* front desk */
 .fd-cat{font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); margin:18px 0 8px; padding-left:2px;}
 .fd-card{background:var(--card-bg); border-radius:14px; padding:14px 16px; margin-bottom:10px; position:relative;}
@@ -776,6 +801,14 @@ body.locked{overflow:hidden;}
   </div>
 </div>
 
+<div class="modal" id="editModal">
+  <div class="modal-card">
+    <h3 id="editHead">Edit Dish</h3>
+    <p>Change what you need. Remy will regenerate the story and ingredients glossary on save.</p>
+    <div id="editBody"></div>
+  </div>
+</div>
+
 <div class="modal" id="promptModal">
   <div class="modal-card">
     <h3>Menu Corrections</h3>
@@ -790,7 +823,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781127746';   // stamped by build-data.py at every deploy
+const BUILD='1781128985';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -909,6 +942,7 @@ function refreshAuthUI(){
   renderBoard();
   renderSchedule();   // re-render so the signed-in user's row highlight follows the login
   startFrontDeskSync();
+  startMenuEditSync();
 }
 function renderAccountBar(){
   if(!$('idBar'))return;
@@ -1030,13 +1064,17 @@ function recentBlockHTML(items,type){
   return h+'</div>';
 }
 
-function dishCardHTML(it){
+function dishCardHTML(baseIt){
+  const it=getEditedDish(baseIt);
   const rich = it.story || (it.ingredients&&it.ingredients.length);
-  const rpl=replacedByLive(it.name);
+  const origName=it._originalName||it.name;
+  const rpl=replacedByLive(origName);
   if(rpl)return `<div class="card replaced"><div class="card-head"><div class="row-between"><span class="dish-name serif">${esc(it.name)}</span><span class="dish-price serif">${esc(it.price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(rpl)}</div></div></div>`;
+  const editBtn=isMgr()?`<button class="edit-btn" onclick="event.stopPropagation();openEditModal('${esc(origName).replace(/'/g,"\\'")}')">&#9998;</button>`:'';
+  const editedChip=it._edited?'<span class="edited-chip">edited</span>':'';
   let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
-      <span class="dish-name serif">${isNew(it)?newBadge():''}${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}</span>
+      <span class="dish-name serif">${isNew(it)?newBadge():''}${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}${editedChip}${editBtn}</span>
       <span class="dish-price serif">${esc(it.price)}</span></div>
       <div class="dish-desc serif">${esc(it.desc)}</div>`;
   h+=allergenChips(it);
@@ -1051,9 +1089,10 @@ function dishCardHTML(it){
       h+=`<div class="itk-label">Ingredients to know</div>`;
       it.ingredients.forEach(g=>h+=`<div class="itk serif"><b>${esc(g.term)}</b>${g.pronunciation?` <span class="pron">${esc(g.pronunciation)}</span>`:''} — ${esc(g.note)}</div>`);
     }
+    if(it._edited)h+=`<div style="font-size:10px;color:var(--ink-mute);margin-top:8px;">Edited by ${esc(MEDITS[it._editId]?.editedBy||'manager')}</div>`;
     h+=`</div>`;
   }
-  h+=noteBox('food',it.name);
+  h+=noteBox('food',origName);
   return h+`</div>`;
 }
 function allergenLegendHTML(){
@@ -1685,8 +1724,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -2177,6 +2216,124 @@ function rmLive(id){
   if(fbReady&&fbDb){ fbDb.collection('menu-live').doc(id).delete().catch(function(){mliveLsSet();}); } else mliveLsSet();
 }
 
+/* MENU EDITS — Firestore-backed edit overlays on base data.js dishes.
+   Manager makes corrections → Remy polishes → saved to menu-edits collection.
+   Render code merges overlays over base data before building cards. */
+const EDIT_URL='https://remy-outreach.sam-d1f.workers.dev/freshtalk-edit';
+const ALL_ALLERGENS=['dairy','gluten','egg','fish','nuts','shellfish','sesame','soy','peanut','allium'];
+let MEDITS={}, meditsUnsub=null;
+function meditsLsGet(){try{return JSON.parse(localStorage.getItem('sf-medits')||'{}');}catch(e){return {};}}
+function meditsLsSet(){try{localStorage.setItem('sf-medits',JSON.stringify(MEDITS));}catch(e){}}
+function startMenuEditSync(){
+  if(fbReady&&fbDb){
+    if(meditsUnsub)meditsUnsub();
+    meditsUnsub=fbDb.collection('menu-edits').onSnapshot(function(snap){
+      MEDITS={};snap.docs.forEach(function(d){MEDITS[d.id]=d.data();});renderFresh();
+    },function(){ MEDITS=meditsLsGet();renderFresh(); });
+  }else{ MEDITS=meditsLsGet(); }
+}
+function editDocId(name){return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-+$/,'');}
+function getEditedDish(it){
+  const id=editDocId(it.name);
+  const ed=MEDITS[id];
+  if(!ed)return it;
+  const merged=Object.assign({},it);
+  ['name','desc','price','pron','story','allergens','canModify','allergenNote','raw'].forEach(function(k){
+    if(ed[k]!==undefined&&ed[k]!==null)merged[k]=ed[k];
+  });
+  if(ed.ingredients&&ed.ingredients.length)merged.ingredients=ed.ingredients;
+  merged._edited=true;merged._editId=id;merged._originalName=it.name;
+  return merged;
+}
+function dishHasEdit(name){return !!MEDITS[editDocId(name)];}
+let editTarget=null;
+function openEditModal(origName){
+  if(!isMgr())return;
+  let dish=null, section='';
+  SF.menu.food.forEach(function(sec){sec.items.forEach(function(it){
+    if(it.name===origName){dish=it;section=sec.section;}
+  });});
+  if(!dish)SF.menu.desserts.forEach(function(it){if(it.name===origName){dish=it;section='Dessert';}});
+  if(!dish)return;
+  const ed=getEditedDish(dish);
+  editTarget={originalName:origName,section:section,isDessert:section==='Dessert'};
+  $('editHead').textContent='Edit: '+ed.name;
+  const algChecks=ALL_ALLERGENS.map(function(a){
+    const on=(ed.allergens||[]).indexOf(a)>=0;
+    return '<div class="em-alg-item'+(on?' on':'')+'" data-alg="'+a+'" onclick="emToggleAlg(this)">'+
+      '<span>'+(ALG[a]||a)+'</span> <span style="font-size:10px">'+a+'</span></div>';
+  }).join('');
+  const modChecks=ALL_ALLERGENS.map(function(a){
+    const on=(ed.canModify||[]).indexOf(a)>=0;
+    return '<div class="em-alg-item'+(on?' mod':'')+'" data-mod="'+a+'" onclick="emToggleMod(this)">'+
+      '<span>'+(ALG[a]||a)+'</span></div>';
+  }).join('');
+  $('editBody').innerHTML=
+    '<div class="em-row">'+
+      '<div class="em-field" style="flex:2"><label>Name</label><input id="em-name" value="'+esc(ed.name)+'"></div>'+
+      '<div class="em-field" style="flex:0 0 80px"><label>Price</label><input id="em-price" value="'+esc(ed.price||'')+'"></div>'+
+    '</div>'+
+    '<div class="em-field"><label>Description (ingredients line)</label><textarea id="em-desc" style="min-height:48px">'+esc(ed.desc||'')+'</textarea></div>'+
+    '<label class="em-toggle" style="margin-bottom:10px"><input type="checkbox" id="em-raw" '+(ed.raw?'checked':'')+'>Contains raw items (asterisk)</label>'+
+    '<div class="em-field"><label>Allergens (tap to toggle)</label><div class="em-alg-grid" id="em-alg">'+algChecks+'</div></div>'+
+    '<div class="em-field"><label>Kitchen can modify (tap to toggle)</label><div class="em-alg-grid" id="em-mod">'+modChecks+'</div></div>'+
+    '<div class="em-field"><label>Allergen note</label><textarea id="em-alnote">'+esc(ed.allergenNote||'')+'</textarea></div>'+
+    '<div class="em-actions">'+
+      '<button class="em-save" id="em-save-btn" onclick="saveEdit()">Save &amp; Polish</button>'+
+      (dishHasEdit(origName)?'<button class="em-revert" onclick="revertEdit()">Revert</button>':'')+
+      '<button class="em-cancel" onclick="$(\'editModal\').classList.remove(\'open\')">Cancel</button>'+
+    '</div>'+
+    '<div class="em-status" id="em-status">Remy will regenerate the story, pronunciation, and ingredient glossary on save.</div>';
+  $('editModal').classList.add('open');
+}
+function emToggleAlg(el){el.classList.toggle('on');}
+function emToggleMod(el){el.classList.toggle('mod');}
+function emGetAllergens(){
+  var out=[];$('em-alg').querySelectorAll('.on').forEach(function(el){out.push(el.getAttribute('data-alg'));});return out;
+}
+function emGetModify(){
+  var out=[];$('em-mod').querySelectorAll('.mod').forEach(function(el){out.push(el.getAttribute('data-mod'));});return out;
+}
+async function saveEdit(){
+  if(!isMgr()||!editTarget)return;
+  var name=($('em-name').value||'').trim();
+  var desc=($('em-desc').value||'').trim();
+  if(!name||!desc){$('em-status').textContent='Name and description are required.';return;}
+  var btn=$('em-save-btn');btn.disabled=true;btn.textContent='Polishing…';
+  $('em-status').textContent='Asking Remy to polish the story and ingredients…';
+  var allergens=emGetAllergens(), canModify=emGetModify();
+  var payload={name:name,desc:desc,price:($('em-price').value||'').trim(),
+    allergens:allergens,allergenNote:($('em-alnote').value||'').trim(),
+    raw:$('em-raw').checked,section:editTarget.section};
+  var pron='',story='',ingredients=[];
+  try{
+    var r=await fetch(EDIT_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
+    if(!r.ok)throw new Error('worker '+r.status);
+    var d=await r.json();
+    if(d.dish){pron=d.dish.pron||'';story=d.dish.story||'';ingredients=d.dish.ingredients||[];}
+  }catch(e){
+    $('em-status').textContent='Remy polish failed ('+e.message+') — saving with your raw input.';
+  }
+  var id=editDocId(editTarget.originalName);
+  var rec={originalName:editTarget.originalName,name:name,desc:desc,
+    price:payload.price,pron:pron,story:story,ingredients:ingredients,
+    allergens:allergens,canModify:canModify,allergenNote:payload.allergenNote,
+    raw:payload.raw,section:editTarget.section,
+    editedBy:currentUserName()||'manager',editedAt:Date.now()};
+  MEDITS[id]=rec;renderFresh();
+  if(fbReady&&fbDb){fbDb.collection('menu-edits').doc(id).set(rec).catch(function(){meditsLsSet();});}else{meditsLsSet();}
+  btn.disabled=false;btn.textContent='Save & Polish';
+  $('editModal').classList.remove('open');
+}
+function revertEdit(){
+  if(!isMgr()||!editTarget)return;
+  if(!confirm('Revert to the base data? The edit will be removed.'))return;
+  var id=editDocId(editTarget.originalName);
+  delete MEDITS[id];renderFresh();
+  if(fbReady&&fbDb){fbDb.collection('menu-edits').doc(id).delete().catch(function(){meditsLsSet();});}else{meditsLsSet();}
+  $('editModal').classList.remove('open');
+}
+
 /* CREW BOARD — staff message board, Firestore `crew` collection.
    Tonight posts are day-keyed and stop showing after the 3am reset rolls the date.
    Pinboard posts show for 30 days, longer if a manager pins them. Author or admin deletes. */
@@ -2439,7 +2596,7 @@ function pinCrew(id){
 /* INIT */
 function init(){
   initFirebase();
-  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); }
+  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); }
   document.body.classList.add('locked'); openLogin();   // start gated; unlocks once the session checks out
   setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='failed'; onProfiles(); } },9000);
   $('appDate').textContent=fmtShort(todayISO());
