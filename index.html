@@ -790,7 +790,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781074290';   // stamped by build-data.py at every deploy
+const BUILD='1781075372';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2209,8 +2209,29 @@ function crewPosts(){
    Plan: Codename: Neelix/docs/farm-order-loop-build-plan.md */
 const ORD_AVAIL_URL='https://samfermo.github.io/seasonal-tracker/availability-swan-house.json';
 const ORD_SMS_TO=['2065513328','2062509433'];   // Tim, Kelly (confirmed by Sam 2026-06-10)
-window.REMY_ORDERS_CONFIG=null;        // remy-orders Firebase web config goes here (Phase 1 wiring)
+window.REMY_ORDERS_CONFIG={apiKey:"AIzaSyCYx8NdTrmmH73J8DYsd94LvXKyOOiFyeU",authDomain:"remy-orders.firebaseapp.com",projectId:"remy-orders",storageBucket:"remy-orders.firebasestorage.app",messagingSenderId:"8525936717",appId:"1:8525936717:web:99fa76a1171b6f53cb4404"};
 let ordAvail=null, ordAvailAt=0, ordLines=[], ordDate='', ordNote='', ordFilter='all';
+/* remy-orders is a SEPARATE Firebase project from sf-staff-portal — secondary
+   compat app + its own anonymous sign-in. Live snapshot merges Kelly's acks/
+   short-flags into the recent-orders list so Chris sees the farm's response. */
+let remyDb=null, remyReady=false, remyOrders=[], remyUnsub=null;
+function remyInit(){
+  if(remyReady||!window.firebase||!window.REMY_ORDERS_CONFIG)return;
+  try{
+    const app=(firebase.apps||[]).find(a=>a.name==='remy')||firebase.initializeApp(window.REMY_ORDERS_CONFIG,'remy');
+    remyDb=app.firestore();
+    app.auth().onAuthStateChanged(function(u){ if(u){ remyReady=true; remyStartSync(); } });
+    app.auth().signInAnonymously().catch(function(){ remyReady=false; });
+  }catch(e){ remyReady=false; }
+}
+function remyStartSync(){
+  if(!remyDb||remyUnsub)return;
+  remyUnsub=remyDb.collection('orders').orderBy('placed_at','desc').limit(25)
+    .onSnapshot(function(snap){
+      remyOrders=snap.docs.map(d=>d.data());
+      if(document.getElementById('orders')&&document.getElementById('orders').classList.contains('active'))renderOrdersBody();
+    }, function(){ /* permission/transient — recent list falls back to local */ });
+}
 
 function ordStaleDays(d){if(!d)return null;return Math.round((Date.now()-new Date(d+'T12:00:00').getTime())/86400000);}
 function ordFetchAvail(){
@@ -2259,18 +2280,18 @@ function ordPlace(){
   const lines=ordLines.filter(l=>l.display);
   if(!lines.length)return;
   const now=new Date();
-  const order={order_id:now.toISOString().slice(0,10)+'-'+now.getTime().toString().slice(-5),
+  const order={order_id:now.toISOString().slice(0,10)+'-'+now.getTime().toString(36)+'-'+Math.random().toString(36).slice(2,6),
     status:'placed',placed_by:currentUserName()||'unknown',placed_at:now.toISOString(),
     requested_date:ordDate||null,confirmed_date:null,
     lines:lines.map(l=>({item:l.display,seasonal_ref:l.free?null:{name:l.name,vendor:'Swan House Farms'},
       qty:l.qty,unit:l.unit,free_text:!!l.free,farm_status:null,farm_note:'',packed:false})),
     order_note:ordNote.trim(),channel:'sms-v0',synced:false};
   const all=ordGetOrders();all.unshift(order);ordSaveOrders(all);
-  /* Firestore write-through once remy-orders exists (Phase 1 wiring) */
-  if(window.REMY_ORDERS_CONFIG&&window.firebase){
-    try{const app=firebase.apps.find(a=>a.name==='remy')||firebase.initializeApp(window.REMY_ORDERS_CONFIG,'remy');
-      app.firestore().collection('orders').doc(order.order_id).set(order)
-        .then(()=>{order.synced=true;ordSaveOrders(all);}).catch(()=>{});}catch(e){}
+  /* Write-through to remy-orders Firestore — system of record + Kelly's side reads it live */
+  if(remyReady&&remyDb){
+    remyDb.collection('orders').doc(order.order_id).set(order)
+      .then(()=>{order.synced=true;ordSaveOrders(ordGetOrders().map(o=>o.order_id===order.order_id?order:o));})
+      .catch(()=>{});
   }
   const body=encodeURIComponent(ordText());
   const to=ORD_SMS_TO.filter(Boolean).join(',');
@@ -2287,6 +2308,7 @@ function ordReload(id){
 }
 function renderOrders(){
   if(!isMgr()){$('ordBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
+  remyInit();
   $('ordBody').innerHTML='<p class="board-empty">Loading Kelly’s list…</p>';
   ordFetchAvail().then(renderOrdersBody).catch(err=>{
     ordAvail=null;renderOrdersBody();
@@ -2347,13 +2369,22 @@ function renderOrdersBody(){
     });
   }
   h+='<div class="ord-note" style="margin-top:12px"><textarea placeholder="Note to Kelly & Tim (optional)" oninput="ordNote=this.value">'+ordNote+'</textarea></div>';
-  const recent=ordGetOrders();
+  /* Recent orders: prefer the live Firestore feed (carries Kelly's acks), fall back to local. Merge by id. */
+  const localO=ordGetOrders(), byId={};
+  localO.forEach(o=>byId[o.order_id]=o);
+  remyOrders.forEach(o=>byId[o.order_id]=o);   // server wins — has farm-side updates
+  const recent=Object.values(byId).sort((a,b)=>(b.placed_at||'').localeCompare(a.placed_at||''));
   if(recent.length){
-    h+='<div class="ord-recent"><div class="ord-group">Recent orders</div>';
+    h+='<div class="ord-recent"><div class="ord-group">Recent orders'+(remyReady?'':' · offline')+'</div>';
     recent.slice(0,6).forEach(o=>{
       const d=new Date(o.placed_at).toLocaleDateString('en-US',{month:'numeric',day:'numeric'});
-      h+='<div class="ord-ro"><div class="ro-head"><span>'+d+' · '+(o.placed_by||'')+(o.requested_date?' · needed '+o.requested_date.slice(5).replace('-','/'):'')+'</span><span>'+(o.synced?'synced':'sent by text')+'</span></div>'+
-         '<div class="ro-lines">'+o.lines.map(l=>l.qty+' '+l.unit+' '+l.item).join(' · ')+'</div>'+
+      const st=(o.status||'placed');
+      const stTxt=st==='acked'?'Kelly’s got it':st==='delivered'?'delivered':st==='cancelled'?'cancelled':(o.synced?'placed':'sent by text');
+      const shorts=(o.lines||[]).filter(l=>l.farm_status==='short'||l.farm_status==='sub');
+      h+='<div class="ord-ro"><div class="ro-head"><span>'+d+' · '+(o.placed_by||'')+(o.requested_date?' · needed '+o.requested_date.slice(5).replace('-','/'):'')+'</span><span>'+stTxt+'</span></div>'+
+         '<div class="ro-lines">'+(o.lines||[]).map(l=>(l.farm_status==='short'||l.farm_status==='sub'?'⚠ ':'')+l.qty+' '+l.unit+' '+l.item).join(' · ')+'</div>'+
+         (shorts.length?'<div class="oi-note" style="color:#d39140;margin-top:4px">Farm flagged: '+shorts.map(l=>l.item+(l.farm_note?' ('+l.farm_note+')':'')).join(', ')+'</div>':'')+
+         (o.confirmed_date?'<div class="oi-note" style="margin-top:3px">Delivery confirmed '+o.confirmed_date.slice(5).replace('-','/')+'</div>':'')+
          '<button onclick="ordReload(\''+o.order_id+'\')">Load again</button></div>';
     });
     h+='</div>';
