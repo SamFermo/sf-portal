@@ -823,7 +823,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781202008';   // stamped by build-data.py at every deploy
+const BUILD='1781202422';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2484,6 +2484,26 @@ function renderOrdersBody(){
   h+='<div class="ord-cart"><span class="ord-count">'+(n?n+' item'+(n>1?'s':'')+' in this order':'Tap items to start an order')+'</span>'+
      '<input type="date" value="'+ordDate+'" min="'+todayISO()+'" onchange="ordDate=this.value" aria-label="Needed by">'+
      '<button class="ord-send" '+(n?'':'disabled')+' onclick="ordReview()">Review & send</button></div>';
+  /* Merge local + live Firestore orders once; server wins (carries Kelly's updates). */
+  const _byId={};
+  ordGetOrders().forEach(o=>_byId[o.order_id]=o);
+  remyOrders.forEach(o=>_byId[o.order_id]=o);
+  const ordAll=Object.values(_byId).sort((a,b)=>(b.placed_at||'').localeCompare(a.placed_at||''));
+  /* Active orders strip — placed/acked, right at the top so status is one glance */
+  const active=ordAll.filter(o=>['placed','acked'].includes(o.status||'placed'));
+  if(active.length){
+    h+='<div class="ord-group">Open orders</div>';
+    active.slice(0,4).forEach(o=>{
+      const d=new Date(o.placed_at).toLocaleDateString('en-US',{month:'numeric',day:'numeric'});
+      const st=(o.status||'placed');
+      const stTxt=st==='acked'?'✓ Kelly’s got it':(o.synced?'waiting on the farm':'sent by text');
+      const shorts=(o.lines||[]).filter(l=>l.farm_status==='short'||l.farm_status==='sub');
+      h+='<div class="ord-ro"><div class="ro-head"><span>'+d+' · '+(o.lines||[]).length+' items'+(o.requested_date?' · needed '+o.requested_date.slice(5).replace('-','/'):'')+'</span><span style="color:'+(st==='acked'?'var(--gold)':'var(--ink-soft)')+'">'+stTxt+'</span></div>'+
+         (shorts.length?'<div class="oi-note" style="color:#d39140;margin-top:3px">⚠ '+shorts.map(l=>l.item+(l.farm_note?': '+l.farm_note:' ('+l.farm_status+')')).join(' · ')+'</div>':'')+
+         (o.confirmed_date?'<div class="oi-note" style="margin-top:3px">Delivery confirmed '+o.confirmed_date.slice(5).replace('-','/')+'</div>':'')+
+         '</div>';
+    });
+  }
   if(ordAvail){
     const cats=[['all','All'],['green','Greens'],['produce','Produce'],['protein','Proteins'],['flower','Flowers'],['berry','Berries'],['mushroom','Mushrooms'],['sea','Sea']];
     const present=new Set(ordAvail.items.map(i=>i.category));
@@ -2526,11 +2546,8 @@ function renderOrdersBody(){
     });
   }
   h+='<div class="ord-note" style="margin-top:12px"><textarea placeholder="Note to Kelly & Tim (optional)" oninput="ordNote=this.value">'+ordNote+'</textarea></div>';
-  /* Recent orders: prefer the live Firestore feed (carries Kelly's acks), fall back to local. Merge by id. */
-  const localO=ordGetOrders(), byId={};
-  localO.forEach(o=>byId[o.order_id]=o);
-  remyOrders.forEach(o=>byId[o.order_id]=o);   // server wins — has farm-side updates
-  const recent=Object.values(byId).sort((a,b)=>(b.placed_at||'').localeCompare(a.placed_at||''));
+  /* Full history (incl. delivered/cancelled) — merged list computed above */
+  const recent=ordAll;
   if(recent.length){
     h+='<div class="ord-recent"><div class="ord-group">Recent orders'+(remyReady?'':' · offline')+'</div>';
     recent.slice(0,6).forEach(o=>{
