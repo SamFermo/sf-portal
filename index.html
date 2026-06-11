@@ -824,7 +824,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781203533';   // stamped by build-data.py at every deploy
+const BUILD='1781203792';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2429,7 +2429,7 @@ function ordText(){
 }
 function ordReview(){
   if(!ordLines.filter(l=>l.display).length)return;
-  $('ordRevTo').textContent='Text to: Tim & Kelly';
+  $('ordRevTo').textContent='Texts Tim & Kelly “Farm order '+(ordEditingId?'adjusted':'placed')+'” — the details below live here and on their portal.';
   $('ordRevText').textContent=ordText();
   $('ordReview').classList.add('open');
 }
@@ -2437,6 +2437,7 @@ function ordPlace(){
   $('ordReview').classList.remove('open');
   const lines=ordLines.filter(l=>l.display);
   if(!lines.length)return;
+  const wasEdit=!!ordEditingId;
   const now=new Date();
   /* Editing an existing order rewrites the SAME doc: status returns to 'placed'
      so Kelly re-acks the changed version; her packed/flag state resets with the
@@ -2456,7 +2457,8 @@ function ordPlace(){
       .then(()=>{order.synced=true;ordSaveOrders(ordGetOrders().map(o=>o.order_id===order.order_id?order:o));})
       .catch(()=>{});
   }
-  const body=encodeURIComponent(ordText());
+  /* The text is just the doorbell — the portal carries the details. */
+  const body=encodeURIComponent(wasEdit?'Farm order adjusted':'Farm order placed');
   const to=ORD_SMS_TO.filter(Boolean).join(',');
   window.location.href='sms:'+to+(to?'&':'?')+'body='+body;
   ordLines=[];ordNote='';ordDate='';
@@ -2490,7 +2492,7 @@ function ordCancel(id){
     if(ordEditingId===id)ordDiscardEdit();else renderOrdersBody();
     const d=new Date(o.placed_at).toLocaleDateString('en-US',{month:'numeric',day:'numeric'});
     const to=ORD_SMS_TO.filter(Boolean).join(',');
-    window.location.href='sms:'+to+(to?'&':'?')+'body='+encodeURIComponent('Cancelled the farm order from '+d+' ('+(o.lines||[]).length+' items) — disregard.');
+    window.location.href='sms:'+to+(to?'&':'?')+'body='+encodeURIComponent('Farm order cancelled');
   };
   /* Orders from before the Firestore wiring (sms-v0 era) exist only on this
      device — update() on a doc that was never created fails with not-found.
