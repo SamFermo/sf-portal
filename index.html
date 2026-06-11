@@ -636,7 +636,8 @@ body.locked{overflow:hidden;}
 .ord-recent .ord-ro{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.12); border-radius:12px; padding:10px 12px; margin-bottom:8px;}
 .ord-recent .ord-ro .ro-head{display:flex; justify-content:space-between; font-size:12px; color:var(--ink-mute); margin-bottom:4px;}
 .ord-recent .ord-ro .ro-lines{font-size:13px; color:var(--ink-soft); line-height:1.5;}
-.ord-recent .ord-ro button{background:none; border:1px solid rgba(230,200,120,.45); color:var(--gold); border-radius:999px; padding:4px 12px; font-size:11.5px; font-weight:700; cursor:pointer; margin-top:7px;}
+.ord-ro button{background:none; border:1px solid rgba(230,200,120,.45); color:var(--gold); border-radius:999px; padding:4px 12px; font-size:11.5px; font-weight:700; cursor:pointer;}
+.ord-recent .ord-ro button{margin-top:7px;}
 </style>
 </head>
 <body class="not-home">
@@ -823,7 +824,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781202782';   // stamped by build-data.py at every deploy
+const BUILD='1781203061';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2367,7 +2368,7 @@ function crewPosts(){
 const ORD_AVAIL_URL='https://samfermo.github.io/seasonal-tracker/availability-swan-house.json';
 const ORD_SMS_TO=['2065513328','2062509433'];   // Tim, Kelly (confirmed by Sam 2026-06-10)
 window.REMY_ORDERS_CONFIG={apiKey:"AIzaSyCYx8NdTrmmH73J8DYsd94LvXKyOOiFyeU",authDomain:"remy-orders.firebaseapp.com",projectId:"remy-orders",storageBucket:"remy-orders.firebasestorage.app",messagingSenderId:"8525936717",appId:"1:8525936717:web:99fa76a1171b6f53cb4404"};
-let ordAvail=null, ordAvailAt=0, ordLines=[], ordDate='', ordNote='', ordFilter='all';
+let ordAvail=null, ordAvailAt=0, ordLines=[], ordDate='', ordNote='', ordFilter='all', ordEditingId=null;
 /* remy-orders is a SEPARATE Firebase project from sf-staff-portal — secondary
    compat app + its own anonymous sign-in. Live snapshot merges Kelly's acks/
    short-flags into the recent-orders list so Chris sees the farm's response. */
@@ -2420,7 +2421,7 @@ function ordFreeEdit(idx,field,v){const l=ordLines[idx];if(l){if(field==='displa
 function ordRemove(idx){ordLines.splice(idx,1);renderOrdersBody();}
 function ordText(){
   const d=ordDate?new Date(ordDate+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'}):'';
-  let t='Farm order'+(d?' — needed by '+d:'')+':\n';
+  let t=(ordEditingId?'UPDATED farm order':'Farm order')+(d?' — needed by '+d:'')+':\n';
   t+=ordLines.filter(l=>l.display).map(l=>l.qty+(l.unit==='#'?'# ':' '+l.unit+' ')+l.display).join('\n');
   if(ordNote.trim())t+='\nNote: '+ordNote.trim();
   t+='\n— '+(currentUserName()||'San Fermo')+' via portal';
@@ -2437,13 +2438,18 @@ function ordPlace(){
   const lines=ordLines.filter(l=>l.display);
   if(!lines.length)return;
   const now=new Date();
-  const order={order_id:now.toISOString().slice(0,10)+'-'+now.getTime().toString(36)+'-'+Math.random().toString(36).slice(2,6),
+  /* Editing an existing order rewrites the SAME doc: status returns to 'placed'
+     so Kelly re-acks the changed version; her packed/flag state resets with the
+     fresh lines (the order changed — old picks don't apply). */
+  const order={order_id:ordEditingId||(now.toISOString().slice(0,10)+'-'+now.getTime().toString(36)+'-'+Math.random().toString(36).slice(2,6)),
     status:'placed',placed_by:currentUserName()||'unknown',placed_at:now.toISOString(),
     requested_date:ordDate||null,confirmed_date:null,
     lines:lines.map(l=>({item:l.display,seasonal_ref:l.free?null:{name:l.name,vendor:'Swan House Farms'},
       qty:l.qty,unit:l.unit,free_text:!!l.free,farm_status:null,farm_note:'',packed:false})),
     order_note:ordNote.trim(),channel:'sms-v0',synced:false};
-  const all=ordGetOrders();all.unshift(order);ordSaveOrders(all);
+  if(ordEditingId)order.edited_at=now.toISOString();
+  const all=ordGetOrders().filter(o=>o.order_id!==order.order_id);all.unshift(order);ordSaveOrders(all);
+  ordEditingId=null;
   /* Write-through to remy-orders Firestore — system of record + Kelly's side reads it live */
   if(remyReady&&remyDb){
     remyDb.collection('orders').doc(order.order_id).set(order)
@@ -2456,12 +2462,39 @@ function ordPlace(){
   ordLines=[];ordNote='';ordDate='';
   setTimeout(renderOrdersBody,400);
 }
-function ordReload(id){
-  const o=ordGetOrders().find(x=>x.order_id===id);if(!o)return;
-  ordLines=o.lines.map(l=>{const av=ordAvail&&ordAvail.items.find(i=>i.name===(l.seasonal_ref&&l.seasonal_ref.name));
+function ordFindOrder(id){
+  return remyOrders.find(x=>x.order_id===id)||ordGetOrders().find(x=>x.order_id===id);
+}
+function ordLoadLines(o){
+  ordLines=(o.lines||[]).map(l=>{const av=ordAvail&&ordAvail.items.find(i=>i.name===(l.seasonal_ref&&l.seasonal_ref.name));
     return {name:(l.seasonal_ref&&l.seasonal_ref.name)||l.item,display:l.item,qty:l.qty,unit:l.unit,
       units:(av&&av.units)||((ordAvail&&ordAvail.all_units)||['#']),free:l.free_text};});
+}
+function ordReload(id){
+  const o=ordFindOrder(id);if(!o)return;
+  ordEditingId=null;ordLoadLines(o);
   renderOrdersBody();window.scrollTo(0,0);
+}
+function ordEdit(id){
+  const o=ordFindOrder(id);if(!o)return;
+  ordEditingId=id;ordLoadLines(o);
+  ordDate=o.requested_date||'';ordNote=o.order_note||'';
+  renderOrdersBody();window.scrollTo(0,0);
+}
+function ordDiscardEdit(){ordEditingId=null;ordLines=[];ordDate='';ordNote='';renderOrdersBody();}
+function ordCancel(id){
+  const o=ordFindOrder(id);if(!o)return;
+  if(!confirm('Cancel this order? Kelly’s side will grey it out.'))return;
+  if(!(remyReady&&remyDb)){alert('Can’t reach the order server right now — text Kelly directly, then try again when back online.');return;}
+  remyDb.collection('orders').doc(id).update({status:'cancelled',cancelled_at:new Date().toISOString(),cancelled_by:currentUserName()||'unknown'})
+    .then(()=>{
+      const all=ordGetOrders().map(x=>x.order_id===id?Object.assign({},x,{status:'cancelled'}):x);ordSaveOrders(all);
+      if(ordEditingId===id)ordDiscardEdit();else renderOrdersBody();
+      const d=new Date(o.placed_at).toLocaleDateString('en-US',{month:'numeric',day:'numeric'});
+      const to=ORD_SMS_TO.filter(Boolean).join(',');
+      window.location.href='sms:'+to+(to?'&':'?')+'body='+encodeURIComponent('Cancelled the farm order from '+d+' ('+(o.lines||[]).length+' items) — disregard.');
+    })
+    .catch(()=>alert('Cancel didn’t save — try again.'));
 }
 function renderOrders(){
   if(!isMgr()){$('ordBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
@@ -2481,9 +2514,14 @@ function renderOrdersBody(){
   if(ordAvail)h+='<p class="ord-stamp'+(days!==null&&days>10?' stale':'')+'">Kelly’s list · updated '+(ordAvail.kelly_last_touch||'?')+(days!==null?' · '+days+'d ago':'')+(days!==null&&days>10?' · getting stale, confirm by text':'')+'</p>';
   else h+='<p class="ord-stamp stale">Availability feed unreachable — free-type your items below; the order still sends.</p>';
   const n=ordLines.filter(l=>l.display).length;
-  h+='<div class="ord-cart"><span class="ord-count">'+(n?n+' item'+(n>1?'s':'')+' in this order':'Tap items to start an order')+'</span>'+
+  if(ordEditingId){
+    const eo=ordFindOrder(ordEditingId);
+    const ed=eo?new Date(eo.placed_at).toLocaleDateString('en-US',{month:'numeric',day:'numeric'}):'';
+    h+='<div class="ord-stamp" style="color:var(--gold);font-weight:700">✎ Editing the order from '+ed+' — saving resends it to the farm as new. <a href="#" onclick="ordDiscardEdit();return false" style="color:var(--ink-mute)">discard</a></div>';
+  }
+  h+='<div class="ord-cart"'+(ordEditingId?' style="border-color:var(--gold)"':'')+'><span class="ord-count">'+(n?n+' item'+(n>1?'s':'')+(ordEditingId?' · editing':' in this order'):'Tap items to start an order')+'</span>'+
      '<input type="date" value="'+ordDate+'" min="'+todayISO()+'" onchange="ordDate=this.value" aria-label="Needed by">'+
-     '<button class="ord-send" '+(n?'':'disabled')+' onclick="ordReview()">Review & send</button></div>';
+     '<button class="ord-send" '+(n?'':'disabled')+' onclick="ordReview()">'+(ordEditingId?'Save & resend':'Review & send')+'</button></div>';
   /* Merge local + live Firestore orders once; server wins (carries Kelly's updates). */
   const _byId={};
   ordGetOrders().forEach(o=>_byId[o.order_id]=o);
@@ -2498,9 +2536,11 @@ function renderOrdersBody(){
       const st=(o.status||'placed');
       const stTxt=st==='acked'?'✓ Kelly’s got it':(o.synced?'waiting on the farm':'sent by text');
       const shorts=(o.lines||[]).filter(l=>l.farm_status==='short'||l.farm_status==='sub');
-      h+='<div class="ord-ro"><div class="ro-head"><span>'+d+' · '+(o.lines||[]).length+' items'+(o.requested_date?' · needed '+o.requested_date.slice(5).replace('-','/'):'')+'</span><span style="color:'+(st==='acked'?'var(--gold)':'var(--ink-soft)')+'">'+stTxt+'</span></div>'+
+      h+='<div class="ord-ro"><div class="ro-head"><span>'+d+' · '+(o.placed_by||'')+(o.requested_date?' · needed '+o.requested_date.slice(5).replace('-','/'):'')+'</span><span style="color:'+(st==='acked'?'var(--gold)':'var(--ink-soft)')+'">'+stTxt+'</span></div>'+
+         '<div class="ro-lines">'+(o.lines||[]).map(l=>(l.farm_status?'⚠ ':'')+l.qty+' '+l.unit+' '+l.item).join(' · ')+'</div>'+
          (shorts.length?'<div class="oi-note" style="color:#d39140;margin-top:3px">⚠ '+shorts.map(l=>l.item+(l.farm_note?': '+l.farm_note:' ('+l.farm_status+')')).join(' · ')+'</div>':'')+
          (o.confirmed_date?'<div class="oi-note" style="margin-top:3px">Delivery confirmed '+o.confirmed_date.slice(5).replace('-','/')+'</div>':'')+
+         '<div style="display:flex;gap:8px;margin-top:7px"><button onclick="ordEdit(\''+o.order_id+'\')">✎ Edit</button><button onclick="ordCancel(\''+o.order_id+'\')" style="border-color:#a85454;color:#c98080">Cancel order</button></div>'+
          '</div>';
     });
   }
