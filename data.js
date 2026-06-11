@@ -4018,7 +4018,7 @@ window.SF = {
        "",
        "Sup Server",
        "",
-       "",
+       "Sup Server",
        "Sup Server",
        "MD"
       ]
@@ -4035,198 +4035,6 @@ window.SF = {
      "2026-06-19",
      "2026-06-20",
      "2026-06-21"
-    ],
-    "label": "Mercato",
-    "coverage": [
-     "",
-     "",
-     "",
-     "",
-     "",
-     "",
-     ""
-    ],
-    "rows": [
-     {
-      "name": "Sam",
-      "shifts": [
-       "MD",
-       "Admin/MD 5-8",
-       "",
-       "",
-       "Expo",
-       "Expo",
-       "Expo"
-      ]
-     },
-     {
-      "name": "Adrian",
-      "shifts": [
-       "Sup Server",
-       "Sup Server",
-       "MD",
-       "MD",
-       "MD",
-       "",
-       ""
-      ]
-     },
-     {
-      "name": "Katie",
-      "shifts": [
-       "",
-       "",
-       "3:30 Bar",
-       "3:30 Bar",
-       "Sup Server",
-       "MD",
-       "Float/Admin"
-      ]
-     },
-     {
-      "name": "Abby",
-      "shifts": [
-       "",
-       "3:30 Bar",
-       "3:30 serve",
-       "Sup Server",
-       "3:30 serve",
-       "",
-       ""
-      ]
-     },
-     {
-      "name": "Allegra",
-      "shifts": [
-       "",
-       "3:30 serve",
-       "3:30 serve",
-       "",
-       "",
-       "3:30 serve",
-       "3:30 serve"
-      ]
-     },
-     {
-      "name": "Brittany",
-      "shifts": [
-       "",
-       "",
-       "",
-       "3:30 serve",
-       "3:30 Bar",
-       "3:30 Bar",
-       "3:30 Bar"
-      ]
-     },
-     {
-      "name": "Denise",
-      "shifts": [
-       "",
-       "",
-       "",
-       "3:30 serve",
-       "3:30 serve",
-       "3:30 serve",
-       ""
-      ]
-     },
-     {
-      "name": "Helen",
-      "shifts": [
-       "",
-       "",
-       "",
-       "3:30 support",
-       "3:30 support",
-       "3:30 support",
-       "3:30 support"
-      ]
-     },
-     {
-      "name": "Jackie",
-      "shifts": [
-       "3:30 serve",
-       "3:30 serve",
-       "",
-       "",
-       "",
-       "3:30 serve",
-       "R/O"
-      ]
-     },
-     {
-      "name": "Josie",
-      "shifts": [
-       "3:30 serve",
-       "R/O",
-       "R/O",
-       "R/O",
-       "R/O",
-       "R/O",
-       "R/O"
-      ]
-     },
-     {
-      "name": "Julian",
-      "shifts": [
-       "",
-       "",
-       "",
-       "",
-       "3:30 serve",
-       "3:30 serve",
-       "Sup Server"
-      ]
-     },
-     {
-      "name": "Mac",
-      "shifts": [
-       "3:30 serve",
-       "3:30 serve",
-       "",
-       "",
-       "",
-       "",
-       "3:30 serve"
-      ]
-     },
-     {
-      "name": "Sabba",
-      "shifts": [
-       "3:30 Bar",
-       "3:30 serve",
-       "3:30 serve",
-       "3:30 serve",
-       "3:30 serve",
-       "",
-       "3:30 serve"
-      ]
-     },
-     {
-      "name": "Sully",
-      "shifts": [
-       "3:30 serve",
-       "",
-       "Sup Server",
-       "",
-       "",
-       "Sup Server",
-       "MD"
-      ]
-     }
-    ]
-   },
-   {
-    "weekStart": "2026-06-22",
-    "dates": [
-     "2026-06-22",
-     "2026-06-23",
-     "2026-06-24",
-     "2026-06-25",
-     "2026-06-26",
-     "2026-06-27",
-     "2026-06-28"
     ],
     "label": "Mercato",
     "coverage": [
@@ -4405,6 +4213,198 @@ window.SF = {
        "",
        "R/O",
        "R/O"
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-06-22",
+    "dates": [
+     "2026-06-22",
+     "2026-06-23",
+     "2026-06-24",
+     "2026-06-25",
+     "2026-06-26",
+     "2026-06-27",
+     "2026-06-28"
+    ],
+    "label": "Mercato",
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "Admin/MD 5-8",
+       "",
+       "",
+       "Expo",
+       "Expo",
+       "Expo"
+      ]
+     },
+     {
+      "name": "Adrian",
+      "shifts": [
+       "Sup Server",
+       "Sup Server",
+       "MD",
+       "MD",
+       "MD",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Katie",
+      "shifts": [
+       "",
+       "",
+       "3:30 Bar",
+       "3:30 Bar",
+       "Sup Server",
+       "MD",
+       "Float/Admin"
+      ]
+     },
+     {
+      "name": "Abby",
+      "shifts": [
+       "",
+       "3:30 Bar",
+       "3:30 serve",
+       "Sup Server",
+       "3:30 serve",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Allegra",
+      "shifts": [
+       "",
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Brittany",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 Bar",
+       "3:30 Bar",
+       "3:30 Bar"
+      ]
+     },
+     {
+      "name": "Denise",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       ""
+      ]
+     },
+     {
+      "name": "Helen",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 support",
+       "3:30 support",
+       "3:30 support",
+       "3:30 support"
+      ]
+     },
+     {
+      "name": "Jackie",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "R/O"
+      ]
+     },
+     {
+      "name": "Josie",
+      "shifts": [
+       "3:30 serve",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O"
+      ]
+     },
+     {
+      "name": "Julian",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve",
+       "Sup Server"
+      ]
+     },
+     {
+      "name": "Mac",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Sabba",
+      "shifts": [
+       "3:30 Bar",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Sully",
+      "shifts": [
+       "3:30 serve",
+       "",
+       "Sup Server",
+       "",
+       "",
+       "Sup Server",
+       "MD"
       ]
      }
     ]
@@ -7309,7 +7309,7 @@ window.SF = {
      "",
      "",
      "",
-     "12-10",
+     "",
      ""
     ],
     "rows": [
@@ -7381,7 +7381,7 @@ window.SF = {
        "",
        "",
        "",
-       "",
+       "5-9",
        "1-close"
       ]
      },
@@ -7417,7 +7417,7 @@ window.SF = {
        "1-close",
        "1-close",
        "",
-       "",
+       "12-10",
        ""
       ]
      },
@@ -11567,5 +11567,5 @@ window.SF = {
    }
   }
  },
- "build": "1781128985"
+ "build": "1781202008"
 };
