@@ -824,7 +824,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781203061';   // stamped by build-data.py at every deploy
+const BUILD='1781203533';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2485,15 +2485,21 @@ function ordDiscardEdit(){ordEditingId=null;ordLines=[];ordDate='';ordNote='';re
 function ordCancel(id){
   const o=ordFindOrder(id);if(!o)return;
   if(!confirm('Cancel this order? Kelly’s side will grey it out.'))return;
+  const finish=()=>{
+    const all=ordGetOrders().map(x=>x.order_id===id?Object.assign({},x,{status:'cancelled'}):x);ordSaveOrders(all);
+    if(ordEditingId===id)ordDiscardEdit();else renderOrdersBody();
+    const d=new Date(o.placed_at).toLocaleDateString('en-US',{month:'numeric',day:'numeric'});
+    const to=ORD_SMS_TO.filter(Boolean).join(',');
+    window.location.href='sms:'+to+(to?'&':'?')+'body='+encodeURIComponent('Cancelled the farm order from '+d+' ('+(o.lines||[]).length+' items) — disregard.');
+  };
+  /* Orders from before the Firestore wiring (sms-v0 era) exist only on this
+     device — update() on a doc that was never created fails with not-found.
+     Those cancel locally; server-known orders cancel server-side. */
+  const serverHas=remyOrders.some(x=>x.order_id===id);
+  if(!serverHas){finish();return;}
   if(!(remyReady&&remyDb)){alert('Can’t reach the order server right now — text Kelly directly, then try again when back online.');return;}
   remyDb.collection('orders').doc(id).update({status:'cancelled',cancelled_at:new Date().toISOString(),cancelled_by:currentUserName()||'unknown'})
-    .then(()=>{
-      const all=ordGetOrders().map(x=>x.order_id===id?Object.assign({},x,{status:'cancelled'}):x);ordSaveOrders(all);
-      if(ordEditingId===id)ordDiscardEdit();else renderOrdersBody();
-      const d=new Date(o.placed_at).toLocaleDateString('en-US',{month:'numeric',day:'numeric'});
-      const to=ORD_SMS_TO.filter(Boolean).join(',');
-      window.location.href='sms:'+to+(to?'&':'?')+'body='+encodeURIComponent('Cancelled the farm order from '+d+' ('+(o.lines||[]).length+' items) — disregard.');
-    })
+    .then(finish)
     .catch(()=>alert('Cancel didn’t save — try again.'));
 }
 function renderOrders(){
