@@ -629,6 +629,10 @@ body.locked{overflow:hidden;}
 .ord-send:disabled{opacity:.4; cursor:default;}
 .ord-group{margin:18px 0 6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.18em; color:var(--gold);}
 .ord-group.muted{color:var(--ink-mute);}
+.ord-group.ntm{color:#e07a5a;}
+.ord-item.ntm{border-color:rgba(224,122,90,.65); background:rgba(192,86,58,.12);}
+.ord-item.ntm.sel{border-color:#e07a5a;}
+.ord-item .oi-move{color:#e07a5a; font-size:10.5px; font-weight:800; letter-spacing:.1em; margin-left:6px;}
 .ord-item{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.14); border-radius:12px; padding:10px 12px; margin-bottom:8px; cursor:pointer; transition:border-color .15s ease;}
 .ord-item.sel{border-color:var(--gold); background:rgba(230,200,120,.08);}
 .ord-item .oi-name{font-size:14.5px; font-weight:600; color:var(--ink);}
@@ -840,7 +844,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781283451';   // stamped by build-data.py at every deploy
+const BUILD='1781287359';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2651,15 +2655,15 @@ function ordRenderComposerPane(){
   });
   h+='<button class="ord-free-btn" onclick="ordAddFree()">+ Something not on the list</button>';
   if(ordAvail){
-    const groups=[['At peak',i=>i.score===2,''],['Available',i=>i.score===1,''],['Coming soon',i=>i.coming,' muted']];
+    const groups=[['▲ Need to move — farm surplus',i=>i.ntm,' ntm'],['At peak',i=>i.score===2&&!i.ntm,''],['Available',i=>i.score===1&&!i.ntm,''],['Coming soon',i=>i.coming&&!i.ntm,' muted']];
     groups.forEach(([label,test,cls])=>{
       const items=ordAvail.items.filter(test).filter(i=>ordFilter==='all'||i.category===ordFilter);
       if(!items.length)return;
       h+='<div class="ord-group'+cls+'">'+label+'</div>';
       items.forEach(it=>{
         const sel=ordLine(it.name);
-        h+='<div class="ord-item'+(sel?' sel':'')+'" onclick="ordToggle(\''+it.name.replace(/'/g,"\\'")+'\',\''+it.display.replace(/'/g,"\\'")+'\','+JSON.stringify(it.units).replace(/"/g,'&quot;')+')">'+
-           '<span class="oi-name">'+it.display+(it.score===2?'<span class="oi-peak">PEAK</span>':'')+'</span>'+
+        h+='<div class="ord-item'+(sel?' sel':'')+(it.ntm?' ntm':'')+'" onclick="ordToggle(\''+it.name.replace(/'/g,"\\'")+'\',\''+it.display.replace(/'/g,"\\'")+'\','+JSON.stringify(it.units).replace(/"/g,'&quot;')+')">'+
+           '<span class="oi-name">'+it.display+(it.ntm?'<span class="oi-move">NEED TO MOVE</span>':(it.score===2?'<span class="oi-peak">PEAK</span>':''))+'</span>'+
            (it.kelly_note?'<div class="oi-note">'+it.kelly_note+(it.last_touch?' · '+it.last_touch.slice(5).replace('-','/'):'')+'</div>':'');
         if(sel){
           h+='<div class="ord-qty" onclick="event.stopPropagation()">'+
