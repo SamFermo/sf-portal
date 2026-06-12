@@ -793,17 +793,6 @@ body.locked{overflow:hidden;}
   </div>
 </div>
 
-<div class="modal" id="ordPlaced">
-  <div class="modal-card" style="max-width:420px">
-    <h3>Done ✓</h3>
-    <p>Saved to the farm portal. Text the heads-up <span id="ordSmsWhat"></span> so it doesn’t sit unseen?</p>
-    <div style="display:flex;flex-direction:column;gap:9px;margin-top:8px">
-      <button class="ord-send" onclick="ordSendSms(false)">Text Kelly &amp; Tim</button>
-      <button class="chip" style="color:var(--card-soft);border-color:var(--card-mute);text-align:center" onclick="ordSendSms(true)">Text just Kelly</button>
-      <button class="chip" style="color:var(--card-mute);border:none;text-align:center" onclick="$('ordPlaced').classList.remove('open')">Skip</button>
-    </div>
-  </div>
-</div>
 </div>
 
 <div class="modal" id="loginGate">
@@ -851,7 +840,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781282328';   // stamped by build-data.py at every deploy
+const BUILD='1781283451';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2408,7 +2397,7 @@ function crewPosts(){
    placed orders also write to Firestore (system of record upgrade, Phase 1 wiring).
    Plan: Codename: Neelix/docs/farm-order-loop-build-plan.md */
 const ORD_AVAIL_URL='https://samfermo.github.io/seasonal-tracker/availability-swan-house.json';
-const ORD_SMS_TIM='2065513328', ORD_SMS_KELLY='2062509433';
+/* SMS announce step removed 2026-06-10 (iOS multi-recipient links only reached Tim). Process instead: hard order days — orders in by Sat night; Kelly & Tim check Sun-Tue mornings. Numbers for reference: Tim 2065513328, Kelly 2062509433. */
 const ORD_UNITS=['cup','pint','quart','1/4 lb','1/2 lb','lb','flat','half-flat','case','bunch','stems','head','gallon bag','medium cooler','large cooler','each','pack','dozen'];
 function ordUnitSelect(units, current, onchangeJs){
   const common=(units&&units.length?units:['lb','case','each','bunch']);
@@ -2479,17 +2468,16 @@ function ordText(){
 }
 function ordReview(){
   if(!ordLines.filter(l=>l.display).length)return;
-  $('ordRevTo').textContent='Placing saves it to the farm portal'+(ordEditingId?' (replaces the original)':'')+'. You can text the heads-up right after.';
+  $('ordRevTo').textContent='Placing saves it straight to the farm portal'+(ordEditingId?' and replaces the original':'')+'. Kelly & Tim check for orders Sunday through Tuesday mornings.';
   $('ordRevText').textContent=ordText();
   $('ordRevGo').textContent=ordEditingId?'Save changes':'Place order';
   $('ordReview').classList.add('open');
 }
-let ordSmsBody='Farm order placed';
-function ordPromptSms(body){ordSmsBody=body;$('ordSmsWhat').textContent='“'+body+'”';$('ordPlaced').classList.add('open');}
-function ordSendSms(kellyOnly){
-  $('ordPlaced').classList.remove('open');
-  const to=kellyOnly?ORD_SMS_KELLY:(ORD_SMS_TIM+','+ORD_SMS_KELLY);
-  window.location.href='sms:'+to+'&body='+encodeURIComponent(ordSmsBody);
+let ordJustDid=null, ordJustTimer=null;
+function ordFlash(what){
+  ordJustDid=what;
+  clearTimeout(ordJustTimer);
+  ordJustTimer=setTimeout(()=>{ordJustDid=null;if($('ordBody'))renderOrdersBody();},6000);
 }
 function ordPlace(){
   $('ordReview').classList.remove('open');
@@ -2517,8 +2505,8 @@ function ordPlace(){
       .catch(()=>{});
   }
   ordLines=[];ordNote='';ordDate='';
+  ordFlash(wasEdit?'Order updated — saved to the farm portal':'Order placed — saved to the farm portal');
   renderOrdersBody();
-  ordPromptSms(wasEdit?'Farm order adjusted':'Farm order placed');
 }
 function ordFindOrder(id){
   return remyOrders.find(x=>x.order_id===id)||ordGetOrders().find(x=>x.order_id===id);
@@ -2546,8 +2534,8 @@ function ordCancel(id){
   if(!confirm('Cancel this order? Kelly’s side will grey it out.'))return;
   const finish=()=>{
     const all=ordGetOrders().map(x=>x.order_id===id?Object.assign({},x,{status:'cancelled'}):x);ordSaveOrders(all);
+    ordFlash('Order cancelled');
     if(ordEditingId===id)ordDiscardEdit();else renderOrdersBody();
-    ordPromptSms('Farm order cancelled');
   };
   /* Orders from before the Firestore wiring (sms-v0 era) exist only on this
      device — update() on a doc that was never created fails with not-found.
@@ -2619,6 +2607,7 @@ function ordCardHTML(o, withActions){
 
 function ordRenderOrdersPane(ordAll, open){
   let h='';
+  if(ordJustDid)h+='<p class="ord-stamp" style="color:var(--gold);font-weight:700">✓ '+ordJustDid+'. Kelly & Tim check Sunday–Tuesday mornings.</p>';
   h+='<div class="ord-group">Pending'+(remyReady?'':' · offline')+'</div>';
   if(!open.length)h+='<p class="board-empty" style="padding:14px 0">No open orders — everything’s been delivered or cancelled.</p>';
   open.forEach(o=>{h+=ordCardHTML(o,true);});
