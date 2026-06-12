@@ -48,6 +48,8 @@ staff-portal/
 ├── index.html          — the whole app (CSS + JS embedded)
 ├── data.js             — generated data bundle the app reads (window.SF)
 ├── build-data.py       — rebuilds data.js from the data/*.json files
+├── build-schedule.py   — fetches FOH/BOH sheet tabs (gviz CSV), validates,
+│                         diffs, writes data/schedule.json + .schedule-stamp
 ├── deploy-to-github.command
 ├── serve-local.command
 └── data/
@@ -67,9 +69,32 @@ preview or `deploy-to-github.command` to push live (it rebuilds `data.js`
 automatically). Examples:
 
 - **New menu / wine list:** update `menu.json` / `wines.json`.
-- **New schedule week:** re-pull the FOH/BOH sheets and update `schedule.json`.
 - **Compliance changes:** keep `compliance.json` in step with the Compliance
   Notebook artifact.
+
+### Schedule — HARD RULE (2026-06-11 incident)
+
+The FOH/BOH Google Sheets are the single source of truth for the schedule.
+**Never edit `data/schedule.json` by hand, and never rebuild it outside
+`build-schedule.py`.** Every schedule change, however small, goes into the
+sheet first, then:
+
+```
+python3 build-schedule.py     # fetches all month tabs (gviz CSV; the sheets
+                              # are link-shared Viewer), validates, prints a
+                              # cell-level diff, writes schedule.json + stamp
+bash deploy-to-github.command # refuses a schedule.json that doesn't match
+                              # its .schedule-stamp
+```
+
+Read the diff the build prints: it reports every cell that changed. Anything
+you didn't expect in there is a red flag — stop and check the sheet.
+
+History: the old pipeline parsed the Drive markdown export, which scrambles
+FOH week blocks (merged label cells detach headers from data), and re-paired
+them heuristically. On 2026-06-11 that shipped 6/22's R/Os under the 6/15
+header for ~8 hours. The gviz pipeline gets headers attached to every block
+and does no pairing; anything ambiguous is a loud build failure, not a guess.
 
 ## Deploying (first time)
 
