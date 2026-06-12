@@ -638,7 +638,9 @@ body.locked{overflow:hidden;}
 .ord-qty button{width:34px; height:34px; border-radius:10px; background:rgba(205,216,244,.1); border:1px solid rgba(205,216,244,.25); color:var(--ink); font-size:17px; font-weight:700; cursor:pointer;}
 .ord-qty input{width:54px; text-align:center; background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:8px; padding:7px 4px; font-size:14.5px; font-weight:700; font-family:inherit;}
 .ord-qty .ord-unit{background:rgba(230,200,120,.12); border:1px solid rgba(230,200,120,.45); color:var(--gold); border-radius:999px; padding:7px 13px; font-size:12.5px; font-weight:700; cursor:pointer;}
-.ord-qty .oi-remove{margin-left:auto; background:none; border:none; color:var(--ink-mute); font-size:12px; cursor:pointer; text-decoration:underline;}
+.ord-qty{flex-wrap:wrap;}
+.ord-qty .ord-unit-sel{background:rgba(230,200,120,.12); border:1px solid rgba(230,200,120,.45); color:var(--gold); border-radius:10px; padding:7px 8px; font-size:12.5px; font-weight:700; font-family:inherit; max-width:138px;}
+.ord-qty .oi-remove{margin-left:auto; margin-right:2px; background:none; border:none; color:var(--ink-mute); font-size:12px; cursor:pointer; text-decoration:underline; flex:0 0 auto;}
 .ord-free-btn{display:block; width:100%; background:rgba(230,200,120,.08); border:1.5px dashed rgba(230,200,120,.55); color:var(--gold); border-radius:12px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; margin:10px 0 14px; font-family:inherit;}
 .ord-free input[type=text]{width:100%; background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:8px; padding:8px 10px; font-size:14px; font-family:inherit; margin-bottom:2px;}
 .ord-free select{background:rgba(205,216,244,.1); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:8px; padding:7px 8px; font-size:13px; font-family:inherit;}
@@ -784,7 +786,19 @@ body.locked{overflow:hidden;}
     <pre id="ordRevText" style="background:rgba(36,31,21,.07);border-radius:10px;padding:12px;font-size:14px;line-height:1.6;color:var(--card-ink);white-space:pre-wrap;font-family:inherit;margin:0;overflow-y:auto"></pre>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
       <button class="chip" style="color:var(--card-soft);border-color:var(--card-mute)" onclick="$('ordReview').classList.remove('open')">Back</button>
-      <button class="ord-send" onclick="ordPlace()">Send text</button>
+      <button class="ord-send" id="ordRevGo" onclick="ordPlace()">Place order</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="ordPlaced">
+  <div class="modal-card" style="max-width:420px">
+    <h3>Done ✓</h3>
+    <p>Saved to the farm portal. Text the heads-up <span id="ordSmsWhat"></span> so it doesn’t sit unseen?</p>
+    <div style="display:flex;flex-direction:column;gap:9px;margin-top:8px">
+      <button class="ord-send" onclick="ordSendSms(false)">Text Kelly &amp; Tim</button>
+      <button class="chip" style="color:var(--card-soft);border-color:var(--card-mute);text-align:center" onclick="ordSendSms(true)">Text just Kelly</button>
+      <button class="chip" style="color:var(--card-mute);border:none;text-align:center" onclick="$('ordPlaced').classList.remove('open')">Skip</button>
     </div>
   </div>
 </div>
@@ -835,7 +849,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781236310';   // stamped by build-data.py at every deploy
+const BUILD='1781281035';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2392,7 +2406,16 @@ function crewPosts(){
    placed orders also write to Firestore (system of record upgrade, Phase 1 wiring).
    Plan: Codename: Neelix/docs/farm-order-loop-build-plan.md */
 const ORD_AVAIL_URL='https://samfermo.github.io/seasonal-tracker/availability-swan-house.json';
-const ORD_SMS_TO=['2065513328','2062509433'];   // Tim, Kelly (confirmed by Sam 2026-06-10)
+const ORD_SMS_TIM='2065513328', ORD_SMS_KELLY='2062509433';
+const ORD_UNITS=['cup','pint','quart','1/4 lb','1/2 lb','lb','flat','case','bunch','gallon bag','medium cooler','large cooler','each','pack','dozen'];
+function ordUnitSelect(units, current, onchangeJs){
+  const common=(units&&units.length?units:['lb','case','each','bunch']);
+  const rest=ORD_UNITS.filter(u=>!common.includes(u));
+  let o='<select class="ord-unit-sel" onchange="'+onchangeJs+'" onclick="event.stopPropagation()">';
+  o+='<optgroup label="Common">'+common.map(u=>'<option'+(u===current?' selected':'')+'>'+u+'</option>').join('')+'</optgroup>';
+  o+='<optgroup label="Everything">'+rest.map(u=>'<option'+(u===current?' selected':'')+'>'+u+'</option>').join('')+'</optgroup>';
+  return o+'</select>';
+}
 window.REMY_ORDERS_CONFIG={apiKey:"AIzaSyCYx8NdTrmmH73J8DYsd94LvXKyOOiFyeU",authDomain:"remy-orders.firebaseapp.com",projectId:"remy-orders",storageBucket:"remy-orders.firebasestorage.app",messagingSenderId:"8525936717",appId:"1:8525936717:web:99fa76a1171b6f53cb4404"};
 let ordAvail=null, ordAvailAt=0, ordLines=[], ordDate='', ordNote='', ordFilter='all', ordEditingId=null, ordView='new';
 /* remy-orders is a SEPARATE Firebase project from sf-staff-portal — secondary
@@ -2437,8 +2460,7 @@ function ordEsc(s){return String(s).replace(/\\/g,'\\\\').replace(/"/g,'\\"');}
 function ordQty(name,delta){const l=ordLine(name);if(!l)return;l.qty=Math.max(.5,(parseFloat(l.qty)||1)+delta);
   const inp=document.querySelector('input[data-oq="'+ordEsc(name)+'"]');if(inp)inp.value=l.qty;else renderOrdersBody();}
 function ordQtyInput(name,v){const l=ordLine(name);if(l)l.qty=Math.max(0.5,parseFloat(v)||1);}
-function ordCycleUnit(name){const l=ordLine(name);if(!l)return;const u=l.units;l.unit=u[(u.indexOf(l.unit)+1)%u.length];
-  const chip=document.querySelector('[data-ou="'+ordEsc(name)+'"]');if(chip)chip.textContent=l.unit+' ▾';else renderOrdersBody();}
+function ordSetUnit(name,v){const l=ordLine(name);if(l)l.unit=v;}
 function ordFreeQty(idx,delta){const l=ordLines[idx];if(!l)return;l.qty=Math.max(.5,(parseFloat(l.qty)||1)+delta);
   const inp=document.querySelector('input[data-oqf="'+idx+'"]');if(inp)inp.value=l.qty;}
 function ordAddFree(){ordLines.push({name:'',display:'',qty:1,unit:'#',units:(ordAvail&&ordAvail.all_units)||['#'],free:true});renderOrdersBody();
@@ -2455,9 +2477,17 @@ function ordText(){
 }
 function ordReview(){
   if(!ordLines.filter(l=>l.display).length)return;
-  $('ordRevTo').textContent='Texts Tim & Kelly “Farm order '+(ordEditingId?'adjusted':'placed')+'” — the details below live here and on their portal.';
+  $('ordRevTo').textContent='Placing saves it to the farm portal'+(ordEditingId?' (replaces the original)':'')+'. You can text the heads-up right after.';
   $('ordRevText').textContent=ordText();
+  $('ordRevGo').textContent=ordEditingId?'Save changes':'Place order';
   $('ordReview').classList.add('open');
+}
+let ordSmsBody='Farm order placed';
+function ordPromptSms(body){ordSmsBody=body;$('ordSmsWhat').textContent='“'+body+'”';$('ordPlaced').classList.add('open');}
+function ordSendSms(kellyOnly){
+  $('ordPlaced').classList.remove('open');
+  const to=kellyOnly?ORD_SMS_KELLY:(ORD_SMS_TIM+','+ORD_SMS_KELLY);
+  window.location.href='sms:'+to+'&body='+encodeURIComponent(ordSmsBody);
 }
 function ordPlace(){
   $('ordReview').classList.remove('open');
@@ -2484,12 +2514,9 @@ function ordPlace(){
       .then(()=>{order.synced=true;ordSaveOrders(ordGetOrders().map(o=>o.order_id===order.order_id?order:o));})
       .catch(()=>{});
   }
-  /* The text is just the doorbell — the portal carries the details. */
-  const body=encodeURIComponent(wasEdit?'Farm order adjusted':'Farm order placed');
-  const to=ORD_SMS_TO.filter(Boolean).join(',');
-  window.location.href='sms:'+to+(to?'&':'?')+'body='+body;
   ordLines=[];ordNote='';ordDate='';
-  setTimeout(renderOrdersBody,400);
+  renderOrdersBody();
+  ordPromptSms(wasEdit?'Farm order adjusted':'Farm order placed');
 }
 function ordFindOrder(id){
   return remyOrders.find(x=>x.order_id===id)||ordGetOrders().find(x=>x.order_id===id);
@@ -2518,9 +2545,7 @@ function ordCancel(id){
   const finish=()=>{
     const all=ordGetOrders().map(x=>x.order_id===id?Object.assign({},x,{status:'cancelled'}):x);ordSaveOrders(all);
     if(ordEditingId===id)ordDiscardEdit();else renderOrdersBody();
-    const d=new Date(o.placed_at).toLocaleDateString('en-US',{month:'numeric',day:'numeric'});
-    const to=ORD_SMS_TO.filter(Boolean).join(',');
-    window.location.href='sms:'+to+(to?'&':'?')+'body='+encodeURIComponent('Farm order cancelled');
+    ordPromptSms('Farm order cancelled');
   };
   /* Orders from before the Firestore wiring (sms-v0 era) exist only on this
      device — update() on a doc that was never created fails with not-found.
@@ -2630,7 +2655,7 @@ function ordRenderComposerPane(){
        '<div class="ord-qty"><button onclick="ordFreeQty('+idx+',-1)">−</button>'+
        '<input type="number" step="0.5" data-oqf="'+idx+'" value="'+l.qty+'" onchange="ordLines['+idx+'].qty=Math.max(0.5,parseFloat(this.value)||1)">'+
        '<button onclick="ordFreeQty('+idx+',1)">+</button>'+
-       '<select onchange="ordLines['+idx+'].unit=this.value">'+l.units.map(u=>'<option'+(u===l.unit?' selected':'')+'>'+u+'</option>').join('')+'</select>'+
+       ordUnitSelect(ORD_UNITS.slice(0,8),l.unit,'ordLines['+idx+'].unit=this.value')+
        '<button class="oi-remove" onclick="ordRemove('+idx+')">remove</button></div></div>';
   });
   h+='<button class="ord-free-btn" onclick="ordAddFree()">+ Something not on the list</button>';
@@ -2650,7 +2675,7 @@ function ordRenderComposerPane(){
              '<button onclick="ordQty(\''+it.name.replace(/'/g,"\\'")+'\',-1)">−</button>'+
              '<input type="number" step="0.5" data-oq="'+it.name.replace(/"/g,'&quot;')+'" value="'+sel.qty+'" onchange="ordQtyInput(\''+it.name.replace(/'/g,"\\'")+'\',this.value)">'+
              '<button onclick="ordQty(\''+it.name.replace(/'/g,"\\'")+'\',1)">+</button>'+
-             '<span class="ord-unit" data-ou="'+it.name.replace(/"/g,'&quot;')+'" onclick="ordCycleUnit(\''+it.name.replace(/'/g,"\\'")+'\')">'+sel.unit+' ▾</span>'+
+             ordUnitSelect(sel.units,sel.unit,'ordSetUnit(&quot;'+it.name.replace(/"/g,'\\&quot;')+'&quot;,this.value)')+
              '<button class="oi-remove" onclick="ordToggle(\''+it.name.replace(/'/g,"\\'")+'\',\''+it.display.replace(/'/g,"\\'")+'\',null)">remove</button></div>';
         }
         h+='</div>';
