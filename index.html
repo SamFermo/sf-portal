@@ -640,7 +640,9 @@ body.locked{overflow:hidden;}
 .ord-qty .ord-unit{background:rgba(230,200,120,.12); border:1px solid rgba(230,200,120,.45); color:var(--gold); border-radius:999px; padding:7px 13px; font-size:12.5px; font-weight:700; cursor:pointer;}
 .ord-qty{flex-wrap:wrap;}
 .ord-qty .ord-unit-sel{background:rgba(230,200,120,.12); border:1px solid rgba(230,200,120,.45); color:var(--gold); border-radius:10px; padding:7px 8px; font-size:12.5px; font-weight:700; font-family:inherit; max-width:138px;}
-.ord-qty .oi-remove{margin-left:auto; margin-right:2px; background:none; border:none; color:var(--ink-mute); font-size:12px; cursor:pointer; text-decoration:underline; flex:0 0 auto;}
+.ord-qty .oi-remove{flex-basis:100%; text-align:right; margin:4px 0 0; padding:0; background:none; border:none; color:var(--ink-mute); font-size:12px; cursor:pointer; text-decoration:underline;}
+.ord-qty>*{min-width:0;}
+.ord-qty .ord-unit-sel{flex:0 1 auto;}
 .ord-free-btn{display:block; width:100%; background:rgba(230,200,120,.08); border:1.5px dashed rgba(230,200,120,.55); color:var(--gold); border-radius:12px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; margin:10px 0 14px; font-family:inherit;}
 .ord-free input[type=text]{width:100%; background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:8px; padding:8px 10px; font-size:14px; font-family:inherit; margin-bottom:2px;}
 .ord-free select{background:rgba(205,216,244,.1); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:8px; padding:7px 8px; font-size:13px; font-family:inherit;}
@@ -849,7 +851,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781281035';   // stamped by build-data.py at every deploy
+const BUILD='1781282328';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2407,7 +2409,7 @@ function crewPosts(){
    Plan: Codename: Neelix/docs/farm-order-loop-build-plan.md */
 const ORD_AVAIL_URL='https://samfermo.github.io/seasonal-tracker/availability-swan-house.json';
 const ORD_SMS_TIM='2065513328', ORD_SMS_KELLY='2062509433';
-const ORD_UNITS=['cup','pint','quart','1/4 lb','1/2 lb','lb','flat','case','bunch','gallon bag','medium cooler','large cooler','each','pack','dozen'];
+const ORD_UNITS=['cup','pint','quart','1/4 lb','1/2 lb','lb','flat','half-flat','case','bunch','stems','head','gallon bag','medium cooler','large cooler','each','pack','dozen'];
 function ordUnitSelect(units, current, onchangeJs){
   const common=(units&&units.length?units:['lb','case','each','bunch']);
   const rest=ORD_UNITS.filter(u=>!common.includes(u));
