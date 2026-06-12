@@ -835,7 +835,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781229983';   // stamped by build-data.py at every deploy
+const BUILD='1781236310';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -848,6 +848,21 @@ function staleCheck(){
     return true;
   }catch(e){return false;}
 }
+/* Resume staleness: phones restore the last rendered page from memory with no
+   network fetch, so a fix can be live for hours while a pocketed phone keeps
+   showing pre-fix data (2026-06-11 incident). If the app resumes after
+   RESUME_MAX_AGE_MS, reload — unless someone is mid-typing. */
+const RESUME_MAX_AGE_MS=60*60*1000; let LOADED_AT=Date.now();
+function resumeCheck(){
+  try{
+    if(Date.now()-LOADED_AT<RESUME_MAX_AGE_MS)return;
+    if(document.querySelector('input:focus, textarea:focus, select:focus'))return;
+    LOADED_AT=Date.now();              // guard against reload loops
+    location.reload();
+  }catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')resumeCheck();});
+window.addEventListener('pageshow',e=>{if(e.persisted)resumeCheck();});
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function todayISO(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;}
 const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
