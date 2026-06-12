@@ -835,7 +835,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781228703';   // stamped by build-data.py at every deploy
+const BUILD='1781229123';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1444,7 +1444,7 @@ function renderSchedule(){
   if(onTimeoff){renderTimeoff();return;}
   const weeks=SF.schedule[schedState.side],today=todayISO();let sel;
   if(schedState.range==='week'){const w=weeks[currentWeekIndex(weeks)];sel=w?[w]:[];}
-  else if(schedState.range.startsWith('m:')){const ym=schedState.range.slice(2);sel=weeks.filter(w=>w.dates.some(d=>d.startsWith(ym)));}
+  else if(schedState.range.startsWith('m:')){const ym=schedState.range.slice(2);sel=weeks.filter(w=>w.weekStart.startsWith(ym));}
   else sel=weeks;
   $('schedBody').innerHTML = sel.length?sel.map(w=>weekTableHTML(w,today)).join(''):'<p class="board-empty">No weeks in this range.</p>';}
 
