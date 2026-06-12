@@ -609,8 +609,9 @@ body.locked{overflow:hidden;}
   .home-hero h1{font-size:32px;}
   /* schedule: tighten for narrow screens so shifts stay in their column */
   .sched-table{font-size:10px;}
+  .sched-table th,.sched-table td{padding:4px 2px;}
   .sched-table td{overflow:hidden;}
-  .shift{font-size:9px; line-height:1.15;}
+  .shift{display:block; font-size:9px; line-height:1.15; word-break:break-word; overflow-wrap:break-word;}
   .sched-table thead th{font-size:8.5px; letter-spacing:0;}
   .sched-table thead th .dnum{font-size:11px;}
   .sched-table td.nm{font-size:10px;}
@@ -834,7 +835,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781228492';   // stamped by build-data.py at every deploy
+const BUILD='1781228703';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
