@@ -234,7 +234,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .sched-table tr.me td{background:rgba(230,200,120,.15);}
 .sched-table tr.me td.nm{color:var(--gold-deep);}
 .sched-table tr.me td.today{background:rgba(230,200,120,.36);}
-.shift{display:inline-block; font-size:10.5px; line-height:1.2; color:var(--card-ink);}
+.shift{display:inline-block; font-size:10.5px; line-height:1.2; color:var(--card-ink); max-width:100%; overflow-wrap:break-word; word-break:break-word; box-decoration-break:clone; -webkit-box-decoration-break:clone;}
 .shift.off{color:var(--moon-edge);} .shift.ro{color:var(--rust); font-weight:700;}
 .shift.farm{color:var(--accent-dark); font-weight:700;} .shift.md{color:var(--gold-deep); font-weight:700;}
 .legend{font-size:11px; color:var(--ink-mute); margin-top:8px; line-height:1.7;}
@@ -607,6 +607,14 @@ body.locked{overflow:hidden;}
   .plist{grid-template-columns:1fr;} .dir-grid{grid-template-columns:1fr;}
   .sidework-card ul{columns:1;}
   .home-hero h1{font-size:32px;}
+  /* schedule: tighten for narrow screens so shifts stay in their column */
+  .sched-table{font-size:10px;}
+  .sched-table td{overflow:hidden;}
+  .shift{font-size:9px; line-height:1.15;}
+  .sched-table thead th{font-size:8.5px; letter-spacing:0;}
+  .sched-table thead th .dnum{font-size:11px;}
+  .sched-table td.nm{font-size:10px;}
+  .sched-week{padding:10px 8px 4px;}
 }
 /* ---------- FARM ORDER (Swan House order loop) ---------- */
 .ord-stamp{font-size:12px; color:var(--ink-mute); margin:0 0 12px;}
@@ -826,7 +834,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781204227';   // stamped by build-data.py at every deploy
+const BUILD='1781228492';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
