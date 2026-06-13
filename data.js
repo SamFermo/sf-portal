@@ -577,10 +577,10 @@ window.SF = {
    },
    {
     "name": "Pavlova",
-    "desc": "meringue, vanilla pastry cream, rhubarb compote, lilac sugar",
+    "desc": "rose meringue, vanilla pastry cream, macerated strawberries",
     "price": "13",
     "pron": "pav-LOH-vah",
-    "story": "A crisp-outside, marshmallow-inside meringue, named for the Russian ballerina Anna Pavlova. Topped with vanilla pastry cream, tart rhubarb compote, and a dusting of lilac sugar — the lilac is a nod to Swan House Farm, where it perfumes the spring menu.",
+    "story": "A crisp-outside, marshmallow-inside meringue, named for the Russian ballerina Anna Pavlova. This one's rose-scented, topped with a cloud of vanilla pastry cream and fresh macerated strawberries. Light, a little floral, and sweet without being heavy.",
     "ingredients": [
      {
       "term": "Pavlova",
@@ -593,9 +593,9 @@ window.SF = {
       "note": "whipped egg whites and sugar, baked low and slow until crisp."
      },
      {
-      "term": "Lilac sugar",
-      "pronunciation": null,
-      "note": "sugar perfumed with lilac blossoms from Swan House Farm; floral and faintly sweet."
+      "term": "Macerated",
+      "pronunciation": "MASS-er-ay-ted",
+      "note": "fruit softened and drawn out with a little sugar until juicy and glossy."
      }
     ],
     "allergens": [
@@ -605,7 +605,7 @@ window.SF = {
     "canModify": [
      "dairy"
     ],
-    "allergenNote": "No flour in the meringue — gluten-free as built. The pastry cream rides on the side for dairy-free; the meringue and rhubarb compote stand on their own."
+    "allergenNote": "No flour in the meringue — gluten-free as built. The pastry cream rides on the side for dairy-free; the meringue and strawberries stand on their own."
    },
    {
     "name": "Seasonal Gelato",
@@ -11567,5 +11567,5 @@ window.SF = {
    }
   }
  },
- "build": "1781287411"
+ "build": "1781356418"
 };
