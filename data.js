@@ -7626,18 +7626,6 @@ window.SF = {
       ]
      },
      {
-      "name": "Jenn",
-      "shifts": [
-       "",
-       "",
-       "1-close train",
-       "1-close train",
-       "1-close train",
-       "1-close train",
-       ""
-      ]
-     },
-     {
       "name": "Kenji",
       "shifts": [
        "9-7",
@@ -11054,10 +11042,6 @@ window.SF = {
      "role": "Line Cook"
     },
     {
-     "name": "Jenn Kozora",
-     "role": "Line Cook · In training"
-    },
-    {
      "name": "Kenji Carskaddan",
      "role": "Line Cook"
     },
@@ -11567,5 +11551,5 @@ window.SF = {
    }
   }
  },
- "build": "1781356418"
+ "build": "1781566797"
 };
