@@ -10558,7 +10558,7 @@ window.SF = {
   ]
  },
  "compliance": {
-  "updated": "2026-05-19",
+  "updated": "2026-06-15",
   "note": "Mirrors the live Compliance Notebook. FWC = Washington Food Worker Card. MAST = Mixology/Alcohol Server permit. Neither auto-renews; renewal means taking the class again.",
   "binderUrl": "https://drive.google.com/file/d/1VpoB2F_Sae104TcJFMSsksCexVqIxzoM/view",
   "roster": {
@@ -10696,8 +10696,8 @@ window.SF = {
       "text": "Expires Aug 29, 2026 — renewal watch"
      },
      "mast": {
-      "status": "warn",
-      "text": "Needs verify — profile says Complete, no image on file"
+      "status": "good",
+      "text": "ServSafe Alcohol WA, valid through Jun 9, 2031"
      }
     },
     {
@@ -10794,6 +10794,18 @@ window.SF = {
      "mast": {
       "status": "good",
       "text": "Valid through Apr 1, 2027"
+     }
+    },
+    {
+     "name": "Mac Solomon",
+     "role": "Server",
+     "fwc": {
+      "status": "good",
+      "text": "Valid through Jan 10, 2028 · confirm cardholder signature"
+     },
+     "mast": {
+      "status": "good",
+      "text": "Valid through Jan 13, 2029 (American Safety Council, completed 1/13/2024)"
      }
     },
     {
@@ -11551,5 +11563,5 @@ window.SF = {
    }
   }
  },
- "build": "1781566797"
+ "build": "1781574096"
 };
