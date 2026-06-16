@@ -1021,6 +1021,27 @@ window.SF = {
   },
   {
    "section": "White/Rosé/Orange",
+   "name": "Gilbert Cellars Orange Wine",
+   "vintage": "2024",
+   "region": "Washington",
+   "type": "orange",
+   "glass": "",
+   "bottle": "",
+   "grapes": "Riesling, Chardonnay",
+   "pour": "Raw honey, herbal tea, and tree fruit on a skin-contact co-ferment of estate Riesling and Chardonnay — 13 days on the skins, unfined and unfiltered.",
+   "producer": "Gilbert Cellars draws the Riesling and Chardonnay for this wine from its estate vineyard on the Hackett Ranch in Washington. The fruit is farmed at the Certified Sustainable Sunrise Vineyard, currently transitioning to organic (year 2).",
+   "winemaking": "An \"orange\" or skin-contact wine. Natural fermentation including a pied de cuve, with 13 days on the skins to extract additional color and flavor from contact between juice and skin. Finished in stainless steel tanks. Unfined and unfiltered.",
+   "has_notes": true,
+   "pronguide": [
+    {
+     "term": "pied de cuve",
+     "pron": "pyay duh KOOV"
+    }
+   ],
+   "added": "2026-06-16"
+  },
+  {
+   "section": "White/Rosé/Orange",
    "name": "Pietramore Trebbiano d'Abruzzo Superiore DOC",
    "vintage": "2021",
    "region": "Abruzzo, Italy",
@@ -11563,5 +11584,5 @@ window.SF = {
    }
   }
  },
- "build": "1781574096"
+ "build": "1781615756"
 };
