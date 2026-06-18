@@ -401,15 +401,41 @@
   "section": "White/Rosé/Orange",
   "name": "Gilbert Cellars Orange Wine",
   "vintage": "2024",
-  "region": "Washington",
+  "region": "Columbia Valley, Washington",
   "type": "orange",
   "glass": "",
   "bottle": "",
-  "grapes": "Riesling, Chardonnay",
-  "pour": "Raw honey, herbal tea, and tree fruit on a skin-contact co-ferment of estate Riesling and Chardonnay — 13 days on the skins, unfined and unfiltered.",
-  "producer": "Gilbert Cellars draws the Riesling and Chardonnay for this wine from its estate vineyard on the Hackett Ranch in Washington. The fruit is farmed at the Certified Sustainable Sunrise Vineyard, currently transitioning to organic (year 2).",
+  "grapes": "77% Riesling, 23% Chardonnay",
+  "pour": "Raw honey, herbal tea, and tree fruit on a skin-contact co-ferment of estate Riesling and Chardonnay — 13 days on the skins, unfined and unfiltered. A Yakima-grown orange wine with the texture of skin contact and the high-toned lift of Columbia Valley Riesling.",
+  "producer": "Gilbert Cellars is a family-run Yakima winery. The Riesling and Chardonnay for this wine come from its estate Sunrise Vineyard on the Hackett Ranch, farmed Certified Sustainable WA and transitioning to organic (year 2). Roughly 300 cases produced; 12.9% ABV.",
   "winemaking": "An \"orange\" or skin-contact wine. Natural fermentation including a pied de cuve, with 13 days on the skins to extract additional color and flavor from contact between juice and skin. Finished in stainless steel tanks. Unfined and unfiltered.",
   "has_notes": true,
+  "specs": [
+   {
+    "label": "Body",
+    "rating": 3,
+    "low": "light",
+    "high": "full"
+   },
+   {
+    "label": "Dryness",
+    "rating": 4,
+    "low": "sweet",
+    "high": "bone dry"
+   },
+   {
+    "label": "Acidity",
+    "rating": 4,
+    "low": "soft",
+    "high": "bright"
+   },
+   {
+    "label": "Tannins",
+    "rating": 3,
+    "low": "none",
+    "high": "grippy"
+   }
+  ],
   "pronguide": [
    {
     "term": "pied de cuve",
