@@ -127,8 +127,14 @@ nav.chips::-webkit-scrollbar{display:none;}
 .new-badge{display:inline-block; margin-right:6px; font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#2d6a4f; background:rgba(45,106,79,.12); border:1px solid rgba(45,106,79,.35); border-radius:999px; padding:1px 7px; vertical-align:middle; font-family:system-ui,sans-serif;}
 .recent-block{background:rgba(45,106,79,.06); border:1.5px solid rgba(45,106,79,.2); border-radius:14px; padding:14px 16px; margin-bottom:16px;}
 .recent-head{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#2d6a4f; margin-bottom:10px;}
-.recent-item{display:flex; align-items:baseline; gap:8px; padding:5px 0; border-bottom:1px solid rgba(45,106,79,.08);}
+.recent-item{display:flex; align-items:baseline; gap:8px; padding:5px 0; border-bottom:1px solid rgba(45,106,79,.08); cursor:pointer; -webkit-tap-highlight-color:rgba(45,106,79,.12);}
 .recent-item:last-child{border-bottom:none;}
+.recent-item:active{opacity:.55;}
+.recent-item .recent-jump{margin-left:auto; font-size:11px; color:#2d6a4f; opacity:.7; white-space:nowrap;}
+.pinned-block{margin-bottom:6px;}
+.pinned-label{color:#2d6a4f !important; border-bottom-color:rgba(45,106,79,.3) !important;}
+@keyframes cardflash{0%{box-shadow:0 0 0 3px rgba(45,106,79,.55);}100%{box-shadow:0 0 0 3px rgba(45,106,79,0);}}
+.card.flash{animation:cardflash 1.5s ease-out;}
 .recent-name{font-size:14px; font-weight:600; color:var(--ink); white-space:nowrap;}
 .recent-desc{font-size:12px; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .dish-story{font-family:'Caladea',Georgia,serif; font-size:14.5px; color:var(--card-ink); line-height:1.55; margin:8px 0 0;}
@@ -844,7 +850,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781792623';   // stamped by build-data.py at every deploy
+const BUILD='1781794159';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1086,16 +1092,27 @@ function allergenChips(it){
   a.forEach(x=>h+=`<span class="alg ${m.indexOf(x)>=0?'alg-mod':''}" title="${esc(x)}">${ALG[x]||esc(x)}</span>`);
   return h+'</div>';
 }
-const NEW_DAYS=14;
-function isNew(item){if(!item||!item.added)return false;const d=new Date(item.added+'T00:00:00');const now=new Date();return(now-d)/(864e5)<=NEW_DAYS;}
+const NEW_DAYS=14;        // NEW badge + clickable "Recently Added" block linger this long
+const SHUFFLE_DAYS=7;     // full cards floated to a pinned group at the top of the tab
+function ageDays(item){if(!item||!item.added)return Infinity;const d=new Date(item.added+'T00:00:00');return(new Date()-d)/864e5;}
+function isNew(item){return ageDays(item)<=NEW_DAYS;}
+function isShuffled(item){return ageDays(item)<=SHUFFLE_DAYS;}
+function fcSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');}
 function newBadge(){return '<span class="new-badge">NEW</span>';}
+function jumpToCard(id){const el=document.getElementById(id);if(!el)return;if(el.classList.contains('expandable'))el.classList.add('expanded');el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),1600);}
+function recentCardId(it,type){
+  if(type==='wine')return 'wcard-'+SF.wines.indexOf(it);
+  if(type==='dish')return 'dcard-'+fcSlug(it._originalName||it.name);
+  return 'ckcard-'+fcSlug(it.name);
+}
 function recentBlockHTML(items,type){
   if(!items.length)return '';
   let h='<div class="recent-block"><div class="recent-head">Recently Added</div>';
   items.forEach(it=>{
-    if(type==='dish')h+=`<div class="recent-item"><span class="recent-name serif">${esc(it.name)}</span><span class="recent-desc">${esc(it.desc||'')}</span></div>`;
-    else if(type==='wine')h+=`<div class="recent-item"><span class="wine-type ${WTYPE[it.type]||'wt-white'}">${esc(it.type)}</span><span class="recent-name serif">${esc(it.name)}</span><span class="recent-desc">${esc(it.region||'')}</span></div>`;
-    else h+=`<div class="recent-item"><span class="recent-name serif">${esc(it.name)}</span><span class="recent-desc">${esc(it.build||it.tagline||'')}</span></div>`;
+    const id=recentCardId(it,type), jump='<span class="recent-jump">tap to view ›</span>';
+    if(type==='dish')h+=`<div class="recent-item" onclick="jumpToCard('${id}')"><span class="recent-name serif">${esc(it.name)}</span><span class="recent-desc">${esc(it.desc||'')}</span>${jump}</div>`;
+    else if(type==='wine')h+=`<div class="recent-item" onclick="jumpToCard('${id}')"><span class="wine-type ${WTYPE[it.type]||'wt-white'}">${esc(it.type)}</span><span class="recent-name serif">${esc(it.name)}</span><span class="recent-desc">${esc(it.region||'')}</span>${jump}</div>`;
+    else h+=`<div class="recent-item" onclick="jumpToCard('${id}')"><span class="recent-name serif">${esc(it.name)}</span><span class="recent-desc">${esc(it.build||it.tagline||'')}</span>${jump}</div>`;
   });
   return h+'</div>';
 }
@@ -1108,7 +1125,7 @@ function dishCardHTML(baseIt){
   if(rpl)return `<div class="card replaced"><div class="card-head"><div class="row-between"><span class="dish-name serif">${esc(it.name)}</span><span class="dish-price serif">${esc(it.price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(rpl)}</div></div></div>`;
   const editBtn=isMgr()?`<button class="edit-btn" onclick="event.stopPropagation();openEditModal('${esc(origName).replace(/'/g,"\\'")}')">&#9998;</button>`:'';
   const editedChip=it._edited?'<span class="edited-chip">edited</span>':'';
-  let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
+  let h=`<div class="card ${rich?'expandable':''}" id="dcard-${fcSlug(origName)}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
       <span class="dish-name serif">${isNew(it)?newBadge():''}${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}${editedChip}${editBtn}</span>
       <span class="dish-price serif">${esc(it.price)}</span></div>
@@ -1141,11 +1158,14 @@ function renderFoodTab(){
   const newDishes=[];
   SF.menu.food.forEach(sec=>sec.items.forEach(it=>{if(isNew(it))newDishes.push(it);}));
   SF.menu.desserts.forEach(it=>{if(isNew(it))newDishes.push(it);});
-  let f=editBarHTML()+recentBlockHTML(newDishes,'dish')+allergenLegendHTML();
+  const pinned=newDishes.filter(isShuffled), pinnedSet=new Set(pinned);
+  let f=editBarHTML()+recentBlockHTML(newDishes,'dish');
+  if(pinned.length){f+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(it=>f+=dishCardHTML(it));f+=`</div>`;}
+  f+=allergenLegendHTML();
   SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;
     if(sec.intro)f+=`<div class="intro-card serif">${esc(sec.intro)}</div>`;
-    sec.items.forEach(it=>f+=dishCardHTML(it));});
-  f+=`<div class="section-label">Dessert</div>`; SF.menu.desserts.forEach(it=>f+=dishCardHTML(it));
+    sec.items.forEach(it=>{if(!pinnedSet.has(it))f+=dishCardHTML(it);});});
+  f+=`<div class="section-label">Dessert</div>`; SF.menu.desserts.forEach(it=>{if(!pinnedSet.has(it))f+=dishCardHTML(it);});
   f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
   $('ftFood').innerHTML=liveBlockHTML('dish')+f;
 }
@@ -1200,6 +1220,26 @@ function specRow(specs){
     return `<div class="spec"><div class="spec-label">${esc(s.label)}</div><div class="dots">${dots}</div><div class="spec-range">${esc(specWord(s))}</div></div>`;
   }).join('')+`</div>`;
 }
+function wineCardHTML(w){
+  const idx=SF.wines.indexOf(w), price=(w.glass?w.glass+' / ':'')+w.bottle;
+  const wrpl=replacedByLive(w.name);
+  if(wrpl){return `<div class="card replaced" id="wcard-${idx}" data-wine="${idx}"><div class="card-head"><span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span><div class="row-between"><span class="wine-name serif">${esc(w.name)}</span><span class="wine-price serif">${esc(price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(wrpl)}</div></div></div>`;}
+  const can=(w.has_notes&&(w.producer||w.winemaking))||(w.pronguide&&w.pronguide.length);
+  return `<div class="card ${can?'expandable':''}" id="wcard-${idx}" data-wine="${idx}">
+      <div class="card-head" ${can?`onclick="toggleWine(${idx})"`:''}>
+        <span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span>
+        <div class="row-between"><span class="wine-name serif">${isNew(w)?newBadge():''}${esc(w.name)} ${w.vintage?`<span class="wine-vintage">${esc(w.vintage)}</span>`:''}</span><span class="wine-price serif">${esc(price)}</span></div>
+        ${w.region?`<div class="wine-origin">${esc(w.region)}${w.grapes?' · '+esc(w.grapes):''}</div>`:''}
+        ${w.pour?`<div class="wine-pour serif">${esc(w.pour)}</div>`:''}
+        ${specRow(w.specs)}
+        ${can?`<div class="expand-hint">Tap for producer &amp; winemaking ›</div>`:''}
+      </div>
+      ${can?`<div class="card-details">
+        ${w.producer?`<div class="wine-sec-label">Producer</div><div class="wine-sec-body serif">${esc(w.producer)}</div>`:''}
+        ${w.winemaking?`<div class="wine-sec-label">Winemaking</div><div class="wine-sec-body serif">${esc(w.winemaking)}</div>`:''}
+        ${pronHTML(w.pronguide)}
+      </div>`:''}${noteBox('wine',w.name)}</div>`;
+}
 function renderWine(){
   const bar=`<div class="filterbar">
     <input class="fsearch" id="wineSearch" placeholder="Search wine, region, grape…" value="${esc(wineFilter.q)}">
@@ -1216,28 +1256,16 @@ function renderWine(){
     if(q&&!((w.name+' '+w.region+' '+w.grapes+' '+w.pour).toLowerCase().includes(q)))return false;
     return true;});
   const newWines=SF.wines.filter(w=>isNew(w));
-  let cur='',html=editBarHTML()+recentBlockHTML(newWines,'wine')+bar;
-  if(!list.length)html+='<p class="board-empty">No wines match.</p>';
-  list.forEach(w=>{
+  const filtering=wineFilter.section!=='all'||wineFilter.glassOnly||!!q;
+  const pinned=filtering?[]:SF.wines.filter(w=>isShuffled(w)), pinnedSet=new Set(pinned);
+  let cur='',html=editBarHTML()+recentBlockHTML(newWines,'wine');
+  if(pinned.length){html+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(w=>html+=wineCardHTML(w));html+=`</div>`;}
+  html+=bar;
+  const shown=list.filter(w=>!pinnedSet.has(w));
+  if(!shown.length)html+='<p class="board-empty">No wines match.</p>';
+  shown.forEach(w=>{
     if(w.section!==cur){cur=w.section;html+=`<div class="section-label">${esc(cur)}</div>`;}
-    const idx=SF.wines.indexOf(w), price=(w.glass?w.glass+' / ':'')+w.bottle;
-    const wrpl=replacedByLive(w.name);
-    if(wrpl){html+=`<div class="card replaced" data-wine="${idx}"><div class="card-head"><span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span><div class="row-between"><span class="wine-name serif">${esc(w.name)}</span><span class="wine-price serif">${esc(price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(wrpl)}</div></div></div>`;return;}
-    const can=(w.has_notes&&(w.producer||w.winemaking))||(w.pronguide&&w.pronguide.length);
-    html+=`<div class="card ${can?'expandable':''}" data-wine="${idx}">
-      <div class="card-head" ${can?`onclick="toggleWine(${idx})"`:''}>
-        <span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span>
-        <div class="row-between"><span class="wine-name serif">${isNew(w)?newBadge():''}${esc(w.name)} ${w.vintage?`<span class="wine-vintage">${esc(w.vintage)}</span>`:''}</span><span class="wine-price serif">${esc(price)}</span></div>
-        ${w.region?`<div class="wine-origin">${esc(w.region)}${w.grapes?' · '+esc(w.grapes):''}</div>`:''}
-        ${w.pour?`<div class="wine-pour serif">${esc(w.pour)}</div>`:''}
-        ${specRow(w.specs)}
-        ${can?`<div class="expand-hint">Tap for producer &amp; winemaking ›</div>`:''}
-      </div>
-      ${can?`<div class="card-details">
-        ${w.producer?`<div class="wine-sec-label">Producer</div><div class="wine-sec-body serif">${esc(w.producer)}</div>`:''}
-        ${w.winemaking?`<div class="wine-sec-label">Winemaking</div><div class="wine-sec-body serif">${esc(w.winemaking)}</div>`:''}
-        ${pronHTML(w.pronguide)}
-      </div>`:''}${noteBox('wine',w.name)}</div>`;
+    html+=wineCardHTML(w);
   });
   $('ftWine').innerHTML=liveBlockHTML('wine')+html;
   $('wineSearch').oninput=e=>{wineFilter.q=e.target.value;const p=e.target.selectionStart;renderWine();const s=$('wineSearch');s.focus();s.setSelectionRange(p,p);};
@@ -1250,7 +1278,7 @@ function ckCardHTML(c){
   const crpl=replacedByLive(c.name);
   if(crpl)return `<div class="card replaced"><div class="card-head"><div class="row-between"><span class="ck-name serif">${esc(c.name)}</span><span class="ck-price serif">${esc(c.price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(crpl)}</div></div></div>`;
   const rich=c.ingredients&&c.ingredients.length;
-  let h=`<div class="card ${rich?'expandable':''}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
+  let h=`<div class="card ${rich?'expandable':''}" id="ckcard-${fcSlug(c.name)}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
       <span class="ck-name serif">${isNew(c)?newBadge():''}${esc(c.name)}${c.highlight?`<span class="hl-badge">${esc(c.highlight)}</span>`:''}</span>
       <span class="ck-price serif">${esc(c.price)}</span></div>
@@ -1267,8 +1295,11 @@ function ckCardHTML(c){
 }
 function renderBar(){
   const newCk=SF.bar.cocktails.filter(c=>isNew(c));
-  let h=editBarHTML()+recentBlockHTML(newCk,'cocktail')+`<div class="section-label">Cocktails</div>`;
-  SF.bar.cocktails.forEach(c=>h+=ckCardHTML(c));
+  const pinned=newCk.filter(isShuffled), pinnedSet=new Set(pinned);
+  let h=editBarHTML()+recentBlockHTML(newCk,'cocktail');
+  if(pinned.length){h+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(c=>h+=ckCardHTML(c));h+=`</div>`;}
+  h+=`<div class="section-label">Cocktails</div>`;
+  SF.bar.cocktails.forEach(c=>{if(!pinnedSet.has(c))h+=ckCardHTML(c);});
   const listSec=items=>{let s=`<div class="card listcard">`;
     items.forEach(n=>{s+=`<div class="pl-item"><div class="pl-row"><span class="pl-name">${esc(n.name)}</span><span class="pl-price">${esc(n.price)}</span></div>${n.note?`<div class="pl-note serif">${esc(n.note)}</div>`:''}${noteBox('bar',n.name)}</div>`;});
     return s+`</div>`;};
