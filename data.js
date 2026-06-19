@@ -195,7 +195,8 @@ window.SF = {
       "canModify": [
        "nuts"
       ],
-      "allergenNote": "Tree nuts: the candied almonds — they come off cleanly for a nut allergy. Allium: raw red onion and the pickled onion are throughout, not removable. UNCONFIRMED — confirm the candied-almond prep with the kitchen; some candying methods also carry dairy (butter) or egg white. Verify before promising nut-free-adjacent or vegan."
+      "allergenNote": "Tree nuts: the candied almonds — they come off cleanly for a nut allergy. Allium: raw red onion and the pickled onion are throughout, not removable. UNCONFIRMED — confirm the candied-almond prep with the kitchen; some candying methods also carry dairy (butter) or egg white. Verify before promising nut-free-adjacent or vegan.",
+      "added": "2026-06-19"
      },
      {
       "name": "Burrata",
@@ -228,7 +229,8 @@ window.SF = {
       "canModify": [
        "gluten"
       ],
-      "allergenNote": "Dairy: the burrata and the buttermilk vinaigrette — central, not removable. Gluten: crostini come on the side so the rest of the table can still have them. UNCONFIRMED: the vinaigrette has poppy seeds (an allergen in some regions, not one we track as a chip) and the chamomile gelee is likely gelatin-set, so as plated this is not vegetarian — verify both with the kitchen before promising."
+      "allergenNote": "Dairy: the burrata and the buttermilk vinaigrette — central, not removable. Gluten: crostini come on the side so the rest of the table can still have them. UNCONFIRMED: the vinaigrette has poppy seeds (an allergen in some regions, not one we track as a chip) and the chamomile gelee is likely gelatin-set, so as plated this is not vegetarian — verify both with the kitchen before promising.",
+      "added": "2026-06-19"
      },
      {
       "name": "Chilled Cherry Gazpacho",
@@ -500,7 +502,8 @@ window.SF = {
       "canModify": [
        "allium"
       ],
-      "allergenNote": "Fish: halibut, central. Allium: shallot — comes off cleanly. UNCONFIRMED — SESAME: the green pea hummus is likely built with tahini (sesame paste), which is how hummus is traditionally made. This is NOT yet confirmed for this prep. Do not clear this dish for a sesame-allergic guest until Chris confirms whether the hummus contains tahini."
+      "allergenNote": "Fish: halibut, central. Allium: shallot — comes off cleanly. UNCONFIRMED — SESAME: the green pea hummus is likely built with tahini (sesame paste), which is how hummus is traditionally made. This is NOT yet confirmed for this prep. Do not clear this dish for a sesame-allergic guest until Chris confirms whether the hummus contains tahini.",
+      "added": "2026-06-19"
      },
      {
       "name": "Pure Country Pork Chop",
@@ -11669,5 +11672,5 @@ window.SF = {
    }
   }
  },
- "build": "1781890466"
+ "build": "1781892076"
 };
