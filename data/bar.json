@@ -110,60 +110,108 @@
    ]
   },
   {
-   "name": "A Midnight Dreary",
-   "build": "uncle val's botanical gin, blueberry and meyer lemon maceration, luxardo, gran classico, lemon, basil",
+   "name": "Pink Pony Club",
+   "build": "uncle val's botanical gin, strawberry and rhubarb maceration, white balsamic, bianco vermouth, lemon, bergamot bitters",
    "price": "17",
    "highlight": "",
-   "tagline": "Dark, botanical, seductively bitter",
+   "tagline": "Bright, fruity, and floral — a strawberry-rhubarb gin sour",
    "ingredients": [
     {
      "name": "Uncle Val's Botanical Gin",
      "amount": "1.5 oz",
-     "description": "Made with five botanicals: juniper, lemon, sage, lavender, and cucumber. The result is a gin that leans floral and citrus-forward rather than piney — exceptionally smooth, with a cucumber coolness and herbal sage note that make it the right canvas for a fruit-forward, aromatic cocktail.",
+     "description": "Made with five botanicals: juniper, lemon, sage, lavender, and cucumber. The result is a gin that leans floral and citrus-forward rather than piney — exceptionally smooth, with a cucumber coolness and herbal sage note that make it the right canvas for a fruit-forward cocktail.",
      "highlight": "floral gin"
     },
     {
-     "name": "Blueberry and Meyer lemon maceration",
+     "name": "Strawberry and rhubarb maceration",
      "amount": "0.75 oz",
-     "description": "A house-made infusion: ripe blueberries and sliced Meyer lemon steeped in spirit until the color runs deep purple and the flavor is rich, jammy, and tart. Meyer lemon is rounder and more floral than regular lemon — less acid, more zest.",
+     "description": "A house-made infusion: ripe strawberries and rhubarb steeped together until the flavor turns jammy, tart, and bright. Strawberry brings the sweetness, rhubarb brings the sour, green edge that keeps it from going candy-sweet.",
      "highlight": "house-made"
     },
     {
-     "name": "Luxardo Maraschino",
+     "name": "White balsamic",
      "amount": "0.25 oz",
-     "description": "Made by the Luxardo family in Padova, Italy since 1821 from Marasca cherries grown in Dalmatia. The crushed pits go in too, giving the liqueur a subtle almond and marzipan note under the cherry. Dry, slightly nutty, unmistakably itself — one of the essential classic cocktail liqueurs."
+     "description": "A pale, mild balsamic vinegar — sweet and gently tart without the dark color or heavy molasses notes of aged balsamic. A small amount adds rounded acidity and a savory depth behind the fruit."
     },
     {
-     "name": "Gran Classico Bitter",
+     "name": "Bianco vermouth",
      "amount": "0.5 oz",
-     "description": "A Swiss-made bitter aperitivo built on a Turin recipe from the 1860s — 25 herbs and roots including wormwood, gentian, bitter orange, and rhubarb. Amber-gold, bittersweet, and beautifully complex. Think Campari's more herbaceous, less sweet sibling. It's what gives this drink its backbone.",
-     "highlight": "1860s recipe"
+     "description": "A sweet white vermouth — floral, vanilla-forward, and lightly herbal. Sweeter than dry vermouth but more delicate than red. It rounds out the fruit and adds body."
     },
     {
      "name": "Lemon juice",
      "amount": "0.5 oz",
-     "description": "Fresh-squeezed. Brightens the whole build and lifts the maceration."
+     "description": "Fresh-squeezed. Keeps the sweetness honest and gives the drink its sour backbone."
     },
     {
-     "name": "Fresh basil",
-     "amount": "4–5 leaves, expressed",
-     "description": "Lightly slapped and expressed, not muddled. Adds an herbal, slightly peppery aroma that bridges the gin's botanicals and the fruit of the maceration."
+     "name": "Bergamot bitters",
+     "amount": "2 dashes",
+     "description": "Aromatic bitters built on bergamot — the floral, slightly bitter citrus that gives Earl Grey its character. A few dashes tie the strawberry and the gin's botanicals together on the nose."
     }
    ],
    "pronguide": [
     {
-     "term": "Luxardo Maraschino",
-     "pron": "look-SAR-doh mah-rah-SKEE-noh"
+     "term": "bianco vermouth",
+     "pron": "BYAHN-koh vehr-MOOTH"
     },
     {
-     "term": "Gran Classico",
-     "pron": "grahn KLAHS-see-koh"
-    },
-    {
-     "term": "Padova",
-     "pron": "PAH-doh-vah"
+     "term": "bergamot",
+     "pron": "BEHR-gah-mot"
     }
-   ]
+   ],
+   "added": "2026-06-19"
+  },
+  {
+   "name": "In Fair Verona",
+   "build": "westland flagship whiskey, rhubarb-infused bianco vermouth, cocchi americano, genziana fernanda, lavender bitters",
+   "price": "18",
+   "highlight": "",
+   "tagline": "Stirred, aromatic, and bittersweet — a Seattle whiskey drink",
+   "ingredients": [
+    {
+     "name": "Westland Flagship American Single Malt",
+     "amount": "1.5 oz",
+     "description": "Seattle's own — distilled in a restored crane factory in SoDo from a five-malt grain bill, aged in American oak at 92 proof. Dessert-like on the nose (marionberry, chocolate, toasted almond) but clean and unobtrusive on the palate. The local backbone of the drink.",
+     "highlight": "Seattle malt"
+    },
+    {
+     "name": "Rhubarb-infused Bianco vermouth",
+     "amount": "1 oz",
+     "description": "House infusion: sweet white (bianco) vermouth steeped with rhubarb until it picks up a tart, green edge. Floral and lightly herbal from the vermouth, sharpened by the rhubarb."
+    },
+    {
+     "name": "Cocchi Americano",
+     "amount": "0.5 oz",
+     "description": "An aromatized aperitif wine from Piedmont, Italy, built on Moscato and flavored with gentian and citrus peels. Bittersweet, light, and floral — it adds a quinine-like bitterness without weight.",
+     "highlight": "aperitivo"
+    },
+    {
+     "name": "Genziana Fernanda",
+     "amount": "0.25 oz",
+     "description": "A gentian liqueur (genziana) made by Letterpress Distilling here in Seattle — earthy, bittersweet, and rooty from the gentian, but on the approachable, balanced end of the style. A small pour for depth and bitter spine.",
+     "highlight": "Seattle made"
+    },
+    {
+     "name": "Lavender bitters",
+     "amount": "2 dashes",
+     "description": "Aromatic bitters infused with dried lavender. Ties the whiskey and the vermouth to a soft floral top note on the nose."
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Cocchi Americano",
+     "pron": "KOH-kee ah-meh-ree-KAH-noh"
+    },
+    {
+     "term": "Genziana",
+     "pron": "jen-tsee-AH-nah"
+    },
+    {
+     "term": "Verona",
+     "pron": "veh-ROH-nah"
+    }
+   ],
+   "added": "2026-06-19"
   },
   {
    "name": "Cool Cat",
