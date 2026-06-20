@@ -413,9 +413,9 @@
             "Admin/MD 5-8",
             "",
             "",
-            "Expo",
-            "Expo",
-            "Expo"
+            "MD",
+            "MD",
+            "MD"
           ]
         },
         {
@@ -425,7 +425,7 @@
             "Sup Server",
             "MD",
             "MD",
-            "MD",
+            "Float",
             "",
             ""
           ]
@@ -438,8 +438,8 @@
             "3:30 Bar",
             "3:30 Bar",
             "Sup Server",
-            "MD",
-            "Float/Admin"
+            "Float",
+            "Sup Server"
           ]
         },
         {
@@ -535,7 +535,7 @@
             "",
             "3:30 serve",
             "3:30 serve",
-            "Sup Server"
+            "3:30 serve"
           ]
         },
         {
