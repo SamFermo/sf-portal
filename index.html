@@ -125,6 +125,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 .dish-desc{font-family:'Caladea',Georgia,serif; font-style:italic; font-size:13.5px; color:var(--card-mute); margin-top:3px;}
 .raw-badge{display:inline-block; margin-left:7px; font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--rust); border:1px solid var(--rust); border-radius:999px; padding:1px 6px; vertical-align:middle;}
 .new-badge{display:inline-block; margin-right:6px; font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#2d6a4f; background:rgba(45,106,79,.12); border:1px solid rgba(45,106,79,.35); border-radius:999px; padding:1px 7px; vertical-align:middle; font-family:system-ui,sans-serif;}
+.chip-count{display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px; padding:0 4px; margin-left:6px; font-size:10px; font-weight:700; line-height:1; color:#fff; background:var(--rust); border-radius:999px; vertical-align:middle; font-family:system-ui,sans-serif;}
+.sub-count{display:inline-flex; align-items:center; justify-content:center; min-width:15px; height:15px; padding:0 4px; margin-left:5px; font-size:9.5px; font-weight:700; line-height:1; color:#fff; background:var(--rust); border-radius:999px; vertical-align:middle; font-family:system-ui,sans-serif;}
 .recent-block{background:rgba(45,106,79,.06); border:1.5px solid rgba(45,106,79,.2); border-radius:14px; padding:14px 16px; margin-bottom:16px;}
 .recent-head{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#2d6a4f; margin-bottom:10px;}
 .recent-item{display:flex; align-items:baseline; gap:8px; padding:5px 0; border-bottom:1px solid rgba(45,106,79,.08); cursor:pointer; -webkit-tap-highlight-color:rgba(45,106,79,.12);}
@@ -850,7 +852,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781961205';   // stamped by build-data.py at every deploy
+const BUILD='1781994713';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -899,7 +901,8 @@ function makeStars(){
 const TABS=[['fresh','Fresh Talk'],['board','Tables'],['verbals','Verbals'],['crew','Crew Board'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service']];
 function navTabs(){let t=isMgr()?TABS.concat([['orders','Farm Order'],['frontdesk','Front Desk']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
-  $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));}
+  $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
+  if(typeof updatePendingBadge==='function')updatePendingBadge();}
 function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
@@ -1052,7 +1055,7 @@ async function submitNewPin(){
   p.pinHash=h; setSession(p.name); me=p;
   $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent();
 }
-function logout(){clearSession();me=null;document.body.classList.add('locked');openLogin();}
+function logout(){clearSession();me=null;document.body.classList.add('locked');try{if('clearAppBadge' in navigator)navigator.clearAppBadge();}catch(e){}openLogin();}
 
 /* contact-consent wall */
 function openConsent(){
@@ -1514,8 +1517,21 @@ function startTimeoffSync(){
     toUnsub=fbDb.collection('timeoff').orderBy('createdAt','desc').limit(120).onSnapshot(function(snap){
       toState=snap.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o;});
       if(schedState.side==='timeoff')renderTimeoff();
-    },function(){ toState=toLsGet(); if(schedState.side==='timeoff')renderTimeoff(); });
-  }else{ toState=toLsGet(); }
+      updatePendingBadge();
+    },function(){ toState=toLsGet(); if(schedState.side==='timeoff')renderTimeoff(); updatePendingBadge(); });
+  }else{ toState=toLsGet(); updatePendingBadge(); }
+}
+/* Pending time-off badge — Sam only, on the Schedule chip + Time Off subtab + app icon.
+   Other admins can approve but don't get the badge (scope decision 2026-06-20). */
+function pendingTimeoffCount(){return (toState||toLsGet()).filter(function(r){return r&&r.status==='pending';}).length;}
+function updatePendingBadge(){
+  var n = (currentUserName()==='Sam West') ? pendingTimeoffCount() : 0;
+  function setOn(el,cls){ if(!el)return; var b=el.querySelector('.'+cls);
+    if(n>0){ if(!b){b=document.createElement('span');b.className=cls;el.appendChild(b);} b.textContent=n; }
+    else if(b){ b.remove(); } }
+  setOn(document.querySelector('#navChips .chip[data-go="schedule"]'),'chip-count');
+  setOn(document.querySelector('.subtab[data-side="timeoff"]'),'sub-count');
+  try{ if('setAppBadge' in navigator){ if(n>0) navigator.setAppBadge(n); else navigator.clearAppBadge(); } }catch(e){}
 }
 function reqDates(r){if(!r.end||r.end===r.start)return fmtLong(r.start);return fmtShort(r.start)+' – '+fmtShort(r.end);}
 function toggleToForm(){toFormOpen=!toFormOpen;renderTimeoff();if(toFormOpen)setTimeout(function(){var s=$('to-start');if(s)s.focus();},40);}
