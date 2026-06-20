@@ -3012,6 +3012,57 @@ window.SF = {
      "pron": "bah-toh-NAHZH"
     }
    ]
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "Pietramore Passerina Abruzzo Superiore DOP",
+   "vintage": "",
+   "region": "Abruzzo, Italy",
+   "type": "white",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Passerina",
+   "pour": "Straw yellow with greenish glints, crystalline and lively. White flowers and tropical fruit on the nose, fresh on the palate with good body. A dry, biodynamic Abruzzese white built for crudo, antipasti and grilled fish.",
+   "producer": "Antica Tenuta Pietramore farms biodynamically in Abruzzo, founded in 2011 and Demeter-certified since 2014, with old vines (many around 40 years) and a fully vegan cellar. The fresh sheet lists the production zone as the Province of Chieti, on medium-textured, chalky-leaning soils with a southeast exposure — confirm the exact zone and vintage with your lead before quoting, since the estate itself is documented near Teramo. ABV runs roughly 13–13.5% depending on vintage; confirm against the bottle in hand.",
+   "winemaking": "Hand-picked, pressed with the aid of dry ice and soft-pressed, with decantation of the free-run juice. Anaerobic fermentation at low temperature, around 14–15°C, then aging on the fine lees in steel vats.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 3,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 4,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Pietramore",
+     "pron": "pyeh-trah-MOH-reh"
+    },
+    {
+     "term": "Passerina",
+     "pron": "pah-seh-REE-nah"
+    }
+   ],
+   "added": "2026-06-20"
   }
  ],
  "bar": {
@@ -4163,9 +4214,9 @@ window.SF = {
        "Admin/MD 5-8",
        "",
        "",
-       "Expo",
-       "Expo",
-       "Expo"
+       "MD",
+       "MD",
+       "MD"
       ]
      },
      {
@@ -4175,7 +4226,7 @@ window.SF = {
        "Sup Server",
        "MD",
        "MD",
-       "MD",
+       "Float",
        "",
        ""
       ]
@@ -4188,8 +4239,8 @@ window.SF = {
        "3:30 Bar",
        "3:30 Bar",
        "Sup Server",
-       "MD",
-       "Float/Admin"
+       "Float",
+       "Sup Server"
       ]
      },
      {
@@ -4285,7 +4336,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 serve",
-       "Sup Server"
+       "3:30 serve"
       ]
      },
      {
@@ -11672,5 +11723,5 @@ window.SF = {
    }
   }
  },
- "build": "1781903492"
+ "build": "1781961205"
 };
