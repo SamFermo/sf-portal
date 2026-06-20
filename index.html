@@ -126,7 +126,6 @@ nav.chips::-webkit-scrollbar{display:none;}
 .raw-badge{display:inline-block; margin-left:7px; font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--rust); border:1px solid var(--rust); border-radius:999px; padding:1px 6px; vertical-align:middle;}
 .new-badge{display:inline-block; margin-right:6px; font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#2d6a4f; background:rgba(45,106,79,.12); border:1px solid rgba(45,106,79,.35); border-radius:999px; padding:1px 7px; vertical-align:middle; font-family:system-ui,sans-serif;}
 .chip-count{display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px; padding:0 4px; margin-left:6px; font-size:10px; font-weight:700; line-height:1; color:#fff; background:var(--rust); border-radius:999px; vertical-align:middle; font-family:system-ui,sans-serif;}
-.sub-count{display:inline-flex; align-items:center; justify-content:center; min-width:15px; height:15px; padding:0 4px; margin-left:5px; font-size:9.5px; font-weight:700; line-height:1; color:#fff; background:var(--rust); border-radius:999px; vertical-align:middle; font-family:system-ui,sans-serif;}
 .recent-block{background:rgba(45,106,79,.06); border:1.5px solid rgba(45,106,79,.2); border-radius:14px; padding:14px 16px; margin-bottom:16px;}
 .recent-head{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#2d6a4f; margin-bottom:10px;}
 .recent-item{display:flex; align-items:baseline; gap:8px; padding:5px 0; border-bottom:1px solid rgba(45,106,79,.08); cursor:pointer; -webkit-tap-highlight-color:rgba(45,106,79,.12);}
@@ -852,7 +851,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781994713';   // stamped by build-data.py at every deploy
+const BUILD='1781995697';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1530,7 +1529,6 @@ function updatePendingBadge(){
     if(n>0){ if(!b){b=document.createElement('span');b.className=cls;el.appendChild(b);} b.textContent=n; }
     else if(b){ b.remove(); } }
   setOn(document.querySelector('#navChips .chip[data-go="schedule"]'),'chip-count');
-  setOn(document.querySelector('.subtab[data-side="timeoff"]'),'sub-count');
   try{ if('setAppBadge' in navigator){ if(n>0) navigator.setAppBadge(n); else navigator.clearAppBadge(); } }catch(e){}
 }
 function reqDates(r){if(!r.end||r.end===r.start)return fmtLong(r.start);return fmtShort(r.start)+' – '+fmtShort(r.end);}
