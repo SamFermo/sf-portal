@@ -871,7 +871,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782006541';   // stamped by build-data.py at every deploy
+const BUILD='1782006923';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2250,10 +2250,13 @@ function tblItemHTML(t,i){
     else if(isOutby)glow=' tbl-glow-a';
   }
   const tagTxt=(t.occasion==='outby'&&t.outby)?('Out by '+t.outby):occLabel(t.occasion);
+  let meta='';
+  if(t.by)meta+='added by '+esc(t.by);
+  if(t.ack){meta+=(meta?' · ':'')+'✓ seen'+(t.ackBy?' by '+esc(String(t.ackBy).split(' ')[0]):'');}
   let mid=`<span class="tbl-occ-tag occ-${esc(t.occasion)}">${esc(tagTxt)}</span>
-    ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${t.by?`<div class="tbl-by">added by ${esc(t.by)}${(isStatus||isOutby)&&t.ack?' · ✓ seen':''}</div>`:''}`;
+    ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${meta?`<div class="tbl-by">${meta}</div>`:''}`;
   let right='';
-  if(!t.ack&&((isStatus&&isMgr())||(isOutby&&me)))right+=`<button class="tbl-ack" onclick="ackTable(${i})">ACK</button>`;
+  if(!t.ack&&me&&t.by!==currentUserName())right+=`<button class="tbl-ack" onclick="ackTable(${i})">ACK</button>`;
   if(canEditTbl(t))right+=`<span class="tbl-edit-btn" onclick="editTable(${i})" title="Edit">✎</span>`;
   right+=`<span class="tbl-x" onclick="rmTable(${i})">✕</span>`;
   return `<div class="tbl-item${glow}"><span class="tbl-badge">${esc(t.table)}</span>
@@ -2262,9 +2265,8 @@ function tblItemHTML(t,i){
 function ackTable(i){
   const b=getBoard();if(!(b.tables&&b.tables[i]))return;
   const t=b.tables[i];
-  const allowed=(t.occasion==='outby')?!!me:isMgr();
-  if(!allowed)return;
-  b.tables[i].ack=true;persistBoard(b);renderBoard();
+  if(!(me&&t.by!==currentUserName()))return;   // only acknowledge someone else's flag
+  b.tables[i].ack=true;b.tables[i].ackBy=currentUserName()||'';persistBoard(b);renderBoard();
 }
 function tablesColHTML(items){
   let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Tables Tonight</span>
