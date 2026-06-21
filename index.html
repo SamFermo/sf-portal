@@ -716,11 +716,13 @@ body.locked{overflow:hidden;}
       <button class="subtab active" data-ft="food">Food</button>
       <button class="subtab" data-ft="wine">Wine</button>
       <button class="subtab" data-ft="bar">Cocktails</button>
+      <button class="subtab" data-ft="allergens">Allergens</button>
     </div>
   </div>
   <div id="ftFood"></div>
   <div id="ftWine" style="display:none;"></div>
   <div id="ftBar" style="display:none;"></div>
+  <div id="ftAllergens" style="display:none;"></div>
 </section>
 
 <section class="view" id="schedule">
@@ -869,7 +871,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782005652';   // stamped by build-data.py at every deploy
+const BUILD='1782006301';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1184,17 +1186,13 @@ const ALLERGEN_SYN={
   egg:['egg','eggs','albumen','aioli','mayo','mayonnaise'],
   fish:['fish','anchovy','anchovies','seafood'],
   gluten:['gluten','wheat','celiac','coeliac','barley','rye'],
-  nuts:['nut','nuts','tree nut','tree-nut','treenut','almond','almonds','walnut','walnuts','pecan','hazelnut','pistachio','cashew','peanut','peanuts','marzipan','praline']
+  nuts:['nut','nuts','tree nut','tree-nut','treenut','almond','almonds','walnut','walnuts','pecan','hazelnut','pistachio','cashew','peanut','peanuts','marzipan','praline'],
+  shellfish:['shellfish','shrimp','prawn','prawns','crab','lobster','crawfish','crayfish','clam','clams','mussel','mussels','oyster','oysters','scallop','scallops','squid','octopus','calamari']
 };
-const ALLERGEN_LBL={allium:'allium (onion/garlic)',dairy:'dairy',egg:'egg',fish:'fish',gluten:'gluten',nuts:'tree nuts'};
-let algQuery='', algTag=null, algUnknown=false;
-function detectAllergen(q){
-  q=' '+String(q||'').toLowerCase().replace(/[^a-z\s-]/g,' ').replace(/\s+/g,' ')+' ';
-  for(var tag in ALLERGEN_SYN){
-    if(ALLERGEN_SYN[tag].some(function(w){return q.indexOf(' '+w+' ')>=0||q.indexOf(' '+w+'s ')>=0;}))return tag;
-  }
-  return null;
-}
+const ALLERGEN_ORDER=['allium','dairy','egg','fish','gluten','nuts','shellfish'];
+const ALLERGEN_OPT={allium:'Allium (onion / garlic)',dairy:'Dairy',egg:'Egg',fish:'Fish',gluten:'Gluten',nuts:'Tree nuts',shellfish:'Shellfish'};
+const ALLERGEN_LBL={allium:'allium (onion/garlic)',dairy:'dairy',egg:'egg',fish:'fish',gluten:'gluten',nuts:'tree nuts',shellfish:'shellfish'};
+let algTag=null;
 function algFoodItems(){var out=[];(SF.menu.food||[]).forEach(function(s){(s.items||[]).forEach(function(it){out.push(it);});});(SF.menu.desserts||[]).forEach(function(it){out.push(it);});return out;}
 function allergenLookup(tag){
   var clear=[],mod=[],off=[],check=[];
@@ -1212,7 +1210,7 @@ function algItemHTML(it,withNote){
     (withNote&&it.allergenNote?'<div class="alg-note">'+esc(it.allergenNote)+'</div>':'')+'</div>';
 }
 function allergenResultHTML(tag){
-  if(!tag)return algUnknown?'<div class="alg-none">I only track the allergens tagged on the menu: allium, dairy, egg, fish, gluten, tree nuts. For anything else (shellfish, soy, sesame, sulfites, etc.), check every dish with the kitchen.</div>':'';
+  if(!tag)return '';
   var r=allergenLookup(tag),lbl=ALLERGEN_LBL[tag];
   var lead;
   if(r.off.length===0&&r.mod.length===0)lead='Nothing on the food menu contains '+lbl+'.';
@@ -1228,21 +1226,21 @@ function allergenResultHTML(tag){
   return h;
 }
 function runAllergen(){
-  var q=($('alg-q')?$('alg-q').value:'')||'';algQuery=q;
-  var tag=detectAllergen(q);algTag=tag;algUnknown=(!tag&&q.trim().length>0);
-  var box=$('alg-result');if(box)box.innerHTML=allergenResultHTML(tag);
+  var sel=$('alg-q');var tag=sel?sel.value:'';algTag=tag||null;
+  var box=$('alg-result');if(box)box.innerHTML=algTag?allergenResultHTML(algTag):'<div class="alg-none">Pick an allergy to see what’s safe, what can be modified, and what’s off limits.</div>';
 }
 function allergenAskHTML(){
+  var opts='<option value="">Choose an allergy…</option>'+ALLERGEN_ORDER.map(function(t){return '<option value="'+t+'"'+(algTag===t?' selected':'')+'>'+esc(ALLERGEN_OPT[t])+'</option>';}).join('');
   return '<div class="alg-box"><div class="alg-title">Allergy check · food menu</div>'+
-    '<div class="alg-row"><input id="alg-q" class="board-input" placeholder="Type an allergy — e.g. allium, dairy, gluten" value="'+esc(algQuery)+'" onkeydown="if(event.key===\'Enter\')runAllergen()"><button class="board-add" onclick="runAllergen()">Check</button></div>'+
-    '<div id="alg-result">'+allergenResultHTML(algTag)+'</div></div>';
+    '<div class="alg-row"><select id="alg-q" class="board-input" onchange="runAllergen()">'+opts+'</select></div>'+
+    '<div id="alg-result">'+(algTag?allergenResultHTML(algTag):'<div class="alg-none">Pick an allergy to see what’s safe, what can be modified, and what’s off limits.</div>')+'</div></div>';
 }
 function renderFoodTab(){
   const newDishes=[];
   SF.menu.food.forEach(sec=>sec.items.forEach(it=>{if(isNew(it))newDishes.push(it);}));
   SF.menu.desserts.forEach(it=>{if(isNew(it))newDishes.push(it);});
   const pinned=newDishes.filter(isShuffled), pinnedSet=new Set(pinned);
-  let f=editBarHTML()+allergenAskHTML()+recentBlockHTML(newDishes,'dish');
+  let f=editBarHTML()+recentBlockHTML(newDishes,'dish');
   if(pinned.length){f+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(it=>f+=dishCardHTML(it));f+=`</div>`;}
   f+=allergenLegendHTML();
   SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;
@@ -1252,7 +1250,7 @@ function renderFoodTab(){
   f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
   $('ftFood').innerHTML=liveBlockHTML('dish')+f;
 }
-function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); }
+function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); var a=$('ftAllergens'); if(a)a.innerHTML=allergenAskHTML(); }
 let corrCopied=false;
 function genPrompt(){
   const c=getCorr();
@@ -2902,7 +2900,7 @@ function init(){
   buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
   renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderCrew(); renderAccess();
   initPill($('crewTabs'),$('crewPill'),'ct',v=>{crewTab=v;renderCrew();});
-  initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';});
+  initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';$('ftAllergens').style.display=v==='allergens'?'block':'none';});
   initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{schedState.side=v;renderSchedule();});
   initPill($('dutyTabs'),$('dutyPill'),'duty',v=>{dutyTab=v;renderDuties();});
   initPill($('compTabs'),$('compPill'),'comp',v=>{compTab=v;renderCompliance();});
