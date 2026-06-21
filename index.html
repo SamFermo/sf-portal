@@ -610,6 +610,19 @@ body.locked{overflow:hidden;}
 .tbl-edit-btn{cursor:pointer; color:var(--ink-mute); font-size:14px; padding:0 2px;}
 .tbl-edit-box{margin:6px 0; padding:8px; border:1px dashed var(--ink-mute); border-radius:10px;}
 .tbl-edit-cancel{background:transparent; border:1px solid var(--ink-mute); color:var(--ink-mute);}
+.alg-box{margin:4px 0 16px; padding:12px 13px; border:1px solid rgba(150,150,150,.28); border-radius:12px;}
+.alg-title{font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:var(--card-mute,#888); margin-bottom:8px;}
+.alg-row{display:flex; gap:8px;}
+.alg-row .board-input{flex:1;}
+.alg-lead{font-size:13.5px; margin:11px 0 4px; color:var(--ink-soft);}
+.alg-bucket{margin-top:11px;}
+.alg-bhead{font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px;}
+.alg-clear .alg-bhead{color:#2d6a4f;} .alg-mod .alg-bhead{color:#9a6a12;} .alg-off .alg-bhead{color:#9b2f2f;} .alg-check .alg-bhead{color:#7a5410;}
+.alg-item{font-size:13px; padding:4px 0; border-top:1px solid rgba(150,150,150,.16);}
+.alg-item-name{font-weight:600;}
+.alg-note{font-size:11.5px; color:var(--ink-mute); margin-top:2px; line-height:1.35;}
+.alg-confirm{margin-top:13px; font-size:11.5px; color:#9b2f2f; font-weight:600; line-height:1.35;}
+.alg-none{font-size:12.5px; color:var(--ink-mute); font-style:italic; margin-top:9px; line-height:1.4;}
 
 @media(max-width:600px){
   .home-grid{grid-template-columns:1fr 1fr;}
@@ -856,7 +869,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782005204';   // stamped by build-data.py at every deploy
+const BUILD='1782005652';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1161,12 +1174,75 @@ function allergenLegendHTML(){
   if(SF.menu.allergenStatus==='draft')h+=`<div class="alg-draft">Allergen flags are in chef review — confirm with the kitchen before promising a table.</div>`;
   return h;
 }
+/* ALLERGEN LOOKUP — food menu only, deterministic over structured allergens/canModify.
+   Buckets: Safe as-is (tag absent) / Can be modified (tag in canModify) / Off limits
+   (tag present, not modifiable). Plus a Verify flag for untagged items whose note
+   raises the allergen with uncertainty. Always defers to the kitchen. (added 2026-06-20) */
+const ALLERGEN_SYN={
+  allium:['allium','onion','onions','garlic','leek','leeks','shallot','shallots','scallion','scallions','chive','chives','ramp','ramps'],
+  dairy:['dairy','milk','cheese','butter','cream','lactose','ghee','yogurt','yoghurt','whey','casein'],
+  egg:['egg','eggs','albumen','aioli','mayo','mayonnaise'],
+  fish:['fish','anchovy','anchovies','seafood'],
+  gluten:['gluten','wheat','celiac','coeliac','barley','rye'],
+  nuts:['nut','nuts','tree nut','tree-nut','treenut','almond','almonds','walnut','walnuts','pecan','hazelnut','pistachio','cashew','peanut','peanuts','marzipan','praline']
+};
+const ALLERGEN_LBL={allium:'allium (onion/garlic)',dairy:'dairy',egg:'egg',fish:'fish',gluten:'gluten',nuts:'tree nuts'};
+let algQuery='', algTag=null, algUnknown=false;
+function detectAllergen(q){
+  q=' '+String(q||'').toLowerCase().replace(/[^a-z\s-]/g,' ').replace(/\s+/g,' ')+' ';
+  for(var tag in ALLERGEN_SYN){
+    if(ALLERGEN_SYN[tag].some(function(w){return q.indexOf(' '+w+' ')>=0||q.indexOf(' '+w+'s ')>=0;}))return tag;
+  }
+  return null;
+}
+function algFoodItems(){var out=[];(SF.menu.food||[]).forEach(function(s){(s.items||[]).forEach(function(it){out.push(it);});});(SF.menu.desserts||[]).forEach(function(it){out.push(it);});return out;}
+function allergenLookup(tag){
+  var clear=[],mod=[],off=[],check=[];
+  var UNCERTAIN=/(confirm|unconfirmed|pending|verify|checking|\bcheck\b|status|tbd)/;
+  algFoodItems().forEach(function(it){
+    var al=it.allergens||[],cm=it.canModify||[],note=(it.allergenNote||'').toLowerCase();
+    if(al.indexOf(tag)>=0){ if(cm.indexOf(tag)>=0)mod.push(it); else off.push(it); }
+    else if(ALLERGEN_SYN[tag].some(function(w){return note.indexOf(w)>=0;})&&UNCERTAIN.test(note)){ check.push(it); }
+    else { clear.push(it); }
+  });
+  return {clear:clear,mod:mod,off:off,check:check};
+}
+function algItemHTML(it,withNote){
+  return '<div class="alg-item"><span class="alg-item-name">'+esc(it.name)+'</span>'+
+    (withNote&&it.allergenNote?'<div class="alg-note">'+esc(it.allergenNote)+'</div>':'')+'</div>';
+}
+function allergenResultHTML(tag){
+  if(!tag)return algUnknown?'<div class="alg-none">I only track the allergens tagged on the menu: allium, dairy, egg, fish, gluten, tree nuts. For anything else (shellfish, soy, sesame, sulfites, etc.), check every dish with the kitchen.</div>':'';
+  var r=allergenLookup(tag),lbl=ALLERGEN_LBL[tag];
+  var lead;
+  if(r.off.length===0&&r.mod.length===0)lead='Nothing on the food menu contains '+lbl+'.';
+  else if(r.off.length<=r.clear.length)lead='Only '+r.off.length+' '+(r.off.length===1?'dish is':'dishes are')+' off limits for '+lbl+'. Everything else is safe'+(r.mod.length?' (some with a change)':'')+'.';
+  else lead=r.clear.length+' '+(r.clear.length===1?'dish is':'dishes are')+' clear for '+lbl+(r.mod.length?', and '+r.mod.length+' can be modified':'')+'. The rest are off limits.';
+  var h='<div class="alg-lead">'+lead+'</div>';
+  function bucket(cls,title,arr,withNote){if(!arr.length)return '';return '<div class="alg-bucket '+cls+'"><div class="alg-bhead">'+title+' ('+arr.length+')</div>'+arr.map(function(it){return algItemHTML(it,withNote);}).join('')+'</div>';}
+  h+=bucket('alg-clear','✓ Safe as-is',r.clear,false);
+  h+=bucket('alg-mod','◐ Can be modified',r.mod,true);
+  h+=bucket('alg-off','✕ Off limits',r.off,true);
+  h+=bucket('alg-check','⚠ Verify with kitchen',r.check,true);
+  h+='<div class="alg-confirm">Always confirm with the kitchen before promising — this reflects the menu data, not a final clearance.</div>';
+  return h;
+}
+function runAllergen(){
+  var q=($('alg-q')?$('alg-q').value:'')||'';algQuery=q;
+  var tag=detectAllergen(q);algTag=tag;algUnknown=(!tag&&q.trim().length>0);
+  var box=$('alg-result');if(box)box.innerHTML=allergenResultHTML(tag);
+}
+function allergenAskHTML(){
+  return '<div class="alg-box"><div class="alg-title">Allergy check · food menu</div>'+
+    '<div class="alg-row"><input id="alg-q" class="board-input" placeholder="Type an allergy — e.g. allium, dairy, gluten" value="'+esc(algQuery)+'" onkeydown="if(event.key===\'Enter\')runAllergen()"><button class="board-add" onclick="runAllergen()">Check</button></div>'+
+    '<div id="alg-result">'+allergenResultHTML(algTag)+'</div></div>';
+}
 function renderFoodTab(){
   const newDishes=[];
   SF.menu.food.forEach(sec=>sec.items.forEach(it=>{if(isNew(it))newDishes.push(it);}));
   SF.menu.desserts.forEach(it=>{if(isNew(it))newDishes.push(it);});
   const pinned=newDishes.filter(isShuffled), pinnedSet=new Set(pinned);
-  let f=editBarHTML()+recentBlockHTML(newDishes,'dish');
+  let f=editBarHTML()+allergenAskHTML()+recentBlockHTML(newDishes,'dish');
   if(pinned.length){f+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(it=>f+=dishCardHTML(it));f+=`</div>`;}
   f+=allergenLegendHTML();
   SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;
