@@ -56,9 +56,12 @@ window.SF = {
         "note": "The fine yellow pollen harvested from wild fennel flowers. Intensely aromatic, floral, and anise-forward — used here as a finishing garnish."
        }
       ],
-      "allergens": [],
+      "allergens": [
+       "allium"
+      ],
       "canModify": [],
-      "allergenNote": "The marinade carries garlic — Chris is confirming the allium status. Check before promising."
+      "allergenNote": "Confirmed: the marinade carries garlic (allium) and chili flake. The garlic is marinated in, so it can't be picked out — off limits for an allium allergy. The chili flake also adds a little heat, a heads up for spice-sensitive guests.",
+      "added": "2026-06-20"
      },
      {
       "name": "Marcona Almonds",
@@ -11723,5 +11726,5 @@ window.SF = {
    }
   }
  },
- "build": "1782006301"
+ "build": "1782006541"
 };
