@@ -607,6 +607,9 @@ body.locked{overflow:hidden;}
 .tbl-note{font-size:13px; color:var(--ink-soft); margin-top:3px;}
 .tbl-by{font-size:10.5px; color:var(--ink-mute); font-style:italic; margin-top:2px;}
 .tbl-x{cursor:pointer; color:var(--ink-mute); font-size:15px; padding:0 2px;}
+.tbl-edit-btn{cursor:pointer; color:var(--ink-mute); font-size:14px; padding:0 2px;}
+.tbl-edit-box{margin:6px 0; padding:8px; border:1px dashed var(--ink-mute); border-radius:10px;}
+.tbl-edit-cancel{background:transparent; border:1px solid var(--ink-mute); color:var(--ink-mute);}
 
 @media(max-width:600px){
   .home-grid{grid-template-columns:1fr 1fr;}
@@ -853,7 +856,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782004212';   // stamped by build-data.py at every deploy
+const BUILD='1782005204';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2132,7 +2135,38 @@ function tableSection(t){
   for(const name of sec.order){if((sec.map[name]||[]).some(x=>String(x).toUpperCase()===key))return name;}
   return null;
 }
+/* EDIT a table flag in place — author or manager (added 2026-06-20). */
+let boardEditIdx=-1;
+function canEditTbl(t){return isMgr() || (!!currentUserName() && t && t.by===currentUserName());}
+function editTable(i){boardEditIdx=i;renderBoard();setTimeout(function(){var n=$('te-note');if(n){n.focus();try{n.setSelectionRange(n.value.length,n.value.length);}catch(e){}}},0);}
+function cancelTableEdit(){boardEditIdx=-1;renderBoard();}
+function occChangedEdit(){var sel=$('te-occ'),tw=$('te-outby');if(!sel||!tw)return;
+  if(sel.value==='outby'){if(!tw.innerHTML.trim())tw.innerHTML=outbyOptionsHTML();tw.style.display='';}else tw.style.display='none';}
+function tblEditHTML(t,i){
+  var opts=OCCASIONS.map(function(o){return '<option value="'+o[0]+'"'+(o[0]===t.occasion?' selected':'')+'>'+o[1]+'</option>';}).join('');
+  var isOutby=t.occasion==='outby';
+  var outbyOpts=isOutby?('<option value="'+esc(t.outby||'')+'" selected>'+esc(t.outby||'—')+'</option>'+outbyOptionsHTML()):'';
+  return '<div class="tbl-edit-box"><div class="tbl-input-row">'+
+    '<input class="board-input tbl-num" id="te-num" inputmode="numeric" value="'+esc(t.table)+'">'+
+    '<select class="tbl-occ" id="te-occ" onchange="occChangedEdit()">'+opts+'</select>'+
+    '<select class="tbl-occ" id="te-outby" style="display:'+(isOutby?'':'none')+'">'+outbyOpts+'</select>'+
+    '<input class="board-input tbl-note-in" id="te-note" placeholder="Note" value="'+esc(t.note||'')+'" onkeydown="if(event.key===\'Enter\')saveTableEdit('+i+')">'+
+    '<button class="board-add" onclick="saveTableEdit('+i+')">✓</button>'+
+    '<button class="board-add tbl-edit-cancel" onclick="cancelTableEdit()">✕</button>'+
+    '</div></div>';
+}
+function saveTableEdit(i){var b=getBoard();if(!(b.tables&&b.tables[i])){boardEditIdx=-1;renderBoard();return;}
+  var t=b.tables[i];
+  if(!canEditTbl(t)){boardEditIdx=-1;renderBoard();return;}
+  var numEl=$('te-num'),num=(numEl?numEl.value:'').trim();
+  if(!num){if(numEl){numEl.classList.add('flash-req');numEl.focus();setTimeout(function(){numEl.classList.remove('flash-req');},1200);}return;}
+  var occ=$('te-occ').value,note=($('te-note').value||'').trim(),outby='';
+  if(occ==='outby'){var o=$('te-outby');outby=o?o.value:'';if(!outby){if(o){o.classList.add('flash-req');setTimeout(function(){o.classList.remove('flash-req');},1200);}return;}}
+  t.table=comboPrimary(num);t.occasion=occ;t.note=note;t.outby=outby;
+  boardEditIdx=-1;persistBoard(b);renderBoard();
+}
 function tblItemHTML(t,i){
+  if(boardEditIdx===i)return tblEditHTML(t,i);
   // reset/dragging are server→MD flags (MD acks); out-by is MD→server (anyone acks)
   const isStatus=(t.occasion==='reset'||t.occasion==='dragging');
   const isOutby=t.occasion==='outby';
@@ -2146,6 +2180,7 @@ function tblItemHTML(t,i){
     ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${t.by?`<div class="tbl-by">added by ${esc(t.by)}${(isStatus||isOutby)&&t.ack?' · ✓ seen':''}</div>`:''}`;
   let right='';
   if(!t.ack&&((isStatus&&isMgr())||(isOutby&&me)))right+=`<button class="tbl-ack" onclick="ackTable(${i})">ACK</button>`;
+  if(canEditTbl(t))right+=`<span class="tbl-edit-btn" onclick="editTable(${i})" title="Edit">✎</span>`;
   right+=`<span class="tbl-x" onclick="rmTable(${i})">✕</span>`;
   return `<div class="tbl-item${glow}"><span class="tbl-badge">${esc(t.table)}</span>
     <div class="tbl-mid">${mid}</div>${right}</div>`;
