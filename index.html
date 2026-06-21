@@ -812,6 +812,17 @@ body.locked{overflow:hidden;}
   <div id="ordBody"></div>
 </section>
 
+<div class="modal" id="ordInvoice">
+  <div class="modal-card">
+    <h3>Invoice from Swan House</h3>
+    <p id="ordInvMeta"></p>
+    <div id="ordInvBody" style="overflow-y:auto"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:14px">
+      <button class="chip" style="color:var(--card-soft);border-color:var(--card-mute)" onclick="$('ordInvoice').classList.remove('open')">Close</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="ordReview">
   <div class="modal-card">
     <h3>Review order</h3>
@@ -871,7 +882,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782047634';   // stamped by build-data.py at every deploy
+const BUILD='1782079071';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2769,14 +2780,38 @@ function ordCardHTML(o, withActions){
     (o.confirmed_date?'<div class="oi-note" style="margin-top:3px">Delivery confirmed '+o.confirmed_date.slice(5).replace('-','/')+'</div>':'')+
     (localOnly&&st!=='cancelled'?'<div class="oi-note" style="margin-top:3px">Text-era order — lives on this phone only, the farm portal never saw it. Cancel clears it here.</div>':'');
   if(withActions){
-    c+='<div style="display:flex;gap:8px;margin-top:8px"><button onclick="ordEdit(\''+o.order_id+'\')">✎ Edit</button>'+
+    c+='<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button onclick="ordEdit(\''+o.order_id+'\')">✎ Edit</button>'+
+       (o.invoice?'<button onclick="ordReviewInvoice(\''+o.order_id+'\')" style="border-color:#6f8f5a;color:#3d6325">Review invoice</button>':'')+
        '<button onclick="ordCancel(\''+o.order_id+'\')" style="border-color:#a85454;color:#c98080">Cancel order</button></div>';
   } else {
-    c+='<button style="margin-top:7px" onclick="ordReload(\''+o.order_id+'\')">Load again</button>';
+    c+='<div style="display:flex;gap:8px;margin-top:7px;flex-wrap:wrap">'+
+       (o.invoice?'<button onclick="ordReviewInvoice(\''+o.order_id+'\')" style="border-color:#6f8f5a;color:#3d6325">Review invoice</button>':'')+
+       '<button onclick="ordReload(\''+o.order_id+'\')">Load again</button></div>';
   }
   return c+'</div>';
 }
 
+function ordReviewInvoice(id){
+  var o=ordFindOrder(id); if(!o||!o.invoice){return;}
+  var inv=o.invoice;
+  var rows=(inv.lines||[]).map(function(l){
+    var flag=l.farm_status?' <span style="color:#c0791f">'+esc(l.farm_status)+(l.farm_note?': '+esc(l.farm_note):'')+'</span>':'';
+    return '<tr><td style="padding:6px 4px">'+esc(l.item)+flag+'</td>'+
+      '<td style="padding:6px 4px;white-space:nowrap">'+esc(String(l.qty))+' '+esc(l.unit||'')+'</td>'+
+      '<td style="padding:6px 4px;text-align:right;white-space:nowrap">'+(l.price!=null?'$'+Number(l.price).toFixed(2):'—')+'</td>'+
+      '<td style="padding:6px 4px;text-align:right;white-space:nowrap">'+(l.amount!=null?'$'+Number(l.amount).toFixed(2):'—')+'</td></tr>';
+  }).join('');
+  var fin=inv.finalized_at?new Date(inv.finalized_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+  document.getElementById('ordInvMeta').innerHTML='Order '+esc(o.order_id)+' · placed by '+esc(o.placed_by||'')+(o.requested_date?' · needed '+esc(o.requested_date.slice(5).replace('-','/')):'')+(fin?' · finalized '+fin:'')+'. Check it against what was delivered.';
+  document.getElementById('ordInvBody').innerHTML=
+    '<table style="width:100%;border-collapse:collapse;font-size:13.5px;color:var(--card-ink)">'+
+    '<thead><tr style="border-bottom:1px solid var(--moon-edge);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--card-soft)">'+
+    '<th style="text-align:left;padding:4px">Item</th><th style="text-align:left;padding:4px">Ordered</th><th style="text-align:right;padding:4px">$ / unit</th><th style="text-align:right;padding:4px">Amount</th></tr></thead>'+
+    '<tbody>'+rows+
+    '<tr style="border-top:1px solid var(--moon-edge);font-weight:700"><td colspan="3" style="padding:8px 4px;text-align:right">Total</td><td style="padding:8px 4px;text-align:right">'+(inv.total!=null?'$'+Number(inv.total).toFixed(2):'—')+'</td></tr>'+
+    '</tbody></table>';
+  document.getElementById('ordInvoice').classList.add('open');
+}
 function ordRenderOrdersPane(ordAll, open){
   let h='';
   if(ordJustDid)h+='<p class="ord-stamp" style="color:var(--gold);font-weight:700">✓ '+ordJustDid+'. Kelly & Tim check Sunday–Tuesday mornings.</p>';
