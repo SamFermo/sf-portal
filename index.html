@@ -590,7 +590,7 @@ body.locked{overflow:hidden;}
 .occ-birthday{background:#f3d9ec; color:#9b2f74;} .occ-anniversary{background:#e6d4f0; color:#6a3596;}
 .occ-vip{background:#f1e0bd; color:#8a5a18;} .occ-special{background:#cdd9bb; color:#3d6325;}
 .occ-reset{background:#bfe3b0; color:#23501a;} .occ-dragging{background:#f0c5b8; color:#8a2a12;}
-.occ-outby{background:#f5e3b0; color:#7a5410;}
+.occ-outby{background:#f5e3b0; color:#7a5410;} .occ-note{background:#dce4ea; color:#3a5060;}
 .tbl-glow-g{border-left-color:#6db657; animation:glowG 1.5s ease-in-out infinite;}
 .tbl-glow-r{border-left-color:#d4654a; animation:glowR 1.5s ease-in-out infinite;}
 @keyframes glowG{0%,100%{box-shadow:0 0 5px rgba(109,182,87,.3);}50%{box-shadow:0 0 16px rgba(109,182,87,.75);}}
@@ -717,36 +717,38 @@ body.locked{overflow:hidden;}
   <div class="legend" id="schedLegend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off · <b>Open</b> row = shifts we still need covered — tap one to claim it (Sam confirms the final schedule) · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
 </section>
 
-<section class="view" id="seating">
-  <div class="view-head"><p class="view-eyebrow">The Room</p><h2 class="view-title">Seating Chart</h2>
-    <p class="view-sub">Table numbers and the floor, mirrored from the OpenTable floorplan.</p></div>
-  <div id="seatBody"></div>
-</section>
+<section class="view" id="standards">
+  <div class="view-head"><p class="view-eyebrow">FOH</p><h2 class="view-title">Standards</h2>
+    <p class="view-sub">The room, daily duties, certifications, and steps of service.</p></div>
+  <div class="subtabs-wrap"><div class="subtabs" id="stdTabs"><span class="subpill" id="stdPill"></span>
+    <button class="subtab active" data-std="seating">Seating</button><button class="subtab" data-std="duties">Duties</button><button class="subtab" data-std="compliance">Compliance</button><button class="subtab" data-std="service">Service</button></div></div>
 
-<section class="view" id="duties">
-  <div class="view-head"><p class="view-eyebrow">FOH · Sidework</p><h2 class="view-title">Opening &amp; Closing</h2>
-    <p class="view-sub">Tap to check off. Resets each day.</p></div>
-  <div class="subtabs-wrap"><div class="subtabs" id="dutyTabs"><span class="subpill" id="dutyPill"></span>
-    <button class="subtab active" data-duty="opening">Opening</button><button class="subtab" data-duty="closing">Closing</button><button class="subtab" data-duty="sidework">Sidework</button></div></div>
-  <div id="dutyBody"></div>
-</section>
+  <div class="std-pane" id="std-seating">
+    <div id="seatBody"></div>
+  </div>
 
-<section class="view" id="compliance">
-  <div class="view-head"><p class="view-eyebrow">Compliance</p><h2 class="view-title">Food Handlers &amp; MAST</h2>
-    <p class="view-sub" id="compSub"></p></div>
-  <div class="subtabs-wrap"><div class="subtabs" id="compTabs"><span class="subpill" id="compPill"></span>
-    <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button></div></div>
-  <div id="compBody"></div>
+  <div class="std-pane" id="std-duties" style="display:none">
+    <p class="view-sub" style="margin:2px 0 8px;">Tap to check off. Resets each day.</p>
+    <div class="subtabs-wrap"><div class="subtabs" id="dutyTabs"><span class="subpill" id="dutyPill"></span>
+      <button class="subtab active" data-duty="opening">Opening</button><button class="subtab" data-duty="closing">Closing</button><button class="subtab" data-duty="sidework">Sidework</button></div></div>
+    <div id="dutyBody"></div>
+  </div>
+
+  <div class="std-pane" id="std-compliance" style="display:none">
+    <p class="view-sub" id="compSub"></p>
+    <div class="subtabs-wrap"><div class="subtabs" id="compTabs"><span class="subpill" id="compPill"></span>
+      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button></div></div>
+    <div id="compBody"></div>
+  </div>
+
+  <div class="std-pane" id="std-service" style="display:none">
+    <div id="svcBody"></div>
+  </div>
 </section>
 
 <section class="view" id="directory">
   <div class="view-head"><p class="view-eyebrow">Team</p><h2 class="view-title">Directory</h2><p class="view-sub" id="dirSub"></p></div>
   <div id="dirBody"></div>
-</section>
-
-<section class="view" id="service">
-  <div class="view-head"><p class="view-eyebrow">Standards</p><h2 class="view-title">Steps of Service</h2></div>
-  <div id="svcBody"></div>
 </section>
 
 <section class="view" id="board">
@@ -851,7 +853,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1781995697';   // stamped by build-data.py at every deploy
+const BUILD='1782004212';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -897,7 +899,7 @@ function makeStars(){
   sky.innerHTML=h;
 }
 
-const TABS=[['fresh','Fresh Talk'],['board','Tables'],['verbals','Verbals'],['crew','Crew Board'],['schedule','Schedule'],['seating','Seating'],['duties','Duties'],['compliance','Compliance'],['directory','Directory'],['service','Service']];
+const TABS=[['fresh','Fresh Talk'],['board','Tables'],['verbals','Verbals'],['crew','Crew Board'],['schedule','Schedule'],['standards','Standards'],['directory','Directory']];
 function navTabs(){let t=isMgr()?TABS.concat([['orders','Farm Order'],['frontdesk','Front Desk']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
@@ -906,6 +908,7 @@ function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
   if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders();
+  if(id==='standards')showStdPane(stdTab);
   if(id==='verbals'){markSeen86();updateVerbalsAttn();}
   window.scrollTo(0,0); requestAnimationFrame(replaceAllPills);}
 
@@ -923,9 +926,8 @@ function renderHome(){
   const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['board','⌗','Tables','Tonight\'s table notes & statuses'],
     ['verbals','☾','Verbals','Standing · 86 · specials'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
-    ['schedule','◷','Schedule','This week + the month'],['seating','▦','Seating','The floor & table numbers'],
-    ['duties','☑','Duties','Opening, closing, sidework'],['compliance','✓','Compliance','Food handlers & MAST'],
-    ['directory','✉','Directory','The team & contacts'],['service','❖','Service','Steps & standards']];
+    ['schedule','◷','Schedule','This week + the month'],['standards','▦','Standards','Room, duties, certs & service'],
+    ['directory','✉','Directory','The team & contacts']];
   if(isMgr()){cards.push(['orders','✾','Farm Order','Order from Swan House']);cards.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);}
   $('homeGrid').innerHTML=cards.map(([id,ic,t,s])=>`<button class="home-card" data-card="${id}" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
   renderAccountBar();
@@ -1642,6 +1644,16 @@ function attachZoom(wrap,img){
   wrap.addEventListener('pointerup',up);
   wrap.addEventListener('pointercancel',function(e){ptrs.delete(e.pointerId);pinch=null;pan=null;});
 }
+/* STANDARDS — one tab housing Seating / Duties / Compliance / Service via a pill switcher. */
+let stdTab='seating';
+function showStdPane(v){
+  ['seating','duties','compliance','service'].forEach(function(k){var p=$('std-'+k);if(p)p.style.display=(k===v)?'':'none';});
+  if(v==='seating')renderSeating();
+  else if(v==='duties')renderDuties();
+  else if(v==='compliance')renderCompliance();
+  else if(v==='service')renderService();
+  requestAnimationFrame(replaceAllPills);
+}
 function renderSeating(){
   const s=SF.seating;
   if(s&&s.image){
@@ -2094,7 +2106,7 @@ function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;
 function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);renderBoard();}
 
 /* TABLES TONIGHT — occasions / VIP notes (maitre d') */
-const OCCASIONS=[['birthday','Birthday'],['anniversary','Anniversary'],['vip','VIP'],['special','Special'],['reset','Reset'],['dragging','Dragging'],['outby','Out by…']];
+const OCCASIONS=[['birthday','Birthday'],['anniversary','Anniversary'],['vip','VIP'],['special','Special'],['note','Note'],['reset','Reset'],['dragging','Dragging'],['outby','Out by…']];
 /* OUT BY — 15-min slots, only times still ahead of now */
 function outbyOptionsHTML(){
   const now=new Date();
@@ -2783,6 +2795,7 @@ function init(){
   initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{schedState.side=v;renderSchedule();});
   initPill($('dutyTabs'),$('dutyPill'),'duty',v=>{dutyTab=v;renderDuties();});
   initPill($('compTabs'),$('compPill'),'comp',v=>{compTab=v;renderCompliance();});
+  initPill($('stdTabs'),$('stdPill'),'std',v=>{stdTab=v;showStdPane(v);});
   go('home');
   // nightly expiry: re-check the session whenever the app comes back to the foreground
   document.addEventListener('visibilitychange',function(){ if(!document.hidden&&me&&!sessionValid()){ me=null; document.body.classList.add('locked'); openLogin(); } });
