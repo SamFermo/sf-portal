@@ -60,8 +60,7 @@ window.SF = {
        "allium"
       ],
       "canModify": [],
-      "allergenNote": "Confirmed: the marinade carries garlic (allium) and chili flake. The garlic is marinated in, so it can't be picked out — off limits for an allium allergy. The chili flake also adds a little heat, a heads up for spice-sensitive guests.",
-      "added": "2026-06-20"
+      "allergenNote": "Confirmed: the marinade carries garlic (allium) and chili flake. The garlic is marinated in, so it can't be picked out — off limits for an allium allergy. The chili flake also adds a little heat, a heads up for spice-sensitive guests."
      },
      {
       "name": "Marcona Almonds",
@@ -11726,5 +11725,5 @@ window.SF = {
    }
   }
  },
- "build": "1782173870"
+ "build": "1782174653"
 };
