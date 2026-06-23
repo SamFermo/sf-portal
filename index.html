@@ -312,6 +312,14 @@ nav.chips::-webkit-scrollbar{display:none;}
 .edit-btn{display:inline-block; background:none; border:none; cursor:pointer; color:var(--gold); font-size:12px; padding:2px 6px; margin-left:6px; vertical-align:2px; opacity:.7; transition:opacity .15s;}
 .edit-btn:hover{opacity:1;}
 .edited-chip{display:inline-block; font-size:8px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); background:rgba(230,200,120,.12); border:1px solid rgba(230,200,120,.35); border-radius:999px; padding:1px 6px; margin-left:5px; vertical-align:2px;}
+/* Manager-only review surfaces for composed-component flags (never shown to servers) */
+.mgr-review{background:rgba(214,158,46,.1); border:1.5px solid rgba(214,158,46,.5); border-radius:12px; padding:12px 14px; margin:10px 0;}
+.mgr-review-head{font-size:12px; font-weight:700; color:#b7791f; text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px;}
+.mgr-review-item{font-size:13px; color:var(--ink); padding:5px 0; border-bottom:1px solid rgba(214,158,46,.18);}
+.mgr-review-item:last-of-type{border-bottom:none;}
+.mgr-review-sub{font-size:11px; color:var(--ink-mute); margin-top:8px; line-height:1.4;}
+.mgr-flag-line{margin-top:8px; font-size:11px; font-weight:600; color:#b7791f; background:rgba(214,158,46,.1); border:1px solid rgba(214,158,46,.32); border-radius:8px; padding:6px 9px; line-height:1.4;}
+.mgr-flag-line .mfl-head{display:block; font-size:9px; letter-spacing:.06em; text-transform:uppercase; opacity:.85; margin-bottom:2px;}
 #editModal .modal-card{max-height:88dvh;}
 #editBody{overflow-y:auto; -webkit-overflow-scrolling:touch; min-height:0; flex:1;}
 #editModal textarea{flex:none; min-height:48px; max-height:120px; font-family:inherit; font-size:13.5px; resize:vertical;}
@@ -882,7 +890,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782174653';   // stamped by build-data.py at every deploy
+const BUILD='1782176873';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1152,6 +1160,21 @@ function recentBlockHTML(items,type){
   return h+'</div>';
 }
 
+/* Manager-only review surfaces. The generator leaves a composed component's makeup
+   out of the server-facing copy when it isn't specified, and lists it here so a
+   manager can confirm it with the kitchen. Servers never see any of this. */
+function reviewBannerHTML(flags){
+  if(!flags||!flags.length)return '';
+  let h='<div class="mgr-review"><div class="mgr-review-head">⚠ Manager review — confirm with the kitchen</div>';
+  flags.forEach(f=>h+=`<div class="mgr-review-item">${esc(f)}</div>`);
+  h+='<div class="mgr-review-sub">Remy left these out of the card on purpose rather than guess. Servers don\'t see this note. Add the real detail and re-polish, or publish as-is once confirmed.</div>';
+  return h+'</div>';
+}
+function mgrFlagLineHTML(flags){
+  if(!flags||!flags.length)return '';
+  return `<div class="mgr-flag-line"><span class="mfl-head">Manager only — confirm with kitchen</span>${flags.map(f=>esc(f)).join('<br>')}</div>`;
+}
+
 function dishCardHTML(baseIt){
   const it=getEditedDish(baseIt);
   const rich = it.story || (it.ingredients&&it.ingredients.length);
@@ -1168,6 +1191,7 @@ function dishCardHTML(baseIt){
   h+=allergenChips(it);
   if(!rich&&it.allergenNote)h+=`<div class="alg-note serif">${esc(it.allergenNote)}</div>`;
   if(rich) h+=`<div class="expand-hint">Tap for the story &amp; ingredients ›</div>`;
+  if(isMgr()&&it._flags&&it._flags.length)h+=mgrFlagLineHTML(it._flags);
   h+=`</div>`;
   if(rich){
     h+=`<div class="card-details">`;
@@ -2379,6 +2403,7 @@ function openLiveModal(type){
       <textarea id="lm-body" placeholder="Body copy"></textarea>
       <input id="lm-pron" placeholder="Pronunciation (optional)" style="margin-top:6px">
     </div>
+    <div id="lm-flags"></div>
     <div class="lm-actions">
       <button class="lm-style" id="lm-style-btn" onclick="styleLive()">Style with Remy</button>
       <button class="lm-post" onclick="postLive()">Post</button>
@@ -2403,7 +2428,10 @@ async function styleLive(){
     if(d.card.name)$('lm-name').value=d.card.name;
     if(d.card.price&&!$('lm-price').value)$('lm-price').value=d.card.price;
     $('lm-sub').value=d.card.sub||'';$('lm-body').value=d.card.body||'';$('lm-pron').value=d.card.pron||'';
-    $('lm-status').textContent='Remy\'s draft is in the box. Edit anything, then Post.';
+    $('lm-flags').innerHTML=reviewBannerHTML(d.flags);
+    $('lm-status').textContent=(d.flags&&d.flags.length)
+      ?'Remy left the flagged components out and noted them above for you. Confirm with the kitchen, then Post.'
+      :'Remy\'s draft is in the box. Edit anything, then Post.';
   }catch(e){
     $('lm-status').textContent='Styling failed ('+e.message+'). Post as-is instead, or try again.';
   }
@@ -2461,11 +2489,12 @@ function getEditedDish(it){
     if(ed[k]!==undefined&&ed[k]!==null)merged[k]=ed[k];
   });
   if(ed.ingredients&&ed.ingredients.length)merged.ingredients=ed.ingredients;
+  if(ed.flags&&ed.flags.length)merged._flags=ed.flags;
   merged._edited=true;merged._editId=id;merged._originalName=it.name;
   return merged;
 }
 function dishHasEdit(name){return !!MEDITS[editDocId(name)];}
-let editTarget=null;
+let editTarget=null, editPolished=null;
 function openEditModal(origName){
   if(!isMgr())return;
   let dish=null, section='';
@@ -2476,6 +2505,7 @@ function openEditModal(origName){
   if(!dish)return;
   const ed=getEditedDish(dish);
   editTarget={originalName:origName,section:section,isDessert:section==='Dessert'};
+  editPolished=null;
   $('editHead').textContent='Edit: '+ed.name;
   const algChecks=ALL_ALLERGENS.map(function(a){
     const on=(ed.allergens||[]).indexOf(a)>=0;
@@ -2497,6 +2527,7 @@ function openEditModal(origName){
     '<div class="em-field"><label>Allergens (tap to toggle)</label><div class="em-alg-grid" id="em-alg">'+algChecks+'</div></div>'+
     '<div class="em-field"><label>Kitchen can modify (tap to toggle)</label><div class="em-alg-grid" id="em-mod">'+modChecks+'</div></div>'+
     '<div class="em-field"><label>Allergen note</label><textarea id="em-alnote">'+esc(ed.allergenNote||'')+'</textarea></div>'+
+    '<div id="em-flags"></div>'+
     '<div class="em-actions">'+
       '<button class="em-save" id="em-save-btn" onclick="saveEdit()">Save &amp; Polish</button>'+
       (dishHasEdit(origName)?'<button class="em-revert" onclick="revertEdit()">Revert</button>':'')+
@@ -2524,24 +2555,38 @@ async function saveEdit(){
   var payload={name:name,desc:desc,price:($('em-price').value||'').trim(),
     allergens:allergens,allergenNote:($('em-alnote').value||'').trim(),
     raw:$('em-raw').checked,section:editTarget.section};
-  var pron='',story='',ingredients=[];
+  var pron='',story='',ingredients=[],flags=[];
   try{
     var r=await fetch(EDIT_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
     if(!r.ok)throw new Error('worker '+r.status);
     var d=await r.json();
     if(d.dish){pron=d.dish.pron||'';story=d.dish.story||'';ingredients=d.dish.ingredients||[];}
+    if(Array.isArray(d.flags))flags=d.flags;
   }catch(e){
     $('em-status').textContent='Remy polish failed ('+e.message+') — saving with your raw input.';
   }
-  var id=editDocId(editTarget.originalName);
   var rec={originalName:editTarget.originalName,name:name,desc:desc,
     price:payload.price,pron:pron,story:story,ingredients:ingredients,
     allergens:allergens,canModify:canModify,allergenNote:payload.allergenNote,
-    raw:payload.raw,section:editTarget.section,
+    raw:payload.raw,section:editTarget.section,flags:flags,
     editedBy:currentUserName()||'manager',editedAt:Date.now()};
+  if(flags.length){
+    // Manager review gate: don't publish a polish that left composed components
+    // out. Show what was flagged, require a second, deliberate click to publish.
+    editPolished=rec;
+    $('em-flags').innerHTML=reviewBannerHTML(flags);
+    $('em-status').textContent='Remy left the flagged components out of the copy. Confirm with the kitchen, then publish (servers won\'t see the flag).';
+    btn.disabled=false;btn.textContent='Publish anyway';btn.onclick=publishEdit;
+    return;
+  }
+  commitEditRec(rec);
+}
+function publishEdit(){if(editPolished){var r=editPolished;editPolished=null;commitEditRec(r);}}
+function commitEditRec(rec){
+  var id=editDocId(rec.originalName);
   MEDITS[id]=rec;renderFresh();
   if(fbReady&&fbDb){fbDb.collection('menu-edits').doc(id).set(rec).catch(function(){meditsLsSet();});}else{meditsLsSet();}
-  btn.disabled=false;btn.textContent='Save & Polish';
+  var btn=$('em-save-btn');if(btn){btn.disabled=false;btn.textContent='Save & Polish';btn.onclick=saveEdit;}
   $('editModal').classList.remove('open');
 }
 function revertEdit(){
