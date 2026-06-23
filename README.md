@@ -96,6 +96,35 @@ them heuristically. On 2026-06-11 that shipped 6/22's R/Os under the 6/15
 header for ~8 hours. The gviz pipeline gets headers attached to every block
 and does no pairing; anything ambiguous is a loud build failure, not a guess.
 
+### Fresh Talk — HARD RULE: don't guess composed components
+
+When a Fresh Talk card is generated — by the "Style with Remy" / dish-edit
+worker (`FRESHTALK_SYSTEM` and `FRESHTALK_EDIT_SYSTEM` in `Codename:
+Neelix/worker/index.js`) or by Claude during a correction session — it must
+**never invent the makeup of an in-house prepped component** (puree, sauce, jus,
+stock, jam, preserve, dressing, vinaigrette, emulsion, aioli, infusion, cure,
+broth, house spice blend). If the source notes don't spell out that component's
+actual ingredients or method, leave it out of the server-facing copy and flag it
+for a manager to confirm with the kitchen. A confident guess that turns out wrong
+is what makes the floor stop trusting the portal.
+
+How it surfaces:
+
+- **Server copy stays clean.** The card never prints a guess and never prints
+  review language ("confirm with kitchen", "unconfirmed"). It just omits the
+  unverified detail.
+- **Flags are manager-only.** The worker returns a `flags` array. The
+  Style-with-Remy modal and the dish-edit modal show a yellow "Manager review"
+  banner listing each flagged component; the dish-edit save is gated behind a
+  deliberate "Publish anyway" click. A live card carrying unresolved flags shows
+  a manager-only amber line (rendered only in manager mode) until a re-polish
+  with the real detail clears it.
+
+History: on 2026-06-22 a Risotto alle Zucchine card described its basil puree as
+"basil blended with oil." The puree actually carried zucchini and crème fraîche
+(dairy) — a guess that read as fact and shipped. This rule exists so the tool
+flags the gap instead of filling it.
+
 ## Deploying (first time)
 
 1. Create a **public** repo `sf-portal` under the `SamFermo` GitHub account.
