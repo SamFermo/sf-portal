@@ -488,19 +488,34 @@ nav.chips::-webkit-scrollbar{display:none;}
 #today .dir-msg-help{color:var(--ink-mute);}
 #today .dir-msg-status{color:var(--gold);}
 #today .dir-msg-fallback textarea{background:rgba(205,216,244,.06); border-color:rgba(205,216,244,.2); color:var(--ink);}
-/* Day at a Glance — full-width manager banner above the tabs */
-.glance-banner{background:linear-gradient(180deg, rgba(214,158,46,.11), rgba(205,216,244,.04)); border-top:1px solid rgba(214,158,46,.25); border-bottom:1px solid rgba(205,216,244,.12); padding:9px 16px;}
-.glance-inner{display:flex; align-items:center; gap:14px; max-width:760px; margin:0 auto; cursor:pointer; flex-wrap:wrap;}
-.glance-wx{display:flex; align-items:center; gap:7px; flex:0 0 auto;}
-.glance-wx-ic{font-size:21px; line-height:1;}
-.glance-wx-sub{font-size:12px; color:var(--ink-soft);}
-.glance-counts{display:flex; gap:7px 16px; flex:1 1 auto; flex-wrap:wrap;}
-.glance-side{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
-.glance-side-lab{font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--gold);}
-.gc{font-size:11.5px; color:var(--ink-soft); white-space:nowrap;}
-.gc b{font-size:13px; color:var(--ink); font-weight:800;}
-.gc.gc0{opacity:.4;}
-.glance-go{font-size:11px; color:var(--gold); font-weight:700; flex:0 0 auto; white-space:nowrap; margin-left:auto;}
+/* Day at a Glance — double-width landing card (manager only) */
+.home-card-wide{grid-column:1/-1;}
+.glance-card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:11px;}
+.glance-card-head{display:flex; align-items:center; gap:9px;}
+.glance-card-head .hc-icon{margin:0; font-size:19px;}
+.glance-card-head .hc-title{margin:0;}
+.glance-card-wx{display:flex; align-items:center; gap:7px; text-align:right;}
+.glance-card-wx .glance-wx-ic{font-size:22px; line-height:1;}
+.glance-card-wx .glance-wx-sub{font-size:12.5px; color:var(--card-soft);}
+.glance-card-counts{display:flex; flex-direction:column; gap:7px;}
+.glance-side{display:flex; align-items:center; gap:9px; flex-wrap:wrap;}
+.glance-side-lab{font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-deep); min-width:30px;}
+.gc{font-size:12px; color:var(--card-mute); white-space:nowrap;}
+.gc b{font-size:14px; color:var(--wood); font-weight:800;}
+.gc.gc0{opacity:.42;}
+/* contact group toggles (FOH / BOH / All) */
+.ds-grp-row{display:flex; gap:8px; margin-bottom:10px;}
+.ds-grp{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:9px; padding:7px 16px; font-size:12.5px; font-weight:800; cursor:pointer; font-family:inherit;}
+.ds-grp.on{background:var(--gold); border-color:var(--gold); color:#241f15;}
+/* weather: hourly temp/precip cards + wind graph */
+.ds-wx-temp{font-size:15px; color:var(--ink); font-weight:700; margin-top:1px;}
+.ds-wx-precip{font-size:10px; color:#7fa9e8; margin-top:1px;}
+.ds-wx-rainamt{font-size:9px; color:var(--ink-mute);}
+.ds-wind-graph{margin-top:11px;}
+.ds-wind-head{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); font-weight:700; margin-bottom:4px;}
+.ds-wind-svg{width:100%; height:78px; display:block;}
+.ds-wind-x{display:flex; justify-content:space-between; margin-top:2px;}
+.ds-wind-x span{font-size:9px; color:var(--ink-mute); flex:1; text-align:center;}
 
 /* service */
 .intro-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:14px 16px; margin-bottom:16px; font-size:13.5px; color:var(--card-ink); line-height:1.55; font-family:'Caladea',Georgia,serif; box-shadow:0 5px 13px rgba(0,0,0,.24);}
@@ -779,8 +794,6 @@ body.locked{overflow:hidden;}
   <nav class="chips" id="navChips"></nav>
 </header>
 
-<div id="glanceBanner" class="glance-banner" style="display:none"></div>
-
 <section class="view" id="home">
   <div class="home-hero">
     <div class="home-moon"></div>
@@ -974,7 +987,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782241072';   // stamped by build-data.py at every deploy
+const BUILD='1782242310';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1050,7 +1063,9 @@ function renderHome(){
     ['schedule','◷','Schedule','This week + the month'],['standards','▦','Standards','Room, duties, certs & service'],
     ['directory','✉','Directory','The team & contacts']];
   if(isMgr()){cards.push(['orders','✾','Farm Order','Order from Swan House']);cards.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);}
-  $('homeGrid').innerHTML=cards.map(([id,ic,t,s])=>`<button class="home-card" data-card="${id}" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
+  const glance=isMgr()?glanceCardHTML():'';
+  $('homeGrid').innerHTML=glance+cards.map(([id,ic,t,s])=>`<button class="home-card" data-card="${id}" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
+  if(isMgr())glanceCardWeather();
   renderAccountBar();
 }
 
@@ -1103,7 +1118,7 @@ function applyAuthGate(){
   }
 }
 function refreshAuthUI(){
-  buildNav(); renderAccountBar(); renderHome(); renderGlance();
+  buildNav(); renderAccountBar(); renderHome();
   if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
   if($('access')&&$('access').classList.contains('active'))renderAccess();
   renderBoard();
@@ -2023,10 +2038,10 @@ function renderDirectory(){const S=SF.staff; $('dirSub').textContent=S.note;
    encodes the day's position); BOH strings are times only, so BOH is ordered by
    each person's role resolved from the directory. ===== */
 let dsDateSel=null;        // ISO; null = actual today
-let dsContactSel=null;     // Set of full names; null = all working today
+let dsContactSel=new Set();  // Set of full names; starts empty — nobody selected by default
 let dsWxCache={};
 function dsDate(){return dsDateSel||todayISO();}
-function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=null;renderToday();}
+function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=new Set();renderToday();}
 function dsHr(h){const ap=h>=12?'p':'a';let hh=h%12;if(hh===0)hh=12;return hh+ap;}
 function dsBuildNameIndex(){
   const idx={first:{},nick:{},full:{}};
@@ -2116,23 +2131,34 @@ function dsSideHTML(title,side,iso,idx){
   if(day.coverage)h+=`<div class="ds-alert">⚠ Coverage still needed: ${esc(day.coverage)}</div>`;
   return h+`</div>`;
 }
+function dsWorkingList(iso){
+  const idx=dsBuildNameIndex(), seen={}, out=[];
+  ['foh','boh'].forEach(side=>{const day=dsDayRows(side,iso); if(!day)return;
+    day.rows.forEach(r=>{const res=dsResolve(r.name,idx),b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role);
+      if(b==='_off')return; if(seen[res.full])return; seen[res.full]=1;
+      if(PROFILES[res.full])out.push({name:res.full,side:side});});});
+  return out;
+}
+function dsAllSel(list){return list.length>0&&list.every(x=>dsContactSel.has(x.name));}
+function dsSideSel(list,side){const g=list.filter(x=>x.side===side);return g.length>0&&g.every(x=>dsContactSel.has(x.name));}
+function dsToggleAll(){const l=dsWorkingList(dsDate());dsContactSel=dsAllSel(l)?new Set():new Set(l.map(x=>x.name));renderToday();}
+function dsToggleSide(side){const l=dsWorkingList(dsDate()),g=l.filter(x=>x.side===side);if(dsSideSel(l,side))g.forEach(x=>dsContactSel.delete(x.name));else g.forEach(x=>dsContactSel.add(x.name));renderToday();}
+function dsToggleContact(name){if(dsContactSel.has(name))dsContactSel.delete(name);else dsContactSel.add(name);renderToday();}
 function dsContactHTML(iso){
-  const profs=dsWorkingProfiles(iso);
-  if(!profs.length)return `<div class="ds-contact"><div class="ds-side-head">Contact today's staff</div><div class="ds-empty">No reachable contacts for the people working ${esc(fmtShort(iso))}.</div></div>`;
-  if(dsContactSel===null)dsContactSel=new Set(profs.map(p=>p.name));
-  const sel=dsContactSel, n=[...sel].length;
+  const list=dsWorkingList(iso);
+  if(!list.length)return `<div class="ds-contact"><div class="ds-side-head">Contact today's staff</div><div class="ds-empty">No reachable contacts for the people working ${esc(fmtShort(iso))}.</div></div>`;
+  const sel=dsContactSel, n=sel.size;
   let h=`<div class="ds-contact"><div class="ds-side-head">Contact today's staff</div>`;
-  h+=`<div class="ds-contact-grid">`+profs.map(p=>`<button class="ds-chip${sel.has(p.name)?' on':''}" onclick="dsToggleContact('${jq(p.name)}')">${esc(p.name.split(' ')[0])}</button>`).join('')+`</div>`;
-  h+=`<div class="ds-contact-actions"><button class="dir-msg-btn${n?'':' off'}" ${n?'':'disabled'} onclick="dsEmailToday()">Email${n?' ('+n+')':''}</button><button class="dir-msg-btn${n?'':' off'}" ${n?'':'disabled'} onclick="dsTextToday()">Text${n?' ('+n+')':''}</button><button class="dir-msg-clear" onclick="dsContactAll()">Select all</button></div>`;
+  h+=`<div class="ds-grp-row"><button class="ds-grp${dsAllSel(list)?' on':''}" onclick="dsToggleAll()">All</button><button class="ds-grp${dsSideSel(list,'foh')?' on':''}" onclick="dsToggleSide('foh')">FOH</button><button class="ds-grp${dsSideSel(list,'boh')?' on':''}" onclick="dsToggleSide('boh')">BOH</button></div>`;
+  h+=`<div class="ds-contact-grid">`+list.map(x=>`<button class="ds-chip${sel.has(x.name)?' on':''}" onclick="dsToggleContact('${jq(x.name)}')">${esc(x.name.split(' ')[0])}</button>`).join('')+`</div>`;
+  h+=`<div class="ds-contact-actions"><button class="dir-msg-btn${n?'':' off'}" ${n?'':'disabled'} onclick="dsEmailToday()">Email${n?' ('+n+')':''}</button><button class="dir-msg-btn${n?'':' off'}" ${n?'':'disabled'} onclick="dsTextToday()">Text${n?' ('+n+')':''}</button></div>`;
   h+=`<div class="dir-msg-help"><b>Email</b> opens one message to everyone selected. <b>Text</b> copies the numbers and opens Messages — iOS won't auto-paste, so tap the To field and Paste once.</div>`;
   h+=`<button class="dir-msg-open" id="ds-open-msg" style="display:none" onclick="dirOpenMessages()">Open Messages</button>`;
   h+=`<div class="dir-msg-status" id="ds-msg-status"></div>`;
   h+=`<div class="dir-msg-fallback" id="ds-msg-fallback" style="display:none"><label>Numbers — select &amp; copy if needed</label><textarea readonly onclick="this.select()"></textarea></div>`;
   return h+`</div>`;
 }
-function dsToggleContact(name){if(dsContactSel===null)dsContactSel=new Set();if(dsContactSel.has(name))dsContactSel.delete(name);else dsContactSel.add(name);renderToday();}
-function dsContactAll(){dsContactSel=null;renderToday();}
-function dsSelProfiles(){const names=dsContactSel||new Set(dsWorkingProfiles(dsDate()).map(p=>p.name));return [...names].map(n=>PROFILES[n]).filter(Boolean);}
+function dsSelProfiles(){return [...dsContactSel].map(n=>PROFILES[n]).filter(Boolean);}
 function dsEmailToday(){const em=dsSelProfiles().map(p=>p.email).filter(Boolean),st=$('ds-msg-status');if(!em.length){if(st)st.textContent='Nobody selected has an email on file.';return;}if(st)st.textContent='Opening email to '+em.length+'…';location.href='mailto:'+encodeURIComponent(em.join(','));}
 function dsTextToday(){
   const ph=dsSelProfiles().map(p=>telDigits(p.phone)).filter(Boolean),st=$('ds-msg-status');
@@ -2175,19 +2201,31 @@ function dsFetchWeather(iso){
     const res={hours:hrs,summary:summary}; dsWxCache[iso]=res; return res;
   });
 }
+function dsWindGraph(hrs){
+  const n=hrs.length; if(!n)return '';
+  const W=320,H=78,padX=6,padTop=11,padBot=6;
+  const winds=hrs.map(x=>x.wind), gusts=hrs.map(x=>x.gust);
+  const maxV=Math.max(10, Math.max.apply(null,gusts))*1.15;
+  const xf=i=> n<=1? W/2 : padX+(i*(W-2*padX)/(n-1));
+  const yf=v=> padTop+(1-(v/maxV))*(H-padTop-padBot);
+  const line=arr=>arr.map((v,i)=>(i?'L':'M')+xf(i).toFixed(1)+' '+yf(v).toFixed(1)).join(' ');
+  let svg=`<svg class="ds-wind-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">`;
+  svg+=`<path d="${line(gusts)}" fill="none" stroke="rgba(127,169,232,.4)" stroke-width="1.4" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`;
+  svg+=`<path d="${line(winds)}" fill="none" stroke="#7fa9e8" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
+  svg+=`</svg>`;
+  const maxWind=Math.round(Math.max.apply(null,winds)), maxGust=Math.round(Math.max.apply(null,gusts));
+  return `<div class="ds-wind-graph"><div class="ds-wind-head">Wind mph · peak ${maxWind} (gust ${maxGust})</div>${svg}<div class="ds-wind-x">`+hrs.map(x=>`<span>${dsHr(x.hr)}</span>`).join('')+`</div></div>`;
+}
 function dsRenderWeather(iso){
   const b=$('ds-wx-body'); if(!b)return;
   dsFetchWeather(iso).then(res=>{
     if(dsDate()!==iso)return; const bb=$('ds-wx-body'); if(!bb)return;
     if(!res.hours.length){bb.innerHTML='<span class="ds-wx-none">Weather not tracked for this day — it\'s outside the forecast range.</span>';return;}
-    const hrs=res.hours, maxWind=Math.max.apply(null,hrs.map(x=>x.wind)), maxGust=Math.max.apply(null,hrs.map(x=>x.gust)),
-      totP=hrs.reduce((s,x)=>s+x.precip,0), maxPop=Math.max.apply(null,hrs.map(x=>x.pop));
-    let h='<div class="ds-wx-sum"><span class="ds-wx-stat"><b>'+Math.round(maxWind)+'</b> mph wind <span class="ds-wx-sub">gust '+Math.round(maxGust)+'</span></span>'+
-      '<span class="ds-wx-stat"><b>'+maxPop+'%</b> rain <span class="ds-wx-sub">'+totP.toFixed(2)+'"</span></span></div>';
-    h+='<div class="ds-wx-hours">'+hrs.map(x=>'<div class="ds-wx-hr"><div class="ds-wx-t">'+dsHr(x.hr)+'</div><div class="ds-wx-w">'+Math.round(x.wind)+'</div><div class="ds-wx-p">'+x.pop+'%</div></div>').join('')+'</div>';
-    let note=''; if(maxGust>=20||maxWind>=15)note+='Breezy — watch the patio. '; if(maxPop>=50||totP>=0.05)note+='Rain likely in the window.';
-    if(note)h+='<div class="ds-wx-note">'+esc(note.trim())+'</div>';
-    bb.innerHTML=h;
+    const hrs=res.hours, sm=res.summary||{};
+    let cards='<div class="ds-wx-hours">'+hrs.map(x=>'<div class="ds-wx-hr"><div class="ds-wx-t">'+dsHr(x.hr)+'</div><div class="ds-wx-temp">'+(x.temp!=null?Math.round(x.temp)+'°':'–')+'</div><div class="ds-wx-precip">'+x.pop+'%</div>'+(x.precip>0?'<div class="ds-wx-rainamt">'+x.precip.toFixed(2)+'"</div>':'')+'</div>').join('')+'</div>';
+    const graph=dsWindGraph(hrs);
+    let note=''; if((sm.maxGust||0)>=20||(sm.maxWind||0)>=15)note+='Breezy — watch the patio. '; if((sm.maxPop||0)>=50||(sm.totP||0)>=0.05)note+='Rain likely in the window.';
+    bb.innerHTML=cards+graph+(note?'<div class="ds-wx-note">'+esc(note.trim())+'</div>':'');
   }).catch(e=>{const bb=$('ds-wx-body');if(bb)bb.innerHTML='<span class="ds-wx-none">Weather not tracked for this day ('+esc(e.message)+').</span>';});
 }
 /* Service-affecting head count for the glance banner. Only roles that touch
@@ -2218,27 +2256,30 @@ function dsServiceCounts(iso){
   });
   return {foh:foh,boh:boh};
 }
-function renderGlance(){
-  const el=$('glanceBanner'); if(!el)return;
-  if(!isMgr()){el.style.display='none';el.innerHTML='';return;}
+/* Day at a Glance — a double-width landing card (manager only) styled like the
+   other home cards, with the service-window weather and the service head count
+   designed into it. Taps through to the full Day Sheet. */
+function glanceCardHTML(){
   const iso=todayISO(), c=dsServiceCounts(iso);
   const gcs=arr=>arr.map(([l,n])=>`<span class="gc${n?'':' gc0'}">${esc(l)} <b>${n}</b></span>`).join('');
   const fohHtml=gcs([['MD',c.foh.MD],['Sup',c.foh['Sup Serve']],['Serv',c.foh.Servers],['Bar',c.foh.Bar],['Supp',c.foh.Support]]);
   const bohHtml=gcs([['Expo',c.boh.Expo],['Cooks',c.boh.Cooks],['Float',c.boh.Float],['Porter',c.boh.Porter]]);
-  el.style.display='block';
-  el.innerHTML=`<div class="glance-inner" onclick="go('today')">
-    <div class="glance-wx" id="glanceWx"><span class="glance-wx-ic">⏳</span></div>
-    <div class="glance-counts">
+  return `<button class="home-card home-card-wide" data-card="today" onclick="go('today')">
+    <div class="glance-card-top">
+      <div class="glance-card-head"><span class="hc-icon">◴</span><span class="hc-title">Day at a Glance</span></div>
+      <div class="glance-card-wx" id="glanceCardWx"><span class="glance-wx-ic">·</span></div>
+    </div>
+    <div class="glance-card-counts">
       <div class="glance-side"><span class="glance-side-lab">FOH</span>${fohHtml}</div>
       <div class="glance-side"><span class="glance-side-lab">BOH</span>${bohHtml}</div>
-    </div>
-    <div class="glance-go">Day Sheet ›</div>
-  </div>`;
-  dsFetchWeather(iso).then(res=>{const w=$('glanceWx');if(!w)return;
+    </div></button>`;
+}
+function glanceCardWeather(){
+  dsFetchWeather(todayISO()).then(res=>{const w=$('glanceCardWx');if(!w)return;
     if(!res.summary){w.innerHTML='<span class="glance-wx-sub">no forecast</span>';return;}
     const sm=res.summary,ic=wxIcon(sm.code); let sub=(sm.temp!=null?sm.temp+'°, ':'')+ic.t; if(sm.maxGust>=20||sm.maxWind>=15)sub+=', breezy';
     w.innerHTML='<span class="glance-wx-ic">'+ic.i+'</span><span class="glance-wx-sub">'+esc(sub)+'</span>';
-  }).catch(()=>{const w=$('glanceWx');if(w)w.innerHTML='<span class="glance-wx-sub">weather n/a</span>';});
+  }).catch(()=>{const w=$('glanceCardWx');if(w)w.innerHTML='<span class="glance-wx-sub">weather n/a</span>';});
 }
 function renderToday(){
   if(!isMgr()){$('todayBody').innerHTML='<p class="ds-empty">Manager view only.</p>';return;}
