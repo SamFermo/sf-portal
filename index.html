@@ -495,6 +495,12 @@ nav.chips::-webkit-scrollbar{display:none;}
 .home-card-wide{grid-column:1/-1;}
 .hc-sub-wide{font-size:13px; line-height:1.45;}
 .hc-sub-wide b{color:var(--gold-deep); font-weight:700;}
+.hc-fresh-list{display:flex; flex-direction:column; gap:4px; margin-top:7px;}
+.hc-fresh-item{display:flex; align-items:baseline; justify-content:space-between; gap:10px; font-size:13.5px; color:var(--wood); padding:3px 0; border-bottom:1px solid rgba(120,90,50,.1);}
+.hc-fresh-item:last-child{border-bottom:none;}
+.hc-fresh-item.unseen{font-weight:700;}
+.hc-fresh-item.unseen::before{content:'•'; color:var(--gold-deep); margin-right:5px;}
+.hc-fresh-type{flex:0 0 auto; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--card-mute); font-weight:600;}
 .home-card-wide .glance-card-top{margin-bottom:8px;}
 .glance-card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:11px;}
 .glance-card-head{display:flex; align-items:center; gap:9px;}
@@ -1037,7 +1043,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782248194';   // stamped by build-data.py at every deploy
+const BUILD='1782249938';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1084,7 +1090,7 @@ function makeStars(){
 }
 
 const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','Tables'],['schedule','Schedule'],['crew','Crew Board'],['standards','Standards'],['directory','Directory']];
-function navTabs(){let t=isMgr()?[['today','Day Sheet']].concat(TABS,[['orders','Farm Order'],['frontdesk','Front Desk']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
+function navTabs(){let t=isMgr()?[['today','Day Sheet']].concat(TABS,[['frontdesk','Front Desk'],['orders','Farm Order']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
   if(typeof updatePendingBadge==='function')updatePendingBadge();}
@@ -1116,12 +1122,16 @@ function wideCardHTML(id,ic,title,detail){
     <div class="hc-sub hc-sub-wide">${detail}</div></button>`;
 }
 function freshCardHTML(){
-  const nw=freshNewList(), un=freshUnseen();
-  const names=esc(nw.slice(0,4).map(o=>o.label).join(', '))+(nw.length>4?'…':'');
+  const nw=freshNewList(), un=freshUnseen(), unKeys={}; un.forEach(o=>unKeys[o.key]=1);
+  const typeLbl={dish:'food',wine:'wine',cocktail:'cocktail'};
   let detail;
-  if(!nw.length) detail='Food, wine &amp; cocktails — all current';
-  else if(un.length) detail=`<b>${un.length} new to see</b> · ${names}`;
-  else detail=`${nw.length} recent · ${names}`;
+  if(!nw.length){
+    detail='Food, wine &amp; cocktails — all current';
+  } else {
+    const head = un.length ? `<b>${un.length} new to see</b>` : `${nw.length} new this week`;
+    const list = nw.map(o=>`<span class="hc-fresh-item${unKeys[o.key]?' unseen':''}">${esc(o.label)}<span class="hc-fresh-type">${esc(typeLbl[o.type]||o.type)}</span></span>`).join('');
+    detail = head + `<div class="hc-fresh-list">${list}</div>`;
+  }
   return wideCardHTML('fresh','✦','Fresh Talk',detail);
 }
 function verbalsCardHTML(){
@@ -1155,12 +1165,14 @@ function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
   const mgr=isMgr();
   let html = (mgr?glanceCardHTML():'') + freshCardHTML() + verbalsCardHTML();
-  html += [['board','⌗','Tables','Tonight\'s table notes & statuses'],
+  const std=[['board','⌗','Tables','Tonight\'s table notes & statuses'],
     ['schedule','◷','Schedule','This week + the month'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
     ['standards','▦','Standards','Room, duties, certs & service'],
-    ['directory','✉','Directory','The team & contacts']].map(stdCardHTML).join('');
-  if(mgr){ html += ordersCardHTML(); html += stdCardHTML(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']); }
+    ['directory','✉','Directory','The team & contacts']];
+  if(mgr) std.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);   // sits beside Directory
+  html += std.map(stdCardHTML).join('');
+  if(mgr) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom
   $('homeGrid').innerHTML=html;
   if(mgr){ glanceCardWeather(); ordHomePrime(); }
   renderAccountBar();
@@ -1343,10 +1355,9 @@ function allergenChips(it){
   a.forEach(x=>h+=`<span class="alg ${m.indexOf(x)>=0?'alg-mod':''}" title="${esc(x)}">${ALG[x]||esc(x)}</span>`);
   return h+'</div>';
 }
-const NEW_DAYS=14;        // NEW badge lingers this long; the clickable "Recently Added"
-                          // note shows an item only AFTER it leaves the pinned group
-                          // (i.e. between SHUFFLE_DAYS and NEW_DAYS), once it's back in the list
+const NEW_DAYS=7;         // an item counts as "new" (NEW badge + Fresh Talk glow) for 1 week
 const SHUFFLE_DAYS=7;     // full cards floated to a pinned group at the top of the tab
+                          // (the old "Recently Added" compact box was removed 2026-06-23)
 function ageDays(item){if(!item||!item.added)return Infinity;const d=new Date(item.added+'T00:00:00');return(new Date()-d)/864e5;}
 function isNew(item){return ageDays(item)<=NEW_DAYS;}
 function isShuffled(item){return ageDays(item)<=SHUFFLE_DAYS;}
@@ -1516,7 +1527,7 @@ function renderFoodTab(){
   const pinned=newDishes.filter(isShuffled), pinnedSet=new Set(pinned);
   // The note only lists items once they've dropped out of the pinned group and
   // back into their normal spot (past SHUFFLE_DAYS) — no note above a pinned card.
-  let f=editBarHTML()+recentBlockHTML(newDishes.filter(it=>!isShuffled(it)),'dish');
+  let f=editBarHTML();
   if(pinned.length){f+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(it=>f+=dishCardHTML(it));f+=`</div>`;}
   f+=allergenLegendHTML();
   SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;
@@ -1615,7 +1626,7 @@ function renderWine(){
   const newWines=SF.wines.filter(w=>isNew(w));
   const filtering=wineFilter.section!=='all'||wineFilter.glassOnly||!!q;
   const pinned=filtering?[]:SF.wines.filter(w=>isShuffled(w)), pinnedSet=new Set(pinned);
-  let cur='',html=editBarHTML()+recentBlockHTML(newWines.filter(w=>!isShuffled(w)),'wine');
+  let cur='',html=editBarHTML();
   if(pinned.length){html+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(w=>html+=wineCardHTML(w));html+=`</div>`;}
   html+=bar;
   const shown=list.filter(w=>!pinnedSet.has(w));
@@ -1653,7 +1664,7 @@ function ckCardHTML(c){
 function renderBar(){
   const newCk=SF.bar.cocktails.filter(c=>isNew(c));
   const pinned=newCk.filter(isShuffled), pinnedSet=new Set(pinned);
-  let h=editBarHTML()+recentBlockHTML(newCk.filter(c=>!isShuffled(c)),'cocktail');
+  let h=editBarHTML();
   if(pinned.length){h+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(c=>h+=ckCardHTML(c));h+=`</div>`;}
   h+=`<div class="section-label">Cocktails</div>`;
   SF.bar.cocktails.forEach(c=>{if(!pinnedSet.has(c))h+=ckCardHTML(c);});
@@ -2426,7 +2437,7 @@ function glanceCardHTML(){
   const iso=todayISO(), c=dsServiceCounts(iso);
   const gcs=arr=>arr.map(([l,n])=>`<span class="gc${n?'':' gc0'}">${esc(l)} <b>${n}</b></span>`).join('');
   const fohHtml=gcs([['MD',c.foh.MD],['Sup',c.foh['Sup Serve']],['Serv',c.foh.Servers],['Bar',c.foh.Bar],['Supp',c.foh.Support]]);
-  const bohHtml=gcs([['Expo',c.boh.Expo],['Cooks',c.boh.Cooks],['Float',c.boh.Float],['Porter',c.boh.Porter]]);
+  const bohHtml=gcs([['Expo',c.boh.Expo],['Cooks',c.boh.Cooks],['Porter',c.boh.Porter],['Float',c.boh.Float]]);
   return `<button class="home-card home-card-wide" data-card="today" onclick="go('today')">
     <div class="glance-card-top">
       <div class="glance-card-head"><span class="hc-icon">◴</span><span class="hc-title">Day at a Glance</span></div>
