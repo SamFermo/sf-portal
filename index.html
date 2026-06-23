@@ -512,10 +512,23 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-wx-precip{font-size:10px; color:#7fa9e8; margin-top:1px;}
 .ds-wx-rainamt{font-size:9px; color:var(--ink-mute);}
 .ds-wind-graph{margin-top:11px;}
-.ds-wind-head{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); font-weight:700; margin-bottom:4px;}
-.ds-wind-svg{width:100%; height:78px; display:block;}
-.ds-wind-x{display:flex; justify-content:space-between; margin-top:2px;}
-.ds-wind-x span{font-size:9px; color:var(--ink-mute); flex:1; text-align:center;}
+.ds-wind-head{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); font-weight:700; margin-bottom:5px;}
+.ds-wind-plot{display:flex; align-items:stretch; gap:5px;}
+.ds-wind-yaxis{display:flex; flex-direction:column; justify-content:space-between; width:20px; padding:8px 0 6px;}
+.ds-wind-yaxis span{font-size:8.5px; color:var(--ink-mute); text-align:right; line-height:1;}
+.ds-wind-svgwrap{flex:1; min-width:0;}
+.ds-wind-svg{width:100%; height:80px; display:block;}
+.ds-wind-x{display:flex; justify-content:space-between; margin:2px 0 0 25px;}
+.ds-wind-x span{font-size:9px; color:var(--ink-mute); flex:1; text-align:center; cursor:pointer;}
+.ds-wx-hr{cursor:pointer;}
+.ds-wx-hr.sel{outline:1.5px solid var(--gold); outline-offset:-1px;}
+.ds-hour-detail{margin-top:10px; background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); border-radius:10px; padding:11px 13px;}
+.dhd-time{font-size:13px; font-weight:800; color:var(--ink); margin-bottom:8px;}
+.dhd-grid{display:flex; gap:18px;}
+.dhd-cell{display:flex; flex-direction:column; gap:1px;}
+.dhd-lab{font-size:9px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-mute); font-weight:700;}
+.dhd-val{font-size:17px; color:var(--ink); font-weight:700; font-family:'Cormorant Garamond','Caladea',serif;}
+.dhd-sub{font-size:10.5px; color:var(--ink-mute);}
 
 /* service */
 .intro-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:14px 16px; margin-bottom:16px; font-size:13.5px; color:var(--card-ink); line-height:1.55; font-family:'Caladea',Georgia,serif; box-shadow:0 5px 13px rgba(0,0,0,.24);}
@@ -987,7 +1000,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782242310';   // stamped by build-data.py at every deploy
+const BUILD='1782242930';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2088,11 +2101,17 @@ function dsFohBucket(shift){
   if(s.includes('float'))return 'Float';
   return 'Other';
 }
-const DS_BOH_ORDER=['Kitchen Lead','Line (1–close)','Expo','Daytime / Prep','Other'];
-function dsBohBucket(shift,role){
+const DS_BOH_ORDER=['Kitchen Lead','Line (1–close)','Porter','Expo','Daytime / Prep','Other'];
+// Always-porters: scheduled as line cooks, but they always run the dish/porter
+// station. Counted and grouped as Porter whenever they're on. Keyed by resolved
+// full name (lowercase). Add names here if more cooks pick up the porter role.
+const DS_PORTERS=new Set(['antolin "tony" reyes','anna velasco-ojeda']);
+function dsIsPorter(full,role){const rl=(role||'').toLowerCase();return DS_PORTERS.has(String(full||'').toLowerCase())||rl.includes('porter')||rl.includes('dish');}
+function dsBohBucket(shift,role,full){
   const s=shift.toLowerCase(), rl=(role||'').toLowerCase();
   if(s.includes('r/o'))return '_off';
   if(s.includes('farm'))return '_farm';
+  if(dsIsPorter(full,role))return 'Porter';
   if(s==='md'||rl.includes('chef')||rl.includes('sous'))return 'Kitchen Lead';
   if(s.includes('expo'))return 'Expo';
   if(s.includes('1-close')||s.includes('close'))return 'Line (1–close)';
@@ -2117,7 +2136,7 @@ function dsSideHTML(title,side,iso,idx){
   if(!day){return h+`<div class="ds-empty">No schedule loaded for this week.</div></div>`;}
   const order=(side==='foh')?DS_FOH_ORDER:DS_BOH_ORDER, groups={}, farm=[];
   day.rows.forEach(r=>{
-    const res=dsResolve(r.name,idx), b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role);
+    const res=dsResolve(r.name,idx), b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role,res.full);
     if(b==='_off')return;
     if(b==='_farm'){farm.push({res,shift:r.shift});return;}
     (groups[b]=groups[b]||[]).push({res,shift:r.shift});
@@ -2186,11 +2205,11 @@ function wxIcon(code){code=+code||0;
 function dsFetchWeather(iso){
   if(dsWxCache[iso])return Promise.resolve(dsWxCache[iso]);
   const url='https://api.open-meteo.com/v1/forecast?latitude=47.668&longitude=-122.384'+
-    '&hourly=temperature_2m,precipitation,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m'+
+    '&hourly=temperature_2m,apparent_temperature,precipitation,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m'+
     '&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FLos_Angeles&start_date='+iso+'&end_date='+iso;
   return fetch(url).then(r=>{if(!r.ok)throw new Error('forecast '+r.status);return r.json();}).then(d=>{
     const H=d.hourly||{}, hrs=[];
-    (H.time||[]).forEach((t,i)=>{const hr=+t.slice(11,13);if(hr>=16&&hr<=22)hrs.push({hr,temp:H.temperature_2m?H.temperature_2m[i]:null,code:H.weather_code?H.weather_code[i]:0,precip:H.precipitation[i]||0,pop:H.precipitation_probability[i]||0,wind:H.wind_speed_10m[i]||0,gust:H.wind_gusts_10m[i]||0});});
+    (H.time||[]).forEach((t,i)=>{const hr=+t.slice(11,13);if(hr>=16&&hr<=22)hrs.push({hr,temp:H.temperature_2m?H.temperature_2m[i]:null,feels:H.apparent_temperature?H.apparent_temperature[i]:null,code:H.weather_code?H.weather_code[i]:0,precip:H.precipitation[i]||0,pop:H.precipitation_probability[i]||0,wind:H.wind_speed_10m[i]||0,gust:H.wind_gusts_10m[i]||0,dir:H.wind_direction_10m?H.wind_direction_10m[i]:null});});
     let summary=null;
     if(hrs.length){
       const maxWind=Math.max.apply(null,hrs.map(x=>x.wind)),maxGust=Math.max.apply(null,hrs.map(x=>x.gust)),totP=hrs.reduce((s,x)=>s+x.precip,0),maxPop=Math.max.apply(null,hrs.map(x=>x.pop));
@@ -2201,20 +2220,40 @@ function dsFetchWeather(iso){
     const res={hours:hrs,summary:summary}; dsWxCache[iso]=res; return res;
   });
 }
+function dsCompass(deg){if(deg==null)return '';return ['N','NE','E','SE','S','SW','W','NW'][Math.round((deg%360)/45)%8];}
+function dsHrFull(h){const ap=h>=12?'pm':'am';let hh=h%12;if(hh===0)hh=12;return hh+':00 '+ap;}
+function dsShowHour(i){
+  const res=dsWxCache[dsDate()]; if(!res||!res.hours||!res.hours[i])return;
+  const x=res.hours[i], el=$('ds-hour-detail'); if(!el)return;
+  const dir=dsCompass(x.dir);
+  el.innerHTML='<div class="dhd-time">'+dsHrFull(x.hr)+' · service hour</div><div class="dhd-grid">'+
+    '<div class="dhd-cell"><span class="dhd-lab">Temp</span><span class="dhd-val">'+(x.temp!=null?Math.round(x.temp)+'°':'–')+'</span>'+(x.feels!=null?'<span class="dhd-sub">feels '+Math.round(x.feels)+'°</span>':'')+'</div>'+
+    '<div class="dhd-cell"><span class="dhd-lab">Rain</span><span class="dhd-val">'+x.pop+'%</span><span class="dhd-sub">'+x.precip.toFixed(2)+'" this hr</span></div>'+
+    '<div class="dhd-cell"><span class="dhd-lab">Wind</span><span class="dhd-val">'+Math.round(x.wind)+' mph</span><span class="dhd-sub">'+(dir?'from '+dir+' · ':'')+'gust '+Math.round(x.gust)+'</span></div>'+
+  '</div>';
+  el.style.display='block';
+  document.querySelectorAll('#ds-wx-body .ds-wx-hr').forEach((c,j)=>c.classList.toggle('sel',j===i));
+}
 function dsWindGraph(hrs){
   const n=hrs.length; if(!n)return '';
-  const W=320,H=78,padX=6,padTop=11,padBot=6;
+  const W=320,H=80,padX=4,padTop=8,padBot=6;
   const winds=hrs.map(x=>x.wind), gusts=hrs.map(x=>x.gust);
-  const maxV=Math.max(10, Math.max.apply(null,gusts))*1.15;
+  const peak=Math.max.apply(null,gusts);
+  const maxV=Math.max(10, Math.ceil(peak/5)*5), mid=maxV/2;   // nice round top for the y-axis
   const xf=i=> n<=1? W/2 : padX+(i*(W-2*padX)/(n-1));
   const yf=v=> padTop+(1-(v/maxV))*(H-padTop-padBot);
   const line=arr=>arr.map((v,i)=>(i?'L':'M')+xf(i).toFixed(1)+' '+yf(v).toFixed(1)).join(' ');
   let svg=`<svg class="ds-wind-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">`;
-  svg+=`<path d="${line(gusts)}" fill="none" stroke="rgba(127,169,232,.4)" stroke-width="1.4" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`;
+  [0,mid,maxV].forEach(v=>{svg+=`<line x1="0" y1="${yf(v).toFixed(1)}" x2="${W}" y2="${yf(v).toFixed(1)}" stroke="rgba(205,216,244,.13)" stroke-width="1" vector-effect="non-scaling-stroke"/>`;});
+  svg+=`<path d="${line(gusts)}" fill="none" stroke="rgba(127,169,232,.42)" stroke-width="1.4" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`;
   svg+=`<path d="${line(winds)}" fill="none" stroke="#7fa9e8" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
+  for(let i=0;i<n;i++){const x0=i?(xf(i-1)+xf(i))/2:0, x1=i<n-1?(xf(i)+xf(i+1))/2:W; svg+=`<rect x="${x0.toFixed(1)}" y="0" width="${(x1-x0).toFixed(1)}" height="${H}" fill="transparent" style="cursor:pointer" onclick="dsShowHour(${i})"/>`;}
   svg+=`</svg>`;
-  const maxWind=Math.round(Math.max.apply(null,winds)), maxGust=Math.round(Math.max.apply(null,gusts));
-  return `<div class="ds-wind-graph"><div class="ds-wind-head">Wind mph · peak ${maxWind} (gust ${maxGust})</div>${svg}<div class="ds-wind-x">`+hrs.map(x=>`<span>${dsHr(x.hr)}</span>`).join('')+`</div></div>`;
+  const peakWind=Math.round(Math.max.apply(null,winds));
+  return `<div class="ds-wind-graph"><div class="ds-wind-head">Wind speed (mph) · peak ${peakWind}, gust ${Math.round(peak)} — tap an hour</div>
+    <div class="ds-wind-plot"><div class="ds-wind-yaxis"><span>${maxV}</span><span>${mid}</span><span>0</span></div><div class="ds-wind-svgwrap">${svg}</div></div>
+    <div class="ds-wind-x">`+hrs.map((x,i)=>`<span onclick="dsShowHour(${i})">${dsHr(x.hr)}</span>`).join('')+`</div>
+    <div class="ds-hour-detail" id="ds-hour-detail" style="display:none"></div></div>`;
 }
 function dsRenderWeather(iso){
   const b=$('ds-wx-body'); if(!b)return;
@@ -2222,7 +2261,7 @@ function dsRenderWeather(iso){
     if(dsDate()!==iso)return; const bb=$('ds-wx-body'); if(!bb)return;
     if(!res.hours.length){bb.innerHTML='<span class="ds-wx-none">Weather not tracked for this day — it\'s outside the forecast range.</span>';return;}
     const hrs=res.hours, sm=res.summary||{};
-    let cards='<div class="ds-wx-hours">'+hrs.map(x=>'<div class="ds-wx-hr"><div class="ds-wx-t">'+dsHr(x.hr)+'</div><div class="ds-wx-temp">'+(x.temp!=null?Math.round(x.temp)+'°':'–')+'</div><div class="ds-wx-precip">'+x.pop+'%</div>'+(x.precip>0?'<div class="ds-wx-rainamt">'+x.precip.toFixed(2)+'"</div>':'')+'</div>').join('')+'</div>';
+    let cards='<div class="ds-wx-hours">'+hrs.map((x,i)=>'<div class="ds-wx-hr" onclick="dsShowHour('+i+')"><div class="ds-wx-t">'+dsHr(x.hr)+'</div><div class="ds-wx-temp">'+(x.temp!=null?Math.round(x.temp)+'°':'–')+'</div><div class="ds-wx-precip">'+x.pop+'%</div>'+(x.precip>0?'<div class="ds-wx-rainamt">'+x.precip.toFixed(2)+'"</div>':'')+'</div>').join('')+'</div>';
     const graph=dsWindGraph(hrs);
     let note=''; if((sm.maxGust||0)>=20||(sm.maxWind||0)>=15)note+='Breezy — watch the patio. '; if((sm.maxPop||0)>=50||(sm.totP||0)>=0.05)note+='Rain likely in the window.';
     bb.innerHTML=cards+graph+(note?'<div class="ds-wx-note">'+esc(note.trim())+'</div>':'');
@@ -2247,9 +2286,9 @@ function dsServiceCounts(iso){
     else if(s.includes('support'))foh.Support++;
     else if(s.includes('serve')||s.includes('server'))foh.Servers++;
   });
-  (bday?bday.rows:[]).forEach(r=>{const res=dsResolve(r.name,idx),s=r.shift.toLowerCase(),rl=(res.role||'').toLowerCase(),st=r.shift.trim();
+  (bday?bday.rows:[]).forEach(r=>{const res=dsResolve(r.name,idx),s=r.shift.toLowerCase(),st=r.shift.trim();
     if(s.includes('r/o')||s.includes('farm'))return;
-    if(rl.includes('porter')||rl.includes('dish')){boh.Porter++;return;}
+    if(dsIsPorter(res.full,res.role)){boh.Porter++;return;}
     if(s.includes('expo'))boh.Expo++;
     else if(s.includes('1-close'))boh.Cooks++;
     else if(/^(10-8|11-9|12-10)$/.test(st))boh.Float++;
