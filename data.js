@@ -438,11 +438,11 @@ window.SF = {
      },
      {
       "name": "Risotto alle Zucchine",
-      "desc": "roasted zucchini, parmesan, lemon, basil",
+      "desc": "roasted zucchini, parmesan, crème fraîche-basil puree, lemon",
       "price": "28",
       "raw": false,
       "pron": "ree-ZOH-toh AHL-leh zoo-kee-NEH",
-      "story": "Creamy risotto built on roasted zucchini, garlic, and shallot. Finished with butter, Parmesan, fresh lemon, and a basil puree. Bright, clean, and seasonal.",
+      "story": "Creamy risotto built on roasted zucchini, garlic, and shallot. Finished with butter, Parmesan, and a basil puree blended from basil, zucchini, crème fraîche, and lemon oil. Bright, clean, and seasonal.",
       "ingredients": [
        {
         "term": "Risotto alle Zucchine",
@@ -452,7 +452,7 @@ window.SF = {
        {
         "term": "Basil puree",
         "pronunciation": null,
-        "note": "Fresh basil blended smooth with oil into a vivid green puree. Herbaceous and bright — swirled in at the finish, with micro basil on top for aroma."
+        "note": "Basil, zucchini, crème fraîche, and lemon oil blended smooth into a vivid green puree. Herbaceous and bright with a little richness from the crème fraîche — swirled in at the finish, with micro basil on top for aroma. Note the crème fraîche: this puree carries dairy."
        },
        {
         "term": "Arborio",
@@ -467,8 +467,8 @@ window.SF = {
       "canModify": [
        "dairy"
       ],
-      "allergenNote": "Naturally gluten-free. Dairy: Parmesan and butter — the kitchen can finish it without for a dairy-free plate. Allium and the cooked wine can't come out — our risotto base is always par-cooked with onion and white wine in the stock, and this build adds garlic and shallot.",
-      "added": "2026-06-19"
+      "allergenNote": "Naturally gluten-free. Dairy lives in three spots: Parmesan, butter, and the crème fraîche in the basil puree — a true dairy-free plate means dropping all three, including the puree, so flag it to the kitchen. Allium and the cooked wine can't come out — our risotto base is always par-cooked with onion and white wine in the stock, and this build adds garlic and shallot.",
+      "added": "2026-06-23"
      },
      {
       "name": "Pan Roasted Halibut",
@@ -11726,5 +11726,5 @@ window.SF = {
    }
   }
  },
- "build": "1782133952"
+ "build": "1782173870"
 };
