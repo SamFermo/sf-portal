@@ -493,6 +493,9 @@ nav.chips::-webkit-scrollbar{display:none;}
 #today .dir-msg-fallback textarea{background:rgba(205,216,244,.06); border-color:rgba(205,216,244,.2); color:var(--ink);}
 /* Day at a Glance — double-width landing card (manager only) */
 .home-card-wide{grid-column:1/-1;}
+.hc-sub-wide{font-size:13px; line-height:1.45;}
+.hc-sub-wide b{color:var(--gold-deep); font-weight:700;}
+.home-card-wide .glance-card-top{margin-bottom:8px;}
 .glance-card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:11px;}
 .glance-card-head{display:flex; align-items:center; gap:9px;}
 .glance-card-head .hc-icon{margin:0; font-size:19px;}
@@ -555,6 +558,14 @@ nav.chips::-webkit-scrollbar{display:none;}
 .vb-entry .x{color:var(--ink-mute); cursor:pointer; font-size:15px; flex:0 0 auto;}
 .vb-view-main{display:flex; flex-direction:column; gap:3px;}
 .vb-edit-link{color:var(--gold); cursor:pointer; font-weight:700;}
+.vb-age{font-size:10.5px; color:var(--ink-mute); letter-spacing:.02em;}
+.vb-mini{flex:0 0 auto; cursor:pointer; color:var(--ink-mute); font-size:14px; line-height:1; padding:2px 3px; user-select:none;}
+.vb-mini:hover{color:var(--gold);}
+.vb-mini.off{opacity:.25; pointer-events:none;}
+.vb-entry-edit .vb-edit-in{width:100%; font-size:13.5px;}
+.vb-view.vb-tap{cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px;}
+.vb-view.vb-tap:hover{background:rgba(214,158,46,.07);}
+.vb-jump{flex:0 0 auto; font-size:10.5px; color:var(--gold); font-weight:700; white-space:nowrap;}
 
 /* service */
 .intro-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:14px 16px; margin-bottom:16px; font-size:13.5px; color:var(--card-ink); line-height:1.55; font-family:'Caladea',Georgia,serif; box-shadow:0 5px 13px rgba(0,0,0,.24);}
@@ -1026,7 +1037,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782247453';   // stamped by build-data.py at every deploy
+const BUILD='1782248194';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1072,7 +1083,7 @@ function makeStars(){
   sky.innerHTML=h;
 }
 
-const TABS=[['fresh','Fresh Talk'],['board','Tables'],['verbals','Verbals'],['crew','Crew Board'],['schedule','Schedule'],['standards','Standards'],['directory','Directory']];
+const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','Tables'],['schedule','Schedule'],['crew','Crew Board'],['standards','Standards'],['directory','Directory']];
 function navTabs(){let t=isMgr()?[['today','Day Sheet']].concat(TABS,[['orders','Farm Order'],['frontdesk','Front Desk']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
@@ -1082,7 +1093,11 @@ function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
   if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday();
   if(id==='standards')showStdPane(stdTab);
-  if(id==='verbals'){markSeen86();updateVerbalsAttn();}
+  if(id==='fresh')markFreshSeen();
+  if(id==='verbals')markVerbalsSeen();
+  if(id==='crew')markCrewSeen();
+  if(id==='orders')markOrdersSeen();
+  updateAttn();
   window.scrollTo(0,0); requestAnimationFrame(replaceAllPills);}
 
 function initPill(tabsEl,pillEl,attr,onSwitch){
@@ -1094,18 +1109,75 @@ function initPill(tabsEl,pillEl,attr,onSwitch){
 function replaceAllPills(){document.querySelectorAll('.subtabs').forEach(t=>{const a=t.querySelector('.subtab.active'),p=t.querySelector('.subpill');if(a&&p){p.style.width=a.offsetWidth+'px';p.style.transform=`translateX(${a.offsetLeft-4}px)`;}});}
 
 /* HOME */
+function stdCardHTML(c){return `<button class="home-card" data-card="${c[0]}" onclick="go('${c[0]}')"><span class="hc-icon">${c[1]}</span><div class="hc-title">${c[2]}</div><div class="hc-sub">${c[3]}</div></button>`;}
+function wideCardHTML(id,ic,title,detail){
+  return `<button class="home-card home-card-wide" data-card="${id}" onclick="go('${id}')">
+    <div class="glance-card-top"><div class="glance-card-head"><span class="hc-icon">${ic}</span><span class="hc-title">${title}</span></div></div>
+    <div class="hc-sub hc-sub-wide">${detail}</div></button>`;
+}
+function freshCardHTML(){
+  const nw=freshNewList(), un=freshUnseen();
+  const names=esc(nw.slice(0,4).map(o=>o.label).join(', '))+(nw.length>4?'…':'');
+  let detail;
+  if(!nw.length) detail='Food, wine &amp; cocktails — all current';
+  else if(un.length) detail=`<b>${un.length} new to see</b> · ${names}`;
+  else detail=`${nw.length} recent · ${names}`;
+  return wideCardHTML('fresh','✦','Fresh Talk',detail);
+}
+function verbalsCardHTML(){
+  const v=getVerbals(), entries=v.entries||[];
+  const e86=entries.filter(e=>e.type==='86'), cnt=entries.filter(e=>e.type!=='86').length;
+  const stdSet=Object.keys(v.standing||{}).filter(k=>v.standing[k]&&String(v.standing[k]).trim()).length;
+  let parts=[];
+  if(e86.length)parts.push('86: '+e86.slice(0,3).map(e=>e.text).join(', ')+(e86.length>3?'…':''));
+  if(cnt)parts.push(cnt+' note'+(cnt>1?'s':''));
+  if(stdSet)parts.push(stdSet+' standing');
+  let detail=parts.length?esc(parts.join(' · ')):'Standing · 86 · specials — nothing flagged';
+  const u=verbalsUnseen();
+  if(u.n>0)detail=`<b>${u.n} new</b> · ${detail}`;
+  else if(u.std)detail=`<b>updated</b> · ${detail}`;
+  return wideCardHTML('verbals','☾','Verbals',detail);
+}
+function ordersCardHTML(){
+  const open=(remyOrders||[]).filter(o=>['placed','acked'].includes(o.status||'placed'));
+  const acked=open.filter(o=>o.status==='acked').length;
+  const invoices=(remyOrders||[]).filter(o=>o.invoice&&['placed','acked'].includes(o.status||'placed')).length;
+  const flags=(remyOrders||[]).reduce((n,o)=>n+(((o.lines||[]).some(l=>l.farm_status==='short'||l.farm_status==='sub'))?1:0),0);
+  let parts=[];
+  if(open.length)parts.push(open.length+' open');
+  if(acked)parts.push(acked+' ✓ farm');
+  if(invoices)parts.push(invoices+' invoice'+(invoices>1?'s':''));
+  if(flags)parts.push(flags+' flagged');
+  const detail=parts.length?esc(parts.join(' · ')):'Order from Swan House';
+  return wideCardHTML('orders','✾','Farm Order',detail);
+}
 function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
-  const cards=[['fresh','✦','Fresh Talk','Food, wine & cocktails'],['board','⌗','Tables','Tonight\'s table notes & statuses'],
-    ['verbals','☾','Verbals','Standing · 86 · specials'],
+  const mgr=isMgr();
+  let html = (mgr?glanceCardHTML():'') + freshCardHTML() + verbalsCardHTML();
+  html += [['board','⌗','Tables','Tonight\'s table notes & statuses'],
+    ['schedule','◷','Schedule','This week + the month'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
-    ['schedule','◷','Schedule','This week + the month'],['standards','▦','Standards','Room, duties, certs & service'],
-    ['directory','✉','Directory','The team & contacts']];
-  if(isMgr()){cards.push(['orders','✾','Farm Order','Order from Swan House']);cards.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);}
-  const glance=isMgr()?glanceCardHTML():'';
-  $('homeGrid').innerHTML=glance+cards.map(([id,ic,t,s])=>`<button class="home-card" data-card="${id}" onclick="go('${id}')"><span class="hc-icon">${ic}</span><div class="hc-title">${t}</div><div class="hc-sub">${s}</div></button>`).join('');
-  if(isMgr())glanceCardWeather();
+    ['standards','▦','Standards','Room, duties, certs & service'],
+    ['directory','✉','Directory','The team & contacts']].map(stdCardHTML).join('');
+  if(mgr){ html += ordersCardHTML(); html += stdCardHTML(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']); }
+  $('homeGrid').innerHTML=html;
+  if(mgr){ glanceCardWeather(); ordHomePrime(); }
   renderAccountBar();
+  updateAttn();
+}
+/* Managers: prime the farm-order feeds in the background so the card detail and
+   its change-glow populate without opening the tab. */
+function ordHomePrime(){
+  try{ remyInit(); }catch(e){}
+  Promise.all([
+    (typeof ordFetchAvail==='function'?ordFetchAvail():Promise.resolve(null)).catch(()=>null),
+    (typeof ordFetchFarmAsks==='function'?ordFetchFarmAsks():Promise.resolve(null)).catch(()=>null)
+  ]).then(()=>{ if($('home')&&$('home').classList.contains('active')) refreshOrdersCard(); });
+}
+function refreshOrdersCard(){
+  const c=document.querySelector('.home-card[data-card="orders"]');
+  if(c){ c.outerHTML=ordersCardHTML(); updateAttn(); }
 }
 
 /* ===== AUTH — per-person PIN login, role-based, nightly 3am reset ===== */
@@ -1454,7 +1526,7 @@ function renderFoodTab(){
   f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
   $('ftFood').innerHTML=liveBlockHTML('dish')+f;
 }
-function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); var a=$('ftAllergens'); if(a)a.innerHTML=allergenAskHTML(); }
+function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); var a=$('ftAllergens'); if(a)a.innerHTML=allergenAskHTML(); if(typeof updateAttn==='function')updateAttn(); }
 let corrCopied=false;
 function genPrompt(){
   const c=getCorr();
@@ -2372,6 +2444,92 @@ function glanceCardWeather(){
     w.innerHTML='<span class="glance-wx-ic">'+ic.i+'</span><span class="glance-wx-sub">'+esc(sub)+'</span>';
   }).catch(()=>{const w=$('glanceCardWx');if(w)w.innerHTML='<span class="glance-wx-sub">weather n/a</span>';});
 }
+
+/* ===== ATTENTION / GLOW =====================================================
+   Per-device "seen" tracking. A home card (and its nav chip) glows gold when it
+   holds content this device hasn't viewed yet. Seen state is marked when the
+   matching tab is opened (see go()). Content-type cards (Fresh Talk, Verbals,
+   Crew) glow when unviewed items exist — including on a brand-new device, so the
+   crew sees there's something to read. Tables glows on unacked flags in the
+   selected section. Farm Order is a CHANGE detector for managers: it baselines
+   silently on first sight, then glows when Kelly's response or the availability
+   feed changes. ============================================================== */
+function attnGet(k){try{return JSON.parse(localStorage.getItem('sf-seen-'+k));}catch(e){return null;}}
+function attnSet(k,v){try{localStorage.setItem('sf-seen-'+k,JSON.stringify(v));}catch(e){}}
+function attnHash(s){s=String(s);let h=0;for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0;}return h;}
+
+/* --- Fresh Talk: menu items added within NEW_DAYS, plus live (Firestore) adds --- */
+function freshNewList(){
+  const out=[];
+  const push=(it,type)=>{ if(it&&isNew(it)) out.push({key:type+':'+String(it._originalName||it.name||'').toLowerCase(), label:String(it.name||''), type:type}); };
+  ((SF.menu&&SF.menu.food)||[]).forEach(s=>(s.items||[]).forEach(it=>push(it,'dish')));
+  ((SF.menu&&SF.menu.desserts)||[]).forEach(it=>push(it,'dish'));
+  (SF.wines||[]).forEach(w=>push(w,'wine'));
+  ((SF.bar&&SF.bar.cocktails)||[]).forEach(c=>push(c,'cocktail'));
+  try{ Object.keys(MLIVE||{}).forEach(k=>{ const p=MLIVE[k]; if(p&&p.at&&(Date.now()-p.at)<=NEW_DAYS*864e5) out.push({key:'live:'+k, label:String(p.name||p.itemName||'New item'), type:p.type||'dish'}); }); }catch(e){}
+  const seen={}; return out.filter(o=>seen[o.key]?false:(seen[o.key]=1));
+}
+function freshUnseen(){ const seen=attnGet('fresh')||[]; return freshNewList().filter(o=>seen.indexOf(o.key)<0); }
+function markFreshSeen(){ attnSet('fresh', freshNewList().map(o=>o.key)); }
+
+/* --- Verbals: entries this device hasn't seen (by id) + a standing-slots change --- */
+function markVerbalsSeen(){ const v=getVerbals(); attnSet('verbals',{ids:(v.entries||[]).map(e=>e.id), std:JSON.stringify(v.standing||{})}); }
+function verbalsUnseen(){ const v=getVerbals(), s=attnGet('verbals');
+  if(!s)return {n:(v.entries||[]).length, std:false};
+  const ne=(v.entries||[]).filter(e=>(s.ids||[]).indexOf(e.id)<0);
+  return {n:ne.length, std:JSON.stringify(v.standing||{})!==(s.std||'{}')};
+}
+function verbalsGlow(){ const u=verbalsUnseen(); return u.n>0||u.std; }
+
+/* --- Tables: any unacked flag (raised by someone else) in the selected section --- */
+function tablesInScope(){
+  const b=getBoard(), items=b.tables||[], sec=boardSecGet();
+  if(sec==='all')return items;
+  if(sec==='mine'){const mineU=getMyTables().map(t=>comboPrimary(t).toUpperCase());return items.filter(t=>mineU.indexOf(comboPrimary(t.table).toUpperCase())>=0);}
+  const secs=Array.isArray(sec)?sec:[sec];
+  return items.filter(t=>secs.indexOf(tableSection(comboPrimary(t.table)))>=0);
+}
+function tablesGlow(){ const me0=currentUserName(); return tablesInScope().some(t=>!t.ack && t.by!==me0); }
+
+/* --- Crew Board: live posts (not mine) newer than the last time I opened it --- */
+function crewMaxAt(){ const me0=currentUserName(), now=Date.now(), cutoff=now-30*864e5, today=todayISO(); let mx=0;
+  Object.keys(CREW||{}).forEach(k=>{const p=CREW[k]; if(!p||p.by===me0)return;
+    const live=p.kind==='tonight'?(p.day===today):(p.pinned||p.at>cutoff);
+    if(live&&p.at>mx)mx=p.at;}); return mx; }
+function markCrewSeen(){ attnSet('crew', crewMaxAt()); }
+function crewGlow(){ const mx=crewMaxAt(); return mx>0 && mx>(attnGet('crew')||0); }
+
+/* --- Farm Order (manager): change detector for Kelly's responses + availability --- */
+function ordFarmSig(){
+  const ords=(remyOrders||[]).map(o=>[o.order_id,o.status||'',o.confirmed_date||'',o.invoice?1:0,
+    (o.lines||[]).map(l=>(l.farm_status||'')+':'+(l.farm_note||'')).join('|')].join('~')).join('||');
+  const asks=JSON.stringify((typeof ordFarmAsks!=='undefined'&&ordFarmAsks)||{});
+  const avail=(typeof ordAvail!=='undefined'&&ordAvail)?attnHash(JSON.stringify(ordAvail)):0;
+  return attnHash(ords+'##'+asks+'##'+avail);
+}
+function ordGlow(){
+  if(!isMgr())return false;
+  const sig=ordFarmSig(), seen=attnGet('orders');
+  if(seen==null){ attnSet('orders',sig); return false; }   // baseline silently
+  return seen!==sig;
+}
+function markOrdersSeen(){ attnSet('orders', ordFarmSig()); }
+
+/* Apply every glow to its home card + nav chip. Cheap; safe to call often. */
+function setCardAttn(id,on){
+  const card=document.querySelector('.home-card[data-card="'+id+'"]'); if(card)card.classList.toggle('attn-card',!!on);
+  const chip=document.querySelector('#navChips .chip[data-go="'+id+'"]'); if(chip)chip.classList.toggle('attn-chip',!!on);
+}
+function updateAttn(){
+  try{
+    setCardAttn('fresh', freshUnseen().length>0);
+    setCardAttn('verbals', verbalsGlow());
+    setCardAttn('board', tablesGlow());
+    setCardAttn('crew', crewGlow());
+    if(isMgr())setCardAttn('orders', ordGlow());
+  }catch(e){}
+}
+
 function renderToday(){
   if(!isMgr()){$('todayBody').innerHTML='<p class="ds-empty">Manager view only.</p>';return;}
   const iso=dsDate(), isToday=(iso===todayISO());
@@ -2485,45 +2643,10 @@ function lsKey(){return 'sf-board-'+todayISO();}
 function lsGetBoard(){try{const s=JSON.parse(localStorage.getItem(lsKey()));if(s){s.tables=s.tables||[];return s;}}catch(e){}return {eightySixed:[...(SF.service.board.eightySixed||[])],specials:[...(SF.service.board.specials||[])],tables:[],combos:[]};}
 function lsSetBoard(b){try{localStorage.setItem(lsKey(),JSON.stringify(b));}catch(e){}}
 function getBoard(){return boardState||lsGetBoard();}
-let standingState=null, standingUnsub=null;
-function lsGetStanding(){try{return JSON.parse(localStorage.getItem('sf-standing'))||{items:[]};}catch(e){return {items:[]};}}
-function lsSetStanding(){try{localStorage.setItem('sf-standing',JSON.stringify(standingState));}catch(e){}}
-function getStanding(){return standingState||lsGetStanding();}
-function persistStanding(st){
-  standingState=st;
-  if(fbReady&&fbDb){ fbDb.collection('board').doc('standing').set(st).catch(function(){lsSetStanding();}); }
-  else lsSetStanding();
-}
-function startStandingSync(){
-  if(fbReady&&fbDb){
-    if(standingUnsub)standingUnsub();
-    standingUnsub=fbDb.collection('board').doc('standing').onSnapshot(function(snap){
-      standingState=snap.exists?snap.data():{items:[]};
-      renderBoard();
-    },function(){ standingState=lsGetStanding(); renderBoard(); });
-  }else{ standingState=lsGetStanding(); }
-}
-function addStanding(){
-  if(!isMgr())return;
-  const inp=$('in-standing'),v=(inp.value||'').trim();if(!v)return;
-  const st=getStanding();st.items=st.items||[];st.items.push(v);
-  persistStanding(st);renderBoard();
-  setTimeout(function(){const x=$('in-standing');if(x)x.focus();},0);
-}
-function rmStanding(i){
-  if(!isMgr())return;
-  const st=getStanding();(st.items||[]).splice(i,1);persistStanding(st);renderBoard();
-}
-function standingColHTML(){
-  const st=getStanding(), items=st.items||[];
-  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Standing Verbals</span>`;
-  if(isMgr())h+=`<div class="board-input-row"><input class="board-input" id="in-standing" placeholder="House red — Centine / Mocktail — shrub fizz / Farinata — apricot preserves / Gelato — fior di latte" onkeydown="if(event.key==='Enter')addStanding()"><button class="board-add" onclick="addStanding()">+</button></div>`;
-  if(!items.length)h+=`<div class="board-empty">Not set yet${isMgr()?'':' — a lead sets these'}.</div>`;
-  items.forEach((it,i)=>{
-    h+=`<div class="board-item"><span>${esc(it)}</span>${isMgr()?`<span class="x" onclick="rmStanding(${i})">✕</span>`:''}</div>`;});
-  h+=`<div class="mm-cap" style="text-align:left">These stick until a lead changes them — not cleared nightly.</div></div>`;
-  return h;
-}
+/* (Legacy free-text "Standing Verbals" — the board/standing doc and its
+   standingColHTML/addStanding/rmStanding/startStandingSync helpers — were removed
+   2026-06-23. Standing verbals now live as the four named slots in board/verbals
+   under `standing` (VB_STANDING), built in the Day Sheet.) */
 /* ===== VERBALS (rework v2) — PERSIST across days (single board/verbals doc, not
    day-keyed), so recurring verbals carry over. Manager builds in the Day Sheet via
    four tabs: General Note (default), 86 (menu typeahead), About a menu item, and
@@ -2575,6 +2698,20 @@ function vbEntryTag(e){
   if(e.type==='item'&&e.itemName)return `<span class="vb-item-tag">${esc(e.itemName)}</span>`;
   return '';
 }
+/* --- v2 polish: age, inline edit, reorder, jump-to-card --- */
+function vbAge(at){ if(!at)return ''; const d=(Date.now()-at)/864e5; if(d<1)return 'added today'; if(d<2)return 'online 1d'; return 'online '+Math.floor(d)+'d'; }
+function vbJsq(s){return esc(s).replace(/'/g,"\\'");}
+let vbEditId=null;
+function vbEditStart(id){ if(!isMgr())return; vbEditId=id; renderVbBuilder(); setTimeout(function(){const x=$('vb-edit-in');if(x){x.focus();if(x.select)x.select();}},0); }
+function vbEditCancel(){ vbEditId=null; renderVbBuilder(); }
+function vbEditSave(id){ if(!isMgr())return; const el=$('vb-edit-in'); if(!el){vbEditId=null;renderVbBuilder();return;} const val=(el.value||'').trim();
+  if(!val){vbEditId=null;renderVbBuilder();return;}
+  const v=getVerbals(), entries=v.entries.map(function(e){return e.id===id?Object.assign({},e,{text:val}):e;});
+  vbEditId=null; persistVerbals({entries:entries,standing:v.standing}); }
+function vbMove(id,dir){ if(!isMgr())return; const v=getVerbals(), entries=v.entries.slice(); const i=entries.findIndex(function(e){return e.id===id;}); if(i<0)return; const j=i+dir; if(j<0||j>=entries.length)return; const t=entries[i];entries[i]=entries[j];entries[j]=t; persistVerbals({entries:entries,standing:v.standing}); }
+function vbCardId(itemType,name){ if(itemType==='wine'){const i=(SF.wines||[]).findIndex(function(w){return w.name===name;});return i>=0?'wcard-'+i:'';} if(itemType==='cocktail')return 'ckcard-'+fcSlug(name); return 'dcard-'+fcSlug(name); }
+function vbFindType(name){const n=String(name).toLowerCase(); if((((SF.bar&&SF.bar.cocktails))||[]).some(function(c){return String(c.name).toLowerCase()===n;}))return 'cocktail'; if((SF.wines||[]).some(function(w){return String(w.name).toLowerCase()===n;}))return 'wine'; return 'dish';}
+function vbJump(itemType,name){ go('fresh'); const ftMap={wine:'wine',cocktail:'bar',dish:'food'}, ft=ftMap[itemType]||'food'; const btn=document.querySelector('#freshTabs .subtab[data-ft="'+ft+'"]'); if(btn)btn.click(); const id=vbCardId(itemType,name); setTimeout(function(){if(id)jumpToCard(id);},180); }
 function dsVerbalsBuilderHTML(){
   const v=getVerbals(), entries=v.entries, st=v.standing;
   const tabs=[['note','General Note'],['86','86'],['item','Menu item'],['standing','Standing']];
@@ -2597,7 +2734,17 @@ function dsVerbalsBuilderHTML(){
     h+=`<div class="vb-text-row"><input class="board-input" id="vb-text" placeholder="Verbal note for the team…" onkeydown="if(event.key==='Enter')vbAdd()"><button class="board-add" onclick="vbAdd()">+</button></div>`;
   }
   if(!entries.length)h+=`<div class="ds-empty">No verbals yet.</div>`;
-  entries.forEach(function(e){h+=`<div class="vb-entry"><div class="vb-entry-main">${vbEntryTag(e)}<span class="vb-entry-text">${esc(e.text)}</span></div><span class="x" onclick="vbDel('${esc(e.id)}')">✕</span></div>`;});
+  entries.forEach(function(e,i){
+    if(vbEditId===e.id){
+      h+=`<div class="vb-entry vb-entry-edit"><div class="vb-entry-main">${vbEntryTag(e)}<input class="board-input vb-edit-in" id="vb-edit-in" value="${esc(e.text)}" onkeydown="if(event.key==='Enter')vbEditSave('${vbJsq(e.id)}');if(event.key==='Escape')vbEditCancel()"></div><span class="vb-mini" title="Save" onclick="vbEditSave('${vbJsq(e.id)}')">✓</span><span class="vb-mini" title="Cancel" onclick="vbEditCancel()">✕</span></div>`;
+    } else {
+      h+=`<div class="vb-entry"><div class="vb-entry-main">${vbEntryTag(e)}<span class="vb-entry-text">${esc(e.text)}</span>${e.at?`<span class="vb-age">${vbAge(e.at)}</span>`:''}</div>`+
+        `<span class="vb-mini${i===0?' off':''}" title="Move up" onclick="vbMove('${vbJsq(e.id)}',-1)">↑</span>`+
+        `<span class="vb-mini${i===entries.length-1?' off':''}" title="Move down" onclick="vbMove('${vbJsq(e.id)}',1)">↓</span>`+
+        `<span class="vb-mini" title="Edit" onclick="vbEditStart('${vbJsq(e.id)}')">✎</span>`+
+        `<span class="x" title="Remove" onclick="vbDel('${vbJsq(e.id)}')">✕</span></div>`;
+    }
+  });
   return h;
 }
 function renderVbBuilder(){const el=$('ds-verbals-wrap'); if(el)el.innerHTML=dsVerbalsBuilderHTML();}
@@ -2605,7 +2752,16 @@ function verbalsViewHTML(){
   const v=getVerbals(), entries=v.entries, st=v.standing;
   let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Verbals</span>`;
   if(!entries.length)h+=`<div class="board-empty">None set${isMgr()?' — build them in Day at a Glance':' — a lead sets these'}.</div>`;
-  entries.forEach(function(e){h+=`<div class="board-item vb-view"><div class="vb-view-main">${e.type==='86'?`<div class="vb-item-tag vb-86-tag">86 — ${esc(e.text)}</div>`:(e.type==='item'&&e.itemName?`<div class="vb-item-tag">${esc(e.itemName)}</div><span>${esc(e.text)}</span>`:`<span>${esc(e.text)}</span>`)}</div></div>`;});
+  entries.forEach(function(e){
+    const age=e.at?`<span class="vb-age">${vbAge(e.at)}</span>`:'';
+    if(e.type==='86'){
+      h+=`<div class="board-item vb-view vb-tap" onclick="vbJump('${vbFindType(e.text)}','${vbJsq(e.text)}')"><div class="vb-view-main"><div class="vb-item-tag vb-86-tag">86 — ${esc(e.text)}</div>${age}</div><span class="vb-jump">view ›</span></div>`;
+    } else if(e.type==='item'&&e.itemName){
+      h+=`<div class="board-item vb-view vb-tap" onclick="vbJump('${esc(e.itemType||'dish')}','${vbJsq(e.itemName)}')"><div class="vb-view-main"><div class="vb-item-tag">${esc(e.itemName)}</div><span>${esc(e.text)}</span>${age}</div><span class="vb-jump">view ›</span></div>`;
+    } else {
+      h+=`<div class="board-item vb-view"><div class="vb-view-main"><span>${esc(e.text)}</span>${age}</div></div>`;
+    }
+  });
   if(isMgr())h+=`<div class="mm-cap" style="text-align:left"><span class="vb-edit-link" onclick="go('today')">Build &amp; edit in Day at a Glance ›</span></div>`;
   h+=`</div>`;
   h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Standing Verbals</span>`;
@@ -2622,7 +2778,6 @@ function startBoardSync(){
       renderBoard();
     },function(){ boardState=lsGetBoard(); renderBoard(); });
   }else{ boardState=lsGetBoard(); }
-  startStandingSync();
   startVerbalsSync();
 }
 function persistBoard(b){
@@ -2640,12 +2795,10 @@ function boardSecGet(){
   }catch(e){return 'all';}
 }
 function boardSecSet(v){try{localStorage.setItem('sf-board-section',typeof v==='string'?v:JSON.stringify(v));}catch(e){}}
-/* per-device "seen" tracking for 86 items — drives the gold pill. Day-keyed so it
-   resets naturally with the nightly board clear. */
-function seen86Key(){return 'sf-86seen-'+todayISO();}
-function getSeen86(){try{return JSON.parse(localStorage.getItem(seen86Key())||'[]');}catch(e){return [];}}
-function markSeen86(){try{localStorage.setItem(seen86Key(),JSON.stringify(getBoard().eightySixed||[]));}catch(e){}}
-function newCount86(){const seen=getSeen86();return (getBoard().eightySixed||[]).filter(x=>seen.indexOf(x)<0).length;}
+/* (The legacy nightly "86 Tonight" board list was retired 2026-06-23 — the 86
+   verbal type in board/verbals is now the single source. Its per-device seen
+   tracking and the verbals gold-pill it drove are gone; glow is handled by
+   updateAttn().) */
 function renderBoard(){const b=getBoard();
   const col=(title,cls,items,kind)=>{let h=`<div class="board-col ${cls}"><span class="board-title">${title}</span>
     <div class="board-input-row"><input class="board-input" id="in-${kind}" placeholder="Add…" onkeydown="if(event.key==='Enter')addBoard('${kind}')"><button class="board-add" onclick="addBoard('${kind}')">+</button></div>`;
@@ -2656,16 +2809,8 @@ function renderBoard(){const b=getBoard();
   $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`+secChipsHTML()+tablesPaneHTML(b);
   $('verbalsBody').innerHTML=`<p class="board-note">Verbals are built by a lead in Day at a Glance and persist until changed; specials below clear nightly. ${live}</p>`+
     verbalsViewHTML()+col('Specials','board-sp',b.specials||[],'specials');
-  const vActive=$('verbals')&&$('verbals').classList.contains('active');
-  if(vActive)markSeen86();   // viewing the tab = seeing the items
-  updateVerbalsAttn();
-}
-function updateVerbalsAttn(){
-  const on=false;   // old nightly 86 list retired; no verbals pulse for now
-  const chip=document.querySelector('#navChips .chip[data-go="verbals"]');
-  if(chip)chip.classList.toggle('attn-chip',on);
-  const card=document.querySelector('.home-card[data-card="verbals"]');
-  if(card)card.classList.toggle('attn-card',on);
+  if($('verbals')&&$('verbals').classList.contains('active'))markVerbalsSeen();   // viewing the tab = seeing the items
+  updateAttn();
 }
 function secChipsHTML(){
   const order=(SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[];
@@ -3334,6 +3479,7 @@ function remyStartSync(){
     .onSnapshot(function(snap){
       remyOrders=snap.docs.map(d=>d.data());
       if(document.getElementById('orders')&&document.getElementById('orders').classList.contains('active'))renderOrdersBody();
+      else if($('home')&&$('home').classList.contains('active'))refreshOrdersCard();
     }, function(){ /* permission/transient — recent list falls back to local */ });
 }
 
@@ -3487,6 +3633,7 @@ function renderOrdersBody(){
   $('ordBody').innerHTML=h;
   requestAnimationFrame(replaceAllPills);
   window.scrollTo(0,_sy);
+  if($('orders')&&$('orders').classList.contains('active'))markOrdersSeen();   // viewing = caught up
 }
 
 function ordCardHTML(o, withActions){
@@ -3628,6 +3775,8 @@ function renderCrew(){
     if(mine||isAdmin())h+=`<span class="tbl-x" onclick="rmCrew('${p.id}')">✕</span>`;
     h+=`</div>`;});
   $('crewBody').innerHTML=h+`</div>`;
+  if($('crew')&&$('crew').classList.contains('active'))markCrewSeen();
+  if(typeof updateAttn==='function')updateAttn();
 }
 function addCrew(){
   if(!me){openLogin();return;}
