@@ -467,6 +467,9 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-wx-none{font-size:12.5px; color:var(--ink-mute); font-style:italic;}
 .ds-side{margin-bottom:16px;}
 .ds-side-head{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-soft); margin-bottom:9px; padding-bottom:5px; border-bottom:.5px solid rgba(205,216,244,.14);}
+.ds-side-toggle{display:flex; align-items:center; cursor:pointer; -webkit-tap-highlight-color:rgba(205,216,244,.1);}
+.ds-chev{font-size:10px; color:var(--ink-mute); margin-right:5px; width:9px;}
+.ds-side-count{margin-left:auto; font-size:10px; color:var(--ink-mute); font-weight:700; text-transform:none; letter-spacing:0;}
 .ds-week-label{font-size:10px; color:var(--gold); font-weight:700; letter-spacing:.03em; text-transform:none; margin-left:6px;}
 .ds-bucket{margin-bottom:9px;}
 .ds-bucket-lab{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); font-weight:700; margin-bottom:3px;}
@@ -1023,7 +1026,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782244911';   // stamped by build-data.py at every deploy
+const BUILD='1782245442';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2135,11 +2138,15 @@ function dsBohBucket(shift,role,full){
   if(s.includes('r/o'))return '_off';
   if(s.includes('farm'))return '_farm';
   if(dsIsPorter(full,role))return 'Porter';
-  if(s.includes('expo'))return 'Expo';   // an expo shift is expo regardless of title
+  // Kitchen leadership (chef/sous) always reads as Kitchen Lead and sits at the
+  // top, even when assigned to expo/admin/float — only NON-leads on an expo shift
+  // drop into the Expo group below.
   if(s==='md'||rl.includes('chef')||rl.includes('sous'))return 'Kitchen Lead';
+  if(s.includes('expo'))return 'Expo';
   if(s.includes('1-close')||s.includes('close'))return 'Line (1–close)';
   return 'Daytime / Prep';
 }
+function dsKlRank(role){const r=(role||'').toLowerCase(); if(r.includes('chef de cuisine'))return 0; if(r.includes('sous'))return 1; if(r.includes('executive'))return 2; return 3;}
 // Sam runs the floor, not the line — drop him from the BOH/kitchen readout unless
 // he's the only expo on (i.e. he's actually covering the pass). He still shows in FOH.
 const DS_KITCHEN_HIDE='sam west';
@@ -2166,17 +2173,24 @@ function dsWorkingProfiles(iso){
   });
   return out;
 }
+let dsCollapsed={foh:false,boh:false};
+function dsCollapseToggle(side){dsCollapsed[side]=!dsCollapsed[side];renderToday();}
 function dsSideHTML(title,side,iso,idx){
   const day=(side==='boh')?dsBohRowsFiltered(iso,idx):dsDayRows(side,iso);
-  let h=`<div class="ds-side"><div class="ds-side-head">${esc(title)}${day&&day.label?` <span class="ds-week-label">${esc(day.label)}</span>`:''}</div>`;
-  if(!day){return h+`<div class="ds-empty">No schedule loaded for this week.</div></div>`;}
-  const order=(side==='foh')?DS_FOH_ORDER:DS_BOH_ORDER, groups={}, farm=[];
+  const collapsed=dsCollapsed[side], chev=collapsed?'▸':'▾';
+  if(!day){
+    return `<div class="ds-side"><div class="ds-side-head ds-side-toggle" onclick="dsCollapseToggle('${side}')"><span class="ds-chev">${chev}</span> ${esc(title)}</div>${collapsed?'':'<div class="ds-empty">No schedule loaded for this week.</div>'}</div>`;
+  }
+  const order=(side==='foh')?DS_FOH_ORDER:DS_BOH_ORDER, groups={}, farm=[]; let onCount=0;
   day.rows.forEach(r=>{
     const res=dsResolve(r.name,idx), b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role,res.full);
     if(b==='_off')return;
     if(b==='_farm'){farm.push({res,shift:r.shift});return;}
-    (groups[b]=groups[b]||[]).push({res,shift:r.shift});
+    onCount++; (groups[b]=groups[b]||[]).push({res,shift:r.shift});
   });
+  if(groups['Kitchen Lead'])groups['Kitchen Lead'].sort((a,b)=>dsKlRank(a.res.role)-dsKlRank(b.res.role));
+  let h=`<div class="ds-side"><div class="ds-side-head ds-side-toggle" onclick="dsCollapseToggle('${side}')"><span class="ds-chev">${chev}</span> ${esc(title)}${day.label?` <span class="ds-week-label">${esc(day.label)}</span>`:''}<span class="ds-side-count">${onCount} on</span></div>`;
+  if(collapsed)return h+`</div>`;
   let any=false;
   order.forEach(b=>{const arr=groups[b]; if(!arr||!arr.length)return; any=true;
     h+=`<div class="ds-bucket"><div class="ds-bucket-lab">${esc(b)}</div>`+
@@ -2638,14 +2652,14 @@ function renderBoard(){const b=getBoard();
     return h+`</div>`;};
   const live=fbReady?`<span style="color:#bfe0a8">● live</span> — shared across every device.`:`saved on this device only.`;
   $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`+secChipsHTML()+tablesPaneHTML(b);
-  $('verbalsBody').innerHTML=`<p class="board-note">Verbals are built by a lead in Day at a Glance and persist until changed; the 86 list and specials below clear nightly. ${live}</p>`+
-    verbalsViewHTML()+col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials');
+  $('verbalsBody').innerHTML=`<p class="board-note">Verbals are built by a lead in Day at a Glance and persist until changed; specials below clear nightly. ${live}</p>`+
+    verbalsViewHTML()+col('Specials','board-sp',b.specials||[],'specials');
   const vActive=$('verbals')&&$('verbals').classList.contains('active');
   if(vActive)markSeen86();   // viewing the tab = seeing the items
   updateVerbalsAttn();
 }
 function updateVerbalsAttn(){
-  const on=newCount86()>0&&!($('verbals')&&$('verbals').classList.contains('active'));
+  const on=false;   // old nightly 86 list retired; no verbals pulse for now
   const chip=document.querySelector('#navChips .chip[data-go="verbals"]');
   if(chip)chip.classList.toggle('attn-chip',on);
   const card=document.querySelector('.home-card[data-card="verbals"]');
