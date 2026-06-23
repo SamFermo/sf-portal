@@ -882,7 +882,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782173870';   // stamped by build-data.py at every deploy
+const BUILD='1782174653';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1125,7 +1125,9 @@ function allergenChips(it){
   a.forEach(x=>h+=`<span class="alg ${m.indexOf(x)>=0?'alg-mod':''}" title="${esc(x)}">${ALG[x]||esc(x)}</span>`);
   return h+'</div>';
 }
-const NEW_DAYS=14;        // NEW badge + clickable "Recently Added" block linger this long
+const NEW_DAYS=14;        // NEW badge lingers this long; the clickable "Recently Added"
+                          // note shows an item only AFTER it leaves the pinned group
+                          // (i.e. between SHUFFLE_DAYS and NEW_DAYS), once it's back in the list
 const SHUFFLE_DAYS=7;     // full cards floated to a pinned group at the top of the tab
 function ageDays(item){if(!item||!item.added)return Infinity;const d=new Date(item.added+'T00:00:00');return(new Date()-d)/864e5;}
 function isNew(item){return ageDays(item)<=NEW_DAYS;}
@@ -1251,7 +1253,9 @@ function renderFoodTab(){
   SF.menu.food.forEach(sec=>sec.items.forEach(it=>{if(isNew(it))newDishes.push(it);}));
   SF.menu.desserts.forEach(it=>{if(isNew(it))newDishes.push(it);});
   const pinned=newDishes.filter(isShuffled), pinnedSet=new Set(pinned);
-  let f=editBarHTML()+recentBlockHTML(newDishes,'dish');
+  // The note only lists items once they've dropped out of the pinned group and
+  // back into their normal spot (past SHUFFLE_DAYS) — no note above a pinned card.
+  let f=editBarHTML()+recentBlockHTML(newDishes.filter(it=>!isShuffled(it)),'dish');
   if(pinned.length){f+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(it=>f+=dishCardHTML(it));f+=`</div>`;}
   f+=allergenLegendHTML();
   SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;
@@ -1350,7 +1354,7 @@ function renderWine(){
   const newWines=SF.wines.filter(w=>isNew(w));
   const filtering=wineFilter.section!=='all'||wineFilter.glassOnly||!!q;
   const pinned=filtering?[]:SF.wines.filter(w=>isShuffled(w)), pinnedSet=new Set(pinned);
-  let cur='',html=editBarHTML()+recentBlockHTML(newWines,'wine');
+  let cur='',html=editBarHTML()+recentBlockHTML(newWines.filter(w=>!isShuffled(w)),'wine');
   if(pinned.length){html+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(w=>html+=wineCardHTML(w));html+=`</div>`;}
   html+=bar;
   const shown=list.filter(w=>!pinnedSet.has(w));
@@ -1388,7 +1392,7 @@ function ckCardHTML(c){
 function renderBar(){
   const newCk=SF.bar.cocktails.filter(c=>isNew(c));
   const pinned=newCk.filter(isShuffled), pinnedSet=new Set(pinned);
-  let h=editBarHTML()+recentBlockHTML(newCk,'cocktail');
+  let h=editBarHTML()+recentBlockHTML(newCk.filter(c=>!isShuffled(c)),'cocktail');
   if(pinned.length){h+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(c=>h+=ckCardHTML(c));h+=`</div>`;}
   h+=`<div class="section-label">Cocktails</div>`;
   SF.bar.cocktails.forEach(c=>{if(!pinnedSet.has(c))h+=ckCardHTML(c);});
