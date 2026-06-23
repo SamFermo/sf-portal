@@ -495,12 +495,6 @@ nav.chips::-webkit-scrollbar{display:none;}
 .home-card-wide{grid-column:1/-1;}
 .hc-sub-wide{font-size:13px; line-height:1.45;}
 .hc-sub-wide b{color:var(--gold-deep); font-weight:700;}
-.hc-fresh-list{display:flex; flex-direction:column; gap:4px; margin-top:7px;}
-.hc-fresh-item{display:flex; align-items:baseline; justify-content:space-between; gap:10px; font-size:13.5px; color:var(--wood); padding:3px 0; border-bottom:1px solid rgba(120,90,50,.1);}
-.hc-fresh-item:last-child{border-bottom:none;}
-.hc-fresh-item.unseen{font-weight:700;}
-.hc-fresh-item.unseen::before{content:'•'; color:var(--gold-deep); margin-right:5px;}
-.hc-fresh-type{flex:0 0 auto; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--card-mute); font-weight:600;}
 .home-card-wide .glance-card-top{margin-bottom:8px;}
 .glance-card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:11px;}
 .glance-card-head{display:flex; align-items:center; gap:9px;}
@@ -1043,7 +1037,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782249938';   // stamped by build-data.py at every deploy
+const BUILD='1782250499';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1122,15 +1116,19 @@ function wideCardHTML(id,ic,title,detail){
     <div class="hc-sub hc-sub-wide">${detail}</div></button>`;
 }
 function freshCardHTML(){
-  const nw=freshNewList(), un=freshUnseen(), unKeys={}; un.forEach(o=>unKeys[o.key]=1);
-  const typeLbl={dish:'food',wine:'wine',cocktail:'cocktail'};
+  const nw=freshNewList();
+  const c={dish:0,wine:0,cocktail:0};
+  nw.forEach(o=>{ if(c[o.type]!=null)c[o.type]++; else c.dish++; });
   let detail;
   if(!nw.length){
     detail='Food, wine &amp; cocktails — all current';
   } else {
-    const head = un.length ? `<b>${un.length} new to see</b>` : `${nw.length} new this week`;
-    const list = nw.map(o=>`<span class="hc-fresh-item${unKeys[o.key]?' unseen':''}">${esc(o.label)}<span class="hc-fresh-type">${esc(typeLbl[o.type]||o.type)}</span></span>`).join('');
-    detail = head + `<div class="hc-fresh-list">${list}</div>`;
+    const parts=[];
+    if(c.dish)parts.push(c.dish+' food');
+    if(c.wine)parts.push(c.wine+' wine');
+    if(c.cocktail)parts.push(c.cocktail+(c.cocktail>1?' cocktails':' cocktail'));
+    const txt=parts.join(' · ')+' this week';
+    detail = freshUnseen().length ? `<b>${txt}</b>` : txt;
   }
   return wideCardHTML('fresh','✦','Fresh Talk',detail);
 }
