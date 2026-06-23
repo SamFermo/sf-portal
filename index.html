@@ -1026,7 +1026,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782245852';   // stamped by build-data.py at every deploy
+const BUILD='1782247453';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3275,7 +3275,7 @@ function crewPosts(){
    When the remy-orders Firebase project exists, set REMY_ORDERS_CONFIG below and
    placed orders also write to Firestore (system of record upgrade, Phase 1 wiring).
    Plan: Codename: Neelix/docs/farm-order-loop-build-plan.md */
-const ORD_AVAIL_URL='https://samfermo.github.io/seasonal-tracker/availability-swan-house.json';
+const ORD_AVAIL_URL='https://samfermo.github.io/remy/availability-swan-house.json';
 /* SMS announce step removed 2026-06-10 (iOS multi-recipient links only reached Tim). Process instead: hard order days — orders in by Sat night; Kelly & Tim check Sun-Tue mornings. Numbers for reference: Tim 2065513328, Kelly 2062509433. */
 const ORD_UNITS=['cup','pint','quart','1/4 lb','1/2 lb','lb','flat','half-flat','case','bunch','stems','head','gallon bag','medium cooler','large cooler','each','pack','dozen'];
 function ordUnitSelect(units, current, onchangeJs){
