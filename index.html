@@ -392,6 +392,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 .tpick-wrap{display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 12px;}
 .tpick{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:9px; min-width:38px; padding:6px 0; text-align:center; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
 .tpick.on{background:var(--gold); color:#241f15; border-color:var(--gold);}
+.tpick-ref{border-style:dashed;}
+.tpick-ref.on{background:#6db657; border-color:#6db657; color:#0e1a0c;}
 .tpick-label{font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-mute); margin:8px 0 4px;}
 /* crew board */
 .crew-cat{font-size:9.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; border-radius:999px; padding:2px 8px; white-space:nowrap;}
@@ -631,6 +633,10 @@ body.locked{overflow:hidden;}
 .alg-note{font-size:11.5px; color:var(--ink-mute); margin-top:2px; line-height:1.35;}
 .alg-confirm{margin-top:13px; font-size:11.5px; color:#9b2f2f; font-weight:600; line-height:1.35;}
 .alg-none{font-size:12.5px; color:var(--ink-mute); font-style:italic; margin-top:9px; line-height:1.4;}
+.alg-chip-row{display:flex; gap:7px; flex-wrap:wrap;}
+.alg-chip{background:rgba(150,150,150,.08); border:1px solid rgba(150,150,150,.3); color:var(--ink-soft); border-radius:999px; padding:7px 13px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit; -webkit-tap-highlight-color:transparent;}
+.alg-chip.on{background:var(--gold); border-color:var(--gold); color:#241f15;}
+.alg-clear-btn{margin-top:9px; background:transparent; border:1px solid rgba(150,150,150,.35); color:var(--ink-mute); border-radius:8px; padding:5px 12px; font-size:11.5px; font-weight:700; cursor:pointer; font-family:inherit;}
 
 @media(max-width:600px){
   .home-grid{grid-template-columns:1fr 1fr;}
@@ -890,7 +896,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782176919';   // stamped by build-data.py at every deploy
+const BUILD='1782178337';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1170,9 +1176,10 @@ function reviewBannerHTML(flags){
   h+='<div class="mgr-review-sub">Remy left these out of the card on purpose rather than guess. Servers don\'t see this note. Add the real detail and re-polish, or publish as-is once confirmed.</div>';
   return h+'</div>';
 }
-function mgrFlagLineHTML(flags){
+function mgrFlagLineHTML(flags,origName){
   if(!flags||!flags.length)return '';
-  return `<div class="mgr-flag-line"><span class="mfl-head">Manager only — confirm with kitchen</span>${flags.map(f=>esc(f)).join('<br>')}</div>`;
+  const oc=origName?` onclick="event.stopPropagation();openEditModal('${esc(origName).replace(/'/g,"\\'")}')" style="cursor:pointer"`:'';
+  return `<div class="mgr-flag-line"${oc}><span class="mfl-head">Manager only — tap to confirm &amp; edit</span>${flags.map(f=>esc(f)).join('<br>')}</div>`;
 }
 
 function dishCardHTML(baseIt){
@@ -1191,7 +1198,11 @@ function dishCardHTML(baseIt){
   h+=allergenChips(it);
   if(!rich&&it.allergenNote)h+=`<div class="alg-note serif">${esc(it.allergenNote)}</div>`;
   if(rich) h+=`<div class="expand-hint">Tap for the story &amp; ingredients ›</div>`;
-  if(isMgr()&&it._flags&&it._flags.length)h+=mgrFlagLineHTML(it._flags);
+  // Manager-only composed-component flags. Edit overlay wins (an empty array means
+  // a manager re-polished and resolved it); otherwise fall back to canonical flags
+  // baked in by the 6am run. Servers never see this. Tap it to open the edit modal.
+  const mgrFlags=(it._flags!==undefined)?it._flags:(it.flags||[]);
+  if(isMgr()&&mgrFlags&&mgrFlags.length)h+=mgrFlagLineHTML(mgrFlags,origName);
   h+=`</div>`;
   if(rich){
     h+=`<div class="card-details">`;
@@ -1229,16 +1240,25 @@ const ALLERGEN_SYN={
 const ALLERGEN_ORDER=['allium','dairy','egg','fish','gluten','nuts','shellfish'];
 const ALLERGEN_OPT={allium:'Allium (onion / garlic)',dairy:'Dairy',egg:'Egg',fish:'Fish',gluten:'Gluten',nuts:'Tree nuts',shellfish:'Shellfish'};
 const ALLERGEN_LBL={allium:'allium (onion/garlic)',dairy:'dairy',egg:'egg',fish:'fish',gluten:'gluten',nuts:'tree nuts',shellfish:'shellfish'};
-let algTag=null;
+let algTags=[];   // multiple allergens can be checked at once (one guest, several allergies)
 function algFoodItems(){var out=[];(SF.menu.food||[]).forEach(function(s){(s.items||[]).forEach(function(it){out.push(it);});});(SF.menu.desserts||[]).forEach(function(it){out.push(it);});return out;}
-function allergenLookup(tag){
+var ALG_UNCERTAIN=/(confirm|unconfirmed|pending|verify|checking|\bcheck\b|status|tbd)/;
+/* Classify one dish against one allergen: 'off' (contains, can't remove) >
+   'check' (note hints at it, unconfirmed) > 'mod' (contains, kitchen can remove) >
+   'clear'. For multiple allergens, a dish takes its WORST class across them all. */
+function algClassifyOne(it,tag){
+  var al=it.allergens||[],cm=it.canModify||[],note=(it.allergenNote||'').toLowerCase();
+  if(al.indexOf(tag)>=0)return cm.indexOf(tag)>=0?'mod':'off';
+  if(ALLERGEN_SYN[tag]&&ALLERGEN_SYN[tag].some(function(w){return note.indexOf(w)>=0;})&&ALG_UNCERTAIN.test(note))return 'check';
+  return 'clear';
+}
+function allergenLookup(tags){
+  var RANK={clear:0,mod:1,check:2,off:3};
   var clear=[],mod=[],off=[],check=[];
-  var UNCERTAIN=/(confirm|unconfirmed|pending|verify|checking|\bcheck\b|status|tbd)/;
   algFoodItems().forEach(function(it){
-    var al=it.allergens||[],cm=it.canModify||[],note=(it.allergenNote||'').toLowerCase();
-    if(al.indexOf(tag)>=0){ if(cm.indexOf(tag)>=0)mod.push(it); else off.push(it); }
-    else if(ALLERGEN_SYN[tag].some(function(w){return note.indexOf(w)>=0;})&&UNCERTAIN.test(note)){ check.push(it); }
-    else { clear.push(it); }
+    var worst='clear';
+    tags.forEach(function(tag){var c=algClassifyOne(it,tag);if(RANK[c]>RANK[worst])worst=c;});
+    ({off:off,check:check,mod:mod,clear:clear})[worst].push(it);
   });
   return {clear:clear,mod:mod,off:off,check:check};
 }
@@ -1246,14 +1266,27 @@ function algItemHTML(it,withNote){
   return '<div class="alg-item"><span class="alg-item-name">'+esc(it.name)+'</span>'+
     (withNote&&it.allergenNote?'<div class="alg-note">'+esc(it.allergenNote)+'</div>':'')+'</div>';
 }
-function allergenResultHTML(tag){
-  if(!tag)return '';
-  var r=allergenLookup(tag),lbl=ALLERGEN_LBL[tag];
+function algLabelList(tags){
+  if(tags.length===1)return ALLERGEN_LBL[tags[0]];
+  if(tags.length===2)return ALLERGEN_LBL[tags[0]]+' and '+ALLERGEN_LBL[tags[1]];
+  return tags.slice(0,-1).map(function(t){return ALLERGEN_LBL[t];}).join(', ')+', and '+ALLERGEN_LBL[tags[tags.length-1]];
+}
+function allergenResultHTML(tags){
+  if(!tags||!tags.length)return '';
+  var r=allergenLookup(tags),lbl=algLabelList(tags);
+  var multi=tags.length>1, scope=multi?'any of '+lbl:lbl;
   var lead;
-  if(r.off.length===0&&r.mod.length===0)lead='Nothing on the food menu contains '+lbl+'.';
-  else if(r.off.length<=r.clear.length)lead='Only '+r.off.length+' '+(r.off.length===1?'dish is':'dishes are')+' off limits for '+lbl+'. Everything else is safe'+(r.mod.length?' (some with a change)':'')+'.';
-  else lead=r.clear.length+' '+(r.clear.length===1?'dish is':'dishes are')+' clear for '+lbl+(r.mod.length?', and '+r.mod.length+' can be modified':'')+'. The rest are off limits.';
+  if(r.off.length===0&&r.mod.length===0&&r.check.length===0)lead='Nothing on the food menu contains '+scope+'.';
+  else{
+    var parts=[];
+    parts.push(r.clear.length+' safe as-is');
+    if(r.mod.length)parts.push(r.mod.length+' can be modified');
+    if(r.check.length)parts.push(r.check.length+' to verify');
+    if(r.off.length)parts.push(r.off.length+' off limits');
+    lead='For '+scope+': '+parts.join(', ')+'.';
+  }
   var h='<div class="alg-lead">'+lead+'</div>';
+  if(multi)h+='<div class="alg-note" style="margin:-4px 0 8px">Each dish is sorted by its strictest result across the allergies you picked.</div>';
   function bucket(cls,title,arr,withNote){if(!arr.length)return '';return '<div class="alg-bucket '+cls+'"><div class="alg-bhead">'+title+' ('+arr.length+')</div>'+arr.map(function(it){return algItemHTML(it,withNote);}).join('')+'</div>';}
   h+=bucket('alg-clear','✓ Safe as-is',r.clear,false);
   h+=bucket('alg-mod','◐ Can be modified',r.mod,true);
@@ -1262,15 +1295,15 @@ function allergenResultHTML(tag){
   h+='<div class="alg-confirm">Always confirm with the kitchen before promising — this reflects the menu data, not a final clearance.</div>';
   return h;
 }
-function runAllergen(){
-  var sel=$('alg-q');var tag=sel?sel.value:'';algTag=tag||null;
-  var box=$('alg-result');if(box)box.innerHTML=algTag?allergenResultHTML(algTag):'<div class="alg-none">Pick an allergy to see what’s safe, what can be modified, and what’s off limits.</div>';
-}
+function toggleAlgTag(t){var i=algTags.indexOf(t);if(i>=0)algTags.splice(i,1);else algTags.push(t);var a=$('ftAllergens');if(a)a.innerHTML=allergenAskHTML();}
+function clearAlgTags(){algTags=[];var a=$('ftAllergens');if(a)a.innerHTML=allergenAskHTML();}
 function allergenAskHTML(){
-  var opts='<option value="">Choose an allergy…</option>'+ALLERGEN_ORDER.map(function(t){return '<option value="'+t+'"'+(algTag===t?' selected':'')+'>'+esc(ALLERGEN_OPT[t])+'</option>';}).join('');
+  var chips=ALLERGEN_ORDER.map(function(t){return '<button type="button" class="alg-chip'+(algTags.indexOf(t)>=0?' on':'')+'" onclick="toggleAlgTag(\''+t+'\')">'+esc(ALLERGEN_OPT[t])+'</button>';}).join('');
+  var none='<div class="alg-none">Tap one or more allergies to see what’s safe, what can be modified, and what’s off limits.</div>';
   return '<div class="alg-box"><div class="alg-title">Allergy check · food menu</div>'+
-    '<div class="alg-row"><select id="alg-q" class="board-input" onchange="runAllergen()">'+opts+'</select></div>'+
-    '<div id="alg-result">'+(algTag?allergenResultHTML(algTag):'<div class="alg-none">Pick an allergy to see what’s safe, what can be modified, and what’s off limits.</div>')+'</div></div>';
+    '<div class="alg-chip-row">'+chips+'</div>'+
+    (algTags.length>=1?'<button type="button" class="alg-clear-btn" onclick="clearAlgTags()">Clear'+(algTags.length>1?' ('+algTags.length+')':'')+'</button>':'')+
+    '<div id="alg-result">'+(algTags.length?allergenResultHTML(algTags):none)+'</div></div>';
 }
 function renderFoodTab(){
   const newDishes=[];
@@ -2056,15 +2089,18 @@ function getCombos(){return (getBoard().combos||[]);}
 function comboFor(t){const u=String(t).trim().toUpperCase();return getCombos().find(c=>c.tables.some(x=>String(x).toUpperCase()===u))||null;}
 function comboPrimary(t){const c=comboFor(t);return c?String(c.primary):String(t).trim();}
 let comboPick=null;   // null = idle, [] = picking
-function startCombo(){if(!isMgr())return;comboPick=[];renderBoard();}
-function cancelCombo(){comboPick=null;renderBoard();}
-function toggleComboPick(t){if(!comboPick)return;const i=comboPick.indexOf(t);if(i>=0)comboPick.splice(i,1);else comboPick.push(t);renderBoard();}
+let comboPrimaryPick=null;  // chosen reference table; null = default to lowest number
+function startCombo(){if(!isMgr())return;comboPick=[];comboPrimaryPick=null;renderBoard();}
+function cancelCombo(){comboPick=null;comboPrimaryPick=null;renderBoard();}
+function toggleComboPick(t){if(!comboPick)return;const i=comboPick.indexOf(t);if(i>=0){comboPick.splice(i,1);if(comboPrimaryPick===t)comboPrimaryPick=null;}else comboPick.push(t);renderBoard();}
+function setComboPrimary(t){if(!comboPick||comboPick.indexOf(t)<0)return;comboPrimaryPick=t;renderBoard();}
 function comboSort(arr){return arr.slice().sort((a,b)=>(parseInt(String(a).replace(/\D/g,''))||999)-(parseInt(String(b).replace(/\D/g,''))||999));}
+function comboChosenPrimary(){return (comboPrimaryPick&&comboPick&&comboPick.indexOf(comboPrimaryPick)>=0)?comboPrimaryPick:(comboPick&&comboPick.length?comboSort(comboPick)[0]:null);}
 function saveCombo(){
   if(!isMgr()||!comboPick||comboPick.length<2)return;
-  const sorted=comboSort(comboPick);
-  const b=getBoard();b.combos=b.combos||[];b.combos.push({primary:sorted[0],tables:sorted});
-  comboPick=null;persistBoard(b);renderBoard();
+  const sorted=comboSort(comboPick),primary=comboChosenPrimary();
+  const b=getBoard();b.combos=b.combos||[];b.combos.push({primary:primary,tables:sorted});
+  comboPick=null;comboPrimaryPick=null;persistBoard(b);renderBoard();
 }
 function rmCombo(i){if(!isMgr())return;const b=getBoard();(b.combos||[]).splice(i,1);persistBoard(b);renderBoard();}
 function comboUIHTML(){
@@ -2073,10 +2109,15 @@ function comboUIHTML(){
   getCombos().forEach((c,i)=>h+=`<span class="combo-chip">${esc(c.tables.join('+'))} → ${esc(c.primary)}<span class="x" onclick="rmCombo(${i})">✕</span></span>`);
   if(comboPick){
     const taken={};getCombos().forEach(c=>c.tables.forEach(t=>taken[String(t).toUpperCase()]=1));
-    h+=`<div class="tpick-label">Tap the tables being pushed together — lowest number becomes the reference</div><div class="tpick-wrap">`+
+    h+=`<div class="tpick-label">Tap the tables being pushed together</div><div class="tpick-wrap">`+
       allTablesInOrder().filter(t=>!taken[String(t).toUpperCase()]).map(t=>`<button class="tpick${comboPick.indexOf(t)>=0?' on':''}" onclick="toggleComboPick('${esc(t)}')">${esc(t)}</button>`).join('')+`</div>`;
+    if(comboPick.length>=2){
+      const chosen=comboChosenPrimary();
+      h+=`<div class="tpick-label">Reference table — the number staff will see for this party</div><div class="tpick-wrap">`+
+        comboSort(comboPick).map(t=>`<button class="tpick tpick-ref${String(t).toUpperCase()===String(chosen).toUpperCase()?' on':''}" onclick="setComboPrimary('${esc(t)}')">${esc(t)}</button>`).join('')+`</div>`;
+    }
     h+=`<div class="lm-actions" style="margin-top:8px">`;
-    if(comboPick.length>=2)h+=`<button class="lm-post" onclick="saveCombo()">Push ${esc(comboSort(comboPick).join('+'))}</button>`;
+    if(comboPick.length>=2)h+=`<button class="lm-post" onclick="saveCombo()">Push ${esc(comboSort(comboPick).join('+'))} → ${esc(comboChosenPrimary())}</button>`;
     h+=`<button class="lm-cancel" onclick="cancelCombo()">Cancel</button></div>`;
   }else{
     h+=`<button class="addlive-btn" style="margin:6px 0 4px" onclick="startCombo()">⊕ Push tables together (tonight)</button>`;
@@ -2387,9 +2428,10 @@ function liveBlockHTML(type){
     h+=`<div class="live-by">added live by ${esc(p.by||'a manager')} · ${crewWhen(p.at)} — in the books tomorrow</div></div>`;});
   return h;
 }
-let liveType='wine';
+let liveType='wine', lmFlags=[];
 function openLiveModal(type){
   if(!isMgr())return;
+  lmFlags=[];
   liveType=type||'wine';
   $('liveBody').innerHTML=`
     <div class="lm-field"><label>Type</label><select id="lm-type">${LIVE_TYPES.map(t=>`<option value="${t[0]}"${t[0]===liveType?' selected':''}>${t[1]}</option>`).join('')}</select></div>
@@ -2428,6 +2470,7 @@ async function styleLive(){
     if(d.card.name)$('lm-name').value=d.card.name;
     if(d.card.price&&!$('lm-price').value)$('lm-price').value=d.card.price;
     $('lm-sub').value=d.card.sub||'';$('lm-body').value=d.card.body||'';$('lm-pron').value=d.card.pron||'';
+    lmFlags=Array.isArray(d.flags)?d.flags:[];
     $('lm-flags').innerHTML=reviewBannerHTML(d.flags);
     $('lm-status').textContent=(d.flags&&d.flags.length)
       ?'Remy left the flagged components out and noted them above for you. Confirm with the kitchen, then Post.'
@@ -2450,6 +2493,7 @@ function postLive(){
     pron:styled?($('lm-pron').value||'').trim():'',
     rawNotes:($('lm-notes').value||'').trim(),
     replaces:replaces,
+    flags:(styled&&Array.isArray(lmFlags))?lmFlags:[],
     by:currentUserName(),at:at,day:todayISO(),styled:styled};
   MLIVE[id]=rec;renderFresh();
   if(fbReady&&fbDb){ fbDb.collection('menu-live').doc(id).set(rec).catch(function(){mliveLsSet();}); } else mliveLsSet();
@@ -2489,7 +2533,10 @@ function getEditedDish(it){
     if(ed[k]!==undefined&&ed[k]!==null)merged[k]=ed[k];
   });
   if(ed.ingredients&&ed.ingredients.length)merged.ingredients=ed.ingredients;
-  if(ed.flags&&ed.flags.length)merged._flags=ed.flags;
+  // An edit overlay's flags win — including an empty array, which is how a manager
+  // re-polish clears a flag the 6am run baked into the canonical item. Old edit recs
+  // (no flags field) fall back to whatever canonical flags the base item carries.
+  merged._flags=Array.isArray(ed.flags)?ed.flags:(Array.isArray(it.flags)?it.flags.slice():[]);
   merged._edited=true;merged._editId=id;merged._originalName=it.name;
   return merged;
 }
