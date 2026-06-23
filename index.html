@@ -447,6 +447,47 @@ nav.chips::-webkit-scrollbar{display:none;}
 .dir-card{position:relative;}
 .dir-card.dir-sel{outline:2px solid var(--gold-deep); outline-offset:-1px;}
 .dir-check{position:absolute; top:8px; right:9px; width:18px; height:18px; border-radius:50%; border:1.5px solid var(--gold-deep); color:var(--gold-deep); font-size:12px; font-weight:800; text-align:center; line-height:15px;}
+/* day sheet (manager-gated, dark chrome) */
+.ds-datebar{display:flex; align-items:center; gap:10px; margin-bottom:13px; flex-wrap:wrap;}
+.ds-datelab{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); font-weight:700;}
+.ds-dateinput{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.2); border-radius:9px; color:var(--ink); font-size:14px; padding:7px 10px; font-family:inherit;}
+.ds-today-btn{background:transparent; border:1px solid var(--gold); color:var(--gold); border-radius:8px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit;}
+.ds-weather{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:12px; padding:12px 14px; margin-bottom:15px;}
+.ds-wx-head{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--gold); font-weight:800; margin-bottom:8px;}
+.ds-wx-sum{display:flex; gap:20px; margin-bottom:9px;}
+.ds-wx-stat{font-size:13px; color:var(--ink-soft);}
+.ds-wx-stat b{font-size:19px; color:var(--ink); font-family:'Cormorant Garamond','Caladea',serif;}
+.ds-wx-sub{font-size:11px; color:var(--ink-mute);}
+.ds-wx-hours{display:flex; gap:5px; flex-wrap:wrap;}
+.ds-wx-hr{flex:1; min-width:38px; text-align:center; background:rgba(205,216,244,.05); border-radius:8px; padding:5px 2px;}
+.ds-wx-t{font-size:10px; color:var(--ink-mute);}
+.ds-wx-w{font-size:14px; color:var(--ink); font-weight:700;}
+.ds-wx-p{font-size:10px; color:#7fa9e8;}
+.ds-wx-note{font-size:12px; color:var(--gold); margin-top:9px; font-weight:600;}
+.ds-wx-none{font-size:12.5px; color:var(--ink-mute); font-style:italic;}
+.ds-side{margin-bottom:16px;}
+.ds-side-head{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-soft); margin-bottom:9px; padding-bottom:5px; border-bottom:.5px solid rgba(205,216,244,.14);}
+.ds-week-label{font-size:10px; color:var(--gold); font-weight:700; letter-spacing:.03em; text-transform:none; margin-left:6px;}
+.ds-bucket{margin-bottom:9px;}
+.ds-bucket-lab{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); font-weight:700; margin-bottom:3px;}
+.ds-person{display:flex; justify-content:space-between; align-items:baseline; padding:6px 11px; background:rgba(205,216,244,.05); border-radius:8px; margin-bottom:3px;}
+.ds-pname{font-size:14px; color:var(--ink); font-weight:600;}
+.ds-pshift{font-size:12px; color:var(--ink-mute);}
+.ds-farm{opacity:.65;}
+.ds-alert{margin-top:7px; font-size:12.5px; font-weight:700; color:#e6c878; background:rgba(214,158,46,.1); border:1px solid rgba(214,158,46,.35); border-radius:9px; padding:8px 11px;}
+.ds-empty{font-size:13px; color:var(--ink-mute); font-style:italic; padding:6px 0;}
+.ds-contact{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:12px; padding:12px 14px; margin-top:4px;}
+.ds-contact-grid{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:11px;}
+.ds-chip{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:999px; padding:6px 12px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
+.ds-chip.on{background:var(--gold); border-color:var(--gold); color:#241f15;}
+.ds-contact-actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+#today .dir-msg-btn{background:var(--gold); color:#241f15; border:none;}
+#today .dir-msg-btn.off{opacity:.42;}
+#today .dir-msg-clear{border-color:var(--ink-mute); color:var(--ink-mute);}
+#today .dir-msg-open{background:#6db657; color:#0e1a0c;}
+#today .dir-msg-help{color:var(--ink-mute);}
+#today .dir-msg-status{color:var(--gold);}
+#today .dir-msg-fallback textarea{background:rgba(205,216,244,.06); border-color:rgba(205,216,244,.2); color:var(--ink);}
 
 /* service */
 .intro-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:14px 16px; margin-bottom:16px; font-size:13.5px; color:var(--card-ink); line-height:1.55; font-family:'Caladea',Georgia,serif; box-shadow:0 5px 13px rgba(0,0,0,.24);}
@@ -690,6 +731,8 @@ body.locked{overflow:hidden;}
 .ord-item .oi-name{font-size:14.5px; font-weight:600; color:var(--ink);}
 .ord-item .oi-note{font-size:11.5px; color:var(--ink-mute); margin-top:2px; line-height:1.35;}
 .ord-item .oi-peak{color:var(--gold); font-size:10.5px; font-weight:700; letter-spacing:.1em; margin-left:6px;}
+.ord-item .oi-ask{display:inline-block; margin-left:6px; font-size:11.5px; font-weight:700; color:var(--gold); letter-spacing:.01em;}
+.ord-item .oi-ask.md{color:#e07a5a;}
 .ord-qty{display:flex; align-items:center; gap:8px; margin-top:9px;}
 .ord-qty button{width:34px; height:34px; border-radius:10px; background:rgba(205,216,244,.1); border:1px solid rgba(205,216,244,.25); color:var(--ink); font-size:17px; font-weight:700; cursor:pointer;}
 .ord-qty input{width:54px; text-align:center; background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.25); color:var(--ink); border-radius:8px; padding:7px 4px; font-size:14.5px; font-weight:700; font-family:inherit;}
@@ -796,6 +839,11 @@ body.locked{overflow:hidden;}
 <section class="view" id="directory">
   <div class="view-head"><p class="view-eyebrow">Team</p><h2 class="view-title">Directory</h2><p class="view-sub" id="dirSub"></p></div>
   <div id="dirBody"></div>
+</section>
+
+<section class="view" id="today">
+  <div class="view-head"><p class="view-eyebrow">Manager</p><h2 class="view-title">Day Sheet</h2><p class="view-sub" id="todaySub"></p></div>
+  <div id="todayBody"></div>
 </section>
 
 <section class="view" id="board">
@@ -911,7 +959,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782239357';   // stamped by build-data.py at every deploy
+const BUILD='1782240266';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -958,14 +1006,14 @@ function makeStars(){
 }
 
 const TABS=[['fresh','Fresh Talk'],['board','Tables'],['verbals','Verbals'],['crew','Crew Board'],['schedule','Schedule'],['standards','Standards'],['directory','Directory']];
-function navTabs(){let t=isMgr()?TABS.concat([['orders','Farm Order'],['frontdesk','Front Desk']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
+function navTabs(){let t=isMgr()?[['today','Day Sheet']].concat(TABS,[['orders','Farm Order'],['frontdesk','Front Desk']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
   if(typeof updatePendingBadge==='function')updatePendingBadge();}
 function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday();
   if(id==='standards')showStdPane(stdTab);
   if(id==='verbals'){markSeen86();updateVerbalsAttn();}
   window.scrollTo(0,0); requestAnimationFrame(replaceAllPills);}
@@ -1954,6 +2002,173 @@ function renderDirectory(){const S=SF.staff; $('dirSub').textContent=S.note;
   $('dirBody').innerHTML=h;
 }
 
+/* ===== DAY SHEET (manager-gated): today's roster by hierarchy, coverage gaps,
+   4–10pm wind/rain, a date picker, and contact-today's-staff (reuses the
+   directory messaging pattern). FOH hierarchy is read from the shift string (it
+   encodes the day's position); BOH strings are times only, so BOH is ordered by
+   each person's role resolved from the directory. ===== */
+let dsDateSel=null;        // ISO; null = actual today
+let dsContactSel=null;     // Set of full names; null = all working today
+let dsWxCache={};
+function dsDate(){return dsDateSel||todayISO();}
+function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=null;renderToday();}
+function dsHr(h){const ap=h>=12?'p':'a';let hh=h%12;if(hh===0)hh=12;return hh+ap;}
+function dsBuildNameIndex(){
+  const idx={first:{},nick:{},full:{}};
+  function add(name,role){
+    if(!name)return; const rec={full:name,role:role||''};
+    idx.full[name.toLowerCase()]=rec;
+    const first=name.split(' ')[0].toLowerCase().replace(/[^a-z]/g,'');
+    if(first&&!idx.first[first])idx.first[first]=rec;
+    const nk=(name.match(/"([^"]+)"/)||[])[1]; if(nk)idx.nick[nk.toLowerCase()]=rec;
+  }
+  (SF.staff.leads||[]).forEach(l=>add(l.name,l.role));
+  ['foh','boh','office'].forEach(k=>(SF.staff.directory&&SF.staff.directory[k]||[]).forEach(p=>add(p.name,p.role)));
+  return idx;
+}
+// Schedule nicknames that aren't the directory name's first word or quoted nickname.
+// Add to this map if a new short name shows up unresolved on the Day Sheet.
+const DS_ALIASES={joe:'joseph steuby'};
+function dsResolve(shortName,idx){
+  const nl=String(shortName||'').trim().toLowerCase(); if(!nl)return {full:shortName,role:''};
+  if(idx.full[nl])return idx.full[nl];
+  if(idx.nick[nl])return idx.nick[nl];
+  if(idx.first[nl])return idx.first[nl];
+  if(DS_ALIASES[nl]&&idx.full[DS_ALIASES[nl]])return idx.full[DS_ALIASES[nl]];
+  return {full:shortName,role:''};
+}
+function dsWeekFor(side,iso){return (SF.schedule&&SF.schedule[side]||[]).find(w=>w.dates&&w.dates.indexOf(iso)>=0)||null;}
+function dsDayRows(side,iso){
+  const w=dsWeekFor(side,iso); if(!w)return null;
+  const di=w.dates.indexOf(iso);
+  const rows=(w.rows||[]).map(r=>({name:r.name,shift:String(r.shifts[di]||'').trim()})).filter(r=>r.shift);
+  return {label:w.label||'',coverage:String((w.coverage||[])[di]||'').trim(),rows:rows};
+}
+const DS_FOH_ORDER=['MD','Sup Server','Server','Bar','Support','Expo','Float','Other'];
+function dsFohBucket(shift){
+  const s=shift.toLowerCase();
+  if(s.includes('r/o'))return '_off';
+  if(s.includes('farm'))return '_farm';
+  if(s.includes('md'))return 'MD';
+  if(s.includes('sup serv'))return 'Sup Server';
+  if(s.includes('bar'))return 'Bar';
+  if(s.includes('support'))return 'Support';
+  if(s.includes('expo'))return 'Expo';
+  if(s.includes('serve')||s.includes('server'))return 'Server';
+  if(s.includes('float'))return 'Float';
+  return 'Other';
+}
+const DS_BOH_ORDER=['Kitchen Lead','Line (1–close)','Expo','Daytime / Prep','Other'];
+function dsBohBucket(shift,role){
+  const s=shift.toLowerCase(), rl=(role||'').toLowerCase();
+  if(s.includes('r/o'))return '_off';
+  if(s.includes('farm'))return '_farm';
+  if(s==='md'||rl.includes('chef')||rl.includes('sous'))return 'Kitchen Lead';
+  if(s.includes('expo'))return 'Expo';
+  if(s.includes('1-close')||s.includes('close'))return 'Line (1–close)';
+  return 'Daytime / Prep';
+}
+function dsWorkingProfiles(iso){
+  const idx=dsBuildNameIndex(), seen={}, out=[];
+  ['foh','boh'].forEach(side=>{
+    const day=dsDayRows(side,iso); if(!day)return;
+    day.rows.forEach(r=>{
+      const res=dsResolve(r.name,idx), b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role);
+      if(b==='_off')return;
+      if(seen[res.full])return; seen[res.full]=1;
+      const p=PROFILES[res.full]; if(p)out.push(p);
+    });
+  });
+  return out;
+}
+function dsSideHTML(title,side,iso,idx){
+  const day=dsDayRows(side,iso);
+  let h=`<div class="ds-side"><div class="ds-side-head">${esc(title)}${day&&day.label?` <span class="ds-week-label">${esc(day.label)}</span>`:''}</div>`;
+  if(!day){return h+`<div class="ds-empty">No schedule loaded for this week.</div></div>`;}
+  const order=(side==='foh')?DS_FOH_ORDER:DS_BOH_ORDER, groups={}, farm=[];
+  day.rows.forEach(r=>{
+    const res=dsResolve(r.name,idx), b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role);
+    if(b==='_off')return;
+    if(b==='_farm'){farm.push({res,shift:r.shift});return;}
+    (groups[b]=groups[b]||[]).push({res,shift:r.shift});
+  });
+  let any=false;
+  order.forEach(b=>{const arr=groups[b]; if(!arr||!arr.length)return; any=true;
+    h+=`<div class="ds-bucket"><div class="ds-bucket-lab">${esc(b)}</div>`+
+      arr.map(x=>`<div class="ds-person"><span class="ds-pname">${esc(x.res.full)}</span><span class="ds-pshift">${esc(x.shift)}</span></div>`).join('')+`</div>`;});
+  if(farm.length)h+=`<div class="ds-bucket ds-farm"><div class="ds-bucket-lab">Farm (offsite)</div>`+farm.map(x=>`<div class="ds-person"><span class="ds-pname">${esc(x.res.full)}</span><span class="ds-pshift">${esc(x.shift)}</span></div>`).join('')+`</div>`;
+  if(!any&&!farm.length)h+=`<div class="ds-empty">Nobody scheduled.</div>`;
+  if(day.coverage)h+=`<div class="ds-alert">⚠ Coverage still needed: ${esc(day.coverage)}</div>`;
+  return h+`</div>`;
+}
+function dsContactHTML(iso){
+  const profs=dsWorkingProfiles(iso);
+  if(!profs.length)return `<div class="ds-contact"><div class="ds-side-head">Contact today's staff</div><div class="ds-empty">No reachable contacts for the people working ${esc(fmtShort(iso))}.</div></div>`;
+  if(dsContactSel===null)dsContactSel=new Set(profs.map(p=>p.name));
+  const sel=dsContactSel, n=[...sel].length;
+  let h=`<div class="ds-contact"><div class="ds-side-head">Contact today's staff</div>`;
+  h+=`<div class="ds-contact-grid">`+profs.map(p=>`<button class="ds-chip${sel.has(p.name)?' on':''}" onclick="dsToggleContact('${jq(p.name)}')">${esc(p.name.split(' ')[0])}</button>`).join('')+`</div>`;
+  h+=`<div class="ds-contact-actions"><button class="dir-msg-btn${n?'':' off'}" ${n?'':'disabled'} onclick="dsEmailToday()">Email${n?' ('+n+')':''}</button><button class="dir-msg-btn${n?'':' off'}" ${n?'':'disabled'} onclick="dsTextToday()">Text${n?' ('+n+')':''}</button><button class="dir-msg-clear" onclick="dsContactAll()">Select all</button></div>`;
+  h+=`<div class="dir-msg-help"><b>Email</b> opens one message to everyone selected. <b>Text</b> copies the numbers and opens Messages — iOS won't auto-paste, so tap the To field and Paste once.</div>`;
+  h+=`<button class="dir-msg-open" id="ds-open-msg" style="display:none" onclick="dirOpenMessages()">Open Messages</button>`;
+  h+=`<div class="dir-msg-status" id="ds-msg-status"></div>`;
+  h+=`<div class="dir-msg-fallback" id="ds-msg-fallback" style="display:none"><label>Numbers — select &amp; copy if needed</label><textarea readonly onclick="this.select()"></textarea></div>`;
+  return h+`</div>`;
+}
+function dsToggleContact(name){if(dsContactSel===null)dsContactSel=new Set();if(dsContactSel.has(name))dsContactSel.delete(name);else dsContactSel.add(name);renderToday();}
+function dsContactAll(){dsContactSel=null;renderToday();}
+function dsSelProfiles(){const names=dsContactSel||new Set(dsWorkingProfiles(dsDate()).map(p=>p.name));return [...names].map(n=>PROFILES[n]).filter(Boolean);}
+function dsEmailToday(){const em=dsSelProfiles().map(p=>p.email).filter(Boolean),st=$('ds-msg-status');if(!em.length){if(st)st.textContent='Nobody selected has an email on file.';return;}if(st)st.textContent='Opening email to '+em.length+'…';location.href='mailto:'+encodeURIComponent(em.join(','));}
+function dsTextToday(){
+  const ph=dsSelProfiles().map(p=>telDigits(p.phone)).filter(Boolean),st=$('ds-msg-status');
+  if(!ph.length){if(st)st.textContent='Nobody selected has a number on file.';return;}
+  const joined=ph.join(', '); let ok=false;
+  try{ navigator.clipboard.writeText(joined); ok=true; }
+  catch(e){ try{var ta=document.createElement('textarea');ta.value=joined;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');document.body.removeChild(ta);}catch(e2){} }
+  const fb=$('ds-msg-fallback'); if(fb){fb.style.display='block';var t=fb.querySelector('textarea');if(t)t.value=joined;}
+  const ob=$('ds-open-msg'); if(ob)ob.style.display='inline-block';
+  if(st)st.textContent=(ok?ph.length+' number'+(ph.length>1?'s':'')+' copied. ':'Select the numbers below & copy. ')+'Tap Open Messages, then tap the To field and Paste.';
+}
+function dsFetchWeather(iso){
+  if(dsWxCache[iso])return Promise.resolve(dsWxCache[iso]);
+  const url='https://api.open-meteo.com/v1/forecast?latitude=47.668&longitude=-122.384'+
+    '&hourly=precipitation,precipitation_probability,wind_speed_10m,wind_gusts_10m'+
+    '&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FLos_Angeles&start_date='+iso+'&end_date='+iso;
+  return fetch(url).then(r=>{if(!r.ok)throw new Error('forecast '+r.status);return r.json();}).then(d=>{
+    const H=d.hourly||{}, hrs=[];
+    (H.time||[]).forEach((t,i)=>{const hr=+t.slice(11,13);if(hr>=16&&hr<=22)hrs.push({hr,precip:H.precipitation[i]||0,pop:H.precipitation_probability[i]||0,wind:H.wind_speed_10m[i]||0,gust:H.wind_gusts_10m[i]||0});});
+    const res={hours:hrs}; dsWxCache[iso]=res; return res;
+  });
+}
+function dsRenderWeather(iso){
+  const b=$('ds-wx-body'); if(!b)return;
+  dsFetchWeather(iso).then(res=>{
+    if(dsDate()!==iso)return; const bb=$('ds-wx-body'); if(!bb)return;
+    if(!res.hours.length){bb.innerHTML='<span class="ds-wx-none">Weather not tracked for this day — it\'s outside the forecast range.</span>';return;}
+    const hrs=res.hours, maxWind=Math.max.apply(null,hrs.map(x=>x.wind)), maxGust=Math.max.apply(null,hrs.map(x=>x.gust)),
+      totP=hrs.reduce((s,x)=>s+x.precip,0), maxPop=Math.max.apply(null,hrs.map(x=>x.pop));
+    let h='<div class="ds-wx-sum"><span class="ds-wx-stat"><b>'+Math.round(maxWind)+'</b> mph wind <span class="ds-wx-sub">gust '+Math.round(maxGust)+'</span></span>'+
+      '<span class="ds-wx-stat"><b>'+maxPop+'%</b> rain <span class="ds-wx-sub">'+totP.toFixed(2)+'"</span></span></div>';
+    h+='<div class="ds-wx-hours">'+hrs.map(x=>'<div class="ds-wx-hr"><div class="ds-wx-t">'+dsHr(x.hr)+'</div><div class="ds-wx-w">'+Math.round(x.wind)+'</div><div class="ds-wx-p">'+x.pop+'%</div></div>').join('')+'</div>';
+    let note=''; if(maxGust>=20||maxWind>=15)note+='Breezy — watch the patio. '; if(maxPop>=50||totP>=0.05)note+='Rain likely in the window.';
+    if(note)h+='<div class="ds-wx-note">'+esc(note.trim())+'</div>';
+    bb.innerHTML=h;
+  }).catch(e=>{const bb=$('ds-wx-body');if(bb)bb.innerHTML='<span class="ds-wx-none">Weather not tracked for this day ('+esc(e.message)+').</span>';});
+}
+function renderToday(){
+  if(!isMgr()){$('todayBody').innerHTML='<p class="ds-empty">Manager view only.</p>';return;}
+  const iso=dsDate(), isToday=(iso===todayISO());
+  $('todaySub').textContent=fmtLong(iso)+(isToday?' · today':'');
+  const idx=dsBuildNameIndex();
+  let h=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
+  h+=`<div class="ds-weather"><div class="ds-wx-head">Service window · 4–10pm</div><div class="ds-wx-body" id="ds-wx-body">Loading forecast…</div></div>`;
+  h+=dsSideHTML('Front of House','foh',iso,idx);
+  h+=dsSideHTML('Back of House','boh',iso,idx);
+  h+=dsContactHTML(iso);
+  $('todayBody').innerHTML=h;
+  dsRenderWeather(iso);
+}
+
 /* ===== STAFF ACCESS — admin-only (add / set PIN / lock out) ===== */
 function jq(s){return esc(s).replace(/'/g,"\\'");}
 function slug(n){return String(n).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
@@ -2764,6 +2979,33 @@ function ordUnitSelect(units, current, onchangeJs){
   return o+'</select>';
 }
 window.REMY_ORDERS_CONFIG={apiKey:"AIzaSyCYx8NdTrmmH73J8DYsd94LvXKyOOiFyeU",authDomain:"remy-orders.firebaseapp.com",projectId:"remy-orders",storageBucket:"remy-orders.firebasestorage.app",messagingSenderId:"8525936717",appId:"1:8525936717:web:99fa76a1171b6f53cb4404"};
+const ORD_BUYER='san_fermo';
+/* Kelly's per-crop ask price + markdown move-it flag, set on the Farm portal pricing
+   calculator, persisted to remy-orders farmAvailability/{buyer}.items[crop]. The picker
+   surfaces it so Chris sees what the farm is asking when composing an order. Direct name
+   match: availability-swan-house item names ARE the farm crop names (canonical), so no
+   swan-name-map join is needed here. Public read; reuses the 'remy' compat app. */
+let ordFarmAsks=null, ordFarmMarkdown=null, ordFarmAsksAt=0, ordFarmAsksErr=false;
+function ordFetchFarmAsks(){
+  try{
+    if(!window.firebase||!window.REMY_ORDERS_CONFIG)return Promise.resolve(null);
+    const app=(firebase.apps||[]).find(a=>a.name==='remy')||firebase.initializeApp(window.REMY_ORDERS_CONFIG,'remy');
+    return app.firestore().collection('farmAvailability').doc(ORD_BUYER).get().then(function(d){
+      ordFarmAsksErr=false; ordFarmAsksAt=Date.now();
+      const x=(d&&d.exists)?(d.data()||{}):{};
+      ordFarmAsks=x.items||{}; ordFarmMarkdown=new Set(x.markdown||[]);
+      return ordFarmAsks;
+    }).catch(function(){ ordFarmAsksErr=true; ordFarmAsks=ordFarmAsks||{}; ordFarmMarkdown=ordFarmMarkdown||new Set(); return ordFarmAsks; });
+  }catch(e){ ordFarmAsksErr=true; return Promise.resolve(null); }
+}
+function ordAskFor(name){
+  const a=ordFarmAsks&&ordFarmAsks[name];
+  if(!a||a.ask==null||a.ask==='')return '';
+  const n=Number(a.ask); if(!isFinite(n))return '';
+  const md=(ordFarmMarkdown&&ordFarmMarkdown.has(name))||a.askMode==='markdown';
+  const u=a.askUnit?('/'+a.askUnit):'';
+  return '<span class="oi-ask'+(md?' md':'')+'">Kelly asks $'+n.toFixed(2)+u+(md?' ▼ to move':'')+'</span>';
+}
 let ordAvail=null, ordAvailAt=0, ordLines=[], ordDate='', ordNote='', ordFilter='all', ordEditingId=null, ordView='new';
 /* remy-orders is a SEPARATE Firebase project from sf-staff-portal — secondary
    compat app + its own anonymous sign-in. Live snapshot merges Kelly's acks/
@@ -2906,6 +3148,7 @@ function ordCancel(id){
 function renderOrders(){
   if(!isMgr()){$('ordBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
   remyInit();
+  ordFetchFarmAsks().then(()=>{if($('ordBody'))renderOrdersBody();});
   $('ordBody').innerHTML='<p class="board-empty">Loading Kelly’s list…</p>';
   ordFetchAvail().then(renderOrdersBody).catch(err=>{
     ordAvail=null;renderOrdersBody();
@@ -3039,7 +3282,7 @@ function ordRenderComposerPane(){
       items.forEach(it=>{
         const sel=ordLine(it.name);
         h+='<div class="ord-item'+(sel?' sel':'')+(it.ntm?' ntm':'')+'" onclick="ordToggle(\''+it.name.replace(/'/g,"\\'")+'\',\''+it.display.replace(/'/g,"\\'")+'\','+JSON.stringify(it.units).replace(/"/g,'&quot;')+')">'+
-           '<span class="oi-name">'+it.display+(it.ntm?'<span class="oi-move">NEED TO MOVE</span>':(it.score===2?'<span class="oi-peak">PEAK</span>':''))+'</span>'+
+           '<span class="oi-name">'+it.display+(it.ntm?'<span class="oi-move">NEED TO MOVE</span>':(it.score===2?'<span class="oi-peak">PEAK</span>':''))+ordAskFor(it.name)+'</span>'+
            (it.kelly_note?'<div class="oi-note">'+it.kelly_note+(it.last_touch?' · '+it.last_touch.slice(5).replace('-','/'):'')+'</div>':'');
         if(sel){
           h+='<div class="ord-qty" onclick="event.stopPropagation()">'+
