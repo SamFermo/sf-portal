@@ -1026,7 +1026,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782245442';   // stamped by build-data.py at every deploy
+const BUILD='1782245852';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2138,10 +2138,12 @@ function dsBohBucket(shift,role,full){
   if(s.includes('r/o'))return '_off';
   if(s.includes('farm'))return '_farm';
   if(dsIsPorter(full,role))return 'Porter';
-  // Kitchen leadership (chef/sous) always reads as Kitchen Lead and sits at the
-  // top, even when assigned to expo/admin/float — only NON-leads on an expo shift
-  // drop into the Expo group below.
-  if(s==='md'||rl.includes('chef')||rl.includes('sous'))return 'Kitchen Lead';
+  // A chef/sous reads as Kitchen Lead only when in a leadership slot (expo, MD,
+  // admin, float, training). A lead working an actual cook shift buckets by that
+  // shift — e.g. Jose on 1-close is a line cook, not the lead, even with Chris on expo.
+  const isLead=rl.includes('chef')||rl.includes('sous');
+  const leadShift=s.includes('expo')||s==='md'||s.includes('admin')||s.includes('float')||s.includes('train');
+  if(isLead&&leadShift)return 'Kitchen Lead';
   if(s.includes('expo'))return 'Expo';
   if(s.includes('1-close')||s.includes('close'))return 'Line (1–close)';
   return 'Daytime / Prep';
