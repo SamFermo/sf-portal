@@ -488,6 +488,19 @@ nav.chips::-webkit-scrollbar{display:none;}
 #today .dir-msg-help{color:var(--ink-mute);}
 #today .dir-msg-status{color:var(--gold);}
 #today .dir-msg-fallback textarea{background:rgba(205,216,244,.06); border-color:rgba(205,216,244,.2); color:var(--ink);}
+/* Day at a Glance — full-width manager banner above the tabs */
+.glance-banner{background:linear-gradient(180deg, rgba(214,158,46,.11), rgba(205,216,244,.04)); border-top:1px solid rgba(214,158,46,.25); border-bottom:1px solid rgba(205,216,244,.12); padding:9px 16px;}
+.glance-inner{display:flex; align-items:center; gap:14px; max-width:760px; margin:0 auto; cursor:pointer; flex-wrap:wrap;}
+.glance-wx{display:flex; align-items:center; gap:7px; flex:0 0 auto;}
+.glance-wx-ic{font-size:21px; line-height:1;}
+.glance-wx-sub{font-size:12px; color:var(--ink-soft);}
+.glance-counts{display:flex; gap:7px 16px; flex:1 1 auto; flex-wrap:wrap;}
+.glance-side{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.glance-side-lab{font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--gold);}
+.gc{font-size:11.5px; color:var(--ink-soft); white-space:nowrap;}
+.gc b{font-size:13px; color:var(--ink); font-weight:800;}
+.gc.gc0{opacity:.4;}
+.glance-go{font-size:11px; color:var(--gold); font-weight:700; flex:0 0 auto; white-space:nowrap; margin-left:auto;}
 
 /* service */
 .intro-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:14px 16px; margin-bottom:16px; font-size:13.5px; color:var(--card-ink); line-height:1.55; font-family:'Caladea',Georgia,serif; box-shadow:0 5px 13px rgba(0,0,0,.24);}
@@ -766,6 +779,8 @@ body.locked{overflow:hidden;}
   <nav class="chips" id="navChips"></nav>
 </header>
 
+<div id="glanceBanner" class="glance-banner" style="display:none"></div>
+
 <section class="view" id="home">
   <div class="home-hero">
     <div class="home-moon"></div>
@@ -959,7 +974,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782240332';   // stamped by build-data.py at every deploy
+const BUILD='1782241072';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1088,7 +1103,7 @@ function applyAuthGate(){
   }
 }
 function refreshAuthUI(){
-  buildNav(); renderAccountBar(); renderHome();
+  buildNav(); renderAccountBar(); renderHome(); renderGlance();
   if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
   if($('access')&&$('access').classList.contains('active'))renderAccess();
   renderBoard();
@@ -2129,15 +2144,35 @@ function dsTextToday(){
   const ob=$('ds-open-msg'); if(ob)ob.style.display='inline-block';
   if(st)st.textContent=(ok?ph.length+' number'+(ph.length>1?'s':'')+' copied. ':'Select the numbers below & copy. ')+'Tap Open Messages, then tap the To field and Paste.';
 }
+function wxSeverity(code){code=+code||0;if(code>=95)return 100;if(code>=80)return 80;if(code>=61)return 70;if(code>=51)return 50;if(code>=45)return 30;if(code===3)return 20;if(code>=1)return 10;return 0;}
+function wxIcon(code){code=+code||0;
+  if(code===0)return {i:'☀️',t:'clear'};
+  if(code<=2)return {i:'⛅️',t:'partly cloudy'};
+  if(code===3)return {i:'☁️',t:'cloudy'};
+  if(code<=48)return {i:'🌫️',t:'fog'};
+  if(code<=57)return {i:'🌦️',t:'drizzle'};
+  if(code<=67)return {i:'🌧️',t:'rain'};
+  if(code<=77)return {i:'🌨️',t:'snow'};
+  if(code<=82)return {i:'🌧️',t:'showers'};
+  if(code<=86)return {i:'🌨️',t:'snow'};
+  return {i:'⛈️',t:'storms'};
+}
 function dsFetchWeather(iso){
   if(dsWxCache[iso])return Promise.resolve(dsWxCache[iso]);
   const url='https://api.open-meteo.com/v1/forecast?latitude=47.668&longitude=-122.384'+
-    '&hourly=precipitation,precipitation_probability,wind_speed_10m,wind_gusts_10m'+
-    '&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FLos_Angeles&start_date='+iso+'&end_date='+iso;
+    '&hourly=temperature_2m,precipitation,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m'+
+    '&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FLos_Angeles&start_date='+iso+'&end_date='+iso;
   return fetch(url).then(r=>{if(!r.ok)throw new Error('forecast '+r.status);return r.json();}).then(d=>{
     const H=d.hourly||{}, hrs=[];
-    (H.time||[]).forEach((t,i)=>{const hr=+t.slice(11,13);if(hr>=16&&hr<=22)hrs.push({hr,precip:H.precipitation[i]||0,pop:H.precipitation_probability[i]||0,wind:H.wind_speed_10m[i]||0,gust:H.wind_gusts_10m[i]||0});});
-    const res={hours:hrs}; dsWxCache[iso]=res; return res;
+    (H.time||[]).forEach((t,i)=>{const hr=+t.slice(11,13);if(hr>=16&&hr<=22)hrs.push({hr,temp:H.temperature_2m?H.temperature_2m[i]:null,code:H.weather_code?H.weather_code[i]:0,precip:H.precipitation[i]||0,pop:H.precipitation_probability[i]||0,wind:H.wind_speed_10m[i]||0,gust:H.wind_gusts_10m[i]||0});});
+    let summary=null;
+    if(hrs.length){
+      const maxWind=Math.max.apply(null,hrs.map(x=>x.wind)),maxGust=Math.max.apply(null,hrs.map(x=>x.gust)),totP=hrs.reduce((s,x)=>s+x.precip,0),maxPop=Math.max.apply(null,hrs.map(x=>x.pop));
+      const temps=hrs.map(x=>x.temp).filter(v=>v!=null), tAvg=temps.length?Math.round(temps.reduce((a,b)=>a+b,0)/temps.length):null;
+      const worstCode=hrs.map(x=>x.code).sort((a,b)=>wxSeverity(b)-wxSeverity(a))[0];
+      summary={maxWind,maxGust,totP,maxPop,temp:tAvg,code:worstCode};
+    }
+    const res={hours:hrs,summary:summary}; dsWxCache[iso]=res; return res;
   });
 }
 function dsRenderWeather(iso){
@@ -2154,6 +2189,56 @@ function dsRenderWeather(iso){
     if(note)h+='<div class="ds-wx-note">'+esc(note.trim())+'</div>';
     bb.innerHTML=h;
   }).catch(e=>{const bb=$('ds-wx-body');if(bb)bb.innerHTML='<span class="ds-wx-none">Weather not tracked for this day ('+esc(e.message)+').</span>';});
+}
+/* Service-affecting head count for the glance banner. Only roles that touch
+   service are counted, per Sam's spec. FOH from the shift's position; BOH:
+   Expo, Cooks (1-close line), Float (daytime production 10-8/11-9/12-10 that
+   runs into service), Porter (dishwasher — by role; 0 until porters are
+   scheduled). Daytime-only shifts that end by service (9-5, 8-6, 9-7) and the
+   BOH 'MD' lead line are intentionally excluded. */
+function dsServiceCounts(iso){
+  const idx=dsBuildNameIndex();
+  const foh={MD:0,'Sup Serve':0,Servers:0,Bar:0,Support:0};
+  const boh={Expo:0,Cooks:0,Float:0,Porter:0};
+  const fday=dsDayRows('foh',iso), bday=dsDayRows('boh',iso);
+  (fday?fday.rows:[]).forEach(r=>{const s=r.shift.toLowerCase();
+    if(s.includes('r/o')||s.includes('farm'))return;
+    if(s.includes('md'))foh.MD++;
+    else if(s.includes('sup serv'))foh['Sup Serve']++;
+    else if(s.includes('bar'))foh.Bar++;
+    else if(s.includes('support'))foh.Support++;
+    else if(s.includes('serve')||s.includes('server'))foh.Servers++;
+  });
+  (bday?bday.rows:[]).forEach(r=>{const res=dsResolve(r.name,idx),s=r.shift.toLowerCase(),rl=(res.role||'').toLowerCase(),st=r.shift.trim();
+    if(s.includes('r/o')||s.includes('farm'))return;
+    if(rl.includes('porter')||rl.includes('dish')){boh.Porter++;return;}
+    if(s.includes('expo'))boh.Expo++;
+    else if(s.includes('1-close'))boh.Cooks++;
+    else if(/^(10-8|11-9|12-10)$/.test(st))boh.Float++;
+  });
+  return {foh:foh,boh:boh};
+}
+function renderGlance(){
+  const el=$('glanceBanner'); if(!el)return;
+  if(!isMgr()){el.style.display='none';el.innerHTML='';return;}
+  const iso=todayISO(), c=dsServiceCounts(iso);
+  const gcs=arr=>arr.map(([l,n])=>`<span class="gc${n?'':' gc0'}">${esc(l)} <b>${n}</b></span>`).join('');
+  const fohHtml=gcs([['MD',c.foh.MD],['Sup',c.foh['Sup Serve']],['Serv',c.foh.Servers],['Bar',c.foh.Bar],['Supp',c.foh.Support]]);
+  const bohHtml=gcs([['Expo',c.boh.Expo],['Cooks',c.boh.Cooks],['Float',c.boh.Float],['Porter',c.boh.Porter]]);
+  el.style.display='block';
+  el.innerHTML=`<div class="glance-inner" onclick="go('today')">
+    <div class="glance-wx" id="glanceWx"><span class="glance-wx-ic">⏳</span></div>
+    <div class="glance-counts">
+      <div class="glance-side"><span class="glance-side-lab">FOH</span>${fohHtml}</div>
+      <div class="glance-side"><span class="glance-side-lab">BOH</span>${bohHtml}</div>
+    </div>
+    <div class="glance-go">Day Sheet ›</div>
+  </div>`;
+  dsFetchWeather(iso).then(res=>{const w=$('glanceWx');if(!w)return;
+    if(!res.summary){w.innerHTML='<span class="glance-wx-sub">no forecast</span>';return;}
+    const sm=res.summary,ic=wxIcon(sm.code); let sub=(sm.temp!=null?sm.temp+'°, ':'')+ic.t; if(sm.maxGust>=20||sm.maxWind>=15)sub+=', breezy';
+    w.innerHTML='<span class="glance-wx-ic">'+ic.i+'</span><span class="glance-wx-sub">'+esc(sub)+'</span>';
+  }).catch(()=>{const w=$('glanceWx');if(w)w.innerHTML='<span class="glance-wx-sub">weather n/a</span>';});
 }
 function renderToday(){
   if(!isMgr()){$('todayBody').innerHTML='<p class="ds-empty">Manager view only.</p>';return;}
