@@ -532,9 +532,14 @@ nav.chips::-webkit-scrollbar{display:none;}
 /* verbals builder (Day Sheet) + read-only view (Verbals tab) */
 .ds-verbals{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:12px; padding:12px 14px; margin-top:14px;}
 .ds-vb-note{font-size:9.5px; font-weight:600; color:var(--ink-mute); text-transform:none; letter-spacing:0; margin-left:6px;}
-.vb-type-row{display:flex; gap:8px; margin-bottom:9px;}
-.vb-typebtn{flex:1; background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:9px; padding:8px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit;}
+.vb-type-row{display:flex; gap:7px; margin-bottom:9px; flex-wrap:wrap;}
+.vb-typebtn{flex:1 1 auto; min-width:0; background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:9px; padding:7px 10px; font-size:11.5px; font-weight:700; cursor:pointer; font-family:inherit; white-space:nowrap;}
 .vb-typebtn.on{background:var(--gold); border-color:var(--gold); color:#241f15;}
+.vb-standing{display:flex; flex-direction:column; gap:8px; margin-bottom:8px;}
+.vb-std-row{display:flex; align-items:center; gap:10px;}
+.vb-std-lab{flex:0 0 116px; font-size:11.5px; font-weight:700; color:var(--ink-soft);}
+.vb-std-in{flex:1; min-width:0;}
+.vb-86-tag{color:#e0795a; background:rgba(212,101,74,.12); border-color:rgba(212,101,74,.35);}
 .vb-item-row{display:flex; gap:8px; margin-bottom:8px;}
 .vb-sel{background:rgba(205,216,244,.07); border:1px solid rgba(205,216,244,.2); border-radius:10px; color:var(--ink); font-size:13px; padding:9px 10px; font-family:inherit; -webkit-appearance:none;}
 .vb-sel-grow{flex:1; min-width:0;}
@@ -1018,7 +1023,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782244197';   // stamped by build-data.py at every deploy
+const BUILD='1782244911';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2503,63 +2508,94 @@ function standingColHTML(){
   h+=`<div class="mm-cap" style="text-align:left">These stick until a lead changes them — not cleared nightly.</div></div>`;
   return h;
 }
-/* ===== VERBALS (rework) — the manager builds structured talking points in the
-   Day Sheet (tagged to a menu item, or a general note); servers read them in the
-   Verbals tab. Day-keyed in the board collection so they clear with the night. ===== */
-let verbalsState=null, verbalsUnsub=null, vbAddType='item', vbItemType='dish';
-function verbalsDay(){return todayISO();}
-function lsGetVerbals(){try{return JSON.parse(localStorage.getItem('sf-verbals-'+verbalsDay()))||{entries:[]};}catch(e){return {entries:[]};}}
-function lsSetVerbals(){try{localStorage.setItem('sf-verbals-'+verbalsDay(),JSON.stringify(verbalsState));}catch(e){}}
-function getVerbals(){const v=verbalsState||lsGetVerbals();return {entries:v.entries||[]};}
+/* ===== VERBALS (rework v2) — PERSIST across days (single board/verbals doc, not
+   day-keyed), so recurring verbals carry over. Manager builds in the Day Sheet via
+   four tabs: General Note (default), 86 (menu typeahead), About a menu item, and
+   Standing (named persistent slots). Servers read in the Verbals tab. ===== */
+let verbalsState=null, verbalsUnsub=null, vbAddType='note', vbItemType='dish';
+const VB_STANDING=[['glassRed','Glass Pour — Red'],['glassWhite','Glass Pour — White'],['farinata','Farinata Side'],['gelato','Gelato']];
+function lsGetVerbals(){try{return JSON.parse(localStorage.getItem('sf-verbals'))||{entries:[],standing:{}};}catch(e){return {entries:[],standing:{}};}}
+function lsSetVerbals(){try{localStorage.setItem('sf-verbals',JSON.stringify(verbalsState));}catch(e){}}
+function getVerbals(){const v=verbalsState||lsGetVerbals();return {entries:v.entries||[],standing:v.standing||{}};}
 function startVerbalsSync(){
   if(fbReady&&fbDb){
     if(verbalsUnsub)verbalsUnsub();
-    verbalsUnsub=fbDb.collection('board').doc('verbals-'+verbalsDay()).onSnapshot(function(snap){
-      verbalsState=snap.exists?snap.data():{entries:[]}; renderVerbalsViews();
+    verbalsUnsub=fbDb.collection('board').doc('verbals').onSnapshot(function(snap){
+      verbalsState=snap.exists?snap.data():{entries:[],standing:{}}; renderVerbalsViews();
     },function(){ verbalsState=lsGetVerbals(); renderVerbalsViews(); });
   }else{ verbalsState=lsGetVerbals(); }
 }
 function persistVerbals(st){
   verbalsState=st;
-  if(fbReady&&fbDb){ fbDb.collection('board').doc('verbals-'+verbalsDay()).set(st).catch(function(){lsSetVerbals();}); }
+  if(fbReady&&fbDb){ fbDb.collection('board').doc('verbals').set(st).catch(function(){lsSetVerbals();}); }
   else { lsSetVerbals(); }
   renderVerbalsViews();
 }
 function renderVerbalsViews(){ if($('verbals'))renderBoard(); renderVbBuilder(); }
 function vbSetType(t){vbAddType=t;renderVbBuilder();}
 function vbSetItemType(t){vbItemType=t;renderVbBuilder();}
+function vbId(){return 'v'+Date.now()+Math.random().toString(36).slice(2,6);}
+function allMenuNames(){const seen={},out=[];['dish','wine','cocktail'].forEach(function(t){currentItemNames(t).forEach(function(n){const k=n.toLowerCase();if(!seen[k]){seen[k]=1;out.push(n);}});});return out.sort();}
 function vbAdd(){
   if(!isMgr())return;
-  const text=(($('vb-text')&&$('vb-text').value)||'').trim(); if(!text)return;
-  const entries=getVerbals().entries.slice();
-  const e={id:'v'+Date.now()+Math.random().toString(36).slice(2,6),type:vbAddType,text:text,by:currentUserName()||'manager',at:Date.now()};
-  if(vbAddType==='item'){e.itemType=vbItemType;e.itemName=(($('vb-itemname')&&$('vb-itemname').value)||'').trim();}
-  entries.push(e); persistVerbals({entries:entries});
-  setTimeout(function(){const x=$('vb-text');if(x)x.focus();},0);
+  const v=getVerbals(), entries=v.entries.slice();
+  if(vbAddType==='item'){
+    const text=(($('vb-text')&&$('vb-text').value)||'').trim(); if(!text)return;
+    entries.push({id:vbId(),type:'item',itemType:vbItemType,itemName:(($('vb-itemname')&&$('vb-itemname').value)||'').trim(),text:text,by:currentUserName()||'manager',at:Date.now()});
+  } else if(vbAddType==='86'){
+    const name=(($('vb-86')&&$('vb-86').value)||'').trim(); if(!name)return;
+    entries.push({id:vbId(),type:'86',text:name,by:currentUserName()||'manager',at:Date.now()});
+  } else {
+    const text=(($('vb-text')&&$('vb-text').value)||'').trim(); if(!text)return;
+    entries.push({id:vbId(),type:'note',text:text,by:currentUserName()||'manager',at:Date.now()});
+  }
+  persistVerbals({entries:entries,standing:v.standing});
+  setTimeout(function(){const x=$('vb-86')||$('vb-text');if(x)x.focus();},0);
 }
-function vbDel(id){ if(!isMgr())return; persistVerbals({entries:getVerbals().entries.filter(e=>e.id!==id)}); }
+function vbDel(id){ if(!isMgr())return; const v=getVerbals(); persistVerbals({entries:v.entries.filter(function(e){return e.id!==id;}),standing:v.standing}); }
+function vbSetStanding(key,val){ if(!isMgr())return; const v=getVerbals(); const st=Object.assign({},v.standing); st[key]=String(val||'').trim(); persistVerbals({entries:v.entries,standing:st}); }
+function vbEntryTag(e){
+  if(e.type==='86')return `<span class="vb-item-tag vb-86-tag">86</span>`;
+  if(e.type==='item'&&e.itemName)return `<span class="vb-item-tag">${esc(e.itemName)}</span>`;
+  return '';
+}
 function dsVerbalsBuilderHTML(){
-  const entries=getVerbals().entries;
-  let h=`<div class="ds-side-head">Tonight's Verbals <span class="ds-vb-note">servers see these read-only</span></div>`;
-  h+=`<div class="vb-type-row"><button class="vb-typebtn${vbAddType==='item'?' on':''}" onclick="vbSetType('item')">About a menu item</button><button class="vb-typebtn${vbAddType==='note'?' on':''}" onclick="vbSetType('note')">General note</button></div>`;
+  const v=getVerbals(), entries=v.entries, st=v.standing;
+  const tabs=[['note','General Note'],['86','86'],['item','Menu item'],['standing','Standing']];
+  let h=`<div class="ds-side-head">Verbals <span class="ds-vb-note">persist across days · servers read-only</span></div>`;
+  h+=`<div class="vb-type-row">`+tabs.map(function(t){return `<button class="vb-typebtn${vbAddType===t[0]?' on':''}" onclick="vbSetType('${t[0]}')">${esc(t[1])}</button>`;}).join('')+`</div>`;
+  if(vbAddType==='standing'){
+    h+=`<div class="vb-standing">`+VB_STANDING.map(function(s){return `<div class="vb-std-row"><label class="vb-std-lab">${esc(s[1])}</label><input class="board-input vb-std-in" value="${esc(st[s[0]]||'')}" placeholder="Not set" onchange="vbSetStanding('${s[0]}',this.value)" onkeydown="if(event.key==='Enter')this.blur()"></div>`;}).join('')+`</div>`;
+    h+=`<div class="ds-empty" style="padding-top:2px">These stick until you change them.</div>`;
+    return h;
+  }
   if(vbAddType==='item'){
     h+=`<div class="vb-item-row"><select id="vb-itemtype" class="vb-sel" onchange="vbSetItemType(this.value)">`+
-      [['dish','Food'],['wine','Wine'],['cocktail','Cocktail']].map(([v,l])=>`<option value="${v}"${vbItemType===v?' selected':''}>${l}</option>`).join('')+`</select>`+
-      `<select id="vb-itemname" class="vb-sel vb-sel-grow">`+currentItemNames(vbItemType).map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')+`</select></div>`;
+      [['dish','Food'],['wine','Wine'],['cocktail','Cocktail']].map(function(o){return `<option value="${o[0]}"${vbItemType===o[0]?' selected':''}>${o[1]}</option>`;}).join('')+`</select>`+
+      `<select id="vb-itemname" class="vb-sel vb-sel-grow">`+currentItemNames(vbItemType).map(function(n){return `<option value="${esc(n)}">${esc(n)}</option>`;}).join('')+`</select></div>`;
+    h+=`<div class="vb-text-row"><input class="board-input" id="vb-text" placeholder="What to tell guests about it…" onkeydown="if(event.key==='Enter')vbAdd()"><button class="board-add" onclick="vbAdd()">+</button></div>`;
+  } else if(vbAddType==='86'){
+    h+=`<datalist id="vb-menu-list">`+allMenuNames().map(function(n){return `<option value="${esc(n)}"></option>`;}).join('')+`</datalist>`;
+    h+=`<div class="vb-text-row"><input class="board-input" id="vb-86" list="vb-menu-list" placeholder="Type a dish, wine, or cocktail…" onkeydown="if(event.key==='Enter')vbAdd()"><button class="board-add" onclick="vbAdd()">+</button></div>`;
+  } else {
+    h+=`<div class="vb-text-row"><input class="board-input" id="vb-text" placeholder="Verbal note for the team…" onkeydown="if(event.key==='Enter')vbAdd()"><button class="board-add" onclick="vbAdd()">+</button></div>`;
   }
-  h+=`<div class="vb-text-row"><input class="board-input" id="vb-text" placeholder="${vbAddType==='item'?'What to tell guests about it…':'Verbal note for the team…'}" onkeydown="if(event.key==='Enter')vbAdd()"><button class="board-add" onclick="vbAdd()">+</button></div>`;
-  if(!entries.length)h+=`<div class="ds-empty">No verbals set for tonight yet.</div>`;
-  entries.forEach(e=>h+=`<div class="vb-entry"><div class="vb-entry-main">${e.type==='item'&&e.itemName?`<span class="vb-item-tag">${esc(e.itemName)}</span>`:''}<span class="vb-entry-text">${esc(e.text)}</span></div><span class="x" onclick="vbDel('${esc(e.id)}')">✕</span></div>`);
+  if(!entries.length)h+=`<div class="ds-empty">No verbals yet.</div>`;
+  entries.forEach(function(e){h+=`<div class="vb-entry"><div class="vb-entry-main">${vbEntryTag(e)}<span class="vb-entry-text">${esc(e.text)}</span></div><span class="x" onclick="vbDel('${esc(e.id)}')">✕</span></div>`;});
   return h;
 }
 function renderVbBuilder(){const el=$('ds-verbals-wrap'); if(el)el.innerHTML=dsVerbalsBuilderHTML();}
 function verbalsViewHTML(){
-  const entries=getVerbals().entries;
-  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Tonight's Verbals</span>`;
-  if(!entries.length)h+=`<div class="board-empty">None set for tonight${isMgr()?' — build them in Day at a Glance':' — a lead sets these'}.</div>`;
-  entries.forEach(e=>h+=`<div class="board-item vb-view"><div class="vb-view-main">${e.type==='item'&&e.itemName?`<div class="vb-item-tag">${esc(e.itemName)}</div>`:''}<span>${esc(e.text)}</span></div></div>`);
+  const v=getVerbals(), entries=v.entries, st=v.standing;
+  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Verbals</span>`;
+  if(!entries.length)h+=`<div class="board-empty">None set${isMgr()?' — build them in Day at a Glance':' — a lead sets these'}.</div>`;
+  entries.forEach(function(e){h+=`<div class="board-item vb-view"><div class="vb-view-main">${e.type==='86'?`<div class="vb-item-tag vb-86-tag">86 — ${esc(e.text)}</div>`:(e.type==='item'&&e.itemName?`<div class="vb-item-tag">${esc(e.itemName)}</div><span>${esc(e.text)}</span>`:`<span>${esc(e.text)}</span>`)}</div></div>`;});
   if(isMgr())h+=`<div class="mm-cap" style="text-align:left"><span class="vb-edit-link" onclick="go('today')">Build &amp; edit in Day at a Glance ›</span></div>`;
-  return h+`</div>`;
+  h+=`</div>`;
+  h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Standing Verbals</span>`;
+  VB_STANDING.forEach(function(s){const val=st[s[0]]||'';h+=`<div class="board-item vb-view"><div class="vb-view-main"><div class="vb-item-tag">${esc(s[1])}</div><span>${val?esc(val):'—'}</span></div></div>`;});
+  h+=`<div class="mm-cap" style="text-align:left">These stick until a lead changes them.</div></div>`;
+  return h;
 }
 function startBoardSync(){
   if(fbReady&&fbDb){
@@ -2602,8 +2638,8 @@ function renderBoard(){const b=getBoard();
     return h+`</div>`;};
   const live=fbReady?`<span style="color:#bfe0a8">● live</span> — shared across every device.`:`saved on this device only.`;
   $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`+secChipsHTML()+tablesPaneHTML(b);
-  $('verbalsBody').innerHTML=`<p class="board-note">Tonight's verbals are built by a lead in Day at a Glance; standing verbals stick; 86 and specials clear nightly. ${live}</p>`+
-    verbalsViewHTML()+standingColHTML()+col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials');
+  $('verbalsBody').innerHTML=`<p class="board-note">Verbals are built by a lead in Day at a Glance and persist until changed; the 86 list and specials below clear nightly. ${live}</p>`+
+    verbalsViewHTML()+col('86 Tonight','board-86',b.eightySixed||[],'eightySixed')+col('Specials','board-sp',b.specials||[],'specials');
   const vActive=$('verbals')&&$('verbals').classList.contains('active');
   if(vActive)markSeen86();   // viewing the tab = seeing the items
   updateVerbalsAttn();
