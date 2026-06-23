@@ -432,6 +432,21 @@ nav.chips::-webkit-scrollbar{display:none;}
 .dir-role{font-size:11.5px; font-style:italic; color:var(--card-mute); margin-bottom:7px;}
 .dir-links{display:flex; gap:8px; flex-wrap:wrap;}
 .dir-links a{font-size:12px; color:var(--accent-dark); text-decoration:none; background:var(--accent-soft); border:1px solid var(--accent); border-radius:999px; padding:3px 11px;}
+/* manager full-contact + multi-recipient messaging */
+.dir-mgr-bar{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:12px 14px; margin-bottom:14px; box-shadow:0 5px 13px rgba(0,0,0,.18);}
+.dir-mgr-tag{font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:var(--gold-deep); margin-bottom:9px;}
+.dir-mgr-actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+.dir-msg-btn{background:var(--accent-soft); color:var(--accent-dark); border:1px solid var(--accent); border-radius:9px; padding:8px 16px; font-size:13px; font-weight:800; font-family:inherit; cursor:pointer;}
+.dir-msg-btn.off{opacity:.42; cursor:default;}
+.dir-msg-clear{background:transparent; border:1px solid var(--card-mute); color:var(--card-mute); border-radius:8px; padding:7px 12px; font-size:12px; font-weight:700; font-family:inherit; cursor:pointer;}
+.dir-msg-open{margin-top:10px; background:var(--gold-deep); color:#fff; border:none; border-radius:9px; padding:8px 17px; font-size:13px; font-weight:800; font-family:inherit; cursor:pointer;}
+.dir-msg-help{font-size:11px; color:var(--card-mute); margin-top:9px; line-height:1.5;}
+.dir-msg-status{font-size:12px; color:var(--gold-deep); margin-top:8px; font-weight:700;}
+.dir-msg-fallback label{font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--card-mute); display:block; margin:9px 0 3px;}
+.dir-msg-fallback textarea{width:100%; min-height:42px; background:rgba(90,58,34,.05); border:1px solid var(--moon-edge); border-radius:8px; color:var(--wood); font-size:13px; padding:7px; font-family:inherit; box-sizing:border-box;}
+.dir-card{position:relative;}
+.dir-card.dir-sel{outline:2px solid var(--gold-deep); outline-offset:-1px;}
+.dir-check{position:absolute; top:8px; right:9px; width:18px; height:18px; border-radius:50%; border:1.5px solid var(--gold-deep); color:var(--gold-deep); font-size:12px; font-weight:800; text-align:center; line-height:15px;}
 
 /* service */
 .intro-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:14px 16px; margin-bottom:16px; font-size:13.5px; color:var(--card-ink); line-height:1.55; font-family:'Caladea',Georgia,serif; box-shadow:0 5px 13px rgba(0,0,0,.24);}
@@ -896,7 +911,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782178364';   // stamped by build-data.py at every deploy
+const BUILD='1782239357';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1863,16 +1878,78 @@ function contactLinks(name){
   if(c.email&&p.email)h+=`<a href="mailto:${esc(p.email)}">Email</a>`;
   return h;
 }
+/* MANAGER full-contact view + multi-recipient messaging.
+   Non-managers see the consent-gated directory unchanged. The full phone/email is
+   already synced to every device in the `staff` collection (consent only governs
+   display), so the manager view surfaces what's there — it adds no new exposure. */
+let dirSelect=new Set();
+function dirIsSel(name){return dirSelect.has(name);}
+function dirToggleSel(name){if(dirSelect.has(name))dirSelect.delete(name);else dirSelect.add(name);renderDirectory();}
+function dirClearSel(){dirSelect.clear();renderDirectory();}
+function telDigits(p){var d=String(p||'').replace(/[^0-9]/g,'');if(d.length===10)d='1'+d;return d?'+'+d:'';}
+function mgrContactLinks(p){
+  let h='';
+  if(p.phone)h+=`<a href="${telHref(p.phone)}">Call</a><a href="${smsHref(p.phone)}">Text</a>`;
+  if(p.email)h+=`<a href="mailto:${esc(p.email)}">Email</a>`;
+  if(!p.phone&&!p.email)h+=`<span class="dir-nocontact">No number or email on file</span>`;
+  return h;
+}
+function dirSelProfiles(){return [...dirSelect].map(n=>PROFILES[n]).filter(Boolean);}
+function dirMsgSet(t){var el=$('dirMsgStatus');if(el)el.textContent=t||'';}
+function dirEmailSelected(){
+  var em=dirSelProfiles().map(p=>p.email).filter(Boolean);
+  if(!em.length){dirMsgSet('Nobody selected has an email on file.');return;}
+  dirMsgSet('Opening email to '+em.length+' '+(em.length===1?'person':'people')+'…');
+  location.href='mailto:'+encodeURIComponent(em.join(','));
+}
+function dirTextSelected(){
+  var ph=dirSelProfiles().map(p=>telDigits(p.phone)).filter(Boolean);
+  if(!ph.length){dirMsgSet('Nobody selected has a number on file.');return;}
+  var joined=ph.join(', ');
+  // Write the clipboard FIRST and synchronously inside this tap — iOS rejects it
+  // after any async gap (Bones, 2026-06). execCommand fallback for old WebKit.
+  var ok=false;
+  try{ navigator.clipboard.writeText(joined); ok=true; }
+  catch(e){ try{var ta=document.createElement('textarea');ta.value=joined;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');document.body.removeChild(ta);}catch(e2){} }
+  var fb=$('dirMsgFallback'); if(fb){fb.style.display='block';var t=fb.querySelector('textarea');if(t)t.value=joined;}
+  var ob=$('dirOpenMsgBtn'); if(ob)ob.style.display='inline-block';
+  dirMsgSet((ok?ph.length+' number'+(ph.length>1?'s':'')+' copied. ':'Select the numbers below and copy them. ')+'Tap Open Messages, then tap the To field and Paste.');
+}
+function dirOpenMessages(){location.href='sms:';}
+function dirMgrBarHTML(){
+  const n=dirSelect.size, on=n>0;
+  return `<div class="dir-mgr-bar">
+    <div class="dir-mgr-tag">Manager view · full team contacts</div>
+    <div class="dir-mgr-actions">
+      <button class="dir-msg-btn${on?'':' off'}" ${on?'':'disabled'} onclick="dirEmailSelected()">Email${on?' ('+n+')':''}</button>
+      <button class="dir-msg-btn${on?'':' off'}" ${on?'':'disabled'} onclick="dirTextSelected()">Text${on?' ('+n+')':''}</button>
+      ${on?`<button class="dir-msg-clear" onclick="dirClearSel()">Clear</button>`:''}
+    </div>
+    <div class="dir-msg-help">Tap people to select. <b>Email</b> opens one message with everyone in the To field. <b>Text</b> copies the numbers and opens Messages — iOS won't paste for you, so tap the To field and Paste once, then it's one group thread.</div>
+    <button class="dir-msg-open" id="dirOpenMsgBtn" style="display:none" onclick="dirOpenMessages()">Open Messages</button>
+    <div class="dir-msg-status" id="dirMsgStatus"></div>
+    <div class="dir-msg-fallback" id="dirMsgFallback" style="display:none"><label>Numbers — select &amp; copy if needed</label><textarea readonly onclick="this.select()"></textarea></div>
+  </div>`;
+}
 function renderDirectory(){const S=SF.staff; $('dirSub').textContent=S.note;
-  let h=`<div class="lead-row">`;
-  S.leads.forEach(l=>{const p=PROFILES[l.name]||{},c=p.contact||{},showPhone=(c.call||c.text)&&p.phone;
+  const mgr=isMgr();
+  let h=mgr?dirMgrBarHTML():'';
+  h+=`<div class="lead-row">`;
+  S.leads.forEach(l=>{const p=PROFILES[l.name]||{},c=p.contact||{},showPhone=(mgr||c.call||c.text)&&p.phone;
     const inner=`<div class="lead-name serif">${esc(l.name)}</div><div class="lead-role">${esc(l.role)}</div>${showPhone?`<div class="lead-phone">${esc(p.phone)}</div>`:''}`;
     h+= showPhone?`<div class="lead-card"><a href="${telHref(p.phone)}">${inner}</a></div>`:`<div class="lead-card">${inner}</div>`;});
   h+=`</div>`;
   [['Front of House','foh'],['Back of House','boh'],['Office','office']].forEach(([lab,key])=>{
     h+=`<div class="section-label">${lab}</div><div class="dir-grid">`;
-    (S.directory[key]||[]).forEach(p=>{const links=contactLinks(p.name);
-      h+=`<div class="dir-card"><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${esc(p.role)}</div>${links?`<div class="dir-links">${links}</div>`:`<div class="dir-nocontact">No contact shared</div>`}</div>`;});
+    (S.directory[key]||[]).forEach(p=>{
+      if(mgr){
+        const prof=PROFILES[p.name]||{}, sel=dirIsSel(p.name), links=mgrContactLinks(prof);
+        h+=`<div class="dir-card${sel?' dir-sel':''}" onclick="dirToggleSel('${jq(p.name)}')"><div class="dir-check">${sel?'✓':''}</div><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${esc(p.role)}</div><div class="dir-links" onclick="event.stopPropagation()">${links}</div></div>`;
+      }else{
+        const links=contactLinks(p.name);
+        h+=`<div class="dir-card"><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${esc(p.role)}</div>${links?`<div class="dir-links">${links}</div>`:`<div class="dir-nocontact">No contact shared</div>`}</div>`;
+      }
+    });
     h+=`</div>`;});
   $('dirBody').innerHTML=h;
 }
