@@ -507,6 +507,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-wx-w{font-size:14px; color:var(--ink); font-weight:700;}
 .ds-wx-p{font-size:10px; color:#7fa9e8;}
 .ds-wx-note{font-size:12px; color:var(--gold); margin-top:9px; font-weight:600;}
+.ds-wx-stamp{font-size:11px; color:var(--card-mute); margin:0 0 9px; cursor:pointer; text-decoration:underline dotted; text-underline-offset:2px;}
 .ds-wx-none{font-size:12.5px; color:var(--ink-mute); font-style:italic;}
 .ds-side{margin-bottom:16px;}
 .ds-side-head{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-soft); margin-bottom:9px; padding-bottom:5px; border-bottom:.5px solid rgba(205,216,244,.14);}
@@ -546,6 +547,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 .glance-card-wx{display:flex; align-items:center; gap:7px; text-align:right;}
 .glance-card-wx .glance-wx-ic{font-size:22px; line-height:1;}
 .glance-card-wx .glance-wx-sub{font-size:12.5px; color:var(--card-soft);}
+.glance-wx-col{display:flex; flex-direction:column; align-items:flex-end; line-height:1.2;}
+.glance-wx-when{font-size:9.5px; color:var(--card-mute); margin-top:1px;}
 .glance-card-counts{display:flex; flex-direction:column; gap:7px;}
 .glance-side{display:flex; align-items:center; gap:9px; flex-wrap:wrap;}
 .glance-side-lab{font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-deep); min-width:30px;}
@@ -1080,7 +1083,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782267135';   // stamped by build-data.py at every deploy
+const BUILD='1782269898';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2487,6 +2490,9 @@ function renderDirectory(){const S=SF.staff; $('dirSub').textContent=S.note;
 let dsDateSel=null;        // ISO; null = actual today
 let dsContactSel=new Set();  // Set of full names; starts empty — nobody selected by default
 let dsWxCache={};
+const DS_WX_TTL=90*60*1000;   // refetch weather if the cached pull is older than 90 min
+function dsWxStamp(ms){ if(!ms)return ''; const d=new Date(ms); let h=d.getHours(); const m=d.getMinutes(); const ap=h>=12?'pm':'am'; h=h%12||12; return h+':'+(m<10?'0':'')+m+ap; }
+function dsRefreshWeather(){ const iso=dsDate(); delete dsWxCache[iso]; dsRenderWeather(iso); }
 function dsDate(){return dsDateSel||todayISO();}
 function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=new Set();renderToday();}
 function dsHr(h){const ap=h>=12?'p':'a';let hh=h%12;if(hh===0)hh=12;return hh+ap;}
@@ -2663,7 +2669,8 @@ function wxIcon(code){code=+code||0;
   return {i:'⛈️',t:'storms'};
 }
 function dsFetchWeather(iso){
-  if(dsWxCache[iso])return Promise.resolve(dsWxCache[iso]);
+  const c=dsWxCache[iso];
+  if(c && (Date.now()-(c.fetchedAt||0))<DS_WX_TTL)return Promise.resolve(c);
   const url='https://api.open-meteo.com/v1/forecast?latitude=47.668&longitude=-122.384'+
     '&hourly=temperature_2m,apparent_temperature,precipitation,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m'+
     '&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FLos_Angeles&start_date='+iso+'&end_date='+iso;
@@ -2677,8 +2684,8 @@ function dsFetchWeather(iso){
       const worstCode=hrs.map(x=>x.code).sort((a,b)=>wxSeverity(b)-wxSeverity(a))[0];
       summary={maxWind,maxGust,totP,maxPop,temp:tAvg,code:worstCode};
     }
-    const res={hours:hrs,summary:summary}; dsWxCache[iso]=res; return res;
-  });
+    const res={hours:hrs,summary:summary,fetchedAt:Date.now()}; dsWxCache[iso]=res; return res;
+  }).catch(function(err){ if(c)return c; throw err; });   // if a refetch fails, keep showing the last good pull
 }
 function dsCompass(deg){if(deg==null)return '';return ['N','NE','E','SE','S','SW','W','NW'][Math.round((deg%360)/45)%8];}
 function dsHrFull(h){const ap=h>=12?'pm':'am';let hh=h%12;if(hh===0)hh=12;return hh+':00 '+ap;}
@@ -2724,7 +2731,8 @@ function dsRenderWeather(iso){
     let cards='<div class="ds-wx-hours">'+hrs.map((x,i)=>'<div class="ds-wx-hr" onclick="dsShowHour('+i+')"><div class="ds-wx-t">'+dsHr(x.hr)+'</div><div class="ds-wx-temp">'+(x.temp!=null?Math.round(x.temp)+'°':'–')+'</div><div class="ds-wx-precip">'+x.pop+'%</div>'+(x.precip>0?'<div class="ds-wx-rainamt">'+x.precip.toFixed(2)+'"</div>':'')+'</div>').join('')+'</div>';
     const graph=dsWindGraph(hrs);
     let note=''; if((sm.maxGust||0)>=20||(sm.maxWind||0)>=15)note+='Breezy — watch the patio. '; if((sm.maxPop||0)>=50||(sm.totP||0)>=0.05)note+='Rain likely in the window.';
-    bb.innerHTML=cards+graph+(note?'<div class="ds-wx-note">'+esc(note.trim())+'</div>':'');
+    const stamp=res.fetchedAt?'<div class="ds-wx-stamp" onclick="dsRefreshWeather()">Forecast pulled '+dsWxStamp(res.fetchedAt)+' · tap to refresh</div>':'';
+    bb.innerHTML=stamp+cards+graph+(note?'<div class="ds-wx-note">'+esc(note.trim())+'</div>':'');
   }).catch(e=>{const bb=$('ds-wx-body');if(bb)bb.innerHTML='<span class="ds-wx-none">Weather not tracked for this day ('+esc(e.message)+').</span>';});
 }
 /* Service-affecting head count for the glance banner. Only roles that touch
@@ -2777,7 +2785,7 @@ function glanceCardWeather(){
   dsFetchWeather(todayISO()).then(res=>{const w=$('glanceCardWx');if(!w)return;
     if(!res.summary){w.innerHTML='<span class="glance-wx-sub">no forecast</span>';return;}
     const sm=res.summary,ic=wxIcon(sm.code); let sub=(sm.temp!=null?sm.temp+'°, ':'')+ic.t; if(sm.maxGust>=20||sm.maxWind>=15)sub+=', breezy';
-    w.innerHTML='<span class="glance-wx-ic">'+ic.i+'</span><span class="glance-wx-sub">'+esc(sub)+'</span>';
+    w.innerHTML='<span class="glance-wx-ic">'+ic.i+'</span><span class="glance-wx-col"><span class="glance-wx-sub">'+esc(sub)+'</span>'+(res.fetchedAt?'<span class="glance-wx-when">as of '+dsWxStamp(res.fetchedAt)+'</span>':'')+'</span>';
   }).catch(()=>{const w=$('glanceCardWx');if(w)w.innerHTML='<span class="glance-wx-sub">weather n/a</span>';});
 }
 
