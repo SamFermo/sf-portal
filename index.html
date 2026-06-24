@@ -524,6 +524,10 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-alert{margin-top:7px; font-size:12.5px; font-weight:700; color:#e6c878; background:rgba(214,158,46,.1); border:1px solid rgba(214,158,46,.35); border-radius:9px; padding:8px 11px;}
 .ds-empty{font-size:13px; color:var(--ink-mute); font-style:italic; padding:6px 0;}
 .ds-contact{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:12px; padding:12px 14px; margin-top:4px;}
+.ds-coverage{margin-top:10px;}
+.ds-cov-sides{display:flex; gap:8px; align-items:center; margin-bottom:11px;}
+.ds-cov-clear{border:1px solid var(--ink-mute); color:var(--ink-mute); background:transparent; border-radius:999px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; margin-left:auto;}
+.ds-cov-cap{font-size:11.5px; color:var(--ink-mute); margin-bottom:8px;}
 .ds-contact-grid{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:11px;}
 .ds-chip{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:999px; padding:6px 12px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
 .ds-chip.on{background:var(--gold); border-color:var(--gold); color:#241f15;}
@@ -1083,7 +1087,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782269898';   // stamped by build-data.py at every deploy
+const BUILD='1782272245';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2494,7 +2498,7 @@ const DS_WX_TTL=90*60*1000;   // refetch weather if the cached pull is older tha
 function dsWxStamp(ms){ if(!ms)return ''; const d=new Date(ms); let h=d.getHours(); const m=d.getMinutes(); const ap=h>=12?'pm':'am'; h=h%12||12; return h+':'+(m<10?'0':'')+m+ap; }
 function dsRefreshWeather(){ const iso=dsDate(); delete dsWxCache[iso]; dsRenderWeather(iso); }
 function dsDate(){return dsDateSel||todayISO();}
-function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=new Set();renderToday();}
+function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=new Set();dsCovSel=new Set();dsCovSide=null;renderToday();}
 function dsHr(h){const ap=h>=12?'p':'a';let hh=h%12;if(hh===0)hh=12;return hh+ap;}
 function dsBuildNameIndex(){
   const idx={first:{},nick:{},full:{}};
@@ -2654,6 +2658,67 @@ function dsTextToday(){
   const fb=$('ds-msg-fallback'); if(fb){fb.style.display='block';var t=fb.querySelector('textarea');if(t)t.value=joined;}
   const ob=$('ds-open-msg'); if(ob)ob.style.display='inline-block';
   if(st)st.textContent=(ok?ph.length+' number'+(ph.length>1?'s':'')+' copied. ':'Select the numbers below & copy. ')+'Tap Open Messages, then tap the To field and Paste.';
+}
+
+/* ===== REACHING FOR COVERAGE — the reverse of "contact today's staff": message
+   the FOH or BOH crew who are NOT working today to ask for coverage. Pick a side,
+   everyone off that day is pre-selected, deselect anyone to exclude. Reuses the
+   directory contact data + the iOS text flow (own element ids so it doesn't
+   collide with the call-off contact block). ===== */
+let dsCovSel=new Set(), dsCovSide=null;
+function dsWorkingSet(iso){ const s={}; dsWorkingList(iso).forEach(function(x){s[x.name]=1;}); return s; }
+function dsCoverageList(iso,side){
+  const working=dsWorkingSet(iso);
+  const dir=(SF.staff&&SF.staff.directory&&SF.staff.directory[side])||[];
+  const seen={}, out=[];
+  dir.forEach(function(p){ const nm=p.name; if(!nm||seen[nm])return; seen[nm]=1;
+    if(working[nm])return;                                   // working today — skip
+    const pr=PROFILES[nm]; if(!pr||pr.active===false)return;  // unreachable or departed — skip
+    out.push({name:nm}); });
+  return out;
+}
+function dsCovOpen(side){ dsCovSide=side; dsCovSel=new Set(dsCoverageList(dsDate(),side).map(function(x){return x.name;})); renderToday(); }
+function dsCovToggle(name){ if(dsCovSel.has(name))dsCovSel.delete(name); else dsCovSel.add(name); renderToday(); }
+function dsCovClose(){ dsCovSide=null; dsCovSel=new Set(); renderToday(); }
+function dsCovProfiles(){ return [...dsCovSel].map(function(n){return PROFILES[n];}).filter(Boolean); }
+function dsCovEmail(){
+  const em=dsCovProfiles().map(function(p){return p.email;}).filter(Boolean), st=$('ds-cov-status');
+  if(!em.length){if(st)st.textContent='Nobody selected has an email on file.';return;}
+  if(st)st.textContent='Opening email to '+em.length+'…';
+  location.href='mailto:'+encodeURIComponent(em.join(','));
+}
+function dsCovText(){
+  const ph=dsCovProfiles().map(function(p){return telDigits(p.phone);}).filter(Boolean), st=$('ds-cov-status');
+  if(!ph.length){if(st)st.textContent='Nobody selected has a number on file.';return;}
+  const joined=ph.join(', '); let ok=false;
+  try{ navigator.clipboard.writeText(joined); ok=true; }
+  catch(e){ try{var ta=document.createElement('textarea');ta.value=joined;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');document.body.removeChild(ta);}catch(e2){} }
+  const fb=$('ds-cov-fallback'); if(fb){fb.style.display='block';var t=fb.querySelector('textarea');if(t)t.value=joined;}
+  const ob=$('ds-cov-open-msg'); if(ob)ob.style.display='inline-block';
+  if(st)st.textContent=(ok?ph.length+' number'+(ph.length>1?'s':'')+' copied. ':'Select the numbers below & copy. ')+'Tap Open Messages, then tap the To field and Paste.';
+}
+function dsCovOpenMessages(){ location.href='sms:'; }
+function dsCoverageHTML(iso){
+  let h=`<div class="ds-contact ds-coverage"><div class="ds-side-head">Reaching for Coverage</div>`;
+  h+=`<div class="ds-cov-sides"><button class="ds-grp${dsCovSide==='foh'?' on':''}" onclick="dsCovOpen('foh')">FOH</button><button class="ds-grp${dsCovSide==='boh'?' on':''}" onclick="dsCovOpen('boh')">BOH</button>`;
+  if(dsCovSide)h+=`<button class="ds-cov-clear" onclick="dsCovClose()">Clear</button>`;
+  h+=`</div>`;
+  if(dsCovSide){
+    const list=dsCoverageList(iso,dsCovSide);
+    if(!list.length){
+      h+=`<div class="ds-empty">Everyone ${esc(dsCovSide.toUpperCase())} is either working ${esc(fmtShort(iso))} or has no contact on file.</div>`;
+    } else {
+      const n=dsCovSel.size;
+      h+=`<div class="ds-cov-cap">${esc(dsCovSide.toUpperCase())} off ${esc(fmtShort(iso))} — all selected; tap a name to remove.</div>`;
+      h+=`<div class="ds-contact-grid">`+list.map(function(x){return `<button class="ds-chip${dsCovSel.has(x.name)?' on':''}" onclick="dsCovToggle('${jq(x.name)}')">${esc(x.name.split(' ')[0])}</button>`;}).join('')+`</div>`;
+      h+=`<div class="ds-contact-actions"><button class="dir-msg-btn${n?'':' off'}" ${n?'':'disabled'} onclick="dsCovEmail()">Email${n?' ('+n+')':''}</button><button class="dir-msg-btn${n?'':' off'}" ${n?'':'disabled'} onclick="dsCovText()">Text${n?' ('+n+')':''}</button></div>`;
+      h+=`<div class="dir-msg-help"><b>Email</b> opens one message to everyone selected. <b>Text</b> copies the numbers and opens Messages — iOS won't auto-paste, so tap the To field and Paste once.</div>`;
+      h+=`<button class="dir-msg-open" id="ds-cov-open-msg" style="display:none" onclick="dsCovOpenMessages()">Open Messages</button>`;
+      h+=`<div class="dir-msg-status" id="ds-cov-status"></div>`;
+      h+=`<div class="dir-msg-fallback" id="ds-cov-fallback" style="display:none"><label>Numbers — select &amp; copy if needed</label><textarea readonly onclick="this.select()"></textarea></div>`;
+    }
+  }
+  return h+`</div>`;
 }
 function wxSeverity(code){code=+code||0;if(code>=95)return 100;if(code>=80)return 80;if(code>=61)return 70;if(code>=51)return 50;if(code>=45)return 30;if(code===3)return 20;if(code>=1)return 10;return 0;}
 function wxIcon(code){code=+code||0;
@@ -2886,6 +2951,7 @@ function renderToday(){
   h+=dsSideHTML('Front of House','foh',iso,idx);
   h+=dsSideHTML('Back of House','boh',iso,idx);
   h+=dsContactHTML(iso);
+  h+=dsCoverageHTML(iso);
   h+=`<div class="ds-verbals" id="ds-verbals-wrap">`+dsVerbalsBuilderHTML()+`</div>`;
   $('todayBody').innerHTML=h;
   dsRenderWeather(iso);
