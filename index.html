@@ -482,6 +482,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .dir-msg-btn{background:var(--accent-soft); color:var(--accent-dark); border:1px solid var(--accent); border-radius:9px; padding:8px 16px; font-size:13px; font-weight:800; font-family:inherit; cursor:pointer;}
 .dir-msg-btn.off{opacity:.42; cursor:default;}
 .dir-msg-clear{background:transparent; border:1px solid var(--card-mute); color:var(--card-mute); border-radius:8px; padding:7px 12px; font-size:12px; font-weight:700; font-family:inherit; cursor:pointer;}
+.dir-msg-sel-all{background:transparent; border:1px solid var(--accent); color:var(--accent-dark); border-radius:8px; padding:7px 12px; font-size:12px; font-weight:700; font-family:inherit; cursor:pointer;}
 .dir-msg-open{margin-top:10px; background:var(--gold-deep); color:#fff; border:none; border-radius:9px; padding:8px 17px; font-size:13px; font-weight:800; font-family:inherit; cursor:pointer;}
 .dir-msg-help{font-size:11px; color:var(--card-mute); margin-top:9px; line-height:1.5;}
 .dir-msg-status{font-size:12px; color:var(--gold-deep); margin-top:8px; font-weight:700;}
@@ -1087,7 +1088,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782272245';   // stamped by build-data.py at every deploy
+const BUILD='1782273272';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2418,6 +2419,9 @@ let dirSelect=new Set();
 function dirIsSel(name){return dirSelect.has(name);}
 function dirToggleSel(name){if(dirSelect.has(name))dirSelect.delete(name);else dirSelect.add(name);renderDirectory();}
 function dirClearSel(){dirSelect.clear();renderDirectory();}
+function dirAllNames(){const S=SF.staff,out=[];['foh','boh','office'].forEach(function(k){((S.directory&&S.directory[k])||[]).forEach(function(p){if(p.name)out.push(p.name);});});return out;}
+function dirAllSelected(){const all=dirAllNames();return all.length>0&&all.every(function(n){return dirSelect.has(n);});}
+function dirSelectAll(){const all=dirAllNames();if(dirAllSelected())dirSelect.clear();else all.forEach(function(n){dirSelect.add(n);});renderDirectory();}
 function telDigits(p){var d=String(p||'').replace(/[^0-9]/g,'');if(d.length===10)d='1'+d;return d?'+'+d:'';}
 function mgrContactLinks(p){
   let h='';
@@ -2453,6 +2457,7 @@ function dirMgrBarHTML(){
   return `<div class="dir-mgr-bar">
     <div class="dir-mgr-tag">Manager view · full team contacts</div>
     <div class="dir-mgr-actions">
+      <button class="dir-msg-sel-all" onclick="dirSelectAll()">${dirAllSelected()?'Deselect all':'Select all'}</button>
       <button class="dir-msg-btn${on?'':' off'}" ${on?'':'disabled'} onclick="dirEmailSelected()">Email${on?' ('+n+')':''}</button>
       <button class="dir-msg-btn${on?'':' off'}" ${on?'':'disabled'} onclick="dirTextSelected()">Text${on?' ('+n+')':''}</button>
       ${on?`<button class="dir-msg-clear" onclick="dirClearSel()">Clear</button>`:''}
