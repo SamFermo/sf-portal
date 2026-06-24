@@ -414,6 +414,24 @@ nav.chips::-webkit-scrollbar{display:none;}
 .st-alarm{background:#f2d2c7; color:#a8311e;} .st-info{background:#ded7c6; color:#5a4d3c;}
 .comp-cred{font-size:11px; color:var(--card-soft); grid-column:1/-1; margin:-2px 0 0;}
 .comp-cred b{color:var(--wood);}
+.comp-upload-note{font-size:11.5px; color:var(--card-soft); line-height:1.45; margin:0 0 12px;}
+.comp-uploads{grid-column:1/-1; display:flex; flex-direction:column; gap:6px; margin-top:7px;}
+.cu-item{display:flex; flex-wrap:wrap; align-items:center; gap:7px; font-size:11.5px;}
+.cu-cred{font-weight:800; letter-spacing:.04em; font-size:10px; color:var(--gold-deep); min-width:34px;}
+.cu-btn{font-size:11px; padding:4px 10px; border-radius:7px; border:1px solid var(--moon-edge); background:rgba(205,216,244,.06); color:var(--wood); cursor:pointer;}
+.cu-btn:hover{border-color:var(--gold);}
+.cu-btn.ok{border-color:#6db657; color:#3d6325;}
+.cu-btn.x{border-color:rgba(168,84,84,.5); color:#a85454;}
+.cu-stat{font-size:10.5px; font-weight:700;}
+.cu-stat.ok{color:#3d6325;}
+.cu-stat.pend{color:var(--gold-deep);}
+.cu-msg{font-size:10.5px; color:var(--card-mute); font-style:italic; flex-basis:100%;}
+.comp-modal{position:fixed; inset:0; background:rgba(20,16,10,.82); display:none; align-items:center; justify-content:center; z-index:9999; padding:18px;}
+.comp-modal-inner{background:var(--moon); border-radius:16px; padding:14px; max-width:94vw; max-height:90vh; display:flex; flex-direction:column; gap:10px; box-shadow:0 12px 40px rgba(0,0,0,.5);}
+.comp-modal-head{font-weight:700; color:var(--wood); font-size:13px;}
+.comp-modal-img{max-width:88vw; max-height:72vh; border-radius:8px; object-fit:contain;}
+.comp-modal-msg{color:var(--card-soft); padding:30px 20px; text-align:center;}
+.comp-modal-x{align-self:flex-end; padding:8px 18px; border-radius:8px; border:none; background:var(--gold); color:#241f15; font-weight:700; cursor:pointer;}
 .binder-link{display:inline-block; margin:2px 0 10px; padding:9px 16px; background:var(--gold); color:#241f15; text-decoration:none; border-radius:8px; font-size:12px; letter-spacing:.04em; text-transform:uppercase; font-weight:700;}
 .due-row{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; padding:9px 0; border-bottom:.5px dotted var(--moon-edge);}
 .due-when{font-size:11px; font-style:italic; color:var(--card-mute);}
@@ -1037,7 +1055,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782250499';   // stamped by build-data.py at every deploy
+const BUILD='1782264811';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1092,7 +1110,7 @@ function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
   if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday();
-  if(id==='standards')showStdPane(stdTab);
+  if(id==='standards'){showStdPane(stdTab);markStandardsSeen();}
   if(id==='fresh')markFreshSeen();
   if(id==='verbals')markVerbalsSeen();
   if(id==='crew')markCrewSeen();
@@ -2049,18 +2067,143 @@ function resetDuties(){setDute({});renderDuties();}
 /* COMPLIANCE */
 let compTab='roster';
 function ic(st){return st==='good'?'✓':st==='alarm'?'!':'•';}
+
+/* ===== COMPLIANCE CARD UPLOADS ============================================
+   Employees upload their own FWC / MAST card from their compliance row (managers
+   can upload on anyone's row); a manager then verifies it. To keep the live sync
+   payload tiny, only small METADATA lives in the synced `compliance` collection;
+   the resized image lives in `complianceImg` and is fetched on demand (View).
+   Self-vs-manager is enforced client-side (same trust model as crew/timeoff —
+   the portal uses one shared anonymous auth, not per-user uids). =========== */
+let COMP_UP={}, compUpUnsub=null;
+function compKey(cred,name){return String(cred).toLowerCase()+'__'+fcSlug(name);}
+function compLsGet(){try{return JSON.parse(localStorage.getItem('sf-compliance')||'{}');}catch(e){return {};}}
+function compLsSet(){try{localStorage.setItem('sf-compliance',JSON.stringify(COMP_UP));}catch(e){}}
+function compCanUpload(name){return isMgr()||!!(me&&me.name===name);}
+function startComplianceSync(){
+  if(fbReady&&fbDb){
+    if(compUpUnsub)compUpUnsub();
+    compUpUnsub=fbDb.collection('compliance').onSnapshot(function(snap){
+      COMP_UP={}; snap.docs.forEach(function(d){COMP_UP[d.id]=d.data();});
+      if($('std-compliance'))renderCompliance();
+      if(typeof updateAttn==='function')updateAttn();
+    },function(){ COMP_UP=compLsGet(); if($('std-compliance'))renderCompliance(); });
+  } else { COMP_UP=compLsGet(); }
+}
+/* Shrink to a single ~1000px JPEG that fits a Firestore doc (1MB hard limit). */
+function compResize(file,cb){
+  const r=new FileReader();
+  r.onload=function(){ const img=new Image();
+    img.onload=function(){
+      let w=img.width,h=img.height; const max=1000;
+      if(w>h&&w>max){h=Math.round(h*max/w);w=max;} else if(h>=w&&h>max){w=Math.round(w*max/h);h=max;}
+      const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      let q=0.72,data=cv.toDataURL('image/jpeg',q);
+      while(data.length>900000&&q>0.4){q-=0.1;data=cv.toDataURL('image/jpeg',q);}
+      cb(data.length>950000?null:data);
+    };
+    img.onerror=function(){cb(null);}; img.src=r.result;
+  };
+  r.onerror=function(){cb(null);}; r.readAsDataURL(file);
+}
+function compPickFile(cred,name){
+  if(!compCanUpload(name)){alert('Only '+String(name).split(' ')[0]+' or a manager can upload this card.');return;}
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.setAttribute('capture','environment');
+  inp.onchange=function(){ const f=inp.files&&inp.files[0]; if(!f)return;
+    compUpMsg(cred,name,'Processing…');
+    compResize(f,function(data){
+      if(!data){compUpMsg(cred,name,'That image was too large or unreadable — try another photo.');return;}
+      compSaveUpload(cred,name,data);
+    });
+  };
+  inp.click();
+}
+function compSaveUpload(cred,name,dataUrl){
+  const key=compKey(cred,name);
+  const meta={name:name,cred:cred,status:'pending',uploadedBy:currentUserName()||'',uploadedAt:Date.now()};
+  if(fbReady&&fbDb){
+    COMP_UP[key]=meta;
+    fbDb.collection('complianceImg').doc(key).set({data:dataUrl}).then(function(){
+      return fbDb.collection('compliance').doc(key).set(meta);
+    }).catch(function(){ compUpMsg(cred,name,'Upload failed — check connection and retry.'); });
+  } else {
+    meta.img=dataUrl; COMP_UP[key]=meta; compLsSet();
+  }
+  renderCompliance(); if(typeof updateAttn==='function')updateAttn();
+}
+function compVerify(cred,name){
+  if(!isMgr())return; const key=compKey(cred,name); const m=Object.assign({},COMP_UP[key]||{});
+  m.status='verified'; m.reviewedBy=currentUserName()||''; m.reviewedAt=Date.now(); COMP_UP[key]=m;
+  if(fbReady&&fbDb)fbDb.collection('compliance').doc(key).set(m).catch(function(){compLsSet();}); else compLsSet();
+  renderCompliance(); if(typeof updateAttn==='function')updateAttn();
+}
+function compRemove(cred,name){
+  if(!compCanUpload(name))return;
+  if(!confirm('Remove '+cred+' card for '+name+'?'))return;
+  const key=compKey(cred,name); delete COMP_UP[key];
+  if(fbReady&&fbDb){ fbDb.collection('compliance').doc(key).delete().catch(function(){}); fbDb.collection('complianceImg').doc(key).delete().catch(function(){}); }
+  else compLsSet();
+  renderCompliance(); if(typeof updateAttn==='function')updateAttn();
+}
+function compUpMsg(cred,name,txt){ const el=$('cu-msg-'+compKey(cred,name)); if(el)el.textContent=txt||''; }
+function compViewImage(cred,name){
+  const key=compKey(cred,name);
+  if(!fbReady){ compShowModal((COMP_UP[key]||{}).img||null,name,cred); return; }
+  compShowModal('loading',name,cred);
+  fbDb.collection('complianceImg').doc(key).get().then(function(s){
+    compShowModal(s.exists?((s.data()||{}).data||null):null,name,cred);
+  }).catch(function(){ compShowModal(null,name,cred); });
+}
+function compShowModal(dataUrl,name,cred){
+  let m=$('compModal');
+  if(!m){ m=document.createElement('div'); m.id='compModal'; m.className='comp-modal';
+    m.onclick=function(e){ if(e.target===m)compCloseModal(); }; document.body.appendChild(m); }
+  const body = dataUrl==='loading' ? '<p class="comp-modal-msg">Loading…</p>'
+    : dataUrl ? '<img class="comp-modal-img" src="'+dataUrl+'" alt="'+esc(cred)+' card">'
+    : '<p class="comp-modal-msg">Image not available.</p>';
+  m.innerHTML='<div class="comp-modal-inner"><div class="comp-modal-head">'+esc(name)+' · '+esc(cred)+'</div>'+body+'<button class="comp-modal-x" onclick="compCloseModal()">Close</button></div>';
+  m.style.display='flex';
+}
+function compCloseModal(){ const m=$('compModal'); if(m)m.style.display='none'; }
+function compPendingSig(){ return Object.keys(COMP_UP).filter(function(k){return COMP_UP[k]&&COMP_UP[k].status==='pending';}).sort().join(','); }
+function markStandardsSeen(){ attnSet('standards', compPendingSig()); }
+function standardsGlow(){ if(!isMgr())return false; const sig=compPendingSig(); return !!sig && sig!==(attnGet('standards')||''); }
+function compRowUploadsHTML(p){
+  const canUp=compCanUpload(p.name), creds=['FWC','MAST'], chunks=[];
+  creds.forEach(function(cred){
+    const key=compKey(cred,p.name), up=COMP_UP[key];
+    if(!up&&!canUp)return;
+    let inner='<span class="cu-cred">'+cred+'</span>';
+    if(up){
+      inner+='<button class="cu-btn" onclick="compViewImage(\''+cred+'\',\''+jq(p.name)+'\')">View card</button>';
+      inner+= up.status==='verified'
+        ? '<span class="cu-stat ok">✓ verified'+(up.reviewedBy?' · '+esc(String(up.reviewedBy).split(' ')[0]):'')+'</span>'
+        : '<span class="cu-stat pend">• pending review</span>';
+      if(isMgr()&&up.status!=='verified')inner+='<button class="cu-btn ok" onclick="compVerify(\''+cred+'\',\''+jq(p.name)+'\')">Verify</button>';
+      if(canUp)inner+='<button class="cu-btn" onclick="compPickFile(\''+cred+'\',\''+jq(p.name)+'\')">Replace</button><button class="cu-btn x" onclick="compRemove(\''+cred+'\',\''+jq(p.name)+'\')">Remove</button>';
+    } else {
+      inner+='<button class="cu-btn" onclick="compPickFile(\''+cred+'\',\''+jq(p.name)+'\')">Upload photo</button>';
+    }
+    inner+='<span class="cu-msg" id="cu-msg-'+key+'"></span>';
+    chunks.push('<div class="cu-item">'+inner+'</div>');
+  });
+  return chunks.length?'<div class="comp-uploads">'+chunks.join('')+'</div>':'';
+}
 function renderCompliance(){const C=SF.compliance;
   $('compSub').textContent=`Updated ${fmtShort(C.updated)} · ${C.roster.foh.length+C.roster.boh.length} active · FWC & MAST`;
   if(compTab==='due'){let h=`<p class="view-sub" style="margin-bottom:14px;">Cards expiring in the next nine months. Renewal means re-taking the class.</p><div class="comp-card">`;
     C.comingDue.forEach(d=>h+=`<div class="due-row"><span class="pill st-${d.urgency==='info'?'info':d.urgency}">${esc(d.window)}</span><div><span class="comp-name">${esc(d.name)}</span> <span class="comp-role">${esc(d.cred)} · ${esc(d.area)}</span></div><span class="due-when">${esc(d.date)}</span></div>`);
     $('compBody').innerHTML=h+`</div>`;return;}
   let h=`<a class="binder-link" href="${esc(C.binderUrl)}" target="_blank" rel="noopener">Open Card Binder PDF ›</a><p class="board-note">${esc(C.note)}</p>`;
+  h+=`<p class="comp-upload-note">📷 Snap a photo of your own FWC or MAST card on your row below to add it to the binder — a manager verifies it.${isMgr()?' Managers can upload on anyone’s row and tap Verify.':''}</p>`;
   [['Back of House','boh'],['Front of House','foh']].forEach(([lab,key])=>{
     h+=`<div class="section-label">${lab}</div><div class="comp-card">`;
     C.roster[key].forEach(p=>h+=`<div class="comp-row"><div><div class="comp-name">${esc(p.name)}</div><div class="comp-role">${esc(p.role)}</div></div>
       <span class="pill st-${p.fwc?p.fwc.status:'info'}"><span class="pl">FWC</span>${p.fwc?ic(p.fwc.status):'—'}</span>
       <span class="pill ${p.mast?'st-'+p.mast.status:'st-info'}"><span class="pl">MAST</span>${p.mast?ic(p.mast.status):'—'}</span>
-      <div class="comp-cred">${p.fwc?'<b>FWC</b> '+esc(p.fwc.text):''}${p.mast?' · <b>MAST</b> '+esc(p.mast.text):''}</div></div>`);
+      <div class="comp-cred">${p.fwc?'<b>FWC</b> '+esc(p.fwc.text):''}${p.mast?' · <b>MAST</b> '+esc(p.mast.text):''}</div>
+      ${compRowUploadsHTML(p)}</div>`);
     h+=`</div>`;});
   $('compBody').innerHTML=h;
 }
@@ -2535,6 +2678,7 @@ function updateAttn(){
     setCardAttn('verbals', verbalsGlow());
     setCardAttn('board', tablesGlow());
     setCardAttn('crew', crewGlow());
+    setCardAttn('standards', standardsGlow());
     if(isMgr())setCardAttn('orders', ordGlow());
   }catch(e){}
 }
@@ -2643,8 +2787,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -3812,7 +3956,7 @@ function pinCrew(id){
 /* INIT */
 function init(){
   initFirebase();
-  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); }
+  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); }
   document.body.classList.add('locked'); openLogin();   // start gated; unlocks once the session checks out
   setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='failed'; onProfiles(); } },9000);
   $('appDate').textContent=fmtShort(todayISO());
