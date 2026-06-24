@@ -415,6 +415,20 @@ nav.chips::-webkit-scrollbar{display:none;}
 .comp-cred{font-size:11px; color:var(--card-soft); grid-column:1/-1; margin:-2px 0 0;}
 .comp-cred b{color:var(--wood);}
 .comp-upload-note{font-size:11.5px; color:var(--card-soft); line-height:1.45; margin:0 0 12px;}
+/* per-employee cert badge (Standards card/chip/subtab) */
+.cert-badge{display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px; padding:0 4px; border-radius:999px; font-size:10px; font-weight:800; line-height:1; color:#fff; margin-left:6px; vertical-align:middle;}
+.cert-badge.soon{background:#d6952e;}
+.cert-badge.past{background:#c0392b; animation:certPulse 1.6s ease-in-out infinite;}
+@keyframes certPulse{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.5);}50%{box-shadow:0 0 0 4px rgba(192,57,43,0);}}
+.cert-badge.corner{position:absolute; top:10px; right:12px; margin:0; box-shadow:0 0 0 2px var(--moon);}
+.cert-badge.corner.past{box-shadow:0 0 0 2px var(--moon), 0 0 0 4px rgba(192,57,43,.25);}
+/* personal cert banner inside the Compliance view */
+.cert-banner{border-radius:10px; padding:10px 13px; font-size:13px; line-height:1.45; margin:0 0 8px; font-weight:600;}
+.cert-banner.past{background:rgba(192,57,43,.14); border:1px solid rgba(192,57,43,.5); color:#9b2d22;}
+.cert-banner.soon{background:rgba(214,149,46,.13); border:1px solid rgba(214,149,46,.45); color:#8a5e15;}
+.cert-dismiss-row{margin:0 0 12px;}
+.cert-dismiss-btn{font-size:12px; padding:6px 14px; border-radius:8px; border:1px solid var(--moon-edge); background:rgba(205,216,244,.06); color:var(--wood); cursor:pointer;}
+.cert-dismiss-btn:hover{border-color:var(--gold);}
 .comp-uploads{grid-column:1/-1; display:flex; flex-direction:column; gap:6px; margin-top:7px;}
 .cu-item{display:flex; flex-wrap:wrap; align-items:center; gap:7px; font-size:11.5px;}
 .cu-cred{font-weight:800; letter-spacing:.04em; font-size:10px; color:var(--gold-deep); min-width:34px;}
@@ -1055,7 +1069,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782264811';   // stamped by build-data.py at every deploy
+const BUILD='1782265960';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2109,7 +2123,7 @@ function compResize(file,cb){
 }
 function compPickFile(cred,name){
   if(!compCanUpload(name)){alert('Only '+String(name).split(' ')[0]+' or a manager can upload this card.');return;}
-  const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.setAttribute('capture','environment');
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';   // no 'capture' → iOS offers Photo Library, Take Photo, or Choose File
   inp.onchange=function(){ const f=inp.files&&inp.files[0]; if(!f)return;
     compUpMsg(cred,name,'Processing…');
     compResize(f,function(data){
@@ -2190,12 +2204,95 @@ function compRowUploadsHTML(p){
   });
   return chunks.length?'<div class="comp-uploads">'+chunks.join('')+'</div>':'';
 }
+
+/* ===== PER-EMPLOYEE CERT EXPIRATION BADGES ================================
+   The SIGNED-IN employee's own FWC/MAST status drives a badge on the Standards
+   home card + nav chip + the Compliance subtab. Coming-due (warn/alarm, not yet
+   expired) = amber, DISMISSABLE. Past-due (a parsed expiry date before today) =
+   red, PERSISTENT (no dismiss). Per-person — managers see only their own. ==== */
+function certDateMatch(s){
+  if(!s)return null;
+  const m=String(s).match(/\b([A-Z][a-z]{2})\s+(\d{1,2}),\s+(\d{4})\b/);
+  if(!m)return null;
+  const mo={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11}[m[1]];
+  if(mo==null)return null;
+  const d=new Date(parseInt(m[3],10),mo,parseInt(m[2],10)); d.setHours(0,0,0,0);
+  return {date:d,str:m[0]};
+}
+function myCertStatus(){
+  const out={pastDue:[],soon:[]}, C=SF&&SF.compliance;
+  if(!me||!C||!C.roster)return out;
+  let row=null;
+  ['boh','foh'].forEach(function(k){(C.roster[k]||[]).forEach(function(p){if(p.name===me.name)row=p;});});
+  if(!row)return out;
+  const today=new Date(); today.setHours(0,0,0,0);
+  [['FWC',row.fwc],['MAST',row.mast]].forEach(function(pair){
+    const cred=pair[0],c=pair[1];
+    if(!c||c.status==='good'||c.status==='info')return;   // valid or N/A — no badge
+    let dm=null;
+    (C.comingDue||[]).forEach(function(d){ if(d.name===me.name&&d.cred===cred){ const x=certDateMatch(d.date); if(x)dm=x; } });
+    if(!dm)dm=certDateMatch(c.text);
+    if(dm){
+      const days=Math.round((dm.date-today)/864e5);
+      if(days<0)out.pastDue.push({cred:cred,dateStr:dm.str,days:days});
+      else out.soon.push({cred:cred,dateStr:dm.str,days:days});
+    } else {
+      out.soon.push({cred:cred,dateStr:null,days:null});   // flagged but no date (e.g. "Pending")
+    }
+  });
+  return out;
+}
+function certDismissKey(){return 'sf-certdismiss-'+(me?fcSlug(me.name):'x');}
+function certSoonSig(s){return s.soon.map(function(x){return x.cred+':'+(x.dateStr||'na');}).sort().join(',');}
+function stdBadge(){
+  const s=myCertStatus();
+  if(s.pastDue.length)return 'past';
+  if(s.soon.length){ if((localStorage.getItem(certDismissKey())||'')!==certSoonSig(s))return 'soon'; }
+  return '';
+}
+function dismissCertSoon(){
+  try{localStorage.setItem(certDismissKey(),certSoonSig(myCertStatus()));}catch(e){}
+  updateStdBadges(); if($('std-compliance'))renderCompliance();
+}
+function applyCertBadge(el,state,corner){
+  if(!el)return;
+  let b=el.querySelector('.cert-badge');
+  if(!state){ if(b)b.remove(); return; }
+  if(!b){ b=document.createElement('span'); b.className='cert-badge'; b.textContent='!'; el.appendChild(b); }
+  b.classList.toggle('corner',!!corner);
+  b.classList.toggle('past',state==='past');
+  b.classList.toggle('soon',state==='soon');
+}
+function updateStdBadges(){
+  try{
+    const st=stdBadge();
+    applyCertBadge(document.querySelector('.home-card[data-card="standards"]'),st,true);
+    applyCertBadge(document.querySelector('#navChips .chip[data-go="standards"]'),st,false);
+    applyCertBadge(document.querySelector('#stdTabs .subtab[data-std="compliance"]'),st,false);
+  }catch(e){}
+}
+function certBannerHTML(){
+  const s=myCertStatus(); if(!s.pastDue.length&&!s.soon.length)return '';
+  let h='';
+  s.pastDue.forEach(function(x){
+    h+='<div class="cert-banner past">⚠ Your '+esc(x.cred)+' is PAST DUE'+(x.dateStr?' (expired '+esc(x.dateStr)+')':'')+' — renew now. Renewal means re-taking the class.</div>';
+  });
+  if(s.soon.length){
+    s.soon.forEach(function(x){
+      h+='<div class="cert-banner soon">⏳ Your '+esc(x.cred)+' is coming due'+(x.dateStr?' ('+esc(x.dateStr)+(typeof x.days==='number'?' · '+x.days+' days':'')+')':' — pending')+'. Plan your renewal.</div>';
+    });
+    const dismissed=(localStorage.getItem(certDismissKey())||'')===certSoonSig(s);
+    if(!dismissed)h+='<div class="cert-dismiss-row"><button class="cert-dismiss-btn" onclick="dismissCertSoon()">Dismiss reminder</button></div>';
+  }
+  return h;
+}
 function renderCompliance(){const C=SF.compliance;
   $('compSub').textContent=`Updated ${fmtShort(C.updated)} · ${C.roster.foh.length+C.roster.boh.length} active · FWC & MAST`;
   if(compTab==='due'){let h=`<p class="view-sub" style="margin-bottom:14px;">Cards expiring in the next nine months. Renewal means re-taking the class.</p><div class="comp-card">`;
     C.comingDue.forEach(d=>h+=`<div class="due-row"><span class="pill st-${d.urgency==='info'?'info':d.urgency}">${esc(d.window)}</span><div><span class="comp-name">${esc(d.name)}</span> <span class="comp-role">${esc(d.cred)} · ${esc(d.area)}</span></div><span class="due-when">${esc(d.date)}</span></div>`);
     $('compBody').innerHTML=h+`</div>`;return;}
-  let h=`<a class="binder-link" href="${esc(C.binderUrl)}" target="_blank" rel="noopener">Open Card Binder PDF ›</a><p class="board-note">${esc(C.note)}</p>`;
+  let h=certBannerHTML();
+  h+=`<a class="binder-link" href="${esc(C.binderUrl)}" target="_blank" rel="noopener">Open Card Binder PDF ›</a><p class="board-note">${esc(C.note)}</p>`;
   h+=`<p class="comp-upload-note">📷 Snap a photo of your own FWC or MAST card on your row below to add it to the binder — a manager verifies it.${isMgr()?' Managers can upload on anyone’s row and tap Verify.':''}</p>`;
   [['Back of House','boh'],['Front of House','foh']].forEach(([lab,key])=>{
     h+=`<div class="section-label">${lab}</div><div class="comp-card">`;
@@ -2206,6 +2303,7 @@ function renderCompliance(){const C=SF.compliance;
       ${compRowUploadsHTML(p)}</div>`);
     h+=`</div>`;});
   $('compBody').innerHTML=h;
+  updateStdBadges();
 }
 
 /* DIRECTORY */
@@ -2680,6 +2778,7 @@ function updateAttn(){
     setCardAttn('crew', crewGlow());
     setCardAttn('standards', standardsGlow());
     if(isMgr())setCardAttn('orders', ordGlow());
+    updateStdBadges();
   }catch(e){}
 }
 
