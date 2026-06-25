@@ -441,6 +441,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 .cu-stat.ok{color:#3d6325;}
 .cu-stat.pend{color:var(--gold-deep);}
 .cu-msg{font-size:10.5px; color:var(--card-mute); font-style:italic; flex-basis:100%;}
+.cu-datelab{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--card-mute);}
+.cu-date{font-size:12px; padding:4px 8px; border-radius:7px; border:1px solid var(--moon-edge); background:rgba(205,216,244,.06); color:var(--wood); font-family:inherit;}
 .comp-modal{position:fixed; inset:0; background:rgba(20,16,10,.82); display:none; align-items:center; justify-content:center; z-index:9999; padding:18px;}
 .comp-modal-inner{background:var(--moon); border-radius:16px; padding:14px; max-width:94vw; max-height:90vh; display:flex; flex-direction:column; gap:10px; box-shadow:0 12px 40px rgba(0,0,0,.5);}
 .comp-modal-head{font-weight:700; color:var(--wood); font-size:13px;}
@@ -1104,7 +1106,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782358786';   // stamped by build-data.py at every deploy
+const BUILD='1782359236';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2256,9 +2258,16 @@ function compSaveUpload(cred,name,dataUrl){
   }
   renderCompliance(); if(typeof updateAttn==='function')updateAttn();
 }
-function compVerify(cred,name){
+let compVerifyKey=null;   // which cu-item is showing the expiry-date input
+function compStartVerify(cred,name){ if(!isMgr())return; compVerifyKey=compKey(cred,name); renderCompliance();
+  setTimeout(function(){const el=$('cu-date-'+compVerifyKey);if(el&&el.focus)el.focus();},0); }
+function compCancelVerify(){ compVerifyKey=null; renderCompliance(); }
+function compConfirmVerify(cred,name){ const el=$('cu-date-'+compKey(cred,name)); const exp=(el&&el.value)||''; compVerifyKey=null; compVerify(cred,name,exp||null); }
+function compVerify(cred,name,expires){
   if(!isMgr())return; const key=compKey(cred,name); const m=Object.assign({},COMP_UP[key]||{});
-  m.status='verified'; m.reviewedBy=currentUserName()||''; m.reviewedAt=Date.now(); COMP_UP[key]=m;
+  m.status='verified'; m.reviewedBy=currentUserName()||''; m.reviewedAt=Date.now();
+  if(expires)m.expires=expires; else delete m.expires;
+  COMP_UP[key]=m;
   if(fbReady&&fbDb)fbDb.collection('compliance').doc(key).set(m).catch(function(){compLsSet();}); else compLsSet();
   renderCompliance(); if(typeof updateAttn==='function')updateAttn();
 }
@@ -2301,11 +2310,21 @@ function compRowUploadsHTML(p){
     let inner='<span class="cu-cred">'+cred+'</span>';
     if(up){
       inner+='<button class="cu-btn" onclick="compViewImage(\''+cred+'\',\''+jq(p.name)+'\')">View card</button>';
-      inner+= up.status==='verified'
-        ? '<span class="cu-stat ok">✓ verified'+(up.reviewedBy?' · '+esc(String(up.reviewedBy).split(' ')[0]):'')+'</span>'
-        : '<span class="cu-stat pend">• pending review</span>';
-      if(isMgr()&&up.status!=='verified')inner+='<button class="cu-btn ok" onclick="compVerify(\''+cred+'\',\''+jq(p.name)+'\')">Verify</button>';
-      if(canUp)inner+='<button class="cu-btn" onclick="compPickFile(\''+cred+'\',\''+jq(p.name)+'\')">Replace</button><button class="cu-btn x" onclick="compRemove(\''+cred+'\',\''+jq(p.name)+'\')">Remove</button>';
+      if(compVerifyKey===key&&isMgr()){
+        inner+='<span class="cu-datelab">Expiry</span><input type="date" class="cu-date" id="cu-date-'+key+'" value="'+esc(up.expires||'')+'">'+
+          '<button class="cu-btn ok" onclick="compConfirmVerify(\''+cred+'\',\''+jq(p.name)+'\')">Save</button>'+
+          '<button class="cu-btn" onclick="compCancelVerify()">Cancel</button>';
+      } else {
+        inner+= up.status==='verified'
+          ? '<span class="cu-stat ok">✓ verified'+(up.reviewedBy?' · '+esc(String(up.reviewedBy).split(' ')[0]):'')+'</span>'
+          : '<span class="cu-stat pend">• pending review</span>';
+        if(isMgr()){
+          inner+= up.status==='verified'
+            ? '<button class="cu-btn" onclick="compStartVerify(\''+cred+'\',\''+jq(p.name)+'\')">'+(up.expires?'Exp '+esc(compNiceDate(up.expires)):'Set expiry')+'</button>'
+            : '<button class="cu-btn ok" onclick="compStartVerify(\''+cred+'\',\''+jq(p.name)+'\')">Verify</button>';
+        }
+        if(canUp)inner+='<button class="cu-btn" onclick="compPickFile(\''+cred+'\',\''+jq(p.name)+'\')">Replace</button><button class="cu-btn x" onclick="compRemove(\''+cred+'\',\''+jq(p.name)+'\')">Remove</button>';
+      }
     } else {
       inner+='<button class="cu-btn" onclick="compPickFile(\''+cred+'\',\''+jq(p.name)+'\')">Upload photo</button>';
     }
@@ -2314,18 +2333,30 @@ function compRowUploadsHTML(p){
   });
   return chunks.length?'<div class="comp-uploads">'+chunks.join('')+'</div>':'';
 }
-/* A manager-verified card on file marks that cred complete: the pill goes green ✓
-   regardless of the (hand-maintained) compliance.json status, and the cert badge
-   stops flagging it. */
-function compVerified(cred,name){ const u=COMP_UP[compKey(cred,name)]; return !!(u&&u.status==='verified'); }
+/* A manager-verified card on file drives that cred's status: when verified WITH an
+   expiry date, the pill/badge age automatically (green → amber within 60 days →
+   red once past). A verified card with no date captured = green (legacy). Overrides
+   the hand-maintained compliance.json status. */
+function compVerifiedRec(cred,name){ const u=COMP_UP[compKey(cred,name)]; return (u&&u.status==='verified')?u:null; }
+function compVerified(cred,name){ return !!compVerifiedRec(cred,name); }
+function compExpDate(iso){ const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso||''); if(!m)return null; const d=new Date(+m[1],+m[2]-1,+m[3]); d.setHours(0,0,0,0); return d; }
+function compNiceDate(iso){ const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso||''); if(!m)return ''; return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1]+' '+(+m[3])+', '+m[1]; }
+function compExpStatus(iso){ const d=compExpDate(iso); if(!d)return 'good'; const t=new Date(); t.setHours(0,0,0,0); const days=Math.round((d-t)/864e5); return days<0?'past':(days<=60?'warn':'good'); }
 function compPillHTML(cred,name,obj){
-  const verified=compVerified(cred,name);
-  const status=verified?'good':(obj?obj.status:'info');
-  const icon=verified?'✓':(obj?ic(obj.status):'—');
+  const rec=compVerifiedRec(cred,name);
+  if(rec){ const st=rec.expires?compExpStatus(rec.expires):'good';
+    const cls=(st==='past')?'alarm':st, icon=st==='good'?'✓':(st==='warn'?'•':'!');
+    return '<span class="pill st-'+cls+'"><span class="pl">'+cred+'</span>'+icon+'</span>'; }
+  const status=obj?obj.status:'info', icon=obj?ic(obj.status):'—';
   return '<span class="pill st-'+status+'"><span class="pl">'+cred+'</span>'+icon+'</span>';
 }
 function compCredTextHTML(cred,name,obj){
-  if(compVerified(cred,name)){ const u=COMP_UP[compKey(cred,name)]||{}; return '<b>'+cred+'</b> ✓ Card on file'+(u.reviewedBy?' — verified by '+esc(String(u.reviewedBy).split(' ')[0]):''); }
+  const rec=compVerifiedRec(cred,name);
+  if(rec){ const by=rec.reviewedBy?' · verified by '+esc(String(rec.reviewedBy).split(' ')[0]):'';
+    if(rec.expires){ const st=compExpStatus(rec.expires), nd=compNiceDate(rec.expires);
+      const lead=st==='past'?('✗ EXPIRED '+nd):(st==='warn'?('Card on file — expires '+nd+' (renew soon)'):('✓ Card on file — exp '+nd));
+      return '<b>'+cred+'</b> '+lead+by; }
+    return '<b>'+cred+'</b> ✓ Card on file'+by; }
   return obj?'<b>'+cred+'</b> '+esc(obj.text):'';
 }
 
@@ -2352,7 +2383,15 @@ function myCertStatus(){
   const today=new Date(); today.setHours(0,0,0,0);
   [['FWC',row.fwc],['MAST',row.mast]].forEach(function(pair){
     const cred=pair[0],c=pair[1];
-    if(compVerified(cred,row.name))return;                // a verified card on file = complete
+    const rec=compVerifiedRec(cred,row.name);
+    if(rec){                                              // verified card drives status off its expiry
+      if(!rec.expires)return;                             // verified, no date captured = complete
+      const st=compExpStatus(rec.expires); if(st==='good')return;
+      const days=Math.round((compExpDate(rec.expires)-today)/864e5);
+      if(st==='past')out.pastDue.push({cred:cred,dateStr:compNiceDate(rec.expires),days:days});
+      else out.soon.push({cred:cred,dateStr:compNiceDate(rec.expires),days:days});
+      return;
+    }
     if(!c||c.status==='good'||c.status==='info')return;   // valid or N/A — no badge
     let dm=null;
     (C.comingDue||[]).forEach(function(d){ if(d.name===me.name&&d.cred===cred){ const x=certDateMatch(d.date); if(x)dm=x; } });
