@@ -461,6 +461,28 @@ nav.chips::-webkit-scrollbar{display:none;}
 .crop-actions{display:flex; gap:8px; justify-content:flex-end;}
 .crop-btn{padding:8px 16px; border-radius:8px; border:1px solid var(--moon-edge); background:rgba(205,216,244,.06); color:var(--wood); font-weight:600; cursor:pointer;}
 .crop-btn.primary{background:var(--gold); color:#241f15; border:none;}
+/* announcement / RSVP pop-up + home chip */
+.ann-card{background:var(--moon); border-radius:18px; padding:22px 20px; max-width:min(92vw,420px); display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; box-shadow:0 14px 44px rgba(0,0,0,.5);}
+.ann-emoji{font-size:40px; line-height:1;}
+.ann-title{font-size:25px; font-weight:700; color:var(--wood); margin:0;}
+.ann-lines{display:flex; flex-direction:column; gap:4px; margin:4px 0;}
+.ann-line{font-size:13px; color:var(--card-soft); line-height:1.4;}
+.ann-note{font-size:12.5px; font-weight:700; color:var(--gold-deep);}
+.ann-current{font-size:12px; color:var(--ink-mute); background:rgba(214,158,46,.1); border-radius:8px; padding:7px 10px;}
+.ann-guests{display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; margin-top:6px; padding:8px 12px; background:rgba(205,216,244,.05); border-radius:10px;}
+.ann-glab{font-size:13px; color:var(--ink); font-weight:600;}
+.ann-step{display:flex; align-items:center; gap:14px;}
+.ann-step button{width:30px; height:30px; border-radius:50%; border:1px solid var(--moon-edge); background:rgba(205,216,244,.08); color:var(--wood); font-size:18px; font-weight:700; cursor:pointer; line-height:1;}
+.ann-step span{font-size:17px; font-weight:700; color:var(--wood); min-width:18px; text-align:center;}
+.ann-actions{display:flex; gap:9px; width:100%; margin-top:8px;}
+.ann-btn{flex:1; padding:12px; border-radius:10px; border:none; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit;}
+.ann-btn.yes{background:#6db657; color:#0e1a0c;}
+.ann-btn.no{background:rgba(205,216,244,.1); color:var(--ink-soft); border:1px solid var(--moon-edge);}
+.ann-dismiss{margin-top:4px; background:none; border:none; color:var(--ink-mute); font-size:12.5px; text-decoration:underline dotted; text-underline-offset:2px; cursor:pointer; font-family:inherit;}
+.ann-tally{margin-top:6px; font-size:11.5px; color:var(--card-mute);}
+.ann-home{grid-column:1/-1; display:flex; align-items:center; gap:10px; background:linear-gradient(90deg, rgba(192,57,43,.16), rgba(40,70,150,.16)); border:1px solid rgba(214,158,46,.4); border-radius:14px; padding:12px 15px; cursor:pointer; font-family:inherit; text-align:left;}
+.ann-home-ic{font-size:20px;}
+.ann-home-txt{font-size:13.5px; font-weight:700; color:var(--wood);}
 .binder-link{display:inline-block; margin:2px 0 10px; padding:9px 16px; background:var(--gold); color:#241f15; text-decoration:none; border-radius:8px; font-size:12px; letter-spacing:.04em; text-transform:uppercase; font-weight:700;}
 .due-row{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; padding:9px 0; border-bottom:.5px dotted var(--moon-edge);}
 .due-when{font-size:11px; font-style:italic; color:var(--card-mute);}
@@ -1107,7 +1129,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782361440';   // stamped by build-data.py at every deploy
+const BUILD='1782414727';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1232,7 +1254,8 @@ function ordersCardHTML(){
 function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
   const mgr=isMgr();
-  let html = (mgr?glanceCardHTML():'') + freshCardHTML() + verbalsCardHTML();
+  const annChip = annActive()?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${esc(ANNOUNCE.title)} — ${annMyRsvp()?(annMyRsvp().rsvp==='yes'?'you\'re in ✓ (tap to change)':'tap to RSVP'):'tap to RSVP'}</span></button>`:'';
+  let html = annChip + (mgr?glanceCardHTML():'') + freshCardHTML() + verbalsCardHTML();
   const std=[['board','⌗','Tables','Tonight\'s table notes & statuses'],
     ['schedule','◷','Schedule','This week + the month'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
@@ -1301,7 +1324,7 @@ function onProfiles(){
 }
 function applyAuthGate(){
   const gate=$('loginGate');
-  if(me){ if(gate)gate.classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); }
+  if(me){ if(gate)gate.classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); else setTimeout(maybeShowAnnounce,300); }
   else {
     document.body.classList.add('locked');
     if(!gate.classList.contains('open')) openLogin();
@@ -1370,7 +1393,7 @@ async function submitLogin(){
   const p=PROFILES[loginName]; if(!p)return;
   if(!p.pinHash){alert('No PIN has been set for you yet — see Sam.');return;}
   let h; try{ h=await hashPin(($('pinInput').value||'')); }catch(e){ h=null; }
-  if(h&&h===p.pinHash){ setSession(p.name); me=p; $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); }
+  if(h&&h===p.pinHash){ setSession(p.name); me=p; $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); else setTimeout(maybeShowAnnounce,300); }
   else { const e=$('pinErr'); if(e)e.style.display='block'; const x=$('pinInput'); if(x){x.value='';x.focus();} }
 }
 async function submitNewPin(){
@@ -1381,7 +1404,7 @@ async function submitNewPin(){
   const h=await hashPin(a);
   if(fbReady&&fbDb&&p.id){ await fbDb.collection('staff').doc(p.id).update({pinHash:h}).catch(function(){}); }
   p.pinHash=h; setSession(p.name); me=p;
-  $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent();
+  $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); else setTimeout(maybeShowAnnounce,300);
 }
 function logout(){clearSession();me=null;document.body.classList.add('locked');try{if('clearAppBadge' in navigator)navigator.clearAppBadge();}catch(e){}openLogin();}
 
@@ -1404,6 +1427,68 @@ function saveConsent(){
   Object.assign(me,patch);
   if(fbReady&&fbDb&&me.id){ fbDb.collection('staff').doc(me.id).update(patch).catch(function(){}); }
   closeConsent(); renderAccountBar(); if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
+  setTimeout(maybeShowAnnounce,250);   // brand-new user just finished consent — now offer the announcement
+}
+
+/* ===== ANNOUNCEMENT / RSVP POP-UP =========================================
+   A one-off card shown on login until the person RSVPs or dismisses. Dismiss
+   lasts until the next 3am reset (matches the session), not just this view. RSVP
+   is stored on the person's staff profile (synced) so managers get a live tally.
+   To run a future announcement, update ANNOUNCE (new id resets everyone). ===== */
+const ANNOUNCE={
+  id:'bbq-2026-07-04',
+  showUntil:'2026-07-04',
+  emoji:'🎆',
+  title:'4th of July BBQ',
+  lines:[
+    'Swan House Farm · Saturday, July 4',
+    'Arrive anytime after 1pm — overnight camping OK',
+    'Snacks, beer & wine on arrival · burgers, corn & ribs around 6pm · fireworks later',
+    'Bring friends — we just need a headcount for food & drink'
+  ],
+  note:'Please RSVP by June 28 so we can place orders.'
+};
+let annShownSession=false, annGuests=0;
+function annDismissKey(){return 'sf-announce-'+ANNOUNCE.id;}
+function annDismissedNow(){ try{const s=JSON.parse(localStorage.getItem(annDismissKey())||'null'); return !!(s&&s.exp&&Date.now()<s.exp);}catch(e){return false;} }
+function annDismiss(){ try{localStorage.setItem(annDismissKey(),JSON.stringify({exp:next3am(Date.now())}));}catch(e){} annClose(); }
+function annActive(){ return todayISO()<=ANNOUNCE.showUntil; }
+function annMyRsvp(){ const r=me&&me.announceRsvp; return (r&&r.id===ANNOUNCE.id)?r:null; }
+function annShouldShow(){ return !!(me && me.contactSet && annActive() && !annMyRsvp() && !annDismissedNow()); }
+function maybeShowAnnounce(){ if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
+function annTally(){ let yes=0,no=0,guests=0; Object.keys(PROFILES).forEach(function(k){const r=PROFILES[k].announceRsvp; if(r&&r.id===ANNOUNCE.id){ if(r.rsvp==='yes'){yes++;guests+=(+r.guests||0);} else if(r.rsvp==='no')no++; }}); return {yes:yes,no:no,guests:guests}; }
+function annInc(d){ annGuests=Math.max(0,Math.min(30,annGuests+d)); const el=$('ann-guests-n'); if(el)el.textContent=annGuests; }
+function annRsvp(going){
+  if(!me)return;
+  const rec={id:ANNOUNCE.id, rsvp:going?'yes':'no', guests:going?annGuests:0, at:Date.now(), by:me.name};
+  me.announceRsvp=rec;
+  if(fbReady&&fbDb&&me.id){ fbDb.collection('staff').doc(me.id).update({announceRsvp:rec}).catch(function(){}); }
+  annClose(); if($('home')&&$('home').classList.contains('active'))renderHome();
+}
+function annOpen(){
+  if(!me)return;
+  const existing=annMyRsvp(); annGuests=existing?(+existing.guests||0):0;
+  let m=$('announceModal');
+  if(!m){ m=document.createElement('div'); m.id='announceModal'; m.className='comp-modal ann-modal'; m.onclick=function(e){if(e.target===m)annClose();}; document.body.appendChild(m); }
+  m.innerHTML=annCardHTML(existing); m.style.display='flex';
+}
+function annClose(){ const m=$('announceModal'); if(m)m.style.display='none'; }
+function annCardHTML(existing){
+  const A=ANNOUNCE;
+  const cur=existing?`<div class="ann-current">Right now you're down as <b>${existing.rsvp==='yes'?('coming'+(existing.guests?` +${existing.guests} guest${existing.guests>1?'s':''}`:'')):'not coming'}</b> — change it below if needed.</div>`:'';
+  let tally='';
+  if(typeof isMgr==='function'&&isMgr()){ const t=annTally(); tally=`<div class="ann-tally">RSVPs so far: <b>${t.yes}</b> coming${t.guests?` (+${t.guests} guest${t.guests>1?'s':''})`:''} · <b>${t.no}</b> can't</div>`; }
+  return `<div class="ann-card">
+    <div class="ann-emoji">${A.emoji}</div>
+    <div class="ann-title serif">${esc(A.title)}</div>
+    <div class="ann-lines">${A.lines.map(l=>`<div class="ann-line">${esc(l)}</div>`).join('')}</div>
+    <div class="ann-note">${esc(A.note)}</div>
+    ${cur}
+    <div class="ann-guests"><span class="ann-glab">Guests joining you</span><div class="ann-step"><button onclick="annInc(-1)">−</button><span id="ann-guests-n">${annGuests}</span><button onclick="annInc(1)">+</button></div></div>
+    <div class="ann-actions"><button class="ann-btn yes" onclick="annRsvp(true)">I'm coming</button><button class="ann-btn no" onclick="annRsvp(false)">Can't make it</button></div>
+    <button class="ann-dismiss" onclick="annDismiss()">I'll confirm later</button>
+    ${tally}
+  </div>`;
 }
 
 /* FRESH — FOOD + corrections mode */
