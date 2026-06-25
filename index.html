@@ -1158,7 +1158,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782426741';   // stamped by build-data.py at every deploy
+const BUILD='1782427588';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3370,9 +3370,11 @@ function dsRenderWxRec(iso){
 function dsCoversHTML(iso){
   const isToday=(iso===todayISO());
   const c = isToday ? (getBoard()||{}).covers : dsCoversCache[iso];
-  if(!c||!c.booked)return '';
+  if(!c)return '';
   let day=''; try{ day=new Date(iso+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'}); }catch(e){}
   let head='Tonight'; if(!isToday){ try{ head=new Date(iso+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }catch(e){ head=day; } }
+  if(c.closed)return '<div class="ds-covers">📋 '+esc(head)+': <b>Closed</b>'+(c.note?' — '+esc(c.note):'')+'</div>';
+  if(!c.booked)return '';
   // Employee line: booked + expected total (incl. walk-ins, today only) + a plain pace read.
   let line='📋 '+esc(head)+': <b>'+c.booked+'</b> booked';
   if(c.expectedTotal)line+=' · ~'+c.expectedTotal+' expected with walk-ins';
