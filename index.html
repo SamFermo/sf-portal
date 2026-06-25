@@ -1107,7 +1107,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782360666';   // stamped by build-data.py at every deploy
+const BUILD='1782361440';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2144,15 +2144,27 @@ function startComplianceSync(){
 }
 function compClamp(v,a,b){return Math.max(a,Math.min(b,v));}
 let cropCtx=null;   // {cred,name,img,box:{x,y,w,h} normalized 0..1}
+let _compFileInp=null;
 function compPickFile(cred,name){
   if(!compCanUpload(name)){alert('Only '+String(name).split(' ')[0]+' or a manager can upload this card.');return;}
-  const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';   // no 'capture' → iOS offers Photo Library, Take Photo, or Choose File
-  inp.onchange=function(){ const f=inp.files&&inp.files[0]; if(!f)return;
+  // The input MUST be in the DOM before .click() — iOS/the home-screen app fire the
+  // tap + change event unreliably on a detached input (the "nothing happens until I
+  // refresh" bug). Append a hidden one, click it, and clean it up afterward.
+  if(_compFileInp){ try{document.body.removeChild(_compFileInp);}catch(e){} _compFileInp=null; }
+  const inp=document.createElement('input');
+  inp.type='file'; inp.accept='image/*';   // no 'capture' → iOS offers Photo Library, Take Photo, or Choose File
+  inp.style.position='fixed'; inp.style.left='-9999px'; inp.style.top='0'; inp.style.opacity='0';
+  const cleanup=function(){ try{document.body.removeChild(inp);}catch(e){} if(_compFileInp===inp)_compFileInp=null; };
+  inp.onchange=function(){
+    const f=inp.files&&inp.files[0];
+    if(!f){cleanup();return;}
     const r=new FileReader();
-    r.onload=function(){ compOpenCrop(r.result,cred,name); };
-    r.onerror=function(){ compUpMsg(cred,name,'Could not read that image.'); };
+    r.onload=function(){ cleanup(); compOpenCrop(r.result,cred,name); };
+    r.onerror=function(){ cleanup(); compUpMsg(cred,name,'Could not read that image.'); };
     r.readAsDataURL(f);
   };
+  document.body.appendChild(inp);
+  _compFileInp=inp;
   inp.click();
 }
 /* Auto-detect the card's bounds: downscale, take the background colour from the
