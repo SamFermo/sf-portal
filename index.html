@@ -519,9 +519,24 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-week-label{font-size:10px; color:var(--gold); font-weight:700; letter-spacing:.03em; text-transform:none; margin-left:6px;}
 .ds-bucket{margin-bottom:9px;}
 .ds-bucket-lab{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); font-weight:700; margin-bottom:3px;}
-.ds-person{display:flex; justify-content:space-between; align-items:baseline; padding:6px 11px; background:rgba(205,216,244,.05); border-radius:8px; margin-bottom:3px;}
-.ds-pname{font-size:14px; color:var(--ink); font-weight:600;}
-.ds-pshift{font-size:12px; color:var(--ink-mute);}
+.ds-person{display:flex; justify-content:space-between; align-items:center; gap:9px; padding:6px 11px; background:rgba(205,216,244,.05); border-radius:8px; margin-bottom:3px;}
+.ds-pname{font-size:14px; color:var(--ink); font-weight:600; flex:1; min-width:0;}
+.ds-pshift{font-size:12px; color:var(--ink-mute); flex:0 0 auto;}
+.ds-person.ds-off{opacity:.6;}
+.ds-person.ds-off .ds-pname{text-decoration:line-through;}
+.ds-person.ds-pickup{background:rgba(109,182,87,.09);}
+.ds-off-tag{margin-left:7px; font-size:9px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#c0392b; background:rgba(192,57,43,.12); border:1px solid rgba(192,57,43,.35); border-radius:999px; padding:1px 6px; vertical-align:middle; text-decoration:none; display:inline-block;}
+.ds-pickup-tag{margin-left:7px; font-size:9px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#3d6325; background:rgba(109,182,87,.15); border:1px solid rgba(109,182,87,.4); border-radius:999px; padding:1px 6px; vertical-align:middle; display:inline-block;}
+.ds-row-btn{flex:0 0 auto; font-size:11px; font-weight:700; padding:4px 10px; border-radius:7px; border:1px solid var(--ink-mute); background:transparent; color:var(--ink-soft); cursor:pointer; font-family:inherit;}
+.ds-row-btn:hover{border-color:var(--gold); color:var(--ink);}
+.ds-row-btn.undo{border-color:#6db657; color:#6db657;}
+.ds-row-btn.x{border-color:rgba(168,84,84,.5); color:#c98080; padding:4px 8px;}
+.ds-shiftchg{margin-top:10px;}
+.ds-sc-hint{font-size:11.5px; color:var(--ink-mute); line-height:1.45; margin-bottom:10px;}
+.ds-sc-form{display:flex; flex-direction:column; gap:8px;}
+.ds-sc-sel{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink); border-radius:8px; padding:8px 10px; font-size:13px; font-family:inherit;}
+.ds-sc-shift{width:100%;}
+.ds-sc-actions{display:flex; gap:8px;}
 .ds-farm{opacity:.65;}
 .ds-alert{margin-top:7px; font-size:12.5px; font-weight:700; color:#e6c878; background:rgba(214,158,46,.1); border:1px solid rgba(214,158,46,.35); border-radius:9px; padding:8px 11px;}
 .ds-empty{font-size:13px; color:var(--ink-mute); font-style:italic; padding:6px 0;}
@@ -1089,7 +1104,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782350193';   // stamped by build-data.py at every deploy
+const BUILD='1782357623';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2504,8 +2519,69 @@ const DS_WX_TTL=90*60*1000;   // refetch weather if the cached pull is older tha
 function dsWxStamp(ms){ if(!ms)return ''; const d=new Date(ms); let h=d.getHours(); const m=d.getMinutes(); const ap=h>=12?'pm':'am'; h=h%12||12; return h+':'+(m<10?'0':'')+m+ap; }
 function dsRefreshWeather(){ const iso=dsDate(); delete dsWxCache[iso]; dsRenderWeather(iso); }
 function dsDate(){return dsDateSel||todayISO();}
-function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=new Set();dsCovSel=new Set();dsCovSide=null;renderToday();}
+function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=new Set();dsCovSel=new Set();dsCovSide=null;dsPickupOpen=false;renderToday();}
 function dsHr(h){const ap=h>=12?'p':'a';let hh=h%12;if(hh===0)hh=12;return hh+ap;}
+
+/* ===== DAY ROSTER OVERRIDES — per-day call-offs + pickups, layered on the
+   schedule (the source schedule.json is never edited; it's rebuilt daily). Stored
+   in the day board doc `board/{iso}.roster = {calledOff:[fullName], added:[{id,name,side,shift}]}`
+   — that collection already has a Firestore rule, so no new rule needed. Today is
+   live via boardState; other dates are fetched on demand into dsRosterCache. ===== */
+let dsRosterCache={}, dsPickupOpen=false;
+function dsLocalRoster(iso){try{return JSON.parse(localStorage.getItem('sf-roster-'+iso))||{calledOff:[],added:[]};}catch(e){return {calledOff:[],added:[]};}}
+function dsLocalRosterSet(iso,r){try{localStorage.setItem('sf-roster-'+iso,JSON.stringify(r));}catch(e){}}
+function dsRosterOv(iso){
+  let r;
+  if(iso===todayISO()){ const b=getBoard(); r=b&&b.roster; }
+  else r=dsRosterCache[iso];
+  return {calledOff:(r&&r.calledOff)||[], added:(r&&r.added)||[]};
+}
+function dsCalledOffSet(iso){ const s=new Set(); dsRosterOv(iso).calledOff.forEach(function(n){s.add(String(n).toLowerCase());}); return s; }
+function dsEnsureRoster(iso){
+  if(iso===todayISO()||dsRosterCache[iso])return;   // today is live; others fetched once
+  if(fbReady&&fbDb){ fbDb.collection('board').doc(iso).get().then(function(s){ const d=s.exists?(s.data()||{}):{}; dsRosterCache[iso]=d.roster||{calledOff:[],added:[]}; if(dsDate()===iso)renderToday(); }).catch(function(){ dsRosterCache[iso]={calledOff:[],added:[]}; }); }
+  else dsRosterCache[iso]=dsLocalRoster(iso);
+}
+function dsSetRoster(iso,roster){
+  if(iso===todayISO()){ const b=getBoard(); b.roster=roster; persistBoard(b); }
+  else { dsRosterCache[iso]=roster;
+    if(fbReady&&fbDb){ fbDb.collection('board').doc(iso).set({roster:roster},{merge:true}).catch(function(){dsLocalRosterSet(iso,roster);}); }
+    else dsLocalRosterSet(iso,roster); }
+  renderToday();
+}
+function dsCallOff(name){ const iso=dsDate(),ov=dsRosterOv(iso),co=ov.calledOff.slice();
+  if(co.map(function(x){return x.toLowerCase();}).indexOf(String(name).toLowerCase())<0)co.push(name);
+  dsSetRoster(iso,{calledOff:co,added:ov.added}); }
+function dsUndoCallOff(name){ const iso=dsDate(),ov=dsRosterOv(iso);
+  dsSetRoster(iso,{calledOff:ov.calledOff.filter(function(x){return x.toLowerCase()!==String(name).toLowerCase();}),added:ov.added}); }
+function dsAddPickup(name,side,shift){ const iso=dsDate(),ov=dsRosterOv(iso),added=ov.added.slice();
+  added.push({id:'p'+Date.now()+Math.random().toString(36).slice(2,5),name:name,side:(side==='boh'?'boh':'foh'),shift:(shift||'picked up')});
+  dsSetRoster(iso,{calledOff:ov.calledOff,added:added}); }
+function dsRemovePickup(id){ const iso=dsDate(),ov=dsRosterOv(iso);
+  dsSetRoster(iso,{calledOff:ov.calledOff,added:ov.added.filter(function(a){return a.id!==id;})}); }
+function dsPickupToggle(on){ dsPickupOpen=!!on; renderToday(); }
+function dsPickupSubmit(){ const n=$('ds-pick-name'); if(!n||!n.value)return; const s=$('ds-pick-side'),sh=$('ds-pick-shift');
+  const shift=((sh&&sh.value)||'').trim(); dsPickupOpen=false; dsAddPickup(n.value,(s&&s.value)||'foh',shift); }
+function dsShiftChangeHTML(iso){
+  let h='<div class="ds-contact ds-shiftchg"><div class="ds-side-head">Shift change</div>';
+  h+='<div class="ds-sc-hint">Tap <b>Call off</b> on anyone above to mark them off — they drop from the counts and contact list and free up Reaching for Coverage. Add a pickup if someone takes a shift.</div>';
+  if(!dsPickupOpen){
+    h+='<button class="dir-msg-btn" onclick="dsPickupToggle(true)">+ Add a pickup</button>';
+  } else {
+    const working={}; dsWorkingList(iso).forEach(function(x){working[x.name]=1;});
+    const co=dsCalledOffSet(iso), names=[];
+    ['foh','boh'].forEach(function(k){ ((SF.staff.directory&&SF.staff.directory[k])||[]).forEach(function(p){
+      if(p.name&&!working[p.name]&&!co.has(p.name.toLowerCase())&&PROFILES[p.name])names.push(p.name); }); });
+    const uniq=[...new Set(names)].sort();
+    h+='<div class="ds-sc-form">';
+    h+='<select id="ds-pick-name" class="ds-sc-sel">'+(uniq.length?uniq.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join(''):'<option value="">(everyone is already on)</option>')+'</select>';
+    h+='<select id="ds-pick-side" class="ds-sc-sel"><option value="foh">FOH</option><option value="boh">BOH</option></select>';
+    h+='<input id="ds-pick-shift" class="board-input ds-sc-shift" placeholder="Shift — e.g. Server 5-close, Bar, Expo">';
+    h+='<div class="ds-sc-actions"><button class="dir-msg-btn" onclick="dsPickupSubmit()">Add pickup</button><button class="dir-msg-clear" onclick="dsPickupToggle(false)">Cancel</button></div>';
+    h+='</div>';
+  }
+  return h+'</div>';
+}
 function dsBuildNameIndex(){
   const idx={first:{},nick:{},full:{}};
   function add(name,role){
@@ -2532,10 +2608,14 @@ function dsResolve(shortName,idx){
 }
 function dsWeekFor(side,iso){return (SF.schedule&&SF.schedule[side]||[]).find(w=>w.dates&&w.dates.indexOf(iso)>=0)||null;}
 function dsDayRows(side,iso){
-  const w=dsWeekFor(side,iso); if(!w)return null;
-  const di=w.dates.indexOf(iso);
-  const rows=(w.rows||[]).map(r=>({name:r.name,shift:String(r.shifts[di]||'').trim()})).filter(r=>r.shift);
-  return {label:w.label||'',coverage:String((w.coverage||[])[di]||'').trim(),rows:rows};
+  const w=dsWeekFor(side,iso);
+  let label='',coverage='',rows=[];
+  if(w){ const di=w.dates.indexOf(iso); label=w.label||''; coverage=String((w.coverage||[])[di]||'').trim();
+    rows=(w.rows||[]).map(r=>({name:r.name,shift:String(r.shifts[di]||'').trim()})).filter(r=>r.shift); }
+  const added=dsRosterOv(iso).added.filter(function(a){return a.side===side;});   // shift pickups layered on
+  added.forEach(function(a){rows.push({name:a.name,shift:a.shift||'picked up',_pickup:a.id});});
+  if(!w&&!added.length)return null;
+  return {label:label,coverage:coverage,rows:rows};
 }
 const DS_FOH_ORDER=['MD','Sup Server','Server','Bar','Support','Expo','Float','Other'];
 function dsFohBucket(shift){
@@ -2608,29 +2688,40 @@ function dsSideHTML(title,side,iso,idx){
     return `<div class="ds-side"><div class="ds-side-head ds-side-toggle" onclick="dsCollapseToggle('${side}')"><span class="ds-chev">${chev}</span> ${esc(title)}</div>${collapsed?'':'<div class="ds-empty">No schedule loaded for this week.</div>'}</div>`;
   }
   const order=(side==='foh')?DS_FOH_ORDER:DS_BOH_ORDER, groups={}, farm=[]; let onCount=0;
+  const co=dsCalledOffSet(iso);
   day.rows.forEach(r=>{
     const res=dsResolve(r.name,idx), b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role,res.full);
     if(b==='_off')return;
     if(b==='_farm'){farm.push({res,shift:r.shift});return;}
-    onCount++; (groups[b]=groups[b]||[]).push({res,shift:r.shift});
+    const off=co.has(res.full.toLowerCase());
+    if(!off)onCount++;
+    (groups[b]=groups[b]||[]).push({res,shift:r.shift,off:off,pickup:r._pickup||null});
   });
   if(groups['Kitchen Lead'])groups['Kitchen Lead'].sort((a,b)=>dsKlRank(a.res.role)-dsKlRank(b.res.role));
   let h=`<div class="ds-side"><div class="ds-side-head ds-side-toggle" onclick="dsCollapseToggle('${side}')"><span class="ds-chev">${chev}</span> ${esc(title)}${day.label?` <span class="ds-week-label">${esc(day.label)}</span>`:''}<span class="ds-side-count">${onCount} on</span></div>`;
   if(collapsed)return h+`</div>`;
+  const personRow=function(x){
+    const cls='ds-person'+(x.off?' ds-off':'')+(x.pickup?' ds-pickup':'');
+    const tag=x.pickup?'<span class="ds-pickup-tag">picked up</span>':(x.off?'<span class="ds-off-tag">called off</span>':'');
+    let ctrl;
+    if(x.off)ctrl=`<button class="ds-row-btn undo" onclick="dsUndoCallOff('${jq(x.res.full)}')">Undo</button>`;
+    else if(x.pickup)ctrl=`<button class="ds-row-btn x" onclick="dsRemovePickup('${x.pickup}')" title="Remove pickup">✕</button>`;
+    else ctrl=`<button class="ds-row-btn" onclick="dsCallOff('${jq(x.res.full)}')">Call off</button>`;
+    return `<div class="${cls}"><span class="ds-pname">${esc(x.res.full)}${tag}</span><span class="ds-pshift">${esc(x.shift)}</span>${ctrl}</div>`;
+  };
   let any=false;
   order.forEach(b=>{const arr=groups[b]; if(!arr||!arr.length)return; any=true;
-    h+=`<div class="ds-bucket"><div class="ds-bucket-lab">${esc(b)}</div>`+
-      arr.map(x=>`<div class="ds-person"><span class="ds-pname">${esc(x.res.full)}</span><span class="ds-pshift">${esc(x.shift)}</span></div>`).join('')+`</div>`;});
+    h+=`<div class="ds-bucket"><div class="ds-bucket-lab">${esc(b)}</div>`+arr.map(personRow).join('')+`</div>`;});
   if(farm.length)h+=`<div class="ds-bucket ds-farm"><div class="ds-bucket-lab">Farm (offsite)</div>`+farm.map(x=>`<div class="ds-person"><span class="ds-pname">${esc(x.res.full)}</span><span class="ds-pshift">${esc(x.shift)}</span></div>`).join('')+`</div>`;
   if(!any&&!farm.length)h+=`<div class="ds-empty">Nobody scheduled.</div>`;
   if(day.coverage)h+=`<div class="ds-alert">⚠ Coverage still needed: ${esc(day.coverage)}</div>`;
   return h+`</div>`;
 }
 function dsWorkingList(iso){
-  const idx=dsBuildNameIndex(), seen={}, out=[];
+  const idx=dsBuildNameIndex(), seen={}, out=[], co=dsCalledOffSet(iso);
   ['foh','boh'].forEach(side=>{const day=(side==='boh')?dsBohRowsFiltered(iso,idx):dsDayRows(side,iso); if(!day)return;
     day.rows.forEach(r=>{const res=dsResolve(r.name,idx),b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role,res.full);
-      if(b==='_off')return; if(seen[res.full])return; seen[res.full]=1;
+      if(b==='_off')return; if(co.has(res.full.toLowerCase()))return; if(seen[res.full])return; seen[res.full]=1;
       if(PROFILES[res.full])out.push({name:res.full,side:side});});});
   return out;
 }
@@ -2674,11 +2765,12 @@ function dsTextToday(){
 let dsCovSel=new Set(), dsCovSide=null;
 function dsWorkingSet(iso){ const s={}; dsWorkingList(iso).forEach(function(x){s[x.name]=1;}); return s; }
 function dsCoverageList(iso,side){
-  const working=dsWorkingSet(iso);
+  const working=dsWorkingSet(iso), co=dsCalledOffSet(iso);
   const dir=(SF.staff&&SF.staff.directory&&SF.staff.directory[side])||[];
   const seen={}, out=[];
   dir.forEach(function(p){ const nm=p.name; if(!nm||seen[nm])return; seen[nm]=1;
     if(working[nm])return;                                   // working today — skip
+    if(co.has(nm.toLowerCase()))return;                      // just called off — don't suggest texting them
     const pr=PROFILES[nm]; if(!pr||pr.active===false)return;  // unreachable or departed — skip
     out.push({name:nm}); });
   return out;
@@ -2816,9 +2908,10 @@ function dsServiceCounts(iso){
   const idx=dsBuildNameIndex();
   const foh={MD:0,'Sup Serve':0,Servers:0,Bar:0,Support:0};
   const boh={Expo:0,Cooks:0,Float:0,Porter:0};
-  const fday=dsDayRows('foh',iso), bday=dsBohRowsFiltered(iso,idx);
-  (fday?fday.rows:[]).forEach(r=>{const s=r.shift.toLowerCase();
+  const fday=dsDayRows('foh',iso), bday=dsBohRowsFiltered(iso,idx), co=dsCalledOffSet(iso);
+  (fday?fday.rows:[]).forEach(r=>{const s=r.shift.toLowerCase(), res=dsResolve(r.name,idx);
     if(s.includes('r/o')||s.includes('farm'))return;
+    if(co.has(res.full.toLowerCase()))return;
     if(s.includes('md'))foh.MD++;
     else if(s.includes('sup serv'))foh['Sup Serve']++;
     else if(s.includes('bar'))foh.Bar++;
@@ -2827,6 +2920,7 @@ function dsServiceCounts(iso){
   });
   (bday?bday.rows:[]).forEach(r=>{const res=dsResolve(r.name,idx),s=r.shift.toLowerCase(),st=r.shift.trim();
     if(s.includes('r/o')||s.includes('farm'))return;
+    if(co.has(res.full.toLowerCase()))return;
     if(dsIsPorter(res.full,res.role)){boh.Porter++;return;}
     if(s.includes('expo'))boh.Expo++;
     else if(s.includes('1-close'))boh.Cooks++;
@@ -2956,11 +3050,13 @@ function renderToday(){
   h+=`<div class="ds-weather"><div class="ds-wx-head">Service window · 4–10pm</div><div class="ds-wx-body" id="ds-wx-body">Loading forecast…</div></div>`;
   h+=dsSideHTML('Front of House','foh',iso,idx);
   h+=dsSideHTML('Back of House','boh',iso,idx);
+  h+=dsShiftChangeHTML(iso);
   h+=dsContactHTML(iso);
   h+=dsCoverageHTML(iso);
   h+=`<div class="ds-verbals" id="ds-verbals-wrap">`+dsVerbalsBuilderHTML()+`</div>`;
   $('todayBody').innerHTML=h;
   dsRenderWeather(iso);
+  dsEnsureRoster(iso);
 }
 
 /* ===== STAFF ACCESS — admin-only (add / set PIN / lock out) ===== */
@@ -3058,7 +3154,7 @@ function initFirebase(){
 }
 function boardDocId(){return todayISO();}
 function lsKey(){return 'sf-board-'+todayISO();}
-function lsGetBoard(){try{const s=JSON.parse(localStorage.getItem(lsKey()));if(s){s.tables=s.tables||[];return s;}}catch(e){}return {eightySixed:[...(SF.service.board.eightySixed||[])],specials:[...(SF.service.board.specials||[])],tables:[],combos:[]};}
+function lsGetBoard(){try{const s=JSON.parse(localStorage.getItem(lsKey()));if(s){s.tables=s.tables||[];s.roster=s.roster||{calledOff:[],added:[]};return s;}}catch(e){}return {eightySixed:[...(SF.service.board.eightySixed||[])],specials:[...(SF.service.board.specials||[])],tables:[],combos:[],roster:{calledOff:[],added:[]}};}
 function lsSetBoard(b){try{localStorage.setItem(lsKey(),JSON.stringify(b));}catch(e){}}
 function getBoard(){return boardState||lsGetBoard();}
 /* (Legacy free-text "Standing Verbals" — the board/standing doc and its
@@ -3192,7 +3288,7 @@ function startBoardSync(){
     if(boardUnsub)boardUnsub();
     boardUnsub=fbDb.collection('board').doc(boardDocId()).onSnapshot(function(snap){
       const d=snap.exists?snap.data():null;
-      boardState=d?{eightySixed:d.eightySixed||[],specials:d.specials||[],tables:d.tables||[],combos:d.combos||[]}:{eightySixed:[],specials:[],tables:[],combos:[]};
+      boardState=d?{eightySixed:d.eightySixed||[],specials:d.specials||[],tables:d.tables||[],combos:d.combos||[],roster:d.roster||{calledOff:[],added:[]}}:{eightySixed:[],specials:[],tables:[],combos:[],roster:{calledOff:[],added:[]}};
       renderBoard();
     },function(){ boardState=lsGetBoard(); renderBoard(); });
   }else{ boardState=lsGetBoard(); }
