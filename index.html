@@ -1158,7 +1158,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782423996';   // stamped by build-data.py at every deploy
+const BUILD='1782426741';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2788,7 +2788,7 @@ function dsHr(h){const ap=h>=12?'p':'a';let hh=h%12;if(hh===0)hh=12;return hh+ap
    in the day board doc `board/{iso}.roster = {calledOff:[fullName], added:[{id,name,side,shift}]}`
    — that collection already has a Firestore rule, so no new rule needed. Today is
    live via boardState; other dates are fetched on demand into dsRosterCache. ===== */
-let dsRosterCache={}, dsPickupOpen=false, dsRosterUnsub=null, dsRosterUnsubIso=null;
+let dsRosterCache={}, dsCoversCache={}, dsPickupOpen=false, dsRosterUnsub=null, dsRosterUnsubIso=null;
 function dsLocalRoster(iso){try{return JSON.parse(localStorage.getItem('sf-roster-'+iso))||{calledOff:[],added:[]};}catch(e){return {calledOff:[],added:[]};}}
 function dsLocalRosterSet(iso,r){try{localStorage.setItem('sf-roster-'+iso,JSON.stringify(r));}catch(e){}}
 function dsRosterOv(iso){
@@ -2809,6 +2809,7 @@ function dsEnsureRoster(iso){
     dsRosterUnsub=fbDb.collection('board').doc(iso).onSnapshot(function(snap){
       const d=snap.exists?(snap.data()||{}):{};
       dsRosterCache[iso]=d.roster||{};
+      dsCoversCache[iso]=d.covers||null;            // look-ahead covers for the selected date
       if(dsDate()===iso)renderToday();              // live: reflect another manager's change
     },function(){ if(!dsRosterCache[iso])dsRosterCache[iso]={}; });
   } else { dsRosterCache[iso]=dsLocalRoster(iso); }
@@ -3360,15 +3361,20 @@ function dsRenderWxRec(iso){
     if(sm){ if((sm.maxGust||0)>=20||(sm.maxWind||0)>=20)reasons.push('wind '+Math.round(sm.maxGust||sm.maxWind)+' mph');
       if((sm.maxPop||0)>=60||(sm.totP||0)>=0.1)reasons.push('rain likely'); }
     if(aqi!=null&&aqi>=101)reasons.push('smoke / poor air (AQI '+aqi+')');
-    el.innerHTML=reasons.length?'<div class="ds-wxrec-banner">⚠ Tonight could run light — '+esc(reasons.join(' · '))+'. A call-off is possible; if you\'d like the night off, you can volunteer below.</div>':'';
+    const isT=(iso===todayISO()); const lead=isT?'Tonight could run light':'This day could run light';
+    const tail=isT?' A call-off is possible; if you\'d like the night off, you can volunteer below.':'';
+    el.innerHTML=reasons.length?'<div class="ds-wxrec-banner">⚠ '+lead+' — '+esc(reasons.join(' · '))+'.'+tail+'</div>':'';
   });
 }
 /* covers feed (written to board/{iso}.covers by the midday sweep; shows when present) */
 function dsCoversHTML(iso){
-  if(iso!==todayISO())return ''; const c=(getBoard()||{}).covers; if(!c||!c.booked)return '';
+  const isToday=(iso===todayISO());
+  const c = isToday ? (getBoard()||{}).covers : dsCoversCache[iso];
+  if(!c||!c.booked)return '';
   let day=''; try{ day=new Date(iso+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'}); }catch(e){}
-  // Employee line: booked + expected total (incl. walk-ins) + a plain pace read.
-  let line='📋 Tonight: <b>'+c.booked+'</b> booked';
+  let head='Tonight'; if(!isToday){ try{ head=new Date(iso+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }catch(e){ head=day; } }
+  // Employee line: booked + expected total (incl. walk-ins, today only) + a plain pace read.
+  let line='📋 '+esc(head)+': <b>'+c.booked+'</b> booked';
   if(c.expectedTotal)line+=' · ~'+c.expectedTotal+' expected with walk-ins';
   if(c.avg4wk){ const base=c.expectedTotal||c.booked, r=base/c.avg4wk;
     const pace=r>=1.1?('busier than a usual '+day):(r<=0.9?('lighter than a usual '+day):('about a usual '+day));
@@ -3441,15 +3447,15 @@ function dsAlertClose(){ const m=$('dsAlertModal'); if(m)m.style.display='none';
 
 function renderToday(){
   const mgr=isMgr();
-  const iso=mgr?dsDate():todayISO();   // staff always see today
+  const iso=dsDate();                  // everyone can browse dates now (read-only look-ahead for staff)
   const isToday=(iso===todayISO());
-  $('todaySub').textContent=fmtLong(iso)+(isToday?' · today':'');
+  $('todaySub').textContent=fmtLong(iso)+(isToday?' · today':' · look-ahead');
   const idx=dsBuildNameIndex();
   const offerOn=dsRosterOv(iso).offerOff;
   let h='';
-  if(mgr)h+=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
+  h+=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
   h+=dsOfferBannerHTML(iso);
-  if(!mgr&&offerOn)h+=dsStaffActionsHTML(iso);   // night off on offer → actions right under the banner
+  if(!mgr&&isToday&&offerOn)h+=dsStaffActionsHTML(iso);   // night off on offer → actions right under the banner (today only)
   h+=`<div id="ds-wxrec"></div>`;
   h+=dsCoversHTML(iso);
   h+=`<div class="ds-weather"><div class="ds-wx-head">Service window · 4–10pm</div><div class="ds-wx-body" id="ds-wx-body">Loading forecast…</div></div>`;
@@ -3462,8 +3468,8 @@ function renderToday(){
     h+=dsContactHTML(iso);
     h+=dsCoverageHTML(iso);
     h+=`<div class="ds-verbals" id="ds-verbals-wrap">`+dsVerbalsBuilderHTML()+`</div>`;
-  } else if(!offerOn){
-    h+=dsStaffActionsHTML(iso);   // no offer banner → actions at the bottom
+  } else if(isToday&&!offerOn){
+    h+=dsStaffActionsHTML(iso);   // staff actions are a today thing; hidden on look-ahead dates
   }
   $('todayBody').innerHTML=h;
   dsRenderWeather(iso);
