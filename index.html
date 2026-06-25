@@ -443,6 +443,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .cu-msg{font-size:10.5px; color:var(--card-mute); font-style:italic; flex-basis:100%;}
 .cu-datelab{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--card-mute);}
 .cu-date{font-size:12px; padding:4px 8px; border-radius:7px; border:1px solid var(--moon-edge); background:rgba(205,216,244,.06); color:var(--wood); font-family:inherit;}
+.cu-ocr{font-size:10.5px; color:var(--gold-deep); font-style:italic; flex-basis:100%;}
 .comp-modal{position:fixed; inset:0; background:rgba(20,16,10,.82); display:none; align-items:center; justify-content:center; z-index:9999; padding:18px;}
 .comp-modal-inner{background:var(--moon); border-radius:16px; padding:14px; max-width:94vw; max-height:90vh; display:flex; flex-direction:column; gap:10px; box-shadow:0 12px 40px rgba(0,0,0,.5);}
 .comp-modal-head{font-weight:700; color:var(--wood); font-size:13px;}
@@ -1106,7 +1107,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782359823';   // stamped by build-data.py at every deploy
+const BUILD='1782360666';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2261,8 +2262,68 @@ function compSaveUpload(cred,name,dataUrl){
   renderCompliance(); if(typeof updateAttn==='function')updateAttn();
 }
 let compVerifyKey=null;   // which cu-item is showing the expiry-date input
-function compStartVerify(cred,name){ if(!isMgr())return; compVerifyKey=compKey(cred,name); renderCompliance();
-  setTimeout(function(){const el=$('cu-date-'+compVerifyKey);if(el&&el.focus)el.focus();},0); }
+/* OCR: lazy-load Tesseract.js (only when a manager verifies), read the card, and
+   pre-fill the expiry so nobody has to scroll a date picker. The manager confirms
+   or corrects — phone-photo OCR isn't perfect. */
+let _tessLoading=null;
+function compLoadOcr(){
+  if(window.Tesseract)return Promise.resolve(window.Tesseract);
+  if(_tessLoading)return _tessLoading;
+  _tessLoading=new Promise(function(res,rej){
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    s.onload=function(){ window.Tesseract?res(window.Tesseract):rej(new Error('ocr missing')); };
+    s.onerror=function(){ rej(new Error('ocr load failed')); };
+    document.head.appendChild(s);
+  });
+  return _tessLoading;
+}
+function compGetImage(cred,name){
+  const key=compKey(cred,name);
+  if(!fbReady)return Promise.resolve((COMP_UP[key]||{}).img||null);
+  return fbDb.collection('complianceImg').doc(key).get().then(function(s){ return s.exists?((s.data()||{}).data||null):null; }).catch(function(){return null;});
+}
+/* Pull the most likely EXPIRY date out of OCR text: prefer a date sitting just
+   after an exp/valid keyword, otherwise the latest plausible date. Returns ISO. */
+function compParseExpiry(text){
+  if(!text)return null;
+  const M={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11}, cands=[];
+  let m,re;
+  re=/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/g;
+  while((m=re.exec(text))){ let mo=+m[1],da=+m[2],yr=+m[3]; if(yr<100)yr+=2000; if(mo>=1&&mo<=12&&da>=1&&da<=31&&yr>=2000&&yr<2100)cands.push({d:new Date(yr,mo-1,da),i:m.index}); }
+  re=/([A-Za-z]{3,9})\.?\s+(\d{1,2}),?\s+(\d{4})/g;
+  while((m=re.exec(text))){ const mo=M[m[1].slice(0,3).toLowerCase()]; if(mo==null)continue; const da=+m[2],yr=+m[3]; if(da>=1&&da<=31&&yr>=2000&&yr<2100)cands.push({d:new Date(yr,mo,da),i:m.index}); }
+  re=/(\d{1,2})\s+([A-Za-z]{3,9})\.?\s+(\d{4})/g;
+  while((m=re.exec(text))){ const mo=M[m[2].slice(0,3).toLowerCase()]; if(mo==null)continue; const da=+m[1],yr=+m[3]; if(da>=1&&da<=31&&yr>=2000&&yr<2100)cands.push({d:new Date(yr,mo,da),i:m.index}); }
+  re=/(\d{4})-(\d{2})-(\d{2})/g;
+  while((m=re.exec(text))){ const yr=+m[1],mo=+m[2],da=+m[3]; if(mo>=1&&mo<=12&&da>=1&&da<=31&&yr>=2000&&yr<2100)cands.push({d:new Date(yr,mo-1,da),i:m.index}); }
+  if(!cands.length)return null;
+  const low=text.toLowerCase(); let best=null,bestScore=-1;
+  cands.forEach(function(c){
+    let score=c.d.getTime()/1e12;   // later date scores higher
+    let km,kre=/(expir|\bexp\b|valid|good\s*(through|until|thru))/g;
+    while((km=kre.exec(low))){ const dist=c.i-km.index; if(dist>=0&&dist<40){score+=100;break;} }
+    if(score>bestScore){bestScore=score;best=c;}
+  });
+  const d=best.d;
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function compOcrFill(cred,name){
+  const key=compKey(cred,name), note=function(t){const el=$('cu-ocr-'+key); if(el)el.textContent=t||'';};
+  note('Reading card…');
+  compGetImage(cred,name).then(function(url){
+    if(!url){note('No image — enter the date.');return;}
+    return compLoadOcr().then(function(T){ return T.recognize(url,'eng'); }).then(function(r){
+      const iso=compParseExpiry((r&&r.data&&r.data.text)||'');
+      const el=$('cu-date-'+key);
+      if(iso){ if(el&&!el.value)el.value=iso; note('Read from card: '+compNiceDate(iso)+' — confirm or fix'); }
+      else note('Couldn’t read a date — enter it.');
+    });
+  }).catch(function(){ note('Couldn’t read the card — enter the date.'); });
+}
+function compStartVerify(cred,name){ if(!isMgr())return; const key=compKey(cred,name); compVerifyKey=key; renderCompliance();
+  setTimeout(function(){const el=$('cu-date-'+key);if(el&&el.focus)el.focus();},0);
+  if(!(COMP_UP[key]||{}).expires)compOcrFill(cred,name); }
 function compCancelVerify(){ compVerifyKey=null; renderCompliance(); }
 function compConfirmVerify(cred,name){ const el=$('cu-date-'+compKey(cred,name)); const exp=(el&&el.value)||''; compVerifyKey=null; compVerify(cred,name,exp||null); }
 function compVerify(cred,name,expires){
@@ -2315,7 +2376,8 @@ function compRowUploadsHTML(p){
       if(compVerifyKey===key&&isMgr()){
         inner+='<span class="cu-datelab">Expiry</span><input type="date" class="cu-date" id="cu-date-'+key+'" value="'+esc(up.expires||'')+'">'+
           '<button class="cu-btn ok" onclick="compConfirmVerify(\''+cred+'\',\''+jq(p.name)+'\')">Save</button>'+
-          '<button class="cu-btn" onclick="compCancelVerify()">Cancel</button>';
+          '<button class="cu-btn" onclick="compCancelVerify()">Cancel</button>'+
+          '<span class="cu-ocr" id="cu-ocr-'+key+'"></span>';
       } else {
         inner+= up.status==='verified'
           ? '<span class="cu-stat ok">✓ verified'+(up.reviewedBy?' · '+esc(String(up.reviewedBy).split(' ')[0]):'')+'</span>'
