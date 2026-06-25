@@ -489,6 +489,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 @keyframes offerPulse{0%,100%{box-shadow:0 0 0 0 rgba(214,158,46,0);}50%{box-shadow:0 0 16px 1px rgba(214,158,46,.55);}}
 .ds-covers{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:11px; padding:10px 13px; font-size:13px; color:var(--ink); margin:0 0 10px;}
 .ds-covers-at{font-size:10.5px; color:var(--ink-mute);}
+.ds-covers-mgr{font-size:11.5px; color:var(--ink-mute); margin-top:5px; line-height:1.45;}
 .ds-offer-toggle{margin:10px 0;}
 .ds-vol-list{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:12px; padding:12px 14px; margin-top:10px;}
 .ds-vol-row{display:flex; align-items:center; gap:9px; padding:5px 0; font-size:13px;}
@@ -1157,7 +1158,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782421503';   // stamped by build-data.py at every deploy
+const BUILD='1782423996';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3365,9 +3366,25 @@ function dsRenderWxRec(iso){
 /* covers feed (written to board/{iso}.covers by the midday sweep; shows when present) */
 function dsCoversHTML(iso){
   if(iso!==todayISO())return ''; const c=(getBoard()||{}).covers; if(!c||!c.booked)return '';
-  const t=c.turns||{};
-  return '<div class="ds-covers">📋 Tonight: <b>'+c.booked+'</b> booked'+(c.capacity?' / '+c.capacity+' cap':'')+
-    (t.t1!=null?' · T1 '+t.t1+' · T2 '+t.t2+' · T3 '+t.t3:'')+(c.at?' <span class="ds-covers-at">as of '+dsWxStamp(c.at)+'</span>':'')+'</div>';
+  let day=''; try{ day=new Date(iso+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'}); }catch(e){}
+  // Employee line: booked + expected total (incl. walk-ins) + a plain pace read.
+  let line='📋 Tonight: <b>'+c.booked+'</b> booked';
+  if(c.expectedTotal)line+=' · ~'+c.expectedTotal+' expected with walk-ins';
+  if(c.avg4wk){ const base=c.expectedTotal||c.booked, r=base/c.avg4wk;
+    const pace=r>=1.1?('busier than a usual '+day):(r<=0.9?('lighter than a usual '+day):('about a usual '+day));
+    line+=' · '+esc(pace); }
+  let h='<div class="ds-covers">'+line;
+  if(c.at)h+=' <span class="ds-covers-at">as of '+dsWxStamp(c.at)+'</span>';
+  // Manager-only detail: avg, walk-in prediction, busiest stretch, turn split (no source breakdown).
+  if(typeof isMgr==='function'&&isMgr()){
+    const parts=[];
+    if(c.avg4wk)parts.push('avg '+esc(day)+' '+c.avg4wk);
+    if(c.walkinsExpected!=null)parts.push('~'+c.walkinsExpected+' walk-ins expected'+(c.walkinsActual!=null?' ('+c.walkinsActual+' so far)':''));
+    if(c.peak)parts.push('busiest '+esc(c.peak));
+    const t=c.turns; if(t&&t.t1!=null)parts.push('T1 '+t.t1+' · T2 '+t.t2+' · T3 '+t.t3);
+    if(parts.length)h+='<div class="ds-covers-mgr">'+parts.join(' · ')+'</div>';
+  }
+  return h+'</div>';
 }
 /* manager "offer the night off" — flag + banner (everyone) + toggle (manager) */
 function dsOfferBannerHTML(iso){ if(!dsRosterOv(iso).offerOff)return '';
