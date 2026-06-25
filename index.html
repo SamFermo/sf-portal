@@ -1106,7 +1106,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782359236';   // stamped by build-data.py at every deploy
+const BUILD='1782359823';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2199,9 +2199,11 @@ function compRenderCrop(){
     +'<button class="crop-btn" onclick="compResetCrop()">Reset</button>'
     +'<button class="crop-btn primary" onclick="compApplyCrop()">Use crop</button></div></div>';
   m.style.display='flex';
-  const img=$('cropImg');
-  const ready=function(){ requestAnimationFrame(function(){ compPlaceBox(); compBindCropDrag(); }); };
-  if(img.complete) ready(); else img.onload=ready;
+  // Placement is percentage-based, so it doesn't need the image's load event (a
+  // data-URL load can race/miss). Place + bind on the next frame, and re-place on
+  // load as a harmless backup once the image's dimensions settle.
+  requestAnimationFrame(function(){ compPlaceBox(); compBindCropDrag(); });
+  const img=$('cropImg'); if(img) img.onload=function(){ compPlaceBox(); };
 }
 function compPlaceBox(){
   const b=cropCtx&&cropCtx.box, box=$('cropBox'); if(!b||!box)return;
