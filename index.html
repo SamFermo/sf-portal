@@ -506,8 +506,9 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-alert-card{background:var(--moon); border-radius:16px; padding:20px; max-width:min(92vw,400px); display:flex; flex-direction:column; gap:10px; box-shadow:0 14px 44px rgba(0,0,0,.5);}
 .ds-alert-title{font-size:19px; font-weight:700; color:var(--wood);}
 .ds-alert-sub{font-size:12.5px; color:var(--card-soft); line-height:1.45;}
-.ds-alert-people{display:flex; flex-direction:column; gap:6px; background:rgba(214,158,46,.1); border-radius:9px; padding:10px 12px;}
-.ds-alert-person{font-size:13.5px; color:var(--ink);}
+.ds-alert-people{display:flex; flex-direction:column; gap:6px; background:rgba(214,158,46,.18); border:1px solid rgba(214,158,46,.45); border-radius:9px; padding:10px 12px;}
+.ds-alert-person{font-size:13.5px; color:var(--wood);}
+.ds-alert-person b{color:var(--wood);}
 .login-demo{margin-top:16px; text-align:center;}
 .login-demo-btn{background:none; border:none; color:var(--gold); font-size:12.5px; text-decoration:underline dotted; text-underline-offset:2px; cursor:pointer; font-family:inherit;}
 .binder-link{display:inline-block; margin:2px 0 10px; padding:9px 16px; background:var(--gold); color:#241f15; text-decoration:none; border-radius:8px; font-size:12px; letter-spacing:.04em; text-transform:uppercase; font-weight:700;}
@@ -1156,7 +1157,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782420013';   // stamped by build-data.py at every deploy
+const BUILD='1782421503';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3283,7 +3284,7 @@ function verbalsUnseen(){ const v=getVerbals(), s=attnGet('verbals');
   const ne=(v.entries||[]).filter(e=>(s.ids||[]).indexOf(e.id)<0);
   return {n:ne.length, std:JSON.stringify(v.standing||{})!==(s.std||'{}')};
 }
-function verbalsGlow(){ const u=verbalsUnseen(); return u.n>0||u.std; }
+function verbalsGlow(){ if(verbalsState===null)return false; const u=verbalsUnseen(); return u.n>0||u.std; }   // don't flag before the verbals doc has loaded (else the empty-vs-seen mismatch glows on every login)
 
 /* --- Tables: any unacked flag (raised by someone else) in the selected section --- */
 function tablesInScope(){
@@ -3311,10 +3312,14 @@ function ordFarmSig(){
   const avail=(typeof ordAvail!=='undefined'&&ordAvail)?attnHash(JSON.stringify(ordAvail)):0;
   return attnHash(ords+'##'+asks+'##'+avail);
 }
+function ordDataLoaded(){   // true once any farm feed has actually arrived
+  return !!((typeof ordAvail!=='undefined'&&ordAvail) || (typeof remyOrders!=='undefined'&&remyOrders.length) || (typeof ordFarmAsksAt!=='undefined'&&ordFarmAsksAt>0));
+}
 function ordGlow(){
   if(!isMgr())return false;
+  if(!ordDataLoaded())return false;   // don't baseline/compare against not-yet-loaded data (was glowing on every login)
   const sig=ordFarmSig(), seen=attnGet('orders');
-  if(seen==null){ attnSet('orders',sig); return false; }   // baseline silently
+  if(seen==null){ attnSet('orders',sig); return false; }   // baseline silently once data is in
   return seen!==sig;
 }
 function markOrdersSeen(){ attnSet('orders', ordFarmSig()); }
@@ -3423,9 +3428,11 @@ function renderToday(){
   const isToday=(iso===todayISO());
   $('todaySub').textContent=fmtLong(iso)+(isToday?' · today':'');
   const idx=dsBuildNameIndex();
+  const offerOn=dsRosterOv(iso).offerOff;
   let h='';
   if(mgr)h+=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
   h+=dsOfferBannerHTML(iso);
+  if(!mgr&&offerOn)h+=dsStaffActionsHTML(iso);   // night off on offer → actions right under the banner
   h+=`<div id="ds-wxrec"></div>`;
   h+=dsCoversHTML(iso);
   h+=`<div class="ds-weather"><div class="ds-wx-head">Service window · 4–10pm</div><div class="ds-wx-body" id="ds-wx-body">Loading forecast…</div></div>`;
@@ -3438,8 +3445,8 @@ function renderToday(){
     h+=dsContactHTML(iso);
     h+=dsCoverageHTML(iso);
     h+=`<div class="ds-verbals" id="ds-verbals-wrap">`+dsVerbalsBuilderHTML()+`</div>`;
-  } else {
-    h+=dsStaffActionsHTML(iso);
+  } else if(!offerOn){
+    h+=dsStaffActionsHTML(iso);   // no offer banner → actions at the bottom
   }
   $('todayBody').innerHTML=h;
   dsRenderWeather(iso);
@@ -4350,7 +4357,7 @@ function getRemyApp(){
   if(!_remyAcDone){try{if(firebase.appCheck&&firebase.appCheck.ReCaptchaEnterpriseProvider){firebase.appCheck(app).activate(new firebase.appCheck.ReCaptchaEnterpriseProvider('6LcpDDMtAAAAANRyfWfGCd6uPgDsMlIsbFRBiozb'),true);_remyAcDone=true;}}catch(e){}}
   return app;
 }
-let ordFarmAsks=null, ordFarmMarkdown=null, ordFarmAsksAt=0, ordFarmAsksErr=false;
+let ordFarmAsks=null, ordFarmMarkdown=null, ordFarmAsksAt=0, ordFarmAsksErr=false, ordFarmTouch=null;
 function ordFetchFarmAsks(){
   try{
     if(!window.firebase||!window.REMY_ORDERS_CONFIG)return Promise.resolve(null);
@@ -4359,6 +4366,7 @@ function ordFetchFarmAsks(){
       ordFarmAsksErr=false; ordFarmAsksAt=Date.now();
       const x=(d&&d.exists)?(d.data()||{}):{};
       ordFarmAsks=x.items||{}; ordFarmMarkdown=new Set(x.markdown||[]);
+      ordFarmTouch=(typeof x.updated_at==='number')?x.updated_at:(x.updated_at&&x.updated_at.toMillis?x.updated_at.toMillis():null);   // Kelly's last edit in Remy
       return ordFarmAsks;
     }).catch(function(){ ordFarmAsksErr=true; ordFarmAsks=ordFarmAsks||{}; ordFarmMarkdown=ordFarmMarkdown||new Set(); return ordFarmAsks; });
   }catch(e){ ordFarmAsksErr=true; return Promise.resolve(null); }
@@ -4609,10 +4617,18 @@ function ordRenderOrdersPane(ordAll, open){
   return h;
 }
 
+function ordTouchLabel(ms){ const d=new Date(ms), mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  const days=Math.floor((Date.now()-ms)/86400000); const ago=days<=0?'today':(days===1?'yesterday':days+'d ago');
+  return {label:mo+' '+d.getDate(), ago:ago, days:days}; }
 function ordRenderComposerPane(){
   let h='';
-  const days=ordAvail?ordStaleDays(ordAvail.kelly_last_touch):null;
-  if(ordAvail)h+='<p class="ord-stamp'+(days!==null&&days>10?' stale':'')+'">Kelly’s list · updated '+(ordAvail.kelly_last_touch||'?')+(days!==null?' · '+days+'d ago':'')+(days!==null&&days>10?' · getting stale, confirm by text':'')+'</p>';
+  if(ordFarmTouch){   // Kelly's live last-edit in Remy (preferred over the static feed stamp)
+    const t=ordTouchLabel(ordFarmTouch), stale=t.days>10;
+    h+='<p class="ord-stamp'+(stale?' stale':'')+'">Kelly’s list · updated '+esc(t.label)+' · '+t.ago+(stale?' · getting stale, confirm by text':'')+'</p>';
+  } else if(ordAvail){
+    const days=ordStaleDays(ordAvail.kelly_last_touch);
+    h+='<p class="ord-stamp'+(days!==null&&days>10?' stale':'')+'">Kelly’s list · updated '+(ordAvail.kelly_last_touch||'?')+(days!==null?' · '+days+'d ago':'')+(days!==null&&days>10?' · getting stale, confirm by text':'')+'</p>';
+  }
   else h+='<p class="ord-stamp stale">Availability feed unreachable — free-type your items below; the order still sends.</p>';
   const n=ordLines.filter(l=>l.display).length;
   if(ordEditingId){
