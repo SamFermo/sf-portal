@@ -15,6 +15,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check-compat.js"></script>
 <style>
 :root{
   /* Night sky */
@@ -1088,7 +1089,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782306703';   // stamped by build-data.py at every deploy
+const BUILD='1782350193';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3855,11 +3856,20 @@ const ORD_BUYER='san_fermo';
    surfaces it so Chris sees what the farm is asking when composing an order. Direct name
    match: availability-swan-house item names ARE the farm crop names (canonical), so no
    swan-name-map join is needed here. Public read; reuses the 'remy' compat app. */
+/* Find-or-create the 'remy' secondary app and activate App Check (reCAPTCHA Enterprise) on it
+   ONCE. remy-orders is in App Check MONITOR mode (registered 2026-06-24); wrapped so an
+   attestation/SDK failure never blocks the order composer. */
+let _remyAcDone=false;
+function getRemyApp(){
+  const app=(firebase.apps||[]).find(a=>a.name==='remy')||firebase.initializeApp(window.REMY_ORDERS_CONFIG,'remy');
+  if(!_remyAcDone){try{if(firebase.appCheck&&firebase.appCheck.ReCaptchaEnterpriseProvider){firebase.appCheck(app).activate(new firebase.appCheck.ReCaptchaEnterpriseProvider('6LcpDDMtAAAAANRyfWfGCd6uPgDsMlIsbFRBiozb'),true);_remyAcDone=true;}}catch(e){}}
+  return app;
+}
 let ordFarmAsks=null, ordFarmMarkdown=null, ordFarmAsksAt=0, ordFarmAsksErr=false;
 function ordFetchFarmAsks(){
   try{
     if(!window.firebase||!window.REMY_ORDERS_CONFIG)return Promise.resolve(null);
-    const app=(firebase.apps||[]).find(a=>a.name==='remy')||firebase.initializeApp(window.REMY_ORDERS_CONFIG,'remy');
+    const app=getRemyApp();
     return app.firestore().collection('farmAvailability').doc(ORD_BUYER).get().then(function(d){
       ordFarmAsksErr=false; ordFarmAsksAt=Date.now();
       const x=(d&&d.exists)?(d.data()||{}):{};
@@ -3884,7 +3894,7 @@ let remyDb=null, remyReady=false, remyOrders=[], remyUnsub=null;
 function remyInit(){
   if(remyReady||!window.firebase||!window.REMY_ORDERS_CONFIG)return;
   try{
-    const app=(firebase.apps||[]).find(a=>a.name==='remy')||firebase.initializeApp(window.REMY_ORDERS_CONFIG,'remy');
+    const app=getRemyApp();
     remyDb=app.firestore();
     app.auth().onAuthStateChanged(function(u){ if(u){ remyReady=true; remyStartSync(); } });
     app.auth().signInAnonymously().catch(function(){ remyReady=false; });
