@@ -1104,7 +1104,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782357623';   // stamped by build-data.py at every deploy
+const BUILD='1782358786';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2314,6 +2314,20 @@ function compRowUploadsHTML(p){
   });
   return chunks.length?'<div class="comp-uploads">'+chunks.join('')+'</div>':'';
 }
+/* A manager-verified card on file marks that cred complete: the pill goes green ✓
+   regardless of the (hand-maintained) compliance.json status, and the cert badge
+   stops flagging it. */
+function compVerified(cred,name){ const u=COMP_UP[compKey(cred,name)]; return !!(u&&u.status==='verified'); }
+function compPillHTML(cred,name,obj){
+  const verified=compVerified(cred,name);
+  const status=verified?'good':(obj?obj.status:'info');
+  const icon=verified?'✓':(obj?ic(obj.status):'—');
+  return '<span class="pill st-'+status+'"><span class="pl">'+cred+'</span>'+icon+'</span>';
+}
+function compCredTextHTML(cred,name,obj){
+  if(compVerified(cred,name)){ const u=COMP_UP[compKey(cred,name)]||{}; return '<b>'+cred+'</b> ✓ Card on file'+(u.reviewedBy?' — verified by '+esc(String(u.reviewedBy).split(' ')[0]):''); }
+  return obj?'<b>'+cred+'</b> '+esc(obj.text):'';
+}
 
 /* ===== PER-EMPLOYEE CERT EXPIRATION BADGES ================================
    The SIGNED-IN employee's own FWC/MAST status drives a badge on the Standards
@@ -2338,6 +2352,7 @@ function myCertStatus(){
   const today=new Date(); today.setHours(0,0,0,0);
   [['FWC',row.fwc],['MAST',row.mast]].forEach(function(pair){
     const cred=pair[0],c=pair[1];
+    if(compVerified(cred,row.name))return;                // a verified card on file = complete
     if(!c||c.status==='good'||c.status==='info')return;   // valid or N/A — no badge
     let dm=null;
     (C.comingDue||[]).forEach(function(d){ if(d.name===me.name&&d.cred===cred){ const x=certDateMatch(d.date); if(x)dm=x; } });
@@ -2407,9 +2422,9 @@ function renderCompliance(){const C=SF.compliance;
   [['Back of House','boh'],['Front of House','foh']].forEach(([lab,key])=>{
     h+=`<div class="section-label">${lab}</div><div class="comp-card">`;
     C.roster[key].forEach(p=>h+=`<div class="comp-row"><div><div class="comp-name">${esc(p.name)}</div><div class="comp-role">${esc(p.role)}</div></div>
-      <span class="pill st-${p.fwc?p.fwc.status:'info'}"><span class="pl">FWC</span>${p.fwc?ic(p.fwc.status):'—'}</span>
-      <span class="pill ${p.mast?'st-'+p.mast.status:'st-info'}"><span class="pl">MAST</span>${p.mast?ic(p.mast.status):'—'}</span>
-      <div class="comp-cred">${p.fwc?'<b>FWC</b> '+esc(p.fwc.text):''}${p.mast?' · <b>MAST</b> '+esc(p.mast.text):''}</div>
+      ${compPillHTML('FWC',p.name,p.fwc)}
+      ${compPillHTML('MAST',p.name,p.mast)}
+      <div class="comp-cred">${[compCredTextHTML('FWC',p.name,p.fwc),compCredTextHTML('MAST',p.name,p.mast)].filter(Boolean).join(' · ')}</div>
       ${compRowUploadsHTML(p)}</div>`);
     h+=`</div>`;});
   $('compBody').innerHTML=h;
@@ -2527,7 +2542,7 @@ function dsHr(h){const ap=h>=12?'p':'a';let hh=h%12;if(hh===0)hh=12;return hh+ap
    in the day board doc `board/{iso}.roster = {calledOff:[fullName], added:[{id,name,side,shift}]}`
    — that collection already has a Firestore rule, so no new rule needed. Today is
    live via boardState; other dates are fetched on demand into dsRosterCache. ===== */
-let dsRosterCache={}, dsPickupOpen=false;
+let dsRosterCache={}, dsPickupOpen=false, dsRosterUnsub=null, dsRosterUnsubIso=null;
 function dsLocalRoster(iso){try{return JSON.parse(localStorage.getItem('sf-roster-'+iso))||{calledOff:[],added:[]};}catch(e){return {calledOff:[],added:[]};}}
 function dsLocalRosterSet(iso,r){try{localStorage.setItem('sf-roster-'+iso,JSON.stringify(r));}catch(e){}}
 function dsRosterOv(iso){
@@ -2538,9 +2553,18 @@ function dsRosterOv(iso){
 }
 function dsCalledOffSet(iso){ const s=new Set(); dsRosterOv(iso).calledOff.forEach(function(n){s.add(String(n).toLowerCase());}); return s; }
 function dsEnsureRoster(iso){
-  if(iso===todayISO()||dsRosterCache[iso])return;   // today is live; others fetched once
-  if(fbReady&&fbDb){ fbDb.collection('board').doc(iso).get().then(function(s){ const d=s.exists?(s.data()||{}):{}; dsRosterCache[iso]=d.roster||{calledOff:[],added:[]}; if(dsDate()===iso)renderToday(); }).catch(function(){ dsRosterCache[iso]={calledOff:[],added:[]}; }); }
-  else dsRosterCache[iso]=dsLocalRoster(iso);
+  // Today is already live via boardState — drop any date listener and bail.
+  if(iso===todayISO()){ if(dsRosterUnsub){dsRosterUnsub();dsRosterUnsub=null;dsRosterUnsubIso=null;} return; }
+  if(dsRosterUnsubIso===iso)return;                 // already live-listening this date
+  if(dsRosterUnsub){dsRosterUnsub();dsRosterUnsub=null;}
+  if(fbReady&&fbDb){
+    dsRosterUnsubIso=iso;
+    dsRosterUnsub=fbDb.collection('board').doc(iso).onSnapshot(function(snap){
+      const d=snap.exists?(snap.data()||{}):{};
+      dsRosterCache[iso]=d.roster||{calledOff:[],added:[]};
+      if(dsDate()===iso)renderToday();              // live: reflect another manager's change
+    },function(){ if(!dsRosterCache[iso])dsRosterCache[iso]={calledOff:[],added:[]}; });
+  } else { dsRosterCache[iso]=dsLocalRoster(iso); }
 }
 function dsSetRoster(iso,roster){
   if(iso===todayISO()){ const b=getBoard(); b.roster=roster; persistBoard(b); }
