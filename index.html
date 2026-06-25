@@ -483,6 +483,31 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ann-home{grid-column:1/-1; display:flex; align-items:center; gap:10px; background:linear-gradient(90deg, rgba(192,57,43,.16), rgba(40,70,150,.16)); border:1px solid rgba(214,158,46,.4); border-radius:14px; padding:12px 15px; cursor:pointer; font-family:inherit; text-align:left;}
 .ann-home-ic{font-size:20px;}
 .ann-home-txt{font-size:13.5px; font-weight:700; color:var(--wood);}
+/* staff Day at a Glance: weather rec, offer banner, covers, volunteer + actions */
+.ds-wxrec-banner{background:rgba(214,149,46,.16); border:1px solid rgba(214,149,46,.5); border-radius:11px; padding:11px 14px; font-size:13px; font-weight:600; color:#8a5e15; margin:0 0 10px; line-height:1.45;}
+.ds-offer-banner{background:linear-gradient(90deg, rgba(70,110,190,.2), rgba(214,158,46,.2)); border:1px solid rgba(214,158,46,.55); border-radius:12px; padding:13px 15px; font-size:14px; font-weight:700; color:var(--wood); margin:0 0 10px; line-height:1.45; animation:offerPulse 2.4s ease-in-out infinite;}
+@keyframes offerPulse{0%,100%{box-shadow:0 0 0 0 rgba(214,158,46,.0);}50%{box-shadow:0 0 14px 0 rgba(214,158,46,.35);}}
+.ds-covers{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:11px; padding:10px 13px; font-size:13px; color:var(--ink); margin:0 0 10px;}
+.ds-covers-at{font-size:10.5px; color:var(--ink-mute);}
+.ds-offer-toggle{margin:10px 0;}
+.ds-vol-list{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:12px; padding:12px 14px; margin-top:10px;}
+.ds-vol-row{display:flex; align-items:center; gap:9px; padding:5px 0; font-size:13px;}
+.ds-vol-n{width:20px; height:20px; border-radius:50%; background:var(--gold); color:#241f15; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:0 0 auto;}
+.ds-vol-name{flex:1; font-weight:600; color:var(--ink);}
+.ds-vol-type{font-size:11px; color:var(--gold-deep); font-weight:700;}
+.ds-vol-at{font-size:10.5px; color:var(--ink-mute);}
+.ds-staff-actions{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:12px; padding:14px; margin-top:12px; display:flex; flex-direction:column; gap:9px;}
+.ds-sa-btn{padding:12px; border-radius:10px; border:1px solid var(--moon-edge); background:rgba(205,216,244,.07); color:var(--ink); font-size:14px; font-weight:700; cursor:pointer; font-family:inherit;}
+.ds-sa-btn:hover{border-color:var(--gold);}
+.ds-sa-btn.warn{border-color:rgba(168,84,84,.5); color:#c98080;}
+.ds-sa-status{font-size:13px; color:var(--ink); background:rgba(109,182,87,.1); border-radius:9px; padding:10px 12px; line-height:1.5;}
+.ds-sa-undo{margin-left:6px; background:none; border:none; color:var(--gold); text-decoration:underline dotted; cursor:pointer; font-family:inherit; font-size:12.5px;}
+.ds-person.ds-me{outline:1.5px solid var(--gold); outline-offset:-1px;}
+.ds-alert-card{background:var(--moon); border-radius:16px; padding:20px; max-width:min(92vw,400px); display:flex; flex-direction:column; gap:10px; box-shadow:0 14px 44px rgba(0,0,0,.5);}
+.ds-alert-title{font-size:19px; font-weight:700; color:var(--wood);}
+.ds-alert-sub{font-size:12.5px; color:var(--card-soft); line-height:1.45;}
+.ds-alert-people{display:flex; flex-direction:column; gap:6px; background:rgba(214,158,46,.1); border-radius:9px; padding:10px 12px;}
+.ds-alert-person{font-size:13.5px; color:var(--ink);}
 .binder-link{display:inline-block; margin:2px 0 10px; padding:9px 16px; background:var(--gold); color:#241f15; text-decoration:none; border-radius:8px; font-size:12px; letter-spacing:.04em; text-transform:uppercase; font-weight:700;}
 .due-row{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; padding:9px 0; border-bottom:.5px dotted var(--moon-edge);}
 .due-when{font-size:11px; font-style:italic; color:var(--card-mute);}
@@ -1129,7 +1154,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782414727';   // stamped by build-data.py at every deploy
+const BUILD='1782418955';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1176,7 +1201,7 @@ function makeStars(){
 }
 
 const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','Tables'],['schedule','Schedule'],['crew','Crew Board'],['standards','Standards'],['directory','Directory']];
-function navTabs(){let t=isMgr()?[['today','Day Sheet']].concat(TABS,[['frontdesk','Front Desk'],['orders','Farm Order']]):TABS;return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
+function navTabs(){let t=isMgr()?[['today','Day Sheet']].concat(TABS,[['frontdesk','Front Desk'],['orders','Farm Order']]):[['today','Day at a Glance']].concat(TABS);return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
   if(typeof updatePendingBadge==='function')updatePendingBadge();}
@@ -1255,7 +1280,7 @@ function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
   const mgr=isMgr();
   const annChip = annActive()?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${esc(ANNOUNCE.title)} — ${annMyRsvp()?(annMyRsvp().rsvp==='yes'?'you\'re in ✓ (tap to change)':'tap to RSVP'):'tap to RSVP'}</span></button>`:'';
-  let html = annChip + (mgr?glanceCardHTML():'') + freshCardHTML() + verbalsCardHTML();
+  let html = annChip + glanceCardHTML() + freshCardHTML() + verbalsCardHTML();
   const std=[['board','⌗','Tables','Tonight\'s table notes & statuses'],
     ['schedule','◷','Schedule','This week + the month'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
@@ -1265,7 +1290,8 @@ function renderHome(){
   html += std.map(stdCardHTML).join('');
   if(mgr) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom
   $('homeGrid').innerHTML=html;
-  if(mgr){ glanceCardWeather(); ordHomePrime(); }
+  glanceCardWeather();
+  if(mgr){ ordHomePrime(); }
   renderAccountBar();
   updateAttn();
 }
@@ -2749,7 +2775,8 @@ function dsRosterOv(iso){
   let r;
   if(iso===todayISO()){ const b=getBoard(); r=b&&b.roster; }
   else r=dsRosterCache[iso];
-  return {calledOff:(r&&r.calledOff)||[], added:(r&&r.added)||[]};
+  r=r||{};
+  return {calledOff:r.calledOff||[], added:r.added||[], volunteers:r.volunteers||[], offerOff:!!r.offerOff};
 }
 function dsCalledOffSet(iso){ const s=new Set(); dsRosterOv(iso).calledOff.forEach(function(n){s.add(String(n).toLowerCase());}); return s; }
 function dsEnsureRoster(iso){
@@ -2761,9 +2788,9 @@ function dsEnsureRoster(iso){
     dsRosterUnsubIso=iso;
     dsRosterUnsub=fbDb.collection('board').doc(iso).onSnapshot(function(snap){
       const d=snap.exists?(snap.data()||{}):{};
-      dsRosterCache[iso]=d.roster||{calledOff:[],added:[]};
+      dsRosterCache[iso]=d.roster||{};
       if(dsDate()===iso)renderToday();              // live: reflect another manager's change
-    },function(){ if(!dsRosterCache[iso])dsRosterCache[iso]={calledOff:[],added:[]}; });
+    },function(){ if(!dsRosterCache[iso])dsRosterCache[iso]={}; });
   } else { dsRosterCache[iso]=dsLocalRoster(iso); }
 }
 function dsSetRoster(iso,roster){
@@ -2773,16 +2800,39 @@ function dsSetRoster(iso,roster){
     else dsLocalRosterSet(iso,roster); }
   renderToday();
 }
-function dsCallOff(name){ const iso=dsDate(),ov=dsRosterOv(iso),co=ov.calledOff.slice();
+/* Merge a patch into the day's roster doc, preserving the other fields
+   (calledOff / added / volunteers / offerOff all live in one doc). */
+function dsRosterPatch(iso,patch){ const c=dsRosterOv(iso);
+  dsSetRoster(iso, Object.assign({calledOff:c.calledOff,added:c.added,volunteers:c.volunteers,offerOff:c.offerOff}, patch)); }
+function dsCallOff(name){ const iso=dsDate(),co=dsRosterOv(iso).calledOff.slice();
   if(co.map(function(x){return x.toLowerCase();}).indexOf(String(name).toLowerCase())<0)co.push(name);
-  dsSetRoster(iso,{calledOff:co,added:ov.added}); }
-function dsUndoCallOff(name){ const iso=dsDate(),ov=dsRosterOv(iso);
-  dsSetRoster(iso,{calledOff:ov.calledOff.filter(function(x){return x.toLowerCase()!==String(name).toLowerCase();}),added:ov.added}); }
-function dsAddPickup(name,side,shift){ const iso=dsDate(),ov=dsRosterOv(iso),added=ov.added.slice();
+  dsRosterPatch(iso,{calledOff:co}); }
+function dsUndoCallOff(name){ const iso=dsDate();
+  dsRosterPatch(iso,{calledOff:dsRosterOv(iso).calledOff.filter(function(x){return x.toLowerCase()!==String(name).toLowerCase();})}); }
+function dsAddPickup(name,side,shift){ const iso=dsDate(),added=dsRosterOv(iso).added.slice();
   added.push({id:'p'+Date.now()+Math.random().toString(36).slice(2,5),name:name,side:(side==='boh'?'boh':'foh'),shift:(shift||'picked up')});
-  dsSetRoster(iso,{calledOff:ov.calledOff,added:added}); }
-function dsRemovePickup(id){ const iso=dsDate(),ov=dsRosterOv(iso);
-  dsSetRoster(iso,{calledOff:ov.calledOff,added:ov.added.filter(function(a){return a.id!==id;})}); }
+  dsRosterPatch(iso,{added:added}); }
+function dsRemovePickup(id){ const iso=dsDate();
+  dsRosterPatch(iso,{added:dsRosterOv(iso).added.filter(function(a){return a.id!==id;})}); }
+/* --- manager "offer the night off" flag + staff volunteer (first-come) --- */
+function dsToggleOffer(){ const iso=dsDate(); dsRosterPatch(iso,{offerOff:!dsRosterOv(iso).offerOff}); }
+function dsVolunteersSorted(iso){ return dsRosterOv(iso).volunteers.slice().sort(function(a,b){return (a.at||0)-(b.at||0);}); }
+function dsMyVolunteer(iso){ return me?dsRosterOv(iso).volunteers.find(function(v){return v.name===me.name;})||null:null; }
+function dsAmScheduled(iso){ return !!(me&&dsWorkingList(iso).some(function(x){return x.name===me.name;})); }
+function dsVolunteer(){ const iso=dsDate(); if(!me)return; const ov=dsRosterOv(iso);
+  if(ov.volunteers.some(function(v){return v.name===me.name;}))return;
+  const type=dsAmScheduled(iso)?'off':'oncall';
+  dsRosterPatch(iso,{volunteers:ov.volunteers.concat([{name:me.name,type:type,at:Date.now()}])}); }
+function dsUnvolunteer(){ const iso=dsDate(); if(!me)return;
+  dsRosterPatch(iso,{volunteers:dsRosterOv(iso).volunteers.filter(function(v){return v.name!==me.name;})}); }
+/* --- the day's lead(s) for a sick/late alert: Sam + the FOH MD or BOH Kitchen Lead --- */
+function dsLeadNames(iso){
+  const idx=dsBuildNameIndex(), myArea=((PROFILES[me&&me.name]||{}).area||'foh'), out=[], seen={};
+  const push=function(full){ if(full&&!seen[full.toLowerCase()]){seen[full.toLowerCase()]=1;out.push(full);} };
+  if(myArea==='boh'){ const day=dsBohRowsFiltered(iso,idx); (day?day.rows:[]).forEach(function(r){const res=dsResolve(r.name,idx); if(dsBohBucket(r.shift,res.role,res.full)==='Kitchen Lead')push(res.full);}); }
+  else { const day=dsDayRows('foh',iso); (day?day.rows:[]).forEach(function(r){const res=dsResolve(r.name,idx); if(dsFohBucket(r.shift)==='MD')push(res.full);}); }
+  return out;
+}
 function dsPickupToggle(on){ dsPickupOpen=!!on; renderToday(); }
 function dsPickupSubmit(){ const n=$('ds-pick-name'); if(!n||!n.value)return; const s=$('ds-pick-side'),sh=$('ds-pick-shift');
   const shift=((sh&&sh.value)||'').trim(); dsPickupOpen=false; dsAddPickup(n.value,(s&&s.value)||'foh',shift); }
@@ -2927,11 +2977,14 @@ function dsSideHTML(title,side,iso,idx){
   const personRow=function(x){
     const cls='ds-person'+(x.off?' ds-off':'')+(x.pickup?' ds-pickup':'');
     const tag=x.pickup?'<span class="ds-pickup-tag">picked up</span>':(x.off?'<span class="ds-off-tag">called off</span>':'');
-    let ctrl;
-    if(x.off)ctrl=`<button class="ds-row-btn undo" onclick="dsUndoCallOff('${jq(x.res.full)}')">Undo</button>`;
-    else if(x.pickup)ctrl=`<button class="ds-row-btn x" onclick="dsRemovePickup('${x.pickup}')" title="Remove pickup">✕</button>`;
-    else ctrl=`<button class="ds-row-btn" onclick="dsCallOff('${jq(x.res.full)}')">Call off</button>`;
-    return `<div class="${cls}"><span class="ds-pname">${esc(x.res.full)}${tag}</span><span class="ds-pshift">${esc(x.shift)}</span>${ctrl}</div>`;
+    let ctrl='';
+    if(isMgr()){
+      if(x.off)ctrl=`<button class="ds-row-btn undo" onclick="dsUndoCallOff('${jq(x.res.full)}')">Undo</button>`;
+      else if(x.pickup)ctrl=`<button class="ds-row-btn x" onclick="dsRemovePickup('${x.pickup}')" title="Remove pickup">✕</button>`;
+      else ctrl=`<button class="ds-row-btn" onclick="dsCallOff('${jq(x.res.full)}')">Call off</button>`;
+    }
+    const meRow=(me&&x.res.full===me.name)?' ds-me':'';
+    return `<div class="${cls}${meRow}"><span class="ds-pname">${esc(x.res.full)}${tag}</span><span class="ds-pshift">${esc(x.shift)}</span>${ctrl}</div>`;
   };
   let any=false;
   order.forEach(b=>{const arr=groups[b]; if(!arr||!arr.length)return; any=true;
@@ -3265,21 +3318,113 @@ function updateAttn(){
   }catch(e){}
 }
 
+/* --- weather "we might cut someone" recommendation: wind/gust >20, high rain, or
+   smoke (Open-Meteo air quality, US AQI). Rendered async into #ds-wxrec. --- */
+let dsAqiCache={};
+function dsFetchAQI(iso){
+  if(dsAqiCache[iso]!=null)return Promise.resolve(dsAqiCache[iso]);
+  const url='https://air-quality-api.open-meteo.com/v1/air-quality?latitude=47.668&longitude=-122.384&hourly=us_aqi&timezone=America%2FLos_Angeles&start_date='+iso+'&end_date='+iso;
+  return fetch(url).then(function(r){return r.json();}).then(function(d){
+    const a=(d.hourly&&d.hourly.us_aqi)||[], v=a.filter(function(x){return x!=null;});
+    const mx=v.length?Math.max.apply(null,v):null; dsAqiCache[iso]=mx; return mx;
+  }).catch(function(){return null;});
+}
+function dsRenderWxRec(iso){
+  Promise.all([dsFetchWeather(iso).catch(function(){return null;}), dsFetchAQI(iso)]).then(function(res){
+    if(dsDate()!==iso)return; const el=$('ds-wxrec'); if(!el)return;
+    const w=res[0], aqi=res[1], sm=w&&w.summary, reasons=[];
+    if(sm){ if((sm.maxGust||0)>=20||(sm.maxWind||0)>=20)reasons.push('wind '+Math.round(sm.maxGust||sm.maxWind)+' mph');
+      if((sm.maxPop||0)>=60||(sm.totP||0)>=0.1)reasons.push('rain likely'); }
+    if(aqi!=null&&aqi>=101)reasons.push('smoke / poor air (AQI '+aqi+')');
+    el.innerHTML=reasons.length?'<div class="ds-wxrec-banner">⚠ Tonight could run light — '+esc(reasons.join(' · '))+'. A call-off is possible; if you\'d like the night off, you can volunteer below.</div>':'';
+  });
+}
+/* covers feed (written to board/{iso}.covers by the midday sweep; shows when present) */
+function dsCoversHTML(iso){
+  if(iso!==todayISO())return ''; const c=(getBoard()||{}).covers; if(!c||!c.booked)return '';
+  const t=c.turns||{};
+  return '<div class="ds-covers">📋 Tonight: <b>'+c.booked+'</b> booked'+(c.capacity?' / '+c.capacity+' cap':'')+
+    (t.t1!=null?' · T1 '+t.t1+' · T2 '+t.t2+' · T3 '+t.t3:'')+(c.at?' <span class="ds-covers-at">as of '+dsWxStamp(c.at)+'</span>':'')+'</div>';
+}
+/* manager "offer the night off" — flag + banner (everyone) + toggle (manager) */
+function dsOfferBannerHTML(iso){ if(!dsRosterOv(iso).offerOff)return '';
+  return '<div class="ds-offer-banner">🌙 The night off is on offer tonight. Want it? Volunteer below — first come, first served.</div>'; }
+function dsOfferToggleHTML(iso){ const on=dsRosterOv(iso).offerOff;
+  return '<div class="ds-offer-toggle"><button class="dir-msg-btn'+(on?'':' off')+'" onclick="dsToggleOffer()">'+(on?'✓ Offering the night off — tap to stop':'Offer the night off to staff')+'</button></div>'; }
+function dsVolunteerListHTML(iso){ const vs=dsVolunteersSorted(iso); if(!vs.length)return '';
+  let h='<div class="ds-vol-list"><div class="ds-side-head">Volunteered to flex · first-come</div>';
+  vs.forEach(function(v,i){ h+='<div class="ds-vol-row"><span class="ds-vol-n">'+(i+1)+'</span><span class="ds-vol-name">'+esc(v.name)+'</span><span class="ds-vol-type">'+(v.type==='oncall'?'on-call':'night off')+'</span><span class="ds-vol-at">'+dsWxStamp(v.at)+'</span></div>'; });
+  return h+'</div>';
+}
+function dsStaffActionsHTML(iso){
+  const mine=dsMyVolunteer(iso), scheduled=dsAmScheduled(iso);
+  let h='<div class="ds-staff-actions"><div class="ds-side-head">Tonight</div>';
+  if(mine){ const pos=dsVolunteersSorted(iso).findIndex(function(v){return v.name===(me&&me.name);})+1;
+    h+='<div class="ds-sa-status">You\'re on the flex list ('+(mine.type==='oncall'?'on-call':'night off')+') — #'+pos+' in line. <button class="ds-sa-undo" onclick="dsUnvolunteer()">Take me off</button></div>';
+  } else {
+    h+='<button class="ds-sa-btn" onclick="dsVolunteer()">'+(scheduled?'I\'ll take the night off if you don\'t need me':'Put me on-call (available if you need me)')+'</button>';
+  }
+  h+='<button class="ds-sa-btn warn" onclick="dsAlertLead(\'sick\')">Call out sick</button>';
+  if(scheduled)h+='<button class="ds-sa-btn" onclick="dsAlertLead(\'late\')">I\'m running late</button>';
+  return h+'</div>';
+}
+/* sick / running-late → text the day's lead(s). Reuses the iOS copy-numbers flow. */
+let dsAlertPhones=[];
+function dsAlertLead(reason){
+  if(!me)return; const iso=todayISO();
+  const names=['Sam West'].concat(dsLeadNames(iso).filter(function(n){return n.toLowerCase()!=='sam west';}));
+  const ppl=names.map(function(n){return PROFILES[n];}).filter(Boolean);
+  dsAlertPhones=ppl.map(function(p){return telDigits(p.phone);}).filter(Boolean);
+  let m=$('dsAlertModal'); if(!m){ m=document.createElement('div'); m.id='dsAlertModal'; m.className='comp-modal'; m.onclick=function(e){if(e.target===m)dsAlertClose();}; document.body.appendChild(m); }
+  const title=reason==='sick'?'Call out sick':'Running late';
+  let h='<div class="ds-alert-card"><div class="ds-alert-title">'+title+'</div>'+
+    '<div class="ds-alert-sub">Alert your management? This copies their number'+(ppl.length>1?'s':'')+' and opens Messages — paste, then send your note.</div>'+
+    '<div class="ds-alert-people">'+ppl.map(function(p){return '<div class="ds-alert-person"><b>'+esc(p.name)+'</b>'+(p.phone?' · '+esc(p.phone):' · no number on file')+'</div>';}).join('')+'</div>'+
+    '<div class="ann-actions"><button class="ann-btn yes" onclick="dsAlertSend()">Yes, alert them</button><button class="ann-btn no" onclick="dsAlertClose()">Not yet</button></div>'+
+    '<div class="dir-msg-status" id="ds-alert-status"></div>'+
+    '<button class="dir-msg-open" id="ds-alert-openmsg" style="display:none" onclick="dirOpenMessages()">Open Messages</button>'+
+    '<div class="dir-msg-fallback" id="ds-alert-fb" style="display:none"><label>Numbers — select &amp; copy if needed</label><textarea readonly onclick="this.select()"></textarea></div></div>';
+  m.innerHTML=h; m.style.display='flex';
+}
+function dsAlertSend(){
+  const st=$('ds-alert-status');
+  if(!dsAlertPhones.length){ if(st)st.textContent='No numbers on file — let a manager know in person.'; return; }
+  const joined=dsAlertPhones.join(', '); let ok=false;
+  try{ navigator.clipboard.writeText(joined); ok=true; }
+  catch(e){ try{var ta=document.createElement('textarea');ta.value=joined;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');document.body.removeChild(ta);}catch(e2){} }
+  const fb=$('ds-alert-fb'); if(fb){fb.style.display='block';var t=fb.querySelector('textarea');if(t)t.value=joined;}
+  const ob=$('ds-alert-openmsg'); if(ob)ob.style.display='inline-block';
+  if(st)st.textContent=(ok?'Number'+(dsAlertPhones.length>1?'s':'')+' copied. ':'Select the numbers below & copy. ')+'Tap Open Messages, then paste and send your note.';
+}
+function dsAlertClose(){ const m=$('dsAlertModal'); if(m)m.style.display='none'; }
+
 function renderToday(){
-  if(!isMgr()){$('todayBody').innerHTML='<p class="ds-empty">Manager view only.</p>';return;}
-  const iso=dsDate(), isToday=(iso===todayISO());
+  const mgr=isMgr();
+  const iso=mgr?dsDate():todayISO();   // staff always see today
+  const isToday=(iso===todayISO());
   $('todaySub').textContent=fmtLong(iso)+(isToday?' · today':'');
   const idx=dsBuildNameIndex();
-  let h=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
+  let h='';
+  if(mgr)h+=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
+  h+=dsOfferBannerHTML(iso);
+  h+=`<div id="ds-wxrec"></div>`;
+  h+=dsCoversHTML(iso);
   h+=`<div class="ds-weather"><div class="ds-wx-head">Service window · 4–10pm</div><div class="ds-wx-body" id="ds-wx-body">Loading forecast…</div></div>`;
   h+=dsSideHTML('Front of House','foh',iso,idx);
   h+=dsSideHTML('Back of House','boh',iso,idx);
-  h+=dsShiftChangeHTML(iso);
-  h+=dsContactHTML(iso);
-  h+=dsCoverageHTML(iso);
-  h+=`<div class="ds-verbals" id="ds-verbals-wrap">`+dsVerbalsBuilderHTML()+`</div>`;
+  if(mgr){
+    h+=dsOfferToggleHTML(iso);
+    h+=dsVolunteerListHTML(iso);
+    h+=dsShiftChangeHTML(iso);
+    h+=dsContactHTML(iso);
+    h+=dsCoverageHTML(iso);
+    h+=`<div class="ds-verbals" id="ds-verbals-wrap">`+dsVerbalsBuilderHTML()+`</div>`;
+  } else {
+    h+=dsStaffActionsHTML(iso);
+  }
   $('todayBody').innerHTML=h;
   dsRenderWeather(iso);
+  dsRenderWxRec(iso);
   dsEnsureRoster(iso);
 }
 
@@ -3512,7 +3657,7 @@ function startBoardSync(){
     if(boardUnsub)boardUnsub();
     boardUnsub=fbDb.collection('board').doc(boardDocId()).onSnapshot(function(snap){
       const d=snap.exists?snap.data():null;
-      boardState=d?{eightySixed:d.eightySixed||[],specials:d.specials||[],tables:d.tables||[],combos:d.combos||[],roster:d.roster||{calledOff:[],added:[]}}:{eightySixed:[],specials:[],tables:[],combos:[],roster:{calledOff:[],added:[]}};
+      boardState=d?{eightySixed:d.eightySixed||[],specials:d.specials||[],tables:d.tables||[],combos:d.combos||[],roster:d.roster||{calledOff:[],added:[]},covers:d.covers||null}:{eightySixed:[],specials:[],tables:[],combos:[],roster:{calledOff:[],added:[]},covers:null};
       renderBoard();
     },function(){ boardState=lsGetBoard(); renderBoard(); });
   }else{ boardState=lsGetBoard(); }
