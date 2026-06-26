@@ -585,6 +585,10 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-row-btn:hover{border-color:var(--gold); color:var(--ink);}
 .ds-row-btn.undo{border-color:#6db657; color:#6db657;}
 .ds-row-btn.x{border-color:rgba(168,84,84,.5); color:#c98080; padding:4px 8px;}
+.ds-editbar{margin:12px 0 4px;}
+.ds-edit-btn{background:transparent; color:var(--ink-soft); border:1px solid var(--ink-mute); border-radius:9px; padding:8px 16px; font-size:13px; font-weight:800; font-family:inherit; cursor:pointer;}
+.ds-edit-btn.on{background:var(--gold); color:#241f15; border-color:var(--gold);}
+.ds-edit-hint{font-size:11.5px; color:var(--ink-mute); line-height:1.45; margin-top:8px;}
 .ds-shiftchg{margin-top:10px;}
 .ds-sc-hint{font-size:11.5px; color:var(--ink-mute); line-height:1.45; margin-bottom:10px;}
 .ds-sc-form{display:flex; flex-direction:column; gap:8px;}
@@ -1158,7 +1162,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782479553';   // stamped by build-data.py at every deploy
+const BUILD='1782493532';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2780,7 +2784,7 @@ const DS_WX_TTL=90*60*1000;   // refetch weather if the cached pull is older tha
 function dsWxStamp(ms){ if(!ms)return ''; const d=new Date(ms); let h=d.getHours(); const m=d.getMinutes(); const ap=h>=12?'pm':'am'; h=h%12||12; return h+':'+(m<10?'0':'')+m+ap; }
 function dsRefreshWeather(){ const iso=dsDate(); delete dsWxCache[iso]; dsRenderWeather(iso); }
 function dsDate(){return dsDateSel||todayISO();}
-function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=new Set();dsCovSel=new Set();dsCovSide=null;dsPickupOpen=false;renderToday();}
+function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=new Set();dsCovSel=new Set();dsCovSide=null;dsPickupOpen=false;dsEditStaff=false;renderToday();}
 function dsHr(h){const ap=h>=12?'p':'a';let hh=h%12;if(hh===0)hh=12;return hh+ap;}
 
 /* ===== DAY ROSTER OVERRIDES — per-day call-offs + pickups, layered on the
@@ -2788,7 +2792,7 @@ function dsHr(h){const ap=h>=12?'p':'a';let hh=h%12;if(hh===0)hh=12;return hh+ap
    in the day board doc `board/{iso}.roster = {calledOff:[fullName], added:[{id,name,side,shift}]}`
    — that collection already has a Firestore rule, so no new rule needed. Today is
    live via boardState; other dates are fetched on demand into dsRosterCache. ===== */
-let dsRosterCache={}, dsCoversCache={}, dsPickupOpen=false, dsRosterUnsub=null, dsRosterUnsubIso=null;
+let dsRosterCache={}, dsCoversCache={}, dsPickupOpen=false, dsEditStaff=false, dsRosterUnsub=null, dsRosterUnsubIso=null;
 function dsLocalRoster(iso){try{return JSON.parse(localStorage.getItem('sf-roster-'+iso))||{calledOff:[],added:[]};}catch(e){return {calledOff:[],added:[]};}}
 function dsLocalRosterSet(iso,r){try{localStorage.setItem('sf-roster-'+iso,JSON.stringify(r));}catch(e){}}
 function dsRosterOv(iso){
@@ -2857,6 +2861,14 @@ function dsLeadNames(iso){
 function dsPickupToggle(on){ dsPickupOpen=!!on; renderToday(); }
 function dsPickupSubmit(){ const n=$('ds-pick-name'); if(!n||!n.value)return; const s=$('ds-pick-side'),sh=$('ds-pick-shift');
   const shift=((sh&&sh.value)||'').trim(); dsPickupOpen=false; dsAddPickup(n.value,(s&&s.value)||'foh',shift); }
+/* "Edit day's staff" mode — gates the per-row call-off / undo / pickup controls so
+   managers enter an explicit edit mode rather than seeing always-on row buttons that
+   read like the night-off offer. Distinct, clearly-labeled control above the roster. */
+function dsEditStaffToggle(){ dsEditStaff=!dsEditStaff; if(!dsEditStaff)dsPickupOpen=false; renderToday(); }
+function dsEditStaffBarHTML(){ const on=dsEditStaff;
+  let h='<div class="ds-editbar"><button class="ds-edit-btn'+(on?' on':'')+'" onclick="dsEditStaffToggle()">'+(on?'✓ Done editing staff':'✎ Edit day’s staff')+'</button>';
+  if(on)h+='<div class="ds-edit-hint">Tap <b>Call off</b> next to anyone to mark them off, <b>Undo</b> to put them back, or add a pickup below. This only changes the roster for this day — it is <b>not</b> the night-off offer.</div>';
+  return h+'</div>'; }
 function dsShiftChangeHTML(iso){
   let h='<div class="ds-contact ds-shiftchg"><div class="ds-side-head">Shift change</div>';
   h+='<div class="ds-sc-hint">Tap <b>Call off</b> on anyone above to mark them off — they drop from the counts and contact list and free up Reaching for Coverage. Add a pickup if someone takes a shift.</div>';
@@ -2999,7 +3011,7 @@ function dsSideHTML(title,side,iso,idx){
     const cls='ds-person'+(x.off?' ds-off':'')+(x.pickup?' ds-pickup':'');
     const tag=x.pickup?'<span class="ds-pickup-tag">picked up</span>':(x.off?'<span class="ds-off-tag">called off</span>':'');
     let ctrl='';
-    if(isMgr()){
+    if(isMgr()&&dsEditStaff){
       if(x.off)ctrl=`<button class="ds-row-btn undo" onclick="dsUndoCallOff('${jq(x.res.full)}')">Undo</button>`;
       else if(x.pickup)ctrl=`<button class="ds-row-btn x" onclick="dsRemovePickup('${x.pickup}')" title="Remove pickup">✕</button>`;
       else ctrl=`<button class="ds-row-btn" onclick="dsCallOff('${jq(x.res.full)}')">Call off</button>`;
@@ -3461,12 +3473,13 @@ function renderToday(){
   h+=`<div id="ds-wxrec"></div>`;
   h+=dsCoversHTML(iso);
   h+=`<div class="ds-weather"><div class="ds-wx-head">Service window · 4–10pm</div><div class="ds-wx-body" id="ds-wx-body">Loading forecast…</div></div>`;
+  if(mgr)h+=dsEditStaffBarHTML();
   h+=dsSideHTML('Front of House','foh',iso,idx);
   h+=dsSideHTML('Back of House','boh',iso,idx);
   if(mgr){
+    if(dsEditStaff)h+=dsShiftChangeHTML(iso);
     h+=dsOfferToggleHTML(iso);
     h+=dsVolunteerListHTML(iso);
-    h+=dsShiftChangeHTML(iso);
     h+=dsContactHTML(iso);
     h+=dsCoverageHTML(iso);
     h+=`<div class="ds-verbals" id="ds-verbals-wrap">`+dsVerbalsBuilderHTML()+`</div>`;
