@@ -1162,7 +1162,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782493532';   // stamped by build-data.py at every deploy
+const BUILD='1782494447';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3375,7 +3375,8 @@ function dsRenderWxRec(iso){
     if(aqi!=null&&aqi>=101)reasons.push('smoke / poor air (AQI '+aqi+')');
     const isT=(iso===todayISO()); const lead=isT?'Tonight could run light':'This day could run light';
     const tail=isT?' A call-off is possible; if you\'d like the night off, you can volunteer below.':'';
-    el.innerHTML=reasons.length?'<div class="ds-wxrec-banner">⚠ '+lead+' — '+esc(reasons.join(' · '))+'.'+tail+'</div>':'';
+    const offering=dsRosterOv(iso).offerOff;   // night off already on offer → warning is redundant, hide it
+    el.innerHTML=(reasons.length&&!offering)?'<div class="ds-wxrec-banner">⚠ '+lead+' — '+esc(reasons.join(' · '))+'.'+tail+'</div>':'';
   });
 }
 /* covers feed (written to board/{iso}.covers by the midday sweep; shows when present) */
