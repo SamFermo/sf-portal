@@ -314,36 +314,31 @@ window.SF = {
      },
      {
       "name": "Paccheri",
-      "desc": "Italian pork sausage, morel mushroom, sea bean pesto, pistachio, lemon, parmigiano reggiano",
-      "price": "31",
+      "desc": "roasted broccoli, onion, bread-crumble cream, garlic, shallot, chili flake, lemon, pecorino romano, pine nuts",
+      "price": "29",
       "raw": false,
       "pron": "pah-KEH-ree",
-      "story": "Paccheri — smooth tube pasta from Campania, like a snipped rigatoni — tossed with house-made Italian pork sausage, morel mushrooms, and a sea bean pesto made with toasted pistachios and Parmigiano. Finished with lemon and garnished with raw sea beans for a bright, saline crunch. The sea bean pesto is blended from blanched sea beans, toasted pistachios, Parmigiano, olive oil, and a touch of chili — the same recipe from the Swan House Farm dinners.",
+      "story": "Broccoli and onion roasted until caramelized, then built into a pan sauce with garlic, shallot, red chili flake, and cubed bread. White wine and cream go in, and the bread melts down as it cooks to thicken it. Finished with lemon juice, zest, and butter, then topped with Pecorino Romano and pine nuts.",
       "ingredients": [
        {
         "term": "Paccheri",
         "pronunciation": "pah-KEH-ree",
-        "note": "Smooth tube pasta from Campania. Ours run smaller than the classic cut — closer to a shortened rigatoni — and collapse slightly when cooked to trap the sauce inside."
+        "note": "Large smooth tube pasta from Campania. The wide tubes collapse slightly as they cook and trap the sauce inside."
        },
        {
-        "term": "Italian pork sausage",
+        "term": "Bread-crumble cream",
         "pronunciation": null,
-        "note": "House-made pork sausage seasoned in the classic Italian style — fennel seed, garlic, red pepper flake, black pepper. Ground and formed fresh."
+        "note": "The sauce thickener — cubed bread cooked into the roasted broccoli, onion, garlic, shallot, and chili with white wine and cream until the bread melts down and bodies the sauce. Carries gluten (bread) and dairy (cream)."
        },
        {
-        "term": "Morel mushrooms",
-        "pronunciation": "moh-REL",
-        "note": "Wild foraged mushrooms with a honeycomb-shaped cap and an earthy, nutty, almost meaty flavor. Available only in spring — peak season in the Pacific Northwest is April through June."
+        "term": "Pecorino Romano",
+        "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
+        "note": "A hard, salty sheep's-milk cheese from Lazio — sharper than Parmigiano. Grated over the finish."
        },
        {
-        "term": "Sea bean pesto",
+        "term": "Pine nuts",
         "pronunciation": null,
-        "note": "Blended from blanched sea beans (salicornia), toasted pistachios, Parmigiano, olive oil, chili flake, and a touch of ascorbic acid to hold the color. The same recipe used at Swan House Farm dinners. Bright, saline, nutty."
-       },
-       {
-        "term": "Sea beans (salicornia)",
-        "pronunciation": "sal-ih-KOR-nee-ah",
-        "note": "A crisp, salty succulent that grows in coastal salt marshes and tidal flats. Also called samphire or pickleweed. Used raw as a garnish here for a bright, briny crunch."
+        "note": "Soft, buttery seeds of the stone pine, toasted for the finish. Treated as a tree-nut allergen on the plate."
        }
       ],
       "allergens": [
@@ -352,47 +347,45 @@ window.SF = {
        "nuts",
        "allium"
       ],
-      "canModify": [
-       "nuts",
-       "dairy",
-       "allium"
-      ],
-      "allergenNote": "Tree nuts: pistachios in the pesto. Nut free without pesto — the dish still works with just the sausage, morels, and lemon. Dairy: Parmigiano in the pesto and finish. Allium: garlic in the sausage. Vegetarian: sausage off, extra mushrooms.",
-      "added": "2026-06-10"
+      "canModify": [],
+      "allergenNote": "Gluten and dairy are both built into the sauce — the cubed bread melts in to thicken it, and the cream, butter, and Pecorino carry the dairy, so neither comes out cleanly. Allium: onion, garlic, and shallot are all roasted or cooked into the sauce, not removable. Tree nuts: pine nuts finish the plate, and per the kitchen notes they may also go into the pan — do NOT clear this for a nut allergy until Chris confirms they can be left out entirely.",
+      "added": "2026-06-27"
      },
      {
-      "name": "Tartufo Nero",
-      "desc": "fresh egg tagliatelle, summer truffle, butter, parmigiano reggiano",
-      "price": "26",
+      "name": "Beef Ragù",
+      "desc": "fresh egg pappardelle, ground beef, tomato, garlic, onion, basil, parmigiano reggiano",
+      "price": "32",
       "raw": false,
-      "pron": "tar-TOO-foh NEH-roh",
-      "story": "Fresh egg tagliatelle finished in a butter sauce built from pasta water, a little salt, and lemon — then summer black truffle grated generously over the top, never tossed in. No competing flavors — the technique is restraint. The pasta is made in-house daily. It's the most direct expression of a single ingredient on the menu.",
+      "pron": "rah-GOO",
+      "story": "Ground beef cooked down low and slow with tomato, garlic, onion, and basil until it's soft and rich. Tossed with fresh egg pappardelle and finished with Parmigiano Reggiano and a little more basil.",
       "ingredients": [
        {
-        "term": "Tartufo nero",
-        "pronunciation": "tar-TOO-foh NEH-roh",
-        "note": "Italian for black truffle. An underground fungus with an intensely earthy, musky, complex aroma. Summer black truffles (Tuber aestivum) are milder than the winter Périgord variety but still highly aromatic."
+        "term": "Ragù",
+        "pronunciation": "rah-GOO",
+        "note": "A slow-cooked Italian meat sauce — here ground beef braised down with tomato, garlic, onion, and basil until soft and rich. Built around the meat, with just enough tomato to bind it."
        },
        {
-        "term": "Tagliatelle",
-        "pronunciation": "tal-yah-TEL-eh",
-        "note": "Long, flat egg pasta ribbon from the Emilia-Romagna region of Italy. Made in-house with eggs and 00 flour. The slightly porous surface clings to butter and truffle better than a dried pasta."
+        "term": "Pappardelle",
+        "pronunciation": "pah-par-DELL-eh",
+        "note": "Wide, flat egg-pasta ribbons, broader than tagliatelle. A fresh egg dough, so it carries egg and wheat; the wide surface holds a hearty ragù well."
        },
        {
-        "term": "Parmigiano-Reggiano",
+        "term": "Parmigiano Reggiano",
         "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
-        "note": "PDO-protected aged Italian hard cheese from the Parma region. Adds a nutty, salty counterpoint to the truffle's earthiness."
+        "note": "The aged hard cheese from Emilia-Romagna, the only 'real' Parmesan; nutty, savory, crystalline. Grated over the finish."
        }
       ],
       "allergens": [
        "gluten",
        "egg",
-       "dairy"
+       "dairy",
+       "allium"
       ],
       "canModify": [
        "dairy"
       ],
-      "allergenNote": "Egg is in the pasta dough — no way around it. Dairy can technically come off (no butter sauce, no cheese) but it is not recommended; the dish is butter and truffle. Chris is confirming there's no allium — check before promising."
+      "allergenNote": "Egg and gluten are both in the fresh egg pappardelle — no way around them. Dairy: the Parmigiano finish can come off for a leaner plate. Allium: garlic and onion are cooked down into the ragù base, not removable.",
+      "added": "2026-06-27"
      },
      {
       "name": "Mafaldine alla Carbonara",
@@ -4432,7 +4425,7 @@ window.SF = {
        "",
        "3:30 Bar",
        "3:30 Bar",
-       "Sup Server",
+       "",
        "Sup Server",
        "Sup Server"
       ]
@@ -4444,7 +4437,7 @@ window.SF = {
        "3:30 Bar",
        "3:30 serve",
        "Sup Server",
-       "3:30 serve",
+       "Sup Server",
        "",
        ""
       ]
@@ -6316,9 +6309,9 @@ window.SF = {
      "3:30 serve",
      "",
      "",
-     "",
-     "",
-     ""
+     "3:30 Bar",
+     "3:30 Bar",
+     "3:30 Bar"
     ],
     "rows": [
      {
@@ -6388,9 +6381,9 @@ window.SF = {
        "",
        "",
        "3:30 serve",
-       "3:30 Bar",
-       "3:30 Bar",
-       "3:30 Bar"
+       "R/O",
+       "R/O",
+       "R/O"
       ]
      },
      {
@@ -8811,7 +8804,7 @@ window.SF = {
     "label": "",
     "coverage": [
      "",
-     "",
+     "1-close",
      "",
      "",
      "",
@@ -8835,7 +8828,7 @@ window.SF = {
       "name": "Chris",
       "shifts": [
        "",
-       "Admin",
+       "Expo",
        "Expo",
        "Expo",
        "Expo",
@@ -8871,8 +8864,8 @@ window.SF = {
       "name": "Cat",
       "shifts": [
        "1-close",
-       "1-close",
-       "1-close",
+       "R/O",
+       "R/O",
        "",
        "R/O",
        "",
@@ -8907,7 +8900,7 @@ window.SF = {
       "name": "Gopala",
       "shifts": [
        "",
-       "Expo",
+       "1-close",
        "",
        "",
        "1-close",
@@ -11725,5 +11718,5 @@ window.SF = {
    }
   }
  },
- "build": "1782494447"
+ "build": "1782566136"
 };
