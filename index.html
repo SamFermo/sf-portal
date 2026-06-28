@@ -1162,7 +1162,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782652377';   // stamped by build-data.py at every deploy
+const BUILD='1782674866';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4648,7 +4648,7 @@ function ordRenderOrdersPane(ordAll, open){
   h+='<div class="ord-group">Pending'+(remyReady?'':' · offline')+'</div>';
   if(!open.length)h+='<p class="board-empty" style="padding:14px 0">No open orders — everything’s been delivered or cancelled.</p>';
   open.forEach(o=>{h+=ordCardHTML(o,true);});
-  const arch=ordAll.filter(o=>['delivered','cancelled'].includes(o.status||''));
+  const arch=ordAll.filter(o=>(o.status||'')==='delivered');   // cancelled orders hidden from view (clutter); only delivered are archived
   if(arch.length){
     h+='<div class="ord-group muted" style="margin-top:22px">Archive</div>';
     arch.slice(0,10).forEach(o=>{h+=ordCardHTML(o,false);});
