@@ -715,7 +715,7 @@
             "",
             "3:30 serve",
             "",
-            "R/O"
+            "3:30 serve"
           ]
         },
         {
@@ -727,7 +727,7 @@
             "",
             "3:30 serve",
             "3:30 serve",
-            "3:30 serve"
+            "R/O"
           ]
         },
         {
@@ -851,6 +851,18 @@
           ]
         },
         {
+          "name": "Audrey",
+          "shifts": [
+            "",
+            "",
+            "",
+            "",
+            "3:30 training",
+            "",
+            ""
+          ]
+        },
+        {
           "name": "Brittany",
           "shifts": [
             "",
@@ -881,7 +893,7 @@
             "",
             "",
             "3:30 support",
-            "3:30 support",
+            "R/O",
             "",
             "3:30 support"
           ]
@@ -1934,7 +1946,7 @@
       "label": "Farm Dinners",
       "coverage": [
         "",
-        "3:30 serve",
+        "",
         "3:30 serve",
         "",
         "",
@@ -2006,7 +2018,7 @@
           "name": "Brittany",
           "shifts": [
             "",
-            "",
+            "3:30 serve",
             "",
             "3:30 serve",
             "3:30 Bar",
@@ -2510,7 +2522,7 @@
       "label": "Farm Dinners",
       "coverage": [
         "",
-        "3:30 serve",
+        "",
         "",
         "",
         "3:30 Bar",
@@ -2582,7 +2594,7 @@
           "name": "Brittany",
           "shifts": [
             "",
-            "",
+            "3:30 serve",
             "",
             "3:30 serve",
             "R/O",
