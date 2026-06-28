@@ -4511,7 +4511,7 @@ window.SF = {
        "",
        "3:30 serve",
        "",
-       "R/O"
+       "3:30 serve"
       ]
      },
      {
@@ -4523,7 +4523,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 serve",
-       "3:30 serve"
+       "R/O"
       ]
      },
      {
@@ -4647,6 +4647,18 @@ window.SF = {
       ]
      },
      {
+      "name": "Audrey",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "3:30 training",
+       "",
+       ""
+      ]
+     },
+     {
       "name": "Brittany",
       "shifts": [
        "",
@@ -4677,7 +4689,7 @@ window.SF = {
        "",
        "",
        "3:30 support",
-       "3:30 support",
+       "R/O",
        "",
        "3:30 support"
       ]
@@ -5730,7 +5742,7 @@ window.SF = {
     "label": "Farm Dinners",
     "coverage": [
      "",
-     "3:30 serve",
+     "",
      "3:30 serve",
      "",
      "",
@@ -5802,7 +5814,7 @@ window.SF = {
       "name": "Brittany",
       "shifts": [
        "",
-       "",
+       "3:30 serve",
        "",
        "3:30 serve",
        "3:30 Bar",
@@ -6306,7 +6318,7 @@ window.SF = {
     "label": "Farm Dinners",
     "coverage": [
      "",
-     "3:30 serve",
+     "",
      "",
      "",
      "3:30 Bar",
@@ -6378,7 +6390,7 @@ window.SF = {
       "name": "Brittany",
       "shifts": [
        "",
-       "",
+       "3:30 serve",
        "",
        "3:30 serve",
        "R/O",
@@ -11718,5 +11730,5 @@ window.SF = {
    }
   }
  },
- "build": "1782566136"
+ "build": "1782652377"
 };
