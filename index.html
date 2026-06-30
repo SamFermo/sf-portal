@@ -1162,7 +1162,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782825294';   // stamped by build-data.py at every deploy
+const BUILD='1782858444';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1297,6 +1297,7 @@ function renderHome(){
   if(mgr) std.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);   // sits beside Directory
   html += std.map(stdCardHTML).join('');
   if(mgr) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom
+  if(me&&me.name==='Sam West'){ remyEnsureStyle(); html += remyMoonHTML(); }   // Remy prototype moon — Sam only, very bottom
   $('homeGrid').innerHTML=html;
   glanceCardWeather();
   if(mgr){ ordHomePrime(); }
@@ -1316,6 +1317,48 @@ function refreshOrdersCard(){
   const c=document.querySelector('.home-card[data-card="orders"]');
   if(c){ c.outerHTML=ordersCardHTML(); updateAttn(); }
 }
+
+/* ===== REMY PROTOTYPE (Sam only) — a moon at the bottom of the home that steps into the
+   restaurant side of Remy, framed same-origin in embed mode (kitchen-only; no order-send). ===== */
+function remyEnsureStyle(){
+  if(document.getElementById('remyMoonStyle'))return;
+  var st=document.createElement('style');st.id='remyMoonStyle';
+  st.textContent=
+    '@keyframes remyBreath{0%,100%{box-shadow:0 0 58px -12px rgba(244,228,180,.42),inset 0 0 48px -14px rgba(244,228,180,.28)}50%{box-shadow:0 0 98px -6px rgba(244,228,180,.72),inset 0 0 66px -10px rgba(244,228,180,.44)}}'+
+    '.remy-moon-wrap{grid-column:1/-1;margin:18px 0 4px;padding:32px 18px 34px;border-radius:20px;background:radial-gradient(120% 92% at 50% 0%,#11192e,#070b16 72%);border:1px solid rgba(255,255,255,.08);text-align:center;cursor:pointer;position:relative;overflow:hidden}'+
+    '.remy-moon-eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#6b7591;margin-bottom:18px}'+
+    '.remy-moon{width:148px;height:148px;border-radius:50%;margin:0 auto 16px;background:radial-gradient(circle at 38% 33%,#fdf3d4,#e7c98b 46%,#caa45f 72%,#9c7b3e);animation:remyBreath 5.5s ease-in-out infinite;transition:transform .18s}'+
+    '.remy-moon-wrap:active .remy-moon{transform:scale(.94)}'+
+    '.remy-moon-word{font-family:Georgia,serif;font-size:27px;color:#eaf0ff;letter-spacing:.01em}'+
+    '.remy-moon-sub{font-size:12px;color:#9aa6c0;margin-top:4px}'+
+    '#remyOverlay{position:fixed;inset:0;z-index:9999;background:#02040d;display:none;flex-direction:column}'+
+    '#remyOverlay.open{display:flex}'+
+    '.remy-ov-bar{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;background:#070b16;border-bottom:1px solid rgba(255,255,255,.08)}'+
+    '.remy-ov-back{font-size:15px;color:#c4cde2;background:none;border:1px solid rgba(255,255,255,.2);border-radius:9px;padding:7px 12px;cursor:pointer}'+
+    '.remy-ov-word{flex:1;font-family:Georgia,serif;font-size:17px;color:#eaf0ff}'+
+    '.remy-ov-tag{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6b7591}'+
+    '#remyFrame{flex:1 1 auto;width:100%;border:0;background:#02040d}';
+  document.head.appendChild(st);
+}
+function remyMoonHTML(){
+  return '<div class="home-card remy-moon-wrap" data-card="remy" onclick="remyOpen()">'+
+    '<div class="remy-moon-eyebrow">Prototype · Sam only</div>'+
+    '<div class="remy-moon"></div>'+
+    '<div class="remy-moon-word">Remy</div>'+
+    '<div class="remy-moon-sub">Tap to step into the kitchen side</div></div>';
+}
+function remyOpen(){
+  if(!(me&&me.name==='Sam West'))return;   // hard gate
+  remyEnsureStyle();
+  var o=document.getElementById('remyOverlay');
+  if(!o){o=document.createElement('div');o.id='remyOverlay';
+    o.innerHTML='<div class="remy-ov-bar"><button class="remy-ov-back" onclick="remyClose()">‹ San Fermo</button><span class="remy-ov-word">Remy</span><span class="remy-ov-tag">prototype</span></div><iframe id="remyFrame" title="Remy"></iframe>';
+    document.body.appendChild(o);}
+  var fr=document.getElementById('remyFrame');
+  if(fr&&!fr.getAttribute('src'))fr.setAttribute('src','/remy/?embed=sfportal');   // same-origin, kitchen-only embed
+  o.classList.add('open');document.body.style.overflow='hidden';
+}
+function remyClose(){var o=document.getElementById('remyOverlay');if(o)o.classList.remove('open');document.body.style.overflow='';}
 
 /* ===== AUTH — per-person PIN login, role-based, nightly 3am reset ===== */
 const PIN_SALT='sf-portal-2026';            // changing this invalidates every stored PIN hash
