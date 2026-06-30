@@ -8085,7 +8085,7 @@ window.SF = {
       "shifts": [
        "1-close",
        "",
-       "",
+       "9-5",
        "R/O",
        "R/O",
        "",
@@ -8107,9 +8107,9 @@ window.SF = {
      {
       "name": "Cat",
       "shifts": [
-       "",
-       "",
-       "",
+       "R/O",
+       "R/O",
+       "R/O",
        "R/O",
        "R/O",
        "",
@@ -8145,7 +8145,7 @@ window.SF = {
       "shifts": [
        "",
        "1-close",
-       "",
+       "1-close",
        "",
        "1-close",
        "",
@@ -8157,7 +8157,7 @@ window.SF = {
       "shifts": [
        "R/O",
        "R/O",
-       "1-close",
+       "",
        "1-close",
        "1-close",
        "",
@@ -11730,5 +11730,5 @@ window.SF = {
    }
   }
  },
- "build": "1782756446"
+ "build": "1782825294"
 };
