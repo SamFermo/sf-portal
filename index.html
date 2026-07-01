@@ -1162,7 +1162,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782867241';   // stamped by build-data.py at every deploy
+const BUILD='1782876654';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1282,7 +1282,11 @@ function ordersCardHTML(){
   if(invoices)parts.push(invoices+' invoice'+(invoices>1?'s':''));
   if(flags)parts.push(flags+' flagged');
   const detail=parts.length?esc(parts.join(' · ')):'Order from Swan House';
-  return wideCardHTML('orders','✾','Farm Order',detail);
+  // Farm Order now opens the Remy Order composer (embedded, portal-styled) instead of the native
+  // composer view. Same wide-card look; onclick repointed to remyOpen(). (2026-06-30 swap)
+  return `<button class="home-card home-card-wide" data-card="orders" onclick="remyOpen()">
+    <div class="glance-card-top"><div class="glance-card-head"><span class="hc-icon">✾</span><span class="hc-title">Farm Order</span></div></div>
+    <div class="hc-sub hc-sub-wide">${detail}</div></button>`;
 }
 function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
@@ -1296,8 +1300,7 @@ function renderHome(){
     ['directory','✉','Directory','The team & contacts']];
   if(mgr) std.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);   // sits beside Directory
   html += std.map(stdCardHTML).join('');
-  if(mgr) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom
-  if(me&&me.name==='Sam West'){ remyEnsureStyle(); html += remyMoonHTML(); }   // Remy prototype moon — Sam only, very bottom
+  if(mgr) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
   $('homeGrid').innerHTML=html;
   glanceCardWeather();
   if(mgr){ ordHomePrime(); }
@@ -1341,11 +1344,13 @@ function remyMoonHTML(){
   return '<div class="remy-moon-btnwrap"><button class="remy-moon" onclick="remyOpen()" aria-label="Open Remy"></button></div>';
 }
 function remyOpen(){
-  if(!(me&&me.name==='Sam West'))return;   // hard gate
+  if(!isMgr())return;   // managers + admins (matches who sees the Farm Order card)
+  // Hand the logged-in user to the embed so orders record who placed them (Kelly's feed shows it).
+  try{window.__remyPortalUser=(typeof currentUserName==='function'?currentUserName():'')||'';}catch(e){}
   remyEnsureStyle();
   var o=document.getElementById('remyOverlay');
   if(!o){o=document.createElement('div');o.id='remyOverlay';
-    o.innerHTML='<div class="remy-ov-bar"><button class="remy-ov-back" onclick="remyClose()">‹ San Fermo</button><span class="remy-ov-word">Remy</span><span class="remy-ov-tag">prototype</span></div><iframe id="remyFrame" title="Remy"></iframe>';
+    o.innerHTML='<div class="remy-ov-bar"><button class="remy-ov-back" onclick="remyClose()">‹ San Fermo</button><span class="remy-ov-word">Farm Order</span></div><iframe id="remyFrame" title="Farm Order"></iframe>';
     document.body.appendChild(o);}
   var fr=document.getElementById('remyFrame');
   if(fr&&!fr.getAttribute('src'))fr.setAttribute('src','/remy/?embed=sfportal');   // same-origin, kitchen-only embed
