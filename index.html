@@ -1162,7 +1162,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782876654';   // stamped by build-data.py at every deploy
+const BUILD='1782927581';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1213,10 +1213,15 @@ function navTabs(){let t=isMgr()?[['today','Day Sheet']].concat(TABS,[['frontdes
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
   if(typeof updatePendingBadge==='function')updatePendingBadge();}
-function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+function go(id){
+  // 'orders' now opens the Remy composer (matches the home "Farm Order" card, repointed 2026-06-30).
+  // The old native #orders view (renderOrders/ordRenderComposerPane) stays defined as a dormant
+  // fallback but is no longer a live entry point from anywhere in the nav.
+  if(id==='orders'){remyOpen();markOrdersSeen();return;}
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='today')renderToday();
   if(id==='standards'){showStdPane(stdTab);markStandardsSeen();}
   if(id==='fresh')markFreshSeen();
   if(id==='verbals')markVerbalsSeen();
@@ -1339,9 +1344,6 @@ function remyEnsureStyle(){
     '.remy-ov-tag{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6b7591}'+
     '#remyFrame{flex:1 1 auto;width:100%;border:0;background:#02040d}';
   document.head.appendChild(st);
-}
-function remyMoonHTML(){
-  return '<div class="remy-moon-btnwrap"><button class="remy-moon" onclick="remyOpen()" aria-label="Open Remy"></button></div>';
 }
 function remyOpen(){
   if(!isMgr())return;   // managers + admins (matches who sees the Farm Order card)
