@@ -78,6 +78,9 @@ nav.chips::-webkit-scrollbar{display:none;}
 /* ---------- Layout ---------- */
 .view{display:none; max-width:760px; margin:0 auto; padding:20px 16px 40px;}
 .view.active{display:block;}
+/* Farm Order/Remy is a full-bleed embedded app, not a card-content view — no width cap or padding,
+   so it reads as continuous with the header/nav above it rather than a boxed-in insert. */
+.view-flush{max-width:none; margin:0; padding:0;}
 .view-head{margin:2px 0 16px; text-align:center;}
 .view-eyebrow{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.18em; color:var(--gold); margin:0 0 4px;}
 .view-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:30px; font-weight:600; color:var(--ink); margin:0; letter-spacing:.02em;}
@@ -1086,9 +1089,7 @@ body.locked{overflow:hidden;}
   <div id="fdBody"></div>
 </section>
 
-<section class="view" id="orders">
-  <div class="view-head"><p class="view-eyebrow">Managers Only · Swan House Farm</p><h2 class="view-title">Farm Order</h2>
-    <p class="view-sub" id="ordSub">Tap items from Kelly's list, set quantities, send. The text announces it; this page remembers it.</p></div>
+<section class="view view-flush" id="orders">
   <div id="ordBody"></div>
 </section>
 
@@ -1162,7 +1163,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1782927581';   // stamped by build-data.py at every deploy
+const BUILD='1782929577';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1214,14 +1215,13 @@ function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button cla
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
   if(typeof updatePendingBadge==='function')updatePendingBadge();}
 function go(id){
-  // 'orders' now opens the Remy composer (matches the home "Farm Order" card, repointed 2026-06-30).
-  // The old native #orders view (renderOrders/ordRenderComposerPane) stays defined as a dormant
-  // fallback but is no longer a live entry point from anywhere in the nav.
-  if(id==='orders'){remyOpen();markOrdersSeen();return;}
+  // 'orders' is a normal view like every other tab (2026-07-01) — Farm Order/Remy renders INSIDE
+  // #orders via renderOrders(), so the sticky header, nav chips, and page background stay put
+  // exactly like Fresh Talk/Schedule/etc. No full-screen overlay, no second header.
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='today')renderToday();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday();
   if(id==='standards'){showStdPane(stdTab);markStandardsSeen();}
   if(id==='fresh')markFreshSeen();
   if(id==='verbals')markVerbalsSeen();
@@ -1287,9 +1287,9 @@ function ordersCardHTML(){
   if(invoices)parts.push(invoices+' invoice'+(invoices>1?'s':''));
   if(flags)parts.push(flags+' flagged');
   const detail=parts.length?esc(parts.join(' · ')):'Order from Swan House';
-  // Farm Order now opens the Remy Order composer (embedded, portal-styled) instead of the native
-  // composer view. Same wide-card look; onclick repointed to remyOpen(). (2026-06-30 swap)
-  return `<button class="home-card home-card-wide" data-card="orders" onclick="remyOpen()">
+  // Farm Order opens the #orders view like any other tab (2026-07-01) — go('orders') calls
+  // renderOrders()/remyMount(), same single path the nav chip uses. No separate open function.
+  return `<button class="home-card home-card-wide" data-card="orders" onclick="go('orders')">
     <div class="glance-card-top"><div class="glance-card-head"><span class="hc-icon">✾</span><span class="hc-title">Farm Order</span></div></div>
     <div class="hc-sub hc-sub-wide">${detail}</div></button>`;
 }
@@ -1326,39 +1326,35 @@ function refreshOrdersCard(){
   if(c){ c.outerHTML=ordersCardHTML(); updateAttn(); }
 }
 
-/* ===== REMY PROTOTYPE (Sam only) — a moon at the bottom of the home that steps into the
-   restaurant side of Remy, framed same-origin in embed mode (kitchen-only; no order-send). ===== */
-function remyEnsureStyle(){
-  if(document.getElementById('remyMoonStyle'))return;
-  var st=document.createElement('style');st.id='remyMoonStyle';
-  st.textContent=
-    '@keyframes remyBreath{0%,100%{box-shadow:0 0 58px -12px rgba(244,228,180,.42),inset 0 0 48px -14px rgba(244,228,180,.28)}50%{box-shadow:0 0 98px -6px rgba(244,228,180,.72),inset 0 0 66px -10px rgba(244,228,180,.44)}}'+
-    '.remy-moon-btnwrap{grid-column:1/-1;display:flex;justify-content:center;padding:22px 0 14px}'+
-    '.remy-moon{width:120px;height:120px;border-radius:50%;border:0;padding:0;display:block;cursor:pointer;background:radial-gradient(circle at 38% 33%,#fdf3d4,#e7c98b 46%,#caa45f 72%,#9c7b3e);animation:remyBreath 5.5s ease-in-out infinite;transition:transform .18s}'+
-    '.remy-moon:active{transform:scale(.94)}'+
-    '#remyOverlay{position:fixed;inset:0;z-index:9999;background:#02040d;display:none;flex-direction:column}'+
-    '#remyOverlay.open{display:flex}'+
-    '.remy-ov-bar{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;background:#070b16;border-bottom:1px solid rgba(255,255,255,.08)}'+
-    '.remy-ov-back{font-size:15px;color:#c4cde2;background:none;border:1px solid rgba(255,255,255,.2);border-radius:9px;padding:7px 12px;cursor:pointer}'+
-    '.remy-ov-word{flex:1;font-family:Georgia,serif;font-size:17px;color:#eaf0ff}'+
-    '.remy-ov-tag{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6b7591}'+
-    '#remyFrame{flex:1 1 auto;width:100%;border:0;background:#02040d}';
-  document.head.appendChild(st);
-}
-function remyOpen(){
-  if(!isMgr())return;   // managers + admins (matches who sees the Farm Order card)
+/* ===== REMY EMBED — Farm Order renders IN-PLACE inside the #orders view (2026-07-01) =====
+   Was a full-screen fixed overlay with its own header bar and flat background — felt like leaving
+   the app entirely (Sam flagged: keep the header, nav chips, background image, coloring visible;
+   no "new app" transition). Fixed by mounting the iframe as normal content of the #orders .view,
+   same as every other tab, with a transparent background so the portal's bg.jpg shows through and
+   the sticky header + nav chips stay put above it. The iframe is sized to fill the viewport below
+   the header (not auto-sized to full content height) so Remy's own internal fixed-position modals
+   (review sheet, invoice modal, photo lightbox) keep working — those are fixed relative to the
+   iframe's own viewport, which would break if the iframe were stretched to its full scrollable
+   content height. Remy scrolls internally within that box; the outer page/header don't move. */
+function remyMount(){
+  if(!isMgr())return;   // managers + admins (matches who sees the Farm Order card/tab)
   // Hand the logged-in user to the embed so orders record who placed them (Kelly's feed shows it).
   try{window.__remyPortalUser=(typeof currentUserName==='function'?currentUserName():'')||'';}catch(e){}
-  remyEnsureStyle();
-  var o=document.getElementById('remyOverlay');
-  if(!o){o=document.createElement('div');o.id='remyOverlay';
-    o.innerHTML='<div class="remy-ov-bar"><button class="remy-ov-back" onclick="remyClose()">‹ San Fermo</button><span class="remy-ov-word">Farm Order</span></div><iframe id="remyFrame" title="Farm Order"></iframe>';
-    document.body.appendChild(o);}
+  var body=$('ordBody');
   var fr=document.getElementById('remyFrame');
-  if(fr&&!fr.getAttribute('src'))fr.setAttribute('src','/remy/?embed=sfportal');   // same-origin, kitchen-only embed
-  o.classList.add('open');document.body.style.overflow='hidden';
+  if(!fr){
+    body.innerHTML='<iframe id="remyFrame" title="Farm Order" style="display:block;width:100%;border:0;background:transparent" src="/remy/?embed=sfportal"></iframe>';
+    fr=document.getElementById('remyFrame');
+  }
+  remySizeFrame();
 }
-function remyClose(){var o=document.getElementById('remyOverlay');if(o)o.classList.remove('open');document.body.style.overflow='';}
+function remySizeFrame(){
+  var fr=document.getElementById('remyFrame'); if(!fr)return;
+  var header=document.querySelector('header.app');
+  var hh=header?header.getBoundingClientRect().height:0;
+  fr.style.height=Math.max(360, window.innerHeight-hh)+'px';
+}
+window.addEventListener('resize',function(){if($('orders')&&$('orders').classList.contains('active'))remySizeFrame();});
 
 /* ===== AUTH — per-person PIN login, role-based, nightly 3am reset ===== */
 const PIN_SALT='sf-portal-2026';            // changing this invalidates every stored PIN hash
@@ -4602,15 +4598,7 @@ function ordCancel(id){
     .catch(()=>alert('Cancel didn’t save — try again.'));
 }
 function renderOrders(){
-  if(!isMgr()){$('ordBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
-  remyInit();
-  ordFetchFarmAsks().then(()=>{if($('ordBody'))renderOrdersBody();});
-  $('ordBody').innerHTML='<p class="board-empty">Loading Kelly’s list…</p>';
-  ordFetchAvail().then(renderOrdersBody).catch(err=>{
-    ordAvail=null;renderOrdersBody();
-    const s=document.querySelector('#ordBody .ord-stamp');
-    if(s){s.classList.add('stale');s.textContent='Availability feed unreachable ('+err.message+') — free-type your items below; the order still sends.';}
-  });
+  remyMount();   // Farm Order = the Remy embed, in-place inside this view (see remyMount above)
 }
 function renderOrdersBody(){
   if(!$('ordBody'))return;
