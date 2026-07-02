@@ -482,7 +482,15 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ann-btn.yes{background:#6db657; color:#0e1a0c;}
 .ann-btn.no{background:rgba(205,216,244,.1); color:var(--ink-soft); border:1px solid var(--moon-edge);}
 .ann-dismiss{margin-top:4px; background:none; border:none; color:var(--ink-mute); font-size:12.5px; text-decoration:underline dotted; text-underline-offset:2px; cursor:pointer; font-family:inherit;}
-.ann-tally{margin-top:6px; font-size:11.5px; color:var(--card-mute);}
+.ann-tally{margin-top:6px; font-size:11.5px; color:var(--card-mute); display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:center;}
+.ann-full-link{background:none; border:none; color:var(--gold-deep); font-size:11.5px; font-weight:700; text-decoration:underline dotted; text-underline-offset:2px; cursor:pointer; font-family:inherit; padding:0;}
+.ann-full{max-height:80vh; overflow-y:auto;}
+.ann-full-total{font-size:14px; font-weight:800; color:var(--wood); margin-top:2px;}
+.ann-full-sec{width:100%; text-align:left; margin-top:6px;}
+.ann-full-lab{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; color:var(--card-mute); margin-bottom:4px;}
+.ann-list-row{font-size:13px; color:var(--card-soft); line-height:1.5;}
+.ann-list-n{color:var(--gold-deep); font-weight:700;}
+.ann-list-empty{color:var(--card-mute); font-style:italic;}
 .ann-home{grid-column:1/-1; display:flex; align-items:center; gap:10px; background:linear-gradient(90deg, rgba(192,57,43,.16), rgba(40,70,150,.16)); border:1px solid rgba(214,158,46,.4); border-radius:14px; padding:12px 15px; cursor:pointer; font-family:inherit; text-align:left;}
 .ann-home-ic{font-size:20px;}
 .ann-home-txt{font-size:13.5px; font-weight:700; color:var(--wood);}
@@ -1163,7 +1171,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783017119';   // stamped by build-data.py at every deploy
+const BUILD='1783017471';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1539,6 +1547,22 @@ const ANNOUNCE={
   note:'Please RSVP by June 28 so we can place orders.'
 };
 let annShownSession=false, annGuests=0;
+/* Non-staff RSVPs (family/friends Sam adds by hand — no staff profile to hang a
+   record on) live in board/announceGuests as {id, entries:[{name,count,rsvp}]},
+   same singleton-doc pattern as board/verbals. count = total heads that name
+   represents (e.g. "Connon and Holly" -> count 2), not staff-style +guests. */
+let ANNOUNCE_GUESTS=[], annGuestsUnsub=null;
+function startAnnounceGuestsSync(){
+  if(fbReady&&fbDb){
+    if(annGuestsUnsub)annGuestsUnsub();
+    annGuestsUnsub=fbDb.collection('board').doc('announceGuests').onSnapshot(function(snap){
+      const d=snap.data()||{};
+      ANNOUNCE_GUESTS=(d.id===ANNOUNCE.id)?(d.entries||[]):[];
+      if($('home')&&$('home').classList.contains('active'))renderHome();
+      const m=$('announceModal'); if(m&&m.style.display==='flex'&&m.querySelector('.ann-full'))annOpenFullList();
+    },function(){});
+  }
+}
 function annDismissKey(){return 'sf-announce-'+ANNOUNCE.id;}
 function annDismissedNow(){ try{const s=JSON.parse(localStorage.getItem(annDismissKey())||'null'); return !!(s&&s.exp&&Date.now()<s.exp);}catch(e){return false;} }
 function annDismiss(){ try{localStorage.setItem(annDismissKey(),JSON.stringify({exp:next3am(Date.now())}));}catch(e){} annClose(); }
@@ -1546,7 +1570,50 @@ function annActive(){ return todayISO()<=ANNOUNCE.showUntil; }
 function annMyRsvp(){ const r=me&&me.announceRsvp; return (r&&r.id===ANNOUNCE.id)?r:null; }
 function annShouldShow(){ return !!(me && me.contactSet && annActive() && !annMyRsvp() && !annDismissedNow()); }
 function maybeShowAnnounce(){ if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
-function annTally(){ let yes=0,no=0,guests=0; Object.keys(PROFILES).forEach(function(k){const r=PROFILES[k].announceRsvp; if(r&&r.id===ANNOUNCE.id){ if(r.rsvp==='yes'){yes++;guests+=(+r.guests||0);} else if(r.rsvp==='no')no++; }}); return {yes:yes,no:no,guests:guests}; }
+/* Full roster behind the tally: staff (from PROFILES.announceRsvp) plus the
+   hand-added external entries in ANNOUNCE_GUESTS. Single source both the compact
+   tally and the full list (annOpenFullList) read from, so they can't drift. */
+function annRoster(){
+  const A=ANNOUNCE; let yes=[], no=[], none=[];
+  Object.keys(PROFILES).forEach(function(k){
+    const p=PROFILES[k]; if(p.active===false)return;
+    const r=p.announceRsvp;
+    if(r&&r.id===A.id){
+      if(r.rsvp==='yes')yes.push({name:p.name,count:1+(+r.guests||0)});
+      else no.push(p.name);
+    } else none.push(p.name);
+  });
+  (ANNOUNCE_GUESTS||[]).forEach(function(g){
+    if(!g||!g.name)return;
+    if(g.rsvp==='no')no.push(g.name);
+    else yes.push({name:g.name,count:Math.max(1,+g.count||1)});
+  });
+  yes.sort(function(a,b){return a.name.localeCompare(b.name);});
+  no.sort(); none.sort();
+  const totalHeads=yes.reduce(function(n,y){return n+y.count;},0);
+  return {yes:yes,no:no,none:none,totalHeads:totalHeads};
+}
+function annTally(){ const r=annRoster(); return {yes:r.yes.length,no:r.no.length,guests:r.totalHeads-r.yes.length,totalHeads:r.totalHeads}; }
+function annFullListHTML(){
+  const r=annRoster();
+  const comingRows=r.yes.length?r.yes.map(function(y){return '<div class="ann-list-row">'+esc(y.name)+(y.count>1?' <span class="ann-list-n">+'+(y.count-1)+'</span>':'')+'</div>';}).join(''):'<div class="ann-list-row ann-list-empty">Nobody yet</div>';
+  const noRow=r.no.length?esc(r.no.join(', ')):'—';
+  const noneRow=r.none.length?esc(r.none.join(', ')):'—';
+  return '<div class="ann-card ann-full">'
+    +'<div class="ann-emoji">'+ANNOUNCE.emoji+'</div>'
+    +'<div class="ann-title serif">'+esc(ANNOUNCE.title)+'</div>'
+    +'<div class="ann-full-total">'+r.totalHeads+' people coming</div>'
+    +'<div class="ann-full-sec"><div class="ann-full-lab">Coming</div>'+comingRows+'</div>'
+    +'<div class="ann-full-sec"><div class="ann-full-lab">Can\'t make it</div><div class="ann-list-row">'+noRow+'</div></div>'
+    +'<div class="ann-full-sec"><div class="ann-full-lab">Haven\'t RSVP\'d</div><div class="ann-list-row">'+noneRow+'</div></div>'
+    +'<button class="ann-dismiss" onclick="annOpen()">← Back</button>'
+    +'</div>';
+}
+function annOpenFullList(){
+  let m=$('announceModal');
+  if(!m){ m=document.createElement('div'); m.id='announceModal'; m.className='comp-modal ann-modal'; m.onclick=function(e){if(e.target===m)annClose();}; document.body.appendChild(m); }
+  m.innerHTML=annFullListHTML(); m.style.display='flex';
+}
 function annInc(d){ annGuests=Math.max(0,Math.min(30,annGuests+d)); const el=$('ann-guests-n'); if(el)el.textContent=annGuests; }
 function annRsvp(going){
   if(!me)return;
@@ -1566,8 +1633,10 @@ function annClose(){ const m=$('announceModal'); if(m)m.style.display='none'; }
 function annCardHTML(existing){
   const A=ANNOUNCE;
   const cur=existing?`<div class="ann-current">Right now you're down as <b>${existing.rsvp==='yes'?('coming'+(existing.guests?` +${existing.guests} guest${existing.guests>1?'s':''}`:'')):'not coming'}</b> — change it below if needed.</div>`:'';
-  let tally='';
-  if(typeof isMgr==='function'&&isMgr()){ const t=annTally(); tally=`<div class="ann-tally">RSVPs so far: <b>${t.yes}</b> coming${t.guests?` (+${t.guests} guest${t.guests>1?'s':''})`:''} · <b>${t.no}</b> can't</div>`; }
+  // Full list is visible to anybody (staff and demo/guest view alike), not just
+  // managers — Sam wants everyone able to pull up who's actually coming.
+  const t=annTally();
+  const tally=`<div class="ann-tally">RSVPs so far: <b>${t.totalHeads}</b> coming · <b>${t.no}</b> can't · <button class="ann-full-link" onclick="annOpenFullList()">See full list →</button></div>`;
   return `<div class="ann-card">
     <div class="ann-emoji">${A.emoji}</div>
     <div class="ann-title serif">${esc(A.title)}</div>
@@ -3621,8 +3690,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
