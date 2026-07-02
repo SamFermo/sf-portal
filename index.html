@@ -539,6 +539,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .dir-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:12px 13px; box-shadow:0 5px 13px rgba(0,0,0,.24);}
 .dir-name{font-family:'Caladea',Georgia,serif; font-size:14.5px; font-weight:700; color:var(--wood);}
 .dir-role{font-size:11.5px; font-style:italic; color:var(--card-mute); margin-bottom:7px;}
+.dir-new{color:var(--gold,#c9a45c); font-style:normal; font-weight:600; letter-spacing:.03em;}
 .dir-links{display:flex; gap:8px; flex-wrap:wrap;}
 .dir-links a{font-size:12px; color:var(--accent-dark); text-decoration:none; background:var(--accent-soft); border:1px solid var(--accent); border-radius:999px; padding:3px 11px;}
 /* manager full-contact + multi-recipient messaging */
@@ -1171,7 +1172,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783020778';   // stamped by build-data.py at every deploy
+const BUILD='1783021768';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2808,7 +2809,19 @@ let dirSelect=new Set();
 function dirIsSel(name){return dirSelect.has(name);}
 function dirToggleSel(name){if(dirSelect.has(name))dirSelect.delete(name);else dirSelect.add(name);renderDirectory();}
 function dirClearSel(){dirSelect.clear();renderDirectory();}
-function dirAllNames(){const S=SF.staff,out=[];['foh','boh','office'].forEach(function(k){((S.directory&&S.directory[k])||[]).forEach(function(p){if(p.name)out.push(p.name);});});return out;}
+/* Union in portal-added staff: active Firestore profiles not yet in the baked
+   staff.json roster render immediately (tagged New) — the 6am refresh task
+   later lands them in staff.json + the Contact Sheet, at which point the tag
+   naturally disappears. Membership only; contact display stays consent-gated. */
+function dirWithExtras(){const S=SF.staff,base=S.directory||{},seen=new Set();
+  ['foh','boh','office'].forEach(function(k){(base[k]||[]).forEach(function(p){if(p.name)seen.add(p.name.toLowerCase());});});
+  const out={foh:(base.foh||[]).slice(),boh:(base.boh||[]).slice(),office:(base.office||[]).slice()};
+  Object.keys(PROFILES).forEach(function(n){const p=PROFILES[n]||{};const nm=p.name||n;
+    if(p.active===true&&nm&&!seen.has(nm.toLowerCase())){
+      const a=(p.area==='boh')?'boh':(p.area==='office')?'office':'foh';
+      out[a].push({name:nm,role:(p.role||'Staff'),isNew:true});}});
+  return out;}
+function dirAllNames(){const D=dirWithExtras(),out=[];['foh','boh','office'].forEach(function(k){(D[k]||[]).forEach(function(p){if(p.name)out.push(p.name);});});return out;}
 function dirAllSelected(){const all=dirAllNames();return all.length>0&&all.every(function(n){return dirSelect.has(n);});}
 function dirSelectAll(){const all=dirAllNames();if(dirAllSelected())dirSelect.clear();else all.forEach(function(n){dirSelect.add(n);});renderDirectory();}
 function telDigits(p){var d=String(p||'').replace(/[^0-9]/g,'');if(d.length===10)d='1'+d;return d?'+'+d:'';}
@@ -2865,15 +2878,17 @@ function renderDirectory(){const S=SF.staff; $('dirSub').textContent=S.note;
     const inner=`<div class="lead-name serif">${esc(l.name)}</div><div class="lead-role">${esc(l.role)}</div>${showPhone?`<div class="lead-phone">${esc(p.phone)}</div>`:''}`;
     h+= showPhone?`<div class="lead-card"><a href="${telHref(p.phone)}">${inner}</a></div>`:`<div class="lead-card">${inner}</div>`;});
   h+=`</div>`;
+  const D=dirWithExtras();
   [['Front of House','foh'],['Back of House','boh'],['Office','office']].forEach(([lab,key])=>{
     h+=`<div class="section-label">${lab}</div><div class="dir-grid">`;
-    (S.directory[key]||[]).forEach(p=>{
+    (D[key]||[]).forEach(p=>{
+      const roleHtml=esc(p.role)+(p.isNew?' <span class="dir-new">· New</span>':'');
       if(mgr){
         const prof=PROFILES[p.name]||{}, sel=dirIsSel(p.name), links=mgrContactLinks(prof);
-        h+=`<div class="dir-card${sel?' dir-sel':''}" onclick="dirToggleSel('${jq(p.name)}')"><div class="dir-check">${sel?'✓':''}</div><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${esc(p.role)}</div><div class="dir-links" onclick="event.stopPropagation()">${links}</div></div>`;
+        h+=`<div class="dir-card${sel?' dir-sel':''}" onclick="dirToggleSel('${jq(p.name)}')"><div class="dir-check">${sel?'✓':''}</div><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${roleHtml}</div><div class="dir-links" onclick="event.stopPropagation()">${links}</div></div>`;
       }else{
         const links=contactLinks(p.name);
-        h+=`<div class="dir-card"><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${esc(p.role)}</div>${links?`<div class="dir-links">${links}</div>`:`<div class="dir-nocontact">No contact shared</div>`}</div>`;
+        h+=`<div class="dir-card"><div class="dir-name serif">${esc(p.name)}</div><div class="dir-role">${roleHtml}</div>${links?`<div class="dir-links">${links}</div>`:`<div class="dir-nocontact">No contact shared</div>`}</div>`;
       }
     });
     h+=`</div>`;});
