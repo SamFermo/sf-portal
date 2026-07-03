@@ -1207,7 +1207,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783097383';   // stamped by build-data.py at every deploy
+const BUILD='1783097663';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3823,11 +3823,15 @@ function lnRender(){
   if(!lnCanTab()){ el.innerHTML='<p class="ln-empty">Manager access required.</p>'; return; }
   if(!fbReady||!fbDb){ el.innerHTML=lnFailHTML('Can’t reach the server right now. Check your connection, then reopen the app.'); return; }
   el.innerHTML='<p class="ln-empty">Loading last night…</p>';
-  const tier=lnTier(), wantRev=(tier==='full'), N=7, byId=firebase.firestore.FieldPath.documentId();
-  const q=fbDb.collection('revel').orderBy(byId,'desc').limit(N).get();
-  const qr=wantRev?fbDb.collection('revel_rev').orderBy(byId,'desc').limit(N).get():Promise.resolve(null);
+  const tier=lnTier(), wantRev=(tier==='full'), N=7;
+  // Plain collection get + client-side sort: index-free. orderBy(__name__,'desc') needs a
+  // composite index Firestore won't auto-create; one doc per night keeps this read small.
+  const q=fbDb.collection('revel').get();
+  const qr=wantRev?fbDb.collection('revel_rev').get():Promise.resolve(null);
   Promise.all([q,qr]).then(function(res){
-    const rows=[]; res[0].forEach(function(d){ rows.push(Object.assign({id:d.id},d.data())); });   // newest first
+    let rows=[]; res[0].forEach(function(d){ rows.push(Object.assign({id:d.id},d.data())); });
+    rows.sort(function(a,b){ return a.id<b.id?1:(a.id>b.id?-1:0); });   // newest first (doc id = YYYY-MM-DD)
+    rows=rows.slice(0,N);
     const revById={}; if(res[1])res[1].forEach(function(d){ revById[d.id]=d.data(); });
     if(!rows.length){ el.innerHTML=lnEmptyHTML(); return; }
     lnPaint(el, rows, revById, tier);
@@ -3838,12 +3842,12 @@ function lnRender(){
 function lnCardHTML(){ return wideCardHTML('lastnight','◑','Last Night','Last night’s numbers'); }
 function lnHomePrime(){
   if(!lnCanTab()||!fbReady||!fbDb)return;
-  const tier=lnTier(), wantRev=(tier==='full'), byId=firebase.firestore.FieldPath.documentId();
-  const q=fbDb.collection('revel').orderBy(byId,'desc').limit(1).get();
-  const qr=wantRev?fbDb.collection('revel_rev').orderBy(byId,'desc').limit(1).get():Promise.resolve(null);
+  const tier=lnTier(), wantRev=(tier==='full');
+  const q=fbDb.collection('revel').get();
+  const qr=wantRev?fbDb.collection('revel_rev').get():Promise.resolve(null);
   Promise.all([q,qr]).then(function(res){
-    let d=null; res[0].forEach(function(x){ if(!d)d=Object.assign({id:x.id},x.data()); }); if(!d)return;
-    let rev=null; if(res[1])res[1].forEach(function(x){ if(!rev)rev=x.data(); });
+    let d=null; res[0].forEach(function(x){ const o=Object.assign({id:x.id},x.data()); if(!d||o.id>d.id)d=o; }); if(!d)return;
+    let rev=null; if(res[1]){ res[1].forEach(function(x){ if(x.id===d.id)rev=x.data(); }); }
     const parts=[];
     if(d.covers!=null)parts.push(lnNum(d.covers)+' covers');
     if(wantRev&&rev&&rev.net!=null)parts.push(lnMoney0(rev.net));
