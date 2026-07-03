@@ -1001,6 +1001,10 @@ body.locked{overflow:hidden;}
 .ln-na-row{margin-top:2px;}
 .ln-showall{margin-top:8px; font-size:12.5px; font-weight:700; color:var(--gold); cursor:pointer; letter-spacing:.02em;}
 .ln-showall:active{opacity:.6;}
+.ln-stat .ln-tag{font-size:11px; color:var(--ink-mute); margin-top:3px; font-variant-numeric:tabular-nums; line-height:1.35;}
+.ln-note2{font-size:13px; color:var(--ink-soft); line-height:1.5; padding:3px 0; border-bottom:1px solid rgba(205,216,244,.07);}
+.ln-note2:last-child{border-bottom:0;}
+.ln-note-k{display:inline-block; min-width:42px; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--gold); font-weight:700; margin-right:6px;}
 </style>
 </head>
 <body class="not-home">
@@ -1212,7 +1216,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783099981';   // stamped by build-data.py at every deploy
+const BUILD='1783100755';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3844,27 +3848,66 @@ function lnPaint(el, rows, revById, tier){
   const latest=rows[0], isFull=(tier==='full'), showAvg=(tier==='full'||tier==='foh');
   lnExpanded={};   // each open starts collapsed
   let h=lnFreshBlock(latest);
-  if(isFull){
-    const rev=revById[latest.id]||null; h+='<div class="ln-grid">';
-    if(rev&&rev.net!=null){ const nd=rev.wow&&rev.wow.net?rev.wow.net:null;
-      h+='<div class="ln-stat"><div class="k">Net Sales</div><div class="v">'+lnMoney2(rev.net)+'</div>'+(nd?'<div class="sub">'+lnDeltaSpan(nd.d,'money',false)+(nd.pct!=null?' · '+(nd.pct>0?'+':'')+Number(nd.pct).toFixed(1)+'% WoW':'')+'</div>':'')+'</div>'; }
-    if(rev&&rev.gross!=null)h+='<div class="ln-stat"><div class="k">Gross Sales</div><div class="v">'+lnMoney2(rev.gross)+'</div></div>';
-    h+='</div>';
-  }
   h+='<div class="ln-grid">';
-  h+=lnStat('Covers', lnNum(latest.covers), (latest.wow&&latest.wow.covers)?lnDeltaSpan(latest.wow.covers.d,'num',false)+' WoW':'');
-  if(showAvg&&latest.avg_check!=null)h+=lnStat('Avg Check', lnMoney2(latest.avg_check), (latest.wow&&latest.wow.avg_check)?lnDeltaSpan(latest.wow.avg_check.d,'money',false)+' WoW':'');
+  // Net Sales (full only) — gross rides as a tagline underneath.
+  if(isFull){
+    const rev=revById[latest.id]||null;
+    if(rev&&rev.net!=null){
+      const nd=rev.wow&&rev.wow.net?rev.wow.net:null;
+      const wow=nd?lnDeltaSpan(nd.d,'money',false)+(nd.pct!=null?' · '+(nd.pct>0?'+':'')+Number(nd.pct).toFixed(1)+'% WoW':''):'';
+      h+=lnStatT('Net Sales', lnMoney2(rev.net), wow, rev.gross!=null?'Gross '+lnMoney2(rev.gross):'');
+    }
+  }
+  // Covers (all) — nightly-log cross-check as tagline.
+  {
+    const wow=(latest.wow&&latest.wow.covers)?lnDeltaSpan(latest.wow.covers.d,'num',false)+' WoW':'';
+    let tag='';
+    if(latest.covers_log!=null){
+      tag=(latest.covers_log===latest.covers)?('Log '+lnNum(latest.covers_log)+' ✓'):('⚠ Revel '+lnNum(latest.covers)+' vs log '+lnNum(latest.covers_log));
+    }
+    h+=lnStatT('Covers', lnNum(latest.covers), wow, tag);
+  }
+  // Avg Check (full+foh) — per-guest tagline is FULL only (per_guest × covers = net, and all
+  // managers see covers, so exposing it to foh would leak net).
+  if(showAvg&&latest.avg_check!=null){
+    const wow=(latest.wow&&latest.wow.avg_check)?lnDeltaSpan(latest.wow.avg_check.d,'money',false)+' WoW':'';
+    const tag=(isFull&&latest.avg_per_guest!=null)?lnMoney2(latest.avg_per_guest)+' / guest':'';
+    h+=lnStatT('Avg Check', lnMoney2(latest.avg_check), wow, tag);
+  }
+  // Labor (all) — sales/labor-hr, hours, clocked wages as tagline.
   if(latest.labor){
-    h+=lnStat('Labor', lnPct(latest.labor.pct_clocked_proxy), ((latest.wow&&latest.wow.labor_pts)?lnDeltaSpan(latest.wow.labor_pts.d,'pts',true)+' WoW · ':'')+'clocked proxy');
-    if(latest.labor.sales_per_labor_hour!=null)h+=lnStat('Sales / Labor Hr', lnMoney0(latest.labor.sales_per_labor_hour), '');
+    const L=latest.labor;
+    const wow=((latest.wow&&latest.wow.labor_pts)?lnDeltaSpan(latest.wow.labor_pts.d,'pts',true)+' WoW · ':'')+'clocked proxy';
+    const tb=[];
+    if(L.sales_per_labor_hour!=null)tb.push(lnMoney2(L.sales_per_labor_hour)+' / labor hr');
+    if(L.hours!=null)tb.push(Number(L.hours).toFixed(2)+' hrs');
+    if(L.clocked_wages!=null)tb.push(lnMoney0(L.clocked_wages)+' wages');
+    h+=lnStatT('Labor', lnPct(L.pct_clocked_proxy), wow, tb.join(' · '));
   }
   h+='</div>';
+  h+=lnNotesBlock(latest.notes);
   h+=lnFoodBlock(latest.food);
   h+=lnDrinksBlock(latest.drinks);
   h+=lnWineBlock(latest.drinks&&latest.drinks.wine);
   h+=lnStripBlock(rows, revById, isFull);
   el.innerHTML=h;
   lnWineInitPill();
+}
+function lnStatT(k,v,sub,tag){
+  return '<div class="ln-stat"><div class="k">'+k+'</div><div class="v">'+v+'</div>'
+    +(sub?'<div class="sub">'+sub+'</div>':'')
+    +(tag?'<div class="ln-tag">'+esc(tag)+'</div>':'')+'</div>';
+}
+function lnNotesBlock(n){
+  if(!n)return '';
+  const bits=[];
+  if(n.peak)bits.push(['Peak',n.peak]);
+  if(n.tail)bits.push(['Tail',n.tail]);
+  if(n.service)bits.push(['Floor',n.service]);
+  if(!bits.length)return '';
+  let h='<div class="ln-sec">The Night</div><div class="ln-card">';
+  bits.forEach(function(b){ h+='<div class="ln-note2"><span class="ln-note-k">'+b[0]+'</span> '+esc(b[1])+'</div>'; });
+  return h+'</div>';
 }
 function lnRender(){
   const el=$('lnBody'); if(!el)return;
