@@ -1005,6 +1005,8 @@ body.locked{overflow:hidden;}
 .ln-note2{font-size:13px; color:var(--ink-soft); line-height:1.5; padding:3px 0; border-bottom:1px solid rgba(205,216,244,.07);}
 .ln-note2:last-child{border-bottom:0;}
 .ln-note-k{display:inline-block; min-width:42px; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--gold); font-weight:700; margin-right:6px;}
+.ln-tut{margin-top:9px; font-size:12.5px; color:var(--ink-soft); line-height:1.55;}
+.ln-tut p{margin:0 0 8px;} .ln-tut p:last-child{margin-bottom:0;} .ln-tut b{color:var(--ink);}
 </style>
 </head>
 <body class="not-home">
@@ -1216,7 +1218,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783101338';   // stamped by build-data.py at every deploy
+const BUILD='1783102106';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3847,12 +3849,12 @@ function lnWineSet(v){ lnWineView=v; const el=document.getElementById('ln-wine-l
 function lnWineInitPill(){ const t=document.getElementById('ln-wine-tabs'), p=document.getElementById('ln-wine-pill'); if(t&&p&&typeof initPill==='function')initPill(t,p,'lw',lnWineSet); }
 function lnPaint(el, rows, revById, tier){
   const latest=rows[0], isFull=(tier==='full'), showAvg=isFull;   // avg check + per-guest full-only (per-guest × covers = net)
+  const rev=isFull?(revById[latest.id]||null):null;   // revel_rev fetched only for full — never on partial devices
   lnExpanded={};   // each open starts collapsed
   let h=lnFreshBlock(latest);
   h+='<div class="ln-grid">';
   // Net Sales (full only) — gross rides as a tagline underneath.
   if(isFull){
-    const rev=revById[latest.id]||null;
     if(rev&&rev.net!=null){
       const nd=rev.wow&&rev.wow.net?rev.wow.net:null;
       const wow=nd?lnDeltaSpan(nd.d,'money',false)+(nd.pct!=null?' · '+(nd.pct>0?'+':'')+Number(nd.pct).toFixed(1)+'% WoW':''):'';
@@ -3887,6 +3889,7 @@ function lnPaint(el, rows, revById, tier){
   }
   h+='</div>';
   h+=lnNotesBlock(latest.notes);
+  if(isFull){ h+=lnLedgerBlock(rev); h+=lnEfficiencyBlock(rev); }   // full-only, from revel_rev
   h+=lnFoodBlock(latest.food);
   h+=lnDrinksBlock(latest.drinks);
   h+=lnWineBlock(latest.drinks&&latest.drinks.wine);
@@ -3894,6 +3897,38 @@ function lnPaint(el, rows, revById, tier){
   el.innerHTML=h;
   lnWineInitPill();
 }
+function lnLedgerBlock(rev){
+  if(!rev)return '';
+  const rows=[];
+  if(rev.discounts!=null)rows.push(['Discounts',lnMoney2(rev.discounts)]);
+  if(rev.comps!=null)rows.push(['Comps',lnMoney2(rev.comps)]);
+  if(rev.voids!=null)rows.push(['Voids',lnMoney2(rev.voids)]);
+  if(rev.gift_cards_redeemed!=null)rows.push(['Gift cards redeemed',lnMoney2(rev.gift_cards_redeemed)]);
+  if(!rows.length)return '';
+  let h='<div class="ln-sec">Adjustments</div><div class="ln-card">';
+  rows.forEach(function(r){ h+='<div class="ln-row"><span class="nm">'+r[0]+'</span><span class="qv">'+r[1]+'</span></div>'; });
+  return h+'</div>';
+}
+function lnEfficiencyBlock(rev){
+  if(!rev||rev.net==null||!rev.seats)return '';
+  const seats=rev.seats, hrs=rev.service_hours||null;
+  const sps=rev.net/seats, revpash=hrs?rev.net/(seats*hrs):null;
+  let h='<div class="ln-sec">Efficiency</div><div class="ln-card">';
+  h+='<div class="ln-grid">';
+  if(revpash!=null)h+=lnStatT('RevPASH', lnMoney2(revpash), '', 'per seat-hour');
+  h+=lnStatT('Sales / Seat', lnMoney2(sps), '', seats+' seats');
+  h+='</div>';
+  h+='<div class="ln-showall" id="ln-tut-link-eff" onclick="lnToggleTut(\'eff\')">What these mean ▾</div>';
+  h+='<div id="ln-tut-eff" class="ln-tut" style="display:none">'+lnEffTutorial(rev,seats,hrs,revpash,sps)+'</div>';
+  return h+'</div>';
+}
+function lnEffTutorial(rev,seats,hrs,revpash,sps){
+  let h='';
+  if(revpash!=null)h+='<p><b>RevPASH</b> is revenue per available seat-hour: net sales ÷ (seats × service hours). Tonight, '+lnMoney0(rev.net)+' ÷ ('+seats+' seats × '+hrs+' hrs) = <b>'+lnMoney2(revpash)+'</b>. It measures how hard every seat worked each hour, blending how full the room was with how much each guest spent. A quiet night of big checks and a packed night of small checks can land at the same number, which is the point: one figure for yield.</p>';
+  h+='<p><b>Sales per seat</b> is net sales ÷ total seats: '+lnMoney0(rev.net)+' ÷ '+seats+' = <b>'+lnMoney2(sps)+'</b>. No time dimension, so it is roughly average check × turns per seat. Best for comparing nights of similar length.</p>';
+  return h;
+}
+function lnToggleTut(key){ const el=document.getElementById('ln-tut-'+key), lk=document.getElementById('ln-tut-link-'+key); if(!el)return; const open=el.style.display!=='none'; el.style.display=open?'none':'block'; if(lk)lk.textContent=open?'What these mean ▾':'Hide ▲'; }
 function lnStatT(k,v,sub,tag){
   return '<div class="ln-stat"><div class="k">'+k+'</div><div class="v">'+v+'</div>'
     +(sub?'<div class="sub">'+sub+'</div>':'')
