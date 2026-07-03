@@ -1218,7 +1218,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783102529';   // stamped by build-data.py at every deploy
+const BUILD='1783114075';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3889,7 +3889,8 @@ function lnPaint(el, rows, revById, tier){
   }
   h+='</div>';
   h+=lnNotesBlock(latest.notes);
-  if(isFull){ h+=lnLedgerBlock(rev); h+=lnEfficiencyBlock(rev); }   // full-only, from revel_rev
+  h+=lnLedgerBlock(latest, rev, isFull);        // integrity (discounts/comps/voids) all tiers; gift cards full-only
+  if(isFull){ h+=lnEfficiencyBlock(rev); }      // RevPASH/sales-per-seat full-only (net-derivable)
   h+=lnFoodBlock(latest.food);
   h+=lnDrinksBlock(latest.drinks);
   h+=lnWineBlock(latest.drinks&&latest.drinks.wine);
@@ -3897,13 +3898,14 @@ function lnPaint(el, rows, revById, tier){
   el.innerHTML=h;
   lnWineInitPill();
 }
-function lnLedgerBlock(rev){
-  if(!rev)return '';
+function lnLedgerBlock(latest, rev, isFull){
   const rows=[];
-  if(rev.discounts!=null)rows.push(['Discounts',lnMoney2(rev.discounts)]);
-  if(rev.comps!=null)rows.push(['Comps',lnMoney2(rev.comps)]);
-  if(rev.voids!=null)rows.push(['Voids',lnMoney2(rev.voids)]);
-  if(rev.gift_cards_redeemed!=null)rows.push(['Gift cards redeemed',lnMoney2(rev.gift_cards_redeemed)]);
+  // Integrity numbers ride in the main revel doc — visible to ALL tiers (per Sam 2026-07-03).
+  if(latest.discounts!=null)rows.push(['Discounts',lnMoney2(latest.discounts)]);
+  if(latest.comps!=null)rows.push(['Comps',lnMoney2(latest.comps)]);
+  if(latest.voids!=null)rows.push(['Voids',lnMoney2(latest.voids)]);
+  // Gift cards = cash reconciliation, stays full-only (in revel_rev).
+  if(isFull&&rev&&rev.gift_cards_redeemed!=null)rows.push(['Gift cards redeemed',lnMoney2(rev.gift_cards_redeemed)]);
   if(!rows.length)return '';
   let h='<div class="ln-sec">Adjustments</div><div class="ln-card">';
   rows.forEach(function(r){ h+='<div class="ln-row"><span class="nm">'+r[0]+'</span><span class="qv">'+r[1]+'</span></div>'; });
