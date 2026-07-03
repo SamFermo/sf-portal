@@ -6149,7 +6149,7 @@ window.SF = {
      {
       "name": "Adrian",
       "shifts": [
-       "Sup Server",
+       "R/O",
        "Sup Server",
        "MD",
        "MD",
@@ -6185,7 +6185,7 @@ window.SF = {
      {
       "name": "Allegra",
       "shifts": [
-       "",
+       "3:30 serve",
        "3:30 serve",
        "3:30 serve",
        "",
@@ -6293,7 +6293,7 @@ window.SF = {
      {
       "name": "Sully",
       "shifts": [
-       "3:30 serve",
+       "Sup Server",
        "",
        "Sup Server",
        "",
@@ -11734,5 +11734,5 @@ window.SF = {
    }
   }
  },
- "build": "1783021768"
+ "build": "1783084406"
 };
