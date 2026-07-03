@@ -967,6 +967,35 @@ body.locked{overflow:hidden;}
 .ord-recent .ord-ro .ro-lines{font-size:13px; color:var(--ink-soft); line-height:1.5;}
 .ord-ro button{background:none; border:1px solid rgba(230,200,120,.45); color:var(--gold); border-radius:999px; padding:4px 12px; font-size:11.5px; font-weight:700; cursor:pointer;}
 .ord-recent .ord-ro button{margin-top:7px;}
+
+/* ---------- Last Night (manager Revel numbers) ---------- */
+.ln-empty{color:var(--ink-mute); font-size:14px; padding:16px 2px;}
+.ln-fail{background:rgba(176,74,26,.12); border:1px solid rgba(176,74,26,.5); color:#f3d9c7; border-radius:12px; padding:12px 14px; font-size:13.5px; line-height:1.5;}
+.ln-fresh{font-size:12px; color:var(--ink-mute); margin:2px 0 14px; letter-spacing:.02em;}
+.ln-stale{background:rgba(176,74,26,.14); border:1px solid rgba(176,74,26,.55); color:#f6ddca; border-radius:12px; padding:10px 13px; font-size:13px; font-weight:600; margin:2px 0 14px; line-height:1.45;}
+.ln-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;}
+.ln-stat{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.13); border-radius:12px; padding:11px 13px;}
+.ln-stat.wide{grid-column:1 / -1;}
+.ln-stat .k{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); margin-bottom:3px;}
+.ln-stat .v{font-size:22px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+.ln-stat .v small{font-size:12px; font-weight:600; color:var(--ink-soft);}
+.ln-stat .sub{font-size:11.5px; color:var(--ink-mute); margin-top:3px;}
+.ln-d{font-size:12.5px; font-weight:700; font-variant-numeric:tabular-nums;}
+.ln-d.up{color:#7fc98a;} .ln-d.down{color:#e08a6a;} .ln-d.flat{color:var(--ink-mute);}
+.ln-sec{margin:16px 0 6px; font-size:12px; text-transform:uppercase; letter-spacing:.07em; color:var(--gold); font-weight:700;}
+.ln-card{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.13); border-radius:12px; padding:11px 13px; margin-bottom:10px;}
+.ln-row{display:flex; justify-content:space-between; gap:10px; font-size:13.5px; padding:3px 0; border-bottom:1px solid rgba(205,216,244,.07);}
+.ln-row:last-child{border-bottom:0;}
+.ln-row .nm{color:var(--ink-soft);} .ln-row .qv{color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap;}
+.ln-note{font-size:12.5px; color:var(--ink-mute); margin-top:6px; line-height:1.5;}
+.ln-strip{width:100%; border-collapse:collapse; font-size:12.5px; font-variant-numeric:tabular-nums; margin-top:4px;}
+.ln-strip th{text-align:right; color:var(--ink-mute); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; padding:5px 6px; border-bottom:1px solid rgba(205,216,244,.16);}
+.ln-strip th:first-child{text-align:left;}
+.ln-strip td{text-align:right; padding:6px 6px; border-bottom:1px solid rgba(205,216,244,.07); color:var(--ink);}
+.ln-strip td:first-child{text-align:left; color:var(--ink-soft);}
+.ln-strip tr:first-child td{color:var(--ink); font-weight:600;}
+.ln-strip .d{font-size:11px; font-weight:700; margin-left:5px;}
+.ln-strip .d.up{color:#7fc98a;} .ln-strip .d.down{color:#e08a6a;} .ln-strip .d.flat{color:var(--ink-mute);}
 </style>
 </head>
 <body class="not-home">
@@ -1059,6 +1088,12 @@ body.locked{overflow:hidden;}
 <section class="view" id="today">
   <div class="view-head"><p class="view-eyebrow">Manager</p><h2 class="view-title">Day Sheet</h2><p class="view-sub" id="todaySub"></p></div>
   <div id="todayBody"></div>
+</section>
+
+<section class="view" id="lastnight">
+  <div class="view-head"><p class="view-eyebrow">Managers Only</p><h2 class="view-title">Last Night</h2>
+    <p class="view-sub">How last night landed — pulled from the morning brief.</p></div>
+  <div id="lnBody"></div>
 </section>
 
 <section class="view" id="board">
@@ -1172,7 +1207,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783084406';   // stamped by build-data.py at every deploy
+const BUILD='1783096450';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1219,7 +1254,10 @@ function makeStars(){
 }
 
 const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','Tables'],['schedule','Schedule'],['crew','Crew Board'],['standards','Standards'],['directory','Directory']];
-function navTabs(){let t=isMgr()?[['today','Day Sheet']].concat(TABS,[['frontdesk','Front Desk'],['orders','Farm Order']]):[['today','Day at a Glance']].concat(TABS);return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
+function navTabs(){let head=isMgr()?[['today','Day Sheet']]:[['today','Day at a Glance']];
+  if(typeof lnCanTab==='function'&&lnCanTab())head=head.concat([['lastnight','Last Night']]);   // sits beside Day Sheet, gated by isMgr()+lnRole
+  let t=isMgr()?head.concat(TABS,[['frontdesk','Front Desk'],['orders','Farm Order']]):head.concat(TABS);
+  return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
   if(typeof updatePendingBadge==='function')updatePendingBadge();}
@@ -1230,7 +1268,7 @@ function go(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender();
   if(id==='standards'){showStdPane(stdTab);markStandardsSeen();}
   if(id==='fresh')markFreshSeen();
   if(id==='verbals')markVerbalsSeen();
@@ -1306,7 +1344,7 @@ function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
   const mgr=isMgr();
   const annChip = annActive()?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${esc(ANNOUNCE.title)} — ${annMyRsvp()?(annMyRsvp().rsvp==='yes'?'you\'re in ✓ (tap to change)':'tap to RSVP'):'tap to RSVP'}</span></button>`:'';
-  let html = annChip + glanceCardHTML() + freshCardHTML() + verbalsCardHTML();
+  let html = annChip + glanceCardHTML() + (lnCanTab()?lnCardHTML():'') + freshCardHTML() + verbalsCardHTML();
   const std=[['board','⌗','Tables','Tonight\'s table notes & statuses'],
     ['schedule','◷','Schedule','This week + the month'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
@@ -1317,6 +1355,7 @@ function renderHome(){
   if(mgr) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
   $('homeGrid').innerHTML=html;
   glanceCardWeather();
+  if(lnCanTab()){ lnHomePrime(); }
   if(mgr){ ordHomePrime(); }
   renderAccountBar();
   updateAttn();
@@ -3691,6 +3730,128 @@ function renderService(){const S=SF.service.stepsOfService;
   h+=`<div class="section-label">Standards</div>`;
   S.standards.forEach(st=>h+=`<div class="std-card"><div class="std-title serif">${esc(st.title)}</div><div class="std-body">${esc(st.body)}</div></div>`);
   $('svcBody').innerHTML=h;
+}
+
+/* ===== LAST NIGHT — manager-only Revel numbers, mirror of the captain's log (Stage 1) =====
+   Reads revel/{date} (all tiers) + revel_rev/{date} (full only) written ~4am by the brief.
+   Tier from me.lnRole: 'full' (Sam,Tim) sees net/gross+avg; 'foh' (Adrian,Sully) sees avg but
+   not net/gross; 'ops' (Chris,Joe,Katie) sees labor/covers/food/drinks only. revel_rev is only
+   fetched for full viewers, so net/gross never reaches a non-full device. */
+function lnTier(){ return (me&&me.lnRole)||null; }              // 'full' | 'foh' | 'ops' | null
+function lnCanTab(){ return typeof isMgr==='function' && isMgr() && !!lnTier(); }
+function lnMoney2(n){ return (n==null||isNaN(n))?'—':'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function lnMoney0(n){ return (n==null||isNaN(n))?'—':'$'+Math.round(Number(n)).toLocaleString('en-US'); }
+function lnNum(n){ return (n==null||isNaN(n))?'—':Number(n).toLocaleString('en-US'); }
+function lnPct(n){ return (n==null||isNaN(n))?'—':(Number(n).toFixed(2)+'%'); }
+function lnYesterdayISO(){ const d=new Date(todayISO()+'T12:00:00'); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); }
+function lnPrettyDate(iso){ if(!iso)return ''; return new Date(iso+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
+function lnDateLabel(d){ return (d.weekday?d.weekday+' ':'')+lnPrettyDate(d.id||d.date); }
+function lnStripDate(d){ return new Date((d.id||d.date)+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',day:'numeric'}); }
+function lnFmtAsOf(iso){ if(!iso)return '—'; try{ return new Date(iso).toLocaleString(undefined,{weekday:'short',hour:'numeric',minute:'2-digit'}); }catch(e){ return String(iso); } }
+function lnDeltaSpan(d, kind, goodDown){
+  if(d==null||isNaN(d))return '';
+  const cls=(d>0?(goodDown?'down':'up'):d<0?(goodDown?'up':'down'):'flat');
+  const arrow=d>0?'▲':d<0?'▼':'–'; const a=Math.abs(d);
+  let mag; if(kind==='money')mag=lnMoney0(a); else if(kind==='pts')mag=a.toFixed(2)+' pts'; else if(kind==='pct')mag=a.toFixed(1)+'%'; else mag=lnNum(a);
+  return '<span class="ln-d '+cls+'">'+arrow+' '+mag+'</span>';
+}
+function lnStat(k,v,sub){ return '<div class="ln-stat"><div class="k">'+k+'</div><div class="v">'+v+'</div>'+(sub?'<div class="sub">'+sub+'</div>':'')+'</div>'; }
+function lnFailHTML(msg){ return '<div class="ln-fail">'+esc(msg)+'</div>'; }
+function lnEmptyHTML(){ return '<div class="ln-fail">Last night not yet posted. The morning brief writes these around 4am — check back, or verify the push ran.</div>'; }
+function lnFreshBlock(latest){
+  const exp=lnYesterdayISO(); let h='';
+  if((latest.id||latest.date)<exp) h+='<div class="ln-stale">Showing '+lnDateLabel(latest)+', not last night ('+lnPrettyDate(exp)+'). The 4am push may not have run — verify before relying on these.</div>';
+  h+='<div class="ln-fresh">As of '+lnFmtAsOf(latest.written_at)+' · service '+lnDateLabel(latest)+'</div>';
+  return h;
+}
+function lnFoodBlock(food){
+  if(!food)return ''; let h='<div class="ln-sec">Food</div><div class="ln-card">';
+  const top=food.top||[];
+  if(top.length)top.forEach(function(it){ h+='<div class="ln-row"><span class="nm">'+esc(it.name||'')+'</span><span class="qv">'+lnNum(it.qty)+(it.rev!=null?' · '+lnMoney0(it.rev):'')+'</span></div>'; });
+  else h+='<div class="ln-row"><span class="nm">No item detail posted.</span><span class="qv"></span></div>';
+  if(food.not_moving&&food.not_moving.length)h+='<div class="ln-note"><b>Slow:</b> '+food.not_moving.map(function(x){return esc(x.name||'')+' ('+lnNum(x.qty)+')';}).join(', ')+'</div>';
+  if(food.anomalies&&food.anomalies.length)h+='<div class="ln-note"><b>Notable:</b> '+food.anomalies.map(function(x){return esc(x.name||'')+(x.note?' — '+esc(x.note):'');}).join('; ')+'</div>';
+  return h+'</div>';
+}
+function lnDrinksBlock(dr){
+  if(!dr)return ''; let h='<div class="ln-sec">Drinks</div><div class="ln-card">';
+  const top=dr.top||[];
+  if(top.length)top.forEach(function(it){ h+='<div class="ln-row"><span class="nm">'+esc(it.name||'')+'</span><span class="qv">'+lnNum(it.qty)+(it.rev!=null?' · '+lnMoney0(it.rev):'')+'</span></div>'; });
+  if(dr.wine)h+='<div class="ln-row"><span class="nm">Wine</span><span class="qv">'+lnNum(dr.wine.bottles||0)+' btl · '+lnNum(dr.wine.glasses||0)+' gl'+(dr.wine.rev!=null?' · '+lnMoney0(dr.wine.rev):'')+'</span></div>';
+  if(dr.na)h+='<div class="ln-row"><span class="nm">NA</span><span class="qv">'+lnNum(dr.na.qty||0)+(dr.na.rev!=null?' · '+lnMoney0(dr.na.rev):'')+'</span></div>';
+  if(dr.anomalies&&dr.anomalies.length)h+='<div class="ln-note"><b>Notable:</b> '+dr.anomalies.map(function(x){return esc(x.name||'')+(x.note?' — '+esc(x.note):'');}).join('; ')+'</div>';
+  return h+'</div>';
+}
+function lnStripBlock(rows, revById, isFull){
+  let h='<div class="ln-sec">Trailing '+rows.length+' night'+(rows.length===1?'':'s')+'</div>';
+  h+='<table class="ln-strip"><thead><tr><th>Night</th><th>Covers</th><th>Labor</th>'+(isFull?'<th>Net</th>':'')+'</tr></thead><tbody>';
+  rows.forEach(function(d){
+    const cwd=d.wow&&d.wow.covers?d.wow.covers.d:null;
+    const cw=cwd==null?'':'<span class="d '+(cwd>0?'up':cwd<0?'down':'flat')+'">'+(cwd>0?'+':'')+lnNum(cwd)+'</span>';
+    const lwd=d.wow&&d.wow.labor_pts?d.wow.labor_pts.d:null;
+    const lw=lwd==null?'':'<span class="d '+(lwd<0?'up':lwd>0?'down':'flat')+'">'+(lwd>0?'+':'')+lwd.toFixed(1)+'</span>';
+    let net=''; if(isFull){ const r=revById[d.id]; net='<td>'+(r&&r.net!=null?lnMoney0(r.net):'—')+'</td>'; }
+    h+='<tr><td>'+lnStripDate(d)+'</td><td>'+lnNum(d.covers)+' '+cw+'</td><td>'+lnPct(d.labor?d.labor.pct_clocked_proxy:null)+' '+lw+'</td>'+net+'</tr>';
+  });
+  return h+'</tbody></table>';
+}
+function lnPaint(el, rows, revById, tier){
+  const latest=rows[0], isFull=(tier==='full'), showAvg=(tier==='full'||tier==='foh');
+  let h=lnFreshBlock(latest);
+  if(isFull){
+    const rev=revById[latest.id]||null; h+='<div class="ln-grid">';
+    if(rev&&rev.net!=null){ const nd=rev.wow&&rev.wow.net?rev.wow.net:null;
+      h+='<div class="ln-stat"><div class="k">Net Sales</div><div class="v">'+lnMoney2(rev.net)+'</div>'+(nd?'<div class="sub">'+lnDeltaSpan(nd.d,'money',false)+(nd.pct!=null?' · '+(nd.pct>0?'+':'')+Number(nd.pct).toFixed(1)+'% WoW':'')+'</div>':'')+'</div>'; }
+    if(rev&&rev.gross!=null)h+='<div class="ln-stat"><div class="k">Gross Sales</div><div class="v">'+lnMoney2(rev.gross)+'</div></div>';
+    h+='</div>';
+  }
+  h+='<div class="ln-grid">';
+  h+=lnStat('Covers', lnNum(latest.covers), (latest.wow&&latest.wow.covers)?lnDeltaSpan(latest.wow.covers.d,'num',false)+' WoW':'');
+  if(showAvg&&latest.avg_check!=null)h+=lnStat('Avg Check', lnMoney2(latest.avg_check), (latest.wow&&latest.wow.avg_check)?lnDeltaSpan(latest.wow.avg_check.d,'money',false)+' WoW':'');
+  if(latest.labor){
+    h+=lnStat('Labor', lnPct(latest.labor.pct_clocked_proxy), ((latest.wow&&latest.wow.labor_pts)?lnDeltaSpan(latest.wow.labor_pts.d,'pts',true)+' WoW · ':'')+'clocked proxy');
+    if(latest.labor.sales_per_labor_hour!=null)h+=lnStat('Sales / Labor Hr', lnMoney0(latest.labor.sales_per_labor_hour), '');
+  }
+  h+='</div>';
+  h+=lnFoodBlock(latest.food);
+  h+=lnDrinksBlock(latest.drinks);
+  h+=lnStripBlock(rows, revById, isFull);
+  el.innerHTML=h;
+}
+function lnRender(){
+  const el=$('lnBody'); if(!el)return;
+  if(!lnCanTab()){ el.innerHTML='<p class="ln-empty">Manager access required.</p>'; return; }
+  if(!fbReady||!fbDb){ el.innerHTML=lnFailHTML('Can’t reach the server right now. Check your connection, then reopen the app.'); return; }
+  el.innerHTML='<p class="ln-empty">Loading last night…</p>';
+  const tier=lnTier(), wantRev=(tier==='full'), N=7, byId=firebase.firestore.FieldPath.documentId();
+  const q=fbDb.collection('revel').orderBy(byId,'desc').limit(N).get();
+  const qr=wantRev?fbDb.collection('revel_rev').orderBy(byId,'desc').limit(N).get():Promise.resolve(null);
+  Promise.all([q,qr]).then(function(res){
+    const rows=[]; res[0].forEach(function(d){ rows.push(Object.assign({id:d.id},d.data())); });   // newest first
+    const revById={}; if(res[1])res[1].forEach(function(d){ revById[d.id]=d.data(); });
+    if(!rows.length){ el.innerHTML=lnEmptyHTML(); return; }
+    lnPaint(el, rows, revById, tier);
+  }).catch(function(e){
+    el.innerHTML=lnFailHTML('Couldn’t load last night’s numbers ('+((e&&e.message)||'read failed')+'). If this persists, the revel rule may not be published yet.');
+  });
+}
+function lnCardHTML(){ return wideCardHTML('lastnight','◑','Last Night','Last night’s numbers'); }
+function lnHomePrime(){
+  if(!lnCanTab()||!fbReady||!fbDb)return;
+  const tier=lnTier(), wantRev=(tier==='full'), byId=firebase.firestore.FieldPath.documentId();
+  const q=fbDb.collection('revel').orderBy(byId,'desc').limit(1).get();
+  const qr=wantRev?fbDb.collection('revel_rev').orderBy(byId,'desc').limit(1).get():Promise.resolve(null);
+  Promise.all([q,qr]).then(function(res){
+    let d=null; res[0].forEach(function(x){ if(!d)d=Object.assign({id:x.id},x.data()); }); if(!d)return;
+    let rev=null; if(res[1])res[1].forEach(function(x){ if(!rev)rev=x.data(); });
+    const parts=[];
+    if(d.covers!=null)parts.push(lnNum(d.covers)+' covers');
+    if(wantRev&&rev&&rev.net!=null)parts.push(lnMoney0(rev.net));
+    else if((tier==='full'||tier==='foh')&&d.avg_check!=null)parts.push(lnMoney0(d.avg_check)+' avg');
+    if(d.labor&&d.labor.pct_clocked_proxy!=null)parts.push(lnPct(d.labor.pct_clocked_proxy)+' labor');
+    const el=document.querySelector('.home-card[data-card="lastnight"] .hc-sub');
+    if(el)el.innerHTML=esc(lnDateLabel(d)+' · '+parts.join(' · '));
+  }).catch(function(){});
 }
 
 /* 86 BOARD */
