@@ -996,6 +996,11 @@ body.locked{overflow:hidden;}
 .ln-strip tr:first-child td{color:var(--ink); font-weight:600;}
 .ln-strip .d{font-size:11px; font-weight:700; margin-left:5px;}
 .ln-strip .d.up{color:#7fc98a;} .ln-strip .d.down{color:#e08a6a;} .ln-strip .d.flat{color:var(--ink-mute);}
+.ln-wine-sum{font-size:12.5px; color:var(--ink-mute); margin-bottom:9px; font-variant-numeric:tabular-nums;}
+.ln-wine-tabs{margin:2px 0 10px; position:relative;}
+.ln-na-row{margin-top:2px;}
+.ln-showall{margin-top:8px; font-size:12.5px; font-weight:700; color:var(--gold); cursor:pointer; letter-spacing:.02em;}
+.ln-showall:active{opacity:.6;}
 </style>
 </head>
 <body class="not-home">
@@ -1207,7 +1212,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783097663';   // stamped by build-data.py at every deploy
+const BUILD='1783099981';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3766,19 +3771,15 @@ function lnFreshBlock(latest){
 }
 function lnFoodBlock(food){
   if(!food)return ''; let h='<div class="ln-sec">Food</div><div class="ln-card">';
-  const top=food.top||[];
-  if(top.length)top.forEach(function(it){ h+='<div class="ln-row"><span class="nm">'+esc(it.name||'')+'</span><span class="qv">'+lnNum(it.qty)+(it.rev!=null?' · '+lnMoney0(it.rev):'')+'</span></div>'; });
-  else h+='<div class="ln-row"><span class="nm">No item detail posted.</span><span class="qv"></span></div>';
+  h+=lnList(food.top,'food',8,'No item detail posted.');
   if(food.not_moving&&food.not_moving.length)h+='<div class="ln-note"><b>Slow:</b> '+food.not_moving.map(function(x){return esc(x.name||'')+' ('+lnNum(x.qty)+')';}).join(', ')+'</div>';
   if(food.anomalies&&food.anomalies.length)h+='<div class="ln-note"><b>Notable:</b> '+food.anomalies.map(function(x){return esc(x.name||'')+(x.note?' — '+esc(x.note):'');}).join('; ')+'</div>';
   return h+'</div>';
 }
 function lnDrinksBlock(dr){
   if(!dr)return ''; let h='<div class="ln-sec">Drinks</div><div class="ln-card">';
-  const top=dr.top||[];
-  if(top.length)top.forEach(function(it){ h+='<div class="ln-row"><span class="nm">'+esc(it.name||'')+'</span><span class="qv">'+lnNum(it.qty)+(it.rev!=null?' · '+lnMoney0(it.rev):'')+'</span></div>'; });
-  if(dr.wine)h+='<div class="ln-row"><span class="nm">Wine</span><span class="qv">'+lnNum(dr.wine.bottles||0)+' btl · '+lnNum(dr.wine.glasses||0)+' gl'+(dr.wine.rev!=null?' · '+lnMoney0(dr.wine.rev):'')+'</span></div>';
-  if(dr.na)h+='<div class="ln-row"><span class="nm">NA</span><span class="qv">'+lnNum(dr.na.qty||0)+(dr.na.rev!=null?' · '+lnMoney0(dr.na.rev):'')+'</span></div>';
+  h+=lnList(dr.top,'drinks',6,'No cocktail detail posted.');
+  if(dr.na)h+='<div class="ln-row ln-na-row"><span class="nm">NA</span><span class="qv">'+lnNum(dr.na.qty||0)+(dr.na.rev!=null?' · '+lnMoney0(dr.na.rev):'')+'</span></div>';
   if(dr.anomalies&&dr.anomalies.length)h+='<div class="ln-note"><b>Notable:</b> '+dr.anomalies.map(function(x){return esc(x.name||'')+(x.note?' — '+esc(x.note):'');}).join('; ')+'</div>';
   return h+'</div>';
 }
@@ -3795,8 +3796,53 @@ function lnStripBlock(rows, revById, isFull){
   });
   return h+'</tbody></table>';
 }
+/* Product-mix rendering: each section (food, drinks, wine) shows a ranked top-N list with a
+   "Show all (N)" expander that toggles the full list in place. Wine additionally has a Glass
+   Pours / Bottles pill toggle (reusing the app's .subtabs/.subpill pattern); the expander lives
+   inside whichever pill view is selected. Docs carry the FULL item arrays; render caps the view. */
+let lnWineView='glass', lnWineData=null, lnExpanded={}, lnListData={};
+function lnListRender(key){
+  const d=lnListData[key]; if(!d)return '';
+  const items=(d.items||[]).slice().sort(function(a,b){return (b.rev||0)-(a.rev||0);});
+  const exp=!!lnExpanded[key], shown=exp?items:items.slice(0,d.topN);
+  let h='<div class="ln-list" id="ln-list-'+key+'">';
+  if(!shown.length)h+='<div class="ln-row"><span class="nm">'+esc(d.empty||'No detail posted.')+'</span><span class="qv"></span></div>';
+  shown.forEach(function(it){ h+='<div class="ln-row"><span class="nm">'+esc(it.name||'')+'</span><span class="qv">'+lnNum(it.qty)+(it.rev!=null?' · '+lnMoney0(it.rev):'')+'</span></div>'; });
+  if(items.length>d.topN)h+='<div class="ln-showall" onclick="lnToggleExpand(\''+key+'\')">'+(exp?'Show less ▲':'Show all '+items.length+' ▾')+'</div>';
+  return h+'</div>';
+}
+function lnList(items,key,topN,empty){ lnListData[key]={items:items||[],topN:topN,empty:empty}; return lnListRender(key); }
+function lnToggleExpand(key){ lnExpanded[key]=!lnExpanded[key]; const c=document.getElementById('ln-list-'+key); if(c)c.outerHTML=lnListRender(key); }
+function lnWineBlock(wine){
+  if(!wine)return '';
+  lnWineData=wine;
+  const detail=((wine.bottle_items&&wine.bottle_items.length)||(wine.glass_items&&wine.glass_items.length));
+  const sum=[];
+  if(wine.bottles!=null)sum.push(lnNum(wine.bottles)+' btl');
+  if(wine.glasses!=null)sum.push(lnNum(wine.glasses)+' gl');
+  if(wine.rev!=null)sum.push(lnMoney0(wine.rev));
+  let h='<div class="ln-sec">Wine</div><div class="ln-card">';
+  if(sum.length)h+='<div class="ln-wine-sum">'+esc(sum.join(' · '))+'</div>';
+  if(detail){
+    const glassActive=(lnWineView!=='bottle');
+    h+='<div class="subtabs ln-wine-tabs" id="ln-wine-tabs"><span class="subpill" id="ln-wine-pill"></span>'
+      +'<button class="subtab'+(glassActive?' active':'')+'" data-lw="glass">Glass Pours</button>'
+      +'<button class="subtab'+(glassActive?'':' active')+'" data-lw="bottle">Bottles</button></div>';
+    h+='<div id="ln-wine-list">'+lnWineListFor(glassActive?'glass':'bottle')+'</div>';
+  } else {
+    h+='<div class="ln-note">No by-item wine detail for this night.</div>';
+  }
+  return h+'</div>';
+}
+function lnWineListFor(view){
+  const items=(view==='bottle'?lnWineData.bottle_items:lnWineData.glass_items)||[];
+  return lnList(items,'wine-'+view,10,'No '+(view==='bottle'?'bottle':'glass-pour')+' detail posted.');
+}
+function lnWineSet(v){ lnWineView=v; const el=document.getElementById('ln-wine-list'); if(el&&lnWineData)el.innerHTML=lnWineListFor(v); }
+function lnWineInitPill(){ const t=document.getElementById('ln-wine-tabs'), p=document.getElementById('ln-wine-pill'); if(t&&p&&typeof initPill==='function')initPill(t,p,'lw',lnWineSet); }
 function lnPaint(el, rows, revById, tier){
   const latest=rows[0], isFull=(tier==='full'), showAvg=(tier==='full'||tier==='foh');
+  lnExpanded={};   // each open starts collapsed
   let h=lnFreshBlock(latest);
   if(isFull){
     const rev=revById[latest.id]||null; h+='<div class="ln-grid">';
@@ -3815,8 +3861,10 @@ function lnPaint(el, rows, revById, tier){
   h+='</div>';
   h+=lnFoodBlock(latest.food);
   h+=lnDrinksBlock(latest.drinks);
+  h+=lnWineBlock(latest.drinks&&latest.drinks.wine);
   h+=lnStripBlock(rows, revById, isFull);
   el.innerHTML=h;
+  lnWineInitPill();
 }
 function lnRender(){
   const el=$('lnBody'); if(!el)return;
