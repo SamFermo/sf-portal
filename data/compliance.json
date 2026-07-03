@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-15",
+  "updated": "2026-07-03",
   "note": "Mirrors the live Compliance Notebook. FWC = Washington Food Worker Card. MAST = Mixology/Alcohol Server permit. Neither auto-renews; renewal means taking the class again.",
   "binderUrl": "https://drive.google.com/file/d/1VpoB2F_Sae104TcJFMSsksCexVqIxzoM/view",
   "roster": {
@@ -22,7 +22,7 @@
       { "name": "Adrian Bravo", "role": "FOH Manager", "fwc": { "status": "warn", "text": "Expires Aug 29, 2026 — renewal watch" }, "mast": { "status": "good", "text": "ServSafe Alcohol WA, valid through Jun 9, 2031" } },
       { "name": "Allegra Dunbar", "role": "Server", "fwc": { "status": "good", "text": "Valid through May 3, 2028" }, "mast": { "status": "info", "text": "Training cert on file (Learn2Serve), official permit en route" } },
       { "name": "Brittany Hinz", "role": "Server", "fwc": { "status": "good", "text": "Valid through Aug 5, 2027" }, "mast": { "status": "good", "text": "Valid through Nov 1, 2028" } },
-      { "name": "Denise Poon", "role": "Server", "fwc": { "status": "good", "text": "Valid through Jan 9, 2027" }, "mast": { "status": "warn", "text": "Expires Jul 1, 2026 — renewal in progress" } },
+      { "name": "Denise Poon", "role": "Server", "fwc": { "status": "good", "text": "Valid through Jan 9, 2027" }, "mast": { "status": "info", "text": "Renewal training completed Jul 2, 2026 (ABC Server Training); official permit en route" } },
       { "name": "Helen Richardson", "role": "Support Staff · Server training in progress", "fwc": { "status": "good", "text": "Valid through May 7, 2028" }, "mast": { "status": "info", "text": "N/A while support staff; required when promoted to server" } },
       { "name": "Jackie Hanley", "role": "Server", "fwc": { "status": "warn", "text": "Expires Oct 1, 2026" }, "mast": { "status": "good", "text": "Class 12, valid through May 1, 2027" } },
       { "name": "Josie Ableman", "role": "Server", "fwc": { "status": "good", "text": "Valid through Mar 9, 2028" }, "mast": { "status": "good", "text": "Class 12, valid through May 1, 2031" } },
@@ -35,7 +35,6 @@
   },
   "comingDue": [
     { "name": "Sabba Hawash", "cred": "FWC", "date": "Jun 18, 2026", "area": "FOH · Server", "urgency": "alarm", "window": "30 days" },
-    { "name": "Denise Poon", "cred": "MAST", "date": "Jul 1, 2026", "area": "FOH · Server", "urgency": "alarm", "window": "43 days" },
     { "name": "Adrian Bravo", "cred": "FWC", "date": "Aug 29, 2026", "area": "FOH · Manager", "urgency": "warn", "window": "102 days" },
     { "name": "Jackie Hanley", "cred": "FWC", "date": "Oct 1, 2026", "area": "FOH · Server", "urgency": "warn", "window": "135 days" },
     { "name": "Julian Biro", "cred": "FWC", "date": "Oct 6, 2026", "area": "FOH · Server", "urgency": "warn", "window": "140 days" },

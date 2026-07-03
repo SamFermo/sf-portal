@@ -10725,7 +10725,7 @@ window.SF = {
   ]
  },
  "compliance": {
-  "updated": "2026-06-15",
+  "updated": "2026-07-03",
   "note": "Mirrors the live Compliance Notebook. FWC = Washington Food Worker Card. MAST = Mixology/Alcohol Server permit. Neither auto-renews; renewal means taking the class again.",
   "binderUrl": "https://drive.google.com/file/d/1VpoB2F_Sae104TcJFMSsksCexVqIxzoM/view",
   "roster": {
@@ -10899,8 +10899,8 @@ window.SF = {
       "text": "Valid through Jan 9, 2027"
      },
      "mast": {
-      "status": "warn",
-      "text": "Expires Jul 1, 2026 — renewal in progress"
+      "status": "info",
+      "text": "Renewal training completed Jul 2, 2026 (ABC Server Training); official permit en route"
      }
     },
     {
@@ -11009,14 +11009,6 @@ window.SF = {
     "area": "FOH · Server",
     "urgency": "alarm",
     "window": "30 days"
-   },
-   {
-    "name": "Denise Poon",
-    "cred": "MAST",
-    "date": "Jul 1, 2026",
-    "area": "FOH · Server",
-    "urgency": "alarm",
-    "window": "43 days"
    },
    {
     "name": "Adrian Bravo",
@@ -11734,5 +11726,5 @@ window.SF = {
    }
   }
  },
- "build": "1783119046"
+ "build": "1783120849"
 };

@@ -1218,7 +1218,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783119046';   // stamped by build-data.py at every deploy
+const BUILD='1783120849';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2820,8 +2820,23 @@ function certBannerHTML(){
   }
   return h;
 }
-function renderCompliance(){const C=SF.compliance;
-  $('compSub').textContent=`Updated ${fmtShort(C.updated)} · ${C.roster.foh.length+C.roster.boh.length} active · FWC & MAST`;
+/* Union in portal-added staff not yet in the curated compliance.json roster, so any active
+   FOH/BOH employee (a new hire from Staff Access, e.g. Audrey) shows on the Compliance list
+   and can upload their FWC/MAST immediately — tagged "new" until Sam curates their row.
+   Mirrors dirWithExtras. Office + farm-only staff aren't in the staff FOH/BOH areas, so they
+   are naturally excluded. */
+function compWithExtras(){
+  const C=SF.compliance, seen=new Set();
+  ['boh','foh'].forEach(function(k){(C.roster[k]||[]).forEach(function(p){if(p.name)seen.add(p.name.toLowerCase());});});
+  const out={boh:(C.roster.boh||[]).slice(), foh:(C.roster.foh||[]).slice()};
+  Object.keys(PROFILES).forEach(function(n){const p=PROFILES[n]||{};const nm=p.name||n;
+    if(p.active===true && nm && !seen.has(nm.toLowerCase()) && (p.area==='foh'||p.area==='boh')){
+      out[p.area].push({name:nm, role:(p.role||'Staff'), fwc:null, mast:null, isNew:true});
+    }});
+  return out;
+}
+function renderCompliance(){const C=SF.compliance, R=compWithExtras();
+  $('compSub').textContent=`Updated ${fmtShort(C.updated)} · ${R.foh.length+R.boh.length} active · FWC & MAST`;
   if(compTab==='due'){let h=`<p class="view-sub" style="margin-bottom:14px;">Cards expiring in the next nine months. Renewal means re-taking the class.</p><div class="comp-card">`;
     C.comingDue.forEach(d=>h+=`<div class="due-row"><span class="pill st-${d.urgency==='info'?'info':d.urgency}">${esc(d.window)}</span><div><span class="comp-name">${esc(d.name)}</span> <span class="comp-role">${esc(d.cred)} · ${esc(d.area)}</span></div><span class="due-when">${esc(d.date)}</span></div>`);
     $('compBody').innerHTML=h+`</div>`;return;}
@@ -2830,7 +2845,7 @@ function renderCompliance(){const C=SF.compliance;
   h+=`<p class="comp-upload-note">📷 Snap a photo of your own FWC or MAST card on your row below to add it to the binder — a manager verifies it.${isMgr()?' Managers can upload on anyone’s row and tap Verify.':''}</p>`;
   [['Back of House','boh'],['Front of House','foh']].forEach(([lab,key])=>{
     h+=`<div class="section-label">${lab}</div><div class="comp-card">`;
-    C.roster[key].forEach(p=>h+=`<div class="comp-row"><div><div class="comp-name">${esc(p.name)}</div><div class="comp-role">${esc(p.role)}</div></div>
+    R[key].forEach(p=>h+=`<div class="comp-row"><div><div class="comp-name">${esc(p.name)}</div><div class="comp-role">${esc(p.role)}${p.isNew?' · new':''}</div></div>
       ${compPillHTML('FWC',p.name,p.fwc)}
       ${compPillHTML('MAST',p.name,p.mast)}
       <div class="comp-cred">${[compCredTextHTML('FWC',p.name,p.fwc),compCredTextHTML('MAST',p.name,p.mast)].filter(Boolean).join(' · ')}</div>
