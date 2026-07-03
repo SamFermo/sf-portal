@@ -1216,7 +1216,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783101096';   // stamped by build-data.py at every deploy
+const BUILD='1783101338';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3743,10 +3743,11 @@ function renderService(){const S=SF.service.stepsOfService;
 
 /* ===== LAST NIGHT — manager-only Revel numbers, mirror of the captain's log (Stage 1) =====
    Reads revel/{date} (all tiers) + revel_rev/{date} (full only) written ~4am by the brief.
-   Tier from me.lnRole: 'full' (Sam,Tim) sees net/gross+avg; 'foh' (Adrian,Sully) sees avg but
-   not net/gross; 'ops' (Chris,Joe,Katie) sees labor/covers/food/drinks only. revel_rev is only
-   fetched for full viewers, so net/gross never reaches a non-full device. */
-function lnTier(){ return (me&&me.lnRole)||null; }              // 'full' | 'foh' | 'ops' | null
+   Tier from me.lnRole: 'full' (Sam, Tim, Sully) sees everything incl net/gross, avg check,
+   per-guest. 'partial' (Adrian, Chris, Joe, Katie) sees covers, labor, food, drinks, wine,
+   notes — no net/gross, no avg check. revel_rev is fetched only for full, so net/gross never
+   reaches a partial device. (Was 3-tier full/foh/ops; collapsed to full/partial 2026-07-03.) */
+function lnTier(){ return (me&&me.lnRole)||null; }              // 'full' | 'partial' | null
 function lnCanTab(){ return typeof isMgr==='function' && isMgr() && !!lnTier(); }
 function lnMoney2(n){ return (n==null||isNaN(n))?'—':'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function lnMoney0(n){ return (n==null||isNaN(n))?'—':'$'+Math.round(Number(n)).toLocaleString('en-US'); }
@@ -3845,7 +3846,7 @@ function lnWineListFor(view){
 function lnWineSet(v){ lnWineView=v; const el=document.getElementById('ln-wine-list'); if(el&&lnWineData)el.innerHTML=lnWineListFor(v); }
 function lnWineInitPill(){ const t=document.getElementById('ln-wine-tabs'), p=document.getElementById('ln-wine-pill'); if(t&&p&&typeof initPill==='function')initPill(t,p,'lw',lnWineSet); }
 function lnPaint(el, rows, revById, tier){
-  const latest=rows[0], isFull=(tier==='full'), showAvg=(tier==='full'||tier==='foh');
+  const latest=rows[0], isFull=(tier==='full'), showAvg=isFull;   // avg check + per-guest full-only (per-guest × covers = net)
   lnExpanded={};   // each open starts collapsed
   let h=lnFreshBlock(latest);
   h+='<div class="ln-grid">';
