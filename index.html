@@ -1008,6 +1008,7 @@ body.locked{overflow:hidden;}
 .ln-tut{margin-top:9px; font-size:12.5px; color:var(--ink-soft); line-height:1.55;}
 .ln-tut p{margin:0 0 8px;} .ln-tut p:last-child{margin-bottom:0;} .ln-tut b{color:var(--ink);}
 .req-when{font-size:11.5px; color:var(--ink-mute); margin-top:2px;}
+.ds-wx-retry{cursor:pointer; text-decoration:underline dotted;}
 .to-awaiting{background:rgba(230,200,120,.1); border:1px solid rgba(230,200,120,.5); border-radius:12px; padding:12px 14px; margin:0 0 14px;}
 .to-await-head{font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--gold); font-weight:700; margin-bottom:8px;}
 .to-await-row{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:6px 0; border-bottom:1px solid rgba(230,200,120,.18);}
@@ -1228,7 +1229,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783132476';   // stamped by build-data.py at every deploy
+const BUILD='1783132672';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3430,7 +3431,7 @@ function dsRenderWeather(iso){
     let note=''; if((sm.maxGust||0)>=20||(sm.maxWind||0)>=15)note+='Breezy — watch the patio. '; if((sm.maxPop||0)>=50||(sm.totP||0)>=0.05)note+='Rain likely in the window.';
     const stamp=res.fetchedAt?'<div class="ds-wx-stamp" onclick="dsRefreshWeather()">Forecast pulled '+dsWxStamp(res.fetchedAt)+' · tap to refresh</div>':'';
     bb.innerHTML=stamp+cards+graph+(note?'<div class="ds-wx-note">'+esc(note.trim())+'</div>':'');
-  }).catch(e=>{const bb=$('ds-wx-body');if(bb)bb.innerHTML='<span class="ds-wx-none">Weather not tracked for this day ('+esc(e.message)+').</span>';});
+  }).catch(e=>{const bb=$('ds-wx-body');if(bb)bb.innerHTML='<span class="ds-wx-none ds-wx-retry" onclick="dsRefreshWeather()">Forecast service is slow right now — tap to retry.</span>';});
 }
 /* Service-affecting head count for the glance banner. Only roles that touch
    service are counted, per Sam's spec. FOH from the shift's position; BOH:
