@@ -3059,6 +3059,65 @@ window.SF = {
     }
    ],
    "added": "2026-06-20"
+  },
+  {
+   "section": "Red",
+   "name": "Piaggia \"Il Sasso\" Carmignano",
+   "vintage": "",
+   "region": "Carmignano DOCG, Tuscany, Italy",
+   "type": "red",
+   "glass": "",
+   "bottle": "",
+   "grapes": "70% Sangiovese, 15% Cabernet Sauvignon, 10% Merlot, 5% Cabernet Franc",
+   "pour": "Deep, intense ruby red. Cherry and marasca cherry lifted by balsamic and spice, then full and enveloping on the palate with the polish of thoroughbred Sangiovese — fine-grained tannins framing bright, well-balanced acidity, the Cabernet and Merlot rounding the edges. A structured Carmignano for the richer plates on the menu.",
+   "producer": "Piaggia is a small family estate (the Vannucci family) in Carmignano, one of Tuscany's oldest and smallest DOCG zones, where Sangiovese has long been blended with a meaningful share of Cabernet. \"Il Sasso\" is the estate's Sangiovese-led blend, farmed practicing-organic, with roughly 3,300 cases produced and about 1,000 imported. The fresh sheet doesn't list a vintage — confirm the pour vintage with your lead before quoting.",
+   "winemaking": "Fermented with ambient (indigenous) yeasts, with maceration of at least 18–20 days. Aged at least 15 months in French-oak barriques, then at least 6 months in bottle before release.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 4,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 4,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Piaggia",
+     "pron": "PYAH-jah"
+    },
+    {
+     "term": "Il Sasso",
+     "pron": "eel SAH-soh"
+    },
+    {
+     "term": "Carmignano",
+     "pron": "kar-mee-NYAH-noh"
+    },
+    {
+     "term": "marasca",
+     "pron": "mah-RAH-skah"
+    }
+   ],
+   "added": "2026-07-04"
   }
  ],
  "bar": {
@@ -5009,7 +5068,7 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
+       "R/O",
        "3:30 serve",
        "3:30 serve",
        ""
@@ -5057,7 +5116,7 @@ window.SF = {
        "",
        "",
        "",
-       "",
+       "3:30 serve",
        "3:30 serve",
        "3:30 serve",
        "Sup Server"
@@ -5373,6 +5432,18 @@ window.SF = {
        "",
        "3:30 serve",
        "R/O"
+      ]
+     },
+     {
+      "name": "Audrey",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 training",
+       "3:30 training",
+       "",
+       ""
       ]
      },
      {
@@ -7037,7 +7108,7 @@ window.SF = {
      "",
      "",
      "",
-     "",
+     "3:30 serve",
      "",
      "",
      ""
@@ -7109,7 +7180,7 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
+       "R/O",
        "3:30 Bar",
        "3:30 Bar",
        "3:30 Bar"
@@ -11675,5 +11746,5 @@ window.SF = {
    }
   }
  },
- "build": "1783132672"
+ "build": "1783171076"
 };
