@@ -10796,8 +10796,8 @@ window.SF = {
      "name": "Abby Tornquist",
      "role": "Server",
      "fwc": {
-      "status": "alarm",
-      "text": "Pending — email nudge sent 4/30"
+      "status": "good",
+      "text": "On file, verified (no expiry captured on card)"
      },
      "mast": {
       "status": "good",
@@ -10824,8 +10824,8 @@ window.SF = {
       "text": "Valid through May 3, 2028"
      },
      "mast": {
-      "status": "info",
-      "text": "Training cert on file (Learn2Serve), official permit en route"
+      "status": "good",
+      "text": "Valid through Jun 1, 2031"
      }
     },
     {
@@ -11675,5 +11675,5 @@ window.SF = {
    }
   }
  },
- "build": "1783124390"
+ "build": "1783127758"
 };

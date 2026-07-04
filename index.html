@@ -1218,7 +1218,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783124390';   // stamped by build-data.py at every deploy
+const BUILD='1783127758';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3481,13 +3481,14 @@ function freshUnseen(){ const seen=attnGet('fresh')||[]; return freshNewList().f
 function markFreshSeen(){ attnSet('fresh', freshNewList().map(o=>o.key)); }
 
 /* --- Verbals: entries this device hasn't seen (by id) + a standing-slots change --- */
-function markVerbalsSeen(){ const v=getVerbals(); attnSet('verbals',{ids:(v.entries||[]).map(e=>e.id), std:JSON.stringify(v.standing||{})}); }
+function vbStdSig(st){ st=st||{}; return JSON.stringify(Object.keys(st).filter(function(k){return st[k]&&String(st[k]).trim();}).sort().map(function(k){return k+'='+String(st[k]).trim();})); }
+function markVerbalsSeen(){ const v=getVerbals(); attnSet('verbals',{ids:(v.entries||[]).map(e=>e.id), std:vbStdSig(v.standing)}); }
 function verbalsUnseen(){ const v=getVerbals(), s=attnGet('verbals');
   if(!s)return {n:(v.entries||[]).length, std:false};
   const ne=(v.entries||[]).filter(e=>(s.ids||[]).indexOf(e.id)<0);
-  return {n:ne.length, std:JSON.stringify(v.standing||{})!==(s.std||'{}')};
+  return {n:ne.length, std:vbStdSig(v.standing)!==(s.std||vbStdSig({}))};
 }
-function verbalsGlow(){ if(verbalsState===null)return false; const u=verbalsUnseen(); return u.n>0||u.std; }   // don't flag before the verbals doc has loaded (else the empty-vs-seen mismatch glows on every login)
+function verbalsGlow(){ if(!verbalsLoaded)return false; const u=verbalsUnseen(); return u.n>0||u.std; }   // only glow once the FIRESTORE verbals doc has loaded; canonical std sig so seen sticks (was glowing every login)
 
 /* --- Tables: any unacked flag (raised by someone else) in the selected section --- */
 function tablesInScope(){
@@ -3508,11 +3509,12 @@ function markCrewSeen(){ attnSet('crew', crewMaxAt()); }
 function crewGlow(){ const mx=crewMaxAt(); return mx>0 && mx>(attnGet('crew')||0); }
 
 /* --- Farm Order (manager): change detector for Kelly's responses + availability --- */
+function ordStable(o){ if(Array.isArray(o))return '['+o.map(ordStable).join(',')+']'; if(o&&typeof o==='object')return '{'+Object.keys(o).sort().map(function(k){return JSON.stringify(k)+':'+ordStable(o[k]);}).join(',')+'}'; return JSON.stringify(o); }
 function ordFarmSig(){
-  const ords=(remyOrders||[]).map(o=>[o.order_id,o.status||'',o.confirmed_date||'',o.invoice?1:0,
+  const ords=(remyOrders||[]).slice().sort(function(a,b){return String(a.order_id).localeCompare(String(b.order_id));}).map(o=>[o.order_id,o.status||'',o.confirmed_date||'',o.invoice?1:0,
     (o.lines||[]).map(l=>(l.farm_status||'')+':'+(l.farm_note||'')).join('|')].join('~')).join('||');
-  const asks=JSON.stringify((typeof ordFarmAsks!=='undefined'&&ordFarmAsks)||{});
-  const avail=(typeof ordAvail!=='undefined'&&ordAvail)?attnHash(JSON.stringify(ordAvail)):0;
+  const asks=ordStable((typeof ordFarmAsks!=='undefined'&&ordFarmAsks)||{});
+  const avail=(typeof ordAvail!=='undefined'&&ordAvail)?attnHash(ordStable(ordAvail)):0;
   return attnHash(ords+'##'+asks+'##'+avail);
 }
 function ordDataLoaded(){   // true once any farm feed has actually arrived
@@ -3534,7 +3536,7 @@ function setCardAttn(id,on){
 }
 function updateAttn(){
   try{
-    setCardAttn('fresh', freshUnseen().length>0);
+    setCardAttn('fresh', mliveLoaded && freshUnseen().length>0);
     setCardAttn('verbals', verbalsGlow());
     setCardAttn('board', tablesGlow());
     setCardAttn('crew', crewGlow());
@@ -4057,7 +4059,7 @@ function getBoard(){return boardState||lsGetBoard();}
    day-keyed), so recurring verbals carry over. Manager builds in the Day Sheet via
    four tabs: General Note (default), 86 (menu typeahead), About a menu item, and
    Standing (named persistent slots). Servers read in the Verbals tab. ===== */
-let verbalsState=null, verbalsUnsub=null, vbAddType='note', vbItemType='dish';
+let verbalsState=null, verbalsLoaded=false, verbalsUnsub=null, vbAddType='note', vbItemType='dish';
 const VB_STANDING=[['glassRed','Glass Pour — Red'],['glassWhite','Glass Pour — White'],['farinata','Farinata Side'],['gelato','Gelato']];
 function lsGetVerbals(){try{return JSON.parse(localStorage.getItem('sf-verbals'))||{entries:[],standing:{}};}catch(e){return {entries:[],standing:{}};}}
 function lsSetVerbals(){try{localStorage.setItem('sf-verbals',JSON.stringify(verbalsState));}catch(e){}}
@@ -4066,7 +4068,7 @@ function startVerbalsSync(){
   if(fbReady&&fbDb){
     if(verbalsUnsub)verbalsUnsub();
     verbalsUnsub=fbDb.collection('board').doc('verbals').onSnapshot(function(snap){
-      verbalsState=snap.exists?snap.data():{entries:[],standing:{}}; renderVerbalsViews();
+      verbalsState=snap.exists?snap.data():{entries:[],standing:{}}; verbalsLoaded=true; renderVerbalsViews();
     },function(){ verbalsState=lsGetVerbals(); renderVerbalsViews(); });
   }else{ verbalsState=lsGetVerbals(); }
 }
@@ -4537,7 +4539,7 @@ function rmTable(i){const b=getBoard();(b.tables||[]).splice(i,1);persistBoard(b
    canonical JSONs by the 6am run (full Fresh Talk treatment) and cleared. */
 const GEN_URL='https://remy-outreach.sam-d1f.workers.dev/freshtalk-card';
 const LIVE_TYPES=[['dish','Food'],['wine','Wine'],['cocktail','Cocktail']];
-let MLIVE={}, mliveUnsub=null;
+let MLIVE={}, mliveLoaded=false, mliveUnsub=null;
 function isMgr(){return !!(me&&(me.admin||me.mgr));}
 function currentItemNames(type){
   if(type==='dish'){const n=[];SF.menu.food.forEach(s=>s.items.forEach(i=>n.push(i.name)));SF.menu.desserts.forEach(i=>n.push(i.name));return n;}
@@ -4560,7 +4562,7 @@ function startMenuLiveSync(){
   if(fbReady&&fbDb){
     if(mliveUnsub)mliveUnsub();
     mliveUnsub=fbDb.collection('menu-live').onSnapshot(function(snap){
-      MLIVE={};snap.docs.forEach(function(d){MLIVE[d.id]=d.data();});renderFresh();
+      MLIVE={};snap.docs.forEach(function(d){MLIVE[d.id]=d.data();});mliveLoaded=true;renderFresh();
     },function(){ MLIVE=mliveLsGet();renderFresh(); });
   }else{ MLIVE=mliveLsGet(); }
 }
