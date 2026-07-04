@@ -1228,7 +1228,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783128236';   // stamped by build-data.py at every deploy
+const BUILD='1783132476';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2996,6 +2996,12 @@ let dsDateSel=null;        // ISO; null = actual today
 let dsContactSel=new Set();  // Set of full names; starts empty — nobody selected by default
 let dsWxCache={};
 const DS_WX_TTL=90*60*1000;   // refetch weather if the cached pull is older than 90 min
+/* Persist the last-good forecast per day so a slow Open-Meteo (which happens) shows recent
+   weather instantly instead of hanging on "Loading forecast…", and cap every fetch with an
+   AbortController timeout so it fails fast to cache/"n/a" rather than hanging the section. */
+function wxLsGet(iso){ try{ return JSON.parse(localStorage.getItem('sf-wx-'+iso)); }catch(e){ return null; } }
+function wxLsSet(iso,res){ try{ localStorage.setItem('sf-wx-'+iso, JSON.stringify(res)); }catch(e){} }
+function wxFetchTO(url,ms){ const ctl=new AbortController(); const to=setTimeout(function(){ctl.abort();},ms||8000); return fetch(url,{signal:ctl.signal}).then(function(r){clearTimeout(to);return r;},function(e){clearTimeout(to);throw e;}); }
 function dsWxStamp(ms){ if(!ms)return ''; const d=new Date(ms); let h=d.getHours(); const m=d.getMinutes(); const ap=h>=12?'pm':'am'; h=h%12||12; return h+':'+(m<10?'0':'')+m+ap; }
 function dsRefreshWeather(){ const iso=dsDate(); delete dsWxCache[iso]; dsRenderWeather(iso); }
 function dsDate(){return dsDateSel||todayISO();}
@@ -3357,12 +3363,12 @@ function wxIcon(code){code=+code||0;
   return {i:'⛈️',t:'storms'};
 }
 function dsFetchWeather(iso){
-  const c=dsWxCache[iso];
+  let c=dsWxCache[iso]||wxLsGet(iso); if(c)dsWxCache[iso]=c;
   if(c && (Date.now()-(c.fetchedAt||0))<DS_WX_TTL)return Promise.resolve(c);
   const url='https://api.open-meteo.com/v1/forecast?latitude=47.668&longitude=-122.384'+
     '&hourly=temperature_2m,apparent_temperature,precipitation,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m'+
     '&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FLos_Angeles&start_date='+iso+'&end_date='+iso;
-  return fetch(url).then(r=>{if(!r.ok)throw new Error('forecast '+r.status);return r.json();}).then(d=>{
+  const p=wxFetchTO(url,8000).then(r=>{if(!r.ok)throw new Error('forecast '+r.status);return r.json();}).then(d=>{
     const H=d.hourly||{}, hrs=[];
     (H.time||[]).forEach((t,i)=>{const hr=+t.slice(11,13);if(hr>=16&&hr<=22)hrs.push({hr,temp:H.temperature_2m?H.temperature_2m[i]:null,feels:H.apparent_temperature?H.apparent_temperature[i]:null,code:H.weather_code?H.weather_code[i]:0,precip:H.precipitation[i]||0,pop:H.precipitation_probability[i]||0,wind:H.wind_speed_10m[i]||0,gust:H.wind_gusts_10m[i]||0,dir:H.wind_direction_10m?H.wind_direction_10m[i]:null});});
     let summary=null;
@@ -3372,8 +3378,11 @@ function dsFetchWeather(iso){
       const worstCode=hrs.map(x=>x.code).sort((a,b)=>wxSeverity(b)-wxSeverity(a))[0];
       summary={maxWind,maxGust,totP,maxPop,temp:tAvg,code:worstCode};
     }
-    const res={hours:hrs,summary:summary,fetchedAt:Date.now()}; dsWxCache[iso]=res; return res;
-  }).catch(function(err){ if(c)return c; throw err; });   // if a refetch fails, keep showing the last good pull
+    const res={hours:hrs,summary:summary,fetchedAt:Date.now()}; dsWxCache[iso]=res; wxLsSet(iso,res); return res;
+  }).catch(function(err){ const cc=dsWxCache[iso]||wxLsGet(iso); if(cc)return cc; throw err; });   // on failure keep the last good pull
+  // stale-while-revalidate: if we have a cached copy, show it instantly and let the refresh repaint in the background
+  if(c){ p.then(function(){ if(dsDate()===iso){ dsRenderWeather(iso); glanceCardWeather(); } }).catch(function(){}); return Promise.resolve(c); }
+  return p;
 }
 function dsCompass(deg){if(deg==null)return '';return ['N','NE','E','SE','S','SW','W','NW'][Math.round((deg%360)/45)%8];}
 function dsHrFull(h){const ap=h>=12?'pm':'am';let hh=h%12;if(hh===0)hh=12;return hh+':00 '+ap;}
@@ -3578,7 +3587,7 @@ let dsAqiCache={};
 function dsFetchAQI(iso){
   if(dsAqiCache[iso]!=null)return Promise.resolve(dsAqiCache[iso]);
   const url='https://air-quality-api.open-meteo.com/v1/air-quality?latitude=47.668&longitude=-122.384&hourly=us_aqi&timezone=America%2FLos_Angeles&start_date='+iso+'&end_date='+iso;
-  return fetch(url).then(function(r){return r.json();}).then(function(d){
+  return wxFetchTO(url,8000).then(function(r){return r.json();}).then(function(d){
     const a=(d.hourly&&d.hourly.us_aqi)||[], v=a.filter(function(x){return x!=null;});
     const mx=v.length?Math.max.apply(null,v):null; dsAqiCache[iso]=mx; return mx;
   }).catch(function(){return null;});
