@@ -1007,6 +1007,16 @@ body.locked{overflow:hidden;}
 .ln-note-k{display:inline-block; min-width:42px; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--gold); font-weight:700; margin-right:6px;}
 .ln-tut{margin-top:9px; font-size:12.5px; color:var(--ink-soft); line-height:1.55;}
 .ln-tut p{margin:0 0 8px;} .ln-tut p:last-child{margin-bottom:0;} .ln-tut b{color:var(--ink);}
+.req-when{font-size:11.5px; color:var(--ink-mute); margin-top:2px;}
+.to-awaiting{background:rgba(230,200,120,.1); border:1px solid rgba(230,200,120,.5); border-radius:12px; padding:12px 14px; margin:0 0 14px;}
+.to-await-head{font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--gold); font-weight:700; margin-bottom:8px;}
+.to-await-row{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:6px 0; border-bottom:1px solid rgba(230,200,120,.18);}
+.to-await-row:last-of-type{border-bottom:0;}
+.to-await-name{font-weight:700; color:var(--ink);}
+.to-await-dates{color:var(--ink-soft); font-size:13px;}
+.to-await-when{color:var(--ink-mute); font-size:11.5px; margin-top:2px;}
+.to-await-reason{color:var(--ink-mute); font-size:12.5px; font-style:italic; margin-top:2px;}
+.to-await-note{font-size:11.5px; color:var(--ink-mute); margin-top:8px; line-height:1.4;}
 </style>
 </head>
 <body class="not-home">
@@ -1218,7 +1228,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783127758';   // stamped by build-data.py at every deploy
+const BUILD='1783128236';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2300,7 +2310,7 @@ function rmTimeoff(id){
 function reqCardHTML(r){
   var sc=r.status==='approved'?'rs-approved':r.status==='denied'?'rs-denied':'rs-pending';
   var canRm=isAdmin()||r.name===currentUserName();
-  var h=`<div class="req-card"><div class="req-top"><div><div class="req-who serif">${esc(r.name)}</div><div class="req-dates">${esc(reqDates(r))}</div>`;
+  var h=`<div class="req-card"><div class="req-top"><div><div class="req-who serif">${esc(r.name)}</div><div class="req-dates">${esc(reqDates(r))}</div>${r.createdAt?`<div class="req-when">Requested ${esc(reqStamp(r.createdAt))}</div>`:''}`;
   if(r.reason)h+=`<div class="req-reason serif">"${esc(r.reason)}"</div>`;
   h+=`</div><div style="display:flex;align-items:center;gap:6px;"><span class="req-status ${sc}">${esc(r.status)}</span>${canRm?`<span class="req-x" onclick="rmTimeoff('${esc(r.id)}')">✕</span>`:''}</div></div>`;
   if(r.status!=='pending'&&r.decidedBy)h+=`<div class="req-decided">${r.status==='approved'?'Approved':'Denied'} by ${esc(r.decidedBy)}</div>`;
@@ -2314,9 +2324,24 @@ function reqCardHTML(r){
   h+=`<div class="cmt-row"><input id="toc-${esc(r.id)}" placeholder="Add a note… (e.g. I can cover Saturday)" onkeydown="if(event.key==='Enter')addToComment('${esc(r.id)}')"><button onclick="addToComment('${esc(r.id)}')">Post</button></div>`;
   return h+`</div></div>`;
 }
+/* When a request was submitted — shown on every request so overlapping asks for the same
+   dates resolve first-come. */
+function reqStamp(ms){ if(!ms)return ''; const d=new Date(ms); return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+', '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}); }
+/* Approved requests whose dates fall past the built-schedule horizon: they clear the pending
+   badge (approved != pending) but stay pinned atop the time-off view as an "apply when you
+   build this month" reminder, dropping off once the schedule extends to cover them. */
+function schedHorizon(){ let mx=''; ['foh','boh'].forEach(function(s){((SF.schedule&&SF.schedule[s])||[]).forEach(function(w){(w.dates||[]).forEach(function(d){if(d>mx)mx=d;});});}); return mx; }
+function awaitingReqs(){ const h=schedHorizon(); if(!h)return []; return getReqs().filter(function(r){return r.status==='approved'&&(r.start||'')>h;}).sort(function(a,b){return (a.start||'').localeCompare(b.start||'')|| (a.createdAt||0)-(b.createdAt||0);}); }
+function awaitingHTML(aw){
+  let h='<div class="to-awaiting"><div class="to-await-head">Approved — apply when you build the schedule</div>';
+  aw.forEach(function(r){ h+='<div class="to-await-row"><div><span class="to-await-name">'+esc(r.name)+'</span> <span class="to-await-dates">'+esc(reqDates(r))+'</span>'+(r.createdAt?'<div class="to-await-when">requested '+esc(reqStamp(r.createdAt))+'</div>':'')+(r.reason?'<div class="to-await-reason">"'+esc(r.reason)+'"</div>':'')+'</div>'+(isAdmin()?'<span class="req-x" onclick="rmTimeoff(\''+esc(r.id)+'\')">✕</span>':'')+'</div>'; });
+  h+='<div class="to-await-note">Past your built schedule ('+esc(fmtShort(schedHorizon()))+'). These stay here until you build that far, then drop off on their own.</div></div>';
+  return h;
+}
 function renderTimeoff(){
   var who=currentUserName(),today=todayISO();
-  var list=getReqs().filter(function(r){return r.status==='pending'||((r.end||r.start)>=today);});
+  var awaiting=isMgr()?awaitingReqs():[], awaitIds={}; awaiting.forEach(function(r){awaitIds[r.id]=1;});
+  var list=getReqs().filter(function(r){return (r.status==='pending'||((r.end||r.start)>=today))&&!awaitIds[r.id];});
   list.sort(function(a,b){var ap=a.status==='pending'?0:1,bp=b.status==='pending'?0:1;if(ap!==bp)return ap-bp;return (a.start||'').localeCompare(b.start||'');});
   var occVal=toFormOpen&&$('to-reason')?$('to-reason').value:'';
   var sVal=toFormOpen&&$('to-start')?$('to-start').value:today;
@@ -2329,6 +2354,7 @@ function renderTimeoff(){
   h+=`<div class="to-submit"><button class="to-go" onclick="submitTimeoff()">Submit request</button><button class="to-cancel" onclick="closeToForm()">Cancel</button></div></div>`;
   var live=fbReady?'Live — shared across every device.':'Saved on this device only (offline).';
   h+=`<p class="req-hint">${esc(live)} Pending requests need Sam's approval.</p>`;
+  if(awaiting.length)h+=awaitingHTML(awaiting);
   h+= list.length? list.map(reqCardHTML).join('') : `<p class="req-empty">No time-off requests right now.</p>`;
   $('schedBody').innerHTML=h;
 }
