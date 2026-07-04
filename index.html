@@ -1218,7 +1218,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783121005';   // stamped by build-data.py at every deploy
+const BUILD='1783124390';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2833,6 +2833,7 @@ function compWithExtras(){
     if(p.active===true && nm && !seen.has(nm.toLowerCase()) && (p.area==='foh'||p.area==='boh')){
       out[p.area].push({name:nm, role:(p.role||'Staff'), fwc:null, mast:null, isNew:true});
     }});
+  ['foh','boh'].forEach(function(k){ out[k].sort(function(a,b){ return a.name.localeCompare(b.name); }); });
   return out;
 }
 function renderCompliance(){const C=SF.compliance, R=compWithExtras();
@@ -3617,6 +3618,20 @@ function dsStaffActionsHTML(iso){
   if(scheduled)h+='<button class="ds-sa-btn" onclick="dsAlertLead(\'late\')">I\'m running late</button>';
   return h+'</div>';
 }
+/* Managers run the Day Sheet, so they don't get the staff actions block — but they can still
+   put themselves on the flex list (offer themselves as the call-off). Reuses dsVolunteer. */
+function dsMgrSelfOfferHTML(iso){
+  if(!me)return '';
+  const mine=dsMyVolunteer(iso), scheduled=dsAmScheduled(iso);
+  let h='<div class="ds-offer-toggle">';
+  if(mine){
+    const pos=dsVolunteersSorted(iso).findIndex(function(v){return v.name===me.name;})+1;
+    h+='<div class="ds-sa-status">You\'re on the flex list ('+(mine.type==='oncall'?'on-call':'night off')+') — #'+pos+' in line. <button class="ds-sa-undo" onclick="dsUnvolunteer()">Take me off</button></div>';
+  } else {
+    h+='<button class="dir-msg-btn off" onclick="dsVolunteer()">'+(scheduled?'Offer myself as a call-off tonight':'Put myself on-call (available if needed)')+'</button>';
+  }
+  return h+'</div>';
+}
 /* sick / running-late → text the day's lead(s). Reuses the iOS copy-numbers flow. */
 let dsAlertPhones=[];
 function dsAlertLead(reason){
@@ -3668,6 +3683,7 @@ function renderToday(){
   if(mgr){
     if(dsEditStaff)h+=dsShiftChangeHTML(iso);
     h+=dsOfferToggleHTML(iso);
+    h+=dsMgrSelfOfferHTML(iso);
     h+=dsVolunteerListHTML(iso);
     h+=dsContactHTML(iso);
     h+=dsCoverageHTML(iso);
@@ -3962,14 +3978,23 @@ function lnNotesBlock(n){
   bits.forEach(function(b){ h+='<div class="ln-note2"><span class="ln-note-k">'+b[0]+'</span> '+esc(b[1])+'</div>'; });
   return h+'</div>';
 }
+/* Cache the last render per tier so re-opening the tab paints instantly, then refreshes in the
+   background. First-ever open still fetches. Cache lives on the viewer's own device; partial
+   tier never caches net/gross (revById is empty for them). */
+function lnCacheKey(){ return 'sf-ln-cache-'+(lnTier()||'x'); }
+function lnCacheGet(){ try{ return JSON.parse(localStorage.getItem(lnCacheKey())); }catch(e){ return null; } }
+function lnCacheSet(rows,revById){ try{ localStorage.setItem(lnCacheKey(), JSON.stringify({rows:rows,revById:revById})); }catch(e){} }
 function lnRender(){
   const el=$('lnBody'); if(!el)return;
   if(!lnCanTab()){ el.innerHTML='<p class="ln-empty">Manager access required.</p>'; return; }
-  if(!fbReady||!fbDb){ el.innerHTML=lnFailHTML('Can’t reach the server right now. Check your connection, then reopen the app.'); return; }
-  el.innerHTML='<p class="ln-empty">Loading last night…</p>';
   const tier=lnTier(), wantRev=(tier==='full'), N=7;
-  // Plain collection get + client-side sort: index-free. orderBy(__name__,'desc') needs a
-  // composite index Firestore won't auto-create; one doc per night keeps this read small.
+  const cached=lnCacheGet(), hasCache=!!(cached&&cached.rows&&cached.rows.length);
+  if(hasCache){ lnPaint(el, cached.rows, cached.revById||{}, tier); }        // instant
+  else if(!fbReady||!fbDb){ el.innerHTML=lnFailHTML('Can’t reach the server right now. Check your connection, then reopen the app.'); return; }
+  else { el.innerHTML='<p class="ln-empty">Loading last night…</p>'; }
+  if(!fbReady||!fbDb)return;   // showing cache; can't refresh offline
+  // Plain collection get + client-side sort: index-free (orderBy(__name__,'desc') needs a
+  // composite index Firestore won't auto-create; one doc per night keeps this read small).
   const q=fbDb.collection('revel').get();
   const qr=wantRev?fbDb.collection('revel_rev').get():Promise.resolve(null);
   Promise.all([q,qr]).then(function(res){
@@ -3977,10 +4002,11 @@ function lnRender(){
     rows.sort(function(a,b){ return a.id<b.id?1:(a.id>b.id?-1:0); });   // newest first (doc id = YYYY-MM-DD)
     rows=rows.slice(0,N);
     const revById={}; if(res[1])res[1].forEach(function(d){ revById[d.id]=d.data(); });
-    if(!rows.length){ el.innerHTML=lnEmptyHTML(); return; }
+    if(!rows.length){ if(!hasCache)el.innerHTML=lnEmptyHTML(); return; }
     lnPaint(el, rows, revById, tier);
+    lnCacheSet(rows, revById);
   }).catch(function(e){
-    el.innerHTML=lnFailHTML('Couldn’t load last night’s numbers ('+((e&&e.message)||'read failed')+'). If this persists, the revel rule may not be published yet.');
+    if(!hasCache)el.innerHTML=lnFailHTML('Couldn’t load last night’s numbers ('+((e&&e.message)||'read failed')+'). If this persists, the revel rule may not be published yet.');
   });
 }
 function lnCardHTML(){ return wideCardHTML('lastnight','◑','Last Night','Last night’s numbers'); }

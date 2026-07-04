@@ -311,17 +311,18 @@
      "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
     },
     {
-     "name": "Paccheri",
+     "name": "Rigatoni",
+     "_originalName": "Paccheri",
      "desc": "roasted broccoli, onion, bread-crumble cream, garlic, shallot, chili flake, lemon, pecorino romano, pine nuts",
      "price": "29",
      "raw": false,
-     "pron": "pah-KEH-ree",
+     "pron": "ree-gah-TOH-nee",
      "story": "Broccoli and onion roasted until caramelized, then built into a pan sauce with garlic, shallot, red chili flake, and cubed bread. White wine and cream go in, and the bread melts down as it cooks to thicken it. Finished with lemon juice, zest, and butter, then topped with Pecorino Romano and pine nuts.",
      "ingredients": [
       {
-       "term": "Paccheri",
-       "pronunciation": "pah-KEH-ree",
-       "note": "Large smooth tube pasta from Campania. The wide tubes collapse slightly as they cook and trap the sauce inside."
+       "term": "Rigatoni",
+       "pronunciation": "ree-gah-TOH-nee",
+       "note": "Ridged tube pasta, shorter and narrower than paccheri. The ridges and hollow centers grab and hold the sauce."
       },
       {
        "term": "Bread-crumble cream",

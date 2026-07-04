@@ -313,17 +313,18 @@ window.SF = {
       "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
      },
      {
-      "name": "Paccheri",
+      "name": "Rigatoni",
+      "_originalName": "Paccheri",
       "desc": "roasted broccoli, onion, bread-crumble cream, garlic, shallot, chili flake, lemon, pecorino romano, pine nuts",
       "price": "29",
       "raw": false,
-      "pron": "pah-KEH-ree",
+      "pron": "ree-gah-TOH-nee",
       "story": "Broccoli and onion roasted until caramelized, then built into a pan sauce with garlic, shallot, red chili flake, and cubed bread. White wine and cream go in, and the bread melts down as it cooks to thicken it. Finished with lemon juice, zest, and butter, then topped with Pecorino Romano and pine nuts.",
       "ingredients": [
        {
-        "term": "Paccheri",
-        "pronunciation": "pah-KEH-ree",
-        "note": "Large smooth tube pasta from Campania. The wide tubes collapse slightly as they cook and trap the sauce inside."
+        "term": "Rigatoni",
+        "pronunciation": "ree-gah-TOH-nee",
+        "note": "Ridged tube pasta, shorter and narrower than paccheri. The ridges and hollow centers grab and hold the sauce."
        },
        {
         "term": "Bread-crumble cream",
@@ -3224,58 +3225,6 @@ window.SF = {
     "added": "2026-06-19"
    },
    {
-    "name": "In Fair Verona",
-    "build": "westland flagship whiskey, rhubarb-infused bianco vermouth, cocchi americano, genziana fernanda, lavender bitters",
-    "price": "18",
-    "highlight": "",
-    "tagline": "Stirred, aromatic, and bittersweet — a Seattle whiskey drink",
-    "ingredients": [
-     {
-      "name": "Westland Flagship American Single Malt",
-      "amount": "1.5 oz",
-      "description": "Seattle's own — distilled in a restored crane factory in SoDo from a five-malt grain bill, aged in American oak at 92 proof. Dessert-like on the nose (marionberry, chocolate, toasted almond) but clean and unobtrusive on the palate. The local backbone of the drink.",
-      "highlight": "Seattle malt"
-     },
-     {
-      "name": "Rhubarb-infused Bianco vermouth",
-      "amount": "1 oz",
-      "description": "House infusion: sweet white (bianco) vermouth steeped with rhubarb until it picks up a tart, green edge. Floral and lightly herbal from the vermouth, sharpened by the rhubarb."
-     },
-     {
-      "name": "Cocchi Americano",
-      "amount": "0.5 oz",
-      "description": "An aromatized aperitif wine from Piedmont, Italy, built on Moscato and flavored with gentian and citrus peels. Bittersweet, light, and floral — it adds a quinine-like bitterness without weight.",
-      "highlight": "aperitivo"
-     },
-     {
-      "name": "Genziana Fernanda",
-      "amount": "0.25 oz",
-      "description": "A gentian liqueur (genziana) made by Letterpress Distilling here in Seattle — earthy, bittersweet, and rooty from the gentian, but on the approachable, balanced end of the style. A small pour for depth and bitter spine.",
-      "highlight": "Seattle made"
-     },
-     {
-      "name": "Lavender bitters",
-      "amount": "2 dashes",
-      "description": "Aromatic bitters infused with dried lavender. Ties the whiskey and the vermouth to a soft floral top note on the nose."
-     }
-    ],
-    "pronguide": [
-     {
-      "term": "Cocchi Americano",
-      "pron": "KOH-kee ah-meh-ree-KAH-noh"
-     },
-     {
-      "term": "Genziana",
-      "pron": "jen-tsee-AH-nah"
-     },
-     {
-      "term": "Verona",
-      "pron": "veh-ROH-nah"
-     }
-    ],
-    "added": "2026-06-19"
-   },
-   {
     "name": "Cool Cat",
     "build": "mezcal, sunflower seed orgeat, brucato kumquat and chili liqueur, lime, dry vermouth, saline, grapefruit bitters",
     "price": "17",
@@ -3466,9 +3415,9 @@ window.SF = {
     "note": "Seattle-born zero-proof spirit: fermented hemp, distilled in copper pots, layered with wormwood, angelica, sage, ginger, and Douglas fir. Reads like an amaro — earthy, bittersweet, crisp — stirred here into a Negroni-style build. No cannabinoids, nothing psychoactive. First poured at Life on Mars in 2021."
    },
    {
-    "name": "Aplos Ginger and Hibiscus \"Sour\"",
+    "name": "Aplos Red Shiso Ginger \"Sour\"",
     "price": "13",
-    "note": "Zero-proof sour built on Aplos, a hemp-infused alcohol-free spirit — shaken with hibiscus and fresh ginger over lemon. Tart, floral, with a gingery bite."
+    "note": "Zero-proof sour built on Aplos, a hemp-infused alcohol-free spirit, shaken with a red shiso ginger syrup (made from Katie's own red shiso) over lemon. Tart and herbaceous, with a gingery bite and a garden edge from the shiso."
    },
    {
     "name": "Noughty N/A Sparkling Chardonnay",
@@ -11726,5 +11675,5 @@ window.SF = {
    }
   }
  },
- "build": "1783121005"
+ "build": "1783124390"
 };
