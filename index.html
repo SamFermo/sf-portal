@@ -255,6 +255,18 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ro-claimed{display:inline-flex; flex-direction:column; align-items:center; background:rgba(74,106,58,.14); border:1.5px solid var(--accent); color:var(--accent-dark); border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; cursor:pointer; line-height:1.15;}
 .ro-claimed small{font-size:8px;}
 .ro-claim,.ro-claimed{margin:1px 0;}
+.claims-panel{background:rgba(176,74,26,.06); border:1.5px solid rgba(176,74,26,.35); border-radius:14px; padding:13px 15px; margin:6px 0 14px;}
+.claims-head{font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--rust); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+.claims-count{background:var(--rust); color:#fff; border-radius:999px; min-width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; padding:0 5px;}
+.claim-row{display:flex; align-items:center; gap:10px; padding:9px 0; border-top:.5px solid rgba(176,74,26,.18);}
+.claim-row:first-of-type{border-top:none;}
+.claim-main{flex:1; min-width:0;}
+.claim-who{display:block; font-weight:700; font-size:14px; color:var(--ink);}
+.claim-meta{display:block; font-size:12px; color:var(--ink-soft); margin-top:1px;}
+.claim-row.past .claim-meta b{color:var(--rust);}
+.claim-actions{display:flex; gap:6px; flex-shrink:0;}
+.claim-ok{background:var(--accent); color:#fff; border:none; border-radius:8px; padding:7px 13px; font-size:12.5px; font-weight:700; font-family:inherit; cursor:pointer;}
+.claim-rel{background:transparent; color:var(--rust); border:1px solid var(--rust); border-radius:8px; padding:7px 11px; font-size:12.5px; font-weight:700; font-family:inherit; cursor:pointer;}
 .ro-claim-pend{display:inline-flex; flex-direction:column; align-items:center; background:rgba(214,149,46,.12); border:1.5px solid #d6952e; color:#8a5a12; border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; line-height:1.15; cursor:pointer; margin:1px 0; font-family:inherit;}
 .ro-claim-pend small{font-size:8px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;}
 .rcp-actions{display:flex; gap:3px; margin-top:2px;}
@@ -1087,6 +1099,7 @@ body.locked{overflow:hidden;}
     <p class="view-sub">Front and back of house, this week and the month ahead.</p></div>
   <div class="subtabs-wrap"><div class="subtabs" id="schedSideTabs"><span class="subpill" id="schedSidePill"></span>
     <button class="subtab active" data-side="foh">FOH</button><button class="subtab" data-side="boh">BOH</button><button class="subtab" data-side="timeoff">Time Off</button></div></div>
+  <div id="schedClaims"></div>
   <div class="filterbar" id="schedRanges" style="justify-content:center; padding-top:2px;"></div>
   <div id="schedBody"></div>
   <div class="legend" id="schedLegend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off · <b>Open</b> row = shifts we still need covered — tap one to claim it (Sam confirms the final schedule) · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
@@ -1248,7 +1261,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783295063';   // stamped by build-data.py at every deploy
+const BUILD='1783295718';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2268,7 +2281,32 @@ function schedRanges(){
 function renderRangeChips(){
   $('schedRanges').innerHTML=schedRanges().map(o=>`<button class="fchip${schedState.range===o.key?' active':''}" data-r="${o.key}">${o.label}</button>`).join('');
   $('schedRanges').querySelectorAll('.fchip').forEach(c=>c.onclick=()=>{schedState.range=c.dataset.r;renderRangeChips();renderSchedule();});}
+/* Pending coverage-claims list — a manager-only panel at the top of the Schedule view.
+   Surfaces EVERY pending claim regardless of side, week, or whether its open-shift cell is
+   currently on screen (a past-date or other-side claim never shows in the grid otherwise).
+   One place to Approve or Release, so the badge always has a home. */
+function schedPendingClaims(){
+  return Object.keys(CLAIMS).filter(function(k){return claimPending(CLAIMS[k]);})
+    .map(function(k){return Object.assign({key:k},CLAIMS[k]);})
+    .sort(function(a,b){return String(a.date||'').localeCompare(String(b.date||''))||((a.at||0)-(b.at||0));});
+}
+function renderSchedClaims(){
+  const el=$('schedClaims'); if(!el)return;
+  if(!isAdmin()){ el.innerHTML=''; return; }
+  const list=schedPendingClaims();
+  if(!list.length){ el.innerHTML=''; return; }
+  const today=todayISO();
+  let h='<div class="claims-panel"><div class="claims-head">Coverage claims to approve <span class="claims-count">'+list.length+'</span></div>';
+  list.forEach(function(c){ const past=(c.date&&c.date<today);
+    h+='<div class="claim-row'+(past?' past':'')+'"><div class="claim-main"><span class="claim-who">'+esc(String(c.claimedBy||'—'))+'</span>'+
+       '<span class="claim-meta">'+esc(fmtShort(c.date))+' · '+esc(String(c.side||'').toUpperCase())+' · '+esc(String(c.shift||''))+(past?' · <b>past date</b>':'')+'</span></div>'+
+       '<div class="claim-actions"><button class="claim-ok" onclick="approveClaim(\''+c.key+'\')">Approve</button>'+
+       '<button class="claim-rel" onclick="unclaimByKey(\''+c.key+'\')">Release</button></div></div>';
+  });
+  el.innerHTML=h+'</div>';
+}
 function renderSchedule(){
+  renderSchedClaims();               // manager pending-claims panel — every subtab, before the side-specific view
   const onTimeoff=schedState.side==='timeoff';
   $('schedRanges').style.display=onTimeoff?'none':'flex';
   const lg=$('schedLegend');if(lg)lg.style.display=onTimeoff?'none':'block';
