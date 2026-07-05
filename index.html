@@ -255,6 +255,11 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ro-claimed{display:inline-flex; flex-direction:column; align-items:center; background:rgba(74,106,58,.14); border:1.5px solid var(--accent); color:var(--accent-dark); border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; cursor:pointer; line-height:1.15;}
 .ro-claimed small{font-size:8px;}
 .ro-claim,.ro-claimed{margin:1px 0;}
+.ro-claim-pend{display:inline-flex; flex-direction:column; align-items:center; background:rgba(214,149,46,.12); border:1.5px solid #d6952e; color:#8a5a12; border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; line-height:1.15; cursor:pointer; margin:1px 0; font-family:inherit;}
+.ro-claim-pend small{font-size:8px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;}
+.rcp-actions{display:flex; gap:3px; margin-top:2px;}
+.rcp-ok{background:var(--accent); color:#fff; border:none; border-radius:5px; font-size:8.5px; font-weight:700; padding:1px 6px; cursor:pointer; font-family:inherit; text-transform:uppercase; letter-spacing:.03em;}
+.rcp-x{background:transparent; color:var(--rust); border:1px solid var(--rust); border-radius:5px; font-size:8.5px; font-weight:700; padding:1px 5px; cursor:pointer; font-family:inherit;}
 .sched-table tr.covrow td{background:rgba(176,74,26,.06); border-top:1.5px solid var(--rust);}
 .sched-table tr.covrow td.today{background:rgba(230,200,120,.25);}
 .cov-nm{color:var(--rust)!important; font-size:10px!important; text-transform:uppercase; letter-spacing:.06em;}
@@ -285,6 +290,12 @@ nav.chips::-webkit-scrollbar{display:none;}
 /* gold attention: nav chip + home card when new 86 items are unseen on this device */
 .chip.attn-chip{background:linear-gradient(155deg,#e8cd79,#c9a64e); color:#241f15; border-color:transparent; animation:goldPulse 1.7s ease-in-out infinite;}
 .home-card.attn-card{animation:goldPulse 1.7s ease-in-out infinite;}
+.chip.attn-chip-red{background:#c0392b; color:#fff; border-color:transparent; animation:certPulse 1.6s ease-in-out infinite;}
+.home-card.attn-card-red{animation:certPulse 1.6s ease-in-out infinite; box-shadow:0 0 0 2px rgba(192,57,43,.55), 0 8px 20px rgba(0,0,0,.34);}
+.ds-vol-row.approved{background:rgba(74,106,58,.12); border-radius:8px;}
+.ds-vol-appr{margin-left:auto; background:var(--accent); color:#fff; border:none; border-radius:6px; font-size:10.5px; font-weight:700; padding:3px 9px; cursor:pointer; font-family:inherit;}
+.ds-vol-appr.on{background:transparent; color:var(--accent-dark); border:1px solid var(--accent);}
+.ds-offapp-banner{background:linear-gradient(135deg,rgba(192,57,43,.14),rgba(214,149,46,.12)); border:1.5px solid rgba(192,57,43,.5); border-radius:12px; padding:11px 14px; margin:8px 0; font-weight:700; color:#8a2a1e; font-size:14px;}
 /* gold attention state on an inactive subtab (new 86 items unseen on this device) */
 .subtab.attn{background:linear-gradient(155deg,#e8cd79,#c9a64e); color:#241f15; border-radius:999px; animation:goldPulse 1.7s ease-in-out infinite;}
 @keyframes goldPulse{0%,100%{box-shadow:0 0 6px rgba(230,200,120,.35);}50%{box-shadow:0 0 16px rgba(230,200,120,.75);}}
@@ -502,6 +513,11 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-covers-at{font-size:10.5px; color:var(--ink-mute);}
 .ds-covers-mgr{font-size:11.5px; color:var(--ink-mute); margin-top:5px; line-height:1.45;}
 .ds-offer-toggle{margin:10px 0;}
+.ds-nightoff-top{margin:0 0 14px;}
+.ds-offer-btn{display:block; width:100%; text-align:center; background:#e7bf5e; color:#2a1f08; border:1.5px solid var(--gold-deep); border-radius:11px; padding:12px 16px; font-size:14.5px; font-weight:800; font-family:inherit; cursor:pointer;}
+.ds-offer-btn.on{background:var(--accent); color:#fff; border-color:var(--accent-dark);}
+.ds-nightoff-top .ds-vol-list{margin-top:9px;}
+.ds-nightoff-empty{margin-top:9px; font-size:12.5px; color:var(--ink-soft); font-style:italic;}
 .ds-vol-list{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:12px; padding:12px 14px; margin-top:10px;}
 .ds-vol-row{display:flex; align-items:center; gap:9px; padding:5px 0; font-size:13px;}
 .ds-vol-n{width:20px; height:20px; border-radius:50%; background:var(--gold); color:#241f15; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:0 0 auto;}
@@ -1229,7 +1245,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783171076';   // stamped by build-data.py at every deploy
+const BUILD='1783282520';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1296,6 +1312,7 @@ function go(id){
   if(id==='verbals')markVerbalsSeen();
   if(id==='crew')markCrewSeen();
   if(id==='orders')markOrdersSeen();
+  if(id==='today')markCalloffSeen();
   updateAttn();
   window.scrollTo(0,0); requestAnimationFrame(replaceAllPills);}
 
@@ -2174,17 +2191,28 @@ function startClaimsSync(){
     if(claimsUnsub)claimsUnsub();
     claimsUnsub=fbDb.collection('claims').onSnapshot(function(snap){
       CLAIMS={}; snap.docs.forEach(function(d){CLAIMS[d.id]=d.data();});
-      renderSchedule();
-    },function(){ CLAIMS=clLsGet(); renderSchedule(); });
+      renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge();
+    },function(){ CLAIMS=clLsGet(); renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge(); });
   } else { CLAIMS=clLsGet(); }
 }
+/* A claim is 'pending' until Sam confirms it (status==='confirmed'). Legacy claims
+   with no status read as pending — Sam confirms them once. */
+function claimPending(c){ return !!c && c.status!=='confirmed'; }
+function pendingClaimsCount(){ return Object.keys(CLAIMS).reduce(function(n,k){return n+(claimPending(CLAIMS[k])?1:0);},0); }
 function doClaim(k,desc,rec){
   if(!me){openLogin();return;}
   if(CLAIMS[k])return;
   if(!confirm('Claim '+desc+'? Sam still confirms the final schedule.'))return;
-  rec.claimedBy=me.name; rec.at=Date.now();
-  CLAIMS[k]=rec; renderSchedule();
+  rec.claimedBy=me.name; rec.at=Date.now(); rec.status='pending';
+  CLAIMS[k]=rec; renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge();
   if(!DEMO){ if(fbReady&&fbDb){ fbDb.collection('claims').doc(k).set(rec).catch(function(){clLsSet();}); } else clLsSet(); }
+}
+function approveClaim(k){
+  const c=CLAIMS[k]; if(!c)return;
+  if(!isAdmin()){alert('Only a manager can confirm a claim.');return;}
+  c.status='confirmed'; c.confirmedBy=currentUserName()||'Sam'; c.confirmedAt=Date.now();
+  CLAIMS[k]=c; renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge();
+  if(!DEMO){ if(fbReady&&fbDb){ fbDb.collection('claims').doc(k).update({status:'confirmed',confirmedBy:c.confirmedBy,confirmedAt:c.confirmedAt}).catch(function(){clLsSet();}); } else clLsSet(); }
 }
 function claimShiftCv(side,date,label,idx){
   doClaim(claimKey(side,date,'cv-'+label+'-'+idx),'the '+label+' shift on '+fmtLong(date),{side:side,date:date,shift:label,slot:idx,kind:'coverage'});
@@ -2193,7 +2221,7 @@ function unclaimByKey(k){
   const c=CLAIMS[k]; if(!c)return;
   if(!(isAdmin()||c.claimedBy===currentUserName())){alert('Only '+String(c.claimedBy).split(' ')[0]+' or Sam can release this claim.');return;}
   if(!confirm('Release this coverage claim?'))return;
-  delete CLAIMS[k]; renderSchedule();
+  delete CLAIMS[k]; renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge();
   if(!DEMO){ if(fbReady&&fbDb){ fbDb.collection('claims').doc(k).delete().catch(function(){clLsSet();}); } else clLsSet(); }
 }
 function weekTableHTML(w,today){
@@ -2214,7 +2242,12 @@ function weekTableHTML(w,today){
       const d=w.dates[i]; let inner='';
       String(cell||'').split(',').map(x=>x.trim()).filter(Boolean).forEach((lab,j)=>{
         const k=claimKey(schedState.side,d,'cv-'+lab+'-'+j), c=CLAIMS[k];
-        if(c) inner+=`<span class="ro-claimed" onclick="unclaimByKey('${k}')">${esc(lab)}<small>✓ ${esc(String(c.claimedBy).split(' ')[0])}</small></span>`;
+        if(c){
+          const nm=esc(String(c.claimedBy).split(' ')[0]);
+          if(!claimPending(c)) inner+=`<span class="ro-claimed" onclick="unclaimByKey('${k}')">${esc(lab)}<small>✓ ${nm}</small></span>`;
+          else if(isAdmin()) inner+=`<span class="ro-claim-pend">${esc(lab)}<small>${nm} · claimed</small><span class="rcp-actions"><button class="rcp-ok" onclick="approveClaim('${k}')">Confirm</button><button class="rcp-x" onclick="unclaimByKey('${k}')">✕</button></span></span>`;
+          else inner+=`<span class="ro-claim-pend" onclick="unclaimByKey('${k}')">${esc(lab)}<small>${nm} · awaiting Sam</small></span>`;
+        }
         else inner+=`<button class="ro-claim" onclick="claimShiftCv('${schedState.side}','${d}','${jq(lab)}',${j})">${esc(lab)}<small>claim</small></button>`;
       });
       h+=`<td class="${d===today?'today':''}">${inner||'<span class="shift off">·</span>'}</td>`;
@@ -2262,7 +2295,7 @@ function startTimeoffSync(){
    Other admins can approve but don't get the badge (scope decision 2026-06-20). */
 function pendingTimeoffCount(){return (toState||toLsGet()).filter(function(r){return r&&r.status==='pending';}).length;}
 function updatePendingBadge(){
-  var n = (currentUserName()==='Sam West') ? pendingTimeoffCount() : 0;
+  var n = (currentUserName()==='Sam West') ? (pendingTimeoffCount()+pendingClaimsCount()) : 0;
   function setOn(el,cls){ if(!el)return; var b=el.querySelector('.'+cls);
     if(n>0){ if(!b){b=document.createElement('span');b.className=cls;el.appendChild(b);} b.textContent=n; }
     else if(b){ b.remove(); } }
@@ -3022,7 +3055,7 @@ function dsRosterOv(iso){
   if(iso===todayISO()){ const b=getBoard(); r=b&&b.roster; }
   else r=dsRosterCache[iso];
   r=r||{};
-  return {calledOff:r.calledOff||[], added:r.added||[], volunteers:r.volunteers||[], offerOff:!!r.offerOff};
+  return {calledOff:r.calledOff||[], added:r.added||[], volunteers:r.volunteers||[], offerOff:!!r.offerOff, offApproved:r.offApproved||null};
 }
 function dsCalledOffSet(iso){ const s=new Set(); dsRosterOv(iso).calledOff.forEach(function(n){s.add(String(n).toLowerCase());}); return s; }
 function dsEnsureRoster(iso){
@@ -3050,7 +3083,16 @@ function dsSetRoster(iso,roster){
 /* Merge a patch into the day's roster doc, preserving the other fields
    (calledOff / added / volunteers / offerOff all live in one doc). */
 function dsRosterPatch(iso,patch){ const c=dsRosterOv(iso);
-  dsSetRoster(iso, Object.assign({calledOff:c.calledOff,added:c.added,volunteers:c.volunteers,offerOff:c.offerOff}, patch)); }
+  dsSetRoster(iso, Object.assign({calledOff:c.calledOff,added:c.added,volunteers:c.volunteers,offerOff:c.offerOff,offApproved:c.offApproved}, patch)); }
+/* Manager approves a flex volunteer for the night off: records the pick + auto-marks
+   them called off (drops from tonight's counts, contact list, coverage). Undo reverses both. */
+function dsApproveCallOff(name){ const iso=dsDate();
+  if(!isAdmin()){alert('Only a manager can approve a call-off.');return;}
+  const c=dsRosterOv(iso), co=c.calledOff.slice();
+  if(co.map(function(x){return x.toLowerCase();}).indexOf(String(name).toLowerCase())<0)co.push(name);
+  dsRosterPatch(iso,{offApproved:{name:name,at:Date.now(),by:currentUserName()||'Sam'}, calledOff:co}); }
+function dsUndoApproveCallOff(name){ const iso=dsDate(), c=dsRosterOv(iso);
+  dsRosterPatch(iso,{offApproved:null, calledOff:c.calledOff.filter(function(x){return x.toLowerCase()!==String(name).toLowerCase();})}); }
 function dsCallOff(name){ const iso=dsDate(),co=dsRosterOv(iso).calledOff.slice();
   if(co.map(function(x){return x.toLowerCase();}).indexOf(String(name).toLowerCase())<0)co.push(name);
   dsRosterPatch(iso,{calledOff:co}); }
@@ -3570,6 +3612,18 @@ function setCardAttn(id,on){
   const card=document.querySelector('.home-card[data-card="'+id+'"]'); if(card)card.classList.toggle('attn-card',!!on);
   const chip=document.querySelector('#navChips .chip[data-go="'+id+'"]'); if(chip)chip.classList.toggle('attn-chip',!!on);
 }
+/* Red variant — a directed notification (e.g. "you've been given the night off"),
+   distinct from the gold "unseen content" glow. */
+function setCardAttnRed(id,on){
+  const card=document.querySelector('.home-card[data-card="'+id+'"]'); if(card)card.classList.toggle('attn-card-red',!!on);
+  const chip=document.querySelector('#navChips .chip[data-go="'+id+'"]'); if(chip)chip.classList.toggle('attn-chip-red',!!on);
+}
+/* Call-off approval directed at the signed-in person: red badge on Day at a Glance
+   card + nav chip until they open it (marks seen). */
+function calloffApprovedForMe(){ if(!me)return false; const a=dsRosterOv(todayISO()).offApproved; return !!(a&&a.name===me.name); }
+function calloffSig(){ const a=dsRosterOv(todayISO()).offApproved; return (a&&a.name===(me&&me.name))?String(a.at||1):''; }
+function calloffGlow(){ if(!calloffApprovedForMe())return false; const sig=calloffSig(); return sig!=='' && sig!==(attnGet('calloff')||''); }
+function markCalloffSeen(){ attnSet('calloff', calloffSig()); }
 function updateAttn(){
   try{
     setCardAttn('fresh', mliveLoaded && freshUnseen().length>0);
@@ -3578,6 +3632,7 @@ function updateAttn(){
     setCardAttn('crew', crewGlow());
     setCardAttn('standards', standardsGlow());
     if(isMgr())setCardAttn('orders', ordGlow());
+    setCardAttnRed('today', calloffGlow());
     updateStdBadges();
   }catch(e){}
 }
@@ -3637,11 +3692,25 @@ function dsCoversHTML(iso){
 /* manager "offer the night off" — flag + banner (everyone) + toggle (manager) */
 function dsOfferBannerHTML(iso){ if(!dsRosterOv(iso).offerOff)return '';
   return '<div class="ds-offer-banner">🌙 The night off is on offer tonight. Want it? Volunteer below — first come, first served.</div>'; }
-function dsOfferToggleHTML(iso){ const on=dsRosterOv(iso).offerOff;
-  return '<div class="ds-offer-toggle"><button class="dir-msg-btn'+(on?'':' off')+'" onclick="dsToggleOffer()">'+(on?'✓ Offering the night off — tap to stop':'Offer the night off to staff')+'</button></div>'; }
+/* Top-of-sheet night-off control: a clear (never-faded) toggle with the volunteer
+   list + approval baked in directly beneath. Sits right under the date selector. */
+function dsNightOffTopHTML(iso){ const on=dsRosterOv(iso).offerOff, vs=dsVolunteersSorted(iso);
+  let h='<div class="ds-nightoff-top">';
+  h+='<button class="ds-offer-btn'+(on?' on':'')+'" onclick="dsToggleOffer()">'+(on?'✓ Offering the night off — tap to stop':'🌙 Offer the night off to staff')+'</button>';
+  if(vs.length)h+=dsVolunteerListHTML(iso);
+  else if(on)h+='<div class="ds-nightoff-empty">No one has volunteered yet — staff see the offer on their Day at a Glance.</div>';
+  return h+'</div>'; }
 function dsVolunteerListHTML(iso){ const vs=dsVolunteersSorted(iso); if(!vs.length)return '';
+  const appr=dsRosterOv(iso).offApproved, apprName=appr&&appr.name;
   let h='<div class="ds-vol-list"><div class="ds-side-head">Volunteered to flex · first-come</div>';
-  vs.forEach(function(v,i){ h+='<div class="ds-vol-row"><span class="ds-vol-n">'+(i+1)+'</span><span class="ds-vol-name">'+esc(v.name)+'</span><span class="ds-vol-type">'+(v.type==='oncall'?'on-call':'night off')+'</span><span class="ds-vol-at">'+dsWxStamp(v.at)+'</span></div>'; });
+  vs.forEach(function(v,i){ const isAppr=apprName&&v.name===apprName;
+    h+='<div class="ds-vol-row'+(isAppr?' approved':'')+'"><span class="ds-vol-n">'+(i+1)+'</span><span class="ds-vol-name">'+esc(v.name)+'</span><span class="ds-vol-type">'+(v.type==='oncall'?'on-call':'night off')+'</span><span class="ds-vol-at">'+dsWxStamp(v.at)+'</span>';
+    if(isAdmin()){
+      if(isAppr)h+='<button class="ds-vol-appr on" onclick="dsUndoApproveCallOff(\''+jq(v.name)+'\')">✓ Off tonight · undo</button>';
+      else if(v.type==='off')h+='<button class="ds-vol-appr" onclick="dsApproveCallOff(\''+jq(v.name)+'\')">Approve night off</button>';
+    }
+    h+='</div>';
+  });
   return h+'</div>';
 }
 function dsStaffActionsHTML(iso){
@@ -3710,7 +3779,9 @@ function renderToday(){
   const offerOn=dsRosterOv(iso).offerOff;
   let h='';
   h+=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
-  h+=dsOfferBannerHTML(iso);
+  if(isToday&&calloffApprovedForMe()){ h+='<div class="ds-offapp-banner">🌙 Sam gave you the night off tonight — you\'re off. Enjoy it.</div>'; markCalloffSeen(); }
+  if(mgr)h+=dsNightOffTopHTML(iso);        // top-of-sheet night-off toggle + volunteer list w/ approval
+  if(!mgr)h+=dsOfferBannerHTML(iso);        // staff see the offer banner; managers get the toggle above instead
   if(!mgr&&isToday&&offerOn)h+=dsStaffActionsHTML(iso);   // night off on offer → actions right under the banner (today only)
   h+=`<div id="ds-wxrec"></div>`;
   h+=dsCoversHTML(iso);
@@ -3720,9 +3791,7 @@ function renderToday(){
   h+=dsSideHTML('Back of House','boh',iso,idx);
   if(mgr){
     if(dsEditStaff)h+=dsShiftChangeHTML(iso);
-    h+=dsOfferToggleHTML(iso);
     h+=dsMgrSelfOfferHTML(iso);
-    h+=dsVolunteerListHTML(iso);
     h+=dsContactHTML(iso);
     h+=dsCoverageHTML(iso);
     h+=`<div class="ds-verbals" id="ds-verbals-wrap">`+dsVerbalsBuilderHTML()+`</div>`;
