@@ -518,6 +518,9 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-offer-btn.on{background:var(--accent); color:#fff; border-color:var(--accent-dark);}
 .ds-nightoff-top .ds-vol-list{margin-top:9px;}
 .ds-nightoff-empty{margin-top:9px; font-size:12.5px; color:var(--ink-soft); font-style:italic;}
+.ds-staffoffer-top{margin:0 0 14px;}
+.ds-offer-status{display:flex; align-items:center; justify-content:space-between; gap:10px; background:rgba(74,106,58,.14); border:1.5px solid var(--accent); border-radius:11px; padding:11px 14px; font-size:13.5px; font-weight:700; color:var(--accent-dark);}
+.ds-offer-undo{background:transparent; border:1px solid var(--accent); color:var(--accent-dark); border-radius:7px; padding:5px 11px; font-size:12px; font-weight:700; font-family:inherit; cursor:pointer; white-space:nowrap;}
 .ds-vol-list{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:12px; padding:12px 14px; margin-top:10px;}
 .ds-vol-row{display:flex; align-items:center; gap:9px; padding:5px 0; font-size:13px;}
 .ds-vol-n{width:20px; height:20px; border-radius:50%; background:var(--gold); color:#241f15; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:0 0 auto;}
@@ -1245,7 +1248,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783282520';   // stamped by build-data.py at every deploy
+const BUILD='1783295063';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3656,7 +3659,7 @@ function dsRenderWxRec(iso){
       if((sm.maxPop||0)>=60||(sm.totP||0)>=0.1)reasons.push('rain likely'); }
     if(aqi!=null&&aqi>=101)reasons.push('smoke / poor air (AQI '+aqi+')');
     const isT=(iso===todayISO()); const lead=isT?'Tonight could run light':'This day could run light';
-    const tail=isT?' A call-off is possible; if you\'d like the night off, you can volunteer below.':'';
+    const tail=isT?' A call-off is possible; if you\'d like the night off, use the offer button up top.':'';
     const offering=dsRosterOv(iso).offerOff;   // night off already on offer → warning is redundant, hide it
     el.innerHTML=(reasons.length&&!offering)?'<div class="ds-wxrec-banner">⚠ '+lead+' — '+esc(reasons.join(' · '))+'.'+tail+'</div>':'';
   });
@@ -3713,14 +3716,22 @@ function dsVolunteerListHTML(iso){ const vs=dsVolunteersSorted(iso); if(!vs.leng
   });
   return h+'</div>';
 }
-function dsStaffActionsHTML(iso){
+/* Staff offer-to-be-called-off / on-call — the primary self-action, moved to the top
+   of the sheet with the same clear (never-faded) button the manager toggle uses. */
+function dsStaffOfferHTML(iso){
   const mine=dsMyVolunteer(iso), scheduled=dsAmScheduled(iso);
-  let h='<div class="ds-staff-actions"><div class="ds-side-head">Tonight</div>';
+  let h='<div class="ds-staffoffer-top">';
   if(mine){ const pos=dsVolunteersSorted(iso).findIndex(function(v){return v.name===(me&&me.name);})+1;
-    h+='<div class="ds-sa-status">You\'re on the flex list ('+(mine.type==='oncall'?'on-call':'night off')+') — #'+pos+' in line. <button class="ds-sa-undo" onclick="dsUnvolunteer()">Take me off</button></div>';
+    h+='<div class="ds-offer-status">✓ You\'re on the '+(mine.type==='oncall'?'on-call':'call-off')+' list — #'+pos+' in line.<button class="ds-offer-undo" onclick="dsUnvolunteer()">Take me off</button></div>';
   } else {
-    h+='<button class="ds-sa-btn" onclick="dsVolunteer()">'+(scheduled?'I\'ll take the night off if you don\'t need me':'Put me on-call (available if you need me)')+'</button>';
+    h+='<button class="ds-offer-btn" onclick="dsVolunteer()">'+(scheduled?'🌙 Offer to take the night off':'🖐 Put me on-call — available if you\'re short')+'</button>';
   }
+  return h+'</div>';
+}
+/* Sick / running-late alerts — kept lower on the sheet; these are emergencies, not the offer. */
+function dsStaffAlertsHTML(iso){
+  const scheduled=dsAmScheduled(iso);
+  let h='<div class="ds-staff-actions"><div class="ds-side-head">Tonight</div>';
   h+='<button class="ds-sa-btn warn" onclick="dsAlertLead(\'sick\')">Call out sick</button>';
   if(scheduled)h+='<button class="ds-sa-btn" onclick="dsAlertLead(\'late\')">I\'m running late</button>';
   return h+'</div>';
@@ -3781,8 +3792,8 @@ function renderToday(){
   h+=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
   if(isToday&&calloffApprovedForMe()){ h+='<div class="ds-offapp-banner">🌙 Sam gave you the night off tonight — you\'re off. Enjoy it.</div>'; markCalloffSeen(); }
   if(mgr)h+=dsNightOffTopHTML(iso);        // top-of-sheet night-off toggle + volunteer list w/ approval
-  if(!mgr)h+=dsOfferBannerHTML(iso);        // staff see the offer banner; managers get the toggle above instead
-  if(!mgr&&isToday&&offerOn)h+=dsStaffActionsHTML(iso);   // night off on offer → actions right under the banner (today only)
+  else { h+=dsOfferBannerHTML(iso);        // staff: informational "night off is on offer" banner
+    if(isToday)h+=dsStaffOfferHTML(iso); } // then the clear offer-to-be-called-off button at top (today only)
   h+=`<div id="ds-wxrec"></div>`;
   h+=dsCoversHTML(iso);
   h+=`<div class="ds-weather"><div class="ds-wx-head">Service window · 4–10pm</div><div class="ds-wx-body" id="ds-wx-body">Loading forecast…</div></div>`;
@@ -3795,8 +3806,8 @@ function renderToday(){
     h+=dsContactHTML(iso);
     h+=dsCoverageHTML(iso);
     h+=`<div class="ds-verbals" id="ds-verbals-wrap">`+dsVerbalsBuilderHTML()+`</div>`;
-  } else if(isToday&&!offerOn){
-    h+=dsStaffActionsHTML(iso);   // staff actions are a today thing; hidden on look-ahead dates
+  } else if(isToday){
+    h+=dsStaffAlertsHTML(iso);   // sick / running late — staff, today only (offer button is up top)
   }
   $('todayBody').innerHTML=h;
   dsRenderWeather(iso);
