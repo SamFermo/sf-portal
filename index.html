@@ -1261,7 +1261,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783296469';   // stamped by build-data.py at every deploy
+const BUILD='1783297120';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2292,7 +2292,7 @@ function schedPendingClaims(){
 }
 function renderSchedClaims(){
   const el=$('schedClaims'); if(!el)return;
-  if(!isAdmin()){ el.innerHTML=''; return; }
+  if(currentUserName()!=='Sam West'){ el.innerHTML=''; return; }   // Sam-only, matches the pending badge scope
   const list=schedPendingClaims();
   if(!list.length){ el.innerHTML=''; return; }
   const today=todayISO();
