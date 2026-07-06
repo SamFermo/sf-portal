@@ -3816,6 +3816,7 @@ window.SF = {
      "2026-06-07"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -4008,6 +4009,7 @@ window.SF = {
      "2026-06-14"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -4200,6 +4202,7 @@ window.SF = {
      "2026-06-21"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -4392,6 +4395,7 @@ window.SF = {
      "2026-06-28"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -4584,6 +4588,7 @@ window.SF = {
      "2026-07-05"
     ],
     "label": "July 4!",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -4788,20 +4793,23 @@ window.SF = {
      "2026-07-12"
     ],
     "label": "Farm Dinners",
+    "notes": [
+     "Seafood Fest"
+    ],
     "coverage": [
      "",
      "",
      "",
      "",
-     "3:30 serve",
-     "3:30 serve",
-     "3:30 serve"
+     "",
+     "",
+     ""
     ],
     "rows": [
      {
       "name": "Sam",
       "shifts": [
-       "MD",
+       "R/O",
        "Admin/MD 5-8",
        "",
        "",
@@ -4829,9 +4837,9 @@ window.SF = {
        "",
        "3:30 Bar",
        "3:30 Bar",
-       "R/O",
-       "R/O",
-       "R/O"
+       "Sup Server",
+       "Sup Server",
+       "Sup Server"
       ]
      },
      {
@@ -4927,7 +4935,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 serve",
-       "Sup Server"
+       "3:30 serve"
       ]
      },
      {
@@ -4957,7 +4965,7 @@ window.SF = {
      {
       "name": "Sully",
       "shifts": [
-       "3:30 serve",
+       "MD",
        "",
        "Sup Server",
        "",
@@ -4980,6 +4988,7 @@ window.SF = {
      "2026-07-19"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -5172,6 +5181,7 @@ window.SF = {
      "2026-07-26"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -5364,6 +5374,7 @@ window.SF = {
      "2026-08-02"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -5568,6 +5579,7 @@ window.SF = {
      "2026-08-09"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -5760,6 +5772,7 @@ window.SF = {
      "2026-08-16"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -5952,6 +5965,7 @@ window.SF = {
      "2026-08-23"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -6144,6 +6158,7 @@ window.SF = {
      "2026-08-30"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -6336,6 +6351,7 @@ window.SF = {
      "2026-09-06"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -6528,6 +6544,7 @@ window.SF = {
      "2026-09-13"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -6720,6 +6737,7 @@ window.SF = {
      "2026-09-20"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -6912,6 +6930,7 @@ window.SF = {
      "2026-09-27"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -7104,6 +7123,7 @@ window.SF = {
      "2026-10-04"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -7298,6 +7318,7 @@ window.SF = {
      "2026-06-07"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -7490,6 +7511,7 @@ window.SF = {
      "2026-06-14"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -7682,6 +7704,7 @@ window.SF = {
      "2026-06-21"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -7874,6 +7897,7 @@ window.SF = {
      "2026-06-28"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -8066,6 +8090,7 @@ window.SF = {
      "2026-07-05"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -8241,7 +8266,7 @@ window.SF = {
        "1-close",
        "1-close",
        "",
-       "8-6"
+       ""
       ]
      }
     ]
@@ -8258,9 +8283,12 @@ window.SF = {
      "2026-07-12"
     ],
     "label": "Farm Dinners",
+    "notes": [
+     "Seafood Fest"
+    ],
     "coverage": [
-     "1-close",
-     "1-close",
+     "",
+     "",
      "",
      "",
      "",
@@ -8271,7 +8299,7 @@ window.SF = {
      {
       "name": "Sam",
       "shifts": [
-       "MD",
+       "R/O",
        "MD",
        "",
        "",
@@ -8450,6 +8478,7 @@ window.SF = {
      "2026-07-19"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -8514,7 +8543,7 @@ window.SF = {
        "1-close",
        "1-close",
        "10-8",
-       "",
+       "R/O",
        "1-close",
        "",
        ""
@@ -8642,6 +8671,7 @@ window.SF = {
      "2026-07-26"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -8817,7 +8847,7 @@ window.SF = {
        "1-close",
        "1-close",
        "",
-       "8-6"
+       ""
       ]
      }
     ]
@@ -8834,6 +8864,7 @@ window.SF = {
      "2026-08-02"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "1-close",
@@ -9026,6 +9057,7 @@ window.SF = {
      "2026-08-09"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "9-7",
      "1-close",
@@ -9218,6 +9250,7 @@ window.SF = {
      "2026-08-16"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -9410,6 +9443,7 @@ window.SF = {
      "2026-08-23"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "9-5",
@@ -9585,7 +9619,7 @@ window.SF = {
        "1-close",
        "1-close",
        "",
-       "8-6"
+       ""
       ]
      }
     ]
@@ -9602,6 +9636,7 @@ window.SF = {
      "2026-08-30"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -9777,7 +9812,7 @@ window.SF = {
        "1-close",
        "1-close",
        "",
-       "8-6, 1-close"
+       ""
       ]
      }
     ]
@@ -9794,6 +9829,7 @@ window.SF = {
      "2026-09-06"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "1-close",
      "1-close",
@@ -9986,6 +10022,7 @@ window.SF = {
      "2026-09-13"
     ],
     "label": "Farm Dinners",
+    "notes": [],
     "coverage": [
      "9-7",
      "1-close",
@@ -10178,6 +10215,7 @@ window.SF = {
      "2026-09-20"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -10353,7 +10391,7 @@ window.SF = {
        "1-close",
        "1-close",
        "",
-       "8-6"
+       ""
       ]
      }
     ]
@@ -10370,6 +10408,7 @@ window.SF = {
      "2026-09-27"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -10545,7 +10584,7 @@ window.SF = {
        "1-close",
        "1-close",
        "",
-       "8-6"
+       ""
       ]
      }
     ]
@@ -10562,6 +10601,7 @@ window.SF = {
      "2026-10-04"
     ],
     "label": "",
+    "notes": [],
     "coverage": [
      "",
      "",
@@ -10737,7 +10777,7 @@ window.SF = {
        "1-close",
        "1-close",
        "",
-       "8-6"
+       ""
       ]
      }
     ]
@@ -11746,5 +11786,5 @@ window.SF = {
    }
   }
  },
- "build": "1783358315"
+ "build": "1783368744"
 };

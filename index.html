@@ -233,6 +233,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 
 /* schedule */
 .sched-banner{display:inline-block; background:rgba(230,200,120,.16); color:var(--gold); border:1px solid rgba(230,200,120,.4); border-radius:999px; padding:3px 12px; font-size:11.5px; font-weight:700; letter-spacing:.05em; margin-bottom:10px;}
+.sched-banner.sched-event{background:rgba(120,190,210,.16); color:#8fcede; border-color:rgba(120,190,210,.45); margin-left:6px;}
 .sched-week{background:radial-gradient(130% 130% at 28% 12%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:14px; padding:14px 14px 6px; margin-bottom:18px; box-shadow:0 6px 16px rgba(0,0,0,.28);}
 .sched-wk-date{font-family:'Caladea',Georgia,serif; font-size:15px; font-weight:700; color:var(--wood); margin:0 0 6px;}
 .sched-table{width:100%; border-collapse:collapse; font-size:11.5px; table-layout:fixed;}
@@ -614,6 +615,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-chev{font-size:10px; color:var(--ink-mute); margin-right:5px; width:9px;}
 .ds-side-count{margin-left:auto; font-size:10px; color:var(--ink-mute); font-weight:700; text-transform:none; letter-spacing:0;}
 .ds-week-label{font-size:10px; color:var(--gold); font-weight:700; letter-spacing:.03em; text-transform:none; margin-left:6px;}
+.ds-week-label.ds-week-event{color:#8fcede;}
 .ds-bucket{margin-bottom:9px;}
 .ds-bucket-lab{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); font-weight:700; margin-bottom:3px;}
 .ds-person{display:flex; justify-content:space-between; align-items:center; gap:9px; padding:6px 11px; background:rgba(205,216,244,.05); border-radius:8px; margin-bottom:3px;}
@@ -1261,7 +1263,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783358315';   // stamped by build-data.py at every deploy
+const BUILD='1783368744';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2244,6 +2246,7 @@ function weekTableHTML(w,today){
   const MYN=myRowNames();
   let h=`<div class="sched-week"><div class="sched-wk-date serif">Week of ${fmtShort(w.dates[0])}</div>`;
   if(w.label)h+=`<span class="sched-banner">${esc(w.label)}</span>`;
+  if(w.notes&&w.notes.length)h+=w.notes.map(n=>`<span class="sched-banner sched-event">${esc(n)}</span>`).join('');
   h+=`<table class="sched-table"><thead><tr><th></th>`;
   w.dates.forEach((d,i)=>h+=`<th class="${d===today?'today':''}">${DOW[i]}<span class="dnum">${d.split('-')[2].replace(/^0/,'')}</span></th>`);
   h+=`</tr></thead><tbody>`;
@@ -3221,13 +3224,13 @@ function dsResolve(shortName,idx){
 function dsWeekFor(side,iso){return (SF.schedule&&SF.schedule[side]||[]).find(w=>w.dates&&w.dates.indexOf(iso)>=0)||null;}
 function dsDayRows(side,iso){
   const w=dsWeekFor(side,iso);
-  let label='',coverage='',rows=[];
-  if(w){ const di=w.dates.indexOf(iso); label=w.label||''; coverage=String((w.coverage||[])[di]||'').trim();
+  let label='',notes=[],coverage='',rows=[];
+  if(w){ const di=w.dates.indexOf(iso); label=w.label||''; notes=w.notes||[]; coverage=String((w.coverage||[])[di]||'').trim();
     rows=(w.rows||[]).map(r=>({name:r.name,shift:String(r.shifts[di]||'').trim()})).filter(r=>r.shift); }
   const added=dsRosterOv(iso).added.filter(function(a){return a.side===side;});   // shift pickups layered on
   added.forEach(function(a){rows.push({name:a.name,shift:a.shift||'picked up',_pickup:a.id});});
   if(!w&&!added.length)return null;
-  return {label:label,coverage:coverage,rows:rows};
+  return {label:label,notes:notes,coverage:coverage,rows:rows};
 }
 const DS_FOH_ORDER=['MD','Sup Server','Server','Bar','Support','Expo','Float','Other'];
 function dsFohBucket(shift){
@@ -3276,7 +3279,7 @@ function dsBohRowsFiltered(iso,idx){
     else if(expo)otherExpo++;});
   const keepSam=samPresent&&samExpo&&otherExpo===0;
   const rows=day.rows.filter(r=>{const res=dsResolve(r.name,idx); if(res.full.toLowerCase()===DS_KITCHEN_HIDE)return keepSam; return true;});
-  return {label:day.label,coverage:day.coverage,rows:rows};
+  return {label:day.label,notes:day.notes,coverage:day.coverage,rows:rows};
 }
 function dsWorkingProfiles(iso){
   const idx=dsBuildNameIndex(), seen={}, out=[];
@@ -3310,7 +3313,7 @@ function dsSideHTML(title,side,iso,idx){
     (groups[b]=groups[b]||[]).push({res,shift:r.shift,off:off,pickup:r._pickup||null});
   });
   if(groups['Kitchen Lead'])groups['Kitchen Lead'].sort((a,b)=>dsKlRank(a.res.role)-dsKlRank(b.res.role));
-  let h=`<div class="ds-side"><div class="ds-side-head ds-side-toggle" onclick="dsCollapseToggle('${side}')"><span class="ds-chev">${chev}</span> ${esc(title)}${day.label?` <span class="ds-week-label">${esc(day.label)}</span>`:''}<span class="ds-side-count">${onCount} on</span></div>`;
+  let h=`<div class="ds-side"><div class="ds-side-head ds-side-toggle" onclick="dsCollapseToggle('${side}')"><span class="ds-chev">${chev}</span> ${esc(title)}${day.label?` <span class="ds-week-label">${esc(day.label)}</span>`:''}${(day.notes&&day.notes.length)?day.notes.map(n=>` <span class="ds-week-label ds-week-event">${esc(n)}</span>`).join(''):''}<span class="ds-side-count">${onCount} on</span></div>`;
   if(collapsed)return h+`</div>`;
   const personRow=function(x){
     const cls='ds-person'+(x.off?' ds-off':'')+(x.pickup?' ds-pickup':'');
