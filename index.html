@@ -616,6 +616,10 @@ nav.chips::-webkit-scrollbar{display:none;}
 .ds-side-count{margin-left:auto; font-size:10px; color:var(--ink-mute); font-weight:700; text-transform:none; letter-spacing:0;}
 .ds-week-label{font-size:10px; color:var(--gold); font-weight:700; letter-spacing:.03em; text-transform:none; margin-left:6px;}
 .ds-week-label.ds-week-event{color:#8fcede;}
+.ds-event-hdr{display:flex; flex-wrap:wrap; gap:8px; margin:2px 0 14px;}
+.ds-event-tag{display:inline-block; font-size:13.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; padding:8px 15px; border-radius:11px; border:1px solid;}
+.ds-event-tag.ds-event-gold{background:rgba(230,200,120,.14); color:var(--gold); border-color:rgba(230,200,120,.45);}
+.ds-event-tag.ds-event-event{background:rgba(120,190,210,.14); color:#8fcede; border-color:rgba(120,190,210,.45);}
 .ds-bucket{margin-bottom:9px;}
 .ds-bucket-lab{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); font-weight:700; margin-bottom:3px;}
 .ds-person{display:flex; justify-content:space-between; align-items:center; gap:9px; padding:6px 11px; background:rgba(205,216,244,.05); border-radius:8px; margin-bottom:3px;}
@@ -1263,7 +1267,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783368744';   // stamped by build-data.py at every deploy
+const BUILD='1783370769';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2242,11 +2246,23 @@ function unclaimByKey(k){
   delete CLAIMS[k]; renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge();
   if(!DEMO){ if(fbReady&&fbDb){ fbDb.collection('claims').doc(k).delete().catch(function(){clLsSet();}); } else clLsSet(); }
 }
+// Event banners are scoped to the days they actually affect, not the whole
+// week. weekday indices: 0=Mon … 6=Sun. Unknown events fall back to the
+// whole week with no date suffix (prior behavior).
+const SCHED_EVENT_SCOPE = {
+  'farm dinners': {days:[5,6],     span:'Sat–Sun', tone:'gold'},
+  'seafood fest': {days:[4,5,6],   span:'Fri–Sun', tone:'event'}
+};
+function schedEventScope(name){
+  const k=String(name||'').trim().toLowerCase();
+  return SCHED_EVENT_SCOPE[k] || {days:[0,1,2,3,4,5,6], span:'', tone:'gold'};
+}
+function schedIsoWeekday(iso){ return (new Date(iso+'T00:00:00').getDay()+6)%7; } // 0=Mon..6=Sun
 function weekTableHTML(w,today){
   const MYN=myRowNames();
   let h=`<div class="sched-week"><div class="sched-wk-date serif">Week of ${fmtShort(w.dates[0])}</div>`;
-  if(w.label)h+=`<span class="sched-banner">${esc(w.label)}</span>`;
-  if(w.notes&&w.notes.length)h+=w.notes.map(n=>`<span class="sched-banner sched-event">${esc(n)}</span>`).join('');
+  if(w.label){const sc=schedEventScope(w.label);h+=`<span class="sched-banner">${esc(w.label)}${sc.span?` · ${sc.span}`:''}</span>`;}
+  if(w.notes&&w.notes.length)h+=w.notes.map(n=>{const sc=schedEventScope(n);return `<span class="sched-banner sched-event">${esc(n)}${sc.span?` · ${sc.span}`:''}</span>`;}).join('');
   h+=`<table class="sched-table"><thead><tr><th></th>`;
   w.dates.forEach((d,i)=>h+=`<th class="${d===today?'today':''}">${DOW[i]}<span class="dnum">${d.split('-')[2].replace(/^0/,'')}</span></th>`);
   h+=`</tr></thead><tbody>`;
@@ -3313,7 +3329,7 @@ function dsSideHTML(title,side,iso,idx){
     (groups[b]=groups[b]||[]).push({res,shift:r.shift,off:off,pickup:r._pickup||null});
   });
   if(groups['Kitchen Lead'])groups['Kitchen Lead'].sort((a,b)=>dsKlRank(a.res.role)-dsKlRank(b.res.role));
-  let h=`<div class="ds-side"><div class="ds-side-head ds-side-toggle" onclick="dsCollapseToggle('${side}')"><span class="ds-chev">${chev}</span> ${esc(title)}${day.label?` <span class="ds-week-label">${esc(day.label)}</span>`:''}${(day.notes&&day.notes.length)?day.notes.map(n=>` <span class="ds-week-label ds-week-event">${esc(n)}</span>`).join(''):''}<span class="ds-side-count">${onCount} on</span></div>`;
+  let h=`<div class="ds-side"><div class="ds-side-head ds-side-toggle" onclick="dsCollapseToggle('${side}')"><span class="ds-chev">${chev}</span> ${esc(title)}<span class="ds-side-count">${onCount} on</span></div>`;
   if(collapsed)return h+`</div>`;
   const personRow=function(x){
     const cls='ds-person'+(x.off?' ds-off':'')+(x.pickup?' ds-pickup':'');
@@ -3822,6 +3838,23 @@ function dsAlertSend(){
 }
 function dsAlertClose(){ const m=$('dsAlertModal'); if(m)m.style.display='none'; }
 
+// Day-scoped event header: the week's Farm Dinners / Seafood Fest banners show
+// only on the days they actually affect (Farm Dinners Sat–Sun, Seafood Fest
+// Fri–Sun), as a prominent header rather than a whole-week headline.
+function dsDayEvents(iso){
+  const w=dsWeekFor('foh',iso)||dsWeekFor('boh',iso);
+  if(!w)return [];
+  const wd=schedIsoWeekday(iso), out=[];
+  const consider=(name,dflt)=>{ if(!name)return; const sc=schedEventScope(name);
+    if(sc.days.indexOf(wd)>=0)out.push({name:name,span:sc.span,tone:sc.tone||dflt}); };
+  consider(w.label,'gold');
+  (w.notes||[]).forEach(n=>consider(n,'event'));
+  return out;
+}
+function dsDayEventHeaderHTML(iso){
+  const evs=dsDayEvents(iso); if(!evs.length)return '';
+  return '<div class="ds-event-hdr">'+evs.map(e=>`<span class="ds-event-tag ds-event-${e.tone}">${esc(e.name)}${e.span?` · ${e.span}`:''}</span>`).join('')+'</div>';
+}
 function renderToday(){
   const mgr=isMgr();
   const iso=dsDate();                  // everyone can browse dates now (read-only look-ahead for staff)
@@ -3831,6 +3864,7 @@ function renderToday(){
   const offerOn=dsRosterOv(iso).offerOff;
   let h='';
   h+=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
+  h+=dsDayEventHeaderHTML(iso);
   if(isToday&&calloffApprovedForMe()){ h+='<div class="ds-offapp-banner">🌙 Sam gave you the night off tonight — you\'re off. Enjoy it.</div>'; markCalloffSeen(); }
   if(mgr)h+=dsNightOffTopHTML(iso);        // top-of-sheet night-off toggle + volunteer list w/ approval
   else { h+=dsOfferBannerHTML(iso);        // staff: informational "night off is on offer" banner
