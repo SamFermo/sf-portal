@@ -1267,7 +1267,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1783370769';   // stamped by build-data.py at every deploy
+const BUILD='1783385361';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4116,6 +4116,7 @@ function lnPaint(el, rows, revById, tier){
   h+=lnLedgerBlock(latest, rev, isFull);        // integrity (discounts/comps/voids) all tiers; gift cards full-only
   if(isFull){ h+=lnEfficiencyBlock(rev); }      // RevPASH/sales-per-seat full-only (net-derivable)
   h+=lnFoodBlock(latest.food);
+  h+=lnMenuCostBlock(latest.food);   // Remy plate cost × units sold → theoretical menu-mix food cost
   h+=lnDrinksBlock(latest.drinks);
   h+=lnWineBlock(latest.drinks&&latest.drinks.wine);
   h+=lnStripBlock(rows, revById, isFull);
@@ -4177,6 +4178,50 @@ function lnNotesBlock(n){
 function lnCacheKey(){ return 'sf-ln-cache-'+(lnTier()||'x'); }
 function lnCacheGet(){ try{ return JSON.parse(localStorage.getItem(lnCacheKey())); }catch(e){ return null; } }
 function lnCacheSet(rows,revById){ try{ localStorage.setItem(lnCacheKey(), JSON.stringify({rows:rows,revById:revById})); }catch(e){} }
+/* ---------- Menu-mix food cost (Remy plate cost × units sold) ---------- */
+// POS button name (lowercased) -> Remy dish name (menu-map). The register rings SHORT names;
+// Remy uses full menu names. Keep this in sync when the menu rotates. Unmapped POS items
+// (off-menu specials, e.g. Primavera) simply don't cost — surfaced as "% of food sales costed".
+var POS_TO_REMY={'bolognese':'Swan House Bolognese','carbonara':'Mafaldine alla Carbonara','beef ragu':'Beef Ragù','halibut':'Pan Roasted Halibut','rigatoni':'Rigatoni','risotto':'Risotto alle Zucchine','burrata':'Burrata','caesar salad':'House Caesar','baguette':'Sea Wolf Bakery Baguette','tiramisu':'Earl Grey Tiramisu','pork chop':'Pure Country Pork Chop','farm house salad':'Farm House Salad','soup':'Chilled Cherry Gazpacho','pavlova':'Pavlova','farinata':'Farinata','olives':'Castelvetrano Olives','gelato':'Seasonal Gelato','almonds':'Marcona Almonds'};
+var lnCostByName=null;   // {remy_name_lower: plate_cost}, built from the Remy menu-map (same Firestore)
+function lnBuildCostMap(snap){
+  var m={};
+  snap.forEach(function(d){var v=d.data()||{};var c=0;(v.components||[]).forEach(function(comp){
+    if(['tracked','sourced','untracked'].indexOf(comp.kind)<0)return;   // sub-recipes/pantry/prose don't cost
+    var a=(comp.price&&comp.price.amount!=null&&comp.price.amount!=='')?Number(comp.price.amount):null;
+    var q=(comp.portion&&comp.portion.qty!=null&&comp.portion.qty!=='')?Number(comp.portion.qty):null;
+    if(a!=null&&q!=null&&!isNaN(a)&&!isNaN(q))c+=a*q;
+  }); if(v.name)m[String(v.name).toLowerCase()]=c;});
+  lnCostByName=m;
+  try{localStorage.setItem('ln_costmap',JSON.stringify(m));}catch(e){}
+  return m;
+}
+function lnCostMap(){ if(lnCostByName)return lnCostByName; try{return JSON.parse(localStorage.getItem('ln_costmap')||'null');}catch(e){return null;} }
+function lnMenuCostBlock(food){
+  var cm=lnCostMap(); if(!cm||!food||!food.top||!food.top.length)return '';
+  var rows=[],cCost=0,cRev=0,totRev=0,uncosted=[];
+  food.top.forEach(function(it){
+    var rev=Number(it.rev)||0; totRev+=rev;
+    var remy=POS_TO_REMY[String(it.name||'').toLowerCase()];
+    var cost=remy?cm[String(remy).toLowerCase()]:null;
+    if(cost&&cost>0){var ext=cost*it.qty; cCost+=ext; cRev+=rev;
+      rows.push({n:it.name,q:it.qty,plate:cost,ext:ext,fc:(rev>0?cost/(rev/it.qty)*100:null)});}
+    else uncosted.push((it.name||'')+' ('+lnNum(it.qty)+')');
+  });
+  if(!rows.length)return '';
+  rows.sort(function(a,b){return b.ext-a.ext;});
+  var fcPct=cRev>0?(cCost/cRev*100):0, cov=totRev>0?(cRev/totRev*100):0;
+  var h='<div class="ln-sec">Menu-mix food cost</div><div class="ln-card">';
+  h+='<div class="ln-row"><span class="nm">Theoretical food cost</span><span class="qv">'+fcPct.toFixed(1)+'% · '+lnMoney0(cCost)+' COGS</span></div>';
+  h+='<table class="ln-strip"><tr><th>Dish</th><th>Sold</th><th>Plate</th><th>Cost</th><th>FC%</th></tr>';
+  rows.slice(0,8).forEach(function(r){
+    h+='<tr><td>'+esc(r.n)+'</td><td>'+lnNum(r.q)+'</td><td>'+lnMoney2(r.plate)+'</td><td>'+lnMoney0(r.ext)+'</td><td>'+(r.fc!=null?r.fc.toFixed(0)+'%':'—')+'</td></tr>';
+  });
+  h+='</table>';
+  h+='<div class="ln-note">Remy plate cost × units sold. '+cov.toFixed(0)+'% of food sales costed'+(uncosted.length?' · not costed: '+esc(uncosted.join(', ')):'')+'. Estimates from the recipe map — a modeled figure that sharpens as portions get tuned.</div>';
+  return h+'</div>';
+}
+
 function lnRender(){
   const el=$('lnBody'); if(!el)return;
   if(!lnCanTab()){ el.innerHTML='<p class="ln-empty">Manager access required.</p>'; return; }
@@ -4190,10 +4235,12 @@ function lnRender(){
   // composite index Firestore won't auto-create; one doc per night keeps this read small).
   const q=fbDb.collection('revel').get();
   const qr=wantRev?fbDb.collection('revel_rev').get():Promise.resolve(null);
-  Promise.all([q,qr]).then(function(res){
+  const qm=fbDb.collection('menu-map').get().catch(function(){return null;});   // Remy plate costs (same Firestore)
+  Promise.all([q,qr,qm]).then(function(res){
     let rows=[]; res[0].forEach(function(d){ rows.push(Object.assign({id:d.id},d.data())); });
     rows.sort(function(a,b){ return a.id<b.id?1:(a.id>b.id?-1:0); });   // newest first (doc id = YYYY-MM-DD)
     rows=rows.slice(0,N);
+    if(res[2])lnBuildCostMap(res[2]);   // build/refresh the plate-cost lookup for the menu-mix block
     const revById={}; if(res[1])res[1].forEach(function(d){ revById[d.id]=d.data(); });
     if(!rows.length){ if(!hasCache)el.innerHTML=lnEmptyHTML(); return; }
     lnPaint(el, rows, revById, tier);
