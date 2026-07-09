@@ -241,6 +241,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 .sched-table thead th{font-size:10px; text-transform:uppercase; letter-spacing:.03em; color:var(--card-mute); font-weight:700; border-bottom:1px solid var(--moon-edge);}
 .sched-table thead th:first-child{width:58px;}
 .sched-table thead th .dnum{display:block; font-family:'Caladea',Georgia,serif; font-size:13px; color:var(--wood); font-weight:700;}
+.sched-table thead th.sched-dayhead{cursor:pointer;}
+.sched-table thead th.sched-dayhead:active{background:rgba(230,200,120,.28);}
 .sched-table td.nm{text-align:left; font-weight:700; color:var(--wood); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:12px;}
 .sched-table td.today,.sched-table th.today{background:rgba(230,200,120,.22);}
 .sched-table tr.me td{background:rgba(230,200,120,.15);}
@@ -683,6 +685,25 @@ nav.chips::-webkit-scrollbar{display:none;}
 .gc{font-size:12px; color:var(--card-mute); white-space:nowrap;}
 .gc b{font-size:14px; color:var(--wood); font-weight:800;}
 .gc.gc0{opacity:.42;}
+/* Schedule day popup — tap a day column → counts + who's on, with a date selector */
+.sdp-card{max-width:460px;}
+.sdp-selector{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;}
+.sdp-date{font-size:22px; color:var(--wood); font-weight:600; text-align:center; flex:1;}
+.sdp-nav{width:38px; height:38px; flex:none; border:1px solid var(--moon-edge); background:rgba(90,58,26,.06); color:var(--wood); border-radius:10px; font-size:22px; line-height:1; font-weight:700; cursor:pointer; font-family:inherit;}
+.sdp-nav:active{background:rgba(90,58,26,.14);}
+.sdp-counts{display:flex; flex-direction:column; gap:9px; padding:12px 13px; background:rgba(90,58,26,.05); border:1px solid var(--moon-edge); border-radius:12px;}
+.sdp-counts .glance-side{display:flex; align-items:center; gap:9px; flex-wrap:wrap;}
+.sdp-tot{margin-left:auto; font-size:12px; font-weight:800; color:var(--wood); background:rgba(90,58,26,.1); border-radius:20px; padding:2px 10px;}
+.sdp-expand{margin-top:12px; width:100%; border:1px solid var(--moon-edge); background:rgba(90,58,26,.06); color:var(--wood); border-radius:10px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;}
+.sdp-detail{margin-top:12px; display:flex; flex-direction:column; gap:14px;}
+.sdp-side-head{font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-deep); margin-bottom:7px;}
+.sdp-bucket{margin-bottom:9px;}
+.sdp-bucket-lab{font-size:11px; font-weight:800; color:var(--card-soft); margin-bottom:3px;}
+.sdp-person{display:flex; justify-content:space-between; gap:12px; padding:3px 0; border-bottom:1px solid rgba(90,58,26,.08);}
+.sdp-pname{font-size:13px; color:var(--card-ink); font-weight:600;}
+.sdp-pshift{font-size:12px; color:var(--card-mute);}
+.sdp-empty,.sdp-note{font-size:12.5px; color:var(--card-mute); font-style:italic;}
+.sdp-note{margin-top:10px;}
 /* contact group toggles (FOH / BOH / All) */
 .ds-grp-row{display:flex; gap:8px; margin-bottom:10px;}
 .ds-grp{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:9px; padding:7px 16px; font-size:12.5px; font-weight:800; cursor:pointer; font-family:inherit;}
@@ -1265,9 +1286,15 @@ body.locked{overflow:hidden;}
     </div>
   </div>
 </div>
+<div class="modal" id="schedDayModal" onclick="if(event.target===this)schedDayClose()">
+  <div class="modal-card sdp-card">
+    <div id="schedDayBody"></div>
+    <div class="modal-actions"><button class="close-btn" onclick="schedDayClose()">Close</button></div>
+  </div>
+</div>
 
 <script>
-const BUILD='1783385361';   // stamped by build-data.py at every deploy
+const BUILD='1783620641';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2264,7 +2291,7 @@ function weekTableHTML(w,today){
   if(w.label){const sc=schedEventScope(w.label);h+=`<span class="sched-banner">${esc(w.label)}${sc.span?` · ${sc.span}`:''}</span>`;}
   if(w.notes&&w.notes.length)h+=w.notes.map(n=>{const sc=schedEventScope(n);return `<span class="sched-banner sched-event">${esc(n)}${sc.span?` · ${sc.span}`:''}</span>`;}).join('');
   h+=`<table class="sched-table"><thead><tr><th></th>`;
-  w.dates.forEach((d,i)=>h+=`<th class="${d===today?'today':''}">${DOW[i]}<span class="dnum">${d.split('-')[2].replace(/^0/,'')}</span></th>`);
+  w.dates.forEach((d,i)=>h+=`<th class="sched-dayhead ${d===today?'today':''}" onclick="schedDayPopup('${d}')" title="Staff on ${DOW[i]} ${d.split('-')[2].replace(/^0/,'')}">${DOW[i]}<span class="dnum">${d.split('-')[2].replace(/^0/,'')}</span></th>`);
   h+=`</tr></thead><tbody>`;
   w.rows.forEach(r=>{const mine=MYN.indexOf(String(r.name).trim().toLowerCase())>=0;
     h+=`<tr class="${mine?'me':''}"><td class="nm">${esc(r.name)}</td>`;
@@ -3541,29 +3568,38 @@ function dsRenderWeather(iso){
    runs into service), Porter (dishwasher — by role; 0 until porters are
    scheduled). Daytime-only shifts that end by service (9-5, 8-6, 9-7) and the
    BOH 'MD' lead line are intentionally excluded. */
-function dsServiceCounts(iso){
+/* Names behind the glance counts, bucketed by the SAME rules as dsServiceCounts so
+   the head count and the who's-on list can never drift. Each bucket is an array of
+   {name,shift}; dsServiceCounts just maps these to lengths. */
+function dsServiceDetail(iso){
   const idx=dsBuildNameIndex();
-  const foh={MD:0,'Sup Serve':0,Servers:0,Bar:0,Support:0};
-  const boh={Expo:0,Cooks:0,Float:0,Porter:0};
+  const foh={MD:[],'Sup Serve':[],Servers:[],Bar:[],Support:[]};
+  const boh={Expo:[],Cooks:[],Float:[],Porter:[]};
   const fday=dsDayRows('foh',iso), bday=dsBohRowsFiltered(iso,idx), co=dsCalledOffSet(iso);
   (fday?fday.rows:[]).forEach(r=>{const s=r.shift.toLowerCase(), res=dsResolve(r.name,idx);
     if(s.includes('r/o')||s.includes('farm'))return;
     if(co.has(res.full.toLowerCase()))return;
-    if(s.includes('md'))foh.MD++;
-    else if(s.includes('sup serv'))foh['Sup Serve']++;
-    else if(s.includes('bar'))foh.Bar++;
-    else if(s.includes('support'))foh.Support++;
-    else if(s.includes('serve')||s.includes('server'))foh.Servers++;
+    const rec={name:res.full,shift:r.shift};
+    if(s.includes('md'))foh.MD.push(rec);
+    else if(s.includes('sup serv'))foh['Sup Serve'].push(rec);
+    else if(s.includes('bar'))foh.Bar.push(rec);
+    else if(s.includes('support'))foh.Support.push(rec);
+    else if(s.includes('serve')||s.includes('server'))foh.Servers.push(rec);
   });
   (bday?bday.rows:[]).forEach(r=>{const res=dsResolve(r.name,idx),s=r.shift.toLowerCase(),st=r.shift.trim();
     if(s.includes('r/o')||s.includes('farm'))return;
     if(co.has(res.full.toLowerCase()))return;
-    if(dsIsPorter(res.full,res.role)){boh.Porter++;return;}
-    if(s.includes('expo'))boh.Expo++;
-    else if(s.includes('1-close'))boh.Cooks++;
-    else if(/^(10-8|11-9|12-10)$/.test(st))boh.Float++;
+    const rec={name:res.full,shift:r.shift};
+    if(dsIsPorter(res.full,res.role)){boh.Porter.push(rec);return;}
+    if(s.includes('expo'))boh.Expo.push(rec);
+    else if(s.includes('1-close'))boh.Cooks.push(rec);
+    else if(/^(10-8|11-9|12-10)$/.test(st))boh.Float.push(rec);
   });
   return {foh:foh,boh:boh};
+}
+function dsServiceCounts(iso){
+  const d=dsServiceDetail(iso), lens=o=>{const r={};Object.keys(o).forEach(k=>r[k]=o[k].length);return r;};
+  return {foh:lens(d.foh),boh:lens(d.boh)};
 }
 /* Day at a Glance — a double-width landing card (manager only) styled like the
    other home cards, with the service-window weather and the service head count
@@ -3589,6 +3625,60 @@ function glanceCardWeather(){
     const sm=res.summary,ic=wxIcon(sm.code); let sub=(sm.temp!=null?sm.temp+'°, ':'')+ic.t; if(sm.maxGust>=20||sm.maxWind>=15)sub+=', breezy';
     w.innerHTML='<span class="glance-wx-ic">'+ic.i+'</span><span class="glance-wx-col"><span class="glance-wx-sub">'+esc(sub)+'</span>'+(res.fetchedAt?'<span class="glance-wx-when">as of '+dsWxStamp(res.fetchedAt)+'</span>':'')+'</span>';
   }).catch(()=>{const w=$('glanceCardWx');if(w)w.innerHTML='<span class="glance-wx-sub">weather n/a</span>';});
+}
+
+/* ===== SCHEDULE DAY POPUP ===================================================
+   Tap any day column in the Schedule grid to see that day's staffing — the same
+   service head count as the landing Day at a Glance card, ALWAYS both FOH and BOH
+   regardless of the side you're viewing. Expand to see the names+positions behind
+   the counts (matched to the counts by construction — see dsServiceDetail). The
+   header is a prev/next date selector so you can walk day to day without closing.
+   Available to all staff. */
+let schedPopIso=null, schedPopExpanded=false;
+function schedDayShift(delta){
+  if(!schedPopIso)return;
+  const d=new Date(schedPopIso+'T00:00:00'); d.setDate(d.getDate()+delta);
+  const p=n=>String(n).padStart(2,'0');
+  schedPopIso=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+  schedDayRender();
+}
+function schedDayPopup(iso){ schedPopIso=iso; schedPopExpanded=false; schedDayRender(); const m=$('schedDayModal'); if(m)m.classList.add('open'); }
+function schedDayClose(){ const m=$('schedDayModal'); if(m)m.classList.remove('open'); }
+function schedDayToggle(){ schedPopExpanded=!schedPopExpanded; schedDayRender(); }
+function schedDayRender(){
+  const iso=schedPopIso, body=$('schedDayBody'); if(!iso||!body)return;
+  const det=dsServiceDetail(iso), c=dsServiceCounts(iso);
+  const totFoh=Object.keys(c.foh).reduce((a,k)=>a+c.foh[k],0);
+  const totBoh=Object.keys(c.boh).reduce((a,k)=>a+c.boh[k],0);
+  const gcs=arr=>arr.map(x=>`<span class="gc${x[1]?'':' gc0'}">${esc(x[0])} <b>${x[1]}</b></span>`).join('');
+  const fohHtml=gcs([['MD',c.foh.MD],['Sup',c.foh['Sup Serve']],['Serv',c.foh.Servers],['Bar',c.foh.Bar],['Supp',c.foh.Support]]);
+  const bohHtml=gcs([['Expo',c.boh.Expo],['Cooks',c.boh.Cooks],['Porter',c.boh.Porter],['Float',c.boh.Float]]);
+  let h=`<div class="sdp-selector">
+    <button class="sdp-nav" onclick="schedDayShift(-1)" aria-label="Previous day">‹</button>
+    <div class="sdp-date serif">${esc(fmtLong(iso))}</div>
+    <button class="sdp-nav" onclick="schedDayShift(1)" aria-label="Next day">›</button>
+  </div>`;
+  h+=`<div class="sdp-counts">
+    <div class="glance-side"><span class="glance-side-lab">FOH</span>${fohHtml}<span class="sdp-tot">${totFoh}</span></div>
+    <div class="glance-side"><span class="glance-side-lab">BOH</span>${bohHtml}<span class="sdp-tot">${totBoh}</span></div>
+  </div>`;
+  const total=totFoh+totBoh;
+  h+=`<button class="sdp-expand" onclick="schedDayToggle()">${schedPopExpanded?'Hide who’s on ›':'Show who’s on ›'}</button>`;
+  if(schedPopExpanded){
+    const FOH_ORD=[['MD','MD'],['Sup Serve','Sup Serve'],['Servers','Servers'],['Bar','Bar'],['Support','Support']];
+    const BOH_ORD=[['Expo','Expo'],['Cooks','Cooks'],['Porter','Porter'],['Float','Float']];
+    const sideBlock=(lab,ord,buckets)=>{
+      let any=false, inner='';
+      ord.forEach(([key,title])=>{const arr=buckets[key]||[]; if(!arr.length)return; any=true;
+        inner+=`<div class="sdp-bucket"><div class="sdp-bucket-lab">${esc(title)}</div>`+
+          arr.map(x=>`<div class="sdp-person"><span class="sdp-pname">${esc(x.name)}</span><span class="sdp-pshift">${esc(x.shift)}</span></div>`).join('')+`</div>`;
+      });
+      return `<div class="sdp-side"><div class="sdp-side-head">${esc(lab)}</div>${any?inner:'<div class="sdp-empty">Nobody scheduled.</div>'}</div>`;
+    };
+    h+=`<div class="sdp-detail">${sideBlock('Front of House',FOH_ORD,det.foh)}${sideBlock('Back of House',BOH_ORD,det.boh)}</div>`;
+    if(total===0)h+=`<div class="sdp-note">No service staff scheduled for this day yet.</div>`;
+  }
+  body.innerHTML=h;
 }
 
 /* ===== ATTENTION / GLOW =====================================================
