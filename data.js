@@ -8579,8 +8579,8 @@ window.SF = {
        "",
        "Expo",
        "",
-       "",
        "1-close",
+       "",
        "1-close",
        "1-close"
       ]
@@ -8591,8 +8591,8 @@ window.SF = {
        "1-close",
        "1-close",
        "1-close",
-       "1-close",
        "",
+       "1-close",
        "",
        ""
       ]
@@ -9330,7 +9330,7 @@ window.SF = {
        "",
        "",
        "",
-       "1-close"
+       "R/O"
       ]
      },
      {
@@ -9354,7 +9354,7 @@ window.SF = {
        "",
        "1-close",
        "1-close",
-       "Expo Train"
+       "1-close"
       ]
      },
      {
@@ -9445,7 +9445,7 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
-     "",
+     "1-close",
      "9-5",
      "9-5",
      "9-5",
@@ -9517,7 +9517,7 @@ window.SF = {
      {
       "name": "Cooper",
       "shifts": [
-       "1-close",
+       "R/O",
        "",
        "",
        "",
@@ -11786,5 +11786,5 @@ window.SF = {
    }
   }
  },
- "build": "1783620641"
+ "build": "1783689277"
 };
