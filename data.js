@@ -3118,6 +3118,120 @@ window.SF = {
     }
    ],
    "added": "2026-07-04"
+  },
+  {
+   "section": "Bubbles",
+   "name": "Claudio Plessi \"Muntanera\" Rosato",
+   "vintage": "",
+   "region": "Emilia-Romagna, Italy",
+   "type": "sparkling",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Uva Tosca",
+   "pour": "An earthy, funky, cloudy pink fizz with real tannic grip — cherry, wild berries, dusty roses, sage and a hint of pine. Ancestral method with no added sulfur; serve cold but not icy and let it open with air.",
+   "producer": "Claudio Plessi farms near Modena in Emilia-Romagna, where his parents planted vines in 1958. A professor of agriculture, he took over the estate in 1986 and founded Il Salto, a consortium of biodynamic growers and natural winemakers. Uva Tosca is a rare, hyper-local variety — reputedly the only grape able to ripen at these elevations — grown on super-calcareous silty clay-loam that was a riverbed a thousand years ago. 12% ABV.",
+   "winemaking": "Metodo ancestrale (pét-nat): a few hours of skin contact, then bottle-fermented and capped off without disgorging (sboccatura), per local tradition. Biodynamic farming, no added SO2, unfiltered and cloudy.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 3,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 4,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 3,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Claudio Plessi",
+     "pron": "KLOW-dyoh PLESS-ee"
+    },
+    {
+     "term": "Muntanera",
+     "pron": "moon-tah-NEH-rah"
+    },
+    {
+     "term": "Uva Tosca",
+     "pron": "OO-vah TOS-kah"
+    },
+    {
+     "term": "metodo ancestrale",
+     "pron": "MEH-toh-doh ahn-chess-TRAH-leh"
+    }
+   ],
+   "added": "2026-07-11"
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "Schiopetto Sauvignon Blanc, Collio DOC",
+   "vintage": "",
+   "region": "Collio, Friuli-Venezia Giulia, Italy",
+   "type": "white",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Sauvignon",
+   "pour": "Bright straw-yellow with green flecks; a fresh, flowery nose of exotic blossom leading to an elegant palate with long, refreshing acidity. Five months on the fine lees in stainless steel.",
+   "producer": "Schiopetto is one of the oldest estates in Collio, the terraced hill zone between Gorizia and Cividale. Founder Mario Schiopetto is regarded as a pioneer of modern Friulian white wine. The estate on the hills of Capriva del Friuli is now owned by Emilio Rotolo, with son Alessandro managing and Giorgio Schiopetto in the cellar. Around 13% ABV per importer and critic references — confirm with your lead before quoting.",
+   "winemaking": "100% Sauvignon fermented in stainless steel, five months on the fine lees; filtered, natural cork.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 2,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 4,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Schiopetto",
+     "pron": "skyoh-PET-toh"
+    },
+    {
+     "term": "Collio",
+     "pron": "KOH-lyoh"
+    },
+    {
+     "term": "Capriva del Friuli",
+     "pron": "kah-PREE-vah del free-OO-lee"
+    }
+   ],
+   "added": "2026-07-11"
   }
  ],
  "bar": {
@@ -4947,7 +5061,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "5-9 support"
       ]
      },
      {
@@ -9329,7 +9443,7 @@ window.SF = {
        "",
        "",
        "",
-       "",
+       "R/O",
        "R/O"
       ]
      },
@@ -11786,5 +11900,5 @@ window.SF = {
    }
   }
  },
- "build": "1783689277"
+ "build": "1783775930"
 };
