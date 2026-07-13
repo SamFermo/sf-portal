@@ -4785,24 +4785,24 @@
           "name": "Ignacio",
           "shifts": [
             "1-close",
-            "1-close",
-            "1-close",
             "",
             "1-close",
             "",
-            ""
+            "1-close",
+            "",
+            "1-close"
           ]
         },
         {
           "name": "Jackson",
           "shifts": [
             "",
+            "1-close",
             "",
-            "",
             "1-close",
             "1-close",
             "1-close",
-            "1-close"
+            ""
           ]
         },
         {

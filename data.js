@@ -8703,24 +8703,24 @@ window.SF = {
       "name": "Ignacio",
       "shifts": [
        "1-close",
-       "1-close",
-       "1-close",
        "",
        "1-close",
        "",
-       ""
+       "1-close",
+       "",
+       "1-close"
       ]
      },
      {
       "name": "Jackson",
       "shifts": [
        "",
+       "1-close",
        "",
-       "",
        "1-close",
        "1-close",
        "1-close",
-       "1-close"
+       ""
       ]
      },
      {
@@ -11022,7 +11022,7 @@ window.SF = {
      "role": "Server",
      "fwc": {
       "status": "good",
-      "text": "On file, verified (no expiry captured on card)"
+      "text": "Valid through Jun 23, 2028"
      },
      "mast": {
       "status": "good",
@@ -11051,6 +11051,18 @@ window.SF = {
      "mast": {
       "status": "good",
       "text": "Valid through Jun 1, 2031"
+     }
+    },
+    {
+     "name": "Audrey Bean",
+     "role": "Server",
+     "fwc": {
+      "status": "good",
+      "text": "Valid through Dec 13, 2027"
+     },
+     "mast": {
+      "status": "good",
+      "text": "Valid through Jan 26, 2031"
      }
     },
     {
@@ -11900,5 +11912,5 @@ window.SF = {
    }
   }
  },
- "build": "1783775930"
+ "build": "1783948554"
 };

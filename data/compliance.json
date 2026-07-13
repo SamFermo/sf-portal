@@ -18,9 +18,10 @@
       { "name": "Manny Dominguez", "role": "Line Cook", "fwc": { "status": "good", "text": "Valid through Feb 7, 2028" }, "mast": null }
     ],
     "foh": [
-      { "name": "Abby Tornquist", "role": "Server", "fwc": { "status": "good", "text": "On file, verified (no expiry captured on card)" }, "mast": { "status": "good", "text": "Class 12, valid through Apr 1, 2029" } },
+      { "name": "Abby Tornquist", "role": "Server", "fwc": { "status": "good", "text": "Valid through Jun 23, 2028" }, "mast": { "status": "good", "text": "Class 12, valid through Apr 1, 2029" } },
       { "name": "Adrian Bravo", "role": "FOH Manager", "fwc": { "status": "warn", "text": "Expires Aug 29, 2026 — renewal watch" }, "mast": { "status": "good", "text": "ServSafe Alcohol WA, valid through Jun 9, 2031" } },
       { "name": "Allegra Dunbar", "role": "Server", "fwc": { "status": "good", "text": "Valid through May 3, 2028" }, "mast": { "status": "good", "text": "Valid through Jun 1, 2031" } },
+      { "name": "Audrey Bean", "role": "Server", "fwc": { "status": "good", "text": "Valid through Dec 13, 2027" }, "mast": { "status": "good", "text": "Valid through Jan 26, 2031" } },
       { "name": "Brittany Hinz", "role": "Server", "fwc": { "status": "good", "text": "Valid through Aug 5, 2027" }, "mast": { "status": "good", "text": "Valid through Nov 1, 2028" } },
       { "name": "Denise Poon", "role": "Server", "fwc": { "status": "good", "text": "Valid through Jan 9, 2027" }, "mast": { "status": "info", "text": "Renewal training completed Jul 2, 2026 (ABC Server Training); official permit en route" } },
       { "name": "Helen Richardson", "role": "Support Staff · Server training in progress", "fwc": { "status": "good", "text": "Valid through May 7, 2028" }, "mast": { "status": "info", "text": "N/A while support staff; required when promoted to server" } },
