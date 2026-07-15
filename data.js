@@ -8619,7 +8619,7 @@ window.SF = {
       "name": "Chris",
       "shifts": [
        "",
-       "Farm",
+       "Expo",
        "Farm",
        "Farm",
        "Expo",
@@ -8655,12 +8655,12 @@ window.SF = {
       "name": "Cat",
       "shifts": [
        "1-close",
-       "1-close",
+       "",
        "10-8",
        "R/O",
        "1-close",
-       "",
-       ""
+       "Farm",
+       "Farm"
       ]
      },
      {
@@ -8691,7 +8691,7 @@ window.SF = {
       "name": "Gopala",
       "shifts": [
        "",
-       "Expo",
+       "1-close",
        "",
        "1-close",
        "",
@@ -11912,5 +11912,5 @@ window.SF = {
    }
   }
  },
- "build": "1783948554"
+ "build": "1784121378"
 };
