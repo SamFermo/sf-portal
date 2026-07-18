@@ -2600,5 +2600,127 @@
       }
     ],
     "added": "2026-07-11"
+  },
+  {
+    "section": "White/Rosé/Orange",
+    "name": "Rocca del Principe Fiano di Avellino DOCG",
+    "vintage": "",
+    "region": "Campania (Lapio, Irpinia), Italy",
+    "type": "white",
+    "glass": "",
+    "bottle": "",
+    "grapes": "100% Fiano",
+    "pour": "White peach, lemon, lime, and crushed stone on the nose, lifted by flowers and aromatic herbs. Pure, fresh, and juicy on the palate, finishing with outstanding length and great acidity — a textbook, mineral-driven Fiano di Avellino.",
+    "producer": "Rocca del Principe is a small family estate in Lapio, one of the most respected crus for Fiano di Avellino. Vines (10-25 years) sit at 500-600 meters on the Arianiello hillside, split between complex volcanic soils and calcareous clay. Around 13.5% ABV per the importer, Indigenous Selections — confirm with your lead before quoting.",
+    "winemaking": "100% Fiano, hand-harvested. Fermented in stainless steel with partial malolactic, then aged on the fine lees in stainless for 10 months, plus a minimum 3-4 months in bottle before release.",
+    "has_notes": true,
+    "specs": [
+      {
+        "label": "Body",
+        "rating": 3,
+        "low": "light",
+        "high": "full"
+      },
+      {
+        "label": "Dryness",
+        "rating": 4,
+        "low": "sweet",
+        "high": "bone dry"
+      },
+      {
+        "label": "Acidity",
+        "rating": 5,
+        "low": "soft",
+        "high": "bright"
+      },
+      {
+        "label": "Tannins",
+        "rating": 1,
+        "low": "none",
+        "high": "grippy"
+      }
+    ],
+    "pronguide": [
+      {
+        "term": "Fiano di Avellino",
+        "pron": "fee-AH-noh dee ah-vel-LEE-noh"
+      },
+      {
+        "term": "Rocca del Principe",
+        "pron": "ROH-kah del PREEN-chee-peh"
+      },
+      {
+        "term": "Lapio",
+        "pron": "LAH-pyoh"
+      },
+      {
+        "term": "Irpinia",
+        "pron": "eer-PEE-nyah"
+      }
+    ],
+    "added": "2026-07-18"
+  },
+  {
+    "section": "Red",
+    "name": "Cocito \"Baluchin\" Barbaresco Riserva DOCG",
+    "vintage": "2017",
+    "region": "Piedmont, Italy",
+    "type": "red",
+    "glass": "",
+    "bottle": "",
+    "grapes": "100% Nebbiolo",
+    "pour": "Crushed flowers, sweet red cherry, cinnamon, white pepper, cedar, and a touch of French oak, with violets, flint, and dark cassis and plum underneath. Translucent, high-altitude Barbaresco — super-expressive and impeccably done. 94 points, Vinous.",
+    "producer": "Ezio Cocito (pronounced Co-CHEE-toh) farms a tiny 1.2-hectare, high-elevation vineyard in Neive, one of the highest sites in the Barbaresco appellation at ~380 meters with a steep 45-55% south/southwest slope and 30+ year-old vines. Made in collaboration with, and aged at, Giorgio Rivetti's La Spinetta; only 300-400 six-pack cases a year, and Riserva only in exceptional vintages. Around 14.5% ABV per the importer, Indigenous Selections — confirm with your lead before quoting.",
+    "winemaking": "100% Nebbiolo, aged roughly 20 months in 30% new French oak. Unfined and unfiltered.",
+    "has_notes": true,
+    "specs": [
+      {
+        "label": "Body",
+        "rating": 4,
+        "low": "light",
+        "high": "full"
+      },
+      {
+        "label": "Dryness",
+        "rating": 5,
+        "low": "sweet",
+        "high": "bone dry"
+      },
+      {
+        "label": "Acidity",
+        "rating": 4,
+        "low": "soft",
+        "high": "bright"
+      },
+      {
+        "label": "Tannins",
+        "rating": 4,
+        "low": "none",
+        "high": "grippy"
+      }
+    ],
+    "pronguide": [
+      {
+        "term": "Cocito",
+        "pron": "co-CHEE-toh"
+      },
+      {
+        "term": "Baluchin",
+        "pron": "bah-loo-KEEN"
+      },
+      {
+        "term": "Barbaresco",
+        "pron": "bar-bah-RES-koh"
+      },
+      {
+        "term": "Nebbiolo",
+        "pron": "neb-BYOH-loh"
+      },
+      {
+        "term": "Neive",
+        "pron": "NAY-veh"
+      }
+    ],
+    "added": "2026-07-18"
   }
 ]
