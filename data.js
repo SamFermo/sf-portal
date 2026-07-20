@@ -5479,7 +5479,7 @@ window.SF = {
      {
       "name": "Allegra",
       "shifts": [
-       "",
+       "3:30 serve",
        "3:30 serve",
        "3:30 serve",
        "",
@@ -5539,7 +5539,7 @@ window.SF = {
      {
       "name": "Josie",
       "shifts": [
-       "3:30 serve",
+       "3:30 Bar",
        "",
        "",
        "",
@@ -5575,7 +5575,7 @@ window.SF = {
      {
       "name": "Sabba",
       "shifts": [
-       "3:30 Bar",
+       "",
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
@@ -5822,8 +5822,8 @@ window.SF = {
      "",
      "",
      "",
-     "",
-     ""
+     "3:30 serve",
+     "3:30 serve"
     ],
     "rows": [
      {
@@ -5856,10 +5856,10 @@ window.SF = {
        "",
        "",
        "3:30 Bar",
-       "3:30 Bar",
-       "Sup Server",
-       "MD",
-       "Float"
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O"
       ]
      },
      {
@@ -5880,7 +5880,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        "3:30 serve",
        "3:30 serve"
@@ -5892,7 +5892,7 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
+       "3:30 Bar",
        "3:30 Bar",
        "3:30 Bar",
        "3:30 Bar"
@@ -5954,7 +5954,7 @@ window.SF = {
        "",
        "",
        "3:30 serve",
-       "3:30 serve",
+       "Sup Server",
        "Sup Server"
       ]
      },
@@ -5987,10 +5987,10 @@ window.SF = {
       "shifts": [
        "3:30 serve",
        "",
-       "Sup Server",
        "",
        "",
-       "Sup Server",
+       "",
+       "MD",
        "MD"
       ]
      }
@@ -6051,7 +6051,7 @@ window.SF = {
        "3:30 Bar",
        "3:30 Bar",
        "Sup Server",
-       "MD",
+       "Sup Server",
        "Float"
       ]
      },
@@ -6183,7 +6183,7 @@ window.SF = {
        "Sup Server",
        "",
        "",
-       "Sup Server",
+       "MD",
        "MD"
       ]
      }
@@ -6244,7 +6244,7 @@ window.SF = {
        "R/O",
        "MD",
        "Sup Server",
-       "MD",
+       "Sup Server",
        "R/O"
       ]
      },
@@ -6376,7 +6376,7 @@ window.SF = {
        "Sup Server",
        "",
        "",
-       "Sup Server",
+       "MD",
        "MD"
       ]
      }
@@ -6400,7 +6400,7 @@ window.SF = {
      "",
      "",
      "",
-     "3:30 serve",
+     "",
      "",
      ""
     ],
@@ -6520,7 +6520,7 @@ window.SF = {
        "",
        "",
        "",
-       "",
+       "3:30 serve",
        "",
        "3:30 serve"
       ]
@@ -6593,7 +6593,7 @@ window.SF = {
      "",
      "",
      "",
-     "3:30 Bar",
+     "",
      "3:30 Bar",
      "3:30 Bar"
     ],
@@ -6629,7 +6629,7 @@ window.SF = {
        "",
        "3:30 Bar",
        "3:30 Bar",
-       "Sup Server",
+       "3:30 Bar",
        "MD",
        "Float"
       ]
@@ -6713,7 +6713,7 @@ window.SF = {
        "",
        "",
        "",
-       "",
+       "3:30 serve",
        "",
        "3:30 serve"
       ]
@@ -6725,7 +6725,7 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
+       "Sup Server",
        "3:30 serve",
        "Sup Server"
       ]
@@ -12034,5 +12034,5 @@ window.SF = {
    }
   }
  },
- "build": "1784380639"
+ "build": "1784553220"
 };
