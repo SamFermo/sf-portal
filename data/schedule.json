@@ -1395,9 +1395,9 @@
             "Admin/MD 5-8",
             "",
             "",
-            "Expo",
-            "Expo",
-            "Expo"
+            "Float",
+            "Float",
+            "Float"
           ]
         },
         {
@@ -1588,9 +1588,9 @@
             "Admin/MD 5-8",
             "",
             "",
-            "Expo",
-            "Expo",
-            "Expo"
+            "Float",
+            "Float",
+            "Float"
           ]
         },
         {
@@ -1613,7 +1613,7 @@
             "3:30 Bar",
             "3:30 Bar",
             "3:30 Bar",
-            "MD",
+            "3:30 Bar",
             "Float"
           ]
         },
@@ -1721,7 +1721,7 @@
             "",
             "",
             "3:30 serve",
-            "3:30 serve",
+            "Sup Server",
             "Sup Server"
           ]
         },
@@ -1733,7 +1733,7 @@
             "",
             "",
             "",
-            "",
+            "3:30 serve",
             "3:30 serve"
           ]
         },
@@ -1757,7 +1757,7 @@
             "Sup Server",
             "",
             "",
-            "Sup Server",
+            "MD",
             "MD"
           ]
         }
@@ -5271,7 +5271,7 @@
         "1-close",
         "1-close",
         "",
-        "",
+        "1-close",
         "",
         ""
       ],
@@ -5365,9 +5365,9 @@
           "shifts": [
             "",
             "Expo Train",
-            "",
-            "",
-            "1-close",
+            "R/O",
+            "R/O",
+            "R/O",
             "1-close",
             "Expo Train"
           ]

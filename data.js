@@ -5435,9 +5435,9 @@ window.SF = {
        "Admin/MD 5-8",
        "",
        "",
-       "Expo",
-       "Expo",
-       "Expo"
+       "Float",
+       "Float",
+       "Float"
       ]
      },
      {
@@ -5628,9 +5628,9 @@ window.SF = {
        "Admin/MD 5-8",
        "",
        "",
-       "Expo",
-       "Expo",
-       "Expo"
+       "Float",
+       "Float",
+       "Float"
       ]
      },
      {
@@ -5653,7 +5653,7 @@ window.SF = {
        "3:30 Bar",
        "3:30 Bar",
        "3:30 Bar",
-       "MD",
+       "3:30 Bar",
        "Float"
       ]
      },
@@ -5761,7 +5761,7 @@ window.SF = {
        "",
        "",
        "3:30 serve",
-       "3:30 serve",
+       "Sup Server",
        "Sup Server"
       ]
      },
@@ -5773,7 +5773,7 @@ window.SF = {
        "",
        "",
        "",
-       "",
+       "3:30 serve",
        "3:30 serve"
       ]
      },
@@ -5797,7 +5797,7 @@ window.SF = {
        "Sup Server",
        "",
        "",
-       "Sup Server",
+       "MD",
        "MD"
       ]
      }
@@ -9311,7 +9311,7 @@ window.SF = {
      "1-close",
      "1-close",
      "",
-     "",
+     "1-close",
      "",
      ""
     ],
@@ -9405,9 +9405,9 @@ window.SF = {
       "shifts": [
        "",
        "Expo Train",
-       "",
-       "",
-       "1-close",
+       "R/O",
+       "R/O",
+       "R/O",
        "1-close",
        "Expo Train"
       ]
@@ -12046,5 +12046,5 @@ window.SF = {
    }
   }
  },
- "build": "1784812358"
+ "build": "1784898780"
 };
