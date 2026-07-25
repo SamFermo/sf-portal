@@ -5650,7 +5650,7 @@ window.SF = {
       "shifts": [
        "",
        "",
-       "3:30 Bar",
+       "R/O",
        "3:30 Bar",
        "3:30 Bar",
        "3:30 Bar",
@@ -5746,7 +5746,7 @@ window.SF = {
       "shifts": [
        "3:30 serve",
        "",
-       "",
+       "3:30 Bar",
        "",
        "",
        "",
@@ -5870,7 +5870,7 @@ window.SF = {
        "3:30 serve",
        "Sup Server",
        "3:30 serve",
-       "",
+       "Farm",
        ""
       ]
      },
@@ -9308,10 +9308,10 @@ window.SF = {
     "notes": [],
     "coverage": [
      "9-7",
-     "1-close",
-     "1-close",
      "",
-     "1-close",
+     "",
+     "",
+     "",
      "",
      ""
     ],
@@ -9369,11 +9369,11 @@ window.SF = {
       "shifts": [
        "1-close",
        "1-close",
-       "",
+       "1-close",
        "",
        "",
        "12-10",
-       "1-close"
+       ""
       ]
      },
      {
@@ -9404,12 +9404,12 @@ window.SF = {
       "name": "Gopala",
       "shifts": [
        "",
-       "Expo Train",
+       "1-close",
        "R/O",
        "R/O",
        "R/O",
        "1-close",
-       "Expo Train"
+       "1-close"
       ]
      },
      {
@@ -12046,5 +12046,5 @@ window.SF = {
    }
   }
  },
- "build": "1784898780"
+ "build": "1784985200"
 };
