@@ -1294,7 +1294,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1784985200';   // stamped by build-data.py at every deploy
+const BUILD='1784993037';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4170,9 +4170,15 @@ function lnPaint(el, rows, revById, tier){
   // Net Sales (full only) — gross rides as a tagline underneath.
   if(isFull){
     if(rev&&rev.net!=null){
+      const R=rev.restaurant||null;
       const nd=rev.wow&&rev.wow.net?rev.wow.net:null;
       const wow=nd?lnDeltaSpan(nd.d,'money',false)+(nd.pct!=null?' · '+(nd.pct>0?'+':'')+Number(nd.pct).toFixed(1)+'% WoW':''):'';
-      h+=lnStatT('Net Sales', lnMoney2(rev.net), wow, rev.gross!=null?'Gross '+lnMoney2(rev.gross):'');
+      if(R&&R.net!=null){
+        // Farm ring-in night: headline is restaurant-only, raw carried as tagline. WoW is the restaurant delta.
+        h+=lnStatT('Net Sales', lnMoney2(R.net), wow, 'restaurant · raw '+lnMoney2(rev.net)+' incl. farm ring-in');
+      } else {
+        h+=lnStatT('Net Sales', lnMoney2(rev.net), wow, rev.gross!=null?'Gross '+lnMoney2(rev.gross):'');
+      }
     }
   }
   // Covers (all) — nightly-log cross-check as tagline.
@@ -4187,21 +4193,30 @@ function lnPaint(el, rows, revById, tier){
   // Avg Check (full+foh) — per-guest tagline is FULL only (per_guest × covers = net, and all
   // managers see covers, so exposing it to foh would leak net).
   if(showAvg&&latest.avg_check!=null){
+    const R=(rev&&rev.restaurant)||null;
     const wow=(latest.wow&&latest.wow.avg_check)?lnDeltaSpan(latest.wow.avg_check.d,'money',false)+' WoW':'';
-    const tag=(isFull&&latest.avg_per_guest!=null)?lnMoney2(latest.avg_per_guest)+' / guest':'';
-    h+=lnStatT('Avg Check', lnMoney2(latest.avg_check), wow, tag);
+    if(R&&R.avg_check!=null){
+      // Ring-in night: raw avg check (per transaction) is meaningless; show restaurant per-guest.
+      h+=lnStatT('Per Guest', lnMoney2(R.avg_check), wow, 'restaurant · raw avg check '+lnMoney2(latest.avg_check)+' incl. farm');
+    } else {
+      const tag=(isFull&&latest.avg_per_guest!=null)?lnMoney2(latest.avg_per_guest)+' / guest':'';
+      h+=lnStatT('Avg Check', lnMoney2(latest.avg_check), wow, tag);
+    }
   }
   // Labor (all) — sales/labor-hr, hours, clocked wages as tagline.
   if(latest.labor){
     const L=latest.labor;
+    const useRest=(L.pct_restaurant!=null);   // ring-in night: raw % is diluted by farm sales, show restaurant-adjusted
     const wow=((latest.wow&&latest.wow.labor_pts)?lnDeltaSpan(latest.wow.labor_pts.d,'pts',true)+' WoW · ':'')+'clocked proxy';
     const tb=[];
-    if(L.sales_per_labor_hour!=null)tb.push(lnMoney2(L.sales_per_labor_hour)+' / labor hr');
+    if(useRest)tb.push('raw '+lnPct(L.pct_clocked_proxy)+' incl. farm');
+    else if(L.sales_per_labor_hour!=null)tb.push(lnMoney2(L.sales_per_labor_hour)+' / labor hr');
     if(L.hours!=null)tb.push(Number(L.hours).toFixed(2)+' hrs');
     if(L.clocked_wages!=null)tb.push(lnMoney0(L.clocked_wages)+' wages');
-    h+=lnStatT('Labor', lnPct(L.pct_clocked_proxy), wow, tb.join(' · '));
+    h+=lnStatT('Labor'+(useRest?' (rest.)':''), lnPct(useRest?L.pct_restaurant:L.pct_clocked_proxy), wow, tb.join(' · '));
   }
   h+='</div>';
+  h+=lnFarmBlock(latest, rev, isFull);
   h+=lnNotesBlock(latest.notes);
   h+=lnLedgerBlock(latest, rev, isFull);        // integrity (discounts/comps/voids) all tiers; gift cards full-only
   if(isFull){ h+=lnEfficiencyBlock(rev); }      // RevPASH/sales-per-seat full-only (net-derivable)
@@ -4226,23 +4241,46 @@ function lnLedgerBlock(latest, rev, isFull){
   rows.forEach(function(r){ h+='<div class="ln-row"><span class="nm">'+r[0]+'</span><span class="qv">'+r[1]+'</span></div>'; });
   return h+'</div>';
 }
+function lnFarmBlock(latest, rev, isFull){
+  const f=(latest&&latest.farm_ringin)||null;
+  if(!f||!f.present)return '';
+  let h='<div class="ln-sec">Farm ring-in</div><div class="ln-card">';
+  h+='<div class="ln-note2"><span class="ln-note-k">Heads up</span> '+esc(f.label||'A farm-dinner batch was rung into the POS tonight.')+' The stats above are restaurant-only; the farm total is broken out here and excluded from the restaurant read.</div>';
+  const fr=(isFull&&rev&&rev.farm_ringin)?rev.farm_ringin:null;
+  if(fr){
+    const rows=[];
+    if(fr.food!=null)rows.push(['Open Food',lnMoney2(fr.food)]);
+    if(fr.wine!=null)rows.push(['Open Wine',lnMoney2(fr.wine)]);
+    if(fr.liquor!=null)rows.push(['Open Liquor',lnMoney2(fr.liquor)]);
+    if(fr.total!=null)rows.push(['Farm total',lnMoney2(fr.total)]);
+    if(fr.gift_card_paid!=null)rows.push(['Paid via gift card',lnMoney2(fr.gift_card_paid)]);
+    rows.forEach(function(r){ h+='<div class="ln-row"><span class="nm">'+r[0]+'</span><span class="qv">'+r[1]+'</span></div>'; });
+  } else {
+    h+='<div class="ln-note">Dollar breakout is manager-full only.</div>';
+  }
+  return h+'</div>';
+}
 function lnEfficiencyBlock(rev){
-  if(!rev||rev.net==null||!rev.seats)return '';
+  if(!rev||!rev.seats)return '';
+  // On a farm ring-in night, seat yield must be computed on restaurant net, not the raw (farm-inflated) net.
+  const net=(rev.restaurant&&rev.restaurant.net!=null)?rev.restaurant.net:rev.net;
+  if(net==null)return '';
+  const isRest=(rev.restaurant&&rev.restaurant.net!=null);
   const seats=rev.seats, hrs=rev.service_hours||null;
-  const sps=rev.net/seats, revpash=hrs?rev.net/(seats*hrs):null;
-  let h='<div class="ln-sec">Efficiency</div><div class="ln-card">';
+  const sps=net/seats, revpash=hrs?net/(seats*hrs):null;
+  let h='<div class="ln-sec">Efficiency'+(isRest?' (restaurant)':'')+'</div><div class="ln-card">';
   h+='<div class="ln-grid">';
   if(revpash!=null)h+=lnStatT('RevPASH', lnMoney2(revpash), '', 'per seat-hour');
   h+=lnStatT('Sales / Seat', lnMoney2(sps), '', seats+' seats');
   h+='</div>';
   h+='<div class="ln-showall" id="ln-tut-link-eff" onclick="lnToggleTut(\'eff\')">What these mean ▾</div>';
-  h+='<div id="ln-tut-eff" class="ln-tut" style="display:none">'+lnEffTutorial(rev,seats,hrs,revpash,sps)+'</div>';
+  h+='<div id="ln-tut-eff" class="ln-tut" style="display:none">'+lnEffTutorial(net,seats,hrs,revpash,sps)+'</div>';
   return h+'</div>';
 }
-function lnEffTutorial(rev,seats,hrs,revpash,sps){
+function lnEffTutorial(net,seats,hrs,revpash,sps){
   let h='';
-  if(revpash!=null)h+='<p><b>RevPASH</b> is revenue per available seat-hour: net sales ÷ (seats × service hours). Tonight, '+lnMoney0(rev.net)+' ÷ ('+seats+' seats × '+hrs+' hrs) = <b>'+lnMoney2(revpash)+'</b>. It measures how hard every seat worked each hour, blending how full the room was with how much each guest spent. A quiet night of big checks and a packed night of small checks can land at the same number, which is the point: one figure for yield.</p>';
-  h+='<p><b>Sales per seat</b> is net sales ÷ total seats: '+lnMoney0(rev.net)+' ÷ '+seats+' = <b>'+lnMoney2(sps)+'</b>. No time dimension, so it is roughly average check × turns per seat. Best for comparing nights of similar length.</p>';
+  if(revpash!=null)h+='<p><b>RevPASH</b> is revenue per available seat-hour: net sales ÷ (seats × service hours). Tonight, '+lnMoney0(net)+' ÷ ('+seats+' seats × '+hrs+' hrs) = <b>'+lnMoney2(revpash)+'</b>. It measures how hard every seat worked each hour, blending how full the room was with how much each guest spent. A quiet night of big checks and a packed night of small checks can land at the same number, which is the point: one figure for yield.</p>';
+  h+='<p><b>Sales per seat</b> is net sales ÷ total seats: '+lnMoney0(net)+' ÷ '+seats+' = <b>'+lnMoney2(sps)+'</b>. No time dimension, so it is roughly average check × turns per seat. Best for comparing nights of similar length.</p>';
   return h;
 }
 function lnToggleTut(key){ const el=document.getElementById('ln-tut-'+key), lk=document.getElementById('ln-tut-link-'+key); if(!el)return; const open=el.style.display!=='none'; el.style.display=open?'none':'block'; if(lk)lk.textContent=open?'What these mean ▾':'Hide ▲'; }
