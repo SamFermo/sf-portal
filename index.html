@@ -1368,7 +1368,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785089104';   // stamped by build-data.py at every deploy
+const BUILD='1785090767';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1596,9 +1596,22 @@ function activeProfiles(){return profilesArr().filter(p=>p.active!==false&&!isIn
 function investorProfiles(){return profilesArr().filter(p=>isInvestorP(p)&&p.active!==false);}
 function next3am(from){const e=new Date(from);e.setHours(3,0,0,0);if(e.getTime()<=from)e.setDate(e.getDate()+1);return e.getTime();}
 function getSession(){try{return JSON.parse(localStorage.getItem('sf-session')||'null');}catch(e){return null;}}
-function setSession(name){try{localStorage.setItem('sf-session',JSON.stringify({name:name,exp:next3am(Date.now())}));}catch(e){}}
+/* Staff sessions reset at 3am so a shared iPad never carries one person's login into the next
+   shift. Investors are the opposite case: personal devices, read-only, and re-entering a PIN
+   every visit is the thing most likely to stop them looking. Their session is written with
+   exp:null, which means it lives until they clear the browser or you deactivate the profile. */
+function setSession(name,persist){try{
+  localStorage.setItem('sf-session',JSON.stringify({name:name,exp:persist?null:next3am(Date.now())}));
+}catch(e){}}
 function clearSession(){try{localStorage.removeItem('sf-session');}catch(e){}}
-function sessionValid(){const s=getSession();return !!(s&&s.name&&s.exp&&Date.now()<s.exp&&PROFILES[s.name]&&PROFILES[s.name].active!==false);}
+function sessionValid(){
+  const s=getSession();
+  if(!s||!s.name)return false;
+  const p=PROFILES[s.name];
+  if(!p||p.active===false)return false;            // deactivating the profile still logs them out
+  if(s.exp===null)return isInvestorP(p);           // never-expiring, and only for an investor
+  return !!(s.exp&&Date.now()<s.exp);
+}
 function currentUserName(){return me?me.name:'';}
 function isAdmin(){return !!(me&&me.admin);}
 
@@ -1633,7 +1646,7 @@ async function investorLogin(){
   if(c===null)return;
   const h=await hashPin(String(c).trim());
   if(h!==inv.pinHash){ alert('That PIN didn\u2019t match.'); return; }
-  setSession(inv.name);
+  setSession(inv.name,true);   // persists until the browser is cleared
   me=inv;
   const g=$('loginGate'); if(g)g.classList.remove('open');
   document.body.classList.remove('locked');
