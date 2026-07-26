@@ -1065,6 +1065,70 @@ body.locked{overflow:hidden;}
 .ln-note-k{display:inline-block; min-width:42px; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--gold); font-weight:700; margin-right:6px;}
 .ln-tut{margin-top:9px; font-size:12.5px; color:var(--ink-soft); line-height:1.55;}
 .ln-tut p{margin:0 0 8px;} .ln-tut p:last-child{margin-bottom:0;} .ln-tut b{color:var(--ink);}
+
+/* ---------- Recap (cohesive read of the nightly report) ---------- */
+:root{ --rc-rest:#c98500; --rc-farm:#199e70; --rc-mag:#3987e5; }
+.rc-seg{display:inline-flex; padding:3px; gap:3px; background:rgba(205,216,244,.05);
+  border:1px solid rgba(205,216,244,.13); border-radius:11px; margin:0 0 14px;}
+.rc-seg button{background:transparent; border:0; color:var(--ink-mute); padding:7px 13px;
+  border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
+.rc-seg button.on{background:rgba(205,216,244,.12); color:var(--ink);}
+.rc-hero{background:linear-gradient(155deg,rgba(230,200,120,.09),rgba(205,216,244,.04) 55%);
+  border:1px solid rgba(230,200,120,.24); border-radius:13px; padding:14px 15px; margin-bottom:12px;}
+.ln-stat-k{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); margin-bottom:6px; font-weight:600;}
+.rc-split{display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:rgba(205,216,244,.13);
+  border:1px solid rgba(205,216,244,.13); border-radius:12px; overflow:hidden;}
+.rc-split>div{background:#0c1a3e; padding:12px 13px;}
+.rc-lab{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; font-weight:700; display:flex; align-items:center; gap:6px;}
+.rc-num{font-size:20px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:5px; color:var(--ink);}
+.rc-fine{font-size:11px; color:var(--ink-mute); margin-top:3px; line-height:1.45;}
+.rc-base{display:block; margin-top:5px;}
+.rc-basen{opacity:.75;}
+.rc-sw{width:9px; height:9px; border-radius:2px; flex:0 0 auto; display:inline-block;}
+.rc-bg-rest{background:var(--rc-rest);} .rc-bg-farm{background:var(--rc-farm);} .rc-bg-mag{background:var(--rc-mag);}
+.rc-tick{width:2px; height:12px; border-radius:1px; background:var(--ink-soft);}
+.rc-c-rest{color:var(--rc-rest);} .rc-c-farm{color:var(--rc-farm);} .rc-c-tot{color:var(--ink-soft);}
+.rc-callout{border-left:3px solid var(--rc-farm); background:rgba(25,158,112,.08); border-radius:0 10px 10px 0;
+  padding:11px 13px; margin-top:12px; font-size:13.5px; line-height:1.6; color:var(--ink-soft);}
+.rc-callout b{color:var(--ink); font-weight:600;}
+.rc-ct{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--rc-farm); font-weight:700; margin-bottom:5px;}
+.rc-mrow{padding:8px 0; border-bottom:1px solid rgba(205,216,244,.06);}
+.rc-mrow:last-child{border-bottom:0;}
+.rc-mtop{display:flex; justify-content:space-between; align-items:baseline; gap:12px;}
+.rc-mnm{color:var(--ink); font-size:13.5px;}
+.rc-mval{white-space:nowrap; font-variant-numeric:tabular-nums; font-size:13.5px; color:var(--ink);}
+.rc-mval em{font-style:normal; color:var(--ink-mute); font-size:12px; margin-right:8px;}
+.rc-track{position:relative; margin-top:6px; height:6px; border-radius:4px; background:rgba(205,216,244,.07);}
+.rc-track i{display:block; height:100%; border-radius:4px; background:var(--rc-mag); min-width:2px;}
+.rc-track .rc-mark{position:absolute; top:-3px; bottom:-3px; width:2px; border-radius:1px; background:var(--ink-soft); transform:translateX(-1px);}
+.rc-mtotal{border-top:1px solid rgba(205,216,244,.13); border-bottom:0; margin-top:4px; padding-top:10px;}
+.rc-mtotal .rc-mnm,.rc-mtotal .rc-mval{font-weight:700;}
+.rc-legend{display:flex; gap:15px; flex-wrap:wrap; font-size:11.5px; color:var(--ink-soft); margin-bottom:8px;}
+.rc-legend span{display:inline-flex; align-items:center; gap:6px;}
+.rc-chart{position:relative;}
+.rc-chart svg{display:block; width:100%; overflow:hidden;}
+.rc-grid{stroke:rgba(205,216,244,.09); stroke-width:1;}
+.rc-ax{fill:var(--ink-mute); font-size:10px; font-variant-numeric:tabular-nums;}
+.rc-tip{position:absolute; pointer-events:none; opacity:0; transition:opacity .1s; background:#0a1430;
+  border:1px solid rgba(205,216,244,.28); border-radius:9px; padding:8px 10px; font-size:12px;
+  box-shadow:0 8px 22px rgba(0,0,0,.5); z-index:30; min-width:126px;}
+.rc-tt{font-weight:700; font-size:11.5px; margin-bottom:4px; color:var(--ink);}
+.rc-tr{display:flex; justify-content:space-between; gap:14px; color:var(--ink-soft); font-variant-numeric:tabular-nums; padding:1px 0;}
+.rc-tr b{color:var(--ink); font-weight:600;}
+.rc-rgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px 24px;}
+.rc-rk{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-mute);
+  font-weight:700; margin-bottom:6px; padding-bottom:5px; border-bottom:1px solid rgba(205,216,244,.13);}
+.rc-rrow{display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:5px 0;
+  font-size:13px; border-bottom:1px solid rgba(205,216,244,.05);}
+.rc-rrow:last-child{border-bottom:0;}
+.rc-rrow span{color:var(--ink-soft);}
+.rc-rrow b{color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap;}
+.rc-nocap{font-size:11px; color:#f0c04a; opacity:.9; white-space:nowrap;}
+.rc-gap{background:rgba(176,74,26,.12); border:1px solid rgba(176,74,26,.45); color:#f3d9c7;
+  border-radius:10px; padding:10px 12px; font-size:12.5px; line-height:1.5; margin-bottom:12px;}
+.rc-gap b{color:#fbeade;}
+@media(max-width:560px){ .rc-split{grid-template-columns:1fr;} .rc-num{font-size:19px;} }
+
 .req-when{font-size:11.5px; color:var(--ink-mute); margin-top:2px;}
 .ds-wx-retry{cursor:pointer; text-decoration:underline dotted;}
 .to-awaiting{background:rgba(230,200,120,.1); border:1px solid rgba(230,200,120,.5); border-radius:12px; padding:12px 14px; margin:0 0 14px;}
@@ -1175,6 +1239,12 @@ body.locked{overflow:hidden;}
   <div class="view-head"><p class="view-eyebrow">Managers Only</p><h2 class="view-title">Last Night</h2>
     <p class="view-sub">How last night landed — pulled from the morning brief.</p></div>
   <div id="lnBody"></div>
+</section>
+
+<section class="view" id="recap">
+  <div class="view-head"><p class="view-eyebrow">Managers Only</p><h2 class="view-title">Recap</h2>
+    <p class="view-sub">The nightly report in context — restaurant and farm split out, with the week ahead.</p></div>
+  <div id="rcBody"></div>
 </section>
 
 <section class="view" id="board">
@@ -1294,7 +1364,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1784993037';   // stamped by build-data.py at every deploy
+const BUILD='1785034391';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1342,7 +1412,8 @@ function makeStars(){
 
 const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','Tables'],['schedule','Schedule'],['crew','Crew Board'],['standards','Standards'],['directory','Directory']];
 function navTabs(){let head=isMgr()?[['today','Day Sheet']]:[['today','Day at a Glance']];
-  if(typeof lnCanTab==='function'&&lnCanTab())head=head.concat([['lastnight','Last Night']]);   // sits beside Day Sheet, gated by isMgr()+lnRole
+  if(typeof lnCanTab==='function'&&lnCanTab())head=head.concat([['lastnight','Last Night']]);
+  if(typeof rcCanTab==='function'&&rcCanTab())head=head.concat([['recap','Recap']]);   // sits beside Day Sheet, gated by isMgr()+lnRole
   let t=isMgr()?head.concat(TABS,[['frontdesk','Front Desk'],['orders','Farm Order']]):head.concat(TABS);
   return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
@@ -1355,7 +1426,7 @@ function go(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender();
   if(id==='standards'){showStdPane(stdTab);markStandardsSeen();}
   if(id==='fresh')markFreshSeen();
   if(id==='verbals')markVerbalsSeen();
@@ -4394,6 +4465,456 @@ function lnHomePrime(){
     const el=document.querySelector('.home-card[data-card="lastnight"] .hc-sub');
     if(el)el.innerHTML=esc(lnDateLabel(d)+' · '+parts.join(' · '));
   }).catch(function(){});
+}
+
+
+/* ===== RECAP — the cohesive read of the nightly Revel report =====
+   Built 2026-07-25. Gated to lnRole 'full' (Sam/Tim/Sully) for now; the `investor` role hook is
+   already in rcCanTab so opening it to Wade/Jeff/Scott is a one-line change plus their profiles.
+   Reads the SAME revel/revel_rev docs the Last Night tab reads, plus board/{date}.covers for the
+   forward look. Index-free: plain collection get + client-side sort.
+   Design intent: every headline splits Restaurant / Farm / Total so a farm ring-in can never hide
+   inside a total, and the "Everything on the nightly report" block mirrors the emailed Sales
+   Summary field for field. Fields the capture step never wrote render as "not captured", never as
+   a zero — see revel-capture-contract.md. */
+function rcCanTab(){ return typeof isMgr==='function' && isMgr() &&
+  (lnTier()==='full' || (me && me.role==='investor')); }
+function rcRest(rev,d){ return (rev&&rev.restaurant&&rev.restaurant.net!=null)?rev.restaurant.net:(rev?rev.net:null); }
+function rcFarm(rev){ return (rev&&rev.farm_ringin&&rev.farm_ringin.total)?rev.farm_ringin.total:0; }
+function rcWeekday(iso){ return new Date(iso+'T12:00:00').toLocaleDateString(undefined,{weekday:'long'}); }
+function rcDayShort(iso){ return new Date(iso+'T12:00:00').toLocaleDateString(undefined,{weekday:'short'}); }
+function rcCats(d){
+  const f=(d.food&&d.food.top||[]).reduce((s,x)=>s+(x.rev||0),0);
+  const l=(d.drinks&&d.drinks.top||[]).reduce((s,x)=>s+(x.rev||0),0);
+  const w=(d.drinks&&d.drinks.wine&&d.drinks.wine.rev)||0;
+  const n=(d.drinks&&d.drinks.na&&d.drinks.na.rev)||0;
+  return {food:f,liquor:l,wine:w,na:n};
+}
+function rcProduct(d,rev){
+  if(rev&&rev.restaurant&&rev.restaurant.product!=null)return rev.restaurant.product;
+  const c=rcCats(d); return c.food+c.liquor+c.wine+c.na;
+}
+var RC={rows:[],rev:{},board:{},scope:'night'};
+
+/* --- weekday baseline: mean restaurant net for the same weekday, excluding the night itself.
+   Under 3 other samples it returns null and the UI says nothing rather than guessing. --- */
+function rcClosed(d){ return !!(d && (d.closed || (!d.covers && !d.product))); }
+function rcBaseline(iso){
+  const wd=rcWeekday(iso), s=[];
+  RC.rows.forEach(function(r){
+    if(r.id===iso)return;
+    if(rcClosed(r))return;              // a $0 closed Saturday is not a soft Saturday
+    if(rcWeekday(r.id)!==wd)return;
+    const v=rcRest(RC.rev[r.id],r); if(v!=null)s.push(v);
+  });
+  if(s.length<3)return null;
+  return {mean:s.reduce(function(a,b){return a+b;},0)/s.length, n:s.length};
+}
+function rcDeltaPct(actual,base){ return base?((actual/base-1)*100):null; }
+function rcDPill(p){
+  if(p==null)return '';
+  return '<span class="ln-d '+(p>=0?'up':'down')+'">'+(p>=0?'+':'')+p.toFixed(0)+'%</span>';
+}
+
+/* --- charts: inline SVG, no library. Hit rects drive a shared tooltip. --- */
+function rcTipShow(wrap,html,ev){
+  let t=wrap.querySelector('.rc-tip');
+  if(!t){ t=document.createElement('div'); t.className='rc-tip'; wrap.appendChild(t); }
+  t.innerHTML=html; t.style.opacity=1;
+  const wb=wrap.getBoundingClientRect();
+  let x=ev.clientX-wb.left+12, y=ev.clientY-wb.top-t.offsetHeight-10;
+  if(x+t.offsetWidth>wb.width-4)x=wb.width-t.offsetWidth-4;
+  if(x<0)x=0; if(y<0)y=ev.clientY-wb.top+16;
+  t.style.left=x+'px'; t.style.top=y+'px';
+}
+function rcTipHide(wrap){ const t=wrap.querySelector('.rc-tip'); if(t)t.style.opacity=0; }
+function rcBind(wrap,tipFn){
+  wrap.querySelectorAll('[data-i]').forEach(function(r){
+    const i=+r.dataset.i;
+    ['pointerenter','pointermove','click'].forEach(function(ev){
+      r.addEventListener(ev,function(e){ rcTipShow(wrap,tipFn(i),e); });
+    });
+    r.addEventListener('pointerleave',function(){ rcTipHide(wrap); });
+  });
+}
+function rcStackSVG(rows){
+  const W=760,H=196,PL=48,PR=8,PT=10,PB=30;
+  const max=Math.max.apply(null,rows.map(function(r){return r.a+r.b;}))*1.08||1;
+  const iw=W-PL-PR, ih=H-PT-PB, step=iw/rows.length, bw=Math.min(34,step*0.62);
+  const y=function(v){ return PT+ih-(v/max)*ih; };
+  let g='';
+  for(let i=0;i<=4;i++){ const v=max/4*i, yy=y(v);
+    g+='<line class="rc-grid" x1="'+PL+'" x2="'+(W-PR)+'" y1="'+yy+'" y2="'+yy+'"/>'+
+       '<text class="rc-ax" x="'+(PL-8)+'" y="'+(yy+3.5)+'" text-anchor="end">$'+
+       (v>=1000?Math.round(v/1000)+'k':Math.round(v))+'</text>';
+  }
+  rows.forEach(function(r,i){
+    const cx=PL+step*i+step/2, x=cx-bw/2;
+    const ha=(r.a/max)*ih, hb=(r.b/max)*ih;
+    if(r.a>0)g+='<rect x="'+x+'" y="'+y(r.a)+'" width="'+bw+'" height="'+Math.max(ha,2)+'" rx="4" fill="var(--rc-rest)"/>';
+    if(r.b>0)g+='<rect x="'+x+'" y="'+y(r.a+r.b)+'" width="'+bw+'" height="'+Math.max(hb-2,2)+'" rx="4" fill="var(--rc-farm)"/>';
+    g+='<rect x="'+(cx-step/2)+'" y="'+PT+'" width="'+step+'" height="'+ih+'" fill="transparent" data-i="'+i+'"/>';
+    if(rows.length<=10||i%3===0)
+      g+='<text class="rc-ax" x="'+cx+'" y="'+(H-14)+'" text-anchor="middle">'+rcDayShort(r.date)+'</text>'+
+         '<text class="rc-ax" x="'+cx+'" y="'+(H-3)+'" text-anchor="middle">'+new Date(r.date+'T12:00:00').getDate()+'</text>';
+  });
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Nightly sales, restaurant and farm">'+g+'</svg>';
+}
+function rcLineSVG(rows,opt){
+  opt=opt||{};
+  const W=760,H=166,PL=44,PR=10,PT=12,PB=26;
+  const vals=rows.map(function(r){return r.v;}).filter(function(v){return v!=null;});
+  if(!vals.length)return '';
+  const dom=opt.band?vals.concat(opt.band):vals;
+  let lo=Math.min.apply(null,dom), hi=Math.max.apply(null,dom);
+  const pad=(hi-lo)*0.14||1; lo-=pad; hi+=pad;
+  const iw=W-PL-PR, ih=H-PT-PB, step=iw/((rows.length-1)||1);
+  const y=function(v){ return PT+ih-((v-lo)/(hi-lo))*ih; }, x=function(i){ return PL+step*i; };
+  let g='';
+  for(let i=0;i<=3;i++){ const v=lo+(hi-lo)/3*i, yy=y(v);
+    g+='<line class="rc-grid" x1="'+PL+'" x2="'+(W-PR)+'" y1="'+yy+'" y2="'+yy+'"/>'+
+       '<text class="rc-ax" x="'+(PL-8)+'" y="'+(yy+3.5)+'" text-anchor="end">'+
+       (opt.pct?Math.round(v)+'%':Math.round(v))+'</text>';
+  }
+  if(opt.band){
+    const top=Math.max(Math.min(y(opt.band[0]),y(opt.band[1])),PT);
+    const bot=Math.min(Math.max(y(opt.band[0]),y(opt.band[1])),PT+ih);
+    if(bot>top)g+='<rect x="'+PL+'" y="'+top+'" width="'+iw+'" height="'+(bot-top)+'" fill="rgba(12,163,12,.11)"/>'+
+      '<text class="rc-ax" x="'+(W-PR-3)+'" y="'+(top+12)+'" text-anchor="end">'+(opt.bandLabel||'')+'</text>';
+  }
+  let d='',started=false;
+  rows.forEach(function(r,i){ if(r.v==null){started=false;return;} d+=(started?' L':' M')+x(i)+' '+y(r.v); started=true; });
+  g+='<path d="'+d+'" fill="none" stroke="'+(opt.color||'var(--rc-mag)')+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+  rows.forEach(function(r,i){ if(r.v==null)return;
+    g+='<circle cx="'+x(i)+'" cy="'+y(r.v)+'" r="4" fill="'+(opt.color||'var(--rc-mag)')+'" stroke="#0c1a3e" stroke-width="2"/>'; });
+  rows.forEach(function(r,i){
+    g+='<rect x="'+(x(i)-step/2)+'" y="'+PT+'" width="'+step+'" height="'+ih+'" fill="transparent" data-i="'+i+'"/>';
+    if(rows.length<=10||i%3===0){
+      const anc=i===0?'start':(i===rows.length-1?'end':'middle');
+      g+='<text class="rc-ax" x="'+x(i)+'" y="'+(H-8)+'" text-anchor="'+anc+'">'+lnPrettyDate(r.date)+'</text>';
+    }
+  });
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img">'+g+'</svg>';
+}
+
+/* --- blocks --- */
+function rcSplit(restLab,rest,restFine,farm,farmFine,total,totalFine){
+  return '<div class="rc-split">'+
+    '<div><div class="rc-lab rc-c-rest"><i class="rc-sw rc-bg-rest"></i>'+restLab+'</div>'+
+      '<div class="rc-num rc-c-rest">'+lnMoney0(rest)+'</div><div class="rc-fine">'+restFine+'</div></div>'+
+    '<div><div class="rc-lab rc-c-farm"><i class="rc-sw rc-bg-farm"></i>Farm dinners</div>'+
+      '<div class="rc-num rc-c-farm">'+lnMoney0(farm)+'</div><div class="rc-fine">'+farmFine+'</div></div>'+
+    '<div><div class="rc-lab rc-c-tot">'+totalFine+'</div>'+
+      '<div class="rc-num">'+lnMoney0(total)+'</div><div class="rc-fine">what the emailed report shows</div></div>'+
+  '</div>';
+}
+function rcMagRow(name,right,frac,mark){
+  return '<div class="rc-mrow"><div class="rc-mtop"><span class="rc-mnm">'+esc(name)+'</span>'+
+    '<span class="rc-mval">'+right+'</span></div><div class="rc-track">'+
+    '<i style="width:'+Math.max(frac*100,1).toFixed(1)+'%"></i>'+
+    (mark!=null?'<b class="rc-mark" style="left:'+Math.min(mark*100,100).toFixed(1)+'%"></b>':'')+
+    '</div></div>';
+}
+
+/* Mirrors the emailed Sales Summary. A missing field says so; it never renders as $0.00. */
+var RC_SPEC=[
+  ['Sales',[['net','Net Sales','m'],['gross','Gross Sales','m'],['product','Total Product Sales','m'],
+    ['service_fees','Total Service Fees','m'],['tax_total','Total Tax and Surcharges','m'],
+    ['disc_total','Total Discounts','m'],['disc_item','· Item discounts','m'],
+    ['disc_order','· Order discounts','m'],['net_to_account','Net to Account For','m']]],
+  ['Activity',[['transactions','Total Transactions','n'],['guests','Total Guests','n'],
+    ['avg_check','Average Check','m2'],['per_guest','Average Sale Per Guest','m2']]],
+  ['Adjustments',[['voids','Voided Items','p'],['comps','Comped Items','p'],['refunds','Refunds','p'],
+    ['tips_total','Tips','m2']]],
+  ['Gift cards',[['gc_sold','Sold','m'],['gc_redeemed','Redeemed','m']]]
+];
+function rcReportVal(key,d,rev){
+  const g=function(o,path){ let c=o; const ps=path.split('.');
+    for(let i=0;i<ps.length;i++){ if(c==null)return null; c=c[ps[i]]; } return c===undefined?null:c; };
+  switch(key){
+    // Flat names are what the capture contract writes; the nested forms are legacy fallbacks.
+    case 'net': return g(rev,'net');
+    case 'gross': return g(rev,'gross');
+    case 'product': return d.product!=null?d.product:(d.taxable_sales!=null?d.taxable_sales:g(rev,'restaurant.product'));
+    case 'service_fees': return d.service_fees!=null?d.service_fees:g(d,'service_fees.total');
+    case 'tax_total': return d.tax_total!=null?d.tax_total:g(d,'tax.total');
+    case 'disc_total': return typeof d.discounts==='number'?d.discounts:g(d,'discounts.total');
+    case 'disc_item': return d.discounts_item!=null?d.discounts_item:g(d,'discounts.item');
+    case 'disc_order': return d.discounts_order!=null?d.discounts_order:g(d,'discounts.order');
+    case 'net_to_account': return g(rev,'net_to_account');
+    case 'transactions': return g(d,'transactions');
+    case 'guests': return d.covers!=null?d.covers:null;
+    case 'avg_check': return d.avg_check!=null?d.avg_check:null;
+    case 'per_guest': return d.avg_per_guest!=null?d.avg_per_guest:null;
+    case 'tips_total': return d.tips_total!=null?d.tips_total:g(d,'tips.total');
+    case 'gc_sold': return rev&&rev.gift_cards_sold!=null?rev.gift_cards_sold:g(rev,'gift_cards.sold');
+    case 'gc_redeemed': return rev&&rev.gift_cards_redeemed!=null?rev.gift_cards_redeemed:g(rev,'gift_cards.redeemed');
+    case 'voids': return {c:(d.voids_count!=null?d.voids_count:g(d,'voids.count')), v:(typeof d.voids==='number'?d.voids:g(d,'voids.value'))};
+    case 'comps': return {c:(d.comps_count!=null?d.comps_count:g(d,'comps.count')), v:(typeof d.comps==='number'?d.comps:g(d,'comps.value'))};
+    case 'refunds': return {c:(d.refunds_count!=null?d.refunds_count:g(d,'refunds.count')), v:(d.refunds_value!=null?d.refunds_value:g(d,'refunds.value'))};
+  }
+  return null;
+}
+function rcReportBlock(d,rev){
+  let miss=0,html='';
+  RC_SPEC.forEach(function(grp){
+    let body='';
+    grp[1].forEach(function(f){
+      const raw=rcReportVal(f[0],d,rev); let out=null;
+      if(f[2]==='p'){ if(raw&&(raw.c!=null||raw.v!=null))
+          out=(raw.c!=null?lnNum(raw.c)+' · ':'')+(raw.v!=null?lnMoney2(Math.abs(raw.v)):'—'); }
+      else if(raw!=null) out=f[2]==='n'?lnNum(raw):(f[2]==='m2'?lnMoney2(raw):lnMoney0(Math.abs(raw)));
+      if(out==null)miss++;
+      body+='<div class="rc-rrow"><span>'+f[1]+'</span>'+
+        (out==null?'<span class="rc-nocap">not captured</span>':'<b>'+out+'</b>')+'</div>';
+    });
+    html+='<div class="rc-rgroup"><div class="rc-rk">'+grp[0]+'</div>'+body+'</div>';
+  });
+  const P=(rev&&rev.payments)||null;
+  if(P&&Object.keys(P).length){
+    html+='<div class="rc-rgroup"><div class="rc-rk">Payments taken</div>'+
+      Object.keys(P).sort(function(a,b){return P[b]-P[a];}).map(function(k){
+        return '<div class="rc-rrow"><span>'+esc(k)+'</span><b>'+lnMoney2(P[k])+'</b></div>'; }).join('')+'</div>';
+  } else {
+    miss++;
+    html+='<div class="rc-rgroup"><div class="rc-rk">Payments taken</div>'+
+      '<div class="rc-rrow"><span>Breakdown by tender</span><span class="rc-nocap">not captured</span></div></div>';
+  }
+  return '<div class="ln-sec">Everything on the nightly report</div>'+
+    '<div class="ln-note" style="margin:0 0 10px">The same fields as the Revel Sales Summary emailed each morning, so there is nothing to cross-check.</div>'+
+    '<div class="ln-card">'+
+      (miss?'<div class="rc-gap"><b>'+miss+' '+(miss===1?'field is':'fields are')+' not captured for this night.</b> '+
+        'The figure is on the emailed report; it is not yet flowing into the portal. See revel-capture-contract.md.</div>':'')+
+      '<div class="rc-rgrid">'+html+'</div></div>';
+}
+
+function rcAheadBlock(){
+  const B=RC.board, today=todayISO(), keys=Object.keys(B).filter(function(k){
+    return /^\d{4}-\d{2}-\d{2}$/.test(k) && k>=today && B[k].covers && !B[k].covers.closed;
+  }).sort().slice(0,7);
+  if(!keys.length)return '';
+  const t=B[keys[0]].covers;
+  let h='<div class="ln-sec">The week ahead</div>'+
+    '<div class="ln-note" style="margin:0 0 10px">Reservations on the book right now. Walk-ins are not counted here.</div>'+
+    '<div class="ln-grid">'+
+    lnStat('Tonight, booked', lnNum(t.booked), rcDayShort(keys[0])+' '+lnPrettyDate(keys[0]));
+  if(t.expectedTotal!=null)h+=lnStat('Expected with walk-ins', lnNum(t.expectedTotal), lnNum(t.walkinsExpected)+' walk-ins expected');
+  if(t.avg4wk!=null){
+    h+=lnStat('A usual '+rcWeekday(keys[0]), lnNum(t.avg4wk), 'four-week average');
+    const p=((t.expectedTotal||t.booked)/t.avg4wk-1)*100;
+    h+=lnStat('Pace', '<span class="ln-d '+(p>=0?'up':'down')+'">'+(p>=0?'+':'')+p.toFixed(0)+'%</span>', 'vs a usual '+rcWeekday(keys[0]));
+  }
+  h+='</div>';
+  const rest=keys.slice(1).filter(function(k){ return B[k].covers.avg4wk!=null; });
+  if(rest.length){
+    const mx=Math.max.apply(null,rest.map(function(k){ return Math.max(B[k].covers.booked||0,B[k].covers.avg4wk||0); }));
+    h+='<div class="ln-card"><div class="rc-legend"><span><i class="rc-sw rc-bg-mag"></i>Booked so far</span>'+
+       '<span><i class="rc-sw rc-tick"></i>Where a usual night lands</span></div>';
+    rest.forEach(function(k){ const c=B[k].covers;
+      h+=rcMagRow(rcWeekday(k)+' '+lnPrettyDate(k),
+        '<em>usual '+lnNum(c.avg4wk)+'</em>'+lnNum(c.booked)+' booked', c.booked/mx, c.avg4wk/mx); });
+    h+='<div class="ln-note"><b>Read these as a floor, not a forecast.</b> Tables keep filling through '+
+       'the week and walk-ins are counted only on the night itself, so a date further out will always '+
+       'show fewer on the book than it finishes with.</div></div>';
+  }
+  return h;
+}
+
+function rcNightHTML(){
+  const d=RC.rows[0]; if(!d)return lnEmptyHTML();
+  const rev=RC.rev[d.id]||null, r=rcRest(rev,d), f=rcFarm(rev), tot=rev?rev.net:null;
+  const b=rcBaseline(d.id), dp=b?rcDeltaPct(r,b.mean):null;
+  let h=lnFreshBlock(d);
+  h+='<div class="rc-hero">'+
+    '<div class="ln-stat-k">Net sales</div>'+
+    rcSplit('Restaurant', r,
+      lnNum(d.covers)+' guests · '+lnMoney0(r/d.covers)+'/guest'+
+        (b?'<br><span class="rc-base">A usual '+rcWeekday(d.id)+' runs '+lnMoney0(b.mean)+' '+rcDPill(dp)+
+           '<br><span class="rc-basen">average of the last '+b.n+'</span></span>':''),
+      f, f?'rung into the register this night':'none this night', tot, 'Total');
+  if(f){
+    const fr=rev.farm_ringin;
+    h+='<div class="rc-callout"><div class="rc-ct">Why the total looks unusual</div>'+
+      'The farm dinners were rung into the register this night as one batch and paid with a <b>'+
+      lnMoney0(fr.gift_card_paid)+'</b> gift-card redemption. That adds <b>'+lnMoney0(fr.total)+'</b> to the '+
+      'night’s total ('+lnMoney0(fr.food)+' food, '+lnMoney0(fr.wine)+' wine, '+lnMoney0(fr.liquor)+' liquor) '+
+      'without a single extra guest walking through the restaurant door. The restaurant on its own did <b>'+
+      lnMoney0(r)+'</b>.</div>';
+  }
+  h+='</div>';
+
+  h+='<div class="ln-grid">'+
+    lnStat('Guests', lnNum(d.covers)+(d.wow&&d.wow.covers?' '+lnDeltaSpan(d.wow.covers.d,'num'):''),
+      d.covers_log?lnNum(d.covers_log)+' on the floor log':'')+
+    lnStat('Sales per guest', lnMoney0(r/d.covers), 'restaurant only'+(f?', excludes the batch':''))+
+    lnStat('Labor', lnPct(d.labor&&(d.labor.pct_restaurant||d.labor.pct_clocked_proxy)),
+      d.labor?(lnNum(d.labor.hours)+' hrs · '+lnMoney0(d.labor.clocked_wages)):'')+
+    lnStat('Discounts, comps, voids',
+      lnMoney0((typeof d.discounts==='number'?d.discounts:0)+(typeof d.comps==='number'?d.comps:0)+(typeof d.voids==='number'?d.voids:0)),
+      'clocked from the report')+
+  '</div>';
+
+  const c=rcCats(d), prod=rcProduct(d,rev);
+  const other=Math.round((prod-(c.food+c.liquor+c.wine+c.na))*100)/100;
+  let cats=[['Food',c.food],['Wine',c.wine],['Cocktails, beer, spirits',c.liquor],['Non-alcoholic',c.na]];
+  if(other>0.5)cats.push(['To-go and other',other]);
+  cats=cats.filter(function(x){return x[1]>0;}).sort(function(a,b){return b[1]-a[1];});
+  if(cats.length){
+    const cmax=cats[0][1], ctot=cats.reduce(function(s,x){return s+x[1];},0);
+    h+='<div class="ln-sec">Where the money came from</div><div class="ln-card">';
+    cats.forEach(function(x){ h+=rcMagRow(x[0],'<em>'+Math.round(x[1]/ctot*100)+'%</em>'+lnMoney0(x[1]),x[1]/cmax); });
+    h+='<div class="rc-mrow rc-mtotal"><div class="rc-mtop"><span class="rc-mnm">Product sales</span>'+
+       '<span class="rc-mval">'+lnMoney0(prod)+'</span></div></div>';
+    if(d.drinks&&d.drinks.wine)h+='<div class="ln-note">Wine: '+lnNum(d.drinks.wine.bottles)+' bottles, '+
+       lnNum(d.drinks.wine.glasses)+' glasses by the pour.</div>';
+    h+='</div>';
+  }
+
+  const top=(d.food&&d.food.top||[]).slice(0,10);
+  if(top.length){
+    const tmax=top[0].rev||1;
+    h+='<div class="ln-sec">What sold</div><div class="ln-card">';
+    top.forEach(function(t){ h+=rcMagRow(t.name,'<em>'+lnNum(t.qty)+' sold</em>'+lnMoney0(t.rev),(t.rev||0)/tmax); });
+    h+='</div>';
+  }
+  const dt=(d.drinks&&d.drinks.top||[]).slice(0,6);
+  if(dt.length){
+    const dmax=dt[0].rev||1;
+    h+='<div class="ln-sec">Top drinks</div><div class="ln-card">';
+    dt.forEach(function(t){ h+=rcMagRow(t.name,'<em>'+lnNum(t.qty)+' sold</em>'+lnMoney0(t.rev),(t.rev||0)/dmax); });
+    h+='</div>';
+  }
+  const an=[].concat(d.food&&d.food.anomalies||[], d.drinks&&d.drinks.anomalies||[]);
+  if(an.length){
+    h+='<div class="ln-sec">What moved</div><div class="ln-card">';
+    an.forEach(function(a){ h+='<div class="ln-note2"><b>'+esc(a.name)+'</b> '+esc(a.note||'')+'</div>'; });
+    h+='</div>';
+  }
+  h+=rcAheadBlock();
+  h+=rcReportBlock(d,rev);
+  if(d.notes&&(d.notes.peak||d.notes.tail)){
+    h+='<div class="ln-sec">How the night ran</div><div class="ln-card">';
+    if(d.notes.peak)h+='<div class="ln-note2"><span class="ln-note-k">Peak</span>'+esc(d.notes.peak)+'</div>';
+    if(d.notes.tail)h+='<div class="ln-note2"><span class="ln-note-k">Tail</span>'+esc(d.notes.tail)+'</div>';
+    h+='</div>';
+  }
+  return h;
+}
+
+function rcRangeHTML(rows,title,lede){
+  if(!rows.length)return lnEmptyHTML();
+  const R={rest:0,farm:0,net:0,covers:0,hours:0,wages:0,lprod:0,ln:0};
+  rows.forEach(function(d){ const rev=RC.rev[d.id]||null;
+    R.rest+=rcRest(rev,d)||0; R.farm+=rcFarm(rev); R.net+=(rev&&rev.net)||0; R.covers+=d.covers||0;
+    if(d.labor&&d.labor.clocked_wages){ R.hours+=d.labor.hours||0; R.wages+=d.labor.clocked_wages;
+      R.lprod+=rcProduct(d,rev); R.ln++; } });
+  const lpct=R.lprod?R.wages/R.lprod*100:null;
+  let h='<div class="rc-hero"><div class="ln-stat-k">'+title+'</div>'+
+    rcSplit('Restaurant',R.rest,lnNum(R.covers)+' guests · '+lnMoney0(R.rest/R.covers)+'/guest',
+      R.farm,R.farm?'rung in during this window':'nothing rung in',R.net,'Total')+
+    '<div class="ln-note">'+lede+'</div></div>';
+
+  h+='<div class="ln-sec">Night by night</div><div class="ln-card">'+
+     '<div class="rc-legend"><span><i class="rc-sw rc-bg-rest"></i>Restaurant</span>'+
+     '<span><i class="rc-sw rc-bg-farm"></i>Farm dinners</span></div>'+
+     '<div class="rc-chart" id="rcChRev"></div></div>';
+  h+='<div class="ln-sec">Guests</div><div class="ln-card"><div class="rc-chart" id="rcChCov"></div></div>';
+  h+='<div class="ln-sec">Labor</div>'+
+     '<div class="ln-note" style="margin:0 0 10px">Clocked hourly wages as a share of restaurant sales. '+
+     'Excludes salaried management, service-charge commissions, paid leave and payroll taxes, so true '+
+     'loaded cost runs meaningfully higher.</div>'+
+     '<div class="ln-card"><div class="rc-chart" id="rcChLab"></div><div class="ln-grid" style="margin-top:12px">'+
+     lnStat('Hours',lnNum(Math.round(R.hours*10)/10),'across '+R.ln+' nights')+
+     lnStat('Clocked wages',lnMoney0(R.wages),'hourly staff only')+
+     lnStat('Labor rate',lnPct(lpct),'of restaurant sales')+
+     lnStat('Sales per hour',lnMoney0(R.lprod/R.hours),'restaurant sales ÷ hours')+
+     '</div></div>';
+
+  h+='<div class="ln-sec">The nights</div><div class="ln-card"><table class="ln-strip">'+
+     '<thead><tr><th>Night</th><th>Restaurant</th><th>vs usual</th><th>Farm</th><th>Guests</th><th>Labor</th></tr></thead><tbody>';
+  rows.forEach(function(d){ const rev=RC.rev[d.id]||null, rr=rcRest(rev,d);
+    const b=rcBaseline(d.id), p=b?rcDeltaPct(rr,b.mean):null;
+    if(rcClosed(d)){ h+='<tr><td>'+rcDayShort(d.id)+' '+lnPrettyDate(d.id)+'</td>'+
+      '<td colspan="5" style="text-align:left;color:var(--ink-mute)">Closed</td></tr>'; return; }
+    h+='<tr><td>'+rcDayShort(d.id)+' '+lnPrettyDate(d.id)+'</td><td>'+lnMoney0(rr)+'</td>'+
+      '<td>'+(p==null?'—':rcDPill(p))+'</td>'+
+      '<td>'+(rcFarm(rev)?lnMoney0(rcFarm(rev)):'—')+'</td><td>'+lnNum(d.covers)+'</td>'+
+      '<td>'+lnPct(d.labor&&(d.labor.pct_restaurant||d.labor.pct_clocked_proxy))+'</td></tr>'; });
+  h+='<tr><td><b>Total</b></td><td><b>'+lnMoney0(R.rest)+'</b></td><td></td><td><b>'+lnMoney0(R.farm)+
+     '</b></td><td><b>'+lnNum(R.covers)+'</b></td><td><b>'+lnPct(lpct)+'</b></td></tr></tbody></table></div>';
+  return h;
+}
+function rcDrawRange(rows){
+  const rev=RC.rev;
+  const rev1=document.getElementById('rcChRev');
+  if(rev1){ const data=rows.map(function(d){ return {date:d.id,a:rcRest(rev[d.id],d)||0,b:rcFarm(rev[d.id])}; });
+    rev1.innerHTML=rcStackSVG(data);
+    rcBind(rev1,function(i){ const x=data[i];
+      return '<div class="rc-tt">'+rcDayShort(x.date)+' '+lnPrettyDate(x.date)+'</div>'+
+        '<div class="rc-tr"><span>Restaurant</span><b>'+lnMoney0(x.a)+'</b></div>'+
+        (x.b?'<div class="rc-tr"><span>Farm</span><b>'+lnMoney0(x.b)+'</b></div>'+
+             '<div class="rc-tr"><span>Total</span><b>'+lnMoney0(x.a+x.b)+'</b></div>':''); }); }
+  const cov=document.getElementById('rcChCov');
+  if(cov){ const data=rows.map(function(d){ return {date:d.id,v:rcClosed(d)?null:d.covers,d:d}; });
+    cov.innerHTML=rcLineSVG(data,{color:'var(--rc-mag)'});
+    rcBind(cov,function(i){ const x=data[i];
+      return '<div class="rc-tt">'+rcDayShort(x.date)+' '+lnPrettyDate(x.date)+'</div>'+
+        '<div class="rc-tr"><span>Guests</span><b>'+lnNum(x.v)+'</b></div>'; }); }
+  const lab=document.getElementById('rcChLab');
+  if(lab){ const data=rows.map(function(d){ return {date:d.id,v:rcClosed(d)?null:(d.labor&&(d.labor.pct_restaurant||d.labor.pct_clocked_proxy)),d:d}; });
+    lab.innerHTML=rcLineSVG(data,{color:'var(--rc-rest)',pct:true,band:[30,35],bandLabel:'30–35% target'});
+    rcBind(lab,function(i){ const x=data[i];
+      return '<div class="rc-tt">'+rcDayShort(x.date)+' '+lnPrettyDate(x.date)+'</div>'+
+        '<div class="rc-tr"><span>Labor</span><b>'+lnPct(x.v)+'</b></div>'+
+        (x.d.labor?'<div class="rc-tr"><span>Hours</span><b>'+lnNum(x.d.labor.hours)+'</b></div>':''); }); }
+}
+
+function rcPaint(){
+  const el=$('rcBody'); if(!el)return;
+  const asc=RC.rows.slice().reverse();
+  const seg='<div class="rc-seg">'+['night','week','month'].map(function(s){
+    return '<button data-rc="'+s+'"'+(RC.scope===s?' class="on"':'')+'>'+
+      (s==='night'?'Last night':s==='week'?'Last 7 nights':'This month')+'</button>'; }).join('')+'</div>';
+  let body='';
+  if(RC.scope==='night')body=rcNightHTML();
+  else if(RC.scope==='week'){
+    const rows=asc.slice(-7);
+    body=rcRangeHTML(rows,'Last seven nights',
+      lnPrettyDate(rows[0].id)+' through '+lnPrettyDate(rows[rows.length-1].id)+'.');
+  } else {
+    const mo=(RC.rows[0]&&RC.rows[0].id||todayISO()).slice(0,7);
+    const rows=asc.filter(function(d){ return d.id.slice(0,7)===mo; });
+    body=rcRangeHTML(rows, new Date(mo+'-01T12:00:00').toLocaleDateString(undefined,{month:'long'})+' so far',
+      rows.length+' nights of service captured this month.');
+  }
+  el.innerHTML=seg+body;
+  el.querySelectorAll('[data-rc]').forEach(function(b){
+    b.onclick=function(){ RC.scope=b.dataset.rc; rcPaint(); window.scrollTo(0,0); }; });
+  if(RC.scope!=='night'){
+    const asc2=RC.rows.slice().reverse();
+    const rows=RC.scope==='week'?asc2.slice(-7):asc2.filter(function(d){
+      return d.id.slice(0,7)===(RC.rows[0]&&RC.rows[0].id||todayISO()).slice(0,7); });
+    rcDrawRange(rows);
+  }
+}
+function rcRender(){
+  const el=$('rcBody'); if(!el)return;
+  if(!rcCanTab()){ el.innerHTML='<p class="ln-empty">Access required.</p>'; return; }
+  if(!RC.rows.length)el.innerHTML='<p class="ln-empty">Loading…</p>';
+  if(!fbReady||!fbDb){ if(!RC.rows.length)el.innerHTML=lnFailHTML('Can’t reach the server right now.'); return; }
+  Promise.all([fbDb.collection('revel').get(), fbDb.collection('revel_rev').get(),
+               fbDb.collection('board').get().catch(function(){return null;})])
+  .then(function(res){
+    let rows=[]; res[0].forEach(function(d){ rows.push(Object.assign({id:d.id},d.data())); });
+    rows.sort(function(a,b){ return a.id<b.id?1:(a.id>b.id?-1:0); });
+    RC.rows=rows.slice(0,62);
+    RC.rev={}; if(res[1])res[1].forEach(function(d){ RC.rev[d.id]=d.data(); });
+    RC.board={}; if(res[2])res[2].forEach(function(d){ RC.board[d.id]=d.data(); });
+    if(!RC.rows.length){ el.innerHTML=lnEmptyHTML(); return; }
+    rcPaint();
+  }).catch(function(e){
+    if(!RC.rows.length)el.innerHTML=lnFailHTML('Couldn’t load the recap ('+((e&&e.message)||'read failed')+').');
+  });
 }
 
 /* 86 BOARD */
