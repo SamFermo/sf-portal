@@ -1,50 +1,49 @@
 {
  "cocktails": [
   {
-   "name": "Heart of Glass",
-   "build": "vodka, swan house farm lilac cordial, lemon, grapefruit, dry vermouth, soda",
+   "name": "Wuthering Heights",
+   "build": "dill infused vodka, swan house farm damask rose simple, lime, dry vermouth, cucumber, soda",
    "price": "15",
-   "highlight": "Swan House lilac",
-   "tagline": "Swan House lilac in a glass",
+   "highlight": "Swan House rose",
+   "tagline": "Swan House damask rose with a savory dill edge",
    "ingredients": [
     {
-     "name": "Vodka",
-     "amount": "1.5 oz",
-     "description": "Neutral, clean base that lets the floral and citrus elements shine without competition."
+     "name": "Dill-infused vodka",
+     "description": "Vodka steeped with fresh dill. It keeps the neutral base but adds a green, savory herbaceousness that carries the drink and keeps the florals from reading sweet."
     },
     {
-     "name": "Swan House Farm lilac cordial",
-     "amount": "0.75 oz",
-     "description": "Made from lilacs grown at Sam's family farm in Skagit Valley. The blossoms are harvested and steeped into a simple syrup — the result is delicate, floral, and faintly honeyed. This cordial is the soul of the drink and the reason to order it.",
+     "name": "Swan House Farm damask rose simple",
+     "description": "Made from damask roses grown at Sam's family farm in Skagit Valley. The petals are steeped into a simple syrup, giving a delicate sweetness and real rose perfume. This is the soul of the drink and the reason to order it.",
      "highlight": "Swan House Farm"
     },
     {
-     "name": "Lemon juice",
-     "amount": "0.75 oz",
-     "description": "Fresh-squeezed. Brightens the floral sweetness and keeps the drink alive."
-    },
-    {
-     "name": "Grapefruit juice",
-     "amount": "0.5 oz",
-     "description": "Adds gentle bitterness and a citrus depth that balances the sweetness of the cordial."
+     "name": "Lime juice",
+     "description": "Fresh-squeezed. Sharpens the rose and keeps the drink bright."
     },
     {
      "name": "Dry vermouth",
-     "amount": "0.5 oz",
-     "description": "A fortified white wine aromatized with herbs. Dry vermouth adds a herbal, crisp note — subtle wormwood and botanicals that give the drink structure without heaviness."
+     "description": "A fortified white wine aromatized with herbs. Adds crisp botanical structure and a faint wormwood bitterness without weight."
+    },
+    {
+     "name": "Cucumber",
+     "description": "Cool and clean, echoing the dill and keeping the whole drink crisp."
     },
     {
      "name": "Soda water",
-     "amount": "top",
-     "description": "Lifts the drink and adds a gentle effervescence. Keeps it fresh and sessionable."
+     "description": "Lengthens the drink and lifts it. Finishes refreshing and slightly bitter."
     }
    ],
    "pronguide": [
     {
      "term": "vermouth",
      "pron": "vehr-MOOTH"
+    },
+    {
+     "term": "damask",
+     "pron": "DAM-usk"
     }
-   ]
+   ],
+   "added": "2026-07-25"
   },
   {
    "name": "Material Girl",
@@ -161,7 +160,6 @@
    ],
    "added": "2026-06-19"
   },
-
   {
    "name": "Cool Cat",
    "build": "mezcal, sunflower seed orgeat, brucato kumquat and chili liqueur, lime, dry vermouth, saline, grapefruit bitters",
