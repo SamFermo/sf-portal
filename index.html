@@ -1107,8 +1107,12 @@ body.locked{overflow:hidden;}
 .rc-legend span{display:inline-flex; align-items:center; gap:6px;}
 .rc-chart{position:relative;}
 .rc-chart svg{display:block; width:100%; overflow:hidden;}
+.rc-solo{padding:2px 0 0;}
+.rc-solo-num{font-size:34px; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-.02em; color:var(--rc-rest); margin:6px 0 2px; line-height:1;}
+.rc-sub-line{margin-top:9px; padding-top:9px; border-top:1px solid rgba(205,216,244,.13); font-size:12px; color:var(--ink-mute);}
+@media(max-width:560px){ .rc-solo-num{font-size:29px;} }
 .rc-grid{stroke:rgba(205,216,244,.09); stroke-width:1;}
-.rc-ax{fill:var(--ink-mute); font-size:10px; font-variant-numeric:tabular-nums;}
+.rc-ax{fill:var(--ink-mute); font-size:11px; font-variant-numeric:tabular-nums;}
 .rc-tip{position:absolute; pointer-events:none; opacity:0; transition:opacity .1s; background:#0a1430;
   border:1px solid rgba(205,216,244,.28); border-radius:9px; padding:8px 10px; font-size:12px;
   box-shadow:0 8px 22px rgba(0,0,0,.5); z-index:30; min-width:126px;}
@@ -1364,7 +1368,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785071674';   // stamped by build-data.py at every deploy
+const BUILD='1785088133';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4482,6 +4486,19 @@ function lnHomePrime(){
 function rcCanTab(){ return typeof isMgr==='function' && isMgr() &&
   (lnTier()==='full' || (me && me.role==='investor')); }
 function rcRest(rev,d){ return (rev&&rev.restaurant&&rev.restaurant.net!=null)?rev.restaurant.net:(rev?rev.net:null); }
+/* Product sales is the basis for every headline, delta, chart and baseline in this tab.
+   Tim's P&L carries "Total Food & Beverage Sales" as its own line with "Service Charges"
+   separately below it, and every cost percentage in that P&L is struck against F&B sales,
+   not against total revenue. So product sales is the number the business is actually run on;
+   net moves with the service-charge rate and is not comparable across time the same way.
+   Net is still shown, as a supporting line rather than the headline. */
+function rcProd(d,rev){
+  if(rev&&rev.restaurant&&rev.restaurant.product!=null)return rev.restaurant.product;   // farm night: restaurant only
+  if(d&&d.product!=null)return d.product;
+  if(d&&d.taxable_sales!=null)return d.taxable_sales;
+  const c=rcCats(d); return c.food+c.liquor+c.wine+c.na;
+}
+function rcNet(d,rev){ return rcRest(rev,d); }
 function rcFarm(rev){ return (rev&&rev.farm_ringin&&rev.farm_ringin.total)?rev.farm_ringin.total:0; }
 function rcWeekday(iso){ return new Date(iso+'T12:00:00').toLocaleDateString(undefined,{weekday:'long'}); }
 function rcDayShort(iso){ return new Date(iso+'T12:00:00').toLocaleDateString(undefined,{weekday:'short'}); }
@@ -4491,10 +4508,6 @@ function rcCats(d){
   const w=(d.drinks&&d.drinks.wine&&d.drinks.wine.rev)||0;
   const n=(d.drinks&&d.drinks.na&&d.drinks.na.rev)||0;
   return {food:f,liquor:l,wine:w,na:n};
-}
-function rcProduct(d,rev){
-  if(rev&&rev.restaurant&&rev.restaurant.product!=null)return rev.restaurant.product;
-  const c=rcCats(d); return c.food+c.liquor+c.wine+c.na;
 }
 var RC={rows:[],rev:{},board:{},scope:'night'};
 
@@ -4507,7 +4520,7 @@ function rcBaseline(iso){
     if(r.id===iso)return;
     if(rcClosed(r))return;              // a $0 closed Saturday is not a soft Saturday
     if(rcWeekday(r.id)!==wd)return;
-    const v=rcRest(RC.rev[r.id],r); if(v!=null)s.push(v);
+    const v=rcProd(r,RC.rev[r.id]); if(v!=null)s.push(v);
   });
   if(s.length<3)return null;
   return {mean:s.reduce(function(a,b){return a+b;},0)/s.length, n:s.length};
@@ -4539,8 +4552,9 @@ function rcBind(wrap,tipFn){
     r.addEventListener('pointerleave',function(){ rcTipHide(wrap); });
   });
 }
-function rcStackSVG(rows){
-  const W=760,H=196,PL=48,PR=8,PT=10,PB=30;
+function rcStackSVG(rows,W){
+  W=Math.max(W||760,300); const narrow=W<520;
+  const H=narrow?168:196, PL=narrow?38:48, PR=8, PT=10, PB=30;
   const max=Math.max.apply(null,rows.map(function(r){return r.a+r.b;}))*1.08||1;
   const iw=W-PL-PR, ih=H-PT-PB, step=iw/rows.length, bw=Math.min(34,step*0.62);
   const y=function(v){ return PT+ih-(v/max)*ih; };
@@ -4556,15 +4570,17 @@ function rcStackSVG(rows){
     if(r.a>0)g+='<rect x="'+x+'" y="'+y(r.a)+'" width="'+bw+'" height="'+Math.max(ha,2)+'" rx="4" fill="var(--rc-rest)"/>';
     if(r.b>0)g+='<rect x="'+x+'" y="'+y(r.a+r.b)+'" width="'+bw+'" height="'+Math.max(hb-2,2)+'" rx="4" fill="var(--rc-farm)"/>';
     g+='<rect x="'+(cx-step/2)+'" y="'+PT+'" width="'+step+'" height="'+ih+'" fill="transparent" data-i="'+i+'"/>';
-    if(rows.length<=10||i%3===0)
+    const every=Math.max(1,Math.ceil(rows.length/(narrow?5:12)));
+    if(rows.length<=10||i%every===0)
       g+='<text class="rc-ax" x="'+cx+'" y="'+(H-14)+'" text-anchor="middle">'+rcDayShort(r.date)+'</text>'+
          '<text class="rc-ax" x="'+cx+'" y="'+(H-3)+'" text-anchor="middle">'+new Date(r.date+'T12:00:00').getDate()+'</text>';
   });
-  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Nightly sales, restaurant and farm">'+g+'</svg>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" role="img" aria-label="Nightly product sales">'+g+'</svg>';
 }
-function rcLineSVG(rows,opt){
+function rcLineSVG(rows,opt,W){
   opt=opt||{};
-  const W=760,H=166,PL=44,PR=10,PT=12,PB=26;
+  W=Math.max(W||760,300); const narrow=W<520;
+  const H=narrow?150:166, PL=narrow?34:44, PR=10, PT=12, PB=26;
   const vals=rows.map(function(r){return r.v;}).filter(function(v){return v!=null;});
   if(!vals.length)return '';
   const dom=opt.band?vals.concat(opt.band):vals;
@@ -4591,23 +4607,36 @@ function rcLineSVG(rows,opt){
     g+='<circle cx="'+x(i)+'" cy="'+y(r.v)+'" r="4" fill="'+(opt.color||'var(--rc-mag)')+'" stroke="#0c1a3e" stroke-width="2"/>'; });
   rows.forEach(function(r,i){
     g+='<rect x="'+(x(i)-step/2)+'" y="'+PT+'" width="'+step+'" height="'+ih+'" fill="transparent" data-i="'+i+'"/>';
-    if(rows.length<=10||i%3===0){
+    const every=Math.max(1,Math.ceil(rows.length/(narrow?4:10)));
+    if(rows.length<=10||i%every===0){
       const anc=i===0?'start':(i===rows.length-1?'end':'middle');
       g+='<text class="rc-ax" x="'+x(i)+'" y="'+(H-8)+'" text-anchor="'+anc+'">'+lnPrettyDate(r.date)+'</text>';
     }
   });
-  return '<svg viewBox="0 0 '+W+' '+H+'" role="img">'+g+'</svg>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" role="img">'+g+'</svg>';
 }
 
 /* --- blocks --- */
-function rcSplit(restLab,rest,restFine,farm,farmFine,total,totalFine){
+function rcHero(label, prod, fine, farm, net, farmFine){
+  // A zero farm column on 29 nights a month is wasted space. When there is no ring-in the
+  // headline is one number and farm drops to a supporting line; when there is one it earns
+  // a column, because that is the night the total needs explaining.
+  if(!farm){
+    return '<div class="rc-solo">'+          // card already carries the "Product sales" label
+      '<div class="rc-solo-num">'+lnMoney0(prod)+'</div>'+
+      '<div class="rc-fine">'+fine+'</div>'+
+      '<div class="rc-sub-line">'+lnMoney0(net)+' with the service charge'+
+        (farmFine?' · '+farmFine:'')+'</div></div>';
+  }
   return '<div class="rc-split">'+
-    '<div><div class="rc-lab rc-c-rest"><i class="rc-sw rc-bg-rest"></i>'+restLab+'</div>'+
-      '<div class="rc-num rc-c-rest">'+lnMoney0(rest)+'</div><div class="rc-fine">'+restFine+'</div></div>'+
+    '<div><div class="rc-lab rc-c-rest"><i class="rc-sw rc-bg-rest"></i>Restaurant</div>'+
+      '<div class="rc-num rc-c-rest">'+lnMoney0(prod)+'</div><div class="rc-fine">'+fine+'</div></div>'+
     '<div><div class="rc-lab rc-c-farm"><i class="rc-sw rc-bg-farm"></i>Farm dinners</div>'+
-      '<div class="rc-num rc-c-farm">'+lnMoney0(farm)+'</div><div class="rc-fine">'+farmFine+'</div></div>'+
-    '<div><div class="rc-lab rc-c-tot">'+totalFine+'</div>'+
-      '<div class="rc-num">'+lnMoney0(total)+'</div><div class="rc-fine">what the emailed report shows</div></div>'+
+      '<div class="rc-num rc-c-farm">'+lnMoney0(farm)+'</div>'+
+      '<div class="rc-fine">'+(farmFine||'rung into the register')+'</div></div>'+
+    '<div><div class="rc-lab rc-c-tot">Total product sales</div>'+
+      '<div class="rc-num">'+lnMoney0(prod+farm)+'</div>'+
+      '<div class="rc-fine">what the emailed report shows</div></div>'+
   '</div>';
 }
 function rcMagRow(name,right,frac,mark){
@@ -4727,28 +4756,30 @@ function rcNightHTML(){
   const rev=RC.rev[d.id]||null, r=rcRest(rev,d), f=rcFarm(rev), tot=rev?rev.net:null;
   const b=rcBaseline(d.id), dp=b?rcDeltaPct(r,b.mean):null;
   let h=lnFreshBlock(d);
+  const prod=rcProd(d,rev), net=rcNet(d,rev);
+  const b2=rcBaseline(d.id), dp2=b2?rcDeltaPct(prod,b2.mean):null;
   h+='<div class="rc-hero">'+
-    '<div class="ln-stat-k">Net sales</div>'+
-    rcSplit('Restaurant', r,
-      lnNum(d.covers)+' guests · '+lnMoney0(r/d.covers)+'/guest'+
-        (b?'<br><span class="rc-base">A usual '+rcWeekday(d.id)+' runs '+lnMoney0(b.mean)+' '+rcDPill(dp)+
-           '<br><span class="rc-basen">average of the last '+b.n+'</span></span>':''),
-      f, f?'rung into the register this night':'none this night', tot, 'Total');
+    '<div class="ln-stat-k">Product sales</div>'+
+    rcHero('Product sales', prod,
+      lnNum(d.covers)+' guests · '+lnMoney0(prod/d.covers)+'/guest'+
+        (b2?'<div class="rc-base">A usual '+rcWeekday(d.id)+' runs '+lnMoney0(b2.mean)+' '+rcDPill(dp2)+
+           '<br><span class="rc-basen">average of the last '+b2.n+'</span></div>':''),
+      f, net, f?'July series, rung in this night':'no farm ring-in this night');
   if(f){
     const fr=rev.farm_ringin;
     h+='<div class="rc-callout"><div class="rc-ct">Why the total looks unusual</div>'+
       'The farm dinners were rung into the register this night as one batch and paid with a <b>'+
-      lnMoney0(fr.gift_card_paid)+'</b> gift-card redemption. That adds <b>'+lnMoney0(fr.total)+'</b> to the '+
-      'night’s total ('+lnMoney0(fr.food)+' food, '+lnMoney0(fr.wine)+' wine, '+lnMoney0(fr.liquor)+' liquor) '+
-      'without a single extra guest walking through the restaurant door. The restaurant on its own did <b>'+
-      lnMoney0(r)+'</b>.</div>';
+      lnMoney0(fr.gift_card_paid)+'</b> gift-card redemption. That adds <b>'+lnMoney0(fr.total)+'</b> ('+
+      lnMoney0(fr.food)+' food, '+lnMoney0(fr.wine)+' wine, '+lnMoney0(fr.liquor)+' liquor) '+
+      'without a single extra guest walking through the restaurant door. The restaurant on its own sold <b>'+
+      lnMoney0(prod)+'</b>.</div>';
   }
   h+='</div>';
 
   h+='<div class="ln-grid">'+
     lnStat('Guests', lnNum(d.covers)+(d.wow&&d.wow.covers?' '+lnDeltaSpan(d.wow.covers.d,'num'):''),
       d.covers_log?lnNum(d.covers_log)+' on the floor log':'')+
-    lnStat('Sales per guest', lnMoney0(r/d.covers), 'restaurant only'+(f?', excludes the batch':''))+
+    lnStat('Sales per guest', lnMoney0(prod/d.covers), 'product sales'+(f?', excludes the batch':''))+
     lnStat('Labor', lnPct(d.labor&&(d.labor.pct_restaurant||d.labor.pct_clocked_proxy)),
       d.labor?(lnNum(d.labor.hours)+' hrs · '+lnMoney0(d.labor.clocked_wages)):'')+
     lnStat('Discounts, comps, voids',
@@ -4756,7 +4787,7 @@ function rcNightHTML(){
       'clocked from the report')+
   '</div>';
 
-  const c=rcCats(d), prod=rcProduct(d,rev);
+  const c=rcCats(d);
   const other=Math.round((prod-(c.food+c.liquor+c.wine+c.na))*100)/100;
   let cats=[['Food',c.food],['Wine',c.wine],['Cocktails, beer, spirits',c.liquor],['Non-alcoholic',c.na]];
   if(other>0.5)cats.push(['To-go and other',other]);
@@ -4807,13 +4838,13 @@ function rcRangeHTML(rows,title,lede){
   if(!rows.length)return lnEmptyHTML();
   const R={rest:0,farm:0,net:0,covers:0,hours:0,wages:0,lprod:0,ln:0};
   rows.forEach(function(d){ const rev=RC.rev[d.id]||null;
-    R.rest+=rcRest(rev,d)||0; R.farm+=rcFarm(rev); R.net+=(rev&&rev.net)||0; R.covers+=d.covers||0;
+    R.rest+=rcProd(d,rev)||0; R.farm+=rcFarm(rev); R.net+=rcNet(d,rev)||0; R.covers+=d.covers||0;
     if(d.labor&&d.labor.clocked_wages){ R.hours+=d.labor.hours||0; R.wages+=d.labor.clocked_wages;
-      R.lprod+=rcProduct(d,rev); R.ln++; } });
+      R.lprod+=rcProd(d,rev); R.ln++; } });
   const lpct=R.lprod?R.wages/R.lprod*100:null;
   let h='<div class="rc-hero"><div class="ln-stat-k">'+title+'</div>'+
-    rcSplit('Restaurant',R.rest,lnNum(R.covers)+' guests · '+lnMoney0(R.rest/R.covers)+'/guest',
-      R.farm,R.farm?'rung in during this window':'nothing rung in',R.net,'Total')+
+    rcHero('Product sales', R.rest, lnNum(R.covers)+' guests · '+lnMoney0(R.rest/R.covers)+'/guest',
+      R.farm, R.net, R.farm?'rung in during this window':'no farm ring-in in this window')+
     '<div class="ln-note">'+lede+'</div></div>';
 
   h+='<div class="ln-sec">Night by night</div><div class="ln-card">'+
@@ -4834,7 +4865,7 @@ function rcRangeHTML(rows,title,lede){
 
   h+='<div class="ln-sec">The nights</div><div class="ln-card"><table class="ln-strip">'+
      '<thead><tr><th>Night</th><th>Restaurant</th><th>vs usual</th><th>Farm</th><th>Guests</th><th>Labor</th></tr></thead><tbody>';
-  rows.forEach(function(d){ const rev=RC.rev[d.id]||null, rr=rcRest(rev,d);
+  rows.forEach(function(d){ const rev=RC.rev[d.id]||null, rr=rcProd(d,rev);
     const b=rcBaseline(d.id), p=b?rcDeltaPct(rr,b.mean):null;
     if(rcClosed(d)){ h+='<tr><td>'+rcDayShort(d.id)+' '+lnPrettyDate(d.id)+'</td>'+
       '<td colspan="5" style="text-align:left;color:var(--ink-mute)">Closed</td></tr>'; return; }
@@ -4850,21 +4881,21 @@ function rcDrawRange(rows){
   const rev=RC.rev;
   const rev1=document.getElementById('rcChRev');
   if(rev1){ const data=rows.map(function(d){ return {date:d.id,a:rcRest(rev[d.id],d)||0,b:rcFarm(rev[d.id])}; });
-    rev1.innerHTML=rcStackSVG(data);
+    rev1.innerHTML=rcStackSVG(data, rev1.clientWidth);
     rcBind(rev1,function(i){ const x=data[i];
       return '<div class="rc-tt">'+rcDayShort(x.date)+' '+lnPrettyDate(x.date)+'</div>'+
-        '<div class="rc-tr"><span>Restaurant</span><b>'+lnMoney0(x.a)+'</b></div>'+
+        '<div class="rc-tr"><span>Product</span><b>'+lnMoney0(x.a)+'</b></div>'+
         (x.b?'<div class="rc-tr"><span>Farm</span><b>'+lnMoney0(x.b)+'</b></div>'+
              '<div class="rc-tr"><span>Total</span><b>'+lnMoney0(x.a+x.b)+'</b></div>':''); }); }
   const cov=document.getElementById('rcChCov');
   if(cov){ const data=rows.map(function(d){ return {date:d.id,v:rcClosed(d)?null:d.covers,d:d}; });
-    cov.innerHTML=rcLineSVG(data,{color:'var(--rc-mag)'});
+    cov.innerHTML=rcLineSVG(data,{color:'var(--rc-mag)'},cov.clientWidth);
     rcBind(cov,function(i){ const x=data[i];
       return '<div class="rc-tt">'+rcDayShort(x.date)+' '+lnPrettyDate(x.date)+'</div>'+
         '<div class="rc-tr"><span>Guests</span><b>'+lnNum(x.v)+'</b></div>'; }); }
   const lab=document.getElementById('rcChLab');
   if(lab){ const data=rows.map(function(d){ return {date:d.id,v:rcClosed(d)?null:(d.labor&&(d.labor.pct_restaurant||d.labor.pct_clocked_proxy)),d:d}; });
-    lab.innerHTML=rcLineSVG(data,{color:'var(--rc-rest)',pct:true,band:[30,35],bandLabel:'30–35% target'});
+    lab.innerHTML=rcLineSVG(data,{color:'var(--rc-rest)',pct:true,band:[30,35],bandLabel:'30–35% target'},lab.clientWidth);
     rcBind(lab,function(i){ const x=data[i];
       return '<div class="rc-tt">'+rcDayShort(x.date)+' '+lnPrettyDate(x.date)+'</div>'+
         '<div class="rc-tr"><span>Labor</span><b>'+lnPct(x.v)+'</b></div>'+
@@ -4921,7 +4952,7 @@ function rcHomePrime(){
     const wd=rcWeekday(d.id), s=[];
     rows.forEach(function(o){
       if(o.id===d.id||rcClosed(o)||rcWeekday(o.id)!==wd)return;
-      const v=rcRest(revById[o.id],o); if(v!=null)s.push(v);
+      const v=rcProd(o,revById[o.id]); if(v!=null)s.push(v);
     });
     if(s.length>=3&&r!=null){
       const mean=s.reduce(function(a,b){return a+b;},0)/s.length, p=(r/mean-1)*100;
@@ -4931,6 +4962,15 @@ function rcHomePrime(){
     if(el)el.innerHTML=esc(lnDateLabel(d)+' · '+parts.join(' · '));
   }).catch(function(){});
 }
+var rcResizeT=null;
+window.addEventListener('resize',function(){
+  clearTimeout(rcResizeT);
+  rcResizeT=setTimeout(function(){
+    if(RC.scope==='night'||!RC.rows.length)return;
+    if(!document.getElementById('recap')||!document.getElementById('recap').classList.contains('active'))return;
+    rcPaint();                     // SVGs are sized in real pixels, so a width change needs a redraw
+  },250);
+});
 function rcRender(){
   const el=$('rcBody'); if(!el)return;
   if(!rcCanTab()){ el.innerHTML='<p class="ln-empty">Access required.</p>'; return; }
