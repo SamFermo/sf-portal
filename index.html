@@ -1364,7 +1364,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785034391';   // stamped by build-data.py at every deploy
+const BUILD='1785035320';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1503,7 +1503,7 @@ function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
   const mgr=isMgr();
   const annChip = annActive()?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${esc(ANNOUNCE.title)} — ${annMyRsvp()?(annMyRsvp().rsvp==='yes'?'you\'re in ✓ (tap to change)':'tap to RSVP'):'tap to RSVP'}</span></button>`:'';
-  let html = annChip + glanceCardHTML() + (lnCanTab()?lnCardHTML():'') + freshCardHTML() + verbalsCardHTML();
+  let html = annChip + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():'')) + freshCardHTML() + verbalsCardHTML();
   const std=[['board','⌗','Tables','Tonight\'s table notes & statuses'],
     ['schedule','◷','Schedule','This week + the month'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
@@ -1514,7 +1514,7 @@ function renderHome(){
   if(mgr) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
   $('homeGrid').innerHTML=html;
   glanceCardWeather();
-  if(lnCanTab()){ lnHomePrime(); }
+  if(lnCanTab()){ lnHomePrime(); if(typeof rcHomePrime==='function')rcHomePrime(); }
   if(mgr){ ordHomePrime(); }
   renderAccountBar();
   updateAttn();
@@ -4896,6 +4896,38 @@ function rcPaint(){
       return d.id.slice(0,7)===(RC.rows[0]&&RC.rows[0].id||todayISO()).slice(0,7); });
     rcDrawRange(rows);
   }
+}
+function rcCardHTML(){ return wideCardHTML('recap','◐','Recap','Last night in context'); }
+/* Fills the card subtitle with last night's headline the same way lnHomePrime does, so the
+   home screen shows the number without opening the tab. Restaurant-only on a farm ring-in
+   night, because the raw total is the thing that confuses people. */
+function rcHomePrime(){
+  if(!rcCanTab()||!fbReady||!fbDb)return;
+  Promise.all([fbDb.collection('revel').get(), fbDb.collection('revel_rev').get()])
+  .then(function(res){
+    const rows=[], revById={};
+    res[0].forEach(function(x){ rows.push(Object.assign({id:x.id},x.data())); });
+    res[1].forEach(function(x){ revById[x.id]=x.data(); });
+    if(!rows.length)return;
+    rows.sort(function(a,b){ return a.id<b.id?1:(a.id>b.id?-1:0); });
+    const d=rows[0], rev=revById[d.id]||null;
+    const r=rcRest(rev,d), f=rcFarm(rev), parts=[];
+    if(r!=null)parts.push(lnMoney0(r)+(f?' restaurant':''));
+    if(f)parts.push(lnMoney0(f)+' farm');
+    if(d.covers)parts.push(lnNum(d.covers)+' guests');
+    // same weekday, excluding this night and any closed day, minimum 3 samples
+    const wd=rcWeekday(d.id), s=[];
+    rows.forEach(function(o){
+      if(o.id===d.id||rcClosed(o)||rcWeekday(o.id)!==wd)return;
+      const v=rcRest(revById[o.id],o); if(v!=null)s.push(v);
+    });
+    if(s.length>=3&&r!=null){
+      const mean=s.reduce(function(a,b){return a+b;},0)/s.length, p=(r/mean-1)*100;
+      parts.push((p>=0?'+':'')+p.toFixed(0)+'% vs a usual '+wd);
+    }
+    const el=document.querySelector('.home-card[data-card="recap"] .hc-sub');
+    if(el)el.innerHTML=esc(lnDateLabel(d)+' · '+parts.join(' · '));
+  }).catch(function(){});
 }
 function rcRender(){
   const el=$('rcBody'); if(!el)return;

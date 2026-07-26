@@ -1,5 +1,5 @@
 {
- "menuDate": "2026-06-18",
+ "menuDate": "2026-07-25",
  "note": "We offer a small menu that changes daily. The chef requests that guests put their whole order in at once.",
  "raw_note": "An asterisk (*) marks dishes served raw or under-cooked. Flag the allergy/raw advisory when guests ask.",
  "food": [
@@ -462,69 +462,76 @@
      "added": "2026-06-23"
     },
     {
-     "name": "Pan Roasted Halibut",
-     "desc": "green pea hummus, grilled asparagus, sea bean, shallot, parsley, lemon",
+     "name": "Grilled King Salmon",
+     "desc": "Troll-caught Washington king salmon, Bibb lettuce, roasted tomato vinaigrette, sun gold tomatoes, charred zucchini",
      "price": "38",
      "raw": true,
-     "story": "Halibut seared in the pan until the skin crisps. Green pea hummus anchors the plate with mild earthiness. Grilled asparagus and sea beans bring char and brine. Shallot and parsley sharpen it all up, lemon juice and olive oil finish clean.",
+     "story": "Seven ounces of troll-caught Washington king salmon, grilled to medium rare. Served with Bibb lettuce dressed in roasted tomato vinaigrette, bright sun gold tomatoes, and charred zucchini. Finished with marigold petals.",
      "ingredients": [
       {
-       "term": "Halibut",
+       "term": "Troll-caught king salmon",
        "pronunciation": null,
-       "note": "Pacific halibut from WA and AK landings. Large flatfish with firm, mild, white flesh. Season runs March through November — spring and summer fish are leaner and more delicate."
+       "note": "Caught one fish at a time on hook and line rather than by net, which keeps the fillet intact and the flesh firm. King (chinook) is the richest of the Pacific salmon, high in fat with a deep colour. Seven ounce fillet, grilled to medium rare."
       },
       {
-       "term": "Green pea hummus",
+       "term": "Bibb lettuce",
        "pronunciation": null,
-       "note": "A blended spread of green peas in the style of chickpea hummus — bright, mild, and earthy. IMPORTANT: traditional hummus is built with tahini (sesame paste); confirm with the kitchen whether this version uses tahini before serving any guest with a sesame allergy."
+       "note": "A soft butterhead lettuce with loose, tender leaves and a mild sweetness. Dressed and served cool against the warm fish."
       },
       {
-       "term": "Sea beans (salicornia)",
-       "pronunciation": "sal-ih-KOR-nee-ah",
-       "note": "A crisp, salty succulent that grows in coastal salt marshes and tidal flats. Also called samphire or pickleweed. Naturally briny — adds a saline crunch against the fish."
+       "term": "Sun gold tomatoes",
+       "pronunciation": null,
+       "note": "A small orange cherry tomato, noticeably sweeter and lower in acid than a red cherry tomato. Served raw."
       },
       {
-       "term": "Parsley",
+       "term": "Roasted tomato vinaigrette",
        "pronunciation": null,
-       "note": "Fresh parsley finishes the plate green and herbaceous. Bright, clean, and grassy against the rich fish."
+       "note": "A dressing built on roasted tomato. IMPORTANT: the full composition of this vinaigrette is not specified for this prep. Vinaigrettes commonly carry shallot and mustard. Confirm with the kitchen before clearing this dish for any guest with an allium or mustard allergy."
+      },
+      {
+       "term": "Marigold petals",
+       "pronunciation": null,
+       "note": "Edible flower petals, faintly citrus and peppery. A garnish, and they come off on request."
       }
      ],
      "allergens": [
-      "fish",
-      "allium"
+      "fish"
      ],
-     "canModify": [
-      "allium"
-     ],
-     "allergenNote": "Fish: halibut, central. Allium: shallot — comes off cleanly. UNCONFIRMED — SESAME: the green pea hummus is likely built with tahini (sesame paste), which is how hummus is traditionally made. This is NOT yet confirmed for this prep. Do not clear this dish for a sesame-allergic guest until Chris confirms whether the hummus contains tahini.",
-     "added": "2026-06-19"
+     "canModify": [],
+     "allergenNote": "Fish: king salmon, central to the dish, cannot come off. UNCONFIRMED — the roasted tomato vinaigrette's composition has not been specified. Do not clear this dish for an allium or mustard allergy until the kitchen confirms what is in the vinaigrette. Served medium rare.",
+     "added": "2026-07-24"
     },
     {
-     "name": "Pure Country Pork Chop",
-     "desc": "polenta, charred spring onion, apricot mostarda, demi glace",
+     "name": "Roasted Duck Breast",
+     "desc": "Muscovy duck breast, polenta, chanterelles, corn, huckleberry demi glace",
      "price": "42",
      "raw": true,
-     "story": "Thick cut pork chop served over creamy polenta with charred spring onions for a little smoke and sharpness. Apricot mostarda brings a sweet-tart punch, and demi glace ties it all together. A straightforward dish that lets the pork and its sides speak.",
+     "story": "Muscovy duck breast rendered skin-side down to medium rare. It sits on creamy polenta with sautéed chanterelles, corn, and shallot. Marjoram and sherry vinegar brighten the plate. A huckleberry demi glace finishes it, adding dark fruit and depth.",
      "ingredients": [
       {
-       "term": "Mostarda",
-       "pronunciation": "moh-STAR-dah",
-       "note": "A Northern Italian condiment made from fruit — here apricot — preserved in a sweet, mustard-oil-spiked syrup. Simultaneously sweet, sharp, fruity, and savory. Traditionally served with rich meats to cut through fat. Despite the name, it is built with mustard essence — flag it for a mustard allergy."
+       "term": "Muscovy duck",
+       "pronunciation": "MUSS-koh-vee",
+       "note": "A leaner breed than Pekin, with a deeper, less fatty flavour closer to red meat than poultry. The breast is rendered skin-side down so the fat runs off and the skin crisps, then cooked to medium rare."
       },
       {
-       "term": "Demi glace",
-       "pronunciation": "DEH-mee glahss",
-       "note": "A rich, glossy reduction of meat stock and wine, cooked down until concentrated and silky. Built on a base of onions and aromatics, so it carries cooked allium. Deep and savory — the sauce that pulls the plate together."
-      },
-      {
-       "term": "Charred spring onion",
-       "pronunciation": null,
-       "note": "Young onions charred on high heat — sweet, smoky, and a little sharp. A direct allium element on the plate, alongside the spring onion's mild bite."
+       "term": "Chanterelles",
+       "pronunciation": "shan-tuh-RELS",
+       "note": "A wild golden mushroom, firm with a mild apricot-and-pepper note. Sautéed here."
       },
       {
        "term": "Polenta",
        "pronunciation": "poh-LEN-tah",
-       "note": "Ground cornmeal cooked with cream, chicken stock, and butter until thick and creamy. Serves as the bed for the chop — rich, mild, and soft."
+       "note": "Ground cornmeal cooked until thick and creamy, the bed for the duck. The house polenta is built with cream, stock and butter, so treat it as dairy unless the kitchen says this prep differs."
+      },
+      {
+       "term": "Marjoram",
+       "pronunciation": "MAR-jer-um",
+       "note": "A soft herb in the oregano family, sweeter and more floral than oregano. Used fresh to lift the plate."
+      },
+      {
+       "term": "Huckleberry demi glace",
+       "pronunciation": "DEH-mee glahss",
+       "note": "IMPORTANT: the composition of this demi glace has not been specified for this prep. A demi glace is normally a long reduction of meat stock and wine built on onions and aromatics, which would carry cooked allium. Confirm with the kitchen before clearing it for an allium allergy."
       }
      ],
      "allergens": [
@@ -532,11 +539,10 @@
       "allium"
      ],
      "canModify": [
-      "dairy",
-      "allium"
+      "dairy"
      ],
-     "allergenNote": "Dairy: the polenta comes off or swaps to a dairy-free starch. Allium: the demi glace is built on onions and the charred spring onions sit on top — the kitchen can sub out the spring onions and the demi entirely, or the guest can keep the demi if cooked-in allium works. UNCONFIRMED — MUSTARD: apricot mostarda is made with mustard essence/oil; we don't track mustard as a chip, but flag it for any mustard-allergic guest and confirm with the kitchen.",
-     "added": "2026-06-19"
+     "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. UNCONFIRMED — the huckleberry demi glace composition has not been specified; a standard demi carries cooked allium. Confirm with the kitchen before clearing either the demi or the dish for an allium allergy. Served medium rare.",
+     "added": "2026-07-24"
     }
    ],
    "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
