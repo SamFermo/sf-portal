@@ -1399,7 +1399,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785102278';   // stamped by build-data.py at every deploy
+const BUILD='1785107419';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4566,12 +4566,32 @@ function rcRest(rev,d){ return (rev&&rev.restaurant&&rev.restaurant.net!=null)?r
    separately below it, and every cost percentage in that P&L is struck against F&B sales,
    not against total revenue. So product sales is the number the business is actually run on;
    net moves with the service-charge rate and is not comparable across time the same way.
-   Net is still shown, as a supporting line rather than the headline. */
-function rcProd(d,rev){
+   Net is still shown, as a supporting line rather than the headline.
+
+   AND IT IS NET OF DISCOUNTS. Revel's "Total Product Sales" line is struck BEFORE discounts —
+   it is the sum of menu prices as rung, not what the guest was charged. The relationship is
+   exact and holds on every night: Net Sales = Total Product Sales − Discounts + Service Fees.
+   Tim works from the after-discount figure, which is why his number and this tab disagreed by
+   the discount total: week of 2026-07-20 read $72,470.67 here against his ~$69.7k, and the
+   difference was $2,803.35 of discounts to the cent. Everything in this tab now nets them out.
+
+   Comps are NOT deducted. They are their own Revel field, they have been $0 across this entire
+   window, and they reduce cost rather than price. If they start running, they belong in the
+   same treatment — flagged here so the question gets asked rather than silently answered. */
+function rcGross(d,rev){
   if(rev&&rev.restaurant&&rev.restaurant.product!=null)return rev.restaurant.product;   // farm night: restaurant only
   if(d&&d.product!=null)return d.product;
   if(d&&d.taxable_sales!=null)return d.taxable_sales;
   const c=rcCats(d); return c.food+c.liquor+c.wine+c.na;
+}
+/* Discounts are stored per night for the whole night. On a farm ring-in the farm covers are
+   prepaid fixed-price tickets that carry no discount, so attributing the night's discounts to
+   the restaurant is right rather than merely convenient — but it is an attribution, not a
+   split Revel reports, so it is stated rather than buried. */
+function rcDisc(d){ return (d&&d.discounts!=null)?d.discounts:0; }
+function rcProd(d,rev){
+  const g=rcGross(d,rev);
+  return g==null?null:g-rcDisc(d);
 }
 function rcNet(d,rev){ return rcRest(rev,d); }
 function rcFarm(rev){ return (rev&&rev.farm_ringin&&rev.farm_ringin.total)?rev.farm_ringin.total:0; }
@@ -4818,7 +4838,7 @@ function rcLineSVG(rows,opt,W){
 }
 
 /* --- blocks --- */
-function rcHero(label, prod, fine, farm, net, farmFine){
+function rcHero(label, prod, fine, farm, net, farmFine, discFine){
   // A zero farm column on 29 nights a month is wasted space. When there is no ring-in the
   // headline is one number and farm drops to a supporting line; when there is one it earns
   // a column, because that is the night the total needs explaining.
@@ -4826,6 +4846,7 @@ function rcHero(label, prod, fine, farm, net, farmFine){
     return '<div class="rc-solo">'+          // card already carries the "Product sales" label
       '<div class="rc-solo-num">'+lnMoney0(prod)+'</div>'+
       '<div class="rc-fine">'+fine+'</div>'+
+      (discFine?'<div class="rc-sub-line">'+discFine+'</div>':'')+
       '<div class="rc-sub-line">'+lnMoney0(net)+' with the service charge'+
         (farmFine?' · '+farmFine:'')+'</div></div>';
   }
@@ -4837,8 +4858,11 @@ function rcHero(label, prod, fine, farm, net, farmFine){
       '<div class="rc-fine">'+(farmFine||'rung into the register')+'</div></div>'+
     '<div><div class="rc-lab rc-c-tot">Total product sales</div>'+
       '<div class="rc-num">'+lnMoney0(prod+farm)+'</div>'+
-      '<div class="rc-fine">what the emailed report shows</div></div>'+
-  '</div>';
+      // Farm is a prepaid fixed-price ticket and carries no discount, so only the restaurant
+      // side is netted down. Saying "after discounts" flat would claim a deduction on money
+      // that never had one.
+      '<div class="rc-fine">restaurant after discounts, plus farm</div></div>'+
+  '</div>'+(discFine?'<div class="rc-sub-line" style="margin-top:9px">'+discFine+'</div>':'');
 }
 function rcMagRow(name,right,frac,mark){
   return '<div class="rc-mrow"><div class="rc-mtop"><span class="rc-mnm">'+esc(name)+'</span>'+
@@ -4965,7 +4989,9 @@ function rcNightHTML(){
       lnNum(d.covers)+' guests · '+lnMoney0(prod/d.covers)+'/guest'+
         (b2?'<div class="rc-base">A usual '+rcWeekday(d.id)+' runs '+lnMoney0(b2.mean)+' '+rcDPill(dp2)+
            '<br><span class="rc-basen">average of the last '+b2.n+'</span></div>':''),
-      f, net, f?'July series, rung in this night':'no farm ring-in this night');
+      f, net, f?'July series, rung in this night':'no farm ring-in this night',
+      rcDisc(d)?lnMoney0(rcGross(d,rev))+' rung less '+lnMoney0(rcDisc(d))+' discounts ('+
+        (rcDisc(d)/rcGross(d,rev)*100).toFixed(1)+'%)':'no discounts this night');
   if(f){
     const fr=rev.farm_ringin;
     h+='<div class="rc-callout"><div class="rc-ct">Why the total looks unusual</div>'+
@@ -5085,15 +5111,22 @@ function rcRangeHTML(rows,title,lede,proj,projLabel){
     return (proj?rcProjBlock(proj,projLabel):'')+
       '<div class="ln-fail">No nights captured in this range yet.</div>';
   }
-  const R={rest:0,farm:0,net:0,covers:0,hours:0,wages:0,lprod:0,ln:0};
+  const R={rest:0,farm:0,net:0,covers:0,hours:0,wages:0,lprod:0,ln:0,gross:0,disc:0};
   rows.forEach(function(d){ const rev=RC.rev[d.id]||null;
     R.rest+=rcProd(d,rev)||0; R.farm+=rcFarm(rev); R.net+=rcNet(d,rev)||0; R.covers+=d.covers||0;
+    R.gross+=rcGross(d,rev)||0; R.disc+=rcDisc(d);
+    // Labor stays struck against GROSS product, because that is the denominator Revel's own
+    // Labor report uses for the percentage stored on each night. Switching it here would make
+    // the range total disagree with every per-night figure in the table below it, and would
+    // silently move the 30–35% target band that was set on the old basis.
     if(d.labor&&d.labor.clocked_wages){ R.hours+=d.labor.hours||0; R.wages+=d.labor.clocked_wages;
-      R.lprod+=rcProd(d,rev); R.ln++; } });
+      R.lprod+=rcGross(d,rev); R.ln++; } });
   const lpct=R.lprod?R.wages/R.lprod*100:null;
+  const dpct=R.gross?R.disc/R.gross*100:null;
   let h='<div class="rc-hero"><div class="ln-stat-k">'+title+'</div>'+
     rcHero('Product sales', R.rest, lnNum(R.covers)+' guests · '+lnMoney0(R.rest/R.covers)+'/guest',
-      R.farm, R.net, R.farm?'rung in during this window':'no farm ring-in in this window')+
+      R.farm, R.net, R.farm?'rung in during this window':'no farm ring-in in this window',
+      lnMoney0(R.gross)+' rung less '+lnMoney0(R.disc)+' discounts ('+dpct.toFixed(1)+'%)')+
     '<div class="ln-note">'+lede+'</div></div>';
   if(proj)h+=rcProjBlock(proj,projLabel);
 
@@ -5113,17 +5146,33 @@ function rcRangeHTML(rows,title,lede,proj,projLabel){
      lnStat('Sales per hour',lnMoney0(R.lprod/R.hours),'restaurant sales ÷ hours')+
      '</div></div>';
 
+  const dRows=rows.filter(function(d){ return !rcClosed(d); });
+  const dPeak=dRows.reduce(function(a,d){ const rev=RC.rev[d.id]||null, g=rcGross(d,rev);
+    const p=g?rcDisc(d)/g*100:0; return (!a||p>a.p)?{p:p,id:d.id}:a; },null);
+  h+='<div class="ln-sec">Discounts</div>'+
+     '<div class="ln-note" style="margin:0 0 10px">Comps, promos and manager adjustments, as a share '+
+     'of what was rung before them. Revel reports Total Product Sales before discounts, so this is '+
+     'the gap between the menu price and what the guest was actually charged.</div>'+
+     '<div class="ln-card"><div class="rc-chart" id="rcChDisc"></div><div class="ln-grid" style="margin-top:12px">'+
+     lnStat('Discounts',lnMoney0(R.disc),'across '+dRows.length+' nights')+
+     lnStat('Discount rate',lnPct(dpct),'of '+lnMoney0(R.gross)+' rung')+
+     lnStat('Per guest',R.covers?lnMoney2(R.disc/R.covers):'—','given away per guest')+
+     lnStat('Heaviest night',dPeak?lnPct(dPeak.p):'—',dPeak?rcDayShort(dPeak.id)+' '+lnPrettyDate(dPeak.id):'')+
+     '</div></div>';
+
   h+='<div class="ln-sec">The nights</div><div class="ln-card"><table class="ln-strip">'+
-     '<thead><tr><th>Night</th><th>Restaurant</th><th>vs usual</th><th>Farm</th><th>Guests</th><th>Labor</th></tr></thead><tbody>';
+     '<thead><tr><th>Night</th><th>Restaurant</th><th>vs usual</th><th>Disc.</th><th>Farm</th><th>Guests</th><th>Labor</th></tr></thead><tbody>';
   rows.forEach(function(d){ const rev=RC.rev[d.id]||null, rr=rcProd(d,rev);
     const b=rcBaseline(d.id), p=b?rcDeltaPct(rr,b.mean):null;
     if(rcClosed(d)){ h+='<tr><td>'+rcDayShort(d.id)+' '+lnPrettyDate(d.id)+'</td>'+
-      '<td colspan="5" style="text-align:left;color:var(--ink-mute)">Closed</td></tr>'; return; }
+      '<td colspan="6" style="text-align:left;color:var(--ink-mute)">Closed</td></tr>'; return; }
     h+='<tr><td>'+rcDayShort(d.id)+' '+lnPrettyDate(d.id)+'</td><td>'+lnMoney0(rr)+'</td>'+
       '<td>'+(p==null?'—':rcDPill(p))+'</td>'+
+      '<td>'+(rcDisc(d)?lnMoney0(rcDisc(d)):'—')+'</td>'+
       '<td>'+(rcFarm(rev)?lnMoney0(rcFarm(rev)):'—')+'</td><td>'+lnNum(d.covers)+'</td>'+
       '<td>'+lnPct(d.labor&&(d.labor.pct_restaurant||d.labor.pct_clocked_proxy))+'</td></tr>'; });
-  h+='<tr><td><b>Total</b></td><td><b>'+lnMoney0(R.rest)+'</b></td><td></td><td><b>'+lnMoney0(R.farm)+
+  h+='<tr><td><b>Total</b></td><td><b>'+lnMoney0(R.rest)+'</b></td><td></td><td><b>'+lnMoney0(R.disc)+
+     '</b></td><td><b>'+lnMoney0(R.farm)+
      '</b></td><td><b>'+lnNum(R.covers)+'</b></td><td><b>'+lnPct(lpct)+'</b></td></tr></tbody></table></div>';
   return h;
 }
@@ -5150,6 +5199,15 @@ function rcDrawRange(rows){
       return '<div class="rc-tt">'+rcDayShort(x.date)+' '+lnPrettyDate(x.date)+'</div>'+
         '<div class="rc-tr"><span>Labor</span><b>'+lnPct(x.v)+'</b></div>'+
         (x.d.labor?'<div class="rc-tr"><span>Hours</span><b>'+lnNum(x.d.labor.hours)+'</b></div>':''); }); }
+  const dsc=document.getElementById('rcChDisc');
+  if(dsc){ const data=rows.map(function(d){ const g=rcGross(d,rev[d.id]);
+      return {date:d.id, v:(rcClosed(d)||!g)?null:rcDisc(d)/g*100, amt:rcDisc(d), gross:g}; });
+    dsc.innerHTML=rcLineSVG(data,{color:'var(--rc-mag)',pct:true},dsc.clientWidth);
+    rcBind(dsc,function(i){ const x=data[i];
+      return '<div class="rc-tt">'+rcDayShort(x.date)+' '+lnPrettyDate(x.date)+'</div>'+
+        '<div class="rc-tr"><span>Discount rate</span><b>'+lnPct(x.v)+'</b></div>'+
+        '<div class="rc-tr"><span>Given away</span><b>'+lnMoney0(x.amt)+'</b></div>'+
+        '<div class="rc-tr"><span>Rung before</span><b>'+lnMoney0(x.gross)+'</b></div>'; }); }
 }
 
 function rcPaint(){
@@ -5204,7 +5262,11 @@ function rcHomePrime(){
     if(!rows.length)return;
     rows.sort(function(a,b){ return a.id<b.id?1:(a.id>b.id?-1:0); });
     const d=rows[0], rev=revById[d.id]||null;
-    const r=rcRest(rev,d), f=rcFarm(rev), parts=[];
+    // Product sales net of discounts, matching the tab. This used to read rcRest(), which is
+    // NET sales — so the card showed one number, the tab showed another for the same night, and
+    // the "vs a usual" pill underneath compared that net figure against a product-sales
+    // baseline. Same basis on both sides now.
+    const r=rcProd(d,rev), f=rcFarm(rev), parts=[];
     if(r!=null)parts.push(lnMoney0(r)+(f?' restaurant':''));
     if(f)parts.push(lnMoney0(f)+' farm');
     if(d.covers)parts.push(lnNum(d.covers)+' guests');
