@@ -1246,7 +1246,7 @@ body.locked{overflow:hidden;}
 </section>
 
 <section class="view" id="recap">
-  <div class="view-head"><p class="view-eyebrow">Managers Only</p><h2 class="view-title">Recap</h2>
+  <div class="view-head"><p class="view-eyebrow" id="rcEyebrow">Managers Only</p><h2 class="view-title">Recap</h2>
     <p class="view-sub">The nightly report in context — restaurant and farm split out, with the week ahead.</p></div>
   <div id="rcBody"></div>
 </section>
@@ -1368,7 +1368,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785088133';   // stamped by build-data.py at every deploy
+const BUILD='1785089104';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1415,7 +1415,11 @@ function makeStars(){
 }
 
 const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','Tables'],['schedule','Schedule'],['crew','Crew Board'],['standards','Standards'],['directory','Directory']];
-function navTabs(){let head=isMgr()?[['today','Day Sheet']]:[['today','Day at a Glance']];
+function navTabs(){
+  // Investors see the numbers and the menu those numbers came from. No ordering, tables,
+  // verbals, schedule, directory, standards, crew board, front desk or day sheet.
+  if(isInvestor())return [['recap','Recap'],['fresh','Fresh Talk']];
+  let head=isMgr()?[['today','Day Sheet']]:[['today','Day at a Glance']];
   // Recap supersedes Last Night for the full tier, so only one of the two ever appears.
   // Partial-tier managers keep Last Night, which is still the only view they have.
   if(typeof rcCanTab==='function'&&rcCanTab())head=head.concat([['recap','Recap']]);
@@ -1509,15 +1513,18 @@ function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
   const mgr=isMgr();
   const annChip = annActive()?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${esc(ANNOUNCE.title)} — ${annMyRsvp()?(annMyRsvp().rsvp==='yes'?'you\'re in ✓ (tap to change)':'tap to RSVP'):'tap to RSVP'}</span></button>`:'';
-  let html = annChip + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():'')) + freshCardHTML() + verbalsCardHTML();
+  let html = isInvestor()
+    ? rcCardHTML() + freshCardHTML()
+    : annChip + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():'')) + freshCardHTML() + verbalsCardHTML();
   const std=[['board','⌗','Tables','Tonight\'s table notes & statuses'],
     ['schedule','◷','Schedule','This week + the month'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
     ['standards','▦','Standards','Room, duties, certs & service'],
     ['directory','✉','Directory','The team & contacts']];
   if(mgr) std.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);   // sits beside Directory
-  html += std.map(stdCardHTML).join('');
-  if(mgr) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
+  // Investors get Recap + Fresh Talk only. The standard card block and Farm Order are staff surfaces.
+  if(!isInvestor()) html += std.map(stdCardHTML).join('');
+  if(mgr && !isInvestor()) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
   $('homeGrid').innerHTML=html;
   glanceCardWeather();
   if(lnCanTab()){ lnHomePrime(); if(typeof rcHomePrime==='function')rcHomePrime(); }
@@ -1580,7 +1587,13 @@ async function hashPin(pin){
   return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 function profilesArr(){return Object.keys(PROFILES).map(k=>PROFILES[k]);}
-function activeProfiles(){return profilesArr().filter(p=>p.active!==false).sort((a,b)=>a.name.localeCompare(b.name));}
+function isInvestorP(p){return !!(p&&p.investor===true);}
+function isInvestor(){return isInvestorP(me);}
+/* Investors are real profiles so they can have their own PIN and be deactivated, but they are
+   not staff. Every list that unions PROFILES has to exclude them or they turn up needing a food
+   handler card. activeProfiles() is the login picker and the base for those unions. */
+function activeProfiles(){return profilesArr().filter(p=>p.active!==false&&!isInvestorP(p)).sort((a,b)=>a.name.localeCompare(b.name));}
+function investorProfiles(){return profilesArr().filter(p=>isInvestorP(p)&&p.active!==false);}
 function next3am(from){const e=new Date(from);e.setHours(3,0,0,0);if(e.getTime()<=from)e.setDate(e.getDate()+1);return e.getTime();}
 function getSession(){try{return JSON.parse(localStorage.getItem('sf-session')||'null');}catch(e){return null;}}
 function setSession(name){try{localStorage.setItem('sf-session',JSON.stringify({name:name,exp:next3am(Date.now())}));}catch(e){}}
@@ -1610,6 +1623,22 @@ function startProfilesSync(){
    (gone on reload). ===== */
 let DEMO=false;
 const DEMO_CODE='5341';
+/* Investors are deliberately absent from the name picker, so they need their own way in.
+   PIN-only: there is one investor profile, so there is nothing to disambiguate. The PIN is
+   checked against the same salted SHA-256 hash every staff PIN uses. */
+async function investorLogin(){
+  const inv=investorProfiles()[0];
+  if(!inv){ alert('No investor profile is set up yet.'); return; }
+  const c=prompt('Investor PIN');
+  if(c===null)return;
+  const h=await hashPin(String(c).trim());
+  if(h!==inv.pinHash){ alert('That PIN didn\u2019t match.'); return; }
+  setSession(inv.name);
+  me=inv;
+  const g=$('loginGate'); if(g)g.classList.remove('open');
+  document.body.classList.remove('locked');
+  buildNav(); renderAccountBar(); renderHome(); go('recap');
+}
 function enterDemo(){
   const c=prompt('Demo / guest access code:'); if(c==null)return;
   if(String(c).trim()!==DEMO_CODE){ alert('That code didn’t match.'); return; }
@@ -1655,7 +1684,7 @@ let loginName=null;
 function openLogin(){loginName=null;renderLogin();$('loginGate').classList.add('open');}
 function renderLogin(){
   if(!loginName){
-    $('loginBody').innerHTML=`<input class="who-search" id="loginSearch" placeholder="Find your name…"><div class="who-list" id="loginList"></div><div class="login-demo"><button class="login-demo-btn" onclick="enterDemo()">View as guest (demo)</button></div>`;
+    $('loginBody').innerHTML=`<input class="who-search" id="loginSearch" placeholder="Find your name…"><div class="who-list" id="loginList"></div><div class="login-demo"><button class="login-demo-btn" onclick="investorLogin()">Investor sign-in</button><button class="login-demo-btn" onclick="enterDemo()">View as guest (demo)</button></div>`;
     renderLoginNames('');
     $('loginSearch').oninput=e=>renderLoginNames(e.target.value);
     setTimeout(()=>{try{$('loginSearch').focus();}catch(e){}},60);
@@ -1774,7 +1803,7 @@ function annDismiss(){ try{localStorage.setItem(annDismissKey(),JSON.stringify({
 function annActive(){ return todayISO()<=ANNOUNCE.showUntil; }
 function annMyRsvp(){ const r=me&&me.announceRsvp; return (r&&r.id===ANNOUNCE.id)?r:null; }
 function annShouldShow(){ return !!(me && me.contactSet && annActive() && !annMyRsvp() && !annDismissedNow()); }
-function maybeShowAnnounce(){ if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
+function maybeShowAnnounce(){ if(isInvestor())return; if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
 /* Full roster behind the tally: staff (from PROFILES.announceRsvp) plus the
    hand-added external entries in ANNOUNCE_GUESTS. Single source both the compact
    tally and the full list (annOpenFullList) read from, so they can't drift. */
@@ -3054,7 +3083,7 @@ function compWithExtras(){
   ['boh','foh'].forEach(function(k){(C.roster[k]||[]).forEach(function(p){if(p.name)seen.add(p.name.toLowerCase());});});
   const out={boh:(C.roster.boh||[]).slice(), foh:(C.roster.foh||[]).slice()};
   Object.keys(PROFILES).forEach(function(n){const p=PROFILES[n]||{};const nm=p.name||n;
-    if(p.active===true && nm && !seen.has(nm.toLowerCase()) && (p.area==='foh'||p.area==='boh')){
+    if(p.active===true && !isInvestorP(p) && nm && !seen.has(nm.toLowerCase()) && (p.area==='foh'||p.area==='boh')){
       out[p.area].push({name:nm, role:(p.role||'Staff'), fwc:null, mast:null, isNew:true});
     }});
   ['foh','boh'].forEach(function(k){ out[k].sort(function(a,b){ return a.name.localeCompare(b.name); }); });
@@ -3107,7 +3136,7 @@ function dirWithExtras(){const S=SF.staff,base=S.directory||{},seen=new Set();
   ['foh','boh','office'].forEach(function(k){(base[k]||[]).forEach(function(p){if(p.name)seen.add(p.name.toLowerCase());});});
   const out={foh:(base.foh||[]).slice(),boh:(base.boh||[]).slice(),office:(base.office||[]).slice()};
   Object.keys(PROFILES).forEach(function(n){const p=PROFILES[n]||{};const nm=p.name||n;
-    if(p.active===true&&nm&&!seen.has(nm.toLowerCase())){
+    if(p.active===true&&!isInvestorP(p)&&nm&&!seen.has(nm.toLowerCase())){
       const a=(p.area==='boh')?'boh':(p.area==='office')?'office':'foh';
       out[a].push({name:nm,role:(p.role||'Staff'),isNew:true});}});
   return out;}
@@ -4483,8 +4512,10 @@ function lnHomePrime(){
    inside a total, and the "Everything on the nightly report" block mirrors the emailed Sales
    Summary field for field. Fields the capture step never wrote render as "not captured", never as
    a zero — see revel-capture-contract.md. */
-function rcCanTab(){ return typeof isMgr==='function' && isMgr() &&
-  (lnTier()==='full' || (me && me.role==='investor')); }
+function rcCanTab(){
+  if(isInvestor())return true;
+  return typeof isMgr==='function' && isMgr() && lnTier()==='full';
+}
 function rcRest(rev,d){ return (rev&&rev.restaurant&&rev.restaurant.net!=null)?rev.restaurant.net:(rev?rev.net:null); }
 /* Product sales is the basis for every headline, delta, chart and baseline in this tab.
    Tim's P&L carries "Total Food & Beverage Sales" as its own line with "Service Charges"
@@ -4904,6 +4935,7 @@ function rcDrawRange(rows){
 
 function rcPaint(){
   const el=$('rcBody'); if(!el)return;
+  const eb=$('rcEyebrow'); if(eb)eb.textContent=isInvestor()?'San Fermo Seattle':'Managers Only';
   const asc=RC.rows.slice().reverse();
   const seg='<div class="rc-seg">'+['night','week','month'].map(function(s){
     return '<button data-rc="'+s+'"'+(RC.scope===s?' class="on"':'')+'>'+
