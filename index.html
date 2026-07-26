@@ -1073,6 +1073,37 @@ body.locked{overflow:hidden;}
 .rc-seg button{background:transparent; border:0; color:var(--ink-mute); padding:7px 13px;
   border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
 .rc-seg button.on{background:rgba(205,216,244,.12); color:var(--ink);}
+.rc-seg{flex-wrap:wrap;}
+/* Date range control. Native date inputs so the phone gets its own picker instead of a
+   hand-rolled calendar that would have to be maintained and would still be worse. */
+.rc-range{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:-4px 0 14px;}
+.rc-range label{font-size:11px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--ink-mute); font-weight:600;}
+.rc-range input[type=date]{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.16);
+  color:var(--ink); border-radius:9px; padding:7px 9px; font-family:inherit; font-size:13px;
+  font-weight:600; color-scheme:dark; min-width:9.5em;}
+.rc-range input[type=date]:focus{outline:none; border-color:rgba(230,200,120,.5);}
+.rc-range .rc-arrow{color:var(--ink-mute); font-size:13px;}
+.rc-quick{display:flex; gap:6px; flex-wrap:wrap; margin:0 0 14px;}
+.rc-quick button{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.13);
+  color:var(--ink-mute); border-radius:8px; padding:5px 10px; font-size:11.5px; font-weight:600;
+  cursor:pointer; font-family:inherit;}
+.rc-quick button:hover{color:var(--ink); border-color:rgba(205,216,244,.26);}
+/* Projection is visually separated from actuals — dashed border, no gold fill — so a forecast
+   is never mistaken at a glance for money already in the till. */
+.rc-proj{border:1px dashed rgba(205,216,244,.28); border-radius:13px; padding:14px 15px;
+  margin:0 0 12px; background:rgba(205,216,244,.025);}
+.rc-proj .rc-pv{font-size:26px; font-weight:700; letter-spacing:-.02em; color:var(--ink);
+  font-variant-numeric:tabular-nums;}
+.rc-proj .rc-pn{font-size:12px; color:var(--ink-mute); margin-top:3px;}
+.rc-pgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:10px; margin-top:12px;}
+.rc-pbar{height:7px; border-radius:4px; background:rgba(205,216,244,.1); overflow:hidden;
+  margin:11px 0 5px; display:flex;}
+.rc-pbar i{display:block; height:100%;}
+.rc-pbar i.a{background:var(--rc-rest);}
+.rc-pbar i.b{background:repeating-linear-gradient(115deg,rgba(205,216,244,.42) 0 4px,transparent 4px 8px);}
+.rc-plegend{display:flex; gap:14px; flex-wrap:wrap; font-size:11.5px; color:var(--ink-mute);}
+.rc-plegend b{color:var(--ink); font-weight:700;}
 .rc-hero{background:linear-gradient(155deg,rgba(230,200,120,.09),rgba(205,216,244,.04) 55%);
   border:1px solid rgba(230,200,120,.24); border-radius:13px; padding:14px 15px; margin-bottom:12px;}
 .ln-stat-k{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); margin-bottom:6px; font-weight:600;}
@@ -1368,7 +1399,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785090767';   // stamped by build-data.py at every deploy
+const BUILD='1785102278';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4553,7 +4584,19 @@ function rcCats(d){
   const n=(d.drinks&&d.drinks.na&&d.drinks.na.rev)||0;
   return {food:f,liquor:l,wine:w,na:n};
 }
-var RC={rows:[],rev:{},board:{},scope:'night'};
+var RC={rows:[],rev:{},board:{},scope:'night',from:null,to:null};
+
+/* --- date helpers. All arithmetic is done on YYYY-MM-DD strings via a noon-local Date so a
+   DST boundary can never shift a day, which is what bit the timestamp rendering earlier. --- */
+function rcD(iso){ return new Date(iso+'T12:00:00'); }
+function rcISO(dt){ const p=function(n){return String(n).padStart(2,'0');};
+  return dt.getFullYear()+'-'+p(dt.getMonth()+1)+'-'+p(dt.getDate()); }
+function rcShift(iso,n){ const d=rcD(iso); d.setDate(d.getDate()+n); return rcISO(d); }
+function rcMonday(iso){ const d=rcD(iso), w=(d.getDay()+6)%7; d.setDate(d.getDate()-w); return rcISO(d); }
+function rcMonthStart(iso){ return iso.slice(0,7)+'-01'; }
+function rcMonthEnd(iso){ const d=rcD(iso); d.setMonth(d.getMonth()+1,0); return rcISO(d); }
+function rcSpan(from,to){ const out=[]; let c=from, guard=0;
+  while(c<=to && guard++<800){ out.push(c); c=rcShift(c,1); } return out; }
 
 /* --- weekday baseline: mean restaurant net for the same weekday, excluding the night itself.
    Under 3 other samples it returns null and the UI says nothing rather than guessing. --- */
@@ -4570,6 +4613,120 @@ function rcBaseline(iso){
   return {mean:s.reduce(function(a,b){return a+b;},0)/s.length, n:s.length};
 }
 function rcDeltaPct(actual,base){ return base?((actual/base-1)*100):null; }
+
+/* --- PROJECTION ---------------------------------------------------------------------------
+   Weekday stats over the most recent same-weekday nights.
+
+   The lookback depth is 4, chosen by backtesting the last four weeks of actuals rather than by
+   taste. Predicting each night from same-weekday history before it, mean absolute error came
+   out: 3 back 14.8%, 4 back 12.0%, 5 back 11.8%, 6 back 12.3%, 8-or-more 12.8%. Median error
+   was lowest at 4 (8.7%). More importantly the BIAS is one-directional — deeper lookbacks read
+   progressively low (−1.3% at 3, −2.5% at 4, −4.8% at 8+) because they are still carrying
+   early June, when the room was doing a third less business than it is now. Four also matches
+   the four-week average OpenTable reports, so both forward-looking signals in this tab mean
+   the same thing by "usual".
+
+   Closed nights are excluded — a $0 Saturday is not a soft Saturday, it is a shut door. --- */
+function rcWdStats(iso,cap){
+  const wd=rcWeekday(iso), s=[];
+  RC.rows.forEach(function(r){                       // RC.rows is newest-first
+    if(r.id>=iso)return;                             // never project a night from its own future
+    if(rcClosed(r))return;
+    if(rcWeekday(r.id)!==wd)return;
+    const p=rcProd(r,RC.rev[r.id]);
+    if(p!=null&&r.covers)s.push({p:p,c:r.covers});
+  });
+  const use=s.slice(0,cap||4);
+  if(!use.length)return null;
+  const P=use.reduce(function(a,b){return a+b.p;},0)/use.length;
+  const C=use.reduce(function(a,b){return a+b.c;},0)/use.length;
+  return {prod:P, covers:C, perGuest:C?P/C:null, n:use.length};
+}
+/* One night's forecast. The reservation book is preferred where the midday sweep has produced
+   an expectedTotal (booked + expected walk-ins); raw `booked` is deliberately NOT used on its
+   own, because a date five days out always shows fewer on the book than it finishes with and
+   would drag the projection down the further ahead you look. Falls back to the weekday mean. */
+function rcProjectNight(iso){
+  const b=(RC.board[iso]&&RC.board[iso].covers)||null;
+  if(b&&b.closed)return {iso:iso, prod:0, src:'closed'};
+  const s=rcWdStats(iso);
+  if(b&&b.expectedTotal!=null&&s&&s.perGuest)
+    return {iso:iso, prod:b.expectedTotal*s.perGuest, covers:b.expectedTotal, src:'book'};
+  if(s)return {iso:iso, prod:s.prod, covers:Math.round(s.covers), src:'weekday', n:s.n};
+  return {iso:iso, prod:null, src:'none'};
+}
+/* Actual + forecast for a window. `missing` is kept separate from `ahead`: a past night with no
+   row is a capture failure, not something to forecast, and silently projecting over it would
+   turn a data gap into a confident-looking number. */
+function rcProject(from,to){
+  const today=todayISO(), have={};
+  RC.rows.forEach(function(r){ have[r.id]=r; });
+  const actual={prod:0,covers:0,nights:0};
+  const ahead=[], missing=[];
+  rcSpan(from,to).forEach(function(iso){
+    const d=have[iso];
+    if(d){ if(!rcClosed(d)){ actual.prod+=rcProd(d,RC.rev[iso])||0; actual.covers+=d.covers||0; actual.nights++; } return; }
+    if(iso<today){ missing.push(iso); return; }
+    ahead.push(rcProjectNight(iso));
+  });
+  const priced=ahead.filter(function(x){ return x.prod!=null; });
+  const proj=priced.reduce(function(a,b){ return a+b.prod; },0);
+  return {
+    from:from, to:to, actual:actual, ahead:ahead, missing:missing,
+    projected:proj,
+    total:actual.prod+proj,
+    fromBook:ahead.filter(function(x){return x.src==='book';}).length,
+    fromWeekday:ahead.filter(function(x){return x.src==='weekday';}).length,
+    unknown:ahead.filter(function(x){return x.src==='none';}).length,
+    closedAhead:ahead.filter(function(x){return x.src==='closed';}).length
+  };
+}
+function rcProjBlock(P,label){
+  if(!P.ahead.length&&!P.missing.length)return '';
+  let h='<div class="rc-proj">';
+  if(P.ahead.length){
+    const share=P.total?Math.max(0,Math.min(100,P.actual.prod/P.total*100)):0;
+    const nights=P.ahead.length-P.closedAhead;
+    h+='<div class="ln-stat-k">'+label+' projection</div>'+
+       '<div class="rc-pv">'+lnMoney0(P.total)+'</div>'+
+       '<div class="rc-pn">'+lnMoney0(P.actual.prod)+' banked over '+P.actual.nights+
+         ' night'+(P.actual.nights===1?'':'s')+', '+lnMoney0(P.projected)+' forecast across '+
+         nights+' still to come</div>'+
+       '<div class="rc-pbar"><i class="a" style="width:'+share.toFixed(1)+'%"></i>'+
+         '<i class="b" style="width:'+(100-share).toFixed(1)+'%"></i></div>'+
+       '<div class="rc-plegend"><span><b>'+share.toFixed(0)+'%</b> in the till</span>'+
+         '<span><b>'+(100-share).toFixed(0)+'%</b> forecast</span></div>';
+    const how=[];
+    const nn=function(n,tail){ return n+' night'+(n===1?'':'s')+' '+tail; };
+    if(P.fromBook)how.push(nn(P.fromBook,'from the reservation book'));
+    if(P.fromWeekday)how.push(nn(P.fromWeekday,'from the four-week average for that weekday'));
+    if(P.unknown)how.push(nn(P.unknown,'with no comparable history, counted as zero'));
+    if(P.closedAhead)how.push(nn(P.closedAhead,'closed'));
+    h+='<div class="ln-note" style="margin-top:11px">'+
+       (how.length?how.join(' · ')+'. ':'')+
+       'Restaurant sales only — a farm dinner is never forecast, so a scheduled ring-in lands on '+
+       'top of this rather than inside it. Nights taken from the book move as tables are added.</div>';
+    if(P.ahead.length<=10&&nights){
+      h+='<div class="rc-pgrid">';
+      P.ahead.forEach(function(x){
+        if(x.src==='closed'){ h+=lnStat(rcDayShort(x.iso)+' '+lnPrettyDate(x.iso),'Closed',''); return; }
+        h+=lnStat(rcDayShort(x.iso)+' '+lnPrettyDate(x.iso),
+          x.prod==null?'—':lnMoney0(x.prod),
+          x.src==='book'?lnNum(x.covers)+' expected guests, from the book'
+            :x.src==='weekday'?'usual '+rcWeekday(x.iso)+' of the last '+x.n
+            :'no comparable nights yet');
+      });
+      h+='</div>';
+    }
+  }
+  if(P.missing.length){
+    h+='<div class="ln-note" style="'+(P.ahead.length?'margin-top:11px;':'')+'color:var(--rc-warn,#e0a33a)">'+
+       '<b>'+P.missing.length+' night'+(P.missing.length===1?'':'s')+' in this range never posted</b> — '+
+       P.missing.map(lnPrettyDate).join(', ')+'. Those are excluded from every figure above, so '+
+       'the totals read low until they are captured.</div>';
+  }
+  return h+'</div>';
+}
 function rcDPill(p){
   if(p==null)return '';
   return '<span class="ln-d '+(p>=0?'up':'down')+'">'+(p>=0?'+':'')+p.toFixed(0)+'%</span>';
@@ -4878,8 +5035,56 @@ function rcNightHTML(){
   return h;
 }
 
-function rcRangeHTML(rows,title,lede){
-  if(!rows.length)return lnEmptyHTML();
+/* Resolves a scope to a concrete window. `to` runs to the end of the period, not to today, so
+   the week and month tabs have something to project into; the row list is still only the nights
+   that actually posted. */
+function rcWindow(scope){
+  const today=todayISO();
+  if(scope==='wk'){ const f=rcMonday(today);
+    return {from:f, to:rcShift(f,6), label:'This week',
+      title:'This week', lede:'Monday '+lnPrettyDate(f)+' through Sunday '+lnPrettyDate(rcShift(f,6))+'.'}; }
+  if(scope==='month'){ const f=rcMonthStart(today), t=rcMonthEnd(today);
+    return {from:f, to:t, label:rcD(f).toLocaleDateString(undefined,{month:'long'}),
+      title:rcD(f).toLocaleDateString(undefined,{month:'long'})+' so far',
+      lede:'Calendar month, '+lnPrettyDate(f)+' through '+lnPrettyDate(t)+'.'}; }
+  const f=RC.from||rcShift(today,-13), t=RC.to||today;
+  return {from:f, to:t, label:'Range',
+    title:lnPrettyDate(f)+' – '+lnPrettyDate(t),
+    lede:'Custom range, '+(rcSpan(f,t).length)+' days selected.'};
+}
+function rcRowsIn(from,to){
+  return RC.rows.slice().reverse().filter(function(d){ return d.id>=from&&d.id<=to; });
+}
+/* Native date inputs, and the presets mirror the ones Revel offers so the muscle memory
+   carries over. Changing either end re-renders in place and keeps you on the Range tab. */
+function rcRangeControls(){
+  const w=rcWindow('custom'), lo=(RC.rows[RC.rows.length-1]||{}).id||'', hi=todayISO();
+  return '<div class="rc-range">'+
+    '<label for="rcFrom">From</label><input type="date" id="rcFrom" value="'+w.from+'"'+
+      (lo?' min="'+lo+'"':'')+' max="'+hi+'">'+
+    '<span class="rc-arrow">→</span>'+
+    '<label for="rcTo">To</label><input type="date" id="rcTo" value="'+w.to+'"'+
+      (lo?' min="'+lo+'"':'')+' max="'+hi+'">'+
+    '</div>'+
+    '<div class="rc-quick">'+
+      [['7','Last 7 days'],['14','Last 14 days'],['30','Last 30 days'],
+       ['pw','Previous week'],['pm','Previous month'],['all','All captured']]
+      .map(function(q){ return '<button data-rcq="'+q[0]+'">'+q[1]+'</button>'; }).join('')+
+    '</div>';
+}
+function rcQuick(key){
+  const today=todayISO();
+  if(key==='all'){ RC.from=(RC.rows[RC.rows.length-1]||{}).id||today; RC.to=RC.rows.length?RC.rows[0].id:today; }
+  else if(key==='pw'){ const m=rcMonday(today); RC.from=rcShift(m,-7); RC.to=rcShift(m,-1); }
+  else if(key==='pm'){ const s=rcMonthStart(today); RC.to=rcShift(s,-1); RC.from=rcMonthStart(RC.to); }
+  else { RC.to=today; RC.from=rcShift(today,-(+key-1)); }
+}
+
+function rcRangeHTML(rows,title,lede,proj,projLabel){
+  if(!rows.length){
+    return (proj?rcProjBlock(proj,projLabel):'')+
+      '<div class="ln-fail">No nights captured in this range yet.</div>';
+  }
   const R={rest:0,farm:0,net:0,covers:0,hours:0,wages:0,lprod:0,ln:0};
   rows.forEach(function(d){ const rev=RC.rev[d.id]||null;
     R.rest+=rcProd(d,rev)||0; R.farm+=rcFarm(rev); R.net+=rcNet(d,rev)||0; R.covers+=d.covers||0;
@@ -4890,6 +5095,7 @@ function rcRangeHTML(rows,title,lede){
     rcHero('Product sales', R.rest, lnNum(R.covers)+' guests · '+lnMoney0(R.rest/R.covers)+'/guest',
       R.farm, R.net, R.farm?'rung in during this window':'no farm ring-in in this window')+
     '<div class="ln-note">'+lede+'</div></div>';
+  if(proj)h+=rcProjBlock(proj,projLabel);
 
   h+='<div class="ln-sec">Night by night</div><div class="ln-card">'+
      '<div class="rc-legend"><span><i class="rc-sw rc-bg-rest"></i>Restaurant</span>'+
@@ -4949,31 +5155,40 @@ function rcDrawRange(rows){
 function rcPaint(){
   const el=$('rcBody'); if(!el)return;
   const eb=$('rcEyebrow'); if(eb)eb.textContent=isInvestor()?'San Fermo Seattle':'Managers Only';
-  const asc=RC.rows.slice().reverse();
-  const seg='<div class="rc-seg">'+['night','week','month'].map(function(s){
-    return '<button data-rc="'+s+'"'+(RC.scope===s?' class="on"':'')+'>'+
-      (s==='night'?'Last night':s==='week'?'Last 7 nights':'This month')+'</button>'; }).join('')+'</div>';
-  let body='';
+  const TABS=[['night','Last night'],['wk','This week'],['month','This month'],['custom','Range']];
+  if(!TABS.some(function(t){return t[0]===RC.scope;}))RC.scope='night';   // old saved scope
+  const seg='<div class="rc-seg">'+TABS.map(function(t){
+    return '<button data-rc="'+t[0]+'"'+(RC.scope===t[0]?' class="on"':'')+'>'+t[1]+'</button>';
+  }).join('')+'</div>';
+
+  let body='', rows=null;
   if(RC.scope==='night')body=rcNightHTML();
-  else if(RC.scope==='week'){
-    const rows=asc.slice(-7);
-    body=rcRangeHTML(rows,'Last seven nights',
-      lnPrettyDate(rows[0].id)+' through '+lnPrettyDate(rows[rows.length-1].id)+'.');
-  } else {
-    const mo=(RC.rows[0]&&RC.rows[0].id||todayISO()).slice(0,7);
-    const rows=asc.filter(function(d){ return d.id.slice(0,7)===mo; });
-    body=rcRangeHTML(rows, new Date(mo+'-01T12:00:00').toLocaleDateString(undefined,{month:'long'})+' so far',
-      rows.length+' nights of service captured this month.');
+  else {
+    const w=rcWindow(RC.scope);
+    rows=rcRowsIn(w.from,w.to);
+    // A custom range that ends in the past has nothing to forecast; asking for a projection
+    // there would produce an empty block rather than a wrong one, but skip it for clarity.
+    const P=rcProject(w.from,w.to);
+    const wantProj=(RC.scope!=='custom')||P.ahead.length||P.missing.length;
+    body=(RC.scope==='custom'?rcRangeControls():'')+
+      rcRangeHTML(rows,w.title,w.lede,wantProj?P:null,w.label);
   }
   el.innerHTML=seg+body;
+
   el.querySelectorAll('[data-rc]').forEach(function(b){
     b.onclick=function(){ RC.scope=b.dataset.rc; rcPaint(); window.scrollTo(0,0); }; });
-  if(RC.scope!=='night'){
-    const asc2=RC.rows.slice().reverse();
-    const rows=RC.scope==='week'?asc2.slice(-7):asc2.filter(function(d){
-      return d.id.slice(0,7)===(RC.rows[0]&&RC.rows[0].id||todayISO()).slice(0,7); });
-    rcDrawRange(rows);
+  el.querySelectorAll('[data-rcq]').forEach(function(b){
+    b.onclick=function(){ rcQuick(b.dataset.rcq); rcPaint(); }; });
+  const fi=$('rcFrom'), ti=$('rcTo');
+  if(fi&&ti){
+    const apply=function(){
+      let f=fi.value||RC.from, t=ti.value||RC.to;
+      if(f&&t&&f>t){ const s=f; f=t; t=s; }        // dragged backwards; just swap rather than reject
+      RC.from=f; RC.to=t; rcPaint();
+    };
+    fi.onchange=apply; ti.onchange=apply;
   }
+  if(rows&&rows.length)rcDrawRange(rows);
 }
 function rcCardHTML(){ return wideCardHTML('recap','◐','Recap','Last night in context'); }
 /* Fills the card subtitle with last night's headline the same way lnHomePrime does, so the
