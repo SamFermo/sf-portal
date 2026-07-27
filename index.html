@@ -1451,7 +1451,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785169404';   // stamped by build-data.py at every deploy
+const BUILD='1785169765';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1599,7 +1599,9 @@ function renderHome(){
   const annChip = annActive()?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${esc(ANNOUNCE.title)} — ${annMyRsvp()?(annMyRsvp().rsvp==='yes'?'you\'re in ✓ (tap to change)':'tap to RSVP'):'tap to RSVP'}</span></button>`:'';
   let html = isInvestor()
     ? rcCardHTML() + freshCardHTML()
-    : annChip + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():'')) + freshCardHTML() + verbalsCardHTML();
+    : annChip + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():''))
+      + (typeof scwsCanTab==='function'&&scwsCanTab()?scwsCardHTML():'')
+      + freshCardHTML() + verbalsCardHTML();
   const std=[['board','⌗','Tables','Tonight\'s table notes & statuses'],
     ['schedule','◷','Schedule','This week + the month'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
@@ -1612,6 +1614,7 @@ function renderHome(){
   $('homeGrid').innerHTML=html;
   glanceCardWeather();
   if(lnCanTab()){ lnHomePrime(); if(typeof rcHomePrime==='function')rcHomePrime(); }
+  if(typeof scwsHomePrime==='function')scwsHomePrime();
   if(mgr){ ordHomePrime(); }
   renderAccountBar();
   updateAttn();
@@ -6966,6 +6969,28 @@ function scwsPaint(all,periods){
   if(tabs&&typeof initPill==='function')initPill(tabs,tabs.querySelector('.subpill'),'sc',v=>{SCWS.sub=v;scwsPaint(all,periods);});
 }
 
+
+/* ---------- home card ---------- */
+function scwsCardHTML(){ return wideCardHTML('scws','⚖','Service Charge','Last night\'s split'); }
+
+/* Fills the card detail in the background so it reads live without opening the tab,
+   the same way the Recap card primes itself. */
+function scwsHomePrime(){
+  if(!scwsCanTab()||!fbReady||!fbDb)return;
+  scwsLoad().then(function(){
+    const nights=scwsNights(); if(!nights.length)return;
+    const n=nights[0];
+    const parts=[scwsMoney(n.share)+' a share', n.splits.length+'-way'];
+    const paid=n.splits.length+n.commissions.length;
+    parts.push(paid+' paid');
+    const R=scwsPeriodRange(scwsPeriods(nights.map(x=>x.date))[0]);
+    const inP=nights.filter(x=>x.date>=R.from&&x.date<=R.to);
+    const flagged=inP.filter(x=>!x.ok).length;
+    if(flagged)parts.push('<b>'+flagged+' to review</b>');
+    const el=document.querySelector('.home-card[data-card="scws"] .hc-sub');
+    if(el)el.innerHTML=fmtShort(n.date)+' \u00b7 '+parts.join(' \u00b7 ');
+  }).catch(function(){});
+}
 
 if(document.readyState!=='loading') boot();
 else document.addEventListener('DOMContentLoaded',boot);
