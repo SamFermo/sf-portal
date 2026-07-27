@@ -1104,6 +1104,15 @@ body.locked{overflow:hidden;}
 .rc-pbar i.b{background:repeating-linear-gradient(115deg,rgba(205,216,244,.42) 0 4px,transparent 4px 8px);}
 .rc-plegend{display:flex; gap:14px; flex-wrap:wrap; font-size:11.5px; color:var(--ink-mute);}
 .rc-plegend b{color:var(--ink); font-weight:700;}
+/* Record benchmark. Solid border, unlike the dashed projection card, because this is a
+   standing fact rather than a forecast. */
+.rc-rec{border:1px solid rgba(205,216,244,.16); border-radius:13px; padding:14px 15px;
+  margin:0 0 12px; background:rgba(205,216,244,.03);}
+.rc-rec .rc-rv{font-size:24px; font-weight:700; letter-spacing:-.02em; color:var(--ink);
+  font-variant-numeric:tabular-nums;}
+.rc-rec-hit{border-color:rgba(230,200,120,.45);
+  background:linear-gradient(155deg,rgba(230,200,120,.13),rgba(205,216,244,.03) 60%);}
+.rc-rec-hit .rc-rv{color:var(--rc-rest);}
 .rc-hero{background:linear-gradient(155deg,rgba(230,200,120,.09),rgba(205,216,244,.04) 55%);
   border:1px solid rgba(230,200,120,.24); border-radius:13px; padding:14px 15px; margin-bottom:12px;}
 .ln-stat-k{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); margin-bottom:6px; font-weight:600;}
@@ -1399,7 +1408,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785107419';   // stamped by build-data.py at every deploy
+const BUILD='1785111132';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4604,7 +4613,7 @@ function rcCats(d){
   const n=(d.drinks&&d.drinks.na&&d.drinks.na.rev)||0;
   return {food:f,liquor:l,wine:w,na:n};
 }
-var RC={rows:[],rev:{},board:{},scope:'night',from:null,to:null};
+var RC={rows:[],rev:{},board:{},scope:'night',from:null,to:null,records:null};
 
 /* --- date helpers. All arithmetic is done on YYYY-MM-DD strings via a noon-local Date so a
    DST boundary can never shift a day, which is what bit the timestamp rendering earlier. --- */
@@ -4701,6 +4710,139 @@ function rcProject(from,to){
     closedAhead:ahead.filter(function(x){return x.src==='closed';}).length
   };
 }
+/* --- RECORDS -----------------------------------------------------------------------------
+   Derived from the data on every load rather than kept by hand, and mirrored to board/records
+   so a record survives the 62-night window RC.rows is capped at. Two rules make the mirror
+   safe to write from a browser:
+
+     1. Only ever RAISED. A client with a partial read computes a smaller number and writes
+        nothing, so a slow or half-loaded page can never knock a real record down.
+     2. Except by the same period. If the stored record is the week of Jun 15 and Jun 15
+        recomputes lower — a correction, a re-parse — that lower figure is taken, because it
+        is the same week telling us something new rather than a different week losing.
+
+   Only COMPLETE periods count: seven docs for a week, every calendar day for a month. A
+   closed night is present and contributes zero, which is right; a night that never posted
+   makes the period ineligible, which is also right — a five-night week is not a record, it
+   is a gap. Basis is product sales net of discounts, restaurant only, same as everything
+   else in this tab. --- */
+function rcPeriodTotal(dates,have){
+  if(!dates.every(function(x){ return have[x]; }))return null;
+  let v=0,c=0;
+  dates.forEach(function(x){ const d=have[x];
+    if(rcClosed(d))return;
+    v+=rcProd(d,RC.rev[x])||0; c+=d.covers||0; });
+  return {value:v, covers:c, start:dates[0], end:dates[dates.length-1]};
+}
+function rcComputeRecords(){
+  const have={}; RC.rows.forEach(function(r){ have[r.id]=r; });
+  const ids=Object.keys(have).sort();
+  if(!ids.length)return {};
+  const out={};
+
+  const seen={};
+  ids.forEach(function(id){ const m=rcMonday(id); if(seen[m])return; seen[m]=1;
+    const t=rcPeriodTotal(rcSpan(m,rcShift(m,6)),have);
+    if(t&&(!out.week||t.value>out.week.value))out.week=t; });
+
+  const mseen={};
+  ids.forEach(function(id){ const m=id.slice(0,7); if(mseen[m])return; mseen[m]=1;
+    const s=m+'-01', t=rcPeriodTotal(rcSpan(s,rcMonthEnd(s)),have);
+    if(t&&(!out.month||t.value>out.month.value))out.month=t; });
+
+  ids.forEach(function(id){ const d=have[id];
+    if(rcClosed(d))return;
+    const v=rcProd(d,RC.rev[id]);
+    if(v!=null&&(!out.night||v>out.night.value))
+      out.night={value:v, covers:d.covers||0, start:id, end:id}; });
+
+  return out;
+}
+/* Merge the computed view with what is stored, then push back anything we have raised. */
+function rcMergeRecords(stored){
+  const c=rcComputeRecords(), out={}, raise={};
+  ['week','month','night'].forEach(function(k){
+    const s=stored&&stored[k], n=c[k];
+    if(!n){ if(s)out[k]=s; return; }
+    if(!s){ out[k]=n; raise[k]=n; return; }
+    if(s.start===n.start){                       // same period, fresher numbers win either way
+      out[k]=n; if(Math.abs(s.value-n.value)>0.011)raise[k]=n;
+      return;
+    }
+    if(n.value>s.value){ out[k]=n; raise[k]=n; } else { out[k]=s; }
+  });
+  return {records:out, raise:raise};
+}
+/* A client has to have a real view of history before it is allowed to establish a record.
+   Without this, a page that loaded three nights could seed `night` from those three and, for
+   a key with nothing stored yet, plant a figure well under the true best. It would self-heal
+   on the next full load, but the guard is one line and removes the window entirely. Reading
+   and displaying is never gated — only writing. */
+const RC_MIN_ROWS_TO_WRITE=14;
+function rcSyncRecords(){
+  if(!fbReady||!fbDb||!RC.rows.length)return;
+  fbDb.collection('board').doc('records').get().then(function(snap){
+    const stored=(snap&&snap.exists&&snap.data())||{};
+    const m=rcMergeRecords(stored);
+    RC.records=m.records;
+    const keys=RC.rows.length>=RC_MIN_ROWS_TO_WRITE?Object.keys(m.raise):[];
+    if(keys.length){
+      const patch={}; keys.forEach(function(k){ patch[k]=m.raise[k]; });
+      patch.updatedAt=new Date().toISOString();
+      // set+merge, not update: the doc may not exist yet on a first run.
+      fbDb.collection('board').doc('records').set(patch,{merge:true}).catch(function(){});
+    }
+    if($('recap')&&$('recap').classList.contains('active'))rcPaint();
+  }).catch(function(){
+    RC.records=rcComputeRecords();     // offline or denied: still show what this window knows
+    if($('recap')&&$('recap').classList.contains('active'))rcPaint();
+  });
+}
+/* The benchmark line. Shows where the period stands against the record, and — while the
+   period is still running — whether the forecast clears it. A record is only declared broken
+   on money actually banked, never on a projection. */
+function rcRecordBlock(kind,actual,P){
+  const R=RC.records&&RC.records[kind];
+  if(!R)return '';
+  const label=kind==='week'?'Weekly record':'Monthly record';
+  const held=(kind==='week'?'week of ':'')+
+    (kind==='month'?rcD(R.start).toLocaleDateString(undefined,{month:'long',year:'numeric'})
+                   :lnPrettyDate(R.start));
+  const isSame=P&&R.start===P.from;
+  const beaten=actual>R.value+0.011;
+
+  if(beaten&&!isSame){
+    const by=actual-R.value;
+    return '<div class="rc-rec rc-rec-hit"><div class="ln-stat-k">New '+label.toLowerCase()+'</div>'+
+      '<div class="rc-rv">'+lnMoney0(actual)+'</div>'+
+      '<div class="rc-pn">Past the '+held+' record of '+lnMoney0(R.value)+' by <b>'+lnMoney0(by)+
+      '</b> ('+(by/R.value*100).toFixed(1)+'%). Banked, not forecast.</div></div>';
+  }
+  if(isSame){
+    return '<div class="rc-rec"><div class="ln-stat-k">'+label+'</div>'+
+      '<div class="rc-rv">'+lnMoney0(R.value)+'</div>'+
+      '<div class="rc-pn">This is the record — the standing best, set right here.</div></div>';
+  }
+  const gap=R.value-actual, pct=Math.max(0,Math.min(100,actual/R.value*100));
+  let h='<div class="rc-rec"><div class="ln-stat-k">'+label+'</div>'+
+    '<div class="rc-rv">'+lnMoney0(R.value)+'</div>'+
+    '<div class="rc-pn">'+held+(R.covers?' · '+lnNum(R.covers)+' guests':'')+'</div>'+
+    '<div class="rc-pbar"><i class="a" style="width:'+pct.toFixed(1)+'%"></i>'+
+      '<i class="b" style="width:'+(100-pct).toFixed(1)+'%"></i></div>'+
+    '<div class="rc-plegend"><span><b>'+pct.toFixed(0)+'%</b> of the record</span>'+
+      '<span><b>'+lnMoney0(gap)+'</b> to go</span></div>';
+  if(P&&P.ahead.length){
+    const nights=P.ahead.length-P.closedAhead;
+    h+='<div class="ln-note" style="margin-top:10px">'+
+      (P.total>R.value
+        ? 'On what is on the book, '+nights+' night'+(nights===1?'':'s')+' left should clear it by <b>'+
+          lnMoney0(P.total-R.value)+'</b>.'
+        : 'The forecast lands <b>'+lnMoney0(R.value-P.total)+'</b> short across the '+nights+
+          ' night'+(nights===1?'':'s')+' left.')+'</div>';
+  }
+  return h+'</div>';
+}
+
 function rcProjBlock(P,label){
   if(!P.ahead.length&&!P.missing.length)return '';
   let h='<div class="rc-proj">';
@@ -5106,7 +5248,7 @@ function rcQuick(key){
   else { RC.to=today; RC.from=rcShift(today,-(+key-1)); }
 }
 
-function rcRangeHTML(rows,title,lede,proj,projLabel){
+function rcRangeHTML(rows,title,lede,proj,projLabel,recKind){
   if(!rows.length){
     return (proj?rcProjBlock(proj,projLabel):'')+
       '<div class="ln-fail">No nights captured in this range yet.</div>';
@@ -5128,6 +5270,7 @@ function rcRangeHTML(rows,title,lede,proj,projLabel){
       R.farm, R.net, R.farm?'rung in during this window':'no farm ring-in in this window',
       lnMoney0(R.gross)+' rung less '+lnMoney0(R.disc)+' discounts ('+dpct.toFixed(1)+'%)')+
     '<div class="ln-note">'+lede+'</div></div>';
+  if(recKind)h+=rcRecordBlock(recKind,R.rest,proj);
   if(proj)h+=rcProjBlock(proj,projLabel);
 
   h+='<div class="ln-sec">Night by night</div><div class="ln-card">'+
@@ -5229,7 +5372,8 @@ function rcPaint(){
     const P=rcProject(w.from,w.to);
     const wantProj=(RC.scope!=='custom')||P.ahead.length||P.missing.length;
     body=(RC.scope==='custom'?rcRangeControls():'')+
-      rcRangeHTML(rows,w.title,w.lede,wantProj?P:null,w.label);
+      rcRangeHTML(rows,w.title,w.lede,wantProj?P:null,w.label,
+        RC.scope==='wk'?'week':RC.scope==='month'?'month':null);
   }
   el.innerHTML=seg+body;
 
@@ -5308,6 +5452,7 @@ function rcRender(){
     RC.board={}; if(res[2])res[2].forEach(function(d){ RC.board[d.id]=d.data(); });
     if(!RC.rows.length){ el.innerHTML=lnEmptyHTML(); return; }
     rcPaint();
+    rcSyncRecords();
   }).catch(function(e){
     if(!RC.rows.length)el.innerHTML=lnFailHTML('Couldn’t load the recap ('+((e&&e.message)||'read failed')+').');
   });
