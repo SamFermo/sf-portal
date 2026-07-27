@@ -1451,7 +1451,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785169765';   // stamped by build-data.py at every deploy
+const BUILD='1785183552';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -6876,18 +6876,40 @@ function scwsLoad(){
     snap.forEach(doc=>{
       const d=doc.data()||{};
       if(d.crew&&d.crew.length)SCWS.clock[doc.id]={shifts:d.crew,trainees:d.crew_trainees||[],
-                                                  pool:d.service_fees,covers:d.covers};
+                                                  pool:d.service_fees,covers:d.covers,
+                                                  sheet:d.scws_sheet||null};
     });
     SCWS.ready=true;
   }).catch(()=>{SCWS.ready=true;});
 }
 
+/* A stored sheet wins over recomputing here. The nightly pipeline reads the manager log —
+   who actually held a section, who was phased, the odd written instruction — none of which
+   is visible from the clock alone (Revel's role field said Helen was Run/Bus while the log
+   had her on the cafe). Nights with no log are stored `unverified`: we still show the
+   computed numbers, but flagged, rather than pretending the split size is settled. */
+function scwsSheetToNight(iso,cd){
+  const s=cd.sheet||{};
+  return {date:iso, pool:cd.pool, rate:SCWS_RATE, share:s.share||0,
+    splits:(s.splits||[]).map(x=>({name:x.name, role:x.role||'Server', hours:x.hours||0,
+                                   amt:x.amt, section:x.section||''})),
+    commissions:(s.commissions||[]).map(x=>({name:x.name, why:x.why||'', role:x.role||'',
+                                   hours:x.hours||0, mult:(x.mult!=null?x.mult:1), amt:x.amt})),
+    flags:s.flags||[], totalSplit:s.totalSplit||0, totalComm:s.totalComm||0,
+    totalPaid:s.totalPaid||0, houseKeeps:s.houseKeeps||0,
+    ok:!((s.flags||[]).length), covers:cd.covers, fromSheet:true};
+}
 function scwsNights(){
   return Object.keys(SCWS.clock).sort().reverse().map(iso=>{
     const cd=SCWS.clock[iso]||{};
+    if(cd.sheet&&!cd.sheet.unverified&&cd.pool!=null)return scwsSheetToNight(iso,cd);
     const w=scwsCompute({date:iso, pool:cd.pool!=null?cd.pool:null, shifts:cd.shifts||[],
       sched:scwsSchedFor(iso),
       opts:{trainees:cd.trainees||[], overrides:SCWS.over[iso]||null}});
+    if(cd.sheet&&cd.sheet.unverified){
+      (cd.sheet.flags||[]).forEach(f=>{if(w.flags.indexOf(f)<0)w.flags.push(f);});
+      w.ok=false;
+    }
     w.covers=cd.covers; return w;
   }).filter(w=>w.pool!=null);
 }
@@ -6951,7 +6973,7 @@ function scwsPaint(all,periods){
       let s=`<div class="scws-night${n.ok?'':' scws-flagged'}"><div class="scws-nh"><b>${fmtLong(n.date)}</b>`
           + `<span>${scwsMoney(n.pool)} pool · ${n.splits.length}-way · ${scwsMoney(n.share)} a share</span></div>`;
       s+='<table class="scws-tbl"><tbody>';
-      n.splits.forEach(x=>s+=`<tr><td class="nm">${esc(x.name)}</td><td class="scws-why">split · ${x.role==='Bartender'?'bar':'server'}</td><td>${x.hours}h</td><td>${scwsMoney(x.amt)}</td></tr>`);
+      n.splits.forEach(x=>s+=`<tr><td class="nm">${esc(x.name)}</td><td class="scws-why">split · ${x.section?esc(x.section):(x.role==='Bartender'?'bar':'server')}</td><td>${x.hours}h</td><td>${scwsMoney(x.amt)}</td></tr>`);
       n.commissions.forEach(c=>s+=`<tr class="scws-comm"><td class="nm">${esc(c.name)}</td><td class="scws-why">${esc(c.why)}${c.mult<1?' · '+c.mult+'×':''}</td><td>${c.hours}h</td><td>${scwsMoney(c.amt)}</td></tr>`);
       s+=`</tbody><tfoot><tr><td colspan="3">Total paid</td><td><b>${scwsMoney(n.totalPaid)}</b></td></tr></tfoot></table>`;
       if(!n.ok)s+='<ul class="scws-flags">'+n.flags.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';
