@@ -1076,6 +1076,34 @@ body.locked{overflow:hidden;}
 .rc-seg{flex-wrap:wrap;}
 /* Date range control. Native date inputs so the phone gets its own picker instead of a
    hand-rolled calendar that would have to be maintained and would still be worse. */
+/* Service Charge Work Sheet */
+.scws-cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:0 0 16px;}
+.scws-card{border:1px solid rgba(205,216,244,.13); border-radius:14px; padding:11px 13px; background:rgba(205,216,244,.04);}
+.scws-k{font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mute); font-weight:600;}
+.scws-v{font-size:19px; font-weight:600; margin-top:3px; font-variant-numeric:tabular-nums;}
+.scws-s{font-size:11.5px; color:var(--ink-mute); margin-top:1px;}
+.rc-select{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.16); color:var(--ink);
+  border-radius:9px; padding:7px 10px; font:inherit; font-size:13px;}
+.rc-select:focus{outline:none; border-color:rgba(230,200,120,.5);}
+.scws-night{border:1px solid rgba(205,216,244,.13); border-radius:14px; padding:12px 14px; margin:0 0 12px;
+  background:rgba(205,216,244,.035);}
+.scws-night.scws-flagged{border-color:rgba(230,200,120,.42); background:rgba(230,200,120,.06);}
+.scws-nh{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:8px;}
+.scws-nh b{font-size:15px;}
+.scws-nh span{font-size:12px; color:var(--ink-mute);}
+.scws-tbl{width:100%; border-collapse:collapse; font-size:13px;}
+.scws-tbl th{text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--ink-mute); font-weight:600; padding:4px 6px; border-bottom:1px solid rgba(205,216,244,.14);}
+.scws-tbl td{padding:5px 6px; border-bottom:1px solid rgba(205,216,244,.07);}
+.scws-tbl td:last-child, .scws-tbl th:last-child{text-align:right; font-variant-numeric:tabular-nums;}
+.scws-tbl td:nth-child(3){text-align:right; color:var(--ink-mute); font-variant-numeric:tabular-nums;}
+.scws-tbl tfoot td{border-bottom:none; padding-top:8px; color:var(--ink-mute);}
+.scws-tbl .nm{font-weight:600;}
+.scws-comm td{color:#d9c48a;}
+.scws-why{font-size:11.5px; color:var(--ink-mute); text-transform:lowercase;}
+.scws-flags{margin:8px 0 0; padding-left:18px;}
+.scws-flags li{font-size:12px; color:#e6c878; margin:2px 0;}
+.scws-foot{font-size:11.5px; color:var(--ink-mute); line-height:1.55; margin-top:14px;}
 .rc-range{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:-4px 0 14px;}
 .rc-range label{font-size:11px; text-transform:uppercase; letter-spacing:.06em;
   color:var(--ink-mute); font-weight:600;}
@@ -1291,6 +1319,12 @@ body.locked{overflow:hidden;}
   <div id="rcBody"></div>
 </section>
 
+<section class="view" id="scws">
+  <div class="view-head"><p class="view-eyebrow" id="scwsEyebrow">Draft &middot; Sam, Tim &amp; Sully</p><h2 class="view-title">Service Charge</h2>
+    <p class="view-sub">The nightly service charge worksheet, rebuilt from Revel. Not the system of record until Tim signs off.</p></div>
+  <div id="scwsBody"></div>
+</section>
+
 <section class="view" id="board">
   <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">Tables</h2>
     <p class="view-sub">Notes and statuses on tonight's tables — tap the map to start one.</p>
@@ -1408,7 +1442,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785111132';   // stamped by build-data.py at every deploy
+const BUILD='1785168453';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1463,6 +1497,7 @@ function navTabs(){
   // Recap supersedes Last Night for the full tier, so only one of the two ever appears.
   // Partial-tier managers keep Last Night, which is still the only view they have.
   if(typeof rcCanTab==='function'&&rcCanTab())head=head.concat([['recap','Recap']]);
+  if(typeof scwsCanTab==='function'&&scwsCanTab())head=head.concat([['scws','Service Charge']]);
   else if(typeof lnCanTab==='function'&&lnCanTab())head=head.concat([['lastnight','Last Night']]);
   let t=isMgr()?head.concat(TABS,[['frontdesk','Front Desk'],['orders','Farm Order']]):head.concat(TABS);
   return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
@@ -1476,7 +1511,7 @@ function go(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender();
   if(id==='standards'){showStdPane(stdTab);markStandardsSeen();}
   if(id==='fresh')markFreshSeen();
   if(id==='verbals')markVerbalsSeen();
@@ -6674,6 +6709,246 @@ function boot(){
   s.onerror=function(){ document.body.innerHTML='<p style="color:#eaf0ff;font-family:sans-serif;padding:28px;text-align:center">Couldn’t load menu data. Pull down to refresh.</p>'; };
   document.head.appendChild(s);
 }
+/* ==========================================================================
+   SERVICE CHARGE WORK SHEET  (2026-07-27)
+   Rebuilds Tim's bi-weekly "DAILY Payroll Tip Log" nightly from Revel.
+
+   Sources
+     pool    revel/<date>.service_fees          (already lands nightly)
+     clock   scws_clock/<date>.shifts            [{name, role, h}]  Revel Time Worked
+     sched   SF.schedule.foh                     MD / Sup Server hints only
+
+   The money is exact. The one judgement the data can't settle is which station
+   staff split the pool vs. which are paid a matching share by the house — the
+   engine proposes it (79% agreement with Tim over 73 nights) and a manager can
+   override per night. Nothing here is visible to staff until Tim signs off.
+   ========================================================================== */
+const SCWS_RATE = 0.35;
+const SCWS_PRORATE_BELOW = 0.70;
+const SCWS_NEVER = ['Sam','Tim'];
+const SCWS_ALIAS = {Jackie:'Jacklynn', Jacky:'Jacklynn', Katherine:'Katie'};
+/* Order in which Tim pulls people OUT of the pool onto a house-paid share.
+   Derived from 73 nights: Sully 16x, Abby 11x, Julian 5x, Mac 2x, Denise 1x. */
+const SCWS_SENIORITY = ['Sully','Abby','Julian','Mac','Denise','Katie','Adrian'];
+/* Until Tim approves this as the system of record, only these three see the tab. */
+const SCWS_VIEWERS = ['sam','tim','sully'];
+
+const SCWS = {ready:false, clock:{}, over:{}, period:null, sub:'sheet'};
+
+function scwsN(n){const s=String(n||'').trim();return SCWS_ALIAS[s]||s;}
+function scwsR2(n){return Math.round(n*100)/100;}
+function scwsRank(n){const i=SCWS_SENIORITY.indexOf(n);return i<0?99:i;}
+function scwsMoney(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function scwsFirst(n){return String(n||'').trim().split(/\s+/)[0];}
+
+function scwsCanTab(){
+  if(typeof isInvestor==='function'&&isInvestor())return false;
+  const f=scwsFirst(me&&me.name).toLowerCase();
+  return !!(me&&(me.admin||me.mgr)&&SCWS_VIEWERS.indexOf(f)>=0);
+}
+
+/* ---------- the engine ---------- */
+function scwsCompute(o){
+  const opts=o.opts||{}, pool=o.pool, flags=[];
+  const rate=opts.rate!=null?opts.rate:SCWS_RATE;
+  const below=opts.prorateBelow!=null?opts.prorateBelow:SCWS_PRORATE_BELOW;
+  const trainees=(opts.trainees||[]).map(scwsN);
+  const never=SCWS_NEVER.concat(opts.exclude||[]).map(scwsN);
+  const sched=o.sched||{}, S=k=>(sched[k]||[]).map(scwsN).filter(n=>never.indexOf(n)<0);
+  const SVC=['Server','Bartender'];
+  const rel=(o.shifts||[]).filter(s=>SVC.indexOf(s.role)>=0||s.role==="Maitre D'");
+  const base={date:o.date,pool:pool,rate:rate,share:0,splits:[],commissions:[],flags:flags,
+              totalSplit:0,totalComm:0,totalPaid:0,houseKeeps:0,ok:false};
+  if(!rel.length){flags.push('no service crew on the clock');return base;}
+  if(!(pool>0)){flags.push('no service-fee pool recorded for this date');return base;}
+
+  const full=Math.max.apply(null,rel.map(s=>s.h));
+  const hours={}, role={};
+  rel.forEach(s=>{const n=scwsN(s.name);
+    hours[n]=Math.max(hours[n]||0,s.h);
+    if(s.role==="Maitre D'"||!role[n])role[n]=s.role;});
+  const onClock=Object.keys(hours).filter(n=>never.indexOf(n)<0);
+  const frac=n=>hours[n]/full, short=n=>frac(n)<below, mult=n=>short(n)?scwsR2(frac(n)):1;
+
+  const eligible=onClock.filter(n=>SVC.indexOf(role[n])>=0&&trainees.indexOf(n)<0&&!short(n));
+  const cap=Math.min((eligible.length>=5&&pool>2400)?5:4, eligible.length);
+  let split = (opts.overrides&&opts.overrides.split)
+    ? opts.overrides.split.map(scwsN).filter(n=>onClock.indexOf(n)>=0)
+    : eligible.slice().sort((a,b)=>scwsRank(b)-scwsRank(a)||a.localeCompare(b)).slice(0,cap);
+  split=split.filter((v,i,a)=>a.indexOf(v)===i);
+  if(!split.length){flags.push('nobody eligible to split');return base;}
+
+  const inSplit={}; split.forEach(n=>inSplit[n]=1);
+  const share=scwsR2((pool/split.length)*rate);
+  const splits=split.slice().sort().map(n=>({name:n,hours:hours[n],role:role[n],amt:share}));
+
+  const commissions=[];
+  function add(n,why){
+    if(onClock.indexOf(n)<0||inSplit[n]||trainees.indexOf(n)>=0)return;
+    if(commissions.some(c=>c.name===n))return;
+    const m=mult(n);
+    commissions.push({name:n,why:why,role:role[n],hours:hours[n],mult:m,amt:scwsR2(share*m)});
+  }
+  onClock.filter(n=>role[n]==="Maitre D'").forEach(n=>add(n,"maitre d'"));
+  S('sup').forEach(n=>add(n,'sup server'));
+  onClock.filter(n=>SVC.indexOf(role[n])>=0).forEach(n=>add(n,'extra station'));
+  S('support').filter(n=>SVC.indexOf(role[n])>=0).forEach(n=>add(n,'support who served'));
+
+  S('md').filter(n=>onClock.indexOf(n)<0).forEach(n=>flags.push('scheduled MD '+n+' never clocked in'));
+  S('sup').filter(n=>onClock.indexOf(n)<0).forEach(n=>flags.push('scheduled sup server '+n+' never clocked in'));
+  commissions.filter(c=>c.mult<1).forEach(c=>flags.push(c.name+' worked '+c.hours+'h of '+full+'h — prorated to '+c.mult));
+  onClock.filter(n=>short(n)&&!inSplit[n]&&!commissions.some(c=>c.name===n)&&trainees.indexOf(n)<0)
+    .forEach(n=>flags.push(n+' clocked only '+hours[n]+'h — not paid'));
+  if(!onClock.some(n=>role[n]==="Maitre D'"))flags.push("no maitre d' on the clock — owner likely covered the door");
+
+  const totalSplit=scwsR2(splits.reduce((a,s)=>a+s.amt,0));
+  const totalComm=scwsR2(commissions.reduce((a,c)=>a+c.amt,0));
+  return {date:o.date,pool:pool,rate:rate,share:share,fullShift:full,cap:cap,
+          splits:splits,commissions:commissions,flags:flags,
+          totalSplit:totalSplit,totalComm:totalComm,totalPaid:scwsR2(totalSplit+totalComm),
+          houseKeeps:scwsR2(pool-totalSplit),ok:flags.length===0};
+}
+
+/* ---------- schedule hints: MD / Sup Server, read off the posted schedule ---------- */
+function scwsSchedFor(iso){
+  const out={split:[],md:[],sup:[],support:[]};
+  try{
+    const weeks=(window.SF&&SF.schedule&&SF.schedule.foh)||[];
+    for(const w of weeks){
+      const di=w.dates.indexOf(iso); if(di<0)continue;
+      (w.rows||[]).forEach(r=>{
+        const s=String((r.shifts||[])[di]||'').trim().toLowerCase(); if(!s)return;
+        const n=scwsN(scwsFirst(r.name));
+        if(s==='md')out.md.push(n);
+        else if(s.indexOf('sup')===0)out.sup.push(n);
+        else if(s.indexOf('expo')===0||s.indexOf('bus')>=0)out.support.push(n);
+        else if(s.indexOf('farm')<0&&s.indexOf('r/o')<0&&s.indexOf('off')<0)out.split.push(n);
+      });
+      break;
+    }
+  }catch(e){}
+  return out;
+}
+
+/* ---------- pay periods: 1st–15th and 16th–end, same as Tim's workbooks ---------- */
+function scwsPeriods(dates){
+  const set={};
+  dates.forEach(d=>{const [y,m,dd]=d.split('-').map(Number);
+    const k=y+'-'+String(m).padStart(2,'0')+'-'+(dd<=15?'A':'B'); set[k]=1;});
+  return Object.keys(set).sort().reverse();
+}
+function scwsPeriodRange(key){
+  const [y,m,half]=key.split('-'); const yy=+y, mm=+m;
+  const last=new Date(yy,mm,0).getDate();
+  return half==='A'
+    ? {from:`${y}-${m}-01`, to:`${y}-${m}-15`, label:`${MON[mm-1]} 1–15`}
+    : {from:`${y}-${m}-16`, to:`${y}-${m}-${last}`, label:`${MON[mm-1]} 16–${last}`};
+}
+
+/* ---------- load ---------- */
+/* Crew rides on the nightly revel doc — revel/<date>.crew — so there's no second
+   collection to keep in sync and no extra Firestore rule to maintain. */
+function scwsLoad(){
+  if(SCWS.ready)return Promise.resolve();
+  if(!(fbReady&&fbDb))return Promise.resolve();
+  return fbDb.collection('revel').get().then(snap=>{
+    snap.forEach(doc=>{
+      const d=doc.data()||{};
+      if(d.crew&&d.crew.length)SCWS.clock[doc.id]={shifts:d.crew,trainees:d.crew_trainees||[],
+                                                  pool:d.service_fees,covers:d.covers};
+    });
+    SCWS.ready=true;
+  }).catch(()=>{SCWS.ready=true;});
+}
+
+function scwsNights(){
+  return Object.keys(SCWS.clock).sort().reverse().map(iso=>{
+    const cd=SCWS.clock[iso]||{};
+    const w=scwsCompute({date:iso, pool:cd.pool!=null?cd.pool:null, shifts:cd.shifts||[],
+      sched:scwsSchedFor(iso),
+      opts:{trainees:cd.trainees||[], overrides:SCWS.over[iso]||null}});
+    w.covers=cd.covers; return w;
+  }).filter(w=>w.pool!=null);
+}
+
+/* ---------- render ---------- */
+function scwsRender(){
+  const body=$('scwsBody'); if(!body)return;
+  if(!scwsCanTab()){body.innerHTML='<p class="board-empty">Not available.</p>';return;}
+  body.innerHTML='<p class="board-empty">Loading…</p>';
+  scwsLoad().then(()=>{
+    const all=scwsNights();
+    if(!all.length){body.innerHTML='<p class="board-empty">No clock data yet. The nightly feed hasn\'t been wired up — see the handoff note.</p>';return;}
+    const periods=scwsPeriods(all.map(n=>n.date));
+    if(!SCWS.period||periods.indexOf(SCWS.period)<0)SCWS.period=periods[0];
+    scwsPaint(all,periods);
+  });
+}
+
+function scwsPaint(all,periods){
+  const body=$('scwsBody'); const R=scwsPeriodRange(SCWS.period);
+  const rows=all.filter(n=>n.date>=R.from&&n.date<=R.to);
+  const flagged=rows.filter(n=>!n.ok).length;
+
+  let h='<div class="subtabs" id="scwsTabs"><span class="subpill"></span>'
+      + `<button class="subtab ${SCWS.sub==='sheet'?'active':''}" data-sc="sheet">Nights</button>`
+      + `<button class="subtab ${SCWS.sub==='people'?'active':''}" data-sc="people">By person</button>`
+      + `<button class="subtab ${SCWS.sub==='flags'?'active':''}" data-sc="flags">Review${flagged?' ('+flagged+')':''}</button></div>`;
+
+  h+='<div class="rc-range"><select id="scwsPeriod" class="rc-select">'
+    + periods.map(p=>`<option value="${p}"${p===SCWS.period?' selected':''}>${scwsPeriodRange(p).label}</option>`).join('')
+    + '</select></div>';
+
+  const pool=rows.reduce((a,n)=>a+n.pool,0);
+  const paidS=rows.reduce((a,n)=>a+n.totalSplit,0);
+  const paidC=rows.reduce((a,n)=>a+n.totalComm,0);
+  h+=`<div class="scws-cards">
+    <div class="scws-card"><div class="scws-k">Service fees</div><div class="scws-v">${scwsMoney(pool)}</div><div class="scws-s">${rows.length} nights</div></div>
+    <div class="scws-card"><div class="scws-k">Paid from pool</div><div class="scws-v">${scwsMoney(paidS)}</div><div class="scws-s">${pool?Math.round(paidS/pool*100):0}% of fees</div></div>
+    <div class="scws-card"><div class="scws-k">Paid by house</div><div class="scws-v">${scwsMoney(paidC)}</div><div class="scws-s">commissions</div></div>
+    <div class="scws-card"><div class="scws-k">Total to staff</div><div class="scws-v">${scwsMoney(paidS+paidC)}</div><div class="scws-s">period to date</div></div></div>`;
+
+  if(SCWS.sub==='people'){
+    const per={};
+    rows.forEach(n=>{
+      n.splits.forEach(s=>{per[s.name]=per[s.name]||{split:0,comm:0,n:0,amt:0};per[s.name].split+=s.amt;per[s.name].n++;per[s.name].amt+=s.amt;});
+      n.commissions.forEach(c=>{per[c.name]=per[c.name]||{split:0,comm:0,n:0,amt:0};per[c.name].comm+=c.amt;per[c.name].n++;per[c.name].amt+=c.amt;});
+    });
+    const names=Object.keys(per).sort((a,b)=>per[b].amt-per[a].amt);
+    h+='<table class="scws-tbl"><thead><tr><th>Name</th><th>Nights</th><th>From pool</th><th>From house</th><th>Total</th></tr></thead><tbody>';
+    names.forEach(n=>h+=`<tr><td class="nm">${esc(n)}</td><td>${per[n].n}</td><td>${scwsMoney(per[n].split)}</td><td>${scwsMoney(per[n].comm)}</td><td><b>${scwsMoney(per[n].amt)}</b></td></tr>`);
+    h+=`</tbody><tfoot><tr><td>Total</td><td></td><td>${scwsMoney(paidS)}</td><td>${scwsMoney(paidC)}</td><td><b>${scwsMoney(paidS+paidC)}</b></td></tr></tfoot></table>`;
+  }
+  else if(SCWS.sub==='flags'){
+    const f=rows.filter(n=>!n.ok);
+    h+= f.length?f.map(n=>`<div class="scws-night scws-flagged"><div class="scws-nh"><b>${fmtLong(n.date)}</b><span>${scwsMoney(n.pool)} pool</span></div>`
+        + '<ul class="scws-flags">'+n.flags.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul></div>').join('')
+      : '<p class="board-empty">Nothing to review — every night in this period computed cleanly.</p>';
+  }
+  else {
+    h+=rows.map(n=>{
+      let s=`<div class="scws-night${n.ok?'':' scws-flagged'}"><div class="scws-nh"><b>${fmtLong(n.date)}</b>`
+          + `<span>${scwsMoney(n.pool)} pool · ${n.splits.length}-way · ${scwsMoney(n.share)} a share</span></div>`;
+      s+='<table class="scws-tbl"><tbody>';
+      n.splits.forEach(x=>s+=`<tr><td class="nm">${esc(x.name)}</td><td class="scws-why">split · ${x.role==='Bartender'?'bar':'server'}</td><td>${x.hours}h</td><td>${scwsMoney(x.amt)}</td></tr>`);
+      n.commissions.forEach(c=>s+=`<tr class="scws-comm"><td class="nm">${esc(c.name)}</td><td class="scws-why">${esc(c.why)}${c.mult<1?' · '+c.mult+'×':''}</td><td>${c.hours}h</td><td>${scwsMoney(c.amt)}</td></tr>`);
+      s+=`</tbody><tfoot><tr><td colspan="3">Total paid</td><td><b>${scwsMoney(n.totalPaid)}</b></td></tr></tfoot></table>`;
+      if(!n.ok)s+='<ul class="scws-flags">'+n.flags.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';
+      return s+'</div>';
+    }).join('');
+  }
+
+  h+=`<p class="scws-foot">Rate ${Math.round(SCWS_RATE*100)}% of a pool share. Commissions are matched shares paid by the house, not out of the pool.
+      Short shifts under ${Math.round(SCWS_PRORATE_BELOW*100)}% of the night are prorated by clocked hours.
+      <b>Draft — not the system of record until Tim signs off.</b></p>`;
+
+  body.innerHTML=h;
+  const sel=$('scwsPeriod'); if(sel)sel.onchange=()=>{SCWS.period=sel.value;scwsPaint(all,periods);};
+  const tabs=$('scwsTabs');
+  if(tabs&&typeof initPill==='function')initPill(tabs,tabs.querySelector('.subpill'),'sc',v=>{SCWS.sub=v;scwsPaint(all,periods);});
+}
+
+
 if(document.readyState!=='loading') boot();
 else document.addEventListener('DOMContentLoaded',boot);
 </script>
