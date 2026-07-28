@@ -1467,7 +1467,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785260814';   // stamped by build-data.py at every deploy
+const BUILD='1785262242';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -6896,7 +6896,8 @@ function scwsLoad(){
       if(d.crew&&d.crew.length)SCWS.clock[doc.id]={shifts:d.crew,trainees:d.crew_trainees||[],
                                                   pool:d.service_fees,covers:d.covers,
                                                   sheet:d.scws_sheet||null,
-                                                  over:d.scws_override||null};
+                                                  over:d.scws_override||null,
+                                                  appr:d.scws_approved||null};
     });
     SCWS.ready=true;
   }).catch(()=>{SCWS.ready=true;});
@@ -6961,10 +6962,28 @@ function scwsApplyOverride(w,ov){
   return w;
 }
 
+/* An approval is only good for the flags it was given. Compare a canonical signature —
+   sorted, joined — so that if the nightly run later produces a DIFFERENT flag (a new punch
+   problem, a fresh instruction) the night reopens instead of riding yesterday's sign-off. */
+function scwsFlagSig(flags){ return (flags||[]).slice().sort().join('||'); }
+
+function scwsApplyApproval(w,ap){
+  if(!ap||!ap.sig)return w;
+  if(scwsFlagSig(w.flags)!==ap.sig){
+    w.reopened=true;
+    w.flags=(w.flags||[]).concat(['This night changed after '+(ap.by||'a manager')+' approved it — review again.']);
+    w.ok=false; return w;
+  }
+  w.approved=true; w.apprBy=ap.by||''; w.apprAt=ap.at||'';
+  w.ok=true;
+  return w;
+}
+
 function scwsNights(){
   return Object.keys(SCWS.clock).sort().reverse().map(iso=>{
     const cd=SCWS.clock[iso]||{};
-    if(cd.sheet&&!cd.sheet.unverified&&cd.pool!=null)return scwsApplyOverride(scwsSheetToNight(iso,cd),cd.over);
+    if(cd.sheet&&!cd.sheet.unverified&&cd.pool!=null)
+      return scwsApplyApproval(scwsApplyOverride(scwsSheetToNight(iso,cd),cd.over),cd.appr);
     const w=scwsCompute({date:iso, pool:cd.pool!=null?cd.pool:null, shifts:cd.shifts||[],
       sched:scwsSchedFor(iso),
       opts:{trainees:cd.trainees||[], overrides:SCWS.over[iso]||null}});
@@ -6974,6 +6993,7 @@ function scwsNights(){
     }
     w.covers=cd.covers;
     if(cd.over)scwsApplyOverride(w,cd.over);
+    scwsApplyApproval(w,cd.appr);
     return w;
   }).filter(w=>w.pool!=null);
 }
@@ -7028,31 +7048,49 @@ function scwsPaint(all,periods){
     h+=`</tbody><tfoot><tr><td>Total</td><td></td><td>${scwsMoney(paidS)}</td><td>${scwsMoney(paidC)}</td><td><b>${scwsMoney(paidS+paidC)}</b></td></tr></tfoot></table>`;
   }
   else if(SCWS.sub==='flags'){
-    const f=rows.filter(n=>!n.ok);
-    h+= f.length?f.map(n=>`<div class="scws-night scws-flagged"><div class="scws-nh"><b>${fmtLong(n.date)}</b><span>${scwsMoney(n.pool)} pool</span></div>`
+    const f=rows.filter(n=>!n.ok), done=rows.filter(n=>n.approved);
+    h+= f.length?f.map(n=>`<div class="scws-night scws-flagged"><div class="scws-nh"><b>${fmtLong(n.date)}</b>`
+        + `<span>${scwsMoney(n.pool)} pool · ${scwsMoney(n.totalPaid)} paid</span>`
+        + (n.reopened?`<span class="scws-over">reopened</span>`:'')
+        + (scwsCanEdit()?`<button class="scws-adj" data-appr="${n.date}">Approve</button>`:'')
+        + `</div>`
         + '<ul class="scws-flags">'+n.flags.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul></div>').join('')
-      : '<p class="board-empty">Nothing to review — every night in this period computed cleanly.</p>';
+      : '<p class="board-empty">Nothing to review — every night in this period is either clean or signed off.</p>';
+    if(done.length){
+      h+='<p class="scws-foot" style="margin:16px 0 8px"><b>Signed off</b> — these carried flags that a manager accepted. '
+        +'If the night changes underneath, it reopens on its own.</p>';
+      h+=done.map(n=>`<div class="scws-night"><div class="scws-nh"><b>${fmtLong(n.date)}</b>`
+        + `<span>${scwsMoney(n.totalPaid)} paid · approved by ${esc(n.apprBy||'a manager')}</span>`
+        + (scwsCanEdit()?`<button class="scws-adj" data-unappr="${n.date}">Reopen</button>`:'')
+        + `</div><ul class="scws-flags">`+(n.flags.length?n.flags:['(no open flags)']).map(x=>`<li>${esc(x)}</li>`).join('')+`</ul></div>`).join('');
+    }
   }
   else if(SCWS.sub==='report'){
     const per=scwsReportRows(rows);
     const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,n:a.n+r.total}),{p:0,h:0,n:0});
     const unver=rows.filter(n=>!n.ok).length;
+    const signed=rows.filter(n=>n.approved).length;
     h+=`<p class="scws-foot" style="margin:0 0 10px">Everything paid in <b>${R.label}</b>, by person. `
       +`This is what Krista needs — the CSV carries the same figures plus a night-by-night sheet.</p>`;
     if(unver)h+=`<p class="scws-foot" style="color:#e6c878;margin:0 0 10px">`
       +`${unver} night${unver>1?'s':''} in this period still ${unver>1?'have':'has'} an open flag. `
       +`Settle them under Review before sending.</p>`;
+    if(signed)h+=`<p class="scws-foot" style="margin:0 0 10px">${signed} night${signed>1?'s':''} carried flags that a manager signed off on.</p>`;
     h+='<table class="scws-tbl"><thead><tr><th>Name</th><th>Nights</th><th>From pool</th><th>From house</th><th>Total</th></tr></thead><tbody>';
     per.forEach(r=>h+=`<tr><td class="nm">${esc(r.name)}</td><td>${r.nights}</td><td>${scwsMoney(r.pool)}</td><td>${scwsMoney(r.house)}</td><td><b>${scwsMoney(r.total)}</b></td></tr>`);
     h+=`</tbody><tfoot><tr><td>Total</td><td></td><td>${scwsMoney(t.p)}</td><td>${scwsMoney(t.h)}</td><td><b>${scwsMoney(t.n)}</b></td></tr></tfoot></table>`;
-    h+='<div class="scws-btns"><button class="pri" id="scwsCsvBtn">Download CSV</button>'
+    h+='<div class="scws-btns"><button class="pri" id="scwsXlsBtn">Download Excel</button>'
+      +'<button id="scwsCsvBtn">Download CSV</button>'
       +'<button id="scwsCopyBtn">Copy for email</button></div>';
+    h+='<p class="scws-foot" style="margin-top:6px">Excel comes as three sheets — by person, by night, '
+      +'and every individual payment — so the totals can be traced back without leaving the file.</p>';
   }
   else {
     h+=rows.map(n=>{
       let s=`<div class="scws-night${n.ok?'':' scws-flagged'}"><div class="scws-nh"><b>${fmtLong(n.date)}</b>`
           + `<span>${scwsMoney(n.pool)} pool · ${n.splits.length}-way · ${scwsMoney(n.share)} a share</span>`
           + (n.overridden?`<span class="scws-over">adjusted by ${esc(n.overBy||'a manager')}</span>`:'')
+          + (n.approved?`<span class="scws-over">✓ ${esc(n.apprBy||'approved')}</span>`:'')
           + (scwsCanEdit()?`<button class="scws-adj" data-adj="${n.date}">Adjust</button>`:'')
           + `</div>`;
       s+='<table class="scws-tbl"><tbody>';
@@ -7075,6 +7113,9 @@ function scwsPaint(all,periods){
   const tabs=$('scwsTabs');
   if(tabs&&typeof initPill==='function')initPill(tabs,tabs.querySelector('.subpill'),'sc',v=>{SCWS.sub=v;scwsPaint(all,periods);});
   body.querySelectorAll('[data-adj]').forEach(b=>{ b.onclick=()=>scwsEdit(b.getAttribute('data-adj')); });
+  body.querySelectorAll('[data-appr]').forEach(b=>{ b.onclick=()=>scwsApprove(b.getAttribute('data-appr')); });
+  body.querySelectorAll('[data-unappr]').forEach(b=>{ b.onclick=()=>scwsUnapprove(b.getAttribute('data-unappr')); });
+  const xls=$('scwsXlsBtn'); if(xls)xls.onclick=()=>scwsDownloadXlsx(rows,R.label);
   const csv=$('scwsCsvBtn'); if(csv)csv.onclick=()=>scwsDownloadCSV(rows,R.label);
   const cp=$('scwsCopyBtn');  if(cp)cp.onclick=()=>scwsCopyReport(rows,R.label);
 }
@@ -7173,6 +7214,32 @@ function scwsResetOverride(){
   } else done();
 }
 
+/* ---------- approving a flagged night ----------
+   Signing off is a decision with a name on it, the same as an override. It does not change
+   a single number — it records that a person looked at the flags and accepted them. */
+function scwsApprove(iso){
+  if(!scwsCanEdit())return;
+  const n=scwsNights().filter(x=>x.date===iso)[0]; if(!n)return;
+  const ap={sig:scwsFlagSig(n.flags),flags:(n.flags||[]).slice(),
+            by:scwsFirst(me&&me.name),at:new Date().toISOString()};
+  if(SCWS.clock[iso])SCWS.clock[iso].appr=ap;
+  const done=()=>scwsRender();
+  if(fbReady&&fbDb&&!DEMO){
+    fbDb.collection('revel').doc(iso).set({scws_approved:ap},{merge:true}).then(done)
+      .catch(function(e){ alert('Could not approve: '+(e&&e.message?e.message:'write failed')); });
+  } else done();
+}
+
+function scwsUnapprove(iso){
+  if(!scwsCanEdit())return;
+  if(SCWS.clock[iso])SCWS.clock[iso].appr=null;
+  const done=()=>scwsRender();
+  if(fbReady&&fbDb&&!DEMO){
+    fbDb.collection('revel').doc(iso).set({scws_approved:null},{merge:true}).then(done)
+      .catch(function(e){ alert('Could not reopen: '+(e&&e.message?e.message:'write failed')); });
+  } else done();
+}
+
 /* ---------- the pay-period report for Krista ---------- */
 function scwsReportRows(rows){
   const per={};
@@ -7205,6 +7272,50 @@ function scwsDownloadCSV(rows,label){
   a.download='san-fermo-service-charge-'+label.replace(/[^0-9a-zA-Z]+/g,'-').toLowerCase()+'.csv';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+/* Excel export. SheetJS is fetched only when Tim actually asks for it — the portal stays
+   light on the iPads, same arrangement as the OCR loader. CSV needs no network and is the
+   fallback if this can't load. */
+let _xlsxLoading=null;
+function scwsLoadXlsx(){
+  if(window.XLSX)return Promise.resolve(window.XLSX);
+  if(_xlsxLoading)return _xlsxLoading;
+  _xlsxLoading=new Promise(function(res,rej){
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+    s.onload=function(){ window.XLSX?res(window.XLSX):rej(new Error('xlsx missing')); };
+    s.onerror=function(){ rej(new Error('xlsx load failed')); };
+    document.head.appendChild(s);
+  });
+  return _xlsxLoading;
+}
+
+function scwsDownloadXlsx(rows,label){
+  const btn=$('scwsXlsBtn'); if(btn){btn.disabled=true;btn.textContent='Building…';}
+  const reset=()=>{ if(btn){btn.disabled=false;btn.textContent='Download Excel';} };
+  scwsLoadXlsx().then(function(XLSX){
+    const per=scwsReportRows(rows);
+    const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,n:a.n+r.total}),{p:0,h:0,n:0});
+    const s1=[['Name','Nights','From pool','From house','Total']];
+    per.forEach(r=>s1.push([r.name,r.nights,r.pool,r.house,r.total]));
+    s1.push(['TOTAL','',scwsR2(t.p),scwsR2(t.h),scwsR2(t.n)]);
+    const s2=[['Night','Pool','Split','Share','Paid from pool','Paid by house','Total paid','Status']];
+    rows.slice().sort((a,b)=>a.date<b.date?-1:1).forEach(n=>s2.push([n.date,n.pool,n.splits.length+'-way',
+      n.share,n.totalSplit,n.totalComm,n.totalPaid,
+      n.approved?('approved by '+n.apprBy):(n.ok?'clean':'needs review')]));
+    const s3=[['Night','Name','Paid by','Section / why','Hours','Amount']];
+    rows.slice().sort((a,b)=>a.date<b.date?-1:1).forEach(n=>{
+      n.splits.forEach(x=>s3.push([n.date,x.name,'pool',x.section||'',x.hours,x.amt]));
+      n.commissions.forEach(x=>s3.push([n.date,x.name,'house',x.why||'',x.hours,x.amt]));
+    });
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(s1),'By person');
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(s2),'By night');
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(s3),'Every payment');
+    XLSX.writeFile(wb,'san-fermo-service-charge-'+label.replace(/[^0-9a-zA-Z]+/g,'-').toLowerCase()+'.xlsx');
+    reset();
+  }).catch(function(){ reset(); alert('Could not load the Excel builder. The CSV has the same figures.'); });
 }
 
 function scwsCopyReport(rows,label){
