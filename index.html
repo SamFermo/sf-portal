@@ -1112,6 +1112,22 @@ body.locked{overflow:hidden;}
 .scws-why{font-size:11.5px; color:var(--ink-mute); text-transform:lowercase;}
 .scws-flags{margin:8px 0 0; padding-left:18px;}
 .scws-flags li{font-size:12px; color:#e6c878; margin:2px 0;}
+.scws-adj{margin-left:auto; font-size:11px; padding:3px 10px; border-radius:20px;
+  border:1px solid rgba(205,216,244,.2); background:transparent; color:var(--ink-mute); cursor:pointer;}
+.scws-adj:hover{color:var(--ink); border-color:rgba(205,216,244,.4);}
+.scws-over{font-size:11px; color:#e6c878; font-weight:600;}
+.scws-sum{display:flex; gap:16px; flex-wrap:wrap; margin:12px 0 4px; font-size:13px; color:var(--card-soft);}
+.scws-sum b{color:var(--card-ink);}
+.scws-ed{width:100%; border-collapse:collapse; font-size:13.5px;}
+.scws-ed td{padding:7px 6px; border-bottom:1px solid var(--moon-edge); color:var(--card-ink);}
+.scws-ed .seg{display:inline-flex; border:1px solid var(--moon-edge); border-radius:8px; overflow:hidden;}
+.scws-ed .seg button{font-size:11px; padding:4px 11px; border:0; background:transparent;
+  color:var(--card-soft); cursor:pointer; font-family:inherit;}
+.scws-ed .seg button.on{background:var(--wood); color:#fffdf7; font-weight:600;}
+.scws-btns{display:flex; gap:9px; margin:14px 0 2px; flex-wrap:wrap;}
+.scws-btns button{font-size:12px; padding:7px 14px; border-radius:9px; cursor:pointer;
+  border:1px solid rgba(205,216,244,.2); background:transparent; color:var(--ink); font-family:inherit;}
+.scws-btns button:hover{border-color:rgba(205,216,244,.4);}
 .scws-foot{font-size:11.5px; color:var(--ink-mute); line-height:1.55; margin-top:14px;}
 .rc-range{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:-4px 0 14px;}
 .rc-range label{font-size:11px; text-transform:uppercase; letter-spacing:.06em;
@@ -1451,7 +1467,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785183552';   // stamped by build-data.py at every deploy
+const BUILD='1785260814';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -6749,6 +6765,8 @@ const SCWS_ALIAS = {Jackie:'Jacklynn', Jacky:'Jacklynn', Katherine:'Katie'};
 const SCWS_SENIORITY = ['Sully','Abby','Julian','Mac','Denise','Katie','Adrian'];
 /* Until Tim approves this as the system of record, only these three see the tab. */
 const SCWS_VIEWERS = ['sam','tim','sully'];
+/* Viewing is wider than editing. Tim and Sam settle the split; Sully reads it. */
+const SCWS_EDITORS = ['sam','tim'];
 
 const SCWS = {ready:false, clock:{}, over:{}, period:null, sub:'sheet'};
 
@@ -6877,7 +6895,8 @@ function scwsLoad(){
       const d=doc.data()||{};
       if(d.crew&&d.crew.length)SCWS.clock[doc.id]={shifts:d.crew,trainees:d.crew_trainees||[],
                                                   pool:d.service_fees,covers:d.covers,
-                                                  sheet:d.scws_sheet||null};
+                                                  sheet:d.scws_sheet||null,
+                                                  over:d.scws_override||null};
     });
     SCWS.ready=true;
   }).catch(()=>{SCWS.ready=true;});
@@ -6899,10 +6918,53 @@ function scwsSheetToNight(iso,cd){
     totalPaid:s.totalPaid||0, houseKeeps:s.houseKeeps||0,
     ok:!((s.flags||[]).length), covers:cd.covers, fromSheet:true};
 }
+function scwsCanEdit(){
+  const f=scwsFirst(me&&me.name).toLowerCase();
+  return !!(me&&(me.admin||me.mgr)&&SCWS_EDITORS.indexOf(f)>=0);
+}
+
+/* Everyone the night could conceivably pay: whoever punched, plus anyone the computed
+   sheet already pays. Someone with no punch is deliberately absent — the model refuses to
+   pay off the log alone, and the editor should not quietly offer to. */
+function scwsRoster(iso){
+  const cd=SCWS.clock[iso]||{}, out={};
+  (cd.shifts||[]).forEach(x=>{const n=scwsN(scwsFirst(x.name));
+    if(SCWS_NEVER.indexOf(n)>=0)return;
+    if(!out[n]||x.h>out[n].hours)out[n]={name:n,hours:x.h,role:x.role};});
+  const sh=cd.sheet||{};
+  (sh.splits||[]).concat(sh.commissions||[]).forEach(x=>{
+    if(!out[x.name])out[x.name]={name:x.name,hours:x.hours||0,role:x.role||''};});
+  return Object.keys(out).sort().map(k=>out[k]);
+}
+
+/* An override replaces the split/commission SETS. The share is not stored — it is always
+   pool / |split| x rate, so moving one person recomputes everyone. That is the whole point:
+   the counts are the money. */
+function scwsApplyOverride(w,ov){
+  if(!ov||!ov.split||!ov.split.length)return w;
+  const roster={}; scwsRoster(w.date).forEach(r=>roster[r.name]=r);
+  const seen=w.splits.concat(w.commissions);
+  const info=n=>roster[n]||seen.filter(x=>x.name===n)[0]||{hours:0,role:'',section:''};
+  const share=scwsR2(w.pool/ov.split.length*SCWS_RATE);
+  w.share=share;
+  w.splits=ov.split.map(n=>{const i=info(n);
+    return {name:n,role:i.role||'Server',hours:i.hours||0,amt:share,section:i.section||''};});
+  w.commissions=(ov.comm||[]).map(n=>{const i=info(n), m=(ov.mult&&ov.mult[n]!=null)?ov.mult[n]:1;
+    return {name:n,why:'adjusted by '+(ov.by||'a manager'),role:i.role||'',hours:i.hours||0,mult:m,amt:scwsR2(share*m)};});
+  w.totalSplit=scwsR2(w.splits.reduce((a,x)=>a+x.amt,0));
+  w.totalComm=scwsR2(w.commissions.reduce((a,x)=>a+x.amt,0));
+  w.totalPaid=scwsR2(w.totalSplit+w.totalComm);
+  w.houseKeeps=scwsR2(w.pool-w.totalSplit);
+  w.overridden=true; w.overBy=ov.by||''; w.overAt=ov.at||'';
+  w.flags=(w.flags||[]).filter(f=>f.indexOf('INSTRUCTION')>=0);
+  w.ok=!w.flags.length;
+  return w;
+}
+
 function scwsNights(){
   return Object.keys(SCWS.clock).sort().reverse().map(iso=>{
     const cd=SCWS.clock[iso]||{};
-    if(cd.sheet&&!cd.sheet.unverified&&cd.pool!=null)return scwsSheetToNight(iso,cd);
+    if(cd.sheet&&!cd.sheet.unverified&&cd.pool!=null)return scwsApplyOverride(scwsSheetToNight(iso,cd),cd.over);
     const w=scwsCompute({date:iso, pool:cd.pool!=null?cd.pool:null, shifts:cd.shifts||[],
       sched:scwsSchedFor(iso),
       opts:{trainees:cd.trainees||[], overrides:SCWS.over[iso]||null}});
@@ -6910,7 +6972,9 @@ function scwsNights(){
       (cd.sheet.flags||[]).forEach(f=>{if(w.flags.indexOf(f)<0)w.flags.push(f);});
       w.ok=false;
     }
-    w.covers=cd.covers; return w;
+    w.covers=cd.covers;
+    if(cd.over)scwsApplyOverride(w,cd.over);
+    return w;
   }).filter(w=>w.pool!=null);
 }
 
@@ -6936,7 +7000,8 @@ function scwsPaint(all,periods){
   let h='<div class="subtabs" id="scwsTabs"><span class="subpill"></span>'
       + `<button class="subtab ${SCWS.sub==='sheet'?'active':''}" data-sc="sheet">Nights</button>`
       + `<button class="subtab ${SCWS.sub==='people'?'active':''}" data-sc="people">By person</button>`
-      + `<button class="subtab ${SCWS.sub==='flags'?'active':''}" data-sc="flags">Review${flagged?' ('+flagged+')':''}</button></div>`;
+      + `<button class="subtab ${SCWS.sub==='flags'?'active':''}" data-sc="flags">Review${flagged?' ('+flagged+')':''}</button>`
+      + `<button class="subtab ${SCWS.sub==='report'?'active':''}" data-sc="report">Report</button></div>`;
 
   h+='<div class="scws-range"><select id="scwsPeriod" class="rc-select">'
     + periods.map(p=>`<option value="${p}"${p===SCWS.period?' selected':''}>${scwsPeriodRange(p).label}</option>`).join('')
@@ -6968,10 +7033,28 @@ function scwsPaint(all,periods){
         + '<ul class="scws-flags">'+n.flags.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul></div>').join('')
       : '<p class="board-empty">Nothing to review — every night in this period computed cleanly.</p>';
   }
+  else if(SCWS.sub==='report'){
+    const per=scwsReportRows(rows);
+    const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,n:a.n+r.total}),{p:0,h:0,n:0});
+    const unver=rows.filter(n=>!n.ok).length;
+    h+=`<p class="scws-foot" style="margin:0 0 10px">Everything paid in <b>${R.label}</b>, by person. `
+      +`This is what Krista needs — the CSV carries the same figures plus a night-by-night sheet.</p>`;
+    if(unver)h+=`<p class="scws-foot" style="color:#e6c878;margin:0 0 10px">`
+      +`${unver} night${unver>1?'s':''} in this period still ${unver>1?'have':'has'} an open flag. `
+      +`Settle them under Review before sending.</p>`;
+    h+='<table class="scws-tbl"><thead><tr><th>Name</th><th>Nights</th><th>From pool</th><th>From house</th><th>Total</th></tr></thead><tbody>';
+    per.forEach(r=>h+=`<tr><td class="nm">${esc(r.name)}</td><td>${r.nights}</td><td>${scwsMoney(r.pool)}</td><td>${scwsMoney(r.house)}</td><td><b>${scwsMoney(r.total)}</b></td></tr>`);
+    h+=`</tbody><tfoot><tr><td>Total</td><td></td><td>${scwsMoney(t.p)}</td><td>${scwsMoney(t.h)}</td><td><b>${scwsMoney(t.n)}</b></td></tr></tfoot></table>`;
+    h+='<div class="scws-btns"><button class="pri" id="scwsCsvBtn">Download CSV</button>'
+      +'<button id="scwsCopyBtn">Copy for email</button></div>';
+  }
   else {
     h+=rows.map(n=>{
       let s=`<div class="scws-night${n.ok?'':' scws-flagged'}"><div class="scws-nh"><b>${fmtLong(n.date)}</b>`
-          + `<span>${scwsMoney(n.pool)} pool · ${n.splits.length}-way · ${scwsMoney(n.share)} a share</span></div>`;
+          + `<span>${scwsMoney(n.pool)} pool · ${n.splits.length}-way · ${scwsMoney(n.share)} a share</span>`
+          + (n.overridden?`<span class="scws-over">adjusted by ${esc(n.overBy||'a manager')}</span>`:'')
+          + (scwsCanEdit()?`<button class="scws-adj" data-adj="${n.date}">Adjust</button>`:'')
+          + `</div>`;
       s+='<table class="scws-tbl"><tbody>';
       n.splits.forEach(x=>s+=`<tr><td class="nm">${esc(x.name)}</td><td class="scws-why">split · ${x.section?esc(x.section):(x.role==='Bartender'?'bar':'server')}</td><td>${x.hours}h</td><td>${scwsMoney(x.amt)}</td></tr>`);
       n.commissions.forEach(c=>s+=`<tr class="scws-comm"><td class="nm">${esc(c.name)}</td><td class="scws-why">${esc(c.why)}${c.mult<1?' · '+c.mult+'×':''}</td><td>${c.hours}h</td><td>${scwsMoney(c.amt)}</td></tr>`);
@@ -6983,14 +7066,159 @@ function scwsPaint(all,periods){
 
   h+=`<p class="scws-foot">Rate ${Math.round(SCWS_RATE*100)}% of a pool share. Commissions are matched shares paid by the house, not out of the pool.
       Short shifts under ${Math.round(SCWS_PRORATE_BELOW*100)}% of the night are prorated by clocked hours.
+      Computed from the Revel clock plus the nightly manager log; Tim and Sam can adjust any night,
+      and Reset puts the computed numbers back.
       <b>Draft — not the system of record until Tim signs off.</b></p>`;
 
   body.innerHTML=h;
   const sel=$('scwsPeriod'); if(sel)sel.onchange=()=>{SCWS.period=sel.value;scwsPaint(all,periods);};
   const tabs=$('scwsTabs');
   if(tabs&&typeof initPill==='function')initPill(tabs,tabs.querySelector('.subpill'),'sc',v=>{SCWS.sub=v;scwsPaint(all,periods);});
+  body.querySelectorAll('[data-adj]').forEach(b=>{ b.onclick=()=>scwsEdit(b.getAttribute('data-adj')); });
+  const csv=$('scwsCsvBtn'); if(csv)csv.onclick=()=>scwsDownloadCSV(rows,R.label);
+  const cp=$('scwsCopyBtn');  if(cp)cp.onclick=()=>scwsCopyReport(rows,R.label);
 }
 
+
+/* ---------- the override editor ----------
+   Tim and Sam settle who is in the pool and who the house pays. The computed sheet is a
+   proposal; this is the decision. Nothing is destroyed — Reset drops the override and the
+   computed numbers come straight back. */
+var SCWS_ED = null;
+
+function scwsEdit(iso){
+  if(!scwsCanEdit())return;
+  const all=scwsNights(), n=all.filter(x=>x.date===iso)[0]; if(!n)return;
+  const roster=scwsRoster(iso);
+  const state={};
+  roster.forEach(r=>state[r.name]='off');
+  n.splits.forEach(x=>state[x.name]='split');
+  n.commissions.forEach(x=>{state[x.name]='comm';});
+  const mult={}; n.commissions.forEach(x=>{if(x.mult<1)mult[x.name]=x.mult;});
+  SCWS_ED={iso:iso,pool:n.pool,state:state,mult:mult,roster:roster};
+
+  let m=$('scwsModal');
+  if(!m){ m=document.createElement('div'); m.className='modal'; m.id='scwsModal';
+    m.innerHTML='<div class="modal-card"><h3>Adjust the split</h3><p id="scwsEdSub"></p>'
+      +'<div id="scwsEdBody" style="overflow-y:auto;min-height:0;flex:1"></div>'
+      +'<div class="modal-actions"><button class="btn" id="scwsEdReset">Reset to computed</button>'
+      +'<button class="btn" id="scwsEdCancel">Cancel</button>'
+      +'<button class="btn primary" id="scwsEdSave">Save</button></div></div>';
+    document.body.appendChild(m);
+    m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
+    $('scwsEdCancel').onclick=()=>m.classList.remove('open');
+    $('scwsEdSave').onclick=scwsSaveOverride;
+    $('scwsEdReset').onclick=scwsResetOverride;
+  }
+  $('scwsEdSub').textContent=fmtLong(iso)+' · '+scwsMoney(n.pool)+' pool';
+  scwsEdPaint();
+  m.classList.add('open');
+}
+
+function scwsEdPaint(){
+  const E=SCWS_ED; if(!E)return;
+  const split=Object.keys(E.state).filter(k=>E.state[k]==='split');
+  const comm=Object.keys(E.state).filter(k=>E.state[k]==='comm');
+  const share=split.length?scwsR2(E.pool/split.length*SCWS_RATE):0;
+  let h='<table class="scws-ed"><tbody>';
+  E.roster.forEach(r=>{
+    const st=E.state[r.name]||'off';
+    const m=E.mult[r.name]!=null?E.mult[r.name]:1;
+    const amt=st==='split'?share:(st==='comm'?scwsR2(share*m):0);
+    h+='<tr><td class="nm">'+esc(r.name)+'</td>'
+      +'<td style="color:var(--card-soft);font-size:12px">'+(r.hours||0)+'h</td>'
+      +'<td><span class="seg" data-n="'+esc(r.name)+'">'
+      +'<button data-v="split" class="'+(st==='split'?'on':'')+'">Pool</button>'
+      +'<button data-v="comm" class="'+(st==='comm'?'on':'')+'">House</button>'
+      +'<button data-v="off" class="'+(st==='off'?'on':'')+'">—</button></span></td>'
+      +'<td style="text-align:right">'+(amt?scwsMoney(amt):'<span style="color:var(--card-soft)">—</span>')
+      +(st==='comm'&&m<1?' <span style="color:var(--card-soft);font-size:11px">'+m+'x</span>':'')+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  h+='<div class="scws-sum"><span><b>'+split.length+'-way</b> split</span>'
+    +'<span><b>'+scwsMoney(share)+'</b> a share</span>'
+    +'<span><b>'+comm.length+'</b> house-paid</span>'
+    +'<span>from pool <b>'+scwsMoney(scwsR2(share*split.length))+'</b></span>'
+    +'<span>from house <b>'+scwsMoney(scwsR2(comm.reduce((a,k)=>a+share*(E.mult[k]!=null?E.mult[k]:1),0)))+'</b></span></div>';
+  if(!split.length)h+='<p style="color:var(--rust,#a8452c);font-size:12.5px;margin:8px 0 0">Nobody in the pool — at least one person has to split it.</p>';
+  $('scwsEdBody').innerHTML=h;
+  $('scwsEdBody').querySelectorAll('.seg button').forEach(b=>{
+    b.onclick=()=>{ const nm=b.parentNode.getAttribute('data-n');
+      SCWS_ED.state[nm]=b.getAttribute('data-v'); scwsEdPaint(); };
+  });
+  const sv=$('scwsEdSave'); if(sv)sv.disabled=!split.length;
+}
+
+function scwsSaveOverride(){
+  const E=SCWS_ED; if(!E)return;
+  const split=Object.keys(E.state).filter(k=>E.state[k]==='split');
+  const comm=Object.keys(E.state).filter(k=>E.state[k]==='comm');
+  if(!split.length)return;
+  const ov={split:split,comm:comm,mult:E.mult,by:scwsFirst(me&&me.name),at:new Date().toISOString()};
+  if(SCWS.clock[E.iso])SCWS.clock[E.iso].over=ov;
+  const done=()=>{ $('scwsModal').classList.remove('open'); scwsRender(); };
+  if(fbReady&&fbDb&&!DEMO){
+    fbDb.collection('revel').doc(E.iso).set({scws_override:ov},{merge:true}).then(done)
+      .catch(function(e){ alert('Could not save: '+(e&&e.message?e.message:'write failed')); });
+  } else done();
+}
+
+function scwsResetOverride(){
+  const E=SCWS_ED; if(!E)return;
+  if(SCWS.clock[E.iso])SCWS.clock[E.iso].over=null;
+  const done=()=>{ $('scwsModal').classList.remove('open'); scwsRender(); };
+  if(fbReady&&fbDb&&!DEMO){
+    fbDb.collection('revel').doc(E.iso).set({scws_override:null},{merge:true}).then(done)
+      .catch(function(e){ alert('Could not reset: '+(e&&e.message?e.message:'write failed')); });
+  } else done();
+}
+
+/* ---------- the pay-period report for Krista ---------- */
+function scwsReportRows(rows){
+  const per={};
+  rows.forEach(n=>{
+    n.splits.forEach(x=>{const p=per[x.name]=per[x.name]||{pool:0,house:0,nights:0};p.pool+=x.amt;p.nights++;});
+    n.commissions.forEach(x=>{const p=per[x.name]=per[x.name]||{pool:0,house:0,nights:0};p.house+=x.amt;p.nights++;});
+  });
+  return Object.keys(per).sort().map(k=>({name:k,nights:per[k].nights,
+    pool:scwsR2(per[k].pool),house:scwsR2(per[k].house),total:scwsR2(per[k].pool+per[k].house)}));
+}
+
+function scwsReportCSV(rows,label){
+  const per=scwsReportRows(rows);
+  let c='San Fermo service charge — '+label+'\n\n';
+  c+='Name,Nights,From pool,From house,Total\n';
+  per.forEach(r=>{c+=[r.name,r.nights,r.pool.toFixed(2),r.house.toFixed(2),r.total.toFixed(2)].join(',')+'\n';});
+  const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,t:a.t+r.total}),{p:0,h:0,t:0});
+  c+=['TOTAL','',t.p.toFixed(2),t.h.toFixed(2),t.t.toFixed(2)].join(',')+'\n';
+  c+='\nNight,Pool,Split,Share,Paid from pool,Paid by house,Total\n';
+  rows.slice().sort((a,b)=>a.date<b.date?-1:1).forEach(n=>{
+    c+=[n.date,n.pool.toFixed(2),n.splits.length+'-way',n.share.toFixed(2),
+        n.totalSplit.toFixed(2),n.totalComm.toFixed(2),n.totalPaid.toFixed(2)].join(',')+'\n';});
+  return c;
+}
+
+function scwsDownloadCSV(rows,label){
+  const b=new Blob([scwsReportCSV(rows,label)],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);
+  a.download='san-fermo-service-charge-'+label.replace(/[^0-9a-zA-Z]+/g,'-').toLowerCase()+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+function scwsCopyReport(rows,label){
+  const per=scwsReportRows(rows);
+  const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,t:a.t+r.total}),{p:0,h:0,t:0});
+  let x='San Fermo — service charge, '+label+'\n\n';
+  per.forEach(r=>{x+=r.name+' — '+scwsMoney(r.total)+'  ('+scwsMoney(r.pool)+' pool + '+scwsMoney(r.house)+' house, '+r.nights+' nights)\n';});
+  x+='\nTotal to staff: '+scwsMoney(t.t)+'  ('+scwsMoney(t.p)+' from the pool, '+scwsMoney(t.h)+' paid by the house)\n';
+  const un=rows.filter(n=>!n.ok).length;
+  if(un)x+='\n'+un+' night'+(un>1?'s':'')+' still flagged for review.\n';
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(x).then(()=>{const b=$('scwsCopyBtn');if(b){b.textContent='Copied';setTimeout(()=>b.textContent='Copy for email',1600);}});
+  }
+}
 
 /* ---------- home card ---------- */
 function scwsCardHTML(){ return wideCardHTML('scws','⚖','Service Charge','Last night\'s split'); }
