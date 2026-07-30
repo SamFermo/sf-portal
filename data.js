@@ -3360,6 +3360,116 @@ window.SF = {
     }
    ],
    "added": "2026-07-18"
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "L'Archetipo Greco Bianco IGP Salento 2024",
+   "vintage": "2024",
+   "region": "Salento, Puglia, Italy",
+   "type": "white",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Greco Bianco",
+   "pour": "Green apple, pineapple, honey and white flowers, with a mineral, savory finish — a straw-gold, medium-bodied Greco from a Puglian estate at the forefront of synergistic farming.",
+   "producer": "L'Archetipo was founded by Francesco, a grape farmer's son turned agronomist who converted to organic farming in the '80s, then biodynamics in 2000, and ultimately pioneered 'Synergistic Agriculture' — a no-plow approach linking every organism in the ecosystem. He is now a leading voice for sustainable farming in Italy. (Research puts this bottling at ~12.5% ABV with a few days of skin contact before a slow, cool ferment and two years on lees in steel; the fresh-sheet note doesn't specify either — confirm with your lead before quoting.)",
+   "winemaking": "Spontaneous fermentation with indigenous yeasts following a short period of skin contact, then a slow, low-temperature ferment. Aged on the lees for roughly two years in stainless steel, stirred every 15 days.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 3,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 4,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 3,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "L'Archetipo",
+     "pron": "lar-KEH-tee-poh"
+    },
+    {
+     "term": "Greco Bianco",
+     "pron": "GREH-koh bee-AHN-koh"
+    },
+    {
+     "term": "Salento",
+     "pron": "sah-LEN-toh"
+    }
+   ],
+   "added": "2026-07-30"
+  },
+  {
+   "section": "Bubbles",
+   "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara",
+   "vintage": "",
+   "region": "Sorbara, Modena, Emilia-Romagna, Italy",
+   "type": "sparkling",
+   "grapes": "Lambrusco di Sorbara",
+   "glass": "",
+   "bottle": "",
+   "pour": "Vibrant pink with fine, persistent bubbles — fresh raspberry and strawberry, a lift of violet, dry and refreshing with bright acidity. The most delicate style of Lambrusco.",
+   "producer": "Founded in 1920, Paltrinieri farms 17 hectares between the Secchia and Panaro rivers in Modena; 15 of them are the sandy-loam 'Cristo' vineyard where these grapes grow. The wine is named for St. Agatha, patron saint of Sorbara. Alberto Paltrinieri, who took over in 1998, was among the first to gamble on a mono-varietal Sorbara. (Research puts it at ~11% ABV and notes some bottlings blend in Salomino rather than being 100% Sorbara — confirm the vintage and blend with your lead before quoting.)",
+   "winemaking": "Grapes are gently pressed and vatted for a first fermentation, then a second fermentation by the Martinotti (Charmat) method in pressurized autoclaves, using native yeasts. Bottled at low pressure to preserve the fruit and varietal aromatics.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 2,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 4,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Paltrinieri",
+     "pron": "pal-tree-nee-EH-ree"
+    },
+    {
+     "term": "Sant'Agata",
+     "pron": "sahnt-AH-gah-tah"
+    },
+    {
+     "term": "Lambrusco di Sorbara",
+     "pron": "lahm-BROOS-koh dee sor-BAH-rah"
+    }
+   ],
+   "added": "2026-07-30"
   }
  ],
  "bar": {
@@ -6768,7 +6878,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "",
-       ""
+       "R/O"
       ]
      },
      {
@@ -6799,11 +6909,11 @@ window.SF = {
     "label": "Farm Dinners",
     "notes": [],
     "coverage": [
-     "",
-     "",
-     "",
-     "",
-     "",
+     "3:30 Bar",
+     "3:30 serve",
+     "3:30 serve",
+     "3:30 serve",
+     "3:30 serve",
      "",
      ""
     ],
@@ -6955,13 +7065,13 @@ window.SF = {
      {
       "name": "Sabba",
       "shifts": [
-       "3:30 Bar",
-       "3:30 serve",
-       "3:30 serve",
-       "3:30 serve",
-       "3:30 serve",
-       "",
-       ""
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O"
       ]
      },
      {
@@ -12051,5 +12161,5 @@ window.SF = {
    }
   }
  },
- "build": "1785330866"
+ "build": "1785417393"
 };
