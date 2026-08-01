@@ -1096,6 +1096,26 @@ body.locked{overflow:hidden;}
 .ln-strip tr:first-child td{color:var(--ink); font-weight:600;}
 .ln-strip .d{font-size:11px; font-weight:700; margin-left:5px;}
 .ln-strip .d.up{color:#7fc98a;} .ln-strip .d.down{color:#e08a6a;} .ln-strip .d.flat{color:var(--ink-mute);}
+/* Keeps a wide night-by-night table inside its card instead of past the screen edge. */
+.ln-tablewrap{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 -2px; padding:0 2px;}
+.ln-tablewrap .ln-strip{min-width:100%; width:auto;}
+.ln-tablewrap .ln-strip th,.ln-tablewrap .ln-strip td{white-space:nowrap;}
+/* Recap period stepper + period-vs-period comparison */
+.rc-step{display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 12px;}
+.rc-step button{flex:0 0 38px; height:32px; border-radius:9px; border:1px solid rgba(205,216,244,.22); background:rgba(205,216,244,.06); color:var(--ink); font-size:17px; line-height:1; font-weight:700; cursor:pointer; font-family:inherit;}
+.rc-step button:disabled{opacity:.28; cursor:default;}
+.rc-step-lbl{flex:1; text-align:center; font-size:13px; font-weight:700; letter-spacing:.02em; color:var(--ink);}
+.rc-cmp{font-variant-numeric:tabular-nums;}
+.rc-cmp-head,.rc-cmp-row{display:flex; align-items:center; gap:6px; padding:6px 0;}
+.rc-cmp-row{border-top:1px solid rgba(205,216,244,.07);}
+.rc-cmp-head{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-mute); font-weight:700;}
+.rc-cmp-k{flex:1.5; font-size:12.5px; color:var(--ink-soft); text-align:left;}
+.rc-cmp-head .rc-cmp-k{font-size:10.5px;}
+.rc-cmp-a,.rc-cmp-b{flex:1.1; text-align:right; font-size:12.5px; color:var(--ink);}
+.rc-cmp-b{color:var(--ink-mute);}
+.rc-cmp-head .rc-cmp-a,.rc-cmp-head .rc-cmp-b{font-size:10.5px; color:var(--ink-mute);}
+.rc-cmp-d{flex:0 0 52px; text-align:right;}
+.rc-cmp-na{font-size:10px; color:var(--ink-mute);}
 .ln-wine-sum{font-size:12.5px; color:var(--ink-mute); margin-bottom:9px; font-variant-numeric:tabular-nums;}
 .ln-wine-tabs{margin:2px 0 10px; position:relative;}
 .ln-na-row{margin-top:2px;}
@@ -1517,7 +1537,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785607277';   // stamped by build-data.py at every deploy
+const BUILD='1785607998';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4866,7 +4886,11 @@ function rcCats(d){
   const n=(d.drinks&&d.drinks.na&&d.drinks.na.rev)||0;
   return {food:f,liquor:l,wine:w,na:n};
 }
-var RC={rows:[],rev:{},board:{},scope:'night',from:null,to:null,records:null};
+// wkOff / moOff step the Week and Month tabs backwards (0 = current, -1 = the one
+// before it). Added 2026-08-01: "This month" rolled to August at midnight on the 1st
+// and July became unreachable except through Range, which drops the projection,
+// records, and the period comparison. Stepping keeps the full view on a past period.
+var RC={rows:[],rev:{},board:{},scope:'night',from:null,to:null,records:null,wkOff:0,moOff:0};
 
 /* --- date helpers. All arithmetic is done on YYYY-MM-DD strings via a noon-local Date so a
    DST boundary can never shift a day, which is what bit the timestamp rendering earlier. --- */
@@ -4877,6 +4901,8 @@ function rcShift(iso,n){ const d=rcD(iso); d.setDate(d.getDate()+n); return rcIS
 function rcMonday(iso){ const d=rcD(iso), w=(d.getDay()+6)%7; d.setDate(d.getDate()-w); return rcISO(d); }
 function rcMonthStart(iso){ return iso.slice(0,7)+'-01'; }
 function rcMonthEnd(iso){ const d=rcD(iso); d.setMonth(d.getMonth()+1,0); return rcISO(d); }
+// Day pinned to 1 before shifting, so stepping back from the 31st can't skip a short month.
+function rcMonthShift(iso,n){ const d=rcD(rcMonthStart(iso)); d.setMonth(d.getMonth()+n,1); return rcISO(d); }
 function rcSpan(from,to){ const out=[]; let c=from, guard=0;
   while(c<=to && guard++<800){ out.push(c); c=rcShift(c,1); } return out; }
 
@@ -5461,12 +5487,19 @@ function rcNightHTML(){
    that actually posted. */
 function rcWindow(scope){
   const today=todayISO();
-  if(scope==='wk'){ const f=rcMonday(today);
-    return {from:f, to:rcShift(f,6), label:'This week',
-      title:'This week', lede:'Monday '+lnPrettyDate(f)+' through Sunday '+lnPrettyDate(rcShift(f,6))+'.'}; }
-  if(scope==='month'){ const f=rcMonthStart(today), t=rcMonthEnd(today);
-    return {from:f, to:t, label:rcD(f).toLocaleDateString(undefined,{month:'long'}),
-      title:rcD(f).toLocaleDateString(undefined,{month:'long'})+' so far',
+  if(scope==='wk'){
+    const off=RC.wkOff||0, f=rcShift(rcMonday(today),off*7), t=rcShift(f,6);
+    const cur=(off===0);
+    return {from:f, to:t, offset:off, live:cur,
+      label:cur?'This week':'That week',
+      title:cur?'This week':(off===-1?'Last week':'Week of '+lnPrettyDate(f)),
+      lede:'Monday '+lnPrettyDate(f)+' through Sunday '+lnPrettyDate(t)+'.'}; }
+  if(scope==='month'){
+    const off=RC.moOff||0, f=rcMonthShift(rcMonthStart(today),off), t=rcMonthEnd(f);
+    const cur=(off===0), nm=rcD(f).toLocaleDateString(undefined,{month:'long'});
+    return {from:f, to:t, offset:off, live:cur,
+      label:nm,
+      title:nm+(cur?' so far':' '+f.slice(0,4)),
       lede:'Calendar month, '+lnPrettyDate(f)+' through '+lnPrettyDate(t)+'.'}; }
   const f=RC.from||rcShift(today,-13), t=RC.to||today;
   return {from:f, to:t, label:'Range',
@@ -5475,6 +5508,84 @@ function rcWindow(scope){
 }
 function rcRowsIn(from,to){
   return RC.rows.slice().reverse().filter(function(d){ return d.id>=from&&d.id<=to; });
+}
+
+/* --- PERIOD STEPPER + LIKE-FOR-LIKE COMPARISON (added 2026-08-01) ---------------------------
+   Two problems this solves. One, a period became unreachable the moment it ended: at 00:01 on
+   the 1st, "This month" was August and July was gone. Two, the honest comparison for a period
+   still in progress is not against the whole prior period. On 1 August, August-so-far is one
+   night and July is thirty-one, so a raw side-by-side reads as a 97% collapse. When the window
+   is live we truncate the prior period to the same number of elapsed days and say so. */
+function rcStepDisabled(scope,dir){
+  const off=(scope==='wk'?RC.wkOff:RC.moOff)||0;
+  if(dir>0)return off>=0;                       // never step into the future
+  const oldest=(RC.rows[RC.rows.length-1]||{}).id;
+  if(!oldest)return true;
+  const probe=(scope==='wk')?rcShift(rcMonday(todayISO()),(off-1)*7)
+                           :rcMonthShift(rcMonthStart(todayISO()),off-1);
+  return probe<rcMonthStart(oldest);            // nothing captured that far back
+}
+function rcStep(scope,dir){
+  if(rcStepDisabled(scope,dir))return;
+  if(scope==='wk')RC.wkOff=(RC.wkOff||0)+dir; else RC.moOff=(RC.moOff||0)+dir;
+  rcPaint(); window.scrollTo(0,0);
+}
+function rcStepperHTML(scope,w){
+  const kind=scope==='wk'?'week':'month';
+  return '<div class="rc-step">'+
+    '<button data-rcstep="'+scope+':-1"'+(rcStepDisabled(scope,-1)?' disabled':'')+
+      ' aria-label="Previous '+kind+'">‹</button>'+
+    '<span class="rc-step-lbl">'+esc(w.title)+'</span>'+
+    '<button data-rcstep="'+scope+':1"'+(rcStepDisabled(scope,1)?' disabled':'')+
+      ' aria-label="Next '+kind+'">›</button>'+
+    '</div>';
+}
+function rcPrevWindow(scope,w){
+  if(scope==='wk'){ const f=rcShift(w.from,-7); return {from:f,to:rcShift(f,6)}; }
+  const f=rcMonthShift(w.from,-1); return {from:f,to:rcMonthEnd(f)};
+}
+function rcCmpRow(label,a,b,fmt,invert){
+  const d=(b==null||!b)?null:((a/b-1)*100);
+  const pill=d==null?'<span class="rc-cmp-na">no basis</span>'
+    :'<span class="ln-d '+((invert?-d:d)>=0?'up':'down')+'">'+(d>=0?'+':'')+d.toFixed(0)+'%</span>';
+  return '<div class="rc-cmp-row"><span class="rc-cmp-k">'+label+'</span>'+
+    '<span class="rc-cmp-a">'+fmt(a)+'</span>'+
+    '<span class="rc-cmp-b">'+fmt(b)+'</span>'+
+    '<span class="rc-cmp-d">'+pill+'</span></div>';
+}
+function rcCompareBlock(scope,w){
+  const prev=rcPrevWindow(scope,w);
+  const today=todayISO();
+  // Live period: cut both windows to the same number of elapsed days.
+  let curTo=w.to, prevTo=prev.to, note='', elapsed=null;
+  if(w.live&&today<w.to){
+    elapsed=rcSpan(w.from,today).length;
+    curTo=today;
+    prevTo=rcShift(prev.from,elapsed-1);
+    if(prevTo>prev.to)prevTo=prev.to;
+  }
+  const curRows=rcRowsIn(w.from,curTo), prevRows=rcRowsIn(prev.from,prevTo);
+  if(!prevRows.length)return '';
+  const A=rcTotals(curRows), B=rcTotals(prevRows);
+  const kind=scope==='wk'?'week':'month';
+  const prevName=scope==='wk'?('week of '+lnPrettyDate(prev.from))
+    :rcD(prev.from).toLocaleDateString(undefined,{month:'long'});
+  note=elapsed
+    ? 'First '+elapsed+' day'+(elapsed===1?'':'s')+' of each '+kind+', so the two sides cover the same ground. '+
+      A.nights+' night'+(A.nights===1?'':'s')+' against '+B.nights+'.'
+    : 'Full '+kind+' against full '+kind+'. '+A.nights+' night'+(A.nights===1?'':'s')+' against '+B.nights+'.';
+  return '<div class="ln-sec">Against the '+(scope==='wk'?'week before':'month before')+'</div>'+
+    '<div class="ln-card"><div class="rc-cmp">'+
+      '<div class="rc-cmp-head"><span class="rc-cmp-k"></span>'+
+        '<span class="rc-cmp-a">'+esc(w.live?'Now':w.title)+'</span>'+
+        '<span class="rc-cmp-b">'+esc(prevName)+'</span><span class="rc-cmp-d"></span></div>'+
+      rcCmpRow('Product sales',A.rest,B.rest,lnMoney0)+
+      rcCmpRow('Guests',A.covers,B.covers,lnNum)+
+      rcCmpRow('Per guest',A.covers?A.rest/A.covers:0,B.covers?B.rest/B.covers:0,lnMoney2)+
+      rcCmpRow('Labor rate',A.lpct,B.lpct,lnPct,true)+
+      rcCmpRow('Discount rate',A.dpct,B.dpct,lnPct,true)+
+    '</div><div class="ln-note" style="margin-top:10px">'+note+
+    ' On labor and discounts a fall is the good direction, so the colour follows the outcome, not the sign.</div></div>';
 }
 /* Native date inputs, and the presets mirror the ones Revel offers so the muscle memory
    carries over. Changing either end re-renders in place and keeps you on the Range tab. */
@@ -5501,23 +5612,31 @@ function rcQuick(key){
   else { RC.to=today; RC.from=rcShift(today,-(+key-1)); }
 }
 
-function rcRangeHTML(rows,title,lede,proj,projLabel,recKind){
-  if(!rows.length){
-    return (proj?rcProjBlock(proj,projLabel):'')+
-      '<div class="ln-fail">No nights captured in this range yet.</div>';
-  }
-  const R={rest:0,farm:0,net:0,covers:0,hours:0,wages:0,lprod:0,ln:0,gross:0,disc:0};
+/* Window totals. Pulled out of rcRangeHTML so the period-comparison strip can total a
+   second window the exact same way, rather than a parallel implementation that drifts. */
+function rcTotals(rows){
+  const R={rest:0,farm:0,net:0,covers:0,hours:0,wages:0,lprod:0,ln:0,gross:0,disc:0,nights:0};
   rows.forEach(function(d){ const rev=RC.rev[d.id]||null;
     R.rest+=rcProd(d,rev)||0; R.farm+=rcFarm(rev); R.net+=rcNet(d,rev)||0; R.covers+=d.covers||0;
     R.gross+=rcGross(d,rev)||0; R.disc+=rcDisc(d);
+    if(!rcClosed(d))R.nights++;
     // Labor stays struck against GROSS product, because that is the denominator Revel's own
     // Labor report uses for the percentage stored on each night. Switching it here would make
     // the range total disagree with every per-night figure in the table below it, and would
     // silently move the 30–35% target band that was set on the old basis.
     if(d.labor&&d.labor.clocked_wages){ R.hours+=d.labor.hours||0; R.wages+=d.labor.clocked_wages;
       R.lprod+=rcGross(d,rev); R.ln++; } });
-  const lpct=R.lprod?R.wages/R.lprod*100:null;
-  const dpct=R.gross?R.disc/R.gross*100:null;
+  R.lpct=R.lprod?R.wages/R.lprod*100:null;
+  R.dpct=R.gross?R.disc/R.gross*100:null;
+  return R;
+}
+function rcRangeHTML(rows,title,lede,proj,projLabel,recKind){
+  if(!rows.length){
+    return (proj?rcProjBlock(proj,projLabel):'')+
+      '<div class="ln-fail">No nights captured in this range yet.</div>';
+  }
+  const R=rcTotals(rows);
+  const lpct=R.lpct, dpct=R.dpct;
   let h='<div class="rc-hero"><div class="ln-stat-k">'+title+'</div>'+
     rcHero('Product sales', R.rest, lnNum(R.covers)+' guests · '+lnMoney0(R.rest/R.covers)+'/guest',
       R.farm, R.net, R.farm?'rung in during this window':'no farm ring-in in this window',
@@ -5556,20 +5675,28 @@ function rcRangeHTML(rows,title,lede,proj,projLabel,recKind){
      lnStat('Heaviest night',dPeak?lnPct(dPeak.p):'—',dPeak?rcDayShort(dPeak.id)+' '+lnPrettyDate(dPeak.id):'')+
      '</div></div>';
 
-  h+='<div class="ln-sec">The nights</div><div class="ln-card"><table class="ln-strip">'+
-     '<thead><tr><th>Night</th><th>Restaurant</th><th>vs usual</th><th>Disc.</th><th>Farm</th><th>Guests</th><th>Labor</th></tr></thead><tbody>';
+  // Seven columns of tabular numbers overflowed the card and the screen on a month view,
+  // where the Total row carries six-figure money. Two fixes: the Farm column only exists on a
+  // window that actually had a farm ring-in (most don't, it was a column of em dashes), and
+  // what's left sits in a scroller so the table can never push past the card again.
+  const showFarm=R.farm>0;
+  const cols=showFarm?7:6;
+  h+='<div class="ln-sec">The nights</div><div class="ln-card"><div class="ln-tablewrap"><table class="ln-strip">'+
+     '<thead><tr><th>Night</th><th>Restaurant</th><th>vs usual</th><th>Disc.</th>'+
+     (showFarm?'<th>Farm</th>':'')+'<th>Guests</th><th>Labor</th></tr></thead><tbody>';
   rows.forEach(function(d){ const rev=RC.rev[d.id]||null, rr=rcProd(d,rev);
     const b=rcBaseline(d.id), p=b?rcDeltaPct(rr,b.mean):null;
     if(rcClosed(d)){ h+='<tr><td>'+rcDayShort(d.id)+' '+lnPrettyDate(d.id)+'</td>'+
-      '<td colspan="6" style="text-align:left;color:var(--ink-mute)">Closed</td></tr>'; return; }
+      '<td colspan="'+(cols-1)+'" style="text-align:left;color:var(--ink-mute)">Closed</td></tr>'; return; }
     h+='<tr><td>'+rcDayShort(d.id)+' '+lnPrettyDate(d.id)+'</td><td>'+lnMoney0(rr)+'</td>'+
       '<td>'+(p==null?'—':rcDPill(p))+'</td>'+
       '<td>'+(rcDisc(d)?lnMoney0(rcDisc(d)):'—')+'</td>'+
-      '<td>'+(rcFarm(rev)?lnMoney0(rcFarm(rev)):'—')+'</td><td>'+lnNum(d.covers)+'</td>'+
+      (showFarm?'<td>'+(rcFarm(rev)?lnMoney0(rcFarm(rev)):'—')+'</td>':'')+
+      '<td>'+lnNum(d.covers)+'</td>'+
       '<td>'+lnPct(d.labor&&(d.labor.pct_restaurant||d.labor.pct_clocked_proxy))+'</td></tr>'; });
-  h+='<tr><td><b>Total</b></td><td><b>'+lnMoney0(R.rest)+'</b></td><td></td><td><b>'+lnMoney0(R.disc)+
-     '</b></td><td><b>'+lnMoney0(R.farm)+
-     '</b></td><td><b>'+lnNum(R.covers)+'</b></td><td><b>'+lnPct(lpct)+'</b></td></tr></tbody></table></div>';
+  h+='<tr><td><b>Total</b></td><td><b>'+lnMoney0(R.rest)+'</b></td><td></td><td><b>'+lnMoney0(R.disc)+'</b></td>'+
+     (showFarm?'<td><b>'+lnMoney0(R.farm)+'</b></td>':'')+
+     '<td><b>'+lnNum(R.covers)+'</b></td><td><b>'+lnPct(lpct)+'</b></td></tr></tbody></table></div></div>';
   return h;
 }
 function rcDrawRange(rows){
@@ -5622,11 +5749,15 @@ function rcPaint(){
     rows=rcRowsIn(w.from,w.to);
     // A custom range that ends in the past has nothing to forecast; asking for a projection
     // there would produce an empty block rather than a wrong one, but skip it for clarity.
+    // A stepped-back week or month is finished for the same reason: no forecast, just actuals.
     const P=rcProject(w.from,w.to);
-    const wantProj=(RC.scope!=='custom')||P.ahead.length||P.missing.length;
-    body=(RC.scope==='custom'?rcRangeControls():'')+
+    const stepped=(RC.scope==='wk'||RC.scope==='month')&&!w.live;
+    const wantProj=!stepped&&((RC.scope!=='custom')||P.ahead.length||P.missing.length);
+    const stepper=(RC.scope==='wk'||RC.scope==='month')?rcStepperHTML(RC.scope,w):'';
+    body=stepper+(RC.scope==='custom'?rcRangeControls():'')+
       rcRangeHTML(rows,w.title,w.lede,wantProj?P:null,w.label,
-        RC.scope==='wk'?'week':RC.scope==='month'?'month':null);
+        RC.scope==='wk'?'week':RC.scope==='month'?'month':null)+
+      ((RC.scope==='wk'||RC.scope==='month')?rcCompareBlock(RC.scope,w):'');
   }
   el.innerHTML=seg+body;
 
@@ -5634,6 +5765,8 @@ function rcPaint(){
     b.onclick=function(){ RC.scope=b.dataset.rc; rcPaint(); window.scrollTo(0,0); }; });
   el.querySelectorAll('[data-rcq]').forEach(function(b){
     b.onclick=function(){ rcQuick(b.dataset.rcq); rcPaint(); }; });
+  el.querySelectorAll('[data-rcstep]').forEach(function(b){
+    b.onclick=function(){ const p=b.dataset.rcstep.split(':'); rcStep(p[0],+p[1]); }; });
   const fi=$('rcFrom'), ti=$('rcTo');
   if(fi&&ti){
     const apply=function(){
