@@ -350,6 +350,21 @@ nav.chips::-webkit-scrollbar{display:none;}
 .mgr-review-sub{font-size:11px; color:var(--ink-mute); margin-top:8px; line-height:1.4;}
 .mgr-flag-line{margin-top:8px; font-size:11px; font-weight:600; color:#b7791f; background:rgba(214,158,46,.1); border:1px solid rgba(214,158,46,.32); border-radius:8px; padding:6px 9px; line-height:1.4;}
 .mgr-flag-line .mfl-head{display:block; font-size:9px; letter-spacing:.06em; text-transform:uppercase; opacity:.85; margin-bottom:2px;}
+.mfl-chip{display:block; margin-top:5px; cursor:pointer; padding:5px 8px; border-radius:7px; background:rgba(214,158,46,.14); border:1px solid rgba(214,158,46,.4); transition:background .15s; color:#8a5a12;}
+.mfl-chip:hover{background:rgba(214,158,46,.26);}
+.mfl-chip .mfl-comp{font-weight:700;}
+.mfl-chip .mfl-cta{display:block; font-size:9px; letter-spacing:.05em; text-transform:uppercase; opacity:.8; margin-top:1px; font-weight:600;}
+.mfl-chip.has-std .mfl-comp::after{content:' · standard proposed'; font-weight:600; font-size:9px; letter-spacing:.04em; opacity:.7; text-transform:uppercase;}
+.flag-badge{display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px; padding:0 4px; margin-left:6px; border-radius:999px; background:#d69e2e; color:#fff; font-size:10px; font-weight:800; vertical-align:middle;}
+.subtab .tab-badge{position:absolute; top:-3px; right:4px; min-width:15px; height:15px; padding:0 3px; border-radius:999px; background:#d69e2e; color:#fff; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; z-index:3; box-shadow:0 0 0 2px #f3ecdd;}
+.cf-candidate{background:rgba(74,106,58,.09); border:1px solid rgba(74,106,58,.28); border-radius:9px; padding:9px 11px; margin:6px 0 10px; font-size:13.5px; color:#2a2419; line-height:1.5;}
+.cf-candidate .cf-cl{display:block; font-size:9px; letter-spacing:.05em; text-transform:uppercase; color:#4a6a3a; font-weight:700; margin-bottom:3px;}
+.cf-q{font-size:13px; color:var(--card-ink); margin:4px 0 8px; line-height:1.5;}
+.cf-yn{display:flex; gap:8px; margin-bottom:8px;}
+.cf-yn button{flex:1; border:none; border-radius:9px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;}
+.cf-yes{background:#4a6a3a; color:#fff;}
+.cf-no{background:#e8e0d2; color:#5a5040;}
+.cf-hint{font-size:11px; color:var(--card-mute); font-style:italic; margin-top:8px; line-height:1.4;}
 #editModal .modal-card{max-height:88dvh;}
 #editBody{overflow-y:auto; -webkit-overflow-scrolling:touch; min-height:0; flex:1;}
 #editModal textarea{flex:none; min-height:48px; max-height:120px; font-family:inherit; font-size:13.5px; resize:vertical;}
@@ -1447,6 +1462,14 @@ body.locked{overflow:hidden;}
   </div>
 </div>
 
+<div class="modal" id="confirmModal">
+  <div class="modal-card">
+    <h3 id="cfHead">Confirm component</h3>
+    <p id="cfIntro">Just this one question. Servers won't see anything until you confirm it.</p>
+    <div id="cfBody"></div>
+  </div>
+</div>
+
 <div class="modal" id="promptModal">
   <div class="modal-card">
     <h3>Menu Corrections</h3>
@@ -1467,7 +1490,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785599771';   // stamped by build-data.py at every deploy
+const BUILD='1785603213';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2046,17 +2069,33 @@ function recentBlockHTML(items,type){
 /* Manager-only review surfaces. The generator leaves a composed component's makeup
    out of the server-facing copy when it isn't specified, and lists it here so a
    manager can confirm it with the kitchen. Servers never see any of this. */
+/* A flag is either a legacy string ("component — note") or a structured object
+   {component, proposedStandard, label}. flagNorm() collapses both to one shape so
+   the card chip and the confirm modal can render either. proposedStandard, when
+   present, is a manager-only CANDIDATE the chef comps against — never server copy. */
+function flagNorm(f){
+  if(f&&typeof f==='object'){
+    const comp=(f.component||'').trim();
+    const label=f.label||(comp?comp+' — confirm composition with the kitchen':'');
+    return {component:comp||label, std:(f.proposedStandard||f.standard||'').trim()||null, label:label};
+  }
+  const s=String(f||''); const comp=s.split(/\s[—–-]\s/)[0].trim();
+  return {component:comp||s, std:null, label:s};
+}
 function reviewBannerHTML(flags){
   if(!flags||!flags.length)return '';
   let h='<div class="mgr-review"><div class="mgr-review-head">⚠ Manager review — confirm with the kitchen</div>';
-  flags.forEach(f=>h+=`<div class="mgr-review-item">${esc(f)}</div>`);
+  flags.forEach(f=>{const n=flagNorm(f);h+=`<div class="mgr-review-item">${esc(n.label)}${n.std?` <span style="opacity:.7">(standard proposed: ${esc(n.std)})</span>`:''}</div>`;});
   h+='<div class="mgr-review-sub">Remy left these out of the card on purpose rather than guess. Servers don\'t see this note. Add the real detail and re-polish, or publish as-is once confirmed.</div>';
   return h+'</div>';
 }
 function mgrFlagLineHTML(flags,origName){
   if(!flags||!flags.length)return '';
-  const oc=origName?` onclick="event.stopPropagation();openEditModal('${esc(origName).replace(/'/g,"\\'")}')" style="cursor:pointer"`:'';
-  return `<div class="mgr-flag-line"${oc}><span class="mfl-head">Manager only — tap to confirm &amp; edit</span>${flags.map(f=>esc(f)).join('<br>')}</div>`;
+  const en=esc(origName||'').replace(/'/g,"\\'");
+  let h=`<div class="mgr-flag-line"><span class="mfl-head">Manager only — tap to confirm</span>`;
+  flags.forEach((f,i)=>{const n=flagNorm(f);
+    h+=`<div class="mfl-chip${n.std?' has-std':''}" onclick="event.stopPropagation();openConfirmModal('${en}',${i})"><span class="mfl-comp">${esc(n.component)}</span><span class="mfl-cta">Tap to confirm ›</span></div>`;});
+  return h+'</div>';
 }
 
 function dishCardHTML(baseIt){
@@ -2065,11 +2104,13 @@ function dishCardHTML(baseIt){
   const origName=it._originalName||it.name;
   const rpl=replacedByLive(origName);
   if(rpl)return `<div class="card replaced"><div class="card-head"><div class="row-between"><span class="dish-name serif">${esc(it.name)}</span><span class="dish-price serif">${esc(it.price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(rpl)}</div></div></div>`;
+  const mgrFlags=(it._flags!==undefined)?it._flags:(it.flags||[]);
+  const flagBadge=(isMgr()&&mgrFlags&&mgrFlags.length)?`<span class="flag-badge" title="${mgrFlags.length} component${mgrFlags.length>1?'s':''} to confirm">${mgrFlags.length}</span>`:'';
   const editBtn=isMgr()?`<button class="edit-btn" onclick="event.stopPropagation();openEditModal('${esc(origName).replace(/'/g,"\\'")}')">&#9998;</button>`:'';
   const editedChip=it._edited?'<span class="edited-chip">edited</span>':'';
   let h=`<div class="card ${rich?'expandable':''}" id="dcard-${fcSlug(origName)}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
-      <span class="dish-name serif">${isNew(it)?newBadge():''}${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}${editedChip}${editBtn}</span>
+      <span class="dish-name serif">${isNew(it)?newBadge():''}${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}${editedChip}${flagBadge}${editBtn}</span>
       <span class="dish-price serif">${esc(it.price)}</span></div>
       <div class="dish-desc serif">${esc(it.desc)}</div>`;
   h+=allergenChips(it);
@@ -2078,7 +2119,6 @@ function dishCardHTML(baseIt){
   // Manager-only composed-component flags. Edit overlay wins (an empty array means
   // a manager re-polished and resolved it); otherwise fall back to canonical flags
   // baked in by the 6am run. Servers never see this. Tap it to open the edit modal.
-  const mgrFlags=(it._flags!==undefined)?it._flags:(it.flags||[]);
   if(isMgr()&&mgrFlags&&mgrFlags.length)h+=mgrFlagLineHTML(mgrFlags,origName);
   h+=`</div>`;
   if(rich){
@@ -2199,7 +2239,23 @@ function renderFoodTab(){
   f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
   $('ftFood').innerHTML=liveBlockHTML('dish')+f;
 }
-function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); var a=$('ftAllergens'); if(a)a.innerHTML=allergenAskHTML(); if(typeof updateAttn==='function')updateAttn(); }
+function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); var a=$('ftAllergens'); if(a)a.innerHTML=allergenAskHTML(); if(typeof updateFlagBadges==='function')updateFlagBadges(); if(typeof updateAttn==='function')updateAttn(); }
+/* Manager-only unresolved-component badge on the Food sub-tab. Counts food + dessert
+   dishes with an open flag (post-overlay, so a confirmed one drops off). Absolute-
+   positioned so it never changes the tab's width or disturbs the sliding pill. */
+function foodFlagCount(){
+  let n=0; const seen=function(it){const d=getEditedDish(it);const fl=(d._flags!==undefined)?d._flags:(d.flags||[]);if(fl&&fl.length)n++;};
+  (SF.menu.food||[]).forEach(s=>(s.items||[]).forEach(seen));
+  (SF.menu.desserts||[]).forEach(seen);
+  return n;
+}
+function updateFlagBadges(){
+  const btn=document.querySelector('#freshTabs .subtab[data-ft="food"]'); if(!btn)return;
+  let b=btn.querySelector('.tab-badge');
+  const n=isMgr()?foodFlagCount():0;
+  if(n>0){ if(!b){b=document.createElement('span');b.className='tab-badge';btn.appendChild(b);} b.textContent=n; }
+  else if(b){ b.remove(); }
+}
 let corrCopied=false;
 function genPrompt(){
   const c=getCorr();
@@ -6288,6 +6344,67 @@ function revertEdit(){
   delete MEDITS[id];renderFresh();
   if(fbReady&&fbDb){fbDb.collection('menu-edits').doc(id).delete().catch(function(){meditsLsSet();});}else{meditsLsSet();}
   $('editModal').classList.remove('open');
+}
+
+/* ===== TARGETED CONFIRM MODAL (composed-component review) =====
+   Opens ONE question for a single flagged component instead of the whole editor.
+   proposedStandard present -> yes/no-with-candidate; absent -> free-text only.
+   Save upserts the confirmed composition as an "Ingredients to know" entry and
+   removes that one flag from the dish's edit overlay. No worker call, deterministic;
+   the confirmed detail becomes server-visible, the story stays clean. */
+let cfTarget=null;
+function findDishByName(origName){
+  var dish=null, section='';
+  SF.menu.food.forEach(function(sec){sec.items.forEach(function(it){if(it.name===origName){dish=it;section=sec.section;}});});
+  if(!dish)SF.menu.desserts.forEach(function(it){if(it.name===origName){dish=it;section='Dessert';}});
+  return dish?{dish:dish,section:section}:null;
+}
+function openConfirmModal(origName,idx){
+  if(!isMgr())return;
+  var found=findDishByName(origName); if(!found)return;
+  var ed=getEditedDish(found.dish);
+  var flags=(ed._flags!==undefined)?ed._flags:(ed.flags||[]);
+  if(!flags||!flags[idx])return;
+  var n=flagNorm(flags[idx]);
+  cfTarget={originalName:origName,section:found.section,idx:idx,component:n.component,std:n.std};
+  $('cfHead').textContent='Confirm: '+n.component;
+  var h='';
+  if(n.std){
+    h+='<div class="cf-q">Does the <b>'+esc(n.component)+'</b> follow the standard preparation below?</div>';
+    h+='<div class="cf-candidate"><span class="cf-cl">Proposed standard — comp against the real recipe</span>'+esc(n.std)+'</div>';
+    h+='<div class="cf-yn"><button class="cf-yes" onclick="cfSaveConfirm(true)">Yes — that\'s it</button><button class="cf-no" onclick="cfRevealNo()">No / not quite</button></div>';
+    h+='<div id="cf-nowrap" style="display:none"><div class="em-field"><label>Actual ingredients &amp; process</label><textarea id="cf-text" style="min-height:70px">'+esc(n.std)+'</textarea></div><div class="em-actions"><button class="em-save" onclick="cfSaveConfirm(false)">Save composition</button></div></div>';
+  } else {
+    h+='<div class="cf-q">List the ingredients &amp; process for the <b>'+esc(n.component)+'</b>. There\'s no proposed standard because it isn\'t a standard recipe.</div>';
+    h+='<div class="em-field"><label>Ingredients &amp; process</label><textarea id="cf-text" style="min-height:80px" placeholder="e.g. roasted tomato, sherry vinegar, shallot, olive oil, honey"></textarea></div>';
+    h+='<div class="em-actions"><button class="em-save" onclick="cfSaveConfirm(false)">Save composition</button></div>';
+  }
+  h+='<div class="em-actions" style="margin-top:8px"><button class="em-cancel" onclick="$(\'confirmModal\').classList.remove(\'open\')">Cancel</button></div>';
+  h+='<div class="cf-hint">Saving adds this to the card\'s Ingredients-to-know and clears the flag. Servers see the composition, never the review note.</div>';
+  $('cfBody').innerHTML=h;
+  $('confirmModal').classList.add('open');
+}
+function cfRevealNo(){ var w=$('cf-nowrap'); if(w)w.style.display='block'; }
+function cfSaveConfirm(useStd){
+  if(!isMgr()||!cfTarget)return;
+  var text=useStd?(cfTarget.std||''):(($('cf-text')&&$('cf-text').value||'').trim());
+  if(!text){ if($('cf-text'))$('cf-text').focus(); return; }
+  var found=findDishByName(cfTarget.originalName); if(!found){$('confirmModal').classList.remove('open');return;}
+  var ed=getEditedDish(found.dish);
+  var ings=(ed.ingredients||[]).slice();
+  var comp=cfTarget.component, low=comp.toLowerCase();
+  var fi=ings.findIndex(function(g){return g&&(g.term||'').toLowerCase()===low;});
+  if(fi>=0)ings[fi]=Object.assign({},ings[fi],{note:text}); else ings.push({term:comp,pronunciation:null,note:text});
+  var flags=((ed._flags!==undefined)?ed._flags:(ed.flags||[])).slice();
+  flags.splice(cfTarget.idx,1);
+  var rec={originalName:cfTarget.originalName, name:ed.name, desc:ed.desc, price:ed.price,
+    pron:ed.pron||'', story:ed.story||'', ingredients:ings,
+    allergens:ed.allergens||[], canModify:ed.canModify||[], allergenNote:ed.allergenNote||'',
+    raw:!!ed.raw, section:cfTarget.section, flags:flags,
+    editedBy:(typeof currentUserName==='function'&&currentUserName())||'manager', editedAt:Date.now()};
+  commitEditRec(rec);
+  cfTarget=null;
+  $('confirmModal').classList.remove('open');
 }
 
 /* CREW BOARD — staff message board, Firestore `crew` collection.

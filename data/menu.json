@@ -383,7 +383,11 @@
      "canModify": [],
      "allergenNote": "Egg and gluten are both in the fresh egg pasta — built in. Dairy runs through the filling (ricotta, mozzarella) and the cream in the sauce, so it can't come off this dish. Allium: onion and garlic are cooked into the vodka sauce.",
      "flags": [
-      "spicy vodka sauce — specific heat level/chili type not specified, confirm with kitchen"
+      {
+       "component": "spicy vodka sauce",
+       "proposedStandard": "vodka, crushed tomato, heavy cream, onion, garlic, chili flake, parmesan, butter, salt",
+       "label": "spicy vodka sauce — confirm composition with the kitchen"
+      }
      ],
      "added": "2026-08-01"
     },
@@ -500,7 +504,13 @@
      ],
      "canModify": [],
      "allergenNote": "Fish: king salmon, central to the dish, cannot come off. UNCONFIRMED — the roasted tomato vinaigrette's composition has not been specified. Do not clear this dish for an allium or mustard allergy until the kitchen confirms what is in the vinaigrette. Served medium rare.",
-     "added": "2026-07-24"
+     "added": "2026-08-01",
+     "flags": [
+      {
+       "component": "roasted tomato vinaigrette",
+       "label": "roasted tomato vinaigrette — composition not specified, confirm with the kitchen"
+      }
+     ]
     },
     {
      "name": "Roasted Duck Breast",
@@ -543,7 +553,13 @@
       "dairy"
      ],
      "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. UNCONFIRMED — the huckleberry demi glace composition has not been specified; a standard demi carries cooked allium. Confirm with the kitchen before clearing either the demi or the dish for an allium allergy. Served medium rare.",
-     "added": "2026-07-24"
+     "added": "2026-08-01",
+     "flags": [
+      {
+       "component": "huckleberry demi glace",
+       "label": "huckleberry demi glace — composition not specified, confirm with the kitchen"
+      }
+     ]
     }
    ],
    "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
@@ -622,7 +638,11 @@
    ],
    "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate.",
    "flags": [
-    "vanilla bean pastry cream — composition not specified, confirm with kitchen"
+    {
+     "component": "vanilla bean pastry cream",
+     "proposedStandard": "whole milk, cream, egg yolk, sugar, vanilla bean, cornstarch",
+     "label": "vanilla bean pastry cream — confirm composition with the kitchen"
+    }
    ],
    "added": "2026-08-01"
   },
