@@ -2386,7 +2386,7 @@
             "",
             "Expo",
             "Expo",
-            "Expo"
+            "R/O"
           ]
         },
         {
@@ -2566,14 +2566,14 @@
         "",
         "",
         "",
-        "3:30 Bar",
-        "3:30 Bar"
+        "3:30 Serve",
+        "3:30 Serve"
       ],
       "rows": [
         {
           "name": "Sam",
           "shifts": [
-            "MD",
+            "R/O",
             "Admin/MD 5-8",
             "",
             "",
@@ -5075,7 +5075,7 @@
       "notes": [],
       "coverage": [
         "",
-        "1-close",
+        "",
         "",
         "",
         "",
@@ -5114,8 +5114,8 @@
             "",
             "",
             "",
-            "11-9",
-            "11-9",
+            "",
+            "",
             "Expo"
           ]
         },
@@ -5864,7 +5864,7 @@
             "",
             "MD",
             "MD",
-            "Expo"
+            "R/O"
           ]
         },
         {
@@ -5884,11 +5884,11 @@
           "shifts": [
             "Expo",
             "",
+            "9-5",
+            "9-5",
             "",
             "",
-            "8-6",
-            "8-6",
-            "8-6"
+            "Expo"
           ]
         },
         {
@@ -5948,7 +5948,7 @@
             "",
             "1-close",
             "1-close",
-            "Expo"
+            "1-close"
           ]
         },
         {
@@ -6040,8 +6040,8 @@
       "notes": [],
       "coverage": [
         "1-close",
-        "1-close",
-        "1-close",
+        "",
+        "",
         "",
         "",
         "",
@@ -6051,7 +6051,7 @@
         {
           "name": "Sam",
           "shifts": [
-            "MD",
+            "R/O",
             "MD",
             "",
             "",
@@ -6076,9 +6076,9 @@
           "name": "Jose",
           "shifts": [
             "Expo",
+            "",
             "Expo",
             "Expo",
-            "Expo (4-8)",
             "",
             "",
             "Expo"
@@ -6101,22 +6101,22 @@
           "shifts": [
             "R/O",
             "1-close",
+            "1-close",
             "",
+            "1-close",
             "",
-            "",
-            "12-10",
-            "1-close"
+            ""
           ]
         },
         {
           "name": "Cooper",
           "shifts": [
             "1-close",
+            "1-close",
             "",
             "",
             "",
-            "",
-            "",
+            "1-close",
             "1-close"
           ]
         },
@@ -6136,12 +6136,12 @@
           "name": "Gopala",
           "shifts": [
             "",
-            "Expo Train",
+            "Expo",
             "",
             "",
             "1-close",
             "1-close",
-            "Expo Train"
+            "1-close"
           ]
         },
         {
@@ -6171,7 +6171,7 @@
         {
           "name": "Kenji",
           "shifts": [
-            "9-7",
+            "1-close",
             "R/O",
             "R/O",
             "R/O",
@@ -6187,8 +6187,8 @@
             "",
             "1-close",
             "1-close",
-            "1-close",
-            "1-close",
+            "12-10",
+            "12-10",
             ""
           ]
         },
@@ -6233,8 +6233,8 @@
       "notes": [],
       "coverage": [
         "9-7",
-        "1-close",
-        "1-close",
+        "",
+        "",
         "",
         "",
         "",
@@ -6269,9 +6269,9 @@
           "name": "Jose",
           "shifts": [
             "Expo",
+            "",
             "Expo",
             "Expo",
-            "Expo (4-8)",
             "",
             "",
             "Expo"
@@ -6294,10 +6294,10 @@
           "shifts": [
             "1-close",
             "1-close",
+            "1-close",
             "",
             "",
             "",
-            "12-10",
             "1-close"
           ]
         },
@@ -6305,11 +6305,11 @@
           "name": "Cooper",
           "shifts": [
             "1-close",
+            "1-close",
             "",
             "",
             "",
-            "",
-            "",
+            "1-close",
             "1-close"
           ]
         },
@@ -6329,7 +6329,7 @@
           "name": "Gopala",
           "shifts": [
             "",
-            "Expo Train",
+            "Expo",
             "",
             "",
             "1-close",
@@ -6381,7 +6381,7 @@
             "1-close",
             "1-close",
             "1-close",
-            "1-close",
+            "12-10",
             ""
           ]
         },

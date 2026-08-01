@@ -353,27 +353,27 @@ window.SF = {
       "added": "2026-06-27"
      },
      {
-      "name": "Beef Ragù",
-      "desc": "fresh egg pappardelle, ground beef, tomato, garlic, onion, basil, parmigiano reggiano",
-      "price": "32",
+      "name": "Stuffed Farfalle",
+      "desc": "egg pasta stuffed with basil, ricotta & mozzarella, spicy vodka sauce, heirloom cherry tomatoes, basil",
+      "price": "30",
       "raw": false,
-      "pron": "rah-GOO",
-      "story": "Ground beef cooked down low and slow with tomato, garlic, onion, and basil until it's soft and rich. Tossed with fresh egg pappardelle and finished with Parmigiano Reggiano and a little more basil.",
+      "pron": "far-FAH-leh",
+      "story": "Bow-tie pasta made from egg dough, filled with basil, ricotta, and fresh mozzarella. Finished in a spicy vodka sauce built on onion and garlic, topped with halved heirloom cherry tomatoes and fresh basil chiffonade. Warm, creamy, and a little sharp from the heat.",
       "ingredients": [
        {
-        "term": "Ragù",
-        "pronunciation": "rah-GOO",
-        "note": "A slow-cooked Italian meat sauce — here ground beef braised down with tomato, garlic, onion, and basil until soft and rich. Built around the meat, with just enough tomato to bind it."
+        "term": "Farfalle",
+        "pronunciation": "far-FAH-leh",
+        "note": "Bow-tie shaped pasta; here made in-house from egg dough and stuffed with basil, ricotta, and mozzarella. A fresh egg dough, so it carries egg and wheat."
        },
        {
-        "term": "Pappardelle",
-        "pronunciation": "pah-par-DELL-eh",
-        "note": "Wide, flat egg-pasta ribbons, broader than tagliatelle. A fresh egg dough, so it carries egg and wheat; the wide surface holds a hearty ragù well."
+        "term": "Vodka sauce",
+        "pronunciation": null,
+        "note": "A tomato-and-cream sauce built on onion and garlic. This version is spicy."
        },
        {
-        "term": "Parmigiano Reggiano",
-        "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
-        "note": "The aged hard cheese from Emilia-Romagna, the only 'real' Parmesan; nutty, savory, crystalline. Grated over the finish."
+        "term": "Chiffonade",
+        "pronunciation": "shif-oh-NAHD",
+        "note": "Herbs sliced into thin ribbons — here fresh basil, scattered over the top."
        }
       ],
       "allergens": [
@@ -382,11 +382,12 @@ window.SF = {
        "dairy",
        "allium"
       ],
-      "canModify": [
-       "dairy"
+      "canModify": [],
+      "allergenNote": "Egg and gluten are both in the fresh egg pasta — built in. Dairy runs through the filling (ricotta, mozzarella) and the cream in the sauce, so it can't come off this dish. Allium: onion and garlic are cooked into the vodka sauce.",
+      "flags": [
+       "spicy vodka sauce — specific heat level/chili type not specified, confirm with kitchen"
       ],
-      "allergenNote": "Egg and gluten are both in the fresh egg pappardelle — no way around them. Dairy: the Parmigiano finish can come off for a leaner plate. Allium: garlic and onion are cooked down into the ragù base, not removable.",
-      "added": "2026-06-27"
+      "added": "2026-08-01"
      },
      {
       "name": "Mafaldine alla Carbonara",
@@ -593,10 +594,10 @@ window.SF = {
    },
    {
     "name": "Pavlova",
-    "desc": "rose meringue, vanilla pastry cream, macerated strawberries",
+    "desc": "meringue with marigold sugar, vanilla bean pastry cream, local peaches",
     "price": "13",
     "pron": "pav-LOH-vah",
-    "story": "A crisp-outside, marshmallow-inside meringue, named for the Russian ballerina Anna Pavlova. This one's rose-scented, topped with a cloud of vanilla pastry cream and fresh macerated strawberries. Light, a little floral, and sweet without being heavy.",
+    "story": "A crisp-outside, soft-inside meringue, named for the Russian ballerina Anna Pavlova. This one's built on marigold sugar — petals from Rain Dog Farm in Redmond, dried and ground with sugar — flavoring the meringue base. Topped with vanilla bean pastry cream and gently cooked local Washington peaches. Floral, bright, and delicate.",
     "ingredients": [
      {
       "term": "Pavlova",
@@ -609,9 +610,9 @@ window.SF = {
       "note": "whipped egg whites and sugar, baked low and slow until crisp."
      },
      {
-      "term": "Macerated",
-      "pronunciation": "MASS-er-ay-ted",
-      "note": "fruit softened and drawn out with a little sugar until juicy and glossy."
+      "term": "Marigold sugar",
+      "pronunciation": null,
+      "note": "marigold petals from Rain Dog Farm in Redmond, dried and ground with sugar to flavor the meringue."
      }
     ],
     "allergens": [
@@ -621,7 +622,11 @@ window.SF = {
     "canModify": [
      "dairy"
     ],
-    "allergenNote": "No flour in the meringue — gluten-free as built. The pastry cream rides on the side for dairy-free; the meringue and strawberries stand on their own."
+    "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate.",
+    "flags": [
+     "vanilla bean pastry cream — composition not specified, confirm with kitchen"
+    ],
+    "added": "2026-08-01"
    },
    {
     "name": "Seasonal Gelato",
@@ -3470,6 +3475,65 @@ window.SF = {
     }
    ],
    "added": "2026-07-30"
+  },
+  {
+   "section": "Red",
+   "name": "G.D. Vajra Langhe Nebbiolo DOC",
+   "vintage": "2024",
+   "region": "Piedmont, Italy",
+   "type": "red",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Nebbiolo",
+   "pour": "Lively garnet in the glass — wild strawberry, red cherry, and raspberry with a hint of goji berry, lifted by floral and gentle spice. Crunchy and vibrant on the palate, juicy red fruit woven through a well-defined tannic frame, finishing perfumed, floral, and gourmand.",
+   "producer": "G.D. Vajra, founded in 1972 by Aldo Vaira and named for his father Giuseppe Domenico Vajra, is one of Barolo's pioneering organic estates, based in Vergne — the highest village in the Barolo commune. This Langhe Nebbiolo is the estate's fresher, earlier-drinking expression of the grape, raised in steel rather than the long cask aging of their Barolo. Note: the fresh sheet header lists the 2024 vintage while the accompanying tasting and harvest notes describe the 2025 — confirm the vintage on the bottle with your lead before quoting. ABV runs about 13.5% per the producer; confirm before quoting.",
+   "winemaking": "100% Nebbiolo from organically farmed vineyards on calcareous soils between 280–550m, worked with permanent grass cover; the estate is certified organic and Equalitas sustainable. Hand-harvested over a late, extended pick (Sept 12–Oct 2 in the described vintage). Fermentation ran 20–25 days followed by spontaneous malolactic fermentation, then roughly 4 months in stainless steel before bottling. No oak — the freshness and lift come from steel-only aging.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 3,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 3,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "G.D. Vajra",
+     "pron": "VY-rah"
+    },
+    {
+     "term": "Langhe",
+     "pron": "LAHN-gheh"
+    },
+    {
+     "term": "Nebbiolo",
+     "pron": "neb-BYOH-loh"
+    },
+    {
+     "term": "Piemonte",
+     "pron": "pyeh-MON-teh"
+    }
+   ],
+   "added": "2026-08-01"
   }
  ],
  "bar": {
@@ -6541,7 +6605,7 @@ window.SF = {
        "",
        "Expo",
        "Expo",
-       "Expo"
+       "R/O"
       ]
      },
      {
@@ -6721,14 +6785,14 @@ window.SF = {
      "",
      "",
      "",
-     "3:30 Bar",
-     "3:30 Bar"
+     "3:30 Serve",
+     "3:30 Serve"
     ],
     "rows": [
      {
       "name": "Sam",
       "shifts": [
-       "MD",
+       "R/O",
        "Admin/MD 5-8",
        "",
        "",
@@ -9230,7 +9294,7 @@ window.SF = {
     "notes": [],
     "coverage": [
      "",
-     "1-close",
+     "",
      "",
      "",
      "",
@@ -9269,8 +9333,8 @@ window.SF = {
        "",
        "",
        "",
-       "11-9",
-       "11-9",
+       "",
+       "",
        "Expo"
       ]
      },
@@ -10019,7 +10083,7 @@ window.SF = {
        "",
        "MD",
        "MD",
-       "Expo"
+       "R/O"
       ]
      },
      {
@@ -10039,11 +10103,11 @@ window.SF = {
       "shifts": [
        "Expo",
        "",
+       "9-5",
+       "9-5",
        "",
        "",
-       "8-6",
-       "8-6",
-       "8-6"
+       "Expo"
       ]
      },
      {
@@ -10103,7 +10167,7 @@ window.SF = {
        "",
        "1-close",
        "1-close",
-       "Expo"
+       "1-close"
       ]
      },
      {
@@ -10195,8 +10259,8 @@ window.SF = {
     "notes": [],
     "coverage": [
      "1-close",
-     "1-close",
-     "1-close",
+     "",
+     "",
      "",
      "",
      "",
@@ -10206,7 +10270,7 @@ window.SF = {
      {
       "name": "Sam",
       "shifts": [
-       "MD",
+       "R/O",
        "MD",
        "",
        "",
@@ -10231,9 +10295,9 @@ window.SF = {
       "name": "Jose",
       "shifts": [
        "Expo",
+       "",
        "Expo",
        "Expo",
-       "Expo (4-8)",
        "",
        "",
        "Expo"
@@ -10256,22 +10320,22 @@ window.SF = {
       "shifts": [
        "R/O",
        "1-close",
+       "1-close",
        "",
+       "1-close",
        "",
-       "",
-       "12-10",
-       "1-close"
+       ""
       ]
      },
      {
       "name": "Cooper",
       "shifts": [
        "1-close",
+       "1-close",
        "",
        "",
        "",
-       "",
-       "",
+       "1-close",
        "1-close"
       ]
      },
@@ -10291,12 +10355,12 @@ window.SF = {
       "name": "Gopala",
       "shifts": [
        "",
-       "Expo Train",
+       "Expo",
        "",
        "",
        "1-close",
        "1-close",
-       "Expo Train"
+       "1-close"
       ]
      },
      {
@@ -10326,7 +10390,7 @@ window.SF = {
      {
       "name": "Kenji",
       "shifts": [
-       "9-7",
+       "1-close",
        "R/O",
        "R/O",
        "R/O",
@@ -10342,8 +10406,8 @@ window.SF = {
        "",
        "1-close",
        "1-close",
-       "1-close",
-       "1-close",
+       "12-10",
+       "12-10",
        ""
       ]
      },
@@ -10388,8 +10452,8 @@ window.SF = {
     "notes": [],
     "coverage": [
      "9-7",
-     "1-close",
-     "1-close",
+     "",
+     "",
      "",
      "",
      "",
@@ -10424,9 +10488,9 @@ window.SF = {
       "name": "Jose",
       "shifts": [
        "Expo",
+       "",
        "Expo",
        "Expo",
-       "Expo (4-8)",
        "",
        "",
        "Expo"
@@ -10449,10 +10513,10 @@ window.SF = {
       "shifts": [
        "1-close",
        "1-close",
+       "1-close",
        "",
        "",
        "",
-       "12-10",
        "1-close"
       ]
      },
@@ -10460,11 +10524,11 @@ window.SF = {
       "name": "Cooper",
       "shifts": [
        "1-close",
+       "1-close",
        "",
        "",
        "",
-       "",
-       "",
+       "1-close",
        "1-close"
       ]
      },
@@ -10484,7 +10548,7 @@ window.SF = {
       "name": "Gopala",
       "shifts": [
        "",
-       "Expo Train",
+       "Expo",
        "",
        "",
        "1-close",
@@ -10536,7 +10600,7 @@ window.SF = {
        "1-close",
        "1-close",
        "1-close",
-       "1-close",
+       "12-10",
        ""
       ]
      },
@@ -12161,5 +12225,5 @@ window.SF = {
    }
   }
  },
- "build": "1785526359"
+ "build": "1785590278"
 };

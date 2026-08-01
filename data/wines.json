@@ -2832,5 +2832,64 @@
    }
   ],
   "added": "2026-07-30"
+ },
+ {
+  "section": "Red",
+  "name": "G.D. Vajra Langhe Nebbiolo DOC",
+  "vintage": "2024",
+  "region": "Piedmont, Italy",
+  "type": "red",
+  "glass": "",
+  "bottle": "",
+  "grapes": "100% Nebbiolo",
+  "pour": "Lively garnet in the glass — wild strawberry, red cherry, and raspberry with a hint of goji berry, lifted by floral and gentle spice. Crunchy and vibrant on the palate, juicy red fruit woven through a well-defined tannic frame, finishing perfumed, floral, and gourmand.",
+  "producer": "G.D. Vajra, founded in 1972 by Aldo Vaira and named for his father Giuseppe Domenico Vajra, is one of Barolo's pioneering organic estates, based in Vergne — the highest village in the Barolo commune. This Langhe Nebbiolo is the estate's fresher, earlier-drinking expression of the grape, raised in steel rather than the long cask aging of their Barolo. Note: the fresh sheet header lists the 2024 vintage while the accompanying tasting and harvest notes describe the 2025 — confirm the vintage on the bottle with your lead before quoting. ABV runs about 13.5% per the producer; confirm before quoting.",
+  "winemaking": "100% Nebbiolo from organically farmed vineyards on calcareous soils between 280–550m, worked with permanent grass cover; the estate is certified organic and Equalitas sustainable. Hand-harvested over a late, extended pick (Sept 12–Oct 2 in the described vintage). Fermentation ran 20–25 days followed by spontaneous malolactic fermentation, then roughly 4 months in stainless steel before bottling. No oak — the freshness and lift come from steel-only aging.",
+  "has_notes": true,
+  "specs": [
+   {
+    "label": "Body",
+    "rating": 3,
+    "low": "light",
+    "high": "full"
+   },
+   {
+    "label": "Dryness",
+    "rating": 5,
+    "low": "sweet",
+    "high": "bone dry"
+   },
+   {
+    "label": "Acidity",
+    "rating": 4,
+    "low": "soft",
+    "high": "bright"
+   },
+   {
+    "label": "Tannins",
+    "rating": 3,
+    "low": "none",
+    "high": "grippy"
+   }
+  ],
+  "pronguide": [
+   {
+    "term": "G.D. Vajra",
+    "pron": "VY-rah"
+   },
+   {
+    "term": "Langhe",
+    "pron": "LAHN-gheh"
+   },
+   {
+    "term": "Nebbiolo",
+    "pron": "neb-BYOH-loh"
+   },
+   {
+    "term": "Piemonte",
+    "pron": "pyeh-MON-teh"
+   }
+  ],
+  "added": "2026-08-01"
  }
 ]
