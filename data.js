@@ -198,7 +198,7 @@ window.SF = {
        "nuts"
       ],
       "allergenNote": "Tree nuts: the candied almonds, they come off cleanly for a nut allergy. Allium: raw red onion and the pickled onion are throughout, not removable. The composition of the candied almonds has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
-      "added": "2026-08-01",
+      "added": "2026-06-19",
       "flags": [
        {
         "component": "candied almonds",
@@ -243,7 +243,7 @@ window.SF = {
        "gluten"
       ],
       "allergenNote": "Dairy: the burrata and the buttermilk vinaigrette, central and not removable. Gluten: crostini come on the side so the rest of the table can still have them. The vinaigrette carries poppy seeds, which we do not track as a chip. The composition of the chamomile gelee has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian.",
-      "added": "2026-08-01",
+      "added": "2026-06-19",
       "flags": [
        {
         "component": "chamomile gelee",
@@ -529,7 +529,7 @@ window.SF = {
       ],
       "canModify": [],
       "allergenNote": "Fish: king salmon, central to the dish, cannot come off. The composition of the roasted tomato vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
-      "added": "2026-08-01",
+      "added": "2026-07-24",
       "flags": [
        {
         "component": "roasted tomato vinaigrette",
@@ -582,7 +582,7 @@ window.SF = {
        "dairy"
       ],
       "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. The composition of the huckleberry demi glace has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
-      "added": "2026-08-01",
+      "added": "2026-07-24",
       "flags": [
        {
         "component": "huckleberry demi glace",
@@ -685,8 +685,7 @@ window.SF = {
       "proposedStandard": "whole milk, cream, egg yolk, sugar, vanilla bean, cornstarch",
       "label": "vanilla bean pastry cream — composition not specified"
      }
-    ],
-    "added": "2026-08-01"
+    ]
    },
    {
     "name": "Seasonal Gelato",
@@ -12285,5 +12284,5 @@ window.SF = {
    }
   }
  },
- "build": "1785606079"
+ "build": "1785607277"
 };

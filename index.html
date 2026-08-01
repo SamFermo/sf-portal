@@ -384,6 +384,14 @@ nav.chips::-webkit-scrollbar{display:none;}
 .cf-alg-btns button.on-yes{background:#a03030; color:#fff; border-color:#a03030;}
 .cf-alg-btns button.on-no{background:#4a6a3a; color:#fff; border-color:#4a6a3a;}
 .cf-warn{background:rgba(160,48,48,.08); border:1px solid rgba(160,48,48,.35); color:#8a2020; border-radius:8px; padding:8px 10px; margin:8px 0; font-size:12px; line-height:1.45; font-weight:600;}
+/* Manager-only "Needs review" filter on the Food tab */
+.reviewbar{margin:0 0 10px;}
+.review-toggle{display:inline-flex; align-items:center; gap:6px; background:rgba(214,158,46,.1); border:1.5px solid rgba(214,158,46,.45); color:#8a5a12; border-radius:999px; padding:7px 13px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit;}
+.review-toggle.on{background:#d69e2e; border-color:#d69e2e; color:#fff;}
+.review-toggle .badge{display:inline-flex; align-items:center; justify-content:center; min-width:17px; height:17px; padding:0 5px; border-radius:999px; background:#d69e2e; color:#fff; font-size:10px; font-weight:800;}
+.review-toggle.on .badge{background:rgba(255,255,255,.28);}
+.review-hint{display:block; margin-top:6px; font-size:11px; color:var(--ink-mute); line-height:1.4;}
+.review-empty{background:rgba(74,106,58,.08); border:1px solid rgba(74,106,58,.3); border-radius:12px; padding:14px 16px; font-size:13px; color:#2a2419; line-height:1.5;}
 #editModal .modal-card{max-height:88dvh;}
 #editBody{overflow-y:auto; -webkit-overflow-scrolling:touch; min-height:0; flex:1;}
 #editModal textarea{flex:none; min-height:48px; max-height:120px; font-family:inherit; font-size:13.5px; resize:vertical;}
@@ -1509,7 +1517,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785606079';   // stamped by build-data.py at every deploy
+const BUILD='1785607277';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2309,14 +2317,53 @@ function allergenAskHTML(){
     (algTags.length>=1?'<button type="button" class="alg-clear-btn" onclick="clearAlgTags()">Clear'+(algTags.length>1?' ('+algTags.length+')':'')+'</button>':'')+
     '<div id="alg-result">'+(algTags.length?allergenResultHTML(algTags):none)+'</div></div>';
 }
+/* Manager-only review filter. "Just added" answers a server's question (what
+   changed on the menu). This answers a manager's (what still needs confirming),
+   and they are deliberately separate lists — an unresolved flag is not news to
+   the floor, it is a task for whoever can call the kitchen. Off by default,
+   never rendered for non-managers, and it survives a re-render so resolving a
+   chip doesn't drop you back into the full menu. */
+let reviewFilter=false;
+function dishNeedsReview(it){
+  const ed=getEditedDish(it);
+  const fl=(ed._flags!==undefined)?ed._flags:(ed.flags||[]);
+  return !!(fl&&fl.length);
+}
+function toggleReviewFilter(){ reviewFilter=!reviewFilter; renderFoodTab(); }
+function reviewBarHTML(n){
+  if(!isMgr())return '';
+  return `<div class="reviewbar"><button class="review-toggle${reviewFilter?' on':''}" onclick="toggleReviewFilter()">`+
+    `⚑ Needs review${n?`<span class="badge">${n}</span>`:''}</button>`+
+    (reviewFilter?`<span class="review-hint">Showing only dishes with a component still to confirm. Servers never see this view.</span>`:'')+
+    `</div>`;
+}
 function renderFoodTab(){
-  const newDishes=[];
-  SF.menu.food.forEach(sec=>sec.items.forEach(it=>{if(isNew(it))newDishes.push(it);}));
-  SF.menu.desserts.forEach(it=>{if(isNew(it))newDishes.push(it);});
+  const allDishes=[];
+  SF.menu.food.forEach(sec=>sec.items.forEach(it=>allDishes.push(it)));
+  SF.menu.desserts.forEach(it=>allDishes.push(it));
+  // Same count the Food sub-tab badge shows, computed once in foodFlagCount().
+  const reviewCount=isMgr()?foodFlagCount():0;
+  if(reviewFilter&&!isMgr())reviewFilter=false;   // manager mode dropped while filtered
+  let f=editBarHTML()+reviewBarHTML(reviewCount);
+
+  if(reviewFilter){
+    const due=allDishes.filter(dishNeedsReview);
+    if(!due.length){
+      f+=`<div class="review-empty">Nothing pending review. Every composed component on tonight's menu has been confirmed with the kitchen.</div>`;
+    }else{
+      f+=`<div class="section-label pinned-label">Pending review</div>`;
+      due.forEach(it=>f+=dishCardHTML(it));
+    }
+    $('ftFood').innerHTML=f;
+    return;
+  }
+
+  // Normal view. "Just added" is keyed off the item's own added date and nothing
+  // else — an edit does not resurface a dish here (see build-data.py's fingerprint).
+  const newDishes=allDishes.filter(isNew);
   const pinned=newDishes.filter(isShuffled), pinnedSet=new Set(pinned);
   // The note only lists items once they've dropped out of the pinned group and
   // back into their normal spot (past SHUFFLE_DAYS) — no note above a pinned card.
-  let f=editBarHTML();
   if(pinned.length){f+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(it=>f+=dishCardHTML(it));f+=`</div>`;}
   f+=allergenLegendHTML();
   SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;

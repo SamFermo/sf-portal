@@ -1,701 +1,700 @@
 {
- "menuDate": "2026-07-25",
- "note": "We offer a small menu that changes daily. The chef requests that guests put their whole order in at once.",
- "raw_note": "An asterisk (*) marks dishes served raw or under-cooked. Flag the allergy/raw advisory when guests ask.",
- "food": [
-  {
-   "section": "Antipasti",
-   "items": [
+  "menuDate": "2026-07-25",
+  "note": "We offer a small menu that changes daily. The chef requests that guests put their whole order in at once.",
+  "raw_note": "An asterisk (*) marks dishes served raw or under-cooked. Flag the allergy/raw advisory when guests ask.",
+  "food": [
     {
-     "name": "Sea Wolf Bakery Baguette",
-     "desc": "les pres sales butter, sea salt",
-     "price": "8",
-     "raw": false,
-     "story": "A baguette from Sea Wolf Bakers in Seattle's Fremont neighborhood, one of the Pacific Northwest's most celebrated naturally leavened bakeries. Baked the same day, served with Belgian-churned les prés salés butter flecked with coarse Camargue sea salt crystals. Simple and non-negotiable — this one never changes.",
-     "ingredients": [
-      {
-       "term": "Sea Wolf Bakers",
-       "pronunciation": null,
-       "note": "Seattle's Fremont neighborhood bakery, founded 2014 by brothers Jesse and Kit Schumann. All breads are naturally leavened using Pacific Northwest grains. Named one of the 100 best bakeries in the U.S. by Food & Wine."
-      },
-      {
-       "term": "Les prés salés butter",
-       "pronunciation": "lay pray sah-LAY",
-       "note": "Belgian-churned cultured butter, 82% butterfat, finished with hand-harvested coarse sea salt crystals from the Camargue — a salt marsh region in the south of France. Richer and more complex than standard salted butter."
-      },
-      {
-       "term": "Maldon sea salt",
-       "pronunciation": null,
-       "note": "Flaky finishing salt from Essex, England. Prized for its pyramid-shaped crystals, clean flavor, and satisfying crunch."
-      }
-     ],
-     "allergens": [
-      "gluten",
-      "dairy"
-     ],
-     "canModify": []
+      "section": "Antipasti",
+      "items": [
+        {
+          "name": "Sea Wolf Bakery Baguette",
+          "desc": "les pres sales butter, sea salt",
+          "price": "8",
+          "raw": false,
+          "story": "A baguette from Sea Wolf Bakers in Seattle's Fremont neighborhood, one of the Pacific Northwest's most celebrated naturally leavened bakeries. Baked the same day, served with Belgian-churned les prés salés butter flecked with coarse Camargue sea salt crystals. Simple and non-negotiable — this one never changes.",
+          "ingredients": [
+            {
+              "term": "Sea Wolf Bakers",
+              "pronunciation": null,
+              "note": "Seattle's Fremont neighborhood bakery, founded 2014 by brothers Jesse and Kit Schumann. All breads are naturally leavened using Pacific Northwest grains. Named one of the 100 best bakeries in the U.S. by Food & Wine."
+            },
+            {
+              "term": "Les prés salés butter",
+              "pronunciation": "lay pray sah-LAY",
+              "note": "Belgian-churned cultured butter, 82% butterfat, finished with hand-harvested coarse sea salt crystals from the Camargue — a salt marsh region in the south of France. Richer and more complex than standard salted butter."
+            },
+            {
+              "term": "Maldon sea salt",
+              "pronunciation": null,
+              "note": "Flaky finishing salt from Essex, England. Prized for its pyramid-shaped crystals, clean flavor, and satisfying crunch."
+            }
+          ],
+          "allergens": [
+            "gluten",
+            "dairy"
+          ],
+          "canModify": []
+        },
+        {
+          "name": "Castelvetrano Olives",
+          "desc": "fennel pollen, citrus, rosemary",
+          "price": "6",
+          "raw": false,
+          "pron": "kah-stel-veh-TRAH-noh",
+          "story": "Meaty Nocellara del Belice olives from the Valle del Belice in southwestern Sicily — one of the only olive varieties with a Protected Designation of Origin. Marinated in-house with citrus peel, garlic, chili flake, and olive oil, then finished with a dusting of fennel pollen and rosemary. Bright, buttery, mild.",
+          "ingredients": [
+            {
+              "term": "Castelvetrano olives",
+              "pronunciation": "kah-stel-veh-TRAH-noh",
+              "note": "Nocellara del Belice variety, named for the Sicilian town of Castelvetrano. PDO-protected, so they can only come from the Valle del Belice. Lye-cured for a clean, buttery flavor with no bitterness — the least aggressive olive on any table."
+            },
+            {
+              "term": "Fennel pollen",
+              "pronunciation": null,
+              "note": "The fine yellow pollen harvested from wild fennel flowers. Intensely aromatic, floral, and anise-forward — used here as a finishing garnish."
+            }
+          ],
+          "allergens": [
+            "allium"
+          ],
+          "canModify": [],
+          "allergenNote": "Confirmed: the marinade carries garlic (allium) and chili flake. The garlic is marinated in, so it can't be picked out — off limits for an allium allergy. The chili flake also adds a little heat, a heads up for spice-sensitive guests."
+        },
+        {
+          "name": "Marcona Almonds",
+          "desc": "rosemary olive oil, fried rosemary, maldon sea salt",
+          "price": "6",
+          "raw": false,
+          "pron": "mar-KOH-nah",
+          "story": "Imported Marcona almonds from Spain's Mediterranean coast, roasted until golden, tossed in rosemary olive oil and Maldon sea salt, then finished with crisp fried rosemary. Rounder and softer than a California almond, with a buttery sweetness that makes them genuinely hard to stop eating.",
+          "ingredients": [
+            {
+              "term": "Marcona almonds",
+              "pronunciation": "mar-KOH-nah",
+              "note": "A Spanish almond variety grown along the Mediterranean coast — Alicante, Valencia, and Tarragona. Rounder and plumper than California almonds, with a higher oil content and a naturally sweet, buttery flavor. Spain is the primary producer."
+            },
+            {
+              "term": "Maldon sea salt",
+              "pronunciation": null,
+              "note": "Flaky finishing salt from Essex, England — same as on the bread. Tossed on with the rosemary oil after roasting so the crunch stays distinct."
+            }
+          ],
+          "allergens": [
+            "nuts"
+          ],
+          "canModify": []
+        },
+        {
+          "name": "Farinata",
+          "desc": "chickpea flatbread, house cagliata, seasonal preserve, fresh thyme, sea salt",
+          "price": "13",
+          "raw": false,
+          "pron": "fah-ree-NAH-tah",
+          "story": "A Ligurian chickpea flatbread with roots in 13th-century Genoa — thin, crisp at the edges, soft and nutty in the center. Made in-house from chickpea flour, rosemary olive oil, and water, finished with fresh thyme and sea salt. The housemade cagliatta and a seasonal preserve sit alongside on the plate. Current preserve: rhubarb caramelized onion jam.",
+          "ingredients": [
+            {
+              "term": "Farinata",
+              "pronunciation": "fah-ree-NAH-tah",
+              "note": "Ancient Ligurian flatbread made from chickpea flour, water, olive oil, and salt — baked in a very hot cast iron pan until the edges are crisp and the center is custardy. Also called cecìna in Tuscany. Naturally gluten-free."
+            },
+            {
+              "term": "Cagliatta",
+              "pronunciation": "kal-YAH-tah",
+              "note": "Our housemade fresh cheese — whole milk curdled with lemon juice, then dressed with rosemary-infused olive oil and salt. A fresh, mild, milky curd; closer to a soft ricotta than a mozzarella. Made in-house."
+            },
+            {
+              "term": "Rhubarb caramelized onion jam",
+              "pronunciation": null,
+              "note": "Seasonal preserve made in-house: rhubarb cooked down with caramelized onions, vinegar, and sugar. Tart, sweet, savory — made to work against the richness of the cagliatta."
+            }
+          ],
+          "allergens": [
+            "dairy"
+          ],
+          "canModify": [
+            "dairy"
+          ],
+          "allergenNote": "Naturally gluten-free — chickpea flour, no wheat. The cagliatta is plated alongside; for dairy-free it moves to a bowl on the side or comes off entirely, and the preserve stays."
+        },
+        {
+          "name": "House Caesar",
+          "desc": "anchovy, parmigiano reggiano, red wine croutons",
+          "price": "14",
+          "raw": true,
+          "story": "Romaine dressed with a classic from-scratch Caesar dressing — champagne vinegar, anchovy, garlic, Parmigiano-Reggiano, egg yolk, Worcestershire, Dijon, black pepper. Topped with boquerones white anchovies and red wine croutons: bread soaked in red wine, butter, garlic, and rosemary, then dehydrated until crisp the whole way through. A clean, honest Caesar.",
+          "ingredients": [
+            {
+              "term": "Boquerones",
+              "pronunciation": "boh-keh-ROH-nez",
+              "note": "White anchovies cured in vinegar rather than salt — mild, tender, and bright. Distinct from the oil-packed brown anchovies in the dressing; these sit on top as a finishing garnish."
+            },
+            {
+              "term": "Parmigiano-Reggiano",
+              "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
+              "note": "Aged Italian hard cheese from the Parma region, with PDO protection. Used both in the dressing (grated) and shaved over the top. Nutty, salty, and complex."
+            },
+            {
+              "term": "Red wine croutons",
+              "pronunciation": null,
+              "note": "Made in-house: bread soaked in a red wine, butter, garlic, and rosemary mixture, then dehydrated until crisp all the way through. Deeply savory, and the crunch holds up in the dressing."
+            },
+            {
+              "term": "Coddled egg dressing",
+              "pronunciation": null,
+              "note": "The dressing is built with egg yolk — emulsified raw with oil and champagne vinegar for a thick, rich, classic Caesar consistency. Not cooked through, similar to mayonnaise. It also carries the anchovy: for fish allergies the dressing has to go, not just the boquerones on top."
+            }
+          ],
+          "allergens": [
+            "fish",
+            "dairy",
+            "gluten",
+            "egg",
+            "allium"
+          ],
+          "canModify": [
+            "fish",
+            "dairy",
+            "gluten",
+            "egg",
+            "allium"
+          ],
+          "allergenNote": "Every flag has a path, but fish takes two cuts: the dressing itself has anchovy in it, so pulling the boquerones alone doesn't clear it — omit the boquerones AND swap the dressing for oil and vinegar. Croutons on the side handles gluten. The same oil-and-vinegar swap with cheese on the side covers dairy, egg, and allium. Fully modified it becomes a clean romaine salad with oil and vinegar; tell the guest what they're getting."
+        },
+        {
+          "name": "Farm House Salad",
+          "desc": "red onion, bread and butter pickled onion, charred apricot vinaigrette, nectarines, candied almonds",
+          "price": "18",
+          "raw": false,
+          "story": "Bright and textured. The charred apricot vinaigrette brings acid and a subtle depth to the greens. Fresh nectarines and candied almonds add sweetness and crunch. Red and pickled onions give you sharp bite throughout.",
+          "ingredients": [
+            {
+              "term": "Charred apricot vinaigrette",
+              "pronunciation": null,
+              "note": "Apricots charred on high heat, then blended into a vinaigrette with acid and oil. The char adds a smoky-sweet depth behind the fruit's natural acidity."
+            },
+            {
+              "term": "Bread and butter pickled onion",
+              "pronunciation": null,
+              "note": "A sweet-and-tangy pickle style — onions cured in a vinegar brine with sugar and spice. Despite the name there's no bread or butter; it refers to the classic sweet pickle profile. Bright and sharp against the greens."
+            },
+            {
+              "term": "Candied almonds",
+              "pronunciation": null,
+              "note": "The composition of the candied almonds has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially."
+            },
+            {
+              "term": "Nectarines",
+              "pronunciation": null,
+              "note": "Smooth-skinned stone fruit, sweeter and softer than a peach when ripe. Fresh and raw here for juicy sweetness."
+            }
+          ],
+          "allergens": [
+            "nuts",
+            "allium"
+          ],
+          "canModify": [
+            "nuts"
+          ],
+          "allergenNote": "Tree nuts: the candied almonds, they come off cleanly for a nut allergy. Allium: raw red onion and the pickled onion are throughout, not removable. The composition of the candied almonds has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
+          "added": "2026-06-19",
+          "flags": [
+            {
+              "component": "candied almonds",
+              "riskAllergens": [
+                "dairy",
+                "egg"
+              ],
+              "proposedStandard": "",
+              "label": "candied almonds — composition not specified"
+            }
+          ]
+        },
+        {
+          "name": "Burrata",
+          "desc": "strawberries, chamomile gelee, strawberry buttermilk poppy seed vinaigrette, crostini",
+          "price": "18",
+          "raw": false,
+          "pron": "boo-RAH-tah",
+          "story": "Creamy burrata with fresh strawberries and a chamomile gelee that adds subtle floral sweetness. The strawberry buttermilk vinaigrette brings acid and brightness. Crostini on the side for texture.",
+          "ingredients": [
+            {
+              "term": "Burrata",
+              "pronunciation": "boo-RAH-tah",
+              "note": "a fresh cow's-milk cheese from Puglia: a mozzarella shell holding a center of stracciatella (cheese curds) and cream. Cut into it and the middle should flow."
+            },
+            {
+              "term": "Chamomile gelee",
+              "pronunciation": "kam-oh-MEEL zhuh-LAY",
+              "note": "The composition of this gelee has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian."
+            },
+            {
+              "term": "Strawberry buttermilk poppy seed vinaigrette",
+              "pronunciation": null,
+              "note": "A creamy vinaigrette built on cultured buttermilk and strawberry, flecked with poppy seeds. Tangy and bright — the acid that cuts the rich cheese. Carries dairy from the buttermilk."
+            }
+          ],
+          "allergens": [
+            "dairy",
+            "gluten"
+          ],
+          "canModify": [
+            "gluten"
+          ],
+          "allergenNote": "Dairy: the burrata and the buttermilk vinaigrette, central and not removable. Gluten: crostini come on the side so the rest of the table can still have them. The vinaigrette carries poppy seeds, which we do not track as a chip. The composition of the chamomile gelee has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian.",
+          "added": "2026-06-19",
+          "flags": [
+            {
+              "component": "chamomile gelee",
+              "riskAllergens": [],
+              "proposedStandard": "",
+              "label": "chamomile gelee — composition not specified"
+            }
+          ]
+        },
+        {
+          "name": "Chilled Cherry Gazpacho",
+          "desc": "bing cherry, tomato, cucumber, red onion, bell pepper, champagne vinegar, crème fraiche, sumac",
+          "price": "15",
+          "raw": false,
+          "pron": "gahz-PAH-choh",
+          "story": "Cold soup built on bing cherries and tomatoes with cucumber, red onion, and red bell pepper. Champagne vinegar adds brightness. Finished with crème fraiche and sumac for tang and color.",
+          "ingredients": [
+            {
+              "term": "Gazpacho",
+              "pronunciation": "gahz-PAH-choh",
+              "note": "A cold, raw-blended Spanish soup of vegetables and acid, served chilled. This version leans on bing cherries alongside the tomato for a sweet-savory depth."
+            },
+            {
+              "term": "Bing cherry",
+              "pronunciation": null,
+              "note": "Dark, sweet summer cherry — deep red, rich, and low in acidity. Here it carries the soup's body and sweetness against the tomato and vinegar."
+            },
+            {
+              "term": "Crème fraîche",
+              "pronunciation": "krem FRESH",
+              "note": "French cultured cream — thicker and tangier than sour cream, milder than Greek yogurt. Swirled in to finish, for richness and a cool counterpoint to the acid."
+            },
+            {
+              "term": "Sumac",
+              "pronunciation": "SOO-mak",
+              "note": "A tart, deep-red Middle Eastern spice ground from dried sumac berries. Lemony and astringent — dusted on top for color and a bright, sour lift."
+            }
+          ],
+          "allergens": [
+            "dairy",
+            "allium"
+          ],
+          "canModify": [
+            "dairy"
+          ],
+          "allergenNote": "Naturally gluten-free. Dairy: the crème fraiche finish can come off cleanly. Allium: red onion and garlic are blended into the base — not removable.",
+          "added": "2026-06-19"
+        }
+      ]
     },
     {
-     "name": "Castelvetrano Olives",
-     "desc": "fennel pollen, citrus, rosemary",
-     "price": "6",
-     "raw": false,
-     "pron": "kah-stel-veh-TRAH-noh",
-     "story": "Meaty Nocellara del Belice olives from the Valle del Belice in southwestern Sicily — one of the only olive varieties with a Protected Designation of Origin. Marinated in-house with citrus peel, garlic, chili flake, and olive oil, then finished with a dusting of fennel pollen and rosemary. Bright, buttery, mild.",
-     "ingredients": [
-      {
-       "term": "Castelvetrano olives",
-       "pronunciation": "kah-stel-veh-TRAH-noh",
-       "note": "Nocellara del Belice variety, named for the Sicilian town of Castelvetrano. PDO-protected, so they can only come from the Valle del Belice. Lye-cured for a clean, buttery flavor with no bitterness — the least aggressive olive on any table."
-      },
-      {
-       "term": "Fennel pollen",
-       "pronunciation": null,
-       "note": "The fine yellow pollen harvested from wild fennel flowers. Intensely aromatic, floral, and anise-forward — used here as a finishing garnish."
-      }
-     ],
-     "allergens": [
-      "allium"
-     ],
-     "canModify": [],
-     "allergenNote": "Confirmed: the marinade carries garlic (allium) and chili flake. The garlic is marinated in, so it can't be picked out — off limits for an allium allergy. The chili flake also adds a little heat, a heads up for spice-sensitive guests."
-    },
+      "section": "Primi & Secondi",
+      "items": [
+        {
+          "name": "Swan House Bolognese",
+          "desc": "saffron spaghetti, swan house beef & pork, tomato, fennel, rosemary, parmigiano reggiano",
+          "price": "32",
+          "raw": false,
+          "pron": "boh-loh-NYEH-zeh",
+          "story": "The family recipe — on the menu since day one, and it never leaves. This run is built on ground beef and pork raised at Swan House Farm; when it's gone, the dish returns to the classic pork-and-veal build. Either way: seasoned with our own spice blend, cooked down slowly with red wine, tomato, fennel, and rosemary, then finished with cream, butter, sherry, and salt. The saffron spaghetti is extruded with a strained, highly concentrated saffron tea in place of water — that's where the gold color and the subtle earthy aroma come from, no egg involved.",
+          "ingredients": [
+            {
+              "term": "Bolognese",
+              "pronunciation": "boh-loh-NYEH-zeh",
+              "note": "a slow-cooked meat ragù from Bologna in Emilia-Romagna — traditionally more meat than tomato."
+            },
+            {
+              "term": "Saffron",
+              "pronunciation": "SAF-ron",
+              "note": "the dried stigma of the crocus flower, hand-harvested and prized. We brew it into a concentrated tea, strain it, and use it in place of water in the extruded dough — gold color, hay-like earthiness, and the reason this golden pasta has no egg."
+            },
+            {
+              "term": "Parmigiano Reggiano",
+              "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
+              "note": "the aged hard cheese from Emilia-Romagna, the only 'real' Parmesan; nutty, savory, crystalline."
+            }
+          ],
+          "allergens": [
+            "gluten",
+            "dairy",
+            "allium"
+          ],
+          "canModify": [
+            "dairy"
+          ],
+          "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
+        },
+        {
+          "name": "Rigatoni",
+          "_originalName": "Paccheri",
+          "desc": "roasted broccoli, onion, bread-crumble cream, garlic, shallot, chili flake, lemon, pecorino romano, pine nuts",
+          "price": "29",
+          "raw": false,
+          "pron": "ree-gah-TOH-nee",
+          "story": "Broccoli and onion roasted until caramelized, then built into a pan sauce with garlic, shallot, red chili flake, and cubed bread. White wine and cream go in, and the bread melts down as it cooks to thicken it. Finished with lemon juice, zest, and butter, then topped with Pecorino Romano and pine nuts.",
+          "ingredients": [
+            {
+              "term": "Rigatoni",
+              "pronunciation": "ree-gah-TOH-nee",
+              "note": "Ridged tube pasta, shorter and narrower than paccheri. The ridges and hollow centers grab and hold the sauce."
+            },
+            {
+              "term": "Bread-crumble cream",
+              "pronunciation": null,
+              "note": "The sauce thickener — cubed bread cooked into the roasted broccoli, onion, garlic, shallot, and chili with white wine and cream until the bread melts down and bodies the sauce. Carries gluten (bread) and dairy (cream)."
+            },
+            {
+              "term": "Pecorino Romano",
+              "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
+              "note": "A hard, salty sheep's-milk cheese from Lazio — sharper than Parmigiano. Grated over the finish."
+            },
+            {
+              "term": "Pine nuts",
+              "pronunciation": null,
+              "note": "Soft, buttery seeds of the stone pine, toasted for the finish. Treated as a tree-nut allergen on the plate."
+            }
+          ],
+          "allergens": [
+            "gluten",
+            "dairy",
+            "nuts",
+            "allium"
+          ],
+          "canModify": [],
+          "allergenNote": "Gluten and dairy are both built into the sauce — the cubed bread melts in to thicken it, and the cream, butter, and Pecorino carry the dairy, so neither comes out cleanly. Allium: onion, garlic, and shallot are all roasted or cooked into the sauce, not removable. Tree nuts: pine nuts finish the plate, and per the kitchen notes they may also go into the pan — do NOT clear this for a nut allergy until Chris confirms they can be left out entirely.",
+          "added": "2026-06-27"
+        },
+        {
+          "name": "Stuffed Farfalle",
+          "desc": "egg pasta stuffed with basil, ricotta & mozzarella, spicy vodka sauce, heirloom cherry tomatoes, basil",
+          "price": "30",
+          "raw": false,
+          "pron": "far-FAH-leh",
+          "story": "Bow-tie pasta made from egg dough, filled with basil, ricotta, and fresh mozzarella. Finished in a spicy vodka sauce built on onion and garlic, topped with halved heirloom cherry tomatoes and fresh basil chiffonade. Warm, creamy, and a little sharp from the heat.",
+          "ingredients": [
+            {
+              "term": "Farfalle",
+              "pronunciation": "far-FAH-leh",
+              "note": "Bow-tie shaped pasta; here made in-house from egg dough and stuffed with basil, ricotta, and mozzarella. A fresh egg dough, so it carries egg and wheat."
+            },
+            {
+              "term": "Vodka sauce",
+              "pronunciation": null,
+              "note": "A tomato-and-cream sauce built on onion and garlic. This version is spicy."
+            },
+            {
+              "term": "Chiffonade",
+              "pronunciation": "shif-oh-NAHD",
+              "note": "Herbs sliced into thin ribbons — here fresh basil, scattered over the top."
+            }
+          ],
+          "allergens": [
+            "gluten",
+            "egg",
+            "dairy",
+            "allium"
+          ],
+          "canModify": [],
+          "allergenNote": "Egg and gluten are both in the fresh egg pasta — built in. Dairy runs through the filling (ricotta, mozzarella) and the cream in the sauce, so it can't come off this dish. Allium: onion and garlic are cooked into the vodka sauce.",
+          "flags": [
+            {
+              "component": "spicy vodka sauce",
+              "riskAllergens": [
+                "dairy",
+                "allium"
+              ],
+              "proposedStandard": "vodka, crushed tomato, heavy cream, onion, garlic, chili flake, parmesan, butter, salt",
+              "label": "spicy vodka sauce — composition not specified"
+            }
+          ],
+          "added": "2026-08-01"
+        },
+        {
+          "name": "Mafaldine alla Carbonara",
+          "desc": "guanciale, black pepper, swan house farm egg yolk, pecorino romano",
+          "price": "28",
+          "raw": true,
+          "pron": "mah-fal-DEE-neh",
+          "story": "The Roman classic on mafaldine — wide, ruffled ribbon pasta named after Princess Mafalda of Savoy — whose wavy edges catch and hold the glossy sauce. Rendered guanciale, lots of cracked black pepper, Pecorino Romano, and a Swan House Farm egg yolk emulsified into a peppery, silky coating. No cream — the silk comes from the egg and cheese. Served with a raw yolk, hence the asterisk.",
+          "ingredients": [
+            {
+              "term": "Mafaldine",
+              "pronunciation": "mah-fal-DEE-neh",
+              "note": "Wide, flat pasta with ruffled edges on both sides, from Naples. Named in honor of Princess Mafalda of Savoy — also called reginette (little queens). The wavy edges grip the carbonara sauce exceptionally well."
+            },
+            {
+              "term": "Carbonara",
+              "pronunciation": "kar-boh-NAH-rah",
+              "note": "a Roman sauce of egg, hard cheese, cured pork, and black pepper — emulsified, never creamed."
+            },
+            {
+              "term": "Guanciale",
+              "pronunciation": "gwahn-CHAH-leh",
+              "note": "cured pork jowl, fattier and more delicate than pancetta; renders down into the sauce."
+            },
+            {
+              "term": "Pecorino Romano",
+              "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
+              "note": "a hard, salty sheep's-milk cheese from Lazio — sharper than Parmigiano."
+            }
+          ],
+          "allergens": [
+            "gluten",
+            "egg",
+            "dairy"
+          ],
+          "canModify": [
+            "dairy",
+            "egg"
+          ],
+          "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen subs in whatever vegetable is running seasonally on the menu. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish.",
+          "added": "2026-06-10"
+        },
+        {
+          "name": "Risotto alle Zucchine",
+          "desc": "roasted zucchini, parmesan, crème fraîche-basil puree, lemon",
+          "price": "28",
+          "raw": false,
+          "pron": "ree-ZOH-toh AHL-leh zoo-kee-NEH",
+          "story": "Creamy risotto built on roasted zucchini, garlic, and shallot. Finished with butter, Parmesan, and a basil puree blended from basil, zucchini, crème fraîche, and lemon oil. Bright, clean, and seasonal.",
+          "ingredients": [
+            {
+              "term": "Risotto alle Zucchine",
+              "pronunciation": "ree-ZOH-toh AHL-leh zoo-kee-NEH",
+              "note": "Italian for 'risotto with zucchini.' A summer take on the dish — roasted zucchini folded through the rice, finished bright with lemon and basil."
+            },
+            {
+              "term": "Basil puree",
+              "pronunciation": null,
+              "note": "Basil, zucchini, crème fraîche, and lemon oil blended smooth into a vivid green puree. Herbaceous and bright with a little richness from the crème fraîche — swirled in at the finish, with micro basil on top for aroma. Note the crème fraîche: this puree carries dairy."
+            },
+            {
+              "term": "Arborio",
+              "pronunciation": "ar-BOR-ee-oh",
+              "note": "Short-grain Italian rice that releases starch as it cooks, creating risotto's signature creamy texture. Par-cooked in batches at the restaurant, finished per plate to order."
+            }
+          ],
+          "allergens": [
+            "dairy",
+            "allium"
+          ],
+          "canModify": [
+            "dairy"
+          ],
+          "allergenNote": "Naturally gluten-free. Dairy lives in three spots: Parmesan, butter, and the crème fraîche in the basil puree — a true dairy-free plate means dropping all three, including the puree, so flag it to the kitchen. Allium and the cooked wine can't come out — our risotto base is always par-cooked with onion and white wine in the stock, and this build adds garlic and shallot.",
+          "added": "2026-06-23"
+        },
+        {
+          "name": "Grilled King Salmon",
+          "desc": "Troll-caught Washington king salmon, Bibb lettuce, roasted tomato vinaigrette, sun gold tomatoes, charred zucchini",
+          "price": "38",
+          "raw": true,
+          "story": "Seven ounces of troll-caught Washington king salmon, grilled to medium rare. Served with Bibb lettuce dressed in roasted tomato vinaigrette, bright sun gold tomatoes, and charred zucchini. Finished with marigold petals.",
+          "ingredients": [
+            {
+              "term": "Troll-caught king salmon",
+              "pronunciation": null,
+              "note": "Caught one fish at a time on hook and line rather than by net, which keeps the fillet intact and the flesh firm. King (chinook) is the richest of the Pacific salmon, high in fat with a deep colour. Seven ounce fillet, grilled to medium rare."
+            },
+            {
+              "term": "Bibb lettuce",
+              "pronunciation": null,
+              "note": "A soft butterhead lettuce with loose, tender leaves and a mild sweetness. Dressed and served cool against the warm fish."
+            },
+            {
+              "term": "Sun gold tomatoes",
+              "pronunciation": null,
+              "note": "A small orange cherry tomato, noticeably sweeter and lower in acid than a red cherry tomato. Served raw."
+            },
+            {
+              "term": "Roasted tomato vinaigrette",
+              "pronunciation": null,
+              "note": "The composition of this vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
+            },
+            {
+              "term": "Marigold petals",
+              "pronunciation": null,
+              "note": "Edible flower petals, faintly citrus and peppery. A garnish, and they come off on request."
+            }
+          ],
+          "allergens": [
+            "fish"
+          ],
+          "canModify": [],
+          "allergenNote": "Fish: king salmon, central to the dish, cannot come off. The composition of the roasted tomato vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
+          "added": "2026-07-24",
+          "flags": [
+            {
+              "component": "roasted tomato vinaigrette",
+              "riskAllergens": [
+                "allium"
+              ],
+              "proposedStandard": "",
+              "label": "roasted tomato vinaigrette — composition not specified"
+            }
+          ]
+        },
+        {
+          "name": "Roasted Duck Breast",
+          "desc": "Muscovy duck breast, polenta, chanterelles, corn, huckleberry demi glace",
+          "price": "42",
+          "raw": true,
+          "story": "Muscovy duck breast rendered skin-side down to medium rare. It sits on creamy polenta with sautéed chanterelles, corn, and shallot. Marjoram and sherry vinegar brighten the plate. A huckleberry demi glace finishes it, adding dark fruit and depth.",
+          "ingredients": [
+            {
+              "term": "Muscovy duck",
+              "pronunciation": "MUSS-koh-vee",
+              "note": "A leaner breed than Pekin, with a deeper, less fatty flavour closer to red meat than poultry. The breast is rendered skin-side down so the fat runs off and the skin crisps, then cooked to medium rare."
+            },
+            {
+              "term": "Chanterelles",
+              "pronunciation": "shan-tuh-RELS",
+              "note": "A wild golden mushroom, firm with a mild apricot-and-pepper note. Sautéed here."
+            },
+            {
+              "term": "Polenta",
+              "pronunciation": "poh-LEN-tah",
+              "note": "Ground cornmeal cooked until thick and creamy, the bed for the duck. The house polenta is built with cream, stock and butter, so treat it as dairy unless the kitchen says this prep differs."
+            },
+            {
+              "term": "Marjoram",
+              "pronunciation": "MAR-jer-um",
+              "note": "A soft herb in the oregano family, sweeter and more floral than oregano. Used fresh to lift the plate."
+            },
+            {
+              "term": "Huckleberry demi glace",
+              "pronunciation": "DEH-mee glahss",
+              "note": "The composition of this demi glace has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
+            }
+          ],
+          "allergens": [
+            "dairy",
+            "allium"
+          ],
+          "canModify": [
+            "dairy"
+          ],
+          "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. The composition of the huckleberry demi glace has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
+          "added": "2026-07-24",
+          "flags": [
+            {
+              "component": "huckleberry demi glace",
+              "riskAllergens": [
+                "allium"
+              ],
+              "proposedStandard": "",
+              "label": "huckleberry demi glace — composition not specified"
+            }
+          ]
+        }
+      ],
+      "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
+    }
+  ],
+  "desserts": [
     {
-     "name": "Marcona Almonds",
-     "desc": "rosemary olive oil, fried rosemary, maldon sea salt",
-     "price": "6",
-     "raw": false,
-     "pron": "mar-KOH-nah",
-     "story": "Imported Marcona almonds from Spain's Mediterranean coast, roasted until golden, tossed in rosemary olive oil and Maldon sea salt, then finished with crisp fried rosemary. Rounder and softer than a California almond, with a buttery sweetness that makes them genuinely hard to stop eating.",
-     "ingredients": [
-      {
-       "term": "Marcona almonds",
-       "pronunciation": "mar-KOH-nah",
-       "note": "A Spanish almond variety grown along the Mediterranean coast — Alicante, Valencia, and Tarragona. Rounder and plumper than California almonds, with a higher oil content and a naturally sweet, buttery flavor. Spain is the primary producer."
-      },
-      {
-       "term": "Maldon sea salt",
-       "pronunciation": null,
-       "note": "Flaky finishing salt from Essex, England — same as on the bread. Tossed on with the rosemary oil after roasting so the crunch stays distinct."
-      }
-     ],
-     "allergens": [
-      "nuts"
-     ],
-     "canModify": []
-    },
-    {
-     "name": "Farinata",
-     "desc": "chickpea flatbread, house cagliata, seasonal preserve, fresh thyme, sea salt",
-     "price": "13",
-     "raw": false,
-     "pron": "fah-ree-NAH-tah",
-     "story": "A Ligurian chickpea flatbread with roots in 13th-century Genoa — thin, crisp at the edges, soft and nutty in the center. Made in-house from chickpea flour, rosemary olive oil, and water, finished with fresh thyme and sea salt. The housemade cagliatta and a seasonal preserve sit alongside on the plate. Current preserve: rhubarb caramelized onion jam.",
-     "ingredients": [
-      {
-       "term": "Farinata",
-       "pronunciation": "fah-ree-NAH-tah",
-       "note": "Ancient Ligurian flatbread made from chickpea flour, water, olive oil, and salt — baked in a very hot cast iron pan until the edges are crisp and the center is custardy. Also called cecìna in Tuscany. Naturally gluten-free."
-      },
-      {
-       "term": "Cagliatta",
-       "pronunciation": "kal-YAH-tah",
-       "note": "Our housemade fresh cheese — whole milk curdled with lemon juice, then dressed with rosemary-infused olive oil and salt. A fresh, mild, milky curd; closer to a soft ricotta than a mozzarella. Made in-house."
-      },
-      {
-       "term": "Rhubarb caramelized onion jam",
-       "pronunciation": null,
-       "note": "Seasonal preserve made in-house: rhubarb cooked down with caramelized onions, vinegar, and sugar. Tart, sweet, savory — made to work against the richness of the cagliatta."
-      }
-     ],
-     "allergens": [
-      "dairy"
-     ],
-     "canModify": [
-      "dairy"
-     ],
-     "allergenNote": "Naturally gluten-free — chickpea flour, no wheat. The cagliatta is plated alongside; for dairy-free it moves to a bowl on the side or comes off entirely, and the preserve stays."
-    },
-    {
-     "name": "House Caesar",
-     "desc": "anchovy, parmigiano reggiano, red wine croutons",
-     "price": "14",
-     "raw": true,
-     "story": "Romaine dressed with a classic from-scratch Caesar dressing — champagne vinegar, anchovy, garlic, Parmigiano-Reggiano, egg yolk, Worcestershire, Dijon, black pepper. Topped with boquerones white anchovies and red wine croutons: bread soaked in red wine, butter, garlic, and rosemary, then dehydrated until crisp the whole way through. A clean, honest Caesar.",
-     "ingredients": [
-      {
-       "term": "Boquerones",
-       "pronunciation": "boh-keh-ROH-nez",
-       "note": "White anchovies cured in vinegar rather than salt — mild, tender, and bright. Distinct from the oil-packed brown anchovies in the dressing; these sit on top as a finishing garnish."
-      },
-      {
-       "term": "Parmigiano-Reggiano",
-       "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
-       "note": "Aged Italian hard cheese from the Parma region, with PDO protection. Used both in the dressing (grated) and shaved over the top. Nutty, salty, and complex."
-      },
-      {
-       "term": "Red wine croutons",
-       "pronunciation": null,
-       "note": "Made in-house: bread soaked in a red wine, butter, garlic, and rosemary mixture, then dehydrated until crisp all the way through. Deeply savory, and the crunch holds up in the dressing."
-      },
-      {
-       "term": "Coddled egg dressing",
-       "pronunciation": null,
-       "note": "The dressing is built with egg yolk — emulsified raw with oil and champagne vinegar for a thick, rich, classic Caesar consistency. Not cooked through, similar to mayonnaise. It also carries the anchovy: for fish allergies the dressing has to go, not just the boquerones on top."
-      }
-     ],
-     "allergens": [
-      "fish",
-      "dairy",
-      "gluten",
-      "egg",
-      "allium"
-     ],
-     "canModify": [
-      "fish",
-      "dairy",
-      "gluten",
-      "egg",
-      "allium"
-     ],
-     "allergenNote": "Every flag has a path, but fish takes two cuts: the dressing itself has anchovy in it, so pulling the boquerones alone doesn't clear it — omit the boquerones AND swap the dressing for oil and vinegar. Croutons on the side handles gluten. The same oil-and-vinegar swap with cheese on the side covers dairy, egg, and allium. Fully modified it becomes a clean romaine salad with oil and vinegar; tell the guest what they're getting."
-    },
-    {
-     "name": "Farm House Salad",
-     "desc": "red onion, bread and butter pickled onion, charred apricot vinaigrette, nectarines, candied almonds",
-     "price": "18",
-     "raw": false,
-     "story": "Bright and textured. The charred apricot vinaigrette brings acid and a subtle depth to the greens. Fresh nectarines and candied almonds add sweetness and crunch. Red and pickled onions give you sharp bite throughout.",
-     "ingredients": [
-      {
-       "term": "Charred apricot vinaigrette",
-       "pronunciation": null,
-       "note": "Apricots charred on high heat, then blended into a vinaigrette with acid and oil. The char adds a smoky-sweet depth behind the fruit's natural acidity."
-      },
-      {
-       "term": "Bread and butter pickled onion",
-       "pronunciation": null,
-       "note": "A sweet-and-tangy pickle style — onions cured in a vinegar brine with sugar and spice. Despite the name there's no bread or butter; it refers to the classic sweet pickle profile. Bright and sharp against the greens."
-      },
-      {
-       "term": "Candied almonds",
-       "pronunciation": null,
-       "note": "The composition of the candied almonds has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially."
-      },
-      {
-       "term": "Nectarines",
-       "pronunciation": null,
-       "note": "Smooth-skinned stone fruit, sweeter and softer than a peach when ripe. Fresh and raw here for juicy sweetness."
-      }
-     ],
-     "allergens": [
-      "nuts",
-      "allium"
-     ],
-     "canModify": [
-      "nuts"
-     ],
-     "allergenNote": "Tree nuts: the candied almonds, they come off cleanly for a nut allergy. Allium: raw red onion and the pickled onion are throughout, not removable. The composition of the candied almonds has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
-     "added": "2026-08-01",
-     "flags": [
-      {
-       "component": "candied almonds",
-       "riskAllergens": [
+      "name": "Earl Grey Tiramisu",
+      "desc": "mascarpone, ladyfingers, miro tea, planteray dark rum, bergamot agrumato",
+      "price": "15",
+      "pron": "tee-rah-mee-SOO",
+      "story": "A San Fermo riff on the Italian classic. Instead of espresso, the ladyfingers are soaked in Earl Grey from Miro Tea — Ballard's 200-variety loose leaf tea shop — which swaps coffee's bitterness for bergamot's floral citrus. Planteray dark rum in the mascarpone cream; bergamot agrumato oil at the finish.",
+      "ingredients": [
+        {
+          "term": "Tiramisu",
+          "pronunciation": "tee-rah-mee-SOO",
+          "note": "Classic Northern Italian dessert — ladyfinger biscuits soaked in liquid, layered with sweetened mascarpone cream, finished with cocoa. The name means \"pick me up\" in Italian."
+        },
+        {
+          "term": "Miro Tea",
+          "pronunciation": null,
+          "note": "Ballard neighborhood tea shop, Seattle, founded 2005. Carries over 200 varieties of loose leaf tea. We use their Earl Grey for the ladyfinger soak — clean, bergamot-forward, and bright."
+        },
+        {
+          "term": "Bergamot agrumato",
+          "pronunciation": "BEHR-gah-mot ag-roo-MAH-toh",
+          "note": "Extra virgin olive oil co-milled with whole bergamot fruit at the press — the citrus oils are captured inside the olive oil rather than infused afterward. Bergamot is the citrus that gives Earl Grey its distinctive floral-bitter aroma. Used as a finishing drizzle here."
+        },
+        {
+          "term": "Planteray dark rum",
+          "pronunciation": "PLAN-teh-ray",
+          "note": "Formerly Plantation Rum — rebranded to Planteray in 2024. French-Caribbean aged rum from Maison Ferrand, known for its dual aging: first in the tropics, then finished in cognac barrels in France. Rich, smooth, and molasses-forward."
+        },
+        {
+          "term": "Mascarpone",
+          "pronunciation": "mas-car-POH-neh",
+          "note": "Italian triple-cream fresh cheese from Lombardy — thick, rich, mildly sweet. The base of the tiramisu cream layer."
+        }
+      ],
+      "allergens": [
         "dairy",
+        "gluten",
         "egg"
-       ],
-       "proposedStandard": "",
-       "label": "candied almonds — composition not specified"
-      }
-     ]
+      ],
+      "canModify": []
     },
     {
-     "name": "Burrata",
-     "desc": "strawberries, chamomile gelee, strawberry buttermilk poppy seed vinaigrette, crostini",
-     "price": "18",
-     "raw": false,
-     "pron": "boo-RAH-tah",
-     "story": "Creamy burrata with fresh strawberries and a chamomile gelee that adds subtle floral sweetness. The strawberry buttermilk vinaigrette brings acid and brightness. Crostini on the side for texture.",
-     "ingredients": [
-      {
-       "term": "Burrata",
-       "pronunciation": "boo-RAH-tah",
-       "note": "a fresh cow's-milk cheese from Puglia: a mozzarella shell holding a center of stracciatella (cheese curds) and cream. Cut into it and the middle should flow."
-      },
-      {
-       "term": "Chamomile gelee",
-       "pronunciation": "kam-oh-MEEL zhuh-LAY",
-       "note": "The composition of this gelee has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian."
-      },
-      {
-       "term": "Strawberry buttermilk poppy seed vinaigrette",
-       "pronunciation": null,
-       "note": "A creamy vinaigrette built on cultured buttermilk and strawberry, flecked with poppy seeds. Tangy and bright — the acid that cuts the rich cheese. Carries dairy from the buttermilk."
-      }
-     ],
-     "allergens": [
-      "dairy",
-      "gluten"
-     ],
-     "canModify": [
-      "gluten"
-     ],
-     "allergenNote": "Dairy: the burrata and the buttermilk vinaigrette, central and not removable. Gluten: crostini come on the side so the rest of the table can still have them. The vinaigrette carries poppy seeds, which we do not track as a chip. The composition of the chamomile gelee has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian.",
-     "added": "2026-08-01",
-     "flags": [
-      {
-       "component": "chamomile gelee",
-       "riskAllergens": [],
-       "proposedStandard": "",
-       "label": "chamomile gelee — composition not specified"
-      }
-     ]
+      "name": "Pavlova",
+      "desc": "meringue with marigold sugar, vanilla bean pastry cream, local peaches",
+      "price": "13",
+      "pron": "pav-LOH-vah",
+      "story": "A crisp-outside, soft-inside meringue, named for the Russian ballerina Anna Pavlova. This one's built on marigold sugar — petals from Rain Dog Farm in Redmond, dried and ground with sugar — flavoring the meringue base. Topped with vanilla bean pastry cream and gently cooked local Washington peaches. Floral, bright, and delicate.",
+      "ingredients": [
+        {
+          "term": "Pavlova",
+          "pronunciation": "pav-LOH-vah",
+          "note": "a meringue-based dessert with a crisp crust and soft center, named for ballerina Anna Pavlova."
+        },
+        {
+          "term": "Meringue",
+          "pronunciation": "meh-RANG",
+          "note": "whipped egg whites and sugar, baked low and slow until crisp."
+        },
+        {
+          "term": "Marigold sugar",
+          "pronunciation": null,
+          "note": "marigold petals from Rain Dog Farm in Redmond, dried and ground with sugar to flavor the meringue."
+        },
+        {
+          "term": "Vanilla bean pastry cream",
+          "pronunciation": null,
+          "note": "The composition of this pastry cream has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, dairy and egg especially."
+        }
+      ],
+      "allergens": [
+        "egg",
+        "dairy"
+      ],
+      "canModify": [
+        "dairy"
+      ],
+      "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate. The composition of the vanilla bean pastry cream has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
+      "flags": [
+        {
+          "component": "vanilla bean pastry cream",
+          "riskAllergens": [
+            "dairy",
+            "egg"
+          ],
+          "proposedStandard": "whole milk, cream, egg yolk, sugar, vanilla bean, cornstarch",
+          "label": "vanilla bean pastry cream — composition not specified"
+        }
+      ]
     },
     {
-     "name": "Chilled Cherry Gazpacho",
-     "desc": "bing cherry, tomato, cucumber, red onion, bell pepper, champagne vinegar, crème fraiche, sumac",
-     "price": "15",
-     "raw": false,
-     "pron": "gahz-PAH-choh",
-     "story": "Cold soup built on bing cherries and tomatoes with cucumber, red onion, and red bell pepper. Champagne vinegar adds brightness. Finished with crème fraiche and sumac for tang and color.",
-     "ingredients": [
-      {
-       "term": "Gazpacho",
-       "pronunciation": "gahz-PAH-choh",
-       "note": "A cold, raw-blended Spanish soup of vegetables and acid, served chilled. This version leans on bing cherries alongside the tomato for a sweet-savory depth."
-      },
-      {
-       "term": "Bing cherry",
-       "pronunciation": null,
-       "note": "Dark, sweet summer cherry — deep red, rich, and low in acidity. Here it carries the soup's body and sweetness against the tomato and vinegar."
-      },
-      {
-       "term": "Crème fraîche",
-       "pronunciation": "krem FRESH",
-       "note": "French cultured cream — thicker and tangier than sour cream, milder than Greek yogurt. Swirled in to finish, for richness and a cool counterpoint to the acid."
-      },
-      {
-       "term": "Sumac",
-       "pronunciation": "SOO-mak",
-       "note": "A tart, deep-red Middle Eastern spice ground from dried sumac berries. Lemony and astringent — dusted on top for color and a bright, sour lift."
-      }
-     ],
-     "allergens": [
-      "dairy",
-      "allium"
-     ],
-     "canModify": [
-      "dairy"
-     ],
-     "allergenNote": "Naturally gluten-free. Dairy: the crème fraiche finish can come off cleanly. Allium: red onion and garlic are blended into the base — not removable.",
-     "added": "2026-06-19"
+      "name": "Seasonal Gelato",
+      "desc": "ask the kitchen for tonight's flavor",
+      "price": "8",
+      "allergens": [
+        "dairy"
+      ],
+      "canModify": [],
+      "allergenNote": "Flavors rotate nightly — confirm eggs or nuts with the kitchen before promising anything."
     }
-   ]
-  },
-  {
-   "section": "Primi & Secondi",
-   "items": [
-    {
-     "name": "Swan House Bolognese",
-     "desc": "saffron spaghetti, swan house beef & pork, tomato, fennel, rosemary, parmigiano reggiano",
-     "price": "32",
-     "raw": false,
-     "pron": "boh-loh-NYEH-zeh",
-     "story": "The family recipe — on the menu since day one, and it never leaves. This run is built on ground beef and pork raised at Swan House Farm; when it's gone, the dish returns to the classic pork-and-veal build. Either way: seasoned with our own spice blend, cooked down slowly with red wine, tomato, fennel, and rosemary, then finished with cream, butter, sherry, and salt. The saffron spaghetti is extruded with a strained, highly concentrated saffron tea in place of water — that's where the gold color and the subtle earthy aroma come from, no egg involved.",
-     "ingredients": [
-      {
-       "term": "Bolognese",
-       "pronunciation": "boh-loh-NYEH-zeh",
-       "note": "a slow-cooked meat ragù from Bologna in Emilia-Romagna — traditionally more meat than tomato."
-      },
-      {
-       "term": "Saffron",
-       "pronunciation": "SAF-ron",
-       "note": "the dried stigma of the crocus flower, hand-harvested and prized. We brew it into a concentrated tea, strain it, and use it in place of water in the extruded dough — gold color, hay-like earthiness, and the reason this golden pasta has no egg."
-      },
-      {
-       "term": "Parmigiano Reggiano",
-       "pronunciation": "par-mee-JAH-noh reh-JAH-noh",
-       "note": "the aged hard cheese from Emilia-Romagna, the only 'real' Parmesan; nutty, savory, crystalline."
-      }
-     ],
-     "allergens": [
-      "gluten",
-      "dairy",
-      "allium"
-     ],
-     "canModify": [
-      "dairy"
-     ],
-     "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
-    },
-    {
-     "name": "Rigatoni",
-     "_originalName": "Paccheri",
-     "desc": "roasted broccoli, onion, bread-crumble cream, garlic, shallot, chili flake, lemon, pecorino romano, pine nuts",
-     "price": "29",
-     "raw": false,
-     "pron": "ree-gah-TOH-nee",
-     "story": "Broccoli and onion roasted until caramelized, then built into a pan sauce with garlic, shallot, red chili flake, and cubed bread. White wine and cream go in, and the bread melts down as it cooks to thicken it. Finished with lemon juice, zest, and butter, then topped with Pecorino Romano and pine nuts.",
-     "ingredients": [
-      {
-       "term": "Rigatoni",
-       "pronunciation": "ree-gah-TOH-nee",
-       "note": "Ridged tube pasta, shorter and narrower than paccheri. The ridges and hollow centers grab and hold the sauce."
-      },
-      {
-       "term": "Bread-crumble cream",
-       "pronunciation": null,
-       "note": "The sauce thickener — cubed bread cooked into the roasted broccoli, onion, garlic, shallot, and chili with white wine and cream until the bread melts down and bodies the sauce. Carries gluten (bread) and dairy (cream)."
-      },
-      {
-       "term": "Pecorino Romano",
-       "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
-       "note": "A hard, salty sheep's-milk cheese from Lazio — sharper than Parmigiano. Grated over the finish."
-      },
-      {
-       "term": "Pine nuts",
-       "pronunciation": null,
-       "note": "Soft, buttery seeds of the stone pine, toasted for the finish. Treated as a tree-nut allergen on the plate."
-      }
-     ],
-     "allergens": [
-      "gluten",
-      "dairy",
-      "nuts",
-      "allium"
-     ],
-     "canModify": [],
-     "allergenNote": "Gluten and dairy are both built into the sauce — the cubed bread melts in to thicken it, and the cream, butter, and Pecorino carry the dairy, so neither comes out cleanly. Allium: onion, garlic, and shallot are all roasted or cooked into the sauce, not removable. Tree nuts: pine nuts finish the plate, and per the kitchen notes they may also go into the pan — do NOT clear this for a nut allergy until Chris confirms they can be left out entirely.",
-     "added": "2026-06-27"
-    },
-    {
-     "name": "Stuffed Farfalle",
-     "desc": "egg pasta stuffed with basil, ricotta & mozzarella, spicy vodka sauce, heirloom cherry tomatoes, basil",
-     "price": "30",
-     "raw": false,
-     "pron": "far-FAH-leh",
-     "story": "Bow-tie pasta made from egg dough, filled with basil, ricotta, and fresh mozzarella. Finished in a spicy vodka sauce built on onion and garlic, topped with halved heirloom cherry tomatoes and fresh basil chiffonade. Warm, creamy, and a little sharp from the heat.",
-     "ingredients": [
-      {
-       "term": "Farfalle",
-       "pronunciation": "far-FAH-leh",
-       "note": "Bow-tie shaped pasta; here made in-house from egg dough and stuffed with basil, ricotta, and mozzarella. A fresh egg dough, so it carries egg and wheat."
-      },
-      {
-       "term": "Vodka sauce",
-       "pronunciation": null,
-       "note": "A tomato-and-cream sauce built on onion and garlic. This version is spicy."
-      },
-      {
-       "term": "Chiffonade",
-       "pronunciation": "shif-oh-NAHD",
-       "note": "Herbs sliced into thin ribbons — here fresh basil, scattered over the top."
-      }
-     ],
-     "allergens": [
-      "gluten",
-      "egg",
-      "dairy",
-      "allium"
-     ],
-     "canModify": [],
-     "allergenNote": "Egg and gluten are both in the fresh egg pasta — built in. Dairy runs through the filling (ricotta, mozzarella) and the cream in the sauce, so it can't come off this dish. Allium: onion and garlic are cooked into the vodka sauce.",
-     "flags": [
-      {
-       "component": "spicy vodka sauce",
-       "riskAllergens": [
-        "dairy",
-        "allium"
-       ],
-       "proposedStandard": "vodka, crushed tomato, heavy cream, onion, garlic, chili flake, parmesan, butter, salt",
-       "label": "spicy vodka sauce — composition not specified"
-      }
-     ],
-     "added": "2026-08-01"
-    },
-    {
-     "name": "Mafaldine alla Carbonara",
-     "desc": "guanciale, black pepper, swan house farm egg yolk, pecorino romano",
-     "price": "28",
-     "raw": true,
-     "pron": "mah-fal-DEE-neh",
-     "story": "The Roman classic on mafaldine — wide, ruffled ribbon pasta named after Princess Mafalda of Savoy — whose wavy edges catch and hold the glossy sauce. Rendered guanciale, lots of cracked black pepper, Pecorino Romano, and a Swan House Farm egg yolk emulsified into a peppery, silky coating. No cream — the silk comes from the egg and cheese. Served with a raw yolk, hence the asterisk.",
-     "ingredients": [
-      {
-       "term": "Mafaldine",
-       "pronunciation": "mah-fal-DEE-neh",
-       "note": "Wide, flat pasta with ruffled edges on both sides, from Naples. Named in honor of Princess Mafalda of Savoy — also called reginette (little queens). The wavy edges grip the carbonara sauce exceptionally well."
-      },
-      {
-       "term": "Carbonara",
-       "pronunciation": "kar-boh-NAH-rah",
-       "note": "a Roman sauce of egg, hard cheese, cured pork, and black pepper — emulsified, never creamed."
-      },
-      {
-       "term": "Guanciale",
-       "pronunciation": "gwahn-CHAH-leh",
-       "note": "cured pork jowl, fattier and more delicate than pancetta; renders down into the sauce."
-      },
-      {
-       "term": "Pecorino Romano",
-       "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
-       "note": "a hard, salty sheep's-milk cheese from Lazio — sharper than Parmigiano."
-      }
-     ],
-     "allergens": [
-      "gluten",
-      "egg",
-      "dairy"
-     ],
-     "canModify": [
-      "dairy",
-      "egg"
-     ],
-     "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen subs in whatever vegetable is running seasonally on the menu. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish.",
-     "added": "2026-06-10"
-    },
-    {
-     "name": "Risotto alle Zucchine",
-     "desc": "roasted zucchini, parmesan, crème fraîche-basil puree, lemon",
-     "price": "28",
-     "raw": false,
-     "pron": "ree-ZOH-toh AHL-leh zoo-kee-NEH",
-     "story": "Creamy risotto built on roasted zucchini, garlic, and shallot. Finished with butter, Parmesan, and a basil puree blended from basil, zucchini, crème fraîche, and lemon oil. Bright, clean, and seasonal.",
-     "ingredients": [
-      {
-       "term": "Risotto alle Zucchine",
-       "pronunciation": "ree-ZOH-toh AHL-leh zoo-kee-NEH",
-       "note": "Italian for 'risotto with zucchini.' A summer take on the dish — roasted zucchini folded through the rice, finished bright with lemon and basil."
-      },
-      {
-       "term": "Basil puree",
-       "pronunciation": null,
-       "note": "Basil, zucchini, crème fraîche, and lemon oil blended smooth into a vivid green puree. Herbaceous and bright with a little richness from the crème fraîche — swirled in at the finish, with micro basil on top for aroma. Note the crème fraîche: this puree carries dairy."
-      },
-      {
-       "term": "Arborio",
-       "pronunciation": "ar-BOR-ee-oh",
-       "note": "Short-grain Italian rice that releases starch as it cooks, creating risotto's signature creamy texture. Par-cooked in batches at the restaurant, finished per plate to order."
-      }
-     ],
-     "allergens": [
-      "dairy",
-      "allium"
-     ],
-     "canModify": [
-      "dairy"
-     ],
-     "allergenNote": "Naturally gluten-free. Dairy lives in three spots: Parmesan, butter, and the crème fraîche in the basil puree — a true dairy-free plate means dropping all three, including the puree, so flag it to the kitchen. Allium and the cooked wine can't come out — our risotto base is always par-cooked with onion and white wine in the stock, and this build adds garlic and shallot.",
-     "added": "2026-06-23"
-    },
-    {
-     "name": "Grilled King Salmon",
-     "desc": "Troll-caught Washington king salmon, Bibb lettuce, roasted tomato vinaigrette, sun gold tomatoes, charred zucchini",
-     "price": "38",
-     "raw": true,
-     "story": "Seven ounces of troll-caught Washington king salmon, grilled to medium rare. Served with Bibb lettuce dressed in roasted tomato vinaigrette, bright sun gold tomatoes, and charred zucchini. Finished with marigold petals.",
-     "ingredients": [
-      {
-       "term": "Troll-caught king salmon",
-       "pronunciation": null,
-       "note": "Caught one fish at a time on hook and line rather than by net, which keeps the fillet intact and the flesh firm. King (chinook) is the richest of the Pacific salmon, high in fat with a deep colour. Seven ounce fillet, grilled to medium rare."
-      },
-      {
-       "term": "Bibb lettuce",
-       "pronunciation": null,
-       "note": "A soft butterhead lettuce with loose, tender leaves and a mild sweetness. Dressed and served cool against the warm fish."
-      },
-      {
-       "term": "Sun gold tomatoes",
-       "pronunciation": null,
-       "note": "A small orange cherry tomato, noticeably sweeter and lower in acid than a red cherry tomato. Served raw."
-      },
-      {
-       "term": "Roasted tomato vinaigrette",
-       "pronunciation": null,
-       "note": "The composition of this vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
-      },
-      {
-       "term": "Marigold petals",
-       "pronunciation": null,
-       "note": "Edible flower petals, faintly citrus and peppery. A garnish, and they come off on request."
-      }
-     ],
-     "allergens": [
-      "fish"
-     ],
-     "canModify": [],
-     "allergenNote": "Fish: king salmon, central to the dish, cannot come off. The composition of the roasted tomato vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
-     "added": "2026-08-01",
-     "flags": [
-      {
-       "component": "roasted tomato vinaigrette",
-       "riskAllergens": [
-        "allium"
-       ],
-       "proposedStandard": "",
-       "label": "roasted tomato vinaigrette — composition not specified"
-      }
-     ]
-    },
-    {
-     "name": "Roasted Duck Breast",
-     "desc": "Muscovy duck breast, polenta, chanterelles, corn, huckleberry demi glace",
-     "price": "42",
-     "raw": true,
-     "story": "Muscovy duck breast rendered skin-side down to medium rare. It sits on creamy polenta with sautéed chanterelles, corn, and shallot. Marjoram and sherry vinegar brighten the plate. A huckleberry demi glace finishes it, adding dark fruit and depth.",
-     "ingredients": [
-      {
-       "term": "Muscovy duck",
-       "pronunciation": "MUSS-koh-vee",
-       "note": "A leaner breed than Pekin, with a deeper, less fatty flavour closer to red meat than poultry. The breast is rendered skin-side down so the fat runs off and the skin crisps, then cooked to medium rare."
-      },
-      {
-       "term": "Chanterelles",
-       "pronunciation": "shan-tuh-RELS",
-       "note": "A wild golden mushroom, firm with a mild apricot-and-pepper note. Sautéed here."
-      },
-      {
-       "term": "Polenta",
-       "pronunciation": "poh-LEN-tah",
-       "note": "Ground cornmeal cooked until thick and creamy, the bed for the duck. The house polenta is built with cream, stock and butter, so treat it as dairy unless the kitchen says this prep differs."
-      },
-      {
-       "term": "Marjoram",
-       "pronunciation": "MAR-jer-um",
-       "note": "A soft herb in the oregano family, sweeter and more floral than oregano. Used fresh to lift the plate."
-      },
-      {
-       "term": "Huckleberry demi glace",
-       "pronunciation": "DEH-mee glahss",
-       "note": "The composition of this demi glace has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
-      }
-     ],
-     "allergens": [
-      "dairy",
-      "allium"
-     ],
-     "canModify": [
-      "dairy"
-     ],
-     "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. The composition of the huckleberry demi glace has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
-     "added": "2026-08-01",
-     "flags": [
-      {
-       "component": "huckleberry demi glace",
-       "riskAllergens": [
-        "allium"
-       ],
-       "proposedStandard": "",
-       "label": "huckleberry demi glace — composition not specified"
-      }
-     ]
-    }
-   ],
-   "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
-  }
- ],
- "desserts": [
-  {
-   "name": "Earl Grey Tiramisu",
-   "desc": "mascarpone, ladyfingers, miro tea, planteray dark rum, bergamot agrumato",
-   "price": "15",
-   "pron": "tee-rah-mee-SOO",
-   "story": "A San Fermo riff on the Italian classic. Instead of espresso, the ladyfingers are soaked in Earl Grey from Miro Tea — Ballard's 200-variety loose leaf tea shop — which swaps coffee's bitterness for bergamot's floral citrus. Planteray dark rum in the mascarpone cream; bergamot agrumato oil at the finish.",
-   "ingredients": [
-    {
-     "term": "Tiramisu",
-     "pronunciation": "tee-rah-mee-SOO",
-     "note": "Classic Northern Italian dessert — ladyfinger biscuits soaked in liquid, layered with sweetened mascarpone cream, finished with cocoa. The name means \"pick me up\" in Italian."
-    },
-    {
-     "term": "Miro Tea",
-     "pronunciation": null,
-     "note": "Ballard neighborhood tea shop, Seattle, founded 2005. Carries over 200 varieties of loose leaf tea. We use their Earl Grey for the ladyfinger soak — clean, bergamot-forward, and bright."
-    },
-    {
-     "term": "Bergamot agrumato",
-     "pronunciation": "BEHR-gah-mot ag-roo-MAH-toh",
-     "note": "Extra virgin olive oil co-milled with whole bergamot fruit at the press — the citrus oils are captured inside the olive oil rather than infused afterward. Bergamot is the citrus that gives Earl Grey its distinctive floral-bitter aroma. Used as a finishing drizzle here."
-    },
-    {
-     "term": "Planteray dark rum",
-     "pronunciation": "PLAN-teh-ray",
-     "note": "Formerly Plantation Rum — rebranded to Planteray in 2024. French-Caribbean aged rum from Maison Ferrand, known for its dual aging: first in the tropics, then finished in cognac barrels in France. Rich, smooth, and molasses-forward."
-    },
-    {
-     "term": "Mascarpone",
-     "pronunciation": "mas-car-POH-neh",
-     "note": "Italian triple-cream fresh cheese from Lombardy — thick, rich, mildly sweet. The base of the tiramisu cream layer."
-    }
-   ],
-   "allergens": [
-    "dairy",
-    "gluten",
-    "egg"
-   ],
-   "canModify": []
-  },
-  {
-   "name": "Pavlova",
-   "desc": "meringue with marigold sugar, vanilla bean pastry cream, local peaches",
-   "price": "13",
-   "pron": "pav-LOH-vah",
-   "story": "A crisp-outside, soft-inside meringue, named for the Russian ballerina Anna Pavlova. This one's built on marigold sugar — petals from Rain Dog Farm in Redmond, dried and ground with sugar — flavoring the meringue base. Topped with vanilla bean pastry cream and gently cooked local Washington peaches. Floral, bright, and delicate.",
-   "ingredients": [
-    {
-     "term": "Pavlova",
-     "pronunciation": "pav-LOH-vah",
-     "note": "a meringue-based dessert with a crisp crust and soft center, named for ballerina Anna Pavlova."
-    },
-    {
-     "term": "Meringue",
-     "pronunciation": "meh-RANG",
-     "note": "whipped egg whites and sugar, baked low and slow until crisp."
-    },
-    {
-     "term": "Marigold sugar",
-     "pronunciation": null,
-     "note": "marigold petals from Rain Dog Farm in Redmond, dried and ground with sugar to flavor the meringue."
-    },
-    {
-     "term": "Vanilla bean pastry cream",
-     "pronunciation": null,
-     "note": "The composition of this pastry cream has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, dairy and egg especially."
-    }
-   ],
-   "allergens": [
-    "egg",
-    "dairy"
-   ],
-   "canModify": [
-    "dairy"
-   ],
-   "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate. The composition of the vanilla bean pastry cream has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
-   "flags": [
-    {
-     "component": "vanilla bean pastry cream",
-     "riskAllergens": [
-      "dairy",
-      "egg"
-     ],
-     "proposedStandard": "whole milk, cream, egg yolk, sugar, vanilla bean, cornstarch",
-     "label": "vanilla bean pastry cream — composition not specified"
-    }
-   ],
-   "added": "2026-08-01"
-  },
-  {
-   "name": "Seasonal Gelato",
-   "desc": "ask the kitchen for tonight's flavor",
-   "price": "8",
-   "allergens": [
-    "dairy"
-   ],
-   "canModify": [],
-   "allergenNote": "Flavors rotate nightly — confirm eggs or nuts with the kitchen before promising anything."
-  }
- ],
- "allergenStatus": "confirmed"
+  ],
+  "allergenStatus": "confirmed"
 }
