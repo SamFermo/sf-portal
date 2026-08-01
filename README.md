@@ -96,34 +96,63 @@ them heuristically. On 2026-06-11 that shipped 6/22's R/Os under the 6/15
 header for ~8 hours. The gviz pipeline gets headers attached to every block
 and does no pairing; anything ambiguous is a loud build failure, not a guess.
 
-### Fresh Talk — HARD RULE: don't guess composed components
+### Fresh Talk — HARD RULE: name the gap, never fill it
 
-When a Fresh Talk card is generated — by the "Style with Remy" / dish-edit
-worker (`FRESHTALK_SYSTEM` and `FRESHTALK_EDIT_SYSTEM` in `Codename:
-Neelix/worker/index.js`) or by Claude during a correction session — it must
+When a Fresh Talk card is generated, by the "Style with Remy" / dish-edit worker
+(`FRESHTALK_SYSTEM` and `FRESHTALK_EDIT_SYSTEM` in `Codename:
+Neelix/worker/index.js`) or by Claude during a correction session, it must
 **never invent the makeup of an in-house prepped component** (puree, sauce, jus,
 stock, jam, preserve, dressing, vinaigrette, emulsion, aioli, infusion, cure,
-broth, house spice blend). If the source notes don't spell out that component's
-actual ingredients or method, leave it out of the server-facing copy and flag it
-for a manager to confirm with the kitchen. A confident guess that turns out wrong
-is what makes the floor stop trusting the portal.
+broth, house spice blend). It must also **never quietly drop it.** If the source
+notes don't spell out that component's actual ingredients or method:
+
+- **The component stays in the copy by name.** The floor needs to know it is on
+  the plate. Omitting it leaves a silent gap nobody on the floor can see.
+- **Its composition is never stated, implied, or generalized.** No "commonly
+  carries", "normally built on", "typically includes", "usually a reduction of".
+  A server repeats a hedge to a guest as fact, and the hedge does not survive the
+  retelling.
+- **Its ingredients note is exactly two sentences:** that the composition has not
+  been specified for this prep, and the action that follows. This is the exemplar
+  and the ceiling:
+
+  > The composition of this demi glace has not been specified for this prep.
+  > Confirm with the kitchen before clearing it for any allergy, allium especially.
+
+  Name a specific allergen only where the preparation class puts one at obvious
+  risk, and always keep the "any allergy" catch-all, because an unspecified
+  composition can carry an allergen you did not name.
+- **It goes in the `flags` array** so a manager gets a confirm chip.
 
 How it surfaces:
 
-- **Server copy stays clean.** The card never prints a guess and never prints
-  review language ("confirm with kitchen", "unconfirmed"). It just omits the
-  unverified detail.
-- **Flags are manager-only.** The worker returns a `flags` array. The
-  Style-with-Remy modal and the dish-edit modal show a yellow "Manager review"
-  banner listing each flagged component; the dish-edit save is gated behind a
-  deliberate "Publish anyway" click. A live card carrying unresolved flags shows
-  a manager-only amber line (rendered only in manager mode) until a re-polish
-  with the real detail clears it.
+- **Server copy carries the gap, loudly.** The dish's allergen chip row shows a
+  provisional marker (`?` chip plus an "Allergen list provisional" line) readable
+  without expanding the card, and "kitchen can modify" comes off any allergen the
+  flag puts at risk. A modification we cannot describe is not one we can promise.
+- **Flags are manager-only, and they are the mechanism.** The worker returns a
+  `flags` array of `{component, riskAllergens, proposedStandard, label}`
+  (legacy plain strings still parse). Each unresolved flag renders as an amber
+  "tap to confirm" chip in manager mode. The confirm modal asks one question,
+  takes the kitchen's answer, has Remy write it up in card voice for the manager
+  to read and edit, requires a yes/no on every at-risk allergen, and only then
+  clears the warning. `proposedStandard` is a manager-only candidate the chef
+  comps against and never enters server copy.
+- **Resolutions are per-component, not per-dish.** The edit overlay stores
+  `resolvedComponents`; canonical flags from the overnight bake are always the
+  starting point, so confirming one component today cannot mute a different flag
+  raised tomorrow. A resolution is invalidated if the dish's menu line changes.
 
 History: on 2026-06-22 a Risotto alle Zucchine card described its basil puree as
 "basil blended with oil." The puree actually carried zucchini and crème fraîche
-(dairy) — a guess that read as fact and shipped. This rule exists so the tool
-flags the gap instead of filling it.
+(dairy), a guess that read as fact and shipped. The first version of this rule
+fixed that by omitting the unverified detail entirely and keeping all review
+language out of server copy. On 2026-08-01 Sam overrode the omission half: the
+floor should get the most complete version available with no silent assumptions
+baked in, so the gap is now visible and actionable in server-facing copy while
+its contents are still never speculated. Both halves matter. The 8/1 pass also
+found the old rule had been leaking anyway, with "vinaigrettes commonly carry
+shallot and mustard" style speculation live in ingredient notes on two dishes.
 
 ## Deploying (first time)
 

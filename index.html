@@ -365,6 +365,25 @@ nav.chips::-webkit-scrollbar{display:none;}
 .cf-yes{background:#4a6a3a; color:#fff;}
 .cf-no{background:#e8e0d2; color:#5a5040;}
 .cf-hint{font-size:11px; color:var(--card-mute); font-style:italic; margin-top:8px; line-height:1.4;}
+/* Provisional-allergen surfaces. SERVER-FACING by design: a dish carrying an
+   unresolved composed-component flag has an allergen list we cannot vouch for,
+   and that has to be readable in the chip row without expanding the card. */
+.alg.alg-prov{background:rgba(214,158,46,.18); border:1px solid rgba(214,158,46,.65); color:#8a5a12; font-weight:800;}
+.alg-prov-line{flex:0 0 100%; margin-top:2px; font-size:10.5px; font-weight:700; letter-spacing:.02em; color:#8a5a12; line-height:1.35;}
+.alg-prov-line .apl-sub{display:block; font-weight:600; opacity:.85; letter-spacing:0;}
+/* Confirm-modal Remy preview + allergen resolution */
+.cf-preview{background:rgba(74,106,58,.07); border:1px solid rgba(74,106,58,.3); border-radius:9px; padding:10px 12px; margin:8px 0; font-size:13.5px; line-height:1.55; color:#2a2419;}
+.cf-preview .cf-pl{display:block; font-size:9px; letter-spacing:.05em; text-transform:uppercase; color:#4a6a3a; font-weight:700; margin-bottom:4px;}
+.cf-preview textarea{width:100%; min-height:88px; font-family:inherit; font-size:13.5px; line-height:1.55; border:1px solid rgba(74,106,58,.3); border-radius:7px; padding:7px 9px; background:#fff; resize:vertical; color:#2a2419;}
+.cf-alg{margin:10px 0 4px; border-top:1px solid rgba(214,158,46,.28); padding-top:9px;}
+.cf-alg-head{font-size:11px; font-weight:700; color:#8a5a12; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px;}
+.cf-alg-row{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:5px 0;}
+.cf-alg-name{font-size:13px; color:var(--card-ink); font-weight:600;}
+.cf-alg-btns{display:flex; gap:5px;}
+.cf-alg-btns button{border:1px solid rgba(0,0,0,.15); background:#efe8db; color:#5a5040; border-radius:7px; padding:5px 11px; font-size:11.5px; font-weight:700; cursor:pointer; font-family:inherit;}
+.cf-alg-btns button.on-yes{background:#a03030; color:#fff; border-color:#a03030;}
+.cf-alg-btns button.on-no{background:#4a6a3a; color:#fff; border-color:#4a6a3a;}
+.cf-warn{background:rgba(160,48,48,.08); border:1px solid rgba(160,48,48,.35); color:#8a2020; border-radius:8px; padding:8px 10px; margin:8px 0; font-size:12px; line-height:1.45; font-weight:600;}
 #editModal .modal-card{max-height:88dvh;}
 #editBody{overflow-y:auto; -webkit-overflow-scrolling:touch; min-height:0; flex:1;}
 #editModal textarea{flex:none; min-height:48px; max-height:120px; font-family:inherit; font-size:13.5px; resize:vertical;}
@@ -1490,7 +1509,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785603213';   // stamped by build-data.py at every deploy
+const BUILD='1785606079';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2033,11 +2052,44 @@ function noteBox(cat,name){if(!editMode)return '';const note=(getCorr()[cat]||{}
 function editBarHTML(){let h=`<div class="editbar"><button class="edit-toggle ${editMode?'on':''}" onclick="toggleEdit()">✎ Corrections${editMode?' · on':''}</button>`;if(editMode)h+=`<button class="gen-btn" onclick="genPrompt()">Generate deploy prompt<span class="badge gen-count">${corrCount()}</span></button>`;h+=`</div>`;if(editMode)h+=`<p class="est-note" style="text-align:left;margin:-6px 0 14px;">Notes save on this device. Add corrections under any item across Food, Wine &amp; Cocktails, then generate one prompt to hand back for deploy.</p>`;return h;}
 function toggleEdit(){editMode=!editMode;renderFoodTab();renderWine();renderBar();}
 const ALG={dairy:'D',gluten:'G',egg:'E',fish:'F',nuts:'N',shellfish:'SF',sesame:'SE',soy:'SO',peanut:'P',allium:'AL'};
+/* Allergen chips. A dish carrying an unresolved composed-component flag gets a
+   provisional marker HERE, in the chip row, not buried in the expandable body —
+   mid-service nobody expands the card, they scan the chips and clear the table.
+   Two consequences: a "?" chip sits with the allergens, and "kitchen can modify"
+   comes off any allergen the flag puts at risk, because we cannot promise a
+   modification we cannot describe. Doctrine: name the gap, never fill it. */
+function provRisk(it){
+  const fl=(it._flags!==undefined)?it._flags:(it.flags||[]);
+  if(!fl||!fl.length)return null;
+  const comps=[],risk=[];
+  fl.forEach(function(f){
+    const n=flagNorm(f);
+    if(n.component&&comps.indexOf(n.component)<0)comps.push(n.component);
+    n.risk.forEach(function(x){if(risk.indexOf(x)<0)risk.push(x);});
+  });
+  if(!comps.length)return null;
+  return {comps:comps,risk:risk};
+}
+function provSentence(p){
+  const list=p.comps.length===1?p.comps[0]:p.comps.slice(0,-1).join(', ')+' and '+p.comps[p.comps.length-1];
+  const named=p.risk.filter(function(x){return !!x;}).map(function(x){return x;});
+  const tail=named.length?' for any allergy, '+(named.length===1?named[0]:named.slice(0,-1).join(', ')+' and '+named[named.length-1])+' especially.':' for any allergy.';
+  return 'The composition of the '+list+' has not been specified for this prep. Confirm with the kitchen before clearing this dish'+tail;
+}
 function allergenChips(it){
   const a=it.allergens||[],m=it.canModify||[];
-  if(!a.length)return '';
+  const p=provRisk(it);
+  if(!a.length&&!p)return '';
   let h='<div class="alg-row">';
-  a.forEach(x=>h+=`<span class="alg ${m.indexOf(x)>=0?'alg-mod':''}" title="${esc(x)}">${ALG[x]||esc(x)}</span>`);
+  a.forEach(function(x){
+    // A modification we cannot describe is not a modification we can promise.
+    const modOk=m.indexOf(x)>=0&&!(p&&p.risk.indexOf(x)>=0);
+    h+=`<span class="alg ${modOk?'alg-mod':''}" title="${esc(x)}">${ALG[x]||esc(x)}</span>`;
+  });
+  if(p){
+    h+=`<span class="alg alg-prov" title="${esc(provSentence(p))}">?</span>`;
+    h+=`<span class="alg-prov-line">Allergen list provisional<span class="apl-sub">${esc(provSentence(p))}</span></span>`;
+  }
   return h+'</div>';
 }
 const NEW_DAYS=7;         // an item counts as "new" (NEW badge + Fresh Talk glow) for 1 week
@@ -2077,16 +2129,51 @@ function flagNorm(f){
   if(f&&typeof f==='object'){
     const comp=(f.component||'').trim();
     const label=f.label||(comp?comp+' — confirm composition with the kitchen':'');
-    return {component:comp||label, std:(f.proposedStandard||f.standard||'').trim()||null, label:label};
+    const risk=Array.isArray(f.riskAllergens)?f.riskAllergens.filter(a=>typeof a==='string'&&a.trim()).map(a=>a.trim().toLowerCase()):[];
+    return {component:comp||label, std:(f.proposedStandard||f.standard||'').trim()||null, label:label, risk:risk};
   }
   const s=String(f||''); const comp=s.split(/\s[—–-]\s/)[0].trim();
-  return {component:comp||s, std:null, label:s};
+  return {component:comp||s, std:null, label:s, risk:[]};
+}
+/* Component-name matching for the Ingredients-to-know upsert. Exact match first,
+   then a trailing word-boundary match so a flag component carrying a modifier
+   ("spicy vodka sauce") updates the existing glossary entry ("Vodka sauce")
+   instead of appending a second one. The shorter side must be at least two words,
+   so a bare "sauce" can never swallow every sauce on the card. */
+function termKey(s){return String(s||'').toLowerCase().replace(/\s+/g,' ').trim();}
+function termMatches(a,b){
+  a=termKey(a); b=termKey(b);
+  if(!a||!b)return false;
+  if(a===b)return true;
+  const long=a.length>=b.length?a:b, short=a.length>=b.length?b:a;
+  if(short.split(' ').length<2)return false;
+  return long.endsWith(' '+short);
+}
+/* Which components on this dish a manager has already confirmed. Stored on the
+   edit overlay cumulatively and keyed by component name, NOT by clearing the
+   flags array — clearing froze the array, so a flag the bake raised the next day
+   could never surface. Canonical flags are always the starting point; a resolution
+   only subtracts, and it is invalidated if the dish's menu line changed since.
+   Residual gap: a recipe changed silently under an identical component name and
+   an identical desc is not detectable here. That one comes from the kitchen. */
+function flagResolved(ed,it){
+  if(!ed)return [];
+  if(Array.isArray(ed.resolvedComponents))
+    return ed.resolvedComponents.filter(r=>r&&r.component&&(!r.desc||r.desc===it.desc));
+  // Back-compat for overlays written before resolvedComponents existed: infer the
+  // resolved set from whatever the old cleared-flags array dropped.
+  if(Array.isArray(ed.flags)){
+    const kept=ed.flags.map(f=>termKey(flagNorm(f).component));
+    return (Array.isArray(it.flags)?it.flags:[]).map(f=>flagNorm(f).component)
+      .filter(c=>kept.indexOf(termKey(c))<0).map(c=>({component:c,desc:it.desc}));
+  }
+  return [];
 }
 function reviewBannerHTML(flags){
   if(!flags||!flags.length)return '';
   let h='<div class="mgr-review"><div class="mgr-review-head">⚠ Manager review — confirm with the kitchen</div>';
   flags.forEach(f=>{const n=flagNorm(f);h+=`<div class="mgr-review-item">${esc(n.label)}${n.std?` <span style="opacity:.7">(standard proposed: ${esc(n.std)})</span>`:''}</div>`;});
-  h+='<div class="mgr-review-sub">Remy left these out of the card on purpose rather than guess. Servers don\'t see this note. Add the real detail and re-polish, or publish as-is once confirmed.</div>';
+  h+='<div class="mgr-review-sub">Remy named these on the card without describing them, because the notes didn\'t say what\'s in them. Until you confirm each one, the card tells the floor the composition is unspecified and warns them off clearing the dish for an allergy. Tap the amber chips on the card to resolve them one at a time.</div>';
   return h+'</div>';
 }
 function mgrFlagLineHTML(flags,origName){
@@ -6212,6 +6299,7 @@ function rmLive(id){
    Manager makes corrections → Remy polishes → saved to menu-edits collection.
    Render code merges overlays over base data before building cards. */
 const EDIT_URL='https://remy-outreach.sam-d1f.workers.dev/freshtalk-edit';
+const NOTE_URL='https://remy-outreach.sam-d1f.workers.dev/freshtalk-note';
 const ALL_ALLERGENS=['dairy','gluten','egg','fish','nuts','shellfish','sesame','soy','peanut','allium'];
 let MEDITS={}, meditsUnsub=null;
 function meditsLsGet(){try{return JSON.parse(localStorage.getItem('sf-medits')||'{}');}catch(e){return {};}}
@@ -6234,10 +6322,24 @@ function getEditedDish(it){
     if(ed[k]!==undefined&&ed[k]!==null)merged[k]=ed[k];
   });
   if(ed.ingredients&&ed.ingredients.length)merged.ingredients=ed.ingredients;
-  // An edit overlay's flags win — including an empty array, which is how a manager
-  // re-polish clears a flag the 6am run baked into the canonical item. Old edit recs
-  // (no flags field) fall back to whatever canonical flags the base item carries.
-  merged._flags=Array.isArray(ed.flags)?ed.flags:(Array.isArray(it.flags)?it.flags.slice():[]);
+  // Canonical flags are ALWAYS the starting point, so a flag the overnight bake
+  // raises today still surfaces on a dish someone edited last week. The overlay
+  // only subtracts components a manager actually confirmed. (Before 2026-08-01 the
+  // overlay's flags array won outright, which froze the list permanently and could
+  // silently mute a later allergen alert.)
+  const _res=flagResolved(ed,it).map(r=>r.component);
+  const _union=(Array.isArray(it.flags)?it.flags.slice():[]);
+  // A re-polish can raise flags the bake didn't (the manager changed the desc), so
+  // carry those too. Union, never replace: the only thing that removes a flag is a
+  // manager confirming that specific component.
+  if(Array.isArray(ed.flags))ed.flags.forEach(function(f){
+    const c=flagNorm(f).component;
+    if(!_union.some(function(g){return termMatches(flagNorm(g).component,c);}))_union.push(f);
+  });
+  merged._flags=_union.filter(function(f){
+    const c=flagNorm(f).component;
+    return !_res.some(function(r){return termMatches(r,c);});
+  });
   merged._edited=true;merged._editId=id;merged._originalName=it.name;
   return merged;
 }
@@ -6313,17 +6415,22 @@ async function saveEdit(){
   }catch(e){
     $('em-status').textContent='Remy polish failed ('+e.message+') — saving with your raw input.';
   }
+  // Carry forward every component a manager already confirmed, so a re-polish
+  // doesn't quietly re-raise resolved flags (or, worse, lose the confirmations).
+  var _f=findDishByName(editTarget.originalName);
+  var _prevRes=_f?flagResolved(getEditedDish(_f.dish),_f.dish):[];
   var rec={originalName:editTarget.originalName,name:name,desc:desc,
     price:payload.price,pron:pron,story:story,ingredients:ingredients,
     allergens:allergens,canModify:canModify,allergenNote:payload.allergenNote,
     raw:payload.raw,section:editTarget.section,flags:flags,
+    resolvedComponents:_prevRes,menuDate:(SF.menu&&SF.menu.menuDate)||'',
     editedBy:currentUserName()||'manager',editedAt:Date.now()};
   if(flags.length){
     // Manager review gate: don't publish a polish that left composed components
     // out. Show what was flagged, require a second, deliberate click to publish.
     editPolished=rec;
     $('em-flags').innerHTML=reviewBannerHTML(flags);
-    $('em-status').textContent='Remy left the flagged components out of the copy. Confirm with the kitchen, then publish (servers won\'t see the flag).';
+    $('em-status').textContent='Remy named the flagged components but didn\'t describe them. Publishing is fine: the card will carry a provisional-allergen warning until you confirm each one from the card chips.';
     btn.disabled=false;btn.textContent='Publish anyway';btn.onclick=publishEdit;
     return;
   }
@@ -6352,7 +6459,7 @@ function revertEdit(){
    Save upserts the confirmed composition as an "Ingredients to know" entry and
    removes that one flag from the dish's edit overlay. No worker call, deterministic;
    the confirmed detail becomes server-visible, the story stays clean. */
-let cfTarget=null;
+let cfTarget=null, cfComposition='', cfAlgAns={};
 function findDishByName(origName){
   var dish=null, section='';
   SF.menu.food.forEach(function(sec){sec.items.forEach(function(it){if(it.name===origName){dish=it;section=sec.section;}});});
@@ -6366,45 +6473,123 @@ function openConfirmModal(origName,idx){
   var flags=(ed._flags!==undefined)?ed._flags:(ed.flags||[]);
   if(!flags||!flags[idx])return;
   var n=flagNorm(flags[idx]);
-  cfTarget={originalName:origName,section:found.section,idx:idx,component:n.component,std:n.std};
+  cfTarget={originalName:origName,section:found.section,idx:idx,component:n.component,std:n.std,risk:n.risk||[]};
+  cfComposition=''; cfAlgAns={};
   $('cfHead').textContent='Confirm: '+n.component;
   var h='';
   if(n.std){
     h+='<div class="cf-q">Does the <b>'+esc(n.component)+'</b> follow the standard preparation below?</div>';
     h+='<div class="cf-candidate"><span class="cf-cl">Proposed standard — comp against the real recipe</span>'+esc(n.std)+'</div>';
-    h+='<div class="cf-yn"><button class="cf-yes" onclick="cfSaveConfirm(true)">Yes — that\'s it</button><button class="cf-no" onclick="cfRevealNo()">No / not quite</button></div>';
-    h+='<div id="cf-nowrap" style="display:none"><div class="em-field"><label>Actual ingredients &amp; process</label><textarea id="cf-text" style="min-height:70px">'+esc(n.std)+'</textarea></div><div class="em-actions"><button class="em-save" onclick="cfSaveConfirm(false)">Save composition</button></div></div>';
+    h+='<div class="cf-yn"><button class="cf-yes" onclick="cfProceed(true)">Yes — that\'s it</button><button class="cf-no" onclick="cfRevealNo()">No / not quite</button></div>';
+    h+='<div id="cf-nowrap" style="display:none"><div class="em-field"><label>Actual ingredients &amp; process</label><textarea id="cf-text" style="min-height:70px">'+esc(n.std)+'</textarea></div><div class="em-actions"><button class="em-save" onclick="cfProceed(false)">Next</button></div></div>';
   } else {
     h+='<div class="cf-q">List the ingredients &amp; process for the <b>'+esc(n.component)+'</b>. There\'s no proposed standard because it isn\'t a standard recipe.</div>';
     h+='<div class="em-field"><label>Ingredients &amp; process</label><textarea id="cf-text" style="min-height:80px" placeholder="e.g. roasted tomato, sherry vinegar, shallot, olive oil, honey"></textarea></div>';
-    h+='<div class="em-actions"><button class="em-save" onclick="cfSaveConfirm(false)">Save composition</button></div>';
+    h+='<div class="em-actions"><button class="em-save" onclick="cfProceed(false)">Next</button></div>';
   }
-  h+='<div class="em-actions" style="margin-top:8px"><button class="em-cancel" onclick="$(\'confirmModal\').classList.remove(\'open\')">Cancel</button></div>';
-  h+='<div class="cf-hint">Saving adds this to the card\'s Ingredients-to-know and clears the flag. Servers see the composition, never the review note.</div>';
+  h+='<div class="em-actions" style="margin-top:8px"><button class="em-cancel" onclick="cfClose()">Cancel</button></div>';
+  h+='<div class="cf-hint">Until you confirm this, the card tells the floor the composition is unspecified and not to clear it for an allergy. Confirming replaces that with the real thing.</div>';
   $('cfBody').innerHTML=h;
   $('confirmModal').classList.add('open');
 }
 function cfRevealNo(){ var w=$('cf-nowrap'); if(w)w.style.display='block'; }
-function cfSaveConfirm(useStd){
+function cfClose(){ cfTarget=null; cfComposition=''; cfAlgAns={}; $('confirmModal').classList.remove('open'); }
+
+/* Stage 2: Remy turns the confirmed composition into card-voice prose, and the
+   manager reads it before it reaches the floor. The polish may add background
+   about the preparation (where it comes from, why it is built that way) but the
+   composition itself is pinned to what the chef just typed. Nothing commits
+   without a human clicking Save, so a bad draft dies here. */
+async function cfProceed(useStd){
   if(!isMgr()||!cfTarget)return;
   var text=useStd?(cfTarget.std||''):(($('cf-text')&&$('cf-text').value||'').trim());
   if(!text){ if($('cf-text'))$('cf-text').focus(); return; }
-  var found=findDishByName(cfTarget.originalName); if(!found){$('confirmModal').classList.remove('open');return;}
+  cfComposition=text;
+  $('cfBody').innerHTML='<div class="cf-q">Asking Remy to write this up…</div>';
+  var found=findDishByName(cfTarget.originalName);
+  var ed=found?getEditedDish(found.dish):null;
+  var note='', failed='';
+  try{
+    var r=await fetch(NOTE_URL,{method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({dish:(ed&&ed.name)||cfTarget.originalName,desc:(ed&&ed.desc)||'',
+        section:cfTarget.section,component:cfTarget.component,composition:text})});
+    if(!r.ok)throw new Error('worker '+r.status);
+    var d=await r.json();
+    note=(d&&d.note||'').trim();
+    if(!note)throw new Error('empty note');
+  }catch(e){ failed=e.message; note=text; }
+  cfRenderPreview(note,failed);
+}
+function cfRenderPreview(note,failed){
+  var h='';
+  if(failed)h+='<div class="cf-warn">Remy polish failed ('+esc(failed)+'). The box below holds your text exactly as you typed it. Save it as-is or write it out yourself.</div>';
+  h+='<div class="cf-preview"><span class="cf-pl">Servers will read this — edit anything that is off</span>'+
+     '<textarea id="cf-note">'+esc(note)+'</textarea></div>';
+  h+='<div class="em-actions" style="margin-bottom:2px"><button class="em-cancel" onclick="cfUseRaw()">Use my plain text instead</button></div>';
+  if(cfTarget.risk&&cfTarget.risk.length){
+    h+='<div class="cf-alg"><div class="cf-alg-head">Allergens — answer before saving</div>';
+    cfTarget.risk.forEach(function(a){
+      h+='<div class="cf-alg-row"><span class="cf-alg-name">Does it contain '+esc(a)+'?</span>'+
+         '<span class="cf-alg-btns"><button id="cfa-y-'+esc(a)+'" onclick="cfSetAlg(\''+esc(a)+'\',true)">Yes</button>'+
+         '<button id="cfa-n-'+esc(a)+'" onclick="cfSetAlg(\''+esc(a)+'\',false)">No</button></span></div>';
+    });
+    h+='</div>';
+  }
+  h+='<div class="em-actions" style="margin-top:8px"><button class="em-save" id="cf-save-btn" onclick="cfCommit()">Save to the card</button>'+
+     '<button class="em-cancel" onclick="cfClose()">Cancel</button></div>';
+  h+='<div class="cf-hint">Saving clears the provisional-allergen warning on this dish. Only do that if the answer above came from the kitchen.</div>';
+  $('cfBody').innerHTML=h;
+  cfSyncSave();
+}
+function cfUseRaw(){ var t=$('cf-note'); if(t)t.value=cfComposition; }
+function cfSetAlg(a,yes){
+  cfAlgAns[a]=yes;
+  var y=$('cfa-y-'+a), n=$('cfa-n-'+a);
+  if(y)y.className=yes?'on-yes':'';
+  if(n)n.className=yes?'':'on-no';
+  cfSyncSave();
+}
+function cfSyncSave(){
+  var b=$('cf-save-btn'); if(!b)return;
+  var need=(cfTarget&&cfTarget.risk)||[];
+  var missing=need.filter(function(a){return cfAlgAns[a]===undefined;});
+  b.disabled=missing.length>0;
+  b.style.opacity=missing.length?'.45':'1';
+  b.textContent=missing.length?('Answer '+missing.length+' allergen question'+(missing.length>1?'s':'')):'Save to the card';
+}
+function cfCommit(){
+  if(!isMgr()||!cfTarget)return;
+  var need=(cfTarget.risk)||[];
+  if(need.some(function(a){return cfAlgAns[a]===undefined;}))return;
+  var text=(($('cf-note')&&$('cf-note').value)||'').trim()||cfComposition;
+  var found=findDishByName(cfTarget.originalName); if(!found){cfClose();return;}
   var ed=getEditedDish(found.dish);
   var ings=(ed.ingredients||[]).slice();
-  var comp=cfTarget.component, low=comp.toLowerCase();
-  var fi=ings.findIndex(function(g){return g&&(g.term||'').toLowerCase()===low;});
+  var comp=cfTarget.component;
+  // Trailing word-boundary match, so "spicy vodka sauce" updates "Vodka sauce"
+  // in place and keeps its existing capitalization instead of appending a twin.
+  var fi=ings.findIndex(function(g){return g&&termMatches(g.term,comp);});
   if(fi>=0)ings[fi]=Object.assign({},ings[fi],{note:text}); else ings.push({term:comp,pronunciation:null,note:text});
-  var flags=((ed._flags!==undefined)?ed._flags:(ed.flags||[])).slice();
-  flags.splice(cfTarget.idx,1);
+  // Allergen answers from the kitchen, applied to the dish's allergen list.
+  // canModify is deliberately untouched: whether the kitchen CAN pull an
+  // ingredient is a different question from whether it is in there.
+  var algs=(ed.allergens||[]).slice();
+  Object.keys(cfAlgAns).forEach(function(a){
+    var i=algs.indexOf(a);
+    if(cfAlgAns[a]&&i<0)algs.push(a);
+    if(!cfAlgAns[a]&&i>=0)algs.splice(i,1);
+  });
+  var resolved=flagResolved(ed,found.dish).slice();
+  if(!resolved.some(function(r){return termMatches(r.component,comp);}))
+    resolved.push({component:comp,desc:found.dish.desc,at:Date.now()});
   var rec={originalName:cfTarget.originalName, name:ed.name, desc:ed.desc, price:ed.price,
     pron:ed.pron||'', story:ed.story||'', ingredients:ings,
-    allergens:ed.allergens||[], canModify:ed.canModify||[], allergenNote:ed.allergenNote||'',
-    raw:!!ed.raw, section:cfTarget.section, flags:flags,
+    allergens:algs, canModify:ed.canModify||[], allergenNote:ed.allergenNote||'',
+    raw:!!ed.raw, section:cfTarget.section, resolvedComponents:resolved,
+    menuDate:(SF.menu&&SF.menu.menuDate)||'',
     editedBy:(typeof currentUserName==='function'&&currentUserName())||'manager', editedAt:Date.now()};
   commitEditRec(rec);
-  cfTarget=null;
-  $('confirmModal').classList.remove('open');
+  cfClose();
 }
 
 /* CREW BOARD — staff message board, Firestore `crew` collection.

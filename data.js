@@ -182,7 +182,7 @@ window.SF = {
        {
         "term": "Candied almonds",
         "pronunciation": null,
-        "note": "Almonds cooked in sugar until glazed and crisp. Adds sweetness and crunch — and the tree-nut allergen on the plate. Confirm the candying method with the kitchen; some preparations also carry butter or egg white."
+        "note": "The composition of the candied almonds has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially."
        },
        {
         "term": "Nectarines",
@@ -197,8 +197,19 @@ window.SF = {
       "canModify": [
        "nuts"
       ],
-      "allergenNote": "Tree nuts: the candied almonds — they come off cleanly for a nut allergy. Allium: raw red onion and the pickled onion are throughout, not removable. UNCONFIRMED — confirm the candied-almond prep with the kitchen; some candying methods also carry dairy (butter) or egg white. Verify before promising nut-free-adjacent or vegan.",
-      "added": "2026-06-19"
+      "allergenNote": "Tree nuts: the candied almonds, they come off cleanly for a nut allergy. Allium: raw red onion and the pickled onion are throughout, not removable. The composition of the candied almonds has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
+      "added": "2026-08-01",
+      "flags": [
+       {
+        "component": "candied almonds",
+        "riskAllergens": [
+         "dairy",
+         "egg"
+        ],
+        "proposedStandard": "",
+        "label": "candied almonds — composition not specified"
+       }
+      ]
      },
      {
       "name": "Burrata",
@@ -216,7 +227,7 @@ window.SF = {
        {
         "term": "Chamomile gelee",
         "pronunciation": "kam-oh-MEEL zhuh-LAY",
-        "note": "Chamomile tea set into a soft jelly. Floral, lightly honeyed, and delicate — it echoes the sweetness of the strawberries. Typically set with gelatin, so as plated this is not vegetarian; confirm the setting agent if a guest asks."
+        "note": "The composition of this gelee has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian."
        },
        {
         "term": "Strawberry buttermilk poppy seed vinaigrette",
@@ -231,8 +242,16 @@ window.SF = {
       "canModify": [
        "gluten"
       ],
-      "allergenNote": "Dairy: the burrata and the buttermilk vinaigrette — central, not removable. Gluten: crostini come on the side so the rest of the table can still have them. UNCONFIRMED: the vinaigrette has poppy seeds (an allergen in some regions, not one we track as a chip) and the chamomile gelee is likely gelatin-set, so as plated this is not vegetarian — verify both with the kitchen before promising.",
-      "added": "2026-06-19"
+      "allergenNote": "Dairy: the burrata and the buttermilk vinaigrette, central and not removable. Gluten: crostini come on the side so the rest of the table can still have them. The vinaigrette carries poppy seeds, which we do not track as a chip. The composition of the chamomile gelee has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian.",
+      "added": "2026-08-01",
+      "flags": [
+       {
+        "component": "chamomile gelee",
+        "riskAllergens": [],
+        "proposedStandard": "",
+        "label": "chamomile gelee — composition not specified"
+       }
+      ]
      },
      {
       "name": "Chilled Cherry Gazpacho",
@@ -387,8 +406,12 @@ window.SF = {
       "flags": [
        {
         "component": "spicy vodka sauce",
+        "riskAllergens": [
+         "dairy",
+         "allium"
+        ],
         "proposedStandard": "vodka, crushed tomato, heavy cream, onion, garlic, chili flake, parmesan, butter, salt",
-        "label": "spicy vodka sauce — confirm composition with the kitchen"
+        "label": "spicy vodka sauce — composition not specified"
        }
       ],
       "added": "2026-08-01"
@@ -493,7 +516,7 @@ window.SF = {
        {
         "term": "Roasted tomato vinaigrette",
         "pronunciation": null,
-        "note": "A dressing built on roasted tomato. IMPORTANT: the full composition of this vinaigrette is not specified for this prep. Vinaigrettes commonly carry shallot and mustard. Confirm with the kitchen before clearing this dish for any guest with an allium or mustard allergy."
+        "note": "The composition of this vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
        },
        {
         "term": "Marigold petals",
@@ -505,12 +528,16 @@ window.SF = {
        "fish"
       ],
       "canModify": [],
-      "allergenNote": "Fish: king salmon, central to the dish, cannot come off. UNCONFIRMED — the roasted tomato vinaigrette's composition has not been specified. Do not clear this dish for an allium or mustard allergy until the kitchen confirms what is in the vinaigrette. Served medium rare.",
+      "allergenNote": "Fish: king salmon, central to the dish, cannot come off. The composition of the roasted tomato vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
       "added": "2026-08-01",
       "flags": [
        {
         "component": "roasted tomato vinaigrette",
-        "label": "roasted tomato vinaigrette — composition not specified, confirm with the kitchen"
+        "riskAllergens": [
+         "allium"
+        ],
+        "proposedStandard": "",
+        "label": "roasted tomato vinaigrette — composition not specified"
        }
       ]
      },
@@ -544,7 +571,7 @@ window.SF = {
        {
         "term": "Huckleberry demi glace",
         "pronunciation": "DEH-mee glahss",
-        "note": "IMPORTANT: the composition of this demi glace has not been specified for this prep. A demi glace is normally a long reduction of meat stock and wine built on onions and aromatics, which would carry cooked allium. Confirm with the kitchen before clearing it for an allium allergy."
+        "note": "The composition of this demi glace has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
        }
       ],
       "allergens": [
@@ -554,12 +581,16 @@ window.SF = {
       "canModify": [
        "dairy"
       ],
-      "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. UNCONFIRMED — the huckleberry demi glace composition has not been specified; a standard demi carries cooked allium. Confirm with the kitchen before clearing either the demi or the dish for an allium allergy. Served medium rare.",
+      "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. The composition of the huckleberry demi glace has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
       "added": "2026-08-01",
       "flags": [
        {
         "component": "huckleberry demi glace",
-        "label": "huckleberry demi glace — composition not specified, confirm with the kitchen"
+        "riskAllergens": [
+         "allium"
+        ],
+        "proposedStandard": "",
+        "label": "huckleberry demi glace — composition not specified"
        }
       ]
      }
@@ -629,6 +660,11 @@ window.SF = {
       "term": "Marigold sugar",
       "pronunciation": null,
       "note": "marigold petals from Rain Dog Farm in Redmond, dried and ground with sugar to flavor the meringue."
+     },
+     {
+      "term": "Vanilla bean pastry cream",
+      "pronunciation": null,
+      "note": "The composition of this pastry cream has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, dairy and egg especially."
      }
     ],
     "allergens": [
@@ -638,12 +674,16 @@ window.SF = {
     "canModify": [
      "dairy"
     ],
-    "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate.",
+    "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate. The composition of the vanilla bean pastry cream has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
     "flags": [
      {
       "component": "vanilla bean pastry cream",
+      "riskAllergens": [
+       "dairy",
+       "egg"
+      ],
       "proposedStandard": "whole milk, cream, egg yolk, sugar, vanilla bean, cornstarch",
-      "label": "vanilla bean pastry cream — confirm composition with the kitchen"
+      "label": "vanilla bean pastry cream — composition not specified"
      }
     ],
     "added": "2026-08-01"
@@ -12245,5 +12285,5 @@ window.SF = {
    }
   }
  },
- "build": "1785603213"
+ "build": "1785606079"
 };
