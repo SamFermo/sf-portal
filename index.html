@@ -17,6 +17,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check-compat.js"></script>
 <style>
+.scws-tbl tr.scws-hd td{color:var(--card-soft);font-size:11px;text-transform:uppercase;
+  letter-spacing:.04em;border-bottom:1px solid var(--rule,#d8d2c6);padding-bottom:2px}
 .scws-pct{width:52px;padding:2px 4px;font:inherit;font-size:12.5px;text-align:right;
   border:1px solid var(--rule,#d8d2c6);border-radius:5px;background:transparent;color:inherit}
 .scws-pct::-webkit-outer-spin-button,.scws-pct::-webkit-inner-spin-button{opacity:.45}
@@ -1541,7 +1543,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785687308';   // stamped by build-data.py at every deploy
+const BUILD='1785691960';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -7398,11 +7400,13 @@ function scwsSheetToNight(iso,cd){
   const s=cd.sheet||{};
   return {date:iso, pool:cd.pool, rate:SCWS_RATE, share:s.share||0,
     splits:(s.splits||[]).map(x=>({name:x.name, role:x.role||'Server', hours:x.hours||0,
-                                   amt:x.amt, section:x.section||''})),
+                                   amt:x.amt, tip:x.tip||0, section:x.section||''})),
     commissions:(s.commissions||[]).map(x=>({name:x.name, why:x.why||'', role:x.role||'',
-                                   hours:x.hours||0, mult:(x.mult!=null?x.mult:1), amt:x.amt})),
+                                   hours:x.hours||0, mult:(x.mult!=null?x.mult:1), amt:x.amt,
+                                   tip:x.tip||0})),
     flags:s.flags||[], totalSplit:s.totalSplit||0, totalComm:s.totalComm||0,
     totalPaid:s.totalPaid||0, houseKeeps:s.houseKeeps||0,
+    ccPot:s.ccPot||0, ccPerHead:s.ccPerHead||0, totalTips:s.totalTips||0,
     ok:!((s.flags||[]).length), covers:cd.covers, fromSheet:true};
 }
 function scwsCanEdit(){
@@ -7447,6 +7451,12 @@ function scwsApplyOverride(w,ov){
     return {name:n,role:i.role||'Server',hours:i.hours||0,mult:m,amt:scwsR2(share*m),section:i.section||''};});
   w.commissions=(ov.comm||[]).map(n=>{const i=info(n), m=mult(n);
     return {name:n,why:'adjusted by '+(ov.by||'a manager'),role:i.role||'',hours:i.hours||0,mult:m,amt:scwsR2(share*m)};});
+  /* Card tips ride on the HEADCOUNT, not on the split, so moving one person between pool
+     and house leaves them alone — but adding or dropping somebody re-divides the pot. */
+  const heads=w.splits.concat(w.commissions);
+  w.ccPerHead=(heads.length&&w.ccPot)?scwsR2(w.ccPot/heads.length):0;
+  heads.forEach(x=>{x.tip=w.ccPerHead;});
+  w.totalTips=scwsR2(w.ccPerHead*heads.length);
   w.totalSplit=scwsR2(w.splits.reduce((a,x)=>a+x.amt,0));
   w.totalComm=scwsR2(w.commissions.reduce((a,x)=>a+x.amt,0));
   w.totalPaid=scwsR2(w.totalSplit+w.totalComm);
@@ -7534,13 +7544,19 @@ function scwsPaint(all,periods){
   if(SCWS.sub==='people'){
     const per={};
     rows.forEach(n=>{
-      n.splits.forEach(s=>{per[s.name]=per[s.name]||{split:0,comm:0,n:0,amt:0};per[s.name].split+=s.amt;per[s.name].n++;per[s.name].amt+=s.amt;});
-      n.commissions.forEach(c=>{per[c.name]=per[c.name]||{split:0,comm:0,n:0,amt:0};per[c.name].comm+=c.amt;per[c.name].n++;per[c.name].amt+=c.amt;});
+      const put=(k,f,a,t)=>{per[k]=per[k]||{split:0,comm:0,tips:0,n:0,amt:0};per[k][f]+=a;per[k].n++;per[k].amt+=a+t;per[k].tips+=t;};
+      n.splits.forEach(s=>put(s.name,'split',s.amt,s.tip||0));
+      n.commissions.forEach(c=>put(c.name,'comm',c.amt,c.tip||0));
     });
     const names=Object.keys(per).sort((a,b)=>per[b].amt-per[a].amt);
-    h+='<table class="scws-tbl"><thead><tr><th>Name</th><th>Nights</th><th>From pool</th><th>From house</th><th>Total</th></tr></thead><tbody>';
-    names.forEach(n=>h+=`<tr><td class="nm">${esc(n)}</td><td>${per[n].n}</td><td>${scwsMoney(per[n].split)}</td><td>${scwsMoney(per[n].comm)}</td><td><b>${scwsMoney(per[n].amt)}</b></td></tr>`);
-    h+=`</tbody><tfoot><tr><td>Total</td><td></td><td>${scwsMoney(paidS)}</td><td>${scwsMoney(paidC)}</td><td><b>${scwsMoney(paidS+paidC)}</b></td></tr></tfoot></table>`;
+    const anyTips=names.some(n=>per[n].tips>0);
+    h+='<table class="scws-tbl"><thead><tr><th>Name</th><th>Nights</th><th>From pool</th><th>From house</th>'
+      +(anyTips?'<th>Card tips</th>':'')+'<th>Total</th></tr></thead><tbody>';
+    names.forEach(n=>h+=`<tr><td class="nm">${esc(n)}</td><td>${per[n].n}</td><td>${scwsMoney(per[n].split)}</td><td>${scwsMoney(per[n].comm)}</td>`
+      +(anyTips?`<td>${scwsMoney(per[n].tips)}</td>`:'')+`<td><b>${scwsMoney(per[n].amt)}</b></td></tr>`);
+    const tipT=names.reduce((a,n)=>a+per[n].tips,0);
+    h+=`</tbody><tfoot><tr><td>Total</td><td></td><td>${scwsMoney(paidS)}</td><td>${scwsMoney(paidC)}</td>`
+      +(anyTips?`<td>${scwsMoney(tipT)}</td>`:'')+`<td><b>${scwsMoney(paidS+paidC+tipT)}</b></td></tr></tfoot></table>`;
   }
   else if(SCWS.sub==='flags'){
     const f=rows.filter(n=>!n.ok), done=rows.filter(n=>n.approved);
@@ -7562,7 +7578,7 @@ function scwsPaint(all,periods){
   }
   else if(SCWS.sub==='report'){
     const per=scwsReportRows(rows);
-    const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,n:a.n+r.total}),{p:0,h:0,n:0});
+    const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,k:a.k+(r.tips||0),n:a.n+r.total}),{p:0,h:0,k:0,n:0});
     const unver=rows.filter(n=>!n.ok).length;
     const signed=rows.filter(n=>n.approved).length;
     h+=`<p class="scws-foot" style="margin:0 0 10px">Everything paid in <b>${R.label}</b>, by person. `
@@ -7571,9 +7587,13 @@ function scwsPaint(all,periods){
       +`${unver} night${unver>1?'s':''} in this period still ${unver>1?'have':'has'} an open flag. `
       +`Settle them under Review before sending.</p>`;
     if(signed)h+=`<p class="scws-foot" style="margin:0 0 10px">${signed} night${signed>1?'s':''} carried flags that a manager signed off on.</p>`;
-    h+='<table class="scws-tbl"><thead><tr><th>Name</th><th>Nights</th><th>From pool</th><th>From house</th><th>Total</th></tr></thead><tbody>';
-    per.forEach(r=>h+=`<tr><td class="nm">${esc(r.name)}</td><td>${r.nights}</td><td>${scwsMoney(r.pool)}</td><td>${scwsMoney(r.house)}</td><td><b>${scwsMoney(r.total)}</b></td></tr>`);
-    h+=`</tbody><tfoot><tr><td>Total</td><td></td><td>${scwsMoney(t.p)}</td><td>${scwsMoney(t.h)}</td><td><b>${scwsMoney(t.n)}</b></td></tr></tfoot></table>`;
+    const anyT=per.some(r=>r.tips>0);
+    h+='<table class="scws-tbl"><thead><tr><th>Name</th><th>Nights</th><th>From pool</th><th>From house</th>'
+      +(anyT?'<th>Card tips</th>':'')+'<th>Total</th></tr></thead><tbody>';
+    per.forEach(r=>h+=`<tr><td class="nm">${esc(r.name)}</td><td>${r.nights}</td><td>${scwsMoney(r.pool)}</td><td>${scwsMoney(r.house)}</td>`
+      +(anyT?`<td>${scwsMoney(r.tips)}</td>`:'')+`<td><b>${scwsMoney(r.total)}</b></td></tr>`);
+    h+=`</tbody><tfoot><tr><td>Total</td><td></td><td>${scwsMoney(t.p)}</td><td>${scwsMoney(t.h)}</td>`
+      +(anyT?`<td>${scwsMoney(t.k)}</td>`:'')+`<td><b>${scwsMoney(t.n)}</b></td></tr></tfoot></table>`;
     h+='<div class="scws-btns"><button class="pri" id="scwsXlsBtn">Download Excel</button>'
       +'<button id="scwsCsvBtn">Download CSV</button>'
       +'<button id="scwsCopyBtn">Copy for email</button></div>';
@@ -7583,15 +7603,20 @@ function scwsPaint(all,periods){
   else {
     h+=rows.map(n=>{
       let s=`<div class="scws-night${n.ok?'':' scws-flagged'}"><div class="scws-nh"><b>${fmtLong(n.date)}</b>`
-          + `<span>${scwsMoney(n.pool)} pool · ${n.seats!=null&&n.seats!==n.splits.length?(Math.round(n.seats*100)/100)+'-way':n.splits.length+'-way'} · ${scwsMoney(n.share)} a share</span>`
+          + `<span>${scwsMoney(n.pool)} pool · ${n.seats!=null&&n.seats!==n.splits.length?(Math.round(n.seats*100)/100)+'-way':n.splits.length+'-way'} · ${scwsMoney(n.share)} a share${n.ccPot>0?' · '+scwsMoney(n.ccPot)+' card tips '+scwsMoney(n.ccPerHead)+' each':''}</span>`
           + (n.overridden?`<span class="scws-over">adjusted by ${esc(n.overBy||'a manager')}</span>`:'')
           + (n.approved?`<span class="scws-over">✓ ${esc(n.apprBy||'approved')}</span>`:'')
           + (scwsCanEdit()?`<button class="scws-adj" data-adj="${n.date}">Adjust</button>`:'')
           + `</div>`;
+      const tp=n.ccPot>0;
       s+='<table class="scws-tbl"><tbody>';
-      n.splits.forEach(x=>s+=`<tr><td class="nm">${esc(x.name)}</td><td class="scws-why">split · ${x.section?esc(x.section):(x.role==='Bartender'?'bar':'server')}${x.mult!=null&&x.mult<1?' · '+Math.round(x.mult*100)+'% of a share':''}</td><td>${x.hours}h</td><td>${scwsMoney(x.amt)}</td></tr>`);
-      n.commissions.forEach(c=>s+=`<tr class="scws-comm"><td class="nm">${esc(c.name)}</td><td class="scws-why">${esc(c.why)}${c.mult<1?' · '+c.mult+'×':''}</td><td>${c.hours}h</td><td>${scwsMoney(c.amt)}</td></tr>`);
-      s+=`</tbody><tfoot><tr><td colspan="3">Total paid</td><td><b>${scwsMoney(n.totalPaid)}</b></td></tr></tfoot></table>`;
+      if(tp)s+=`<tr class="scws-hd"><td></td><td></td><td></td><td>service chg</td><td>card tips</td><td>total</td></tr>`;
+      const money=(x)=>tp?`<td>${scwsMoney(x.amt)}</td><td>${scwsMoney(x.tip||0)}</td><td><b>${scwsMoney(scwsR2(x.amt+(x.tip||0)))}</b></td>`
+                        :`<td>${scwsMoney(x.amt)}</td>`;
+      n.splits.forEach(x=>s+=`<tr><td class="nm">${esc(x.name)}</td><td class="scws-why">split · ${x.section?esc(x.section):(x.role==='Bartender'?'bar':'server')}${x.mult!=null&&x.mult<1?' · '+Math.round(x.mult*100)+'% of a share':''}</td><td>${x.hours}h</td>${money(x)}</tr>`);
+      n.commissions.forEach(c=>s+=`<tr class="scws-comm"><td class="nm">${esc(c.name)}</td><td class="scws-why">${esc(c.why)}${c.mult<1?' · '+c.mult+'×':''}</td><td>${c.hours}h</td>${money(c)}</tr>`);
+      s+=tp?`</tbody><tfoot><tr><td colspan="3">Total</td><td><b>${scwsMoney(n.totalPaid)}</b></td><td><b>${scwsMoney(n.totalTips)}</b></td><td><b>${scwsMoney(scwsR2(n.totalPaid+n.totalTips))}</b></td></tr></tfoot></table>`
+                :`</tbody><tfoot><tr><td colspan="3">Total paid</td><td><b>${scwsMoney(n.totalPaid)}</b></td></tr></tfoot></table>`;
       if(!n.ok)s+='<ul class="scws-flags">'+n.flags.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';
       return s+'</div>';
     }).join('');
@@ -7600,6 +7625,8 @@ function scwsPaint(all,periods){
   h+=`<p class="scws-foot">Rate ${Math.round(SCWS_RATE*100)}% of a pool share. Commissions are matched shares paid by the house, not out of the pool.
       Short shifts under ${Math.round(SCWS_PRORATE_BELOW*100)}% of the night are prorated by clocked hours,
       and Adjust lets you set any one person to a percentage of a share by hand.
+      Card tips are a separate pot: the night's credit-card tips split evenly across everyone who
+      drew a service charge, maître d' included.
       Computed from the Revel clock plus the nightly manager log; Tim and Sam can adjust any night,
       and Reset puts the computed numbers back.
       <b>Draft — not the system of record until Tim signs off.</b></p>`;
@@ -7800,25 +7827,28 @@ function scwsUnapprove(iso){
 /* ---------- the pay-period report for Krista ---------- */
 function scwsReportRows(rows){
   const per={};
+  const put=(k,f,a,t)=>{const p=per[k]=per[k]||{pool:0,house:0,tips:0,nights:0};p[f]+=a;p.tips+=t;p.nights++;};
   rows.forEach(n=>{
-    n.splits.forEach(x=>{const p=per[x.name]=per[x.name]||{pool:0,house:0,nights:0};p.pool+=x.amt;p.nights++;});
-    n.commissions.forEach(x=>{const p=per[x.name]=per[x.name]||{pool:0,house:0,nights:0};p.house+=x.amt;p.nights++;});
+    n.splits.forEach(x=>put(x.name,'pool',x.amt,x.tip||0));
+    n.commissions.forEach(x=>put(x.name,'house',x.amt,x.tip||0));
   });
   return Object.keys(per).sort().map(k=>({name:k,nights:per[k].nights,
-    pool:scwsR2(per[k].pool),house:scwsR2(per[k].house),total:scwsR2(per[k].pool+per[k].house)}));
+    pool:scwsR2(per[k].pool),house:scwsR2(per[k].house),tips:scwsR2(per[k].tips),
+    total:scwsR2(per[k].pool+per[k].house+per[k].tips)}));
 }
 
 function scwsReportCSV(rows,label){
   const per=scwsReportRows(rows);
   let c='San Fermo service charge — '+label+'\n\n';
-  c+='Name,Nights,From pool,From house,Total\n';
-  per.forEach(r=>{c+=[r.name,r.nights,r.pool.toFixed(2),r.house.toFixed(2),r.total.toFixed(2)].join(',')+'\n';});
-  const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,t:a.t+r.total}),{p:0,h:0,t:0});
-  c+=['TOTAL','',t.p.toFixed(2),t.h.toFixed(2),t.t.toFixed(2)].join(',')+'\n';
-  c+='\nNight,Pool,Split,Share,Paid from pool,Paid by house,Total\n';
+  c+='Name,Nights,From pool,From house,Card tips,Total\n';
+  per.forEach(r=>{c+=[r.name,r.nights,r.pool.toFixed(2),r.house.toFixed(2),(r.tips||0).toFixed(2),r.total.toFixed(2)].join(',')+'\n';});
+  const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,k:a.k+(r.tips||0),t:a.t+r.total}),{p:0,h:0,k:0,t:0});
+  c+=['TOTAL','',t.p.toFixed(2),t.h.toFixed(2),t.k.toFixed(2),t.t.toFixed(2)].join(',')+'\n';
+  c+='\nNight,Pool,Split,Share,Paid from pool,Paid by house,Card tip pot,Total\n';
   rows.slice().sort((a,b)=>a.date<b.date?-1:1).forEach(n=>{
     c+=[n.date,n.pool.toFixed(2),n.splits.length+'-way',n.share.toFixed(2),
-        n.totalSplit.toFixed(2),n.totalComm.toFixed(2),n.totalPaid.toFixed(2)].join(',')+'\n';});
+        n.totalSplit.toFixed(2),n.totalComm.toFixed(2),(n.ccPot||0).toFixed(2),
+        scwsR2(n.totalPaid+(n.totalTips||0)).toFixed(2)].join(',')+'\n';});
   return c;
 }
 
@@ -7853,18 +7883,20 @@ function scwsDownloadXlsx(rows,label){
   const reset=()=>{ if(btn){btn.disabled=false;btn.textContent='Download Excel';} };
   scwsLoadXlsx().then(function(XLSX){
     const per=scwsReportRows(rows);
-    const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,n:a.n+r.total}),{p:0,h:0,n:0});
-    const s1=[['Name','Nights','From pool','From house','Total']];
-    per.forEach(r=>s1.push([r.name,r.nights,r.pool,r.house,r.total]));
-    s1.push(['TOTAL','',scwsR2(t.p),scwsR2(t.h),scwsR2(t.n)]);
-    const s2=[['Night','Pool','Split','Share','Paid from pool','Paid by house','Total paid','Status']];
+    const t=per.reduce((a,r)=>({p:a.p+r.pool,h:a.h+r.house,k:a.k+(r.tips||0),n:a.n+r.total}),{p:0,h:0,k:0,n:0});
+    const s1=[['Name','Nights','From pool','From house','Card tips','Total']];
+    per.forEach(r=>s1.push([r.name,r.nights,r.pool,r.house,r.tips||0,r.total]));
+    s1.push(['TOTAL','',scwsR2(t.p),scwsR2(t.h),scwsR2(t.k),scwsR2(t.n)]);
+    const s2=[['Night','Pool','Split','Share','Paid from pool','Paid by house','Service charge total',
+               'Card tip pot','Card tip each','Grand total','Status']];
     rows.slice().sort((a,b)=>a.date<b.date?-1:1).forEach(n=>s2.push([n.date,n.pool,n.splits.length+'-way',
-      n.share,n.totalSplit,n.totalComm,n.totalPaid,
+      n.share,n.totalSplit,n.totalComm,n.totalPaid,n.ccPot||0,n.ccPerHead||0,
+      scwsR2(n.totalPaid+(n.totalTips||0)),
       n.approved?('approved by '+n.apprBy):(n.ok?'clean':'needs review')]));
-    const s3=[['Night','Name','Paid by','Section / why','Hours','Amount']];
+    const s3=[['Night','Name','Paid by','Section / why','Hours','Service charge','Card tips','Total']];
     rows.slice().sort((a,b)=>a.date<b.date?-1:1).forEach(n=>{
-      n.splits.forEach(x=>s3.push([n.date,x.name,'pool',x.section||'',x.hours,x.amt]));
-      n.commissions.forEach(x=>s3.push([n.date,x.name,'house',x.why||'',x.hours,x.amt]));
+      n.splits.forEach(x=>s3.push([n.date,x.name,'pool',x.section||'',x.hours,x.amt,x.tip||0,scwsR2(x.amt+(x.tip||0))]));
+      n.commissions.forEach(x=>s3.push([n.date,x.name,'house',x.why||'',x.hours,x.amt,x.tip||0,scwsR2(x.amt+(x.tip||0))]));
     });
     const wb=XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(s1),'By person');
