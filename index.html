@@ -17,6 +17,10 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check-compat.js"></script>
 <style>
+.scws-pct{width:52px;padding:2px 4px;font:inherit;font-size:12.5px;text-align:right;
+  border:1px solid var(--rule,#d8d2c6);border-radius:5px;background:transparent;color:inherit}
+.scws-pct::-webkit-outer-spin-button,.scws-pct::-webkit-inner-spin-button{opacity:.45}
+.scws-pctm{color:var(--card-soft);font-size:11.5px;margin-left:2px}
 :root{
   /* Night sky */
   --night-1:#0a1430; --night-2:#0c1c44; --night-3:#050a1c;
@@ -1537,7 +1541,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785676422';   // stamped by build-data.py at every deploy
+const BUILD='1785687308';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -7428,11 +7432,20 @@ function scwsApplyOverride(w,ov){
   const roster={}; scwsRoster(w.date).forEach(r=>roster[r.name]=r);
   const seen=w.splits.concat(w.commissions);
   const info=n=>roster[n]||seen.filter(x=>x.name===n)[0]||{hours:0,role:'',section:''};
-  const share=scwsR2(w.pool/ov.split.length*SCWS_RATE);
-  w.share=share;
-  w.splits=ov.split.map(n=>{const i=info(n);
-    return {name:n,role:i.role||'Server',hours:i.hours||0,amt:share,section:i.section||''};});
-  w.commissions=(ov.comm||[]).map(n=>{const i=info(n), m=(ov.mult&&ov.mult[n]!=null)?ov.mult[n]:1;
+  const mult=n=>{const m=(ov.mult&&ov.mult[n]!=null)?+ov.mult[n]:1; return (m>=0&&m<=1)?m:1;};
+  /* A prorated person in the POOL takes a fraction of a seat, not a fraction of a fixed
+     share. Tim, on cutting Julian back after he went home at 8.30: "Julian will get a 3 hour
+     split — and that gives everybody a little bit more money." The money he doesn't take
+     goes back to the rest of the split, so the denominator shrinks and every other share
+     rises. The pool still pays out exactly pool x rate.
+     A prorated COMMISSION is different: the house funds it, so cutting it just saves the
+     house money and nobody else moves. */
+  const seats=ov.split.reduce((a,n)=>a+mult(n),0);
+  const share=seats>0?scwsR2(w.pool/seats*SCWS_RATE):0;
+  w.share=share; w.seats=seats;
+  w.splits=ov.split.map(n=>{const i=info(n), m=mult(n);
+    return {name:n,role:i.role||'Server',hours:i.hours||0,mult:m,amt:scwsR2(share*m),section:i.section||''};});
+  w.commissions=(ov.comm||[]).map(n=>{const i=info(n), m=mult(n);
     return {name:n,why:'adjusted by '+(ov.by||'a manager'),role:i.role||'',hours:i.hours||0,mult:m,amt:scwsR2(share*m)};});
   w.totalSplit=scwsR2(w.splits.reduce((a,x)=>a+x.amt,0));
   w.totalComm=scwsR2(w.commissions.reduce((a,x)=>a+x.amt,0));
@@ -7570,13 +7583,13 @@ function scwsPaint(all,periods){
   else {
     h+=rows.map(n=>{
       let s=`<div class="scws-night${n.ok?'':' scws-flagged'}"><div class="scws-nh"><b>${fmtLong(n.date)}</b>`
-          + `<span>${scwsMoney(n.pool)} pool · ${n.splits.length}-way · ${scwsMoney(n.share)} a share</span>`
+          + `<span>${scwsMoney(n.pool)} pool · ${n.seats!=null&&n.seats!==n.splits.length?(Math.round(n.seats*100)/100)+'-way':n.splits.length+'-way'} · ${scwsMoney(n.share)} a share</span>`
           + (n.overridden?`<span class="scws-over">adjusted by ${esc(n.overBy||'a manager')}</span>`:'')
           + (n.approved?`<span class="scws-over">✓ ${esc(n.apprBy||'approved')}</span>`:'')
           + (scwsCanEdit()?`<button class="scws-adj" data-adj="${n.date}">Adjust</button>`:'')
           + `</div>`;
       s+='<table class="scws-tbl"><tbody>';
-      n.splits.forEach(x=>s+=`<tr><td class="nm">${esc(x.name)}</td><td class="scws-why">split · ${x.section?esc(x.section):(x.role==='Bartender'?'bar':'server')}</td><td>${x.hours}h</td><td>${scwsMoney(x.amt)}</td></tr>`);
+      n.splits.forEach(x=>s+=`<tr><td class="nm">${esc(x.name)}</td><td class="scws-why">split · ${x.section?esc(x.section):(x.role==='Bartender'?'bar':'server')}${x.mult!=null&&x.mult<1?' · '+Math.round(x.mult*100)+'% of a share':''}</td><td>${x.hours}h</td><td>${scwsMoney(x.amt)}</td></tr>`);
       n.commissions.forEach(c=>s+=`<tr class="scws-comm"><td class="nm">${esc(c.name)}</td><td class="scws-why">${esc(c.why)}${c.mult<1?' · '+c.mult+'×':''}</td><td>${c.hours}h</td><td>${scwsMoney(c.amt)}</td></tr>`);
       s+=`</tbody><tfoot><tr><td colspan="3">Total paid</td><td><b>${scwsMoney(n.totalPaid)}</b></td></tr></tfoot></table>`;
       if(!n.ok)s+='<ul class="scws-flags">'+n.flags.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';
@@ -7585,7 +7598,8 @@ function scwsPaint(all,periods){
   }
 
   h+=`<p class="scws-foot">Rate ${Math.round(SCWS_RATE*100)}% of a pool share. Commissions are matched shares paid by the house, not out of the pool.
-      Short shifts under ${Math.round(SCWS_PRORATE_BELOW*100)}% of the night are prorated by clocked hours.
+      Short shifts under ${Math.round(SCWS_PRORATE_BELOW*100)}% of the night are prorated by clocked hours,
+      and Adjust lets you set any one person to a percentage of a share by hand.
       Computed from the Revel clock plus the nightly manager log; Tim and Sam can adjust any night,
       and Reset puts the computed numbers back.
       <b>Draft — not the system of record until Tim signs off.</b></p>`;
@@ -7617,7 +7631,9 @@ function scwsEdit(iso){
   roster.forEach(r=>state[r.name]='off');
   n.splits.forEach(x=>state[x.name]='split');
   n.commissions.forEach(x=>{state[x.name]='comm';});
-  const mult={}; n.commissions.forEach(x=>{if(x.mult<1)mult[x.name]=x.mult;});
+  const mult={};
+  n.commissions.forEach(x=>{if(x.mult!=null&&x.mult<1)mult[x.name]=x.mult;});
+  n.splits.forEach(x=>{if(x.mult!=null&&x.mult<1)mult[x.name]=x.mult;});
   SCWS_ED={iso:iso,pool:n.pool,state:state,mult:mult,roster:roster};
 
   let m=$('scwsModal');
@@ -7638,38 +7654,90 @@ function scwsEdit(iso){
   m.classList.add('open');
 }
 
-function scwsEdPaint(){
-  const E=SCWS_ED; if(!E)return;
+/* Percentages live in E.mult as 0..1. scwsEdFigures is the single place that turns the
+   state map into money, so the table, the summary line and the save all agree. */
+function scwsEdFigures(){
+  const E=SCWS_ED;
+  const mult=n=>{const m=E.mult[n]!=null?+E.mult[n]:1; return (m>=0&&m<=1)?m:1;};
   const split=Object.keys(E.state).filter(k=>E.state[k]==='split');
   const comm=Object.keys(E.state).filter(k=>E.state[k]==='comm');
-  const share=split.length?scwsR2(E.pool/split.length*SCWS_RATE):0;
+  const seats=split.reduce((a,n)=>a+mult(n),0);
+  const share=seats>0?scwsR2(E.pool/seats*SCWS_RATE):0;
+  return {mult:mult, split:split, comm:comm, seats:seats, share:share,
+          fromPool:scwsR2(split.reduce((a,n)=>a+share*mult(n),0)),
+          fromHouse:scwsR2(comm.reduce((a,n)=>a+share*mult(n),0))};
+}
+
+/* Rewrites only the amounts and the summary. Called on every keystroke in a percentage
+   box — a full repaint there would blow away focus mid-number. */
+function scwsEdSums(){
+  const E=SCWS_ED; if(!E)return;
+  const F=scwsEdFigures();
+  E.roster.forEach((r,i)=>{
+    const st=E.state[r.name]||'off', m=F.mult(r.name);
+    const cell=$('scwsEdAmt'+i); if(!cell)return;
+    cell.innerHTML = st==='off' ? '<span style="color:var(--card-soft)">—</span>'
+                                : scwsMoney(scwsR2(F.share*m));
+  });
+  const sum=$('scwsEdSum');
+  if(sum)sum.innerHTML='<span><b>'+(Math.round(F.seats*100)/100)+'-way</b> split</span>'
+    +'<span><b>'+scwsMoney(F.share)+'</b> a full share</span>'
+    +'<span><b>'+F.comm.length+'</b> house-paid</span>'
+    +'<span>from pool <b>'+scwsMoney(F.fromPool)+'</b></span>'
+    +'<span>from house <b>'+scwsMoney(F.fromHouse)+'</b></span>';
+  const warn=$('scwsEdWarn');
+  if(warn)warn.innerHTML = !F.split.length
+      ? 'Nobody in the pool — at least one person has to split it.'
+      : (F.seats<=0 ? 'Everybody in the pool is set to 0% — somebody has to take a share.' : '');
+  const sv=$('scwsEdSave'); if(sv)sv.disabled=!F.split.length||F.seats<=0;
+}
+
+function scwsEdPaint(){
+  const E=SCWS_ED; if(!E)return;
+  const F=scwsEdFigures();
   let h='<table class="scws-ed"><tbody>';
-  E.roster.forEach(r=>{
+  E.roster.forEach((r,i)=>{
     const st=E.state[r.name]||'off';
-    const m=E.mult[r.name]!=null?E.mult[r.name]:1;
-    const amt=st==='split'?share:(st==='comm'?scwsR2(share*m):0);
+    const pct=Math.round(F.mult(r.name)*100);
     h+='<tr><td class="nm">'+esc(r.name)+'</td>'
       +'<td style="color:var(--card-soft);font-size:12px">'+(r.hours||0)+'h</td>'
       +'<td><span class="seg" data-n="'+esc(r.name)+'">'
       +'<button data-v="split" class="'+(st==='split'?'on':'')+'">Pool</button>'
       +'<button data-v="comm" class="'+(st==='comm'?'on':'')+'">House</button>'
       +'<button data-v="off" class="'+(st==='off'?'on':'')+'">—</button></span></td>'
-      +'<td style="text-align:right">'+(amt?scwsMoney(amt):'<span style="color:var(--card-soft)">—</span>')
-      +(st==='comm'&&m<1?' <span style="color:var(--card-soft);font-size:11px">'+m+'x</span>':'')+'</td></tr>';
+      +'<td style="text-align:right;white-space:nowrap">'
+      +(st==='off'?'<span style="color:var(--card-soft);font-size:12px">—</span>'
+        :'<input class="scws-pct" type="number" min="0" max="100" step="5" data-i="'+i+'" '
+         +'data-n="'+esc(r.name)+'" value="'+pct+'" aria-label="percent of a share for '+esc(r.name)+'"><span class="scws-pctm">%</span>')
+      +'</td>'
+      +'<td style="text-align:right;min-width:74px" id="scwsEdAmt'+i+'"></td></tr>';
   });
   h+='</tbody></table>';
-  h+='<div class="scws-sum"><span><b>'+split.length+'-way</b> split</span>'
-    +'<span><b>'+scwsMoney(share)+'</b> a share</span>'
-    +'<span><b>'+comm.length+'</b> house-paid</span>'
-    +'<span>from pool <b>'+scwsMoney(scwsR2(share*split.length))+'</b></span>'
-    +'<span>from house <b>'+scwsMoney(scwsR2(comm.reduce((a,k)=>a+share*(E.mult[k]!=null?E.mult[k]:1),0)))+'</b></span></div>';
-  if(!split.length)h+='<p style="color:var(--rust,#a8452c);font-size:12.5px;margin:8px 0 0">Nobody in the pool — at least one person has to split it.</p>';
+  h+='<div class="scws-sum" id="scwsEdSum"></div>';
+  h+='<p id="scwsEdWarn" style="color:var(--rust,#a8452c);font-size:12.5px;margin:8px 0 0"></p>';
+  h+='<p style="color:var(--card-soft);font-size:12px;margin:6px 0 0;line-height:1.45">'
+    +'Percentages are a share of the night. Cutting someone in the <b>pool</b> hands their '
+    +'remainder to the rest of the split, so everyone else goes up. Cutting someone the '
+    +'<b>house</b> pays just costs the house less and moves nobody.</p>';
   $('scwsEdBody').innerHTML=h;
   $('scwsEdBody').querySelectorAll('.seg button').forEach(b=>{
     b.onclick=()=>{ const nm=b.parentNode.getAttribute('data-n');
       SCWS_ED.state[nm]=b.getAttribute('data-v'); scwsEdPaint(); };
   });
-  const sv=$('scwsEdSave'); if(sv)sv.disabled=!split.length;
+  $('scwsEdBody').querySelectorAll('.scws-pct').forEach(inp=>{
+    const apply=()=>{ const nm=inp.getAttribute('data-n');
+      let v=parseFloat(inp.value);
+      if(isNaN(v))return;                        // mid-typing / cleared — leave it alone
+      v=Math.max(0,Math.min(100,v));
+      if(v>=100)delete SCWS_ED.mult[nm]; else SCWS_ED.mult[nm]=Math.round(v)/100;
+      scwsEdSums(); };
+    inp.oninput=apply;
+    inp.onblur=()=>{ let v=parseFloat(inp.value);
+      if(isNaN(v)){inp.value=Math.round((SCWS_ED.mult[inp.getAttribute('data-n')]!=null?SCWS_ED.mult[inp.getAttribute('data-n')]:1)*100);}
+      else inp.value=Math.round(Math.max(0,Math.min(100,v)));
+      apply(); };
+  });
+  scwsEdSums();
 }
 
 function scwsSaveOverride(){
@@ -7677,7 +7745,14 @@ function scwsSaveOverride(){
   const split=Object.keys(E.state).filter(k=>E.state[k]==='split');
   const comm=Object.keys(E.state).filter(k=>E.state[k]==='comm');
   if(!split.length)return;
-  const ov={split:split,comm:comm,mult:E.mult,by:scwsFirst(me&&me.name),at:new Date().toISOString()};
+  /* keep only the percentages that still mean something: someone who is on the night and
+     is actually cut. A stale 0.5 against somebody now switched off would come back to life
+     the next time they were added. */
+  const mult={};
+  split.concat(comm).forEach(n=>{const m=E.mult[n];
+    if(m!=null&&m>=0&&m<1)mult[n]=Math.round(m*100)/100;});
+  if(!split.reduce((a,n)=>a+(mult[n]!=null?mult[n]:1),0))return;
+  const ov={split:split,comm:comm,mult:mult,by:scwsFirst(me&&me.name),at:new Date().toISOString()};
   if(SCWS.clock[E.iso])SCWS.clock[E.iso].over=ov;
   const done=()=>{ $('scwsModal').classList.remove('open'); scwsRender(); };
   if(fbReady&&fbDb&&!DEMO){
