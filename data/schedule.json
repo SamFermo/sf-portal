@@ -2566,8 +2566,8 @@
         "",
         "",
         "",
-        "3:30 Serve",
-        "3:30 Serve"
+        "3:30 serve",
+        "3:30 serve"
       ],
       "rows": [
         {
@@ -2755,7 +2755,7 @@
       "notes": [],
       "coverage": [
         "3:30 Bar",
-        "3:30 serve",
+        "",
         "3:30 serve",
         "3:30 serve",
         "3:30 serve",
@@ -2827,7 +2827,7 @@
           "name": "Brittany",
           "shifts": [
             "",
-            "",
+            "3:30 serve",
             "",
             "3:30 serve",
             "3:30 Bar",
@@ -2947,11 +2947,11 @@
       "label": "",
       "notes": [],
       "coverage": [
-        "",
-        "",
-        "",
-        "",
         "3:30 Bar",
+        "3:30 serve",
+        "3:30 serve",
+        "3:30 serve",
+        "3:30 serve x 2",
         "",
         ""
       ],
@@ -3022,7 +3022,7 @@
             "",
             "",
             "",
-            "3:30 serve",
+            "R/O",
             "R/O",
             "3:30 Bar",
             "3:30 Bar"
@@ -3082,7 +3082,7 @@
             "",
             "",
             "",
-            "",
+            "3:30 serve",
             "3:30 serve",
             "3:30 serve",
             "Sup Server"
@@ -3103,13 +3103,13 @@
         {
           "name": "Sabba",
           "shifts": [
-            "3:30 Bar",
-            "3:30 serve",
-            "3:30 serve",
-            "3:30 serve",
-            "3:30 serve",
-            "",
-            ""
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O",
+            "R/O"
           ]
         },
         {
@@ -3140,8 +3140,8 @@
       "label": "",
       "notes": [],
       "coverage": [
-        "",
-        "",
+        "3:30 Bar",
+        "3:30 serve",
         "",
         "",
         "",
@@ -3296,8 +3296,8 @@
         {
           "name": "Sabba",
           "shifts": [
-            "3:30 Bar",
-            "3:30 serve",
+            "R/O",
+            "R/O",
             "3:30 serve",
             "3:30 serve",
             "3:30 serve",

@@ -6844,8 +6844,8 @@ window.SF = {
      "",
      "",
      "",
-     "3:30 Serve",
-     "3:30 Serve"
+     "3:30 serve",
+     "3:30 serve"
     ],
     "rows": [
      {
@@ -7033,7 +7033,7 @@ window.SF = {
     "notes": [],
     "coverage": [
      "3:30 Bar",
-     "3:30 serve",
+     "",
      "3:30 serve",
      "3:30 serve",
      "3:30 serve",
@@ -7105,7 +7105,7 @@ window.SF = {
       "name": "Brittany",
       "shifts": [
        "",
-       "",
+       "3:30 serve",
        "",
        "3:30 serve",
        "3:30 Bar",
@@ -7225,11 +7225,11 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
-     "",
-     "",
-     "",
-     "",
      "3:30 Bar",
+     "3:30 serve",
+     "3:30 serve",
+     "3:30 serve",
+     "3:30 serve x 2",
      "",
      ""
     ],
@@ -7300,7 +7300,7 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
+       "R/O",
        "R/O",
        "3:30 Bar",
        "3:30 Bar"
@@ -7360,7 +7360,7 @@ window.SF = {
        "",
        "",
        "",
-       "",
+       "3:30 serve",
        "3:30 serve",
        "3:30 serve",
        "Sup Server"
@@ -7381,13 +7381,13 @@ window.SF = {
      {
       "name": "Sabba",
       "shifts": [
-       "3:30 Bar",
-       "3:30 serve",
-       "3:30 serve",
-       "3:30 serve",
-       "3:30 serve",
-       "",
-       ""
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O"
       ]
      },
      {
@@ -7418,8 +7418,8 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
-     "",
-     "",
+     "3:30 Bar",
+     "3:30 serve",
      "",
      "",
      "",
@@ -7574,8 +7574,8 @@ window.SF = {
      {
       "name": "Sabba",
       "shifts": [
-       "3:30 Bar",
-       "3:30 serve",
+       "R/O",
+       "R/O",
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
@@ -12284,5 +12284,5 @@ window.SF = {
    }
   }
  },
- "build": "1785607998"
+ "build": "1785676422"
 };
