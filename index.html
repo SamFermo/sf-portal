@@ -851,6 +851,13 @@ nav.chips::-webkit-scrollbar{display:none;}
 .edit-toggle.on{background:var(--gold); color:#241f15; border-color:var(--gold);}
 .gen-btn{background:var(--accent); color:#eef6e6; border:none; border-radius:999px; padding:8px 16px; font-size:13px; font-weight:700; cursor:pointer;}
 .gen-btn .badge{background:rgba(255,255,255,.25); border-radius:999px; padding:0 7px; margin-left:6px; font-size:11px;}
+/* Publish-to-website. Quiet outline until the settled menu actually differs from
+   what the public site is showing, then it fills in — dirty means "guests are
+   looking at something older than this", not "someone touched the portal". */
+.pub-btn{background:transparent; color:var(--ink-mute,#8a8378); border:1px solid var(--rule,#d8d2c6);
+  border-radius:999px; padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer;}
+.pub-btn.dirty{background:var(--accent); color:#eef6e6; border-color:transparent; font-weight:700;}
+.pub-btn .badge{background:rgba(255,255,255,.3); border-radius:999px; padding:0 6px; margin-left:6px; font-size:11px;}
 .note-box{padding:10px 14px 12px; border-top:.5px dashed var(--moon-edge);}
 .note-box label{display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--rust); margin-bottom:5px;}
 .note-box textarea{width:100%; min-height:46px; resize:vertical; border:1px solid var(--moon-edge); border-radius:8px; padding:8px 10px; font-family:-apple-system,sans-serif; font-size:13.5px; color:var(--card-ink); background:#fffdf7;}
@@ -1543,7 +1550,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785691960';   // stamped by build-data.py at every deploy
+const BUILD='1785715077';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2083,7 +2090,7 @@ function corrCount(){const c=getCorr();return ['food','wine','bar'].reduce((n,k)
 function cssEsc(s){return String(s).replace(/"/g,'\\"');}
 function saveCorr(cat,name,val){const c=getCorr();c[cat]=c[cat]||{};if(val&&val.trim())c[cat][name]=val;else delete c[cat][name];try{localStorage.setItem('sf-corrections',JSON.stringify(c));}catch(e){}document.querySelectorAll('.gen-count').forEach(b=>b.textContent=corrCount());const box=document.querySelector(`.note-box[data-cat="${cat}"][data-for="${cssEsc(name)}"]`);if(box)box.classList.toggle('filled',!!(val&&val.trim()));}
 function noteBox(cat,name){if(!editMode)return '';const note=(getCorr()[cat]||{})[name]||'';return `<div class="note-box ${note?'filled':''}" data-cat="${cat}" data-for="${esc(name)}" onclick="event.stopPropagation()"><label>Correction for ${esc(name)}</label><textarea placeholder="What needs fixing?" oninput="saveCorr('${cat}',this.closest('.note-box').getAttribute('data-for'),this.value)">${esc(note)}</textarea></div>`;}
-function editBarHTML(){let h=`<div class="editbar"><button class="edit-toggle ${editMode?'on':''}" onclick="toggleEdit()">✎ Corrections${editMode?' · on':''}</button>`;if(editMode)h+=`<button class="gen-btn" onclick="genPrompt()">Generate deploy prompt<span class="badge gen-count">${corrCount()}</span></button>`;h+=`</div>`;if(editMode)h+=`<p class="est-note" style="text-align:left;margin:-6px 0 14px;">Notes save on this device. Add corrections under any item across Food, Wine &amp; Cocktails, then generate one prompt to hand back for deploy.</p>`;return h;}
+function editBarHTML(){let h=`<div class="editbar"><button class="edit-toggle ${editMode?'on':''}" onclick="toggleEdit()">✎ Corrections${editMode?' · on':''}</button>`;if(editMode)h+=`<button class="gen-btn" onclick="genPrompt()">Generate deploy prompt<span class="badge gen-count">${corrCount()}</span></button>`;if(isMgr()&&typeof menuPubDirty==='function')h+=`<button class="pub-btn${menuPubDirty()?' dirty':''}" onclick="publishMenuToWebsite()" title="Last published: ${esc(menuPubWhen())}">⇪ Publish menu to website${menuPubDirty()?'<span class="badge">•</span>':''}</button>`;h+=`</div>`;if(editMode)h+=`<p class="est-note" style="text-align:left;margin:-6px 0 14px;">Notes save on this device. Add corrections under any item across Food, Wine &amp; Cocktails, then generate one prompt to hand back for deploy.</p>`;return h;}
 function toggleEdit(){editMode=!editMode;renderFoodTab();renderWine();renderBar();}
 const ALG={dairy:'D',gluten:'G',egg:'E',fish:'F',nuts:'N',shellfish:'SF',sesame:'SE',soy:'SO',peanut:'P',allium:'AL'};
 /* Allergen chips. A dish carrying an unresolved composed-component flag gets a
@@ -5862,7 +5869,7 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); } });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startMenuPubSync(); } });
     firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); });
   }catch(e){ fbReady=false; }
 }
@@ -6530,6 +6537,91 @@ function getEditedDish(it){
   return merged;
 }
 function dishHasEdit(name){return !!MEDITS[editDocId(name)];}
+
+/* ── PUBLISH MENU TO WEBSITE ─────────────────────────────────────────────────
+   Snapshots the SETTLED menu — the data.js base with menu-edits overlays applied
+   — into menu-public/current. sanfermoseattle.com reads that one doc on page load.
+
+   Deliberately EXCLUDES menu-live. Tonight's live adds and 86s are a service tool
+   with a shift-length lifespan; the public web outlives the shift, and a guest who
+   drives across town for a dish that got 86'd at 7pm is a worse outcome than a
+   website that's a day behind. Live stays internal.
+
+   Nothing reaches the public site until a manager taps Publish. Added 2026-08-02. */
+const MENU_PUB_DOC='current';
+let MPUB=null, mpubUnsub=null, mpubLoaded=false;
+
+function startMenuPubSync(){
+  if(!(fbReady&&fbDb))return;
+  if(mpubUnsub)mpubUnsub();
+  mpubUnsub=fbDb.collection('menu-public').doc(MENU_PUB_DOC).onSnapshot(function(d){
+    MPUB=d.exists?d.data():null; mpubLoaded=true;
+    if(typeof renderFoodTab==='function')renderFoodTab();
+  },function(){ MPUB=null; mpubLoaded=false; });
+}
+
+/* Guest-facing fields ONLY. Allergen flags, pronunciation, story, ingredients and
+   review state are staff tools and never leave the portal. */
+function pubItem(it){
+  const o={name:(it.name||'').trim(), desc:(it.desc||'').trim()};
+  const p=(it.price==null?'':it.price).toString().trim();
+  if(p)o.price=p;
+  return o;
+}
+function buildMenuSnapshot(){
+  const sections=[];
+  ((SF.menu&&SF.menu.food)||[]).forEach(function(sec){
+    const items=(sec.items||[]).map(function(it){return pubItem(getEditedDish(it));})
+      .filter(function(i){return i.name;});
+    if(items.length)sections.push({section:sec.section,items:items});
+  });
+  const cocktails=((SF.bar&&SF.bar.cocktails)||[]).map(function(c){
+    const o={name:(c.name||'').trim(), desc:(c.build||c.tagline||'').trim()};
+    const p=(c.price==null?'':c.price).toString().trim(); if(p)o.price=p;
+    return o;
+  }).filter(function(i){return i.name;});
+  if(cocktails.length)sections.push({section:'Cocktails',items:cocktails});
+  const dolci=((SF.menu&&SF.menu.desserts)||[]).map(function(it){return pubItem(getEditedDish(it));})
+    .filter(function(i){return i.name;});
+  if(dolci.length)sections.push({section:'Dolci',items:dolci});
+  return {sections:sections, note:((SF.menu&&SF.menu.raw_note)||'').trim(),
+    menuDate:(SF.menu&&SF.menu.menuDate)||'', publishedAt:Date.now(),
+    publishedBy:currentUserName(), schema:1};
+}
+/* Canonical signature so "changed" means the guest-visible copy actually moved,
+   not that publishedAt ticked. Same discipline as the portal's other seen-state. */
+function menuSnapshotSig(s){
+  return JSON.stringify(((s&&s.sections)||[]).map(function(x){
+    return [x.section,(x.items||[]).map(function(i){return [i.name||'',i.desc||'',i.price||''];})];
+  }))+'||'+((s&&s.note)||'');
+}
+/* Never flag dirty before the feed has arrived — an unloaded MPUB is "unknown",
+   not "stale", and glowing on every login is how these indicators lose meaning. */
+function menuPubDirty(){
+  if(!mpubLoaded)return false;
+  if(!MPUB)return true;
+  return menuSnapshotSig(buildMenuSnapshot())!==menuSnapshotSig(MPUB);
+}
+function menuPubWhen(){
+  if(!mpubLoaded)return 'checking…';
+  if(!MPUB||!MPUB.publishedAt)return 'never published';
+  return crewWhen(MPUB.publishedAt)+(MPUB.publishedBy?' by '+MPUB.publishedBy:'');
+}
+async function publishMenuToWebsite(){
+  if(!isMgr())return;
+  const snap=buildMenuSnapshot();
+  const n=snap.sections.reduce(function(a,s){return a+s.items.length;},0);
+  if(!n){alert('No menu items found to publish, so nothing was sent.');return;}
+  if(!confirm('Publish '+n+' items across '+snap.sections.length+' sections to the San Fermo website?\n\nThis replaces the menu guests see. Tonight\'s live adds and 86s are NOT included.'))return;
+  if(!(fbReady&&fbDb)){alert('Not connected right now, so nothing was published. Try again once you are back online.');return;}
+  try{
+    await fbDb.collection('menu-public').doc(MENU_PUB_DOC).set(snap);
+    MPUB=snap; mpubLoaded=true; renderFoodTab();
+    alert('Published. The website shows it on the next page load — refresh sanfermoseattle.com to confirm.');
+  }catch(e){
+    alert('Publish failed: '+e.message+'\n\nIf that reads permission denied, the menu-public rule still needs publishing in the Firebase console.');
+  }
+}
 let editTarget=null, editPolished=null;
 function openEditModal(origName){
   if(!isMgr())return;
