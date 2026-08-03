@@ -944,6 +944,13 @@ body.locked{overflow:hidden;}
 .login-as{font-size:13.5px; color:var(--card-soft); margin:2px 0 8px;}
 .login-as b{color:var(--wood);}
 .pin-err{display:none; color:var(--rust); font-size:12.5px; margin:8px 0 0;}
+/* Keep-me-signed-in opt-in. Deliberately spells out "your own phone" inline: the 3am
+   reset exists so the shared iPad never carries a login into the next shift, and the
+   only thing standing between that and a stale manager session is this sentence. */
+.remember-row{display:flex; align-items:flex-start; gap:9px; margin:12px 2px 0; cursor:pointer;}
+.remember-row input{margin-top:2px; width:17px; height:17px; flex:none; accent-color:var(--accent);}
+.remember-row span{font-size:13px; line-height:1.35; color:var(--ink-soft);}
+.remember-row em{display:block; font-style:normal; font-size:11.5px; color:var(--ink-mute); margin-top:2px;}
 .pin-note{font-size:12.5px; color:var(--card-soft); line-height:1.5; margin:0 0 10px; background:rgba(176,74,26,.06); border-radius:8px; padding:8px 11px;}
 .pin-note b{color:var(--rust);}
 .consent-lead{font-size:13px; color:var(--card-soft); margin:0 0 12px; line-height:1.5;}
@@ -1550,7 +1557,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785718103';   // stamped by build-data.py at every deploy
+const BUILD='1785725969';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1786,8 +1793,28 @@ function getSession(){try{return JSON.parse(localStorage.getItem('sf-session')||
    shift. Investors are the opposite case: personal devices, read-only, and re-entering a PIN
    every visit is the thing most likely to stop them looking. Their session is written with
    exp:null, which means it lives until they clear the browser or you deactivate the profile. */
-function setSession(name,persist){try{
-  localStorage.setItem('sf-session',JSON.stringify({name:name,exp:persist?null:next3am(Date.now())}));
+/* Third mode added 2026-08-03: REMEMBERED. Tim asked not to re-enter his PIN daily.
+   The 3am reset exists for the shared iPad, so it can't just be removed globally --
+   instead it becomes a per-device opt-in at login. Remembered sessions get a real
+   expiry 30 days out rather than exp:null, deliberately: the null branch in
+   sessionValid() is gated to investors and stays that way, so this cannot widen it.
+   The expiry SLIDES (touchSession) so someone who opens the app weekly never logs in
+   again, while a device that goes quiet for a month re-locks itself. */
+const REMEMBER_DAYS=30;
+function setSession(name,persist,remember){try{
+  const exp = persist ? null
+            : remember ? Date.now()+REMEMBER_DAYS*864e5
+            : next3am(Date.now());
+  localStorage.setItem('sf-session',JSON.stringify({name:name,exp:exp,remembered:!!remember}));
+}catch(e){}}
+/* Slide a remembered session forward whenever it is used. Deactivating the profile
+   still logs them out (sessionValid checks p.active) -- that is the property that
+   actually matters for a firing, and it is unchanged. */
+function touchSession(){try{
+  const s=getSession();
+  if(!s||!s.remembered||s.exp===null)return;
+  s.exp=Date.now()+REMEMBER_DAYS*864e5;
+  localStorage.setItem('sf-session',JSON.stringify(s));
 }catch(e){}}
 function clearSession(){try{localStorage.removeItem('sf-session');}catch(e){}}
 function sessionValid(){
@@ -1849,7 +1876,7 @@ function enterDemo(){
 function exitDemo(){ DEMO=false; me=null; document.body.classList.add('locked'); openLogin(); }
 function onProfiles(){
   if(DEMO)return;   // a profile snapshot must not clobber the guest session
-  if(sessionValid()){ me=PROFILES[getSession().name]; } else { me=null; }
+  if(sessionValid()){ me=PROFILES[getSession().name]; touchSession(); } else { me=null; }
   applyAuthGate();
 }
 function applyAuthGate(){
@@ -1904,6 +1931,7 @@ function renderLogin(){
     } else {
       $('loginBody').innerHTML=`<p class="login-as">Enter <b>${esc(loginName)}</b>'s PIN</p>
         <input class="who-search" id="pinInput" type="password" inputmode="numeric" maxlength="6" placeholder="PIN" onkeydown="if(event.key==='Enter')submitLogin()">
+        <label class="remember-row"><input type="checkbox" id="rememberMe"><span>Keep me signed in on this device<em>Your own phone only &mdash; not the shared iPad.</em></span></label>
         <p id="pinErr" class="pin-err">That PIN didn't match.</p>
         <div class="to-submit"><button class="to-go" onclick="submitLogin()">Log in</button><button class="to-cancel" onclick="loginName=null;renderLogin()">Back</button></div>`;
       setTimeout(()=>{try{$('pinInput').focus();}catch(e){}},60);
@@ -1924,7 +1952,8 @@ async function submitLogin(){
   const p=PROFILES[loginName]; if(!p)return;
   if(!p.pinHash){alert('No PIN has been set for you yet — see Sam.');return;}
   let h; try{ h=await hashPin(($('pinInput').value||'')); }catch(e){ h=null; }
-  if(h&&h===p.pinHash){ setSession(p.name); me=p; $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); else setTimeout(maybeShowAnnounce,300); }
+  const _rm=$('rememberMe');
+  if(h&&h===p.pinHash){ setSession(p.name,false,!!(_rm&&_rm.checked)); me=p; $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); else setTimeout(maybeShowAnnounce,300); }
   else { const e=$('pinErr'); if(e)e.style.display='block'; const x=$('pinInput'); if(x){x.value='';x.focus();} }
 }
 async function submitNewPin(){
