@@ -1557,7 +1557,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785725969';   // stamped by build-data.py at every deploy
+const BUILD='1785726302';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1801,6 +1801,11 @@ function getSession(){try{return JSON.parse(localStorage.getItem('sf-session')||
    The expiry SLIDES (touchSession) so someone who opens the app weekly never logs in
    again, while a device that goes quiet for a month re-locks itself. */
 const REMEMBER_DAYS=30;
+/* WHO may stay signed in. Opt-in per person via `canRemember:true` on the staff profile
+   doc -- deliberately NOT tied to mgr/admin, because seven people carry those flags and
+   this is meant for two. Data-driven so Sam can add or revoke someone in Firestore
+   without a redeploy. Same UI-gate posture as the rest of the portal's role checks. */
+function canRemember(p){ return !!(p && p.canRemember===true); }
 function setSession(name,persist,remember){try{
   const exp = persist ? null
             : remember ? Date.now()+REMEMBER_DAYS*864e5
@@ -1823,6 +1828,11 @@ function sessionValid(){
   const p=PROFILES[s.name];
   if(!p||p.active===false)return false;            // deactivating the profile still logs them out
   if(s.exp===null)return isInvestorP(p);           // never-expiring, and only for an investor
+  // A remembered session dies the moment the profile loses canRemember, so revoking the
+  // flag in Firestore logs that person back out on their next app open. Checking it HERE
+  // rather than only hiding the checkbox means a hand-crafted localStorage entry does not
+  // buy anyone a persistent session either.
+  if(s.remembered && !canRemember(p))return false;
   return !!(s.exp&&Date.now()<s.exp);
 }
 function currentUserName(){return me?me.name:'';}
@@ -1931,7 +1941,7 @@ function renderLogin(){
     } else {
       $('loginBody').innerHTML=`<p class="login-as">Enter <b>${esc(loginName)}</b>'s PIN</p>
         <input class="who-search" id="pinInput" type="password" inputmode="numeric" maxlength="6" placeholder="PIN" onkeydown="if(event.key==='Enter')submitLogin()">
-        <label class="remember-row"><input type="checkbox" id="rememberMe"><span>Keep me signed in on this device<em>Your own phone only &mdash; not the shared iPad.</em></span></label>
+        ${canRemember(p)?`<label class="remember-row"><input type="checkbox" id="rememberMe"><span>Keep me signed in on this device<em>Your own phone only &mdash; not the shared iPad.</em></span></label>`:''}
         <p id="pinErr" class="pin-err">That PIN didn't match.</p>
         <div class="to-submit"><button class="to-go" onclick="submitLogin()">Log in</button><button class="to-cancel" onclick="loginName=null;renderLogin()">Back</button></div>`;
       setTimeout(()=>{try{$('pinInput').focus();}catch(e){}},60);
@@ -1953,7 +1963,10 @@ async function submitLogin(){
   if(!p.pinHash){alert('No PIN has been set for you yet — see Sam.');return;}
   let h; try{ h=await hashPin(($('pinInput').value||'')); }catch(e){ h=null; }
   const _rm=$('rememberMe');
-  if(h&&h===p.pinHash){ setSession(p.name,false,!!(_rm&&_rm.checked)); me=p; $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); else setTimeout(maybeShowAnnounce,300); }
+  // belt and braces: the checkbox is only rendered for permitted profiles, but never
+  // trust the DOM for an authorization decision -- re-check the profile here too.
+  const _remember = !!(_rm && _rm.checked) && canRemember(p);
+  if(h&&h===p.pinHash){ setSession(p.name,false,_remember); me=p; $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); else setTimeout(maybeShowAnnounce,300); }
   else { const e=$('pinErr'); if(e)e.style.display='block'; const x=$('pinInput'); if(x){x.value='';x.focus();} }
 }
 async function submitNewPin(){
