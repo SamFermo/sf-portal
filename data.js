@@ -10,7 +10,7 @@ window.SF = {
     "items": [
      {
       "name": "Sea Wolf Bakery Baguette",
-      "desc": "les pres sales butter, sea salt",
+      "desc": "les prés salés butter, sea salt",
       "price": "8",
       "raw": false,
       "story": "A baguette from Sea Wolf Bakers in Seattle's Fremont neighborhood, one of the Pacific Northwest's most celebrated naturally leavened bakeries. Baked the same day, served with Belgian-churned les prés salés butter flecked with coarse Camargue sea salt crystals. Simple and non-negotiable — this one never changes.",
@@ -35,7 +35,8 @@ window.SF = {
        "gluten",
        "dairy"
       ],
-      "canModify": []
+      "canModify": [],
+      "added": "2026-08-02"
      },
      {
       "name": "Castelvetrano Olives",
@@ -255,11 +256,11 @@ window.SF = {
      },
      {
       "name": "Chilled Cherry Gazpacho",
-      "desc": "bing cherry, tomato, cucumber, red onion, bell pepper, champagne vinegar, crème fraiche, sumac",
+      "desc": "bing cherry, tomato, cucumber, red onion, bell pepper, champagne vinegar, crème fraîche, sumac",
       "price": "15",
       "raw": false,
       "pron": "gahz-PAH-choh",
-      "story": "Cold soup built on bing cherries and tomatoes with cucumber, red onion, and red bell pepper. Champagne vinegar adds brightness. Finished with crème fraiche and sumac for tang and color.",
+      "story": "Cold soup built on bing cherries and tomatoes with cucumber, red onion, and red bell pepper. Champagne vinegar adds brightness. Finished with crème fraîche and sumac for tang and color.",
       "ingredients": [
        {
         "term": "Gazpacho",
@@ -289,8 +290,8 @@ window.SF = {
       "canModify": [
        "dairy"
       ],
-      "allergenNote": "Naturally gluten-free. Dairy: the crème fraiche finish can come off cleanly. Allium: red onion and garlic are blended into the base — not removable.",
-      "added": "2026-06-19"
+      "allergenNote": "Naturally gluten-free. Dairy: the crème fraîche finish can come off cleanly. Allium: red onion and garlic are blended into the base — not removable.",
+      "added": "2026-08-02"
      }
     ]
    },
@@ -12284,5 +12285,5 @@ window.SF = {
    }
   }
  },
- "build": "1785715077"
+ "build": "1785717004"
 };
