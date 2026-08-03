@@ -236,6 +236,17 @@ nav.chips::-webkit-scrollbar{display:none;}
 .fsearch::placeholder{color:var(--ink-mute);}
 .fchip{flex:0 0 auto; background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.2); color:var(--ink-soft); border-radius:999px; padding:6px 13px; font-size:12.5px; font-weight:600; cursor:pointer;}
 .fchip.active{background:var(--gold); color:#241f15; border-color:var(--gold);}
+.fchip.want{background:var(--gold); color:#241f15; border-color:var(--gold);}
+.fchip.avoid{background:rgba(176,74,26,.92); color:#fdf3e8; border-color:var(--rust); text-decoration:line-through;}
+.fgroup{display:flex; flex-wrap:wrap; gap:7px; align-items:center; width:100%; margin-bottom:7px;}
+.fglabel{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-mute); min-width:52px;}
+.fclear{flex:0 0 auto; background:transparent; border:1px solid rgba(205,216,244,.25); color:var(--ink-mute); border-radius:999px; padding:8px 14px; font-size:12.5px; font-weight:600; cursor:pointer;}
+.wm-note{font-size:12.5px; color:var(--ink-soft); background:rgba(230,200,120,.09); border:1px solid rgba(230,200,120,.3); border-radius:10px; padding:10px 13px; margin:10px 0 2px; line-height:1.5;}
+.wm-note b{color:var(--gold);}
+.wm-rank{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--ink-mute); margin:22px 0 10px; text-align:center;}
+.wm-why{display:flex; flex-wrap:wrap; gap:5px; padding:0 14px 12px;}
+.wm-hit{font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; background:rgba(74,106,58,.15); color:#3d5a2e; border:1px solid rgba(74,106,58,.34); border-radius:999px; padding:3px 9px;}
+.wm-miss{font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; background:rgba(154,140,108,.13); color:var(--card-mute); border:1px solid rgba(154,140,108,.32); border-radius:999px; padding:3px 9px;}
 
 /* schedule */
 .sched-banner{display:inline-block; background:rgba(230,200,120,.16); color:var(--gold); border:1px solid rgba(230,200,120,.4); border-radius:999px; padding:3px 12px; font-size:11.5px; font-weight:700; letter-spacing:.05em; margin-bottom:10px;}
@@ -1557,7 +1568,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785726302';   // stamped by build-data.py at every deploy
+const BUILD='1785729356';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2495,7 +2506,6 @@ function closeModal(){const b=$('copyBtn');if(b){b.textContent='Copy to clipboar
 
 /* FRESH — WINE */
 const WTYPE={white:'wt-white',red:'wt-red','rosé':'wt-rose',rose:'wt-rose',orange:'wt-orange',sparkling:'wt-sparkling'};
-let wineFilter={section:'all',glassOnly:false,q:''};
 function pronHTML(arr){if(!arr||!arr.length)return '';return `<div class="pron-guide"><div class="pron-label">Say it right</div>`+arr.map(p=>`<div class="pron-row"><b>${esc(p.term)}</b> — <span class="say">${esc(p.pron)}</span></div>`).join('')+`</div>`;}
 const SPEC_WORDS={
   Body:['','very light','light','medium','full','rich'],
@@ -2515,7 +2525,7 @@ function specRow(specs){
     return `<div class="spec"><div class="spec-label">${esc(s.label)}</div><div class="dots">${dots}</div><div class="spec-range">${esc(specWord(s))}</div></div>`;
   }).join('')+`</div>`;
 }
-function wineCardHTML(w){
+function wineCardHTML(w,matchHTML){
   const idx=SF.wines.indexOf(w), price=(w.glass?w.glass+' / ':'')+w.bottle;
   const wrpl=replacedByLive(w.name);
   if(wrpl){return `<div class="card replaced" id="wcard-${idx}" data-wine="${idx}"><div class="card-head"><span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span><div class="row-between"><span class="wine-name serif">${esc(w.name)}</span><span class="wine-price serif">${esc(price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(wrpl)}</div></div></div>`;}
@@ -2533,39 +2543,286 @@ function wineCardHTML(w){
         ${w.producer?`<div class="wine-sec-label">Producer</div><div class="wine-sec-body serif">${esc(w.producer)}</div>`:''}
         ${w.winemaking?`<div class="wine-sec-label">Winemaking</div><div class="wine-sec-body serif">${esc(w.winemaking)}</div>`:''}
         ${pronHTML(w.pronguide)}
-      </div>`:''}${noteBox('wine',w.name)}</div>`;
+      </div>`:''}${matchHTML||''}${noteBox('wine',w.name)}</div>`;
 }
-function renderWine(){
-  const bar=`<div class="filterbar">
-    <input class="fsearch" id="wineSearch" placeholder="Search wine, region, grape…" value="${esc(wineFilter.q)}">
-    <button class="fchip ${wineFilter.section==='all'?'active':''}" data-sec="all">All</button>
-    <button class="fchip ${wineFilter.section==='Bubbles'?'active':''}" data-sec="Bubbles">Bubbles</button>
-    <button class="fchip ${wineFilter.section==='White/Rosé/Orange'?'active':''}" data-sec="White/Rosé/Orange">White/Rosé/Orange</button>
-    <button class="fchip ${wineFilter.section==='Red'?'active':''}" data-sec="Red">Red</button>
-    <button class="fchip ${wineFilter.glassOnly?'active':''}" data-glass="1">By the glass</button></div>
-    <p class="est-note">Scorecards are house tasting estimates to guide guests, not lab values.</p>`;
-  const q=wineFilter.q.toLowerCase();
-  const list=SF.wines.filter(w=>{
-    if(wineFilter.section!=='all'&&w.section!==wineFilter.section)return false;
-    if(wineFilter.glassOnly&&!w.glass)return false;
-    if(q&&!((w.name+' '+w.region+' '+w.grapes+' '+w.pour).toLowerCase().includes(q)))return false;
-    return true;});
-  const newWines=SF.wines.filter(w=>isNew(w));
-  const filtering=wineFilter.section!=='all'||wineFilter.glassOnly||!!q;
-  const pinned=filtering?[]:SF.wines.filter(w=>isShuffled(w)), pinnedSet=new Set(pinned);
-  let cur='',html=editBarHTML();
-  if(pinned.length){html+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(w=>html+=wineCardHTML(w));html+=`</div>`;}
-  html+=bar;
-  const shown=list.filter(w=>!pinnedSet.has(w));
-  if(!shown.length)html+='<p class="board-empty">No wines match.</p>';
-  shown.forEach(w=>{
-    if(w.section!==cur){cur=w.section;html+=`<div class="section-label">${esc(cur)}</div>`;}
-    html+=wineCardHTML(w);
+/* ---- WINE GUEST-MATCH ENGINE (v1, specs only) ---------------------------
+   Structure bands come from w.specs (Body/Dryness/Acidity/Tannins, 1-5).
+   Flavour + farming words are NOT scored yet; they surface as a pending
+   note rather than silently failing. Tag pass adds them (Adrian reviews). */
+/* sel values: 'want' | 'avoid' | 'off'. 'off' is an explicit override of a
+   criterion the typed phrase asserted, so a tap can always win over the text. */
+let wineFilter={q:'',glass:null,sel:{},info:[]};
+
+const WCRIT=[
+  {id:'sparkling', kind:'type', group:'Type',     label:'Bubbles',       match:w=>w.type==='sparkling'},
+  {id:'white',     kind:'type', group:'Type',     label:'White',         match:w=>w.type==='white'},
+  {id:'rose',      kind:'type', group:'Type',     label:'Rosé',     match:w=>w.type==='rosé'||w.type==='rose'},
+  {id:'orange',    kind:'type', group:'Type',     label:'Orange',        match:w=>w.type==='orange'},
+  {id:'red',       kind:'type', group:'Type',     label:'Red',           match:w=>w.type==='red'},
+  {id:'body-light',kind:'spec', group:'Body',     label:'Light',         spec:'Body',    test:r=>r<=2},
+  {id:'body-med',  kind:'spec', group:'Body',     label:'Medium',        spec:'Body',    test:r=>r===3},
+  {id:'body-full', kind:'spec', group:'Body',     label:'Full',          spec:'Body',    test:r=>r>=4},
+  {id:'tan-low',   kind:'spec', group:'Tannin',   label:'Soft',          spec:'Tannins', test:r=>r<=2},
+  {id:'tan-high',  kind:'spec', group:'Tannin',   label:'Grippy',        spec:'Tannins', test:r=>r>=4},
+  {id:'acid-high', kind:'spec', group:'Acidity',  label:'Crisp',         spec:'Acidity', test:r=>r>=4},
+  {id:'acid-soft', kind:'spec', group:'Acidity',  label:'Round',         spec:'Acidity', test:r=>r<=3},
+  {id:'sweet',     kind:'spec', group:'Sweetness',label:'Off-dry',       spec:'Dryness', test:r=>r<=3, hidden:true}
+];
+const WCRIT_BY_ID={}; WCRIT.forEach(c=>WCRIT_BY_ID[c.id]=c);
+const WGROUPS=['Type','Body','Tannin','Acidity'];
+
+/* Guest phrasing -> criterion. Order matters: earlier patterns consume text. */
+const WPHRASE=[
+  /* consume-only: "light on the tannins" must not read as "light bodied" */
+  [/\b(?:light|easy|lay)\s+(?:on|off)\b/g,'__skip'],
+  [/\b(?:by the glass|glass pour|glass pours|per glass)\b/g,'__glass'],
+  [/\b(?:bubbl\w*|sparkl\w*|champagne|prosecco|franciacorta|lambrusco|spumante|pet[\s-]?nat|fizz\w*)\b/g,'sparkling'],
+  [/\b(?:ros[eé]s?|rosato|pink|blush)(?![a-z])/g,'rose'],
+  [/\b(?:orange wines?|orange|skin[\s-]?contact|amber|ramato)\b/g,'orange'],
+  [/\b(?:whites?|bianco|blanc)\b/g,'white'],
+  [/\b(?:reds?|rosso|rouge|tinto)\b/g,'red'],
+  [/\b(?:off[\s-]?dry|sweet\w*|dessert wine|sugary)\b/g,'sweet'],
+  [/\b(?:low[\s-]?tannin\w*|soft[\s-]?tannin\w*|light[\s-]?tannin\w*|no[\s-]?tannin\w*|smooth|silky|supple|velvety|soft)\b/g,'tan-low'],
+  [/\b(?:high[\s-]?tannin\w*|tannic|tannins?|grippy|grip|structured|firm|chewy|astringent|drying)\b/g,'tan-high'],
+  [/\b(?:low[\s-]?acid\w*|round|mellow|plush|lush|creamy texture)\b/g,'acid-soft'],
+  [/\b(?:high[\s-]?acid\w*|crisp|bright|zippy|zesty|racy|refreshing|acidic|snappy|lively)\b/g,'acid-high'],
+  [/\b(?:medium[\s-]?bodied|medium[\s-]?body|medium)\b/g,'body-med'],
+  [/\b(?:full[\s-]?bodied|full[\s-]?body|big|bold|heavy|rich|powerful|hearty|robust|weighty|full)\b/g,'body-full'],
+  [/\b(?:light[\s-]?bodied|light[\s-]?body|lighter|light|delicate|easy[\s-]?drinking|lean|crushable|quaffable)\b/g,'body-light']
+];
+/* Recognised, but no data behind it yet. Flagged loudly, never silently dropped. */
+const WPENDING=[
+  [/\b(?:fruit[\s-]?forward|fruity|juicy|jammy|berry|fruit)\b/g,'fruit-forward'],
+  [/\b(?:earthy|earth|funky|barnyard|rustic|savou?ry|umami|leathery)\b/g,'earthy'],
+  [/\b(?:unoaked|stainless|steel)\b/g,'unoaked'],
+  [/\b(?:oak\w*|buttery|vanilla|toasty)\b/g,'oaky'],
+  [/\b(?:mineral\w*|saline|flinty|stony|chalky)\b/g,'mineral'],
+  [/\b(?:organic|biodynamic|natural|low[\s-]?intervention|sustainable|orange man)\b/g,'organic / natural'],
+  [/\b(?:floral|flowery|perfumed|aromatic)\b/g,'floral'],
+  [/\b(?:spicy|peppery|spiced|spice)\b/g,'spice'],
+  [/\b(?:smok\w*)\b/g,'smoky']
+];
+const WNEG=/\b(?:no|not|nothing|none|never|without|avoid|avoids|hate|hates|hated|dislike|dislikes|don'?t|dont|doesn'?t|doesnt|isn'?t|anti|skip|except|less|light on|lay off)\b|\btoo\b/;
+const WSTOP=new Set(('a an the some something anything nothing wine wines glass bottle drink drinking like likes liked love loves want wants wanted prefer prefers guest guests they he she her his i im me my us we and or but with without for of on in to at by is are was be it that this those these very really quite kind sort bit little more less most just also please thanks thank tonight looking look give get find ok okay yes maybe dry drier driest table two three four').split(' '));
+
+function wSpec(w,label){var s=(w.specs||[]).find(function(x){return x.label===label;});return s?s.rating:null;}
+function wCritOn(c,w){
+  if(c.kind==='type')return c.match(w);
+  var r=wSpec(w,c.spec);
+  if(r==null)return null;              // unscored: unknown, not false
+  return !!c.test(r);
+}
+function wHay(w){
+  return ((w.name||'')+' '+(w.region||'')+' '+(w.grapes||'')+' '+(w.pour||'')+' '+
+          (w.producer||'')+' '+(w.winemaking||'')+' '+(w.vintage||'')+' '+(w.section||'')).toLowerCase();
+}
+
+/* Parse a typed guest phrase into criteria, pending flags and free-text terms. */
+function wParse(raw){
+  var out={sel:{},text:{want:[],avoid:[]},pending:[],conflict:[],dryNoted:false,glass:false};
+  var s=' '+String(raw||'').toLowerCase().replace(/[’']/g,"'")+' ';
+  if(/\bdry\b/.test(s)&&!/\boff[\s-]?dry\b/.test(s))out.dryNoted=true;
+  var frags=s.split(/,|;|\.|\/|\bbut\b|\band\b|\bthough\b|\bhowever\b/);
+  frags.forEach(function(f){
+    if(!f.trim())return;
+    var neg=WNEG.test(f);
+    var rest=f;
+    WPHRASE.forEach(function(p){
+      var re=p[0],id=p[1];
+      re.lastIndex=0;
+      if(re.test(rest)){
+        rest=rest.replace(re,' ');
+        if(id==='__glass'){ if(!neg)out.glass=true; return; }
+        if(id.charAt(0)==='_')return;
+        var v=neg?'avoid':'want';
+        if(out.sel[id]&&out.sel[id]!==v&&out.conflict.indexOf(id)<0)out.conflict.push(id);
+        out.sel[id]=v;
+      }
+    });
+    WPENDING.forEach(function(p){
+      var re=p[0],lab=p[1];
+      re.lastIndex=0;
+      if(re.test(rest)){ rest=rest.replace(re,' '); if(out.pending.indexOf(lab)<0)out.pending.push(lab); }
+    });
+    rest.split(/[^a-z0-9'à-ÿ-]+/).forEach(function(t){
+      t=t.replace(/^-+|-+$/g,'');
+      if(t.length<3||WSTOP.has(t)||WNEG.test(' '+t+' '))return;
+      out.text[neg?'avoid':'want'].push(t);
+    });
   });
-  $('ftWine').innerHTML=liveBlockHTML('wine')+html;
-  $('wineSearch').oninput=e=>{wineFilter.q=e.target.value;const p=e.target.selectionStart;renderWine();const s=$('wineSearch');s.focus();s.setSelectionRange(p,p);};
-  $('ftWine').querySelectorAll('.fchip').forEach(c=>c.onclick=()=>{if(c.dataset.glass){wineFilter.glassOnly=!wineFilter.glassOnly;}else{wineFilter.section=c.dataset.sec;}renderWine();});
+  return out;
 }
+
+/* Merge typed phrase with tapped chips. Chips win on conflict. */
+function wCriteria(){
+  var p=wParse(wineFilter.q);
+  var sel={};
+  Object.keys(p.sel).forEach(function(k){sel[k]=p.sel[k];});
+  Object.keys(wineFilter.sel).forEach(function(k){sel[k]=wineFilter.sel[k];});
+  Object.keys(sel).forEach(function(k){if(sel[k]==='off')delete sel[k];});
+  return {sel:sel,text:p.text,pending:p.pending,conflict:p.conflict,dryNoted:p.dryNoted,
+          glass:wineFilter.glass==null?p.glass:wineFilter.glass};
+}
+
+/* Score + hard-exclude. Types, glass and negations are hard. Structure is soft. */
+function wMatch(cr){
+  var wantT=[],avoidT=[],wantS=[],avoidS=[],sweetWanted=false;
+  Object.keys(cr.sel).forEach(function(id){
+    var c=WCRIT_BY_ID[id]; if(!c)return;
+    var v=cr.sel[id];
+    if(id==='sweet'){ if(v==='want')sweetWanted=true; return; }
+    if(c.kind==='type')(v==='want'?wantT:avoidT).push(c);
+    else (v==='want'?wantS:avoidS).push(c);
+  });
+  var textHard=(wantS.length===0&&wantT.length===0&&!cr.glass);
+  var rows=[],dropped=0,unscored=[];
+  (SF.wines||[]).forEach(function(w){
+    var hay=wHay(w);
+    for(var i=0;i<avoidT.length;i++){ if(wCritOn(avoidT[i],w)===true){dropped++;return;} }
+    for(var j=0;j<avoidS.length;j++){ if(wCritOn(avoidS[j],w)===true){dropped++;return;} }
+    for(var k=0;k<cr.text.avoid.length;k++){ if(hay.indexOf(cr.text.avoid[k])>=0){dropped++;return;} }
+    if(wantT.length&&!wantT.some(function(c){return wCritOn(c,w)===true;})){dropped++;return;}
+    if(cr.glass&&!w.glass){dropped++;return;}
+    if(textHard&&cr.text.want.length&&!cr.text.want.every(function(t){return hay.indexOf(t)>=0;})){dropped++;return;}
+
+    var hits=[],misses=[],blind=false;
+    wantS.forEach(function(c){
+      var v=wCritOn(c,w);
+      if(v===true)hits.push(c.group+': '+c.label);
+      else if(v===null)blind=true;
+      else misses.push(c.group+': '+c.label);
+    });
+    /* An avoided spec on an unscored wine is unknown, not passed. Say so. */
+    avoidS.forEach(function(c){ if(wCritOn(c,w)===null)blind=true; });
+    if(!textHard)cr.text.want.forEach(function(t){ if(hay.indexOf(t)>=0)hits.push(t); });
+    if(blind)unscored.push(w);
+    rows.push({w:w,score:hits.length,hits:hits,misses:misses,blind:blind});
+  });
+  return {rows:rows,dropped:dropped,unscored:unscored,
+          wantS:wantS,avoidS:avoidS,wantT:wantT,avoidT:avoidT,sweetWanted:sweetWanted,
+          ranking:wantS.length>0||(!textHard&&cr.text.want.length>0)};
+}
+
+/* Chips render the MERGED state, so a typed phrase visibly lights them up and
+   the server can see what we heard before they trust the list. */
+function wChipHTML(c,cr){
+  var st=cr.sel[c.id]||'';
+  return '<button class="fchip '+(st==='want'?'want':(st==='avoid'?'avoid':''))+'" data-crit="'+c.id+'">'+esc(c.label)+'</button>';
+}
+function wCycle(id){
+  var cur=wCriteria().sel[id];
+  wineFilter.sel[id]=cur==='want'?'avoid':(cur==='avoid'?'off':'want');
+  renderWine();
+}
+function wClear(){wineFilter={q:'',glass:null,sel:{},info:[]};renderWine();}
+function wActive(){
+  var cr=wCriteria();
+  return !!wineFilter.q.trim()||cr.glass||Object.keys(cr.sel).length>0;
+}
+
+function renderWine(){
+  var cr=wCriteria(), m=wMatch(cr);
+  var bar='<div class="filterbar"><input class="fsearch" id="wineSearch" '+
+    'placeholder="What did the guest say? light, no oak, not too tannic…" value="'+esc(wineFilter.q)+'">'+
+    (wActive()?'<button class="fclear" id="wineClear">Clear</button>':'')+'</div>';
+  WGROUPS.forEach(function(g){
+    var cs=WCRIT.filter(function(c){return c.group===g&&!c.hidden;});
+    if(!cs.length)return;
+    bar+='<div class="fgroup"><span class="fglabel">'+esc(g)+'</span>'+cs.map(function(c){return wChipHTML(c,cr);}).join('');
+    if(g==='Type')bar+='<button class="fchip '+(cr.glass?'want':'')+'" data-glass="1">By the glass</button>';
+    bar+='</div>';
+  });
+  bar+='<p class="est-note">Tap once for what they want, twice for what to avoid. Scorecards are house tasting estimates, not lab values.</p>';
+
+  var notes='';
+  if(m.sweetWanted){
+    var driest=(SF.wines||[]).filter(function(w){return wSpec(w,'Dryness')===4;}).slice(0,3).map(function(w){return w.name;});
+    notes+='<div class="wm-note"><b>Nothing on the list is sweet.</b> Every scored wine pours dry to bone dry.'+
+      (driest.length?' The softest edge we have: '+esc(driest.join(', '))+'.':'')+
+      ' For a sweet finish, steer to the after-dinner list.</div>';
+  }
+  if(cr.pending.length){
+    notes+='<div class="wm-note"><b>Not scored yet:</b> '+esc(cr.pending.join(', '))+
+      '. Those live in the tasting notes as prose, not as data, so they are ignored here rather than guessed at. Coming in the tag pass.</div>';
+  }
+  if(cr.conflict&&cr.conflict.length){
+    notes+='<div class="wm-note"><b>Mixed signal:</b> “'+esc(cr.conflict.map(function(id){return WCRIT_BY_ID[id]?WCRIT_BY_ID[id].label:id;}).join(', '))+
+      '” came through as both wanted and avoided. Using the later one. Worth asking the guest again.</div>';
+  }
+  if(cr.dryNoted&&!m.sweetWanted){
+    notes+='<div class="wm-note">Everything on the list pours dry, so “dry” does not narrow anything.</div>';
+  }
+  if(m.unscored.length){
+    notes+='<div class="wm-note"><b>'+m.unscored.length+' wine'+(m.unscored.length>1?'s have':' has')+' no scorecard yet</b> ('+
+      esc(m.unscored.map(function(w){return w.name;}).join(', '))+'). '+(m.unscored.length>1?'They are':'It is')+
+      ' still shown, tagged “no scorecard”, because unrated is not the same as ruled out. Taste before you sell '+
+      (m.unscored.length>1?'them':'it')+' on structure.</div>';
+  }
+
+  var html=editBarHTML();
+  var filtering=wActive();
+  var pinned=filtering?[]:(SF.wines||[]).filter(isShuffled), pinnedSet=new Set(pinned);
+  if(pinned.length){
+    html+='<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>';
+    pinned.forEach(function(w){html+=wineCardHTML(w);});
+    html+='</div>';
+  }
+  html+=bar+notes;
+
+  var rows=m.rows.filter(function(r){return !pinnedSet.has(r.w);});
+  if(!rows.length){
+    html+='<p class="board-empty">No wines match'+(m.dropped?' — '+m.dropped+' ruled out by the filters above.':'.')+'</p>';
+  } else if(m.ranking){
+    var scored=rows.filter(function(r){return !r.blind;}), blind=rows.filter(function(r){return r.blind;});
+    scored.sort(function(a,b){return b.score-a.score||SF.wines.indexOf(a.w)-SF.wines.indexOf(b.w);});
+    var top=scored.length?scored[0].score:0, need=m.wantS.length;
+    var band='';
+    scored.forEach(function(r){
+      var lab;
+      if(top===0)lab='Nothing matched what they asked for';
+      else if(r.score>=top)lab=(top>=Math.max(1,need)?'Best match':'Closest we have');
+      else if(r.score>0)lab='Weaker match';
+      else lab='Not a match, but not ruled out';
+      if(lab!==band){band=lab;html+='<div class="wm-rank">'+esc(band)+'</div>';}
+      html+=wineCardHTML(r.w,wWhyHTML(r));
+    });
+    if(blind.length){
+      html+='<div class="wm-rank">Not scored yet</div>';
+      blind.forEach(function(r){html+=wineCardHTML(r.w,wWhyHTML(r));});
+    }
+  } else {
+    var cur='';
+    rows.forEach(function(r){
+      if(r.w.section!==cur){cur=r.w.section;html+='<div class="section-label">'+esc(cur)+'</div>';}
+      html+=wineCardHTML(r.w,wWhyHTML(r));
+    });
+  }
+
+  $('ftWine').innerHTML=liveBlockHTML('wine')+html;
+  var si=$('wineSearch');
+  if(si)si.oninput=function(e){
+    wineFilter.q=e.target.value;
+    var p=e.target.selectionStart;
+    renderWine();
+    var s=$('wineSearch'); if(s){s.focus();s.setSelectionRange(p,p);}
+  };
+  var cb=$('wineClear'); if(cb)cb.onclick=wClear;
+  $('ftWine').querySelectorAll('.fchip').forEach(function(c){
+    c.onclick=function(){
+      if(c.dataset.glass){wineFilter.glass=!wCriteria().glass;renderWine();}
+      else wCycle(c.dataset.crit);
+    };
+  });
+}
+function wWhyHTML(r){
+  if(!r||(!r.hits.length&&!r.misses.length&&!r.blind))return '';
+  var h='<div class="wm-why">';
+  r.hits.forEach(function(t){h+='<span class="wm-hit">'+esc(t)+'</span>';});
+  r.misses.forEach(function(t){h+='<span class="wm-miss">not '+esc(t)+'</span>';});
+  if(r.blind)h+='<span class="wm-miss">no scorecard</span>';
+  return h+'</div>';
+}
+
 function toggleWine(i){const el=$('ftWine').querySelector(`[data-wine="${i}"]`);if(el)el.classList.toggle('expanded');}
 
 /* FRESH — BAR */
