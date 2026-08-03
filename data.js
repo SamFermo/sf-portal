@@ -214,11 +214,11 @@ window.SF = {
      },
      {
       "name": "Burrata",
-      "desc": "strawberries, chamomile gelee, strawberry buttermilk poppy seed vinaigrette, crostini",
+      "desc": "strawberries, chamomile gelée, strawberry buttermilk poppy seed vinaigrette, crostini",
       "price": "18",
       "raw": false,
       "pron": "boo-RAH-tah",
-      "story": "Creamy burrata with fresh strawberries and a chamomile gelee that adds subtle floral sweetness. The strawberry buttermilk vinaigrette brings acid and brightness. Crostini on the side for texture.",
+      "story": "Creamy burrata with fresh strawberries and a chamomile gelée that adds subtle floral sweetness. The strawberry buttermilk vinaigrette brings acid and brightness. Crostini on the side for texture.",
       "ingredients": [
        {
         "term": "Burrata",
@@ -226,9 +226,9 @@ window.SF = {
         "note": "a fresh cow's-milk cheese from Puglia: a mozzarella shell holding a center of stracciatella (cheese curds) and cream. Cut into it and the middle should flow."
        },
        {
-        "term": "Chamomile gelee",
+        "term": "Chamomile gelée",
         "pronunciation": "kam-oh-MEEL zhuh-LAY",
-        "note": "The composition of this gelee has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian."
+        "note": "The composition of this gelée has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian."
        },
        {
         "term": "Strawberry buttermilk poppy seed vinaigrette",
@@ -243,14 +243,14 @@ window.SF = {
       "canModify": [
        "gluten"
       ],
-      "allergenNote": "Dairy: the burrata and the buttermilk vinaigrette, central and not removable. Gluten: crostini come on the side so the rest of the table can still have them. The vinaigrette carries poppy seeds, which we do not track as a chip. The composition of the chamomile gelee has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian.",
-      "added": "2026-06-19",
+      "allergenNote": "Dairy: the burrata and the buttermilk vinaigrette, central and not removable. Gluten: crostini come on the side so the rest of the table can still have them. The vinaigrette carries poppy seeds, which we do not track as a chip. The composition of the chamomile gelée has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian.",
+      "added": "2026-08-02",
       "flags": [
        {
-        "component": "chamomile gelee",
+        "component": "chamomile gelée",
         "riskAllergens": [],
         "proposedStandard": "",
-        "label": "chamomile gelee — composition not specified"
+        "label": "chamomile gelée — composition not specified"
        }
       ]
      },
@@ -544,10 +544,10 @@ window.SF = {
      },
      {
       "name": "Roasted Duck Breast",
-      "desc": "Muscovy duck breast, polenta, chanterelles, corn, huckleberry demi glace",
+      "desc": "Muscovy duck breast, polenta, chanterelles, corn, huckleberry demi-glace",
       "price": "42",
       "raw": true,
-      "story": "Muscovy duck breast rendered skin-side down to medium rare. It sits on creamy polenta with sautéed chanterelles, corn, and shallot. Marjoram and sherry vinegar brighten the plate. A huckleberry demi glace finishes it, adding dark fruit and depth.",
+      "story": "Muscovy duck breast rendered skin-side down to medium rare. It sits on creamy polenta with sautéed chanterelles, corn, and shallot. Marjoram and sherry vinegar brighten the plate. A huckleberry demi-glace finishes it, adding dark fruit and depth.",
       "ingredients": [
        {
         "term": "Muscovy duck",
@@ -570,9 +570,9 @@ window.SF = {
         "note": "A soft herb in the oregano family, sweeter and more floral than oregano. Used fresh to lift the plate."
        },
        {
-        "term": "Huckleberry demi glace",
+        "term": "Huckleberry demi-glace",
         "pronunciation": "DEH-mee glahss",
-        "note": "The composition of this demi glace has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
+        "note": "The composition of this demi-glace has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
        }
       ],
       "allergens": [
@@ -582,16 +582,16 @@ window.SF = {
       "canModify": [
        "dairy"
       ],
-      "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. The composition of the huckleberry demi glace has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
-      "added": "2026-07-24",
+      "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. The composition of the huckleberry demi-glace has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
+      "added": "2026-08-02",
       "flags": [
        {
-        "component": "huckleberry demi glace",
+        "component": "huckleberry demi-glace",
         "riskAllergens": [
          "allium"
         ],
         "proposedStandard": "",
-        "label": "huckleberry demi glace — composition not specified"
+        "label": "huckleberry demi-glace — composition not specified"
        }
       ]
      }
@@ -12285,5 +12285,5 @@ window.SF = {
    }
   }
  },
- "build": "1785717004"
+ "build": "1785718103"
 };
