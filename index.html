@@ -252,6 +252,7 @@ nav.chips::-webkit-scrollbar{display:none;}
 .tour-btns .tour-next{margin-left:auto; background:var(--gold); color:#241f15; border-color:var(--gold);}
 body.tour-on{padding-bottom:230px;}
 .chip.tour-lit{box-shadow:0 0 0 2px var(--gold); border-color:var(--gold);}
+.wel-sub{font-size:12.5px; color:var(--card-mute); text-align:center; margin:-4px 0 12px;}
 .fchip.want{background:var(--gold); color:#241f15; border-color:var(--gold);}
 .fchip.avoid{background:rgba(176,74,26,.92); color:#fdf3e8; border-color:var(--rust); text-decoration:line-through;}
 .fgroup{display:flex; flex-wrap:wrap; gap:7px; align-items:center; width:100%; margin-bottom:7px;}
@@ -1585,7 +1586,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785819737';   // stamped by build-data.py at every deploy
+const BUILD='1785820953';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2029,7 +2030,7 @@ function saveConsent(){
   if(fbReady&&fbDb&&me.id){ fbDb.collection('staff').doc(me.id).update(patch).catch(function(){}); }
   closeConsent(); renderAccountBar(); if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
   /* brand-new user just finished consent — walk them through the app, THEN announce */
-  if(tourPending())setTimeout(function(){startTour(false);},300);
+  if(tourPending())setTimeout(welcomeOpen,300);
   else setTimeout(maybeShowAnnounce,250);
 }
 
@@ -2067,6 +2068,36 @@ const TOUR_COPY={
   orders:{t:'Farm Order',b:'Place and track the farm order without leaving the app.'},
   access:{t:'Staff Access',b:'Add people, set or reset PINs, and lock out anyone who leaves.'}
 };
+/* The first thing a brand-new person sees, between choosing contact
+   preferences and the walkthrough. Frames what the app is and why the contact
+   choice they just made matters, then hands off to startTour(). */
+const WELCOME={
+  emoji:'👋',
+  lines:[
+    "This is the staff portal. The schedule, tonight's menu, the wine list and how we do things all live here.",
+    'Next up is a quick walk through each section. It takes about a minute, and you can replay it anytime from the Tour button next to your name.',
+    "You just chose how the team can reach you. That's what shows in the Directory, and it's how people will get hold of you about picking up or covering a shift."
+  ],
+  note:"Anything that doesn't make sense, ask Sam or a manager."
+};
+function welcomeOpen(){
+  if(!me)return;
+  var m=$('welcomeModal');
+  if(!m){ m=document.createElement('div'); m.id='welcomeModal'; m.className='comp-modal ann-modal'; document.body.appendChild(m); }
+  var first=String(me.name||'').trim().split(/\s+/)[0]||'';
+  m.innerHTML='<div class="ann-card">'+
+    '<div class="ann-emoji">'+WELCOME.emoji+'</div>'+
+    '<div class="ann-title serif">Welcome'+(first?', '+esc(first):'')+'</div>'+
+    '<div class="ann-lines">'+WELCOME.lines.map(function(l){return '<div class="ann-line">'+esc(l)+'</div>';}).join('')+'</div>'+
+    '<div class="ann-note">'+esc(WELCOME.note)+'</div>'+
+    '<div class="to-submit"><button class="to-go" onclick="welcomeGo()">Show me around</button></div>'+
+  '</div>';
+  m.style.display='flex';
+}
+function welcomeGo(){
+  var m=$('welcomeModal'); if(m)m.style.display='none';
+  startTour(false);
+}
 let TOUR={on:false,i:0,steps:[],replay:false};
 function tourPending(){ return !!(me && !DEMO && !isInvestor() && me.tourSeen!==true); }
 function tourSteps(){
@@ -2132,7 +2163,7 @@ function tourEnd(){
 function afterLogin(){
   if(!me)return;
   if(!me.contactSet){openConsent();return;}
-  if(tourPending()){setTimeout(function(){startTour(false);},400);return;}
+  if(tourPending()){setTimeout(welcomeOpen,400);return;}
   setTimeout(maybeShowAnnounce,300);
 }
 
@@ -2176,7 +2207,15 @@ function annDismissedNow(){ try{const s=JSON.parse(localStorage.getItem(annDismi
 function annDismiss(){ try{localStorage.setItem(annDismissKey(),JSON.stringify({exp:next3am(Date.now())}));}catch(e){} annClose(); }
 function annActive(){ return todayISO()<=ANNOUNCE.showUntil; }
 function annMyRsvp(){ const r=me&&me.announceRsvp; return (r&&r.id===ANNOUNCE.id)?r:null; }
-function annShouldShow(){ return !!(me && me.contactSet && annActive() && !annMyRsvp() && !annDismissedNow()); }
+function annIsInfo(){ return ANNOUNCE.kind==='info'; }
+function annAcked(){ return !!(me && me.noticeAck===ANNOUNCE.id); }
+function annAck(){
+  if(me){ me.noticeAck=ANNOUNCE.id;
+    if(fbReady&&fbDb&&me.id)fbDb.collection('staff').doc(me.id).update({noticeAck:ANNOUNCE.id}).catch(function(){}); }
+  annClose();
+}
+function annShouldShow(){ if(!(me && me.contactSet && annActive() && !annDismissedNow()))return false;
+  return annIsInfo() ? !annAcked() : !annMyRsvp(); }
 function maybeShowAnnounce(){ if(isInvestor())return; if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
 /* Full roster behind the tally: staff (from PROFILES.announceRsvp) plus the
    hand-added external entries in ANNOUNCE_GUESTS. Single source both the compact
@@ -2240,6 +2279,15 @@ function annOpen(){
 function annClose(){ const m=$('announceModal'); if(m)m.style.display='none'; }
 function annCardHTML(existing){
   const A=ANNOUNCE;
+  if(annIsInfo()){
+    return `<div class="ann-card">
+      <div class="ann-emoji">${A.emoji}</div>
+      <div class="ann-title serif">${esc(A.title)}</div>
+      <div class="ann-lines">${A.lines.map(l=>`<div class="ann-line">${esc(l)}</div>`).join('')}</div>
+      ${A.note?`<div class="ann-note">${esc(A.note)}</div>`:''}
+      <div class="to-submit"><button class="to-go" onclick="annAck()">Got it</button></div>
+    </div>`;
+  }
   const cur=existing?`<div class="ann-current">Right now you're down as <b>${existing.rsvp==='yes'?('coming'+(existing.guests?` +${existing.guests} guest${existing.guests>1?'s':''}`:'')):'not coming'}</b> — change it below if needed.</div>`:'';
   // Full list is visible to anybody (staff and demo/guest view alike), not just
   // managers — Sam wants everyone able to pull up who's actually coming.
