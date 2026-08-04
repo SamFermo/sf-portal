@@ -1,153 +1,161 @@
 {
-  "note": "Active roster. Contact options appear only as each person opts in (call / text / email) at login.",
-  "leads": [
-    {
-      "name": "Sam West",
-      "role": "Executive Chef & GM"
-    },
-    {
-      "name": "Adrian Bravo",
-      "role": "FOH Manager"
-    },
-    {
-      "name": "Katie Kuntz",
-      "role": "Bar Manager"
-    },
-    {
-      "name": "Chris Hoey",
-      "role": "Chef de Cuisine"
-    },
-    {
-      "name": "Jose Agundez",
-      "role": "Sous Chef"
-    },
-    {
-      "name": "Tim Baker",
-      "role": "Owner"
-    }
-  ],
-  "directory": {
-    "foh": [
-      {
-        "name": "Adrian Bravo",
-        "role": "FOH Manager"
-      },
-      {
-        "name": "Katie Kuntz",
-        "role": "Bar Manager"
-      },
-      {
-        "name": "Abby Tornquist",
-        "role": "Server"
-      },
-      {
-        "name": "Allegra Dunbar",
-        "role": "Server"
-      },
-      {
-        "name": "Audrey Bean",
-        "role": "Server"
-      },
-      {
-        "name": "Brittany Hinz",
-        "role": "Server"
-      },
-      {
-        "name": "Denise Poon",
-        "role": "Server"
-      },
-      {
-        "name": "Jackie Hanley",
-        "role": "Server"
-      },
-      {
-        "name": "Josie Ableman",
-        "role": "Server"
-      },
-      {
-        "name": "Julian Biro",
-        "role": "Server"
-      },
-      {
-        "name": "Mac Solomon",
-        "role": "Server"
-      },
-      {
-        "name": "Sabba Hawash",
-        "role": "Server"
-      },
-      {
-        "name": "Sully Baker",
-        "role": "Server"
-      },
-      {
-        "name": "Helen Richardson",
-        "role": "Support · Server in training"
-      }
-    ],
-    "boh": [
-      {
-        "name": "Chris Hoey",
-        "role": "Chef de Cuisine"
-      },
-      {
-        "name": "Jose Agundez",
-        "role": "Sous Chef"
-      },
-      {
-        "name": "Joseph Steuby",
-        "role": "Pasta Production Lead"
-      },
-      {
-        "name": "Anna Velasco-Ojeda",
-        "role": "Line Cook · Porter"
-      },
-      {
-        "name": "Antolin \"Tony\" Reyes",
-        "role": "Line Cook · Porter"
-      },
-      {
-        "name": "Catherine \"Cat\" Cox",
-        "role": "Line Cook"
-      },
-      {
-        "name": "Cooper Duke",
-        "role": "Line Cook"
-      },
-      {
-        "name": "Darren Mercier",
-        "role": "Line Cook"
-      },
-      {
-        "name": "Gopala Corral",
-        "role": "Line Cook"
-      },
-      {
-        "name": "Ignacio Godinez",
-        "role": "Line Cook"
-      },
-      {
-        "name": "Jackson Partch",
-        "role": "Line Cook"
-      },
-      {
-        "name": "Kenji Carskaddan",
-        "role": "Line Cook"
-      },
-      {
-        "name": "Manny Dominguez",
-        "role": "Line Cook"
-      }
-    ],
-    "office": [
-      {
-        "name": "Sam West",
-        "role": "Executive Chef & GM"
-      },
-      {
-        "name": "Tim Baker",
-        "role": "Owner"
-      }
-    ]
+ "note": "Active roster. Contact options appear only as each person opts in (call / text / email) at login.",
+ "leads": [
+  {
+   "name": "Sam West",
+   "role": "Executive Chef & GM"
+  },
+  {
+   "name": "Adrian Bravo",
+   "role": "FOH Manager"
+  },
+  {
+   "name": "Katie Kuntz",
+   "role": "Bar Manager"
+  },
+  {
+   "name": "Chris Hoey",
+   "role": "Chef de Cuisine"
+  },
+  {
+   "name": "Jose Agundez",
+   "role": "Sous Chef"
+  },
+  {
+   "name": "Tim Baker",
+   "role": "Owner"
   }
+ ],
+ "directory": {
+  "foh": [
+   {
+    "name": "Adrian Bravo",
+    "role": "FOH Manager"
+   },
+   {
+    "name": "Katie Kuntz",
+    "role": "Bar Manager"
+   },
+   {
+    "name": "Abby Tornquist",
+    "role": "Server"
+   },
+   {
+    "name": "Allegra Dunbar",
+    "role": "Server"
+   },
+   {
+    "name": "Audrey Bean",
+    "role": "Server"
+   },
+   {
+    "name": "Brittany Hinz",
+    "role": "Server"
+   },
+   {
+    "name": "Denise Poon",
+    "role": "Server"
+   },
+   {
+    "name": "Jackie Hanley",
+    "role": "Server"
+   },
+   {
+    "name": "Josie Ableman",
+    "role": "Server"
+   },
+   {
+    "name": "Julian Biro",
+    "role": "Server"
+   },
+   {
+    "name": "Mac Solomon",
+    "role": "Server"
+   },
+   {
+    "name": "Nam Huynh",
+    "role": "Server"
+   },
+   {
+    "name": "Sabba Hawash",
+    "role": "Server"
+   },
+   {
+    "name": "Sully Baker",
+    "role": "Server"
+   },
+   {
+    "name": "Helen Richardson",
+    "role": "Support · Server in training"
+   }
+  ],
+  "boh": [
+   {
+    "name": "Chris Hoey",
+    "role": "Chef de Cuisine"
+   },
+   {
+    "name": "Jose Agundez",
+    "role": "Sous Chef"
+   },
+   {
+    "name": "Joseph Steuby",
+    "role": "Pasta Production Lead"
+   },
+   {
+    "name": "Anna Velasco-Ojeda",
+    "role": "Line Cook · Porter"
+   },
+   {
+    "name": "Antolin \"Tony\" Reyes",
+    "role": "Line Cook · Porter"
+   },
+   {
+    "name": "Catherine \"Cat\" Cox",
+    "role": "Line Cook"
+   },
+   {
+    "name": "Cooper Duke",
+    "role": "Line Cook"
+   },
+   {
+    "name": "Darren Mercier",
+    "role": "Line Cook"
+   },
+   {
+    "name": "Gopala Corral",
+    "role": "Line Cook"
+   },
+   {
+    "name": "Ignacio Godinez",
+    "role": "Line Cook"
+   },
+   {
+    "name": "Jackson Partch",
+    "role": "Line Cook"
+   },
+   {
+    "name": "Joshua Lardizabal",
+    "role": "Line Cook"
+   },
+   {
+    "name": "Kenji Carskaddan",
+    "role": "Line Cook"
+   },
+   {
+    "name": "Manny Dominguez",
+    "role": "Line Cook"
+   }
+  ],
+  "office": [
+   {
+    "name": "Sam West",
+    "role": "Executive Chef & GM"
+   },
+   {
+    "name": "Tim Baker",
+    "role": "Owner"
+   }
+  ]
+ }
 }
