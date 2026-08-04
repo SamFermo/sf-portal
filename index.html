@@ -236,6 +236,22 @@ nav.chips::-webkit-scrollbar{display:none;}
 .fsearch::placeholder{color:var(--ink-mute);}
 .fchip{flex:0 0 auto; background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.2); color:var(--ink-soft); border-radius:999px; padding:6px 13px; font-size:12.5px; font-weight:600; cursor:pointer;}
 .fchip.active{background:var(--gold); color:#241f15; border-color:var(--gold);}
+/* ---------- first-run walkthrough ---------- */
+.tour-bar{position:fixed; left:0; right:0; bottom:0; z-index:60; transform:translateY(115%);
+  transition:transform .3s cubic-bezier(.22,.61,.36,1); background:linear-gradient(180deg,#0c1c44,#050a1c);
+  border-top:1px solid rgba(230,200,120,.38); box-shadow:0 -12px 34px rgba(0,0,0,.5);
+  padding:15px 16px calc(16px + env(safe-area-inset-bottom, 0px));}
+.tour-bar.open{transform:none;}
+.tour-inner{max-width:620px; margin:0 auto;}
+.tour-step{font-size:10.5px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-mute);}
+.tour-title{font-size:17.5px; font-weight:700; color:var(--gold); margin:3px 0 5px; font-family:var(--serif, inherit);}
+.tour-body{font-size:13.5px; line-height:1.55; color:var(--ink-soft); margin:0 0 13px;}
+.tour-btns{display:flex; gap:8px; align-items:center;}
+.tour-btns button{font-family:inherit; border-radius:999px; padding:9px 17px; font-size:13px; font-weight:600;
+  cursor:pointer; border:1px solid rgba(205,216,244,.25); background:transparent; color:var(--ink-soft);}
+.tour-btns .tour-next{margin-left:auto; background:var(--gold); color:#241f15; border-color:var(--gold);}
+body.tour-on{padding-bottom:230px;}
+.chip.tour-lit{box-shadow:0 0 0 2px var(--gold); border-color:var(--gold);}
 .fchip.want{background:var(--gold); color:#241f15; border-color:var(--gold);}
 .fchip.avoid{background:rgba(176,74,26,.92); color:#fdf3e8; border-color:var(--rust); text-decoration:line-through;}
 .fgroup{display:flex; flex-wrap:wrap; gap:7px; align-items:center; width:100%; margin-bottom:7px;}
@@ -1517,6 +1533,7 @@ body.locked{overflow:hidden;}
   </div>
 </div>
 
+<div class="tour-bar" id="tourBar"></div>
 <div class="modal" id="consentModal">
   <div class="modal-card">
     <h3>How can the team reach you?</h3>
@@ -1568,7 +1585,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785818005';   // stamped by build-data.py at every deploy
+const BUILD='1785819737';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1902,7 +1919,7 @@ function onProfiles(){
 }
 function applyAuthGate(){
   const gate=$('loginGate');
-  if(me){ if(gate)gate.classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); else setTimeout(maybeShowAnnounce,300); }
+  if(me){ if(gate)gate.classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); afterLogin(); }
   else {
     document.body.classList.add('locked');
     if(!gate.classList.contains('open')) openLogin();
@@ -1922,7 +1939,7 @@ function renderAccountBar(){
   if(!$('idBar'))return;
   if(DEMO){ $('idBar').innerHTML=`<button class="id-chip"><b>Guest / demo view</b> · read-only</button><button class="id-chip" onclick="exitDemo()">Exit demo</button>`; return; }
   $('idBar').innerHTML = me
-    ? `<button class="id-chip" onclick="openConsent()">Signed in as <b>${esc(me.name)}</b></button><button class="id-chip" onclick="logout()">Switch user</button>`
+    ? `<button class="id-chip" onclick="openConsent()">Signed in as <b>${esc(me.name)}</b></button><button class="id-chip" onclick="startTour(true)" title="Replay the walkthrough">Tour</button><button class="id-chip" onclick="logout()">Switch user</button>`
     : `<button class="id-chip" onclick="openLogin()">Log in</button>`;
 }
 
@@ -1977,7 +1994,7 @@ async function submitLogin(){
   // belt and braces: the checkbox is only rendered for permitted profiles, but never
   // trust the DOM for an authorization decision -- re-check the profile here too.
   const _remember = !!(_rm && _rm.checked) && canRemember(p);
-  if(h&&h===p.pinHash){ setSession(p.name,false,_remember); me=p; $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); else setTimeout(maybeShowAnnounce,300); }
+  if(h&&h===p.pinHash){ setSession(p.name,false,_remember); me=p; $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); afterLogin(); }
   else { const e=$('pinErr'); if(e)e.style.display='block'; const x=$('pinInput'); if(x){x.value='';x.focus();} }
 }
 async function submitNewPin(){
@@ -1988,7 +2005,7 @@ async function submitNewPin(){
   const h=await hashPin(a);
   if(fbReady&&fbDb&&p.id){ await fbDb.collection('staff').doc(p.id).update({pinHash:h}).catch(function(){}); }
   p.pinHash=h; setSession(p.name); me=p;
-  $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); if(!me.contactSet)openConsent(); else setTimeout(maybeShowAnnounce,300);
+  $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); afterLogin();
 }
 function logout(){clearSession();me=null;document.body.classList.add('locked');try{if('clearAppBadge' in navigator)navigator.clearAppBadge();}catch(e){}openLogin();}
 
@@ -2011,7 +2028,112 @@ function saveConsent(){
   Object.assign(me,patch);
   if(fbReady&&fbDb&&me.id){ fbDb.collection('staff').doc(me.id).update(patch).catch(function(){}); }
   closeConsent(); renderAccountBar(); if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
-  setTimeout(maybeShowAnnounce,250);   // brand-new user just finished consent — now offer the announcement
+  /* brand-new user just finished consent — walk them through the app, THEN announce */
+  if(tourPending())setTimeout(function(){startTour(false);},300);
+  else setTimeout(maybeShowAnnounce,250);
+}
+
+/* ===== FIRST-RUN WALKTHROUGH ==============================================
+   A guided pass through the app for anyone who has never been in it. The tour
+   drives the real nav via go(), so people learn the actual buttons rather than
+   a mock-up, and it survives UI changes: the step list is BUILT FROM navTabs(),
+   which already answers "what is this person allowed to see", so nobody is walked
+   into a manager view they cannot open and investors are excluded entirely.
+   Note navTabs() does NOT split FOH from BOH — both see the same tabs — so the
+   step list is identical for a server and a cook. Only the COPY differs, via the
+   optional .boh body on a step. If the app ever hides tabs by area, this follows
+   automatically with no change here.
+
+   Gate is profile.tourSeen. Existing staff were backfilled to true on
+   2026-08-03 so the launch didn't ambush anyone mid-shift; a profile with no
+   flag at all is treated as new, which is what accAdd() produces.
+   Replay from the "Tour" chip in the account bar, which never sets the flag. */
+const TOUR_COPY={
+  home:{t:'Home',b:'Everything starts here. The cards below jump to whatever you need, and the row of buttons along the top gets you anywhere in one tap.'},
+  today:{t:'Day at a Glance',b:'Tonight in one screen: how busy we expect to be, who is on with you, and anything the managers flagged for the shift. Check it when you clock in.'},
+  fresh:{t:'Fresh Talk',b:'Tonight\'s menu in full, with separate tabs for wine, cocktails and allergens. Every dish lists its components, and every wine carries tasting notes and a pronunciation guide. Search the wine list by name, grape, or what a guest tells you they like.',
+    boh:'Tonight\'s menu in full. The BOH tab is the one you want: every dish with its components, exactly as it should go out. Allergens live here too, so this is the fastest way to answer a question from the floor mid-service.'},
+  verbals:{t:'Verbals',b:'Standing verbals, the 86 list, and tonight\'s specials. Read this before every service. If something got 86\'d an hour ago, this is where it shows up first.'},
+  board:{t:'Tables',b:'The floor plan. Tap any table to leave a note or set a status so the rest of the team can see what is happening in your section.'},
+  schedule:{t:'Schedule',b:'This week and the month ahead, front and back of house. Time off requests go in here too, under the Time Off tab, and you can see where they stand.'},
+  crew:{t:'Crew Board',b:'From the team, for the team. Notes posted for tonight clear at the 3am reset; anything pinned to the Pinboard stays.'},
+  standards:{t:'Standards',b:'How we do things: daily duties, steps of service, sidework and closing lists. Your food handler card and any other certifications get uploaded and tracked in here as well.',
+    boh:'How we do things: daily duties, prep and closing lists, and the room itself. Your food handler card and any other certifications get uploaded and tracked in here, and the app will warn you before one expires.'},
+  directory:{t:'Directory',b:'Everyone on the team and how to reach them. You only appear the ways you chose a moment ago, and you can change that anytime by tapping your name up top.'},
+  recap:{t:'Recap',b:'How the restaurant and the farm are actually doing, last night through the month, with the week ahead alongside it.'},
+  lastnight:{t:'Last Night',b:'How last night landed, pulled straight from the morning brief.'},
+  scws:{t:'Service Charge',b:'The nightly service charge worksheet rebuilt from Revel. Useful for checking a night, but Tim\'s numbers remain the system of record.'},
+  frontdesk:{t:'Front Desk',b:'Passwords, vendor contacts and account info. Managers can add, edit and remove entries here.'},
+  orders:{t:'Farm Order',b:'Place and track the farm order without leaving the app.'},
+  access:{t:'Staff Access',b:'Add people, set or reset PINs, and lock out anyone who leaves.'}
+};
+let TOUR={on:false,i:0,steps:[],replay:false};
+function tourPending(){ return !!(me && !DEMO && !isInvestor() && me.tourSeen!==true); }
+function tourSteps(){
+  var ids=['home'];
+  try{ navTabs().forEach(function(t){ if(ids.indexOf(t[0])<0)ids.push(t[0]); }); }catch(e){}
+  /* The portal shows BOH staff the same tab set as FOH, so the step LIST cannot
+     differ by area. The copy can: back of house gets wording aimed at the line. */
+  var boh = !!(me && me.area === 'boh');
+  return ids.filter(function(id){return !!TOUR_COPY[id];})
+            .map(function(id){var c=TOUR_COPY[id];
+                              return {id:id, t:c.t, b:(boh && c.boh) ? c.boh : c.b};});
+}
+function startTour(replay){
+  if(!me)return;
+  /* applyAuthGate() re-runs on every profile snapshot, so without this a sync
+     landing mid-tour would throw the person back to step 1. */
+  if(TOUR.on)return;
+  var steps=tourSteps();
+  if(!steps.length)return;
+  TOUR={on:true,i:0,steps:steps,replay:!!replay};
+  document.body.classList.add('tour-on');
+  tourShow();
+}
+function tourShow(){
+  var s=TOUR.steps[TOUR.i];
+  if(!s){tourEnd();return;}
+  go(s.id);
+  var last=(TOUR.i===TOUR.steps.length-1), bar=$('tourBar');
+  if(!bar)return;
+  bar.innerHTML='<div class="tour-inner">'+
+    '<div class="tour-step">Step '+(TOUR.i+1)+' of '+TOUR.steps.length+'</div>'+
+    '<div class="tour-title serif">'+esc(s.t)+'</div>'+
+    '<p class="tour-body">'+esc(s.b)+'</p>'+
+    '<div class="tour-btns">'+
+      '<button class="tour-skip" onclick="tourEnd()">'+(TOUR.replay?'Close':(last?'':'Skip'))+'</button>'+
+      (TOUR.i>0?'<button class="tour-back" onclick="tourBack()">Back</button>':'')+
+      '<button class="tour-next" onclick="tourNext()">'+(last?'Done':'Next')+'</button>'+
+    '</div></div>';
+  bar.classList.add('open');
+  var chips=document.querySelectorAll('#navChips .chip');
+  Array.prototype.forEach.call(chips,function(c){c.classList.toggle('tour-lit',c.dataset.go===s.id);});
+  window.scrollTo(0,0);
+}
+function tourNext(){ if(TOUR.i>=TOUR.steps.length-1){tourEnd();return;} TOUR.i++; tourShow(); }
+function tourBack(){ if(TOUR.i>0){TOUR.i--; tourShow();} }
+function tourEnd(){
+  var wasReplay=TOUR.replay;
+  TOUR.on=false;
+  var bar=$('tourBar'); if(bar){bar.classList.remove('open'); bar.innerHTML='';}
+  document.body.classList.remove('tour-on');
+  var chips=document.querySelectorAll('#navChips .chip');
+  Array.prototype.forEach.call(chips,function(c){c.classList.remove('tour-lit');});
+  /* Replays never touch the flag, so the Tour chip stays repeatable forever. */
+  if(!wasReplay&&me){
+    me.tourSeen=true;
+    if(fbReady&&fbDb&&me.id)fbDb.collection('staff').doc(me.id).update({tourSeen:true}).catch(function(){});
+  }
+  go('home');
+  if(!wasReplay)setTimeout(maybeShowAnnounce,250);
+}
+/* Single place that decides what a freshly signed-in person sees first:
+   consent, then the tour, then any standing announcement. */
+function afterLogin(){
+  if(!me)return;
+  if(!me.contactSet){openConsent();return;}
+  if(tourPending()){setTimeout(function(){startTour(false);},400);return;}
+  setTimeout(maybeShowAnnounce,300);
 }
 
 /* ===== ANNOUNCEMENT / RSVP POP-UP =========================================
