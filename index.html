@@ -1568,7 +1568,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785762843';   // stamped by build-data.py at every deploy
+const BUILD='1785807220';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2674,7 +2674,14 @@ function wMatch(cr){
     if(c.kind==='type')(v==='want'?wantT:avoidT).push(c);
     else (v==='want'?wantS:avoidS).push(c);
   });
-  var textHard=(wantS.length===0&&wantT.length===0&&!cr.glass);
+  /* A typed word narrows the list whenever it actually matches something, even
+     alongside style criteria ("barolo bright" must not return all 52). A word
+     that matches nothing is dead weight, usually a half-typed style word, so it
+     is dropped and reported instead of emptying the screen. */
+  var live=[],dead=[];
+  cr.text.want.forEach(function(t){
+    ((SF.wines||[]).some(function(w){return wHay(w).indexOf(t)>=0;})?live:dead).push(t);
+  });
   var rows=[],dropped=0,unscored=[];
   (SF.wines||[]).forEach(function(w){
     var hay=wHay(w);
@@ -2683,7 +2690,7 @@ function wMatch(cr){
     for(var k=0;k<cr.text.avoid.length;k++){ if(hay.indexOf(cr.text.avoid[k])>=0){dropped++;return;} }
     if(wantT.length&&!wantT.some(function(c){return wCritOn(c,w)===true;})){dropped++;return;}
     if(cr.glass&&!w.glass){dropped++;return;}
-    if(textHard&&cr.text.want.length&&!cr.text.want.every(function(t){return hay.indexOf(t)>=0;})){dropped++;return;}
+    if(live.length&&!live.every(function(t){return hay.indexOf(t)>=0;})){dropped++;return;}
 
     var hits=[],misses=[],blind=false;
     wantS.forEach(function(c){
@@ -2694,13 +2701,12 @@ function wMatch(cr){
     });
     /* An avoided spec on an unscored wine is unknown, not passed. Say so. */
     avoidS.forEach(function(c){ if(wCritOn(c,w)===null)blind=true; });
-    if(!textHard)cr.text.want.forEach(function(t){ if(hay.indexOf(t)>=0)hits.push(t); });
     if(blind)unscored.push(w);
     rows.push({w:w,score:hits.length,hits:hits,misses:misses,blind:blind});
   });
-  return {rows:rows,dropped:dropped,unscored:unscored,
+  return {rows:rows,dropped:dropped,unscored:unscored,deadTerms:dead,liveTerms:live,
           wantS:wantS,avoidS:avoidS,wantT:wantT,avoidT:avoidT,sweetWanted:sweetWanted,
-          ranking:wantS.length>0||(!textHard&&cr.text.want.length>0)};
+          ranking:wantS.length>0};
 }
 
 /* Chips render the MERGED state, so a typed phrase visibly lights them up and
@@ -2709,22 +2715,19 @@ function wChipHTML(c,cr){
   var st=cr.sel[c.id]||'';
   return '<button class="fchip '+(st==='want'?'want':(st==='avoid'?'avoid':''))+'" data-crit="'+c.id+'">'+esc(c.label)+'</button>';
 }
-function wCycle(id){
-  var cur=wCriteria().sel[id];
-  wineFilter.sel[id]=cur==='want'?'avoid':(cur==='avoid'?'off':'want');
-  renderWine();
-}
-function wClear(){wineFilter={q:'',glass:null,sel:{},info:[]};renderWine();}
-function wActive(){
-  var cr=wCriteria();
-  return !!wineFilter.q.trim()||cr.glass||Object.keys(cr.sel).length>0;
-}
 
-function renderWine(){
-  var cr=wCriteria(), m=wMatch(cr);
+/* ---- render -------------------------------------------------------------
+   Typing must NEVER rebuild the filter bar. Rebuilding it destroys the live
+   <input>, forces a refocus, and reflows everything above the caret, which
+   reads on an iPad as the screen jumping under your thumb. So the shell (bar +
+   chips) is built once by renderWine(); keystrokes only swap the notes and the
+   result list below it, on a short debounce, with the caret's screen position
+   pinned across the swap. */
+
+function wBarHTML(cr){
   var bar='<div class="filterbar"><input class="fsearch" id="wineSearch" '+
-    'placeholder="What did the guest say? light, no oak, not too tannic…" value="'+esc(wineFilter.q)+'">'+
-    (wActive()?'<button class="fclear" id="wineClear">Clear</button>':'')+'</div>';
+    'placeholder="Wine, producer, grape, or what the guest said…" value="'+esc(wineFilter.q)+'">'+
+    '<button class="fclear" id="wineClear">Clear</button></div>';
   WGROUPS.forEach(function(g){
     var cs=WCRIT.filter(function(c){return c.group===g&&!c.hidden;});
     if(!cs.length)return;
@@ -2732,14 +2735,21 @@ function renderWine(){
     if(g==='Type')bar+='<button class="fchip '+(cr.glass?'want':'')+'" data-glass="1">By the glass</button>';
     bar+='</div>';
   });
-  bar+='<p class="est-note">Tap once for what they want, twice for what to avoid. Scorecards are house tasting estimates, not lab values.</p>';
+  return bar+'<p class="est-note">Tap once for what they want, twice for what to avoid. Scorecards are house tasting estimates, not lab values.</p>';
+}
 
+function wNotesHTML(cr,m){
   var notes='';
   if(m.sweetWanted){
     var driest=(SF.wines||[]).filter(function(w){return wSpec(w,'Dryness')===4;}).slice(0,3).map(function(w){return w.name;});
     notes+='<div class="wm-note"><b>Nothing on the list is sweet.</b> Every scored wine pours dry to bone dry.'+
       (driest.length?' The softest edge we have: '+esc(driest.join(', '))+'.':'')+
       ' For a sweet finish, steer to the after-dinner list.</div>';
+  }
+  var dead=(m.deadTerms||[]).filter(function(t){return t.length>=4;});
+  if(dead.length){
+    notes+='<div class="wm-note"><b>No wine matches</b> “'+esc(dead.join('”, “'))+
+      '”, so '+(dead.length>1?'those words are':'that word is')+' not narrowing anything. Check the spelling, or it may not be on the list.</div>';
   }
   if(cr.pending.length){
     notes+='<div class="wm-note"><b>Not scored yet:</b> '+esc(cr.pending.join(', '))+
@@ -2758,25 +2768,19 @@ function renderWine(){
       ' still shown, tagged “no scorecard”, because unrated is not the same as ruled out. Taste before you sell '+
       (m.unscored.length>1?'them':'it')+' on structure.</div>';
   }
+  return notes;
+}
 
-  var html=editBarHTML();
-  var filtering=wActive();
-  var pinned=filtering?[]:(SF.wines||[]).filter(isShuffled), pinnedSet=new Set(pinned);
-  if(pinned.length){
-    html+='<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>';
-    pinned.forEach(function(w){html+=wineCardHTML(w);});
-    html+='</div>';
-  }
-  html+=bar+notes;
-
+function wListHTML(cr,m,pinnedSet){
+  var html='';
   var rows=m.rows.filter(function(r){return !pinnedSet.has(r.w);});
   if(!rows.length){
-    html+='<p class="board-empty">No wines match'+(m.dropped?' — '+m.dropped+' ruled out by the filters above.':'.')+'</p>';
-  } else if(m.ranking){
+    return '<p class="board-empty">No wines match'+(m.dropped?', '+m.dropped+' ruled out by the filters above.':'.')+'</p>';
+  }
+  if(m.ranking){
     var scored=rows.filter(function(r){return !r.blind;}), blind=rows.filter(function(r){return r.blind;});
     scored.sort(function(a,b){return b.score-a.score||SF.wines.indexOf(a.w)-SF.wines.indexOf(b.w);});
-    var top=scored.length?scored[0].score:0, need=m.wantS.length;
-    var band='';
+    var top=scored.length?scored[0].score:0, need=m.wantS.length, band='';
     scored.forEach(function(r){
       var lab;
       if(top===0)lab='Nothing matched what they asked for';
@@ -2797,23 +2801,9 @@ function renderWine(){
       html+=wineCardHTML(r.w,wWhyHTML(r));
     });
   }
-
-  $('ftWine').innerHTML=liveBlockHTML('wine')+html;
-  var si=$('wineSearch');
-  if(si)si.oninput=function(e){
-    wineFilter.q=e.target.value;
-    var p=e.target.selectionStart;
-    renderWine();
-    var s=$('wineSearch'); if(s){s.focus();s.setSelectionRange(p,p);}
-  };
-  var cb=$('wineClear'); if(cb)cb.onclick=wClear;
-  $('ftWine').querySelectorAll('.fchip').forEach(function(c){
-    c.onclick=function(){
-      if(c.dataset.glass){wineFilter.glass=!wCriteria().glass;renderWine();}
-      else wCycle(c.dataset.crit);
-    };
-  });
+  return html;
 }
+
 function wWhyHTML(r){
   if(!r||(!r.hits.length&&!r.misses.length&&!r.blind))return '';
   var h='<div class="wm-why">';
@@ -2821,6 +2811,112 @@ function wWhyHTML(r){
   r.misses.forEach(function(t){h+='<span class="wm-miss">not '+esc(t)+'</span>';});
   if(r.blind)h+='<span class="wm-miss">no scorecard</span>';
   return h+'</div>';
+}
+
+function wActive(){
+  var cr=wCriteria();
+  return !!wineFilter.q.trim()||cr.glass||Object.keys(cr.sel).length>0;
+}
+function wPinnedSet(){
+  return new Set(wActive()?[]:(SF.wines||[]).filter(isShuffled));
+}
+
+/* Find whatever actually scrolls, so the pin works inside a scrolling pane
+   as well as on the document. */
+function wScroller(el){
+  var n=el&&el.parentElement;
+  while(n&&n!==document.body&&n!==document.documentElement){
+    var s=getComputedStyle(n).overflowY;
+    if((s==='auto'||s==='scroll')&&n.scrollHeight>n.clientHeight+1)return n;
+    n=n.parentElement;
+  }
+  return null;
+}
+/* Keep the caret exactly where it is on screen across a DOM swap. */
+function wPin(fn){
+  var el=$('wineSearch');
+  var before=el?el.getBoundingClientRect().top:null;
+  fn();
+  var el2=$('wineSearch');
+  if(before==null||!el2)return;
+  var d=el2.getBoundingClientRect().top-before;
+  if(!d)return;
+  var sc=wScroller(el2);
+  if(sc)sc.scrollTop+=d; else window.scrollBy(0,d);
+}
+
+/* Cheap in-place chip repaint. Same nodes, same widths, so no reflow. */
+function wSyncChips(){
+  var root=$('ftWine'); if(!root)return;
+  var cr=wCriteria();
+  root.querySelectorAll('.fchip[data-crit]').forEach(function(c){
+    var st=cr.sel[c.getAttribute('data-crit')]||'';
+    c.className='fchip'+(st==='want'?' want':(st==='avoid'?' avoid':''));
+  });
+  var g=root.querySelector('.fchip[data-glass]');
+  if(g)g.className='fchip'+(cr.glass?' want':'');
+}
+
+var wTimer=null;
+function wTypeTick(){
+  if(wTimer)clearTimeout(wTimer);
+  wTimer=setTimeout(wUpdate,170);
+}
+/* Swap ONLY the notes + list. The bar, the input and the caret are untouched. */
+function wUpdate(){
+  if(wTimer){clearTimeout(wTimer);wTimer=null;}
+  var n=$('wineNotes'), l=$('wineList'), p=$('winePinned');
+  if(!n||!l){renderWine();return;}
+  var cr=wCriteria(), m=wMatch(cr), ps=wPinnedSet();
+  wPin(function(){
+    if(p)p.style.display=ps.size?'':'none';
+    n.innerHTML=wNotesHTML(cr,m);
+    l.innerHTML=wListHTML(cr,m,ps);
+  });
+}
+
+function wWire(){
+  var root=$('ftWine'); if(!root)return;
+  var si=$('wineSearch');
+  if(si)si.oninput=function(e){ wineFilter.q=e.target.value; wSyncChips(); wTypeTick(); };
+  var cb=$('wineClear');
+  if(cb)cb.onclick=function(){
+    wineFilter={q:'',glass:null,sel:{},info:[]};
+    var s=$('wineSearch'); if(s)s.value='';
+    wSyncChips(); wUpdate();
+  };
+  root.querySelectorAll('.fchip').forEach(function(c){
+    c.onclick=function(){
+      if(c.getAttribute('data-glass'))wineFilter.glass=!wCriteria().glass;
+      else{
+        var id=c.getAttribute('data-crit'), cur=wCriteria().sel[id];
+        wineFilter.sel[id]=cur==='want'?'avoid':(cur==='avoid'?'off':'want');
+      }
+      wSyncChips(); wUpdate();
+    };
+  });
+}
+
+/* Full rebuild. Entry point for tab switches and data refreshes, NOT for typing. */
+function renderWine(){
+  var cr=wCriteria(), m=wMatch(cr), ps=wPinnedSet();
+  /* Order matters. The filter bar goes ABOVE the "Just added" block: that block
+     collapses the moment a filter goes active, and anything that changes height
+     above the caret yanks the page out from under whoever is typing. */
+  var html=editBarHTML();
+  html+=wBarHTML(cr);
+  html+='<div id="wineNotes">'+wNotesHTML(cr,m)+'</div>';
+  var pinned=(SF.wines||[]).filter(isShuffled);
+  html+='<div id="winePinned"'+(ps.size?'':' style="display:none"')+'>';
+  if(pinned.length){
+    html+='<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>';
+    pinned.forEach(function(w){html+=wineCardHTML(w);});
+    html+='</div>';
+  }
+  html+='</div>';
+  html+='<div id="wineList">'+wListHTML(cr,m,ps)+'</div>';
+  $('ftWine').innerHTML=liveBlockHTML('wine')+html;
+  wWire();
 }
 
 function toggleWine(i){const el=$('ftWine').querySelector(`[data-wine="${i}"]`);if(el)el.classList.toggle('expanded');}
