@@ -1586,7 +1586,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785823641';   // stamped by build-data.py at every deploy
+const BUILD='1785823880';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2173,17 +2173,16 @@ function afterLogin(){
    is stored on the person's staff profile (synced) so managers get a live tally.
    To run a future announcement, update ANNOUNCE (new id resets everyone). ===== */
 const ANNOUNCE={
-  id:'bbq-2026-07-04',
-  showUntil:'2026-07-04',
-  emoji:'🎆',
-  title:'4th of July BBQ',
+  kind:'info',
+  id:'helen-last-shift-2026-08',
+  showUntil:'2026-08-16',
+  emoji:'\uD83C\uDF19',
+  title:"Helen's last shift",
   lines:[
-    'Swan House Farm · Saturday, July 4',
-    'Arrive anytime after 1pm — overnight camping OK',
-    'Snacks, beer & wine on arrival · burgers, corn & ribs around 6pm · fireworks later',
-    'Bring friends — we just need a headcount for food & drink'
+    "Sunday the 9th is Helen's last day. Three summers on support and she's been a rock through all of them.",
+    "She's on Thursday through Sunday, so say goodbye if you're on with her."
   ],
-  note:'Please RSVP by June 28 so we can place orders.'
+  note:'Her sister Erica picks up Fridays and Saturdays starting the 14th.'
 };
 let annShownSession=false, annGuests=0;
 /* Non-staff RSVPs (family/friends Sam adds by hand — no staff profile to hang a
