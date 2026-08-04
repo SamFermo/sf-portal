@@ -1586,7 +1586,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785823880';   // stamped by build-data.py at every deploy
+const BUILD='1785826059';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1731,7 +1731,12 @@ function ordersCardHTML(){
 function renderHome(){
   $('homeTag').textContent=fmtLong(todayISO());
   const mgr=isMgr();
-  const annChip = annActive()?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${esc(ANNOUNCE.title)} — ${annMyRsvp()?(annMyRsvp().rsvp==='yes'?'you\'re in ✓ (tap to change)':'tap to RSVP'):'tap to RSVP'}</span></button>`:'';
+  /* An info notice has nothing to RSVP to and should clear itself once the person
+     has acknowledged it. Only RSVP-kind announcements keep nagging until answered. */
+  const annChipShow = annActive() && !(annIsInfo() && annAcked());
+  const annChipTxt = annIsInfo() ? esc(ANNOUNCE.title)
+    : `${esc(ANNOUNCE.title)} — ${annMyRsvp()?(annMyRsvp().rsvp==='yes'?'you\'re in ✓ (tap to change)':'tap to RSVP'):'tap to RSVP'}`;
+  const annChip = annChipShow?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${annChipTxt}</span></button>`:'';
   let html = isInvestor()
     ? rcCardHTML() + freshCardHTML()
     : annChip + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():''))
@@ -2174,15 +2179,18 @@ function afterLogin(){
    To run a future announcement, update ANNOUNCE (new id resets everyone). ===== */
 const ANNOUNCE={
   kind:'info',
-  id:'helen-last-shift-2026-08',
-  showUntil:'2026-08-16',
+  id:'goodbye-hello-2026-08',
+  showUntil:'2026-09-30',
   emoji:'\uD83C\uDF19',
-  title:"Helen's last shift",
+  title:'Goodbye and hello',
   lines:[
-    "Sunday the 9th is Helen's last day. Three summers on support and she's been a rock through all of them.",
-    "She's on Thursday through Sunday, so say goodbye if you're on with her."
+    "Sunday the 9th is Helen's last day. Three summers on support and she's been a rock through all of them. She's on Thursday through Sunday, so say goodbye if you're on with her.",
+    "Three new faces coming in.",
+    "Nam Huynh, server. Training Thursday and Friday, then picking up shifts through the end of September.",
+    "Erica Richardson, support. Fridays and Saturdays from the 14th. Helen's sister, and she did the same shifts for us last summer.",
+    "Joshua Lardizabal, line cook. Starts training in the next week or two, picks up a few shifts, then he's away on a trip. Fully live once he's back."
   ],
-  note:'Her sister Erica picks up Fridays and Saturdays starting the 14th.'
+  note:"They're all in the Directory. Contact info shows up as each of them picks how they want to be reached, so if someone's blank today, check back. Once they're up, go to them directly for coverage."
 };
 let annShownSession=false, annGuests=0;
 /* Non-staff RSVPs (family/friends Sam adds by hand — no staff profile to hang a
@@ -2212,6 +2220,8 @@ function annAck(){
   if(me){ me.noticeAck=ANNOUNCE.id;
     if(fbReady&&fbDb&&me.id)fbDb.collection('staff').doc(me.id).update({noticeAck:ANNOUNCE.id}).catch(function(){}); }
   annClose();
+  /* repaint Home so the chip goes away right now, not on the next navigation */
+  try{ if(typeof renderHome==='function')renderHome(); }catch(e){}
 }
 function annShouldShow(){ if(!(me && me.contactSet && annActive() && !annDismissedNow()))return false;
   return annIsInfo() ? !annAcked() : !annMyRsvp(); }
