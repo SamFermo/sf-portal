@@ -6108,7 +6108,7 @@ window.SF = {
        "3:30 Bar",
        "3:30 serve",
        "Sup Server",
-       "3:30 serve",
+       "Sup Server",
        "Farm",
        ""
       ]
@@ -6192,7 +6192,7 @@ window.SF = {
        "",
        "",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        "R/O"
       ]
@@ -6219,6 +6219,18 @@ window.SF = {
        "",
        "",
        "3:30 serve"
+      ]
+     },
+     {
+      "name": "Nam",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 training",
+       "3:30 training",
+       "",
+       ""
       ]
      },
      {
@@ -6355,15 +6367,15 @@ window.SF = {
       ]
      },
      {
-      "name": "Helen",
+      "name": "Erica",
       "shifts": [
        "",
        "",
        "",
+       "",
        "3:30 support",
        "3:30 support",
-       "3:30 support",
-       "3:30 support"
+       ""
       ]
      },
      {
@@ -6415,6 +6427,18 @@ window.SF = {
       ]
      },
      {
+      "name": "Nam",
+      "shifts": [
+       "",
+       "3:30 training",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
       "name": "Sabba",
       "shifts": [
        "3:30 Bar",
@@ -6456,9 +6480,9 @@ window.SF = {
     "coverage": [
      "",
      "",
-     "3:30 serve",
-     "3:30 serve",
-     "3:30 serve",
+     "",
+     "",
+     "",
      "",
      "3:30 serve"
     ],
@@ -6548,15 +6572,15 @@ window.SF = {
       ]
      },
      {
-      "name": "Helen",
+      "name": "Erica",
       "shifts": [
        "",
        "",
        "",
+       "",
        "3:30 support",
        "3:30 support",
-       "3:30 support",
-       "3:30 support"
+       ""
       ]
      },
      {
@@ -6605,6 +6629,18 @@ window.SF = {
        "",
        "",
        "3:30 serve"
+      ]
+     },
+     {
+      "name": "Nam",
+      "shifts": [
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       ""
       ]
      },
      {
@@ -6741,15 +6777,15 @@ window.SF = {
       ]
      },
      {
-      "name": "Helen",
+      "name": "Erica",
       "shifts": [
        "",
        "",
        "",
+       "",
        "3:30 support",
        "3:30 support",
-       "3:30 support",
-       "3:30 support"
+       ""
       ]
      },
      {
@@ -6793,6 +6829,18 @@ window.SF = {
       "shifts": [
        "3:30 serve",
        "3:30 serve",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Nam",
+      "shifts": [
+       "",
+       "",
        "",
        "",
        "",
@@ -6934,15 +6982,15 @@ window.SF = {
       ]
      },
      {
-      "name": "Helen",
+      "name": "Erica",
       "shifts": [
        "",
        "",
        "",
+       "",
        "3:30 support",
        "3:30 support",
-       "3:30 support",
-       "3:30 support"
+       ""
       ]
      },
      {
@@ -6994,6 +7042,18 @@ window.SF = {
       ]
      },
      {
+      "name": "Nam",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
       "name": "Sabba",
       "shifts": [
        "3:30 Bar",
@@ -7033,11 +7093,11 @@ window.SF = {
     "label": "Farm Dinners",
     "notes": [],
     "coverage": [
-     "3:30 Bar",
      "",
-     "3:30 serve",
-     "3:30 serve",
-     "3:30 serve",
+     "",
+     "",
+     "",
+     "",
      "",
      ""
     ],
@@ -7127,15 +7187,15 @@ window.SF = {
       ]
      },
      {
-      "name": "Helen",
+      "name": "Erica",
       "shifts": [
        "",
        "",
        "",
+       "",
        "3:30 support",
        "3:30 support",
-       "3:30 support",
-       "3:30 support"
+       ""
       ]
      },
      {
@@ -7153,7 +7213,7 @@ window.SF = {
      {
       "name": "Josie",
       "shifts": [
-       "3:30 serve",
+       "3:30 Bar",
        "",
        "",
        "",
@@ -7182,6 +7242,18 @@ window.SF = {
        "",
        "",
        "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Nam",
+      "shifts": [
+       "3:30 serve",
+       "",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
        "",
        ""
       ]
@@ -7226,11 +7298,11 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
-     "3:30 Bar",
+     "",
+     "",
+     "",
+     "",
      "3:30 serve",
-     "3:30 serve",
-     "3:30 serve",
-     "3:30 serve x 2",
      "",
      ""
     ],
@@ -7320,15 +7392,15 @@ window.SF = {
       ]
      },
      {
-      "name": "Helen",
+      "name": "Erica",
       "shifts": [
        "",
        "",
        "",
+       "",
        "3:30 support",
        "3:30 support",
-       "3:30 support",
-       "3:30 support"
+       ""
       ]
      },
      {
@@ -7346,7 +7418,7 @@ window.SF = {
      {
       "name": "Josie",
       "shifts": [
-       "3:30 serve",
+       "3:30 Bar",
        "",
        "",
        "",
@@ -7375,6 +7447,18 @@ window.SF = {
        "",
        "",
        "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Nam",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
        "",
        ""
       ]
@@ -7419,8 +7503,8 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
-     "3:30 Bar",
-     "3:30 serve",
+     "",
+     "",
      "",
      "",
      "",
@@ -7513,15 +7597,15 @@ window.SF = {
       ]
      },
      {
-      "name": "Helen",
+      "name": "Erica",
       "shifts": [
        "",
        "",
        "",
+       "",
        "3:30 support",
        "3:30 support",
-       "3:30 support",
-       "3:30 support"
+       ""
       ]
      },
      {
@@ -7539,7 +7623,7 @@ window.SF = {
      {
       "name": "Josie",
       "shifts": [
-       "3:30 serve",
+       "3:30 Bar",
        "",
        "",
        "",
@@ -7562,6 +7646,18 @@ window.SF = {
      },
      {
       "name": "Mac",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Nam",
       "shifts": [
        "3:30 serve",
        "3:30 serve",
@@ -7615,7 +7711,7 @@ window.SF = {
      "",
      "",
      "",
-     "3:30 serve",
+     "",
      "",
      "",
      ""
@@ -7706,15 +7802,15 @@ window.SF = {
       ]
      },
      {
-      "name": "Helen",
+      "name": "Erica",
       "shifts": [
        "",
        "",
        "",
+       "",
        "3:30 support",
        "3:30 support",
-       "3:30 support",
-       "3:30 support"
+       ""
       ]
      },
      {
@@ -7760,6 +7856,18 @@ window.SF = {
        "3:30 serve",
        "",
        "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Nam",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 serve",
        "",
        "",
        ""
@@ -12285,5 +12393,5 @@ window.SF = {
    }
   }
  },
- "build": "1785807220"
+ "build": "1785815305"
 };

@@ -1829,7 +1829,7 @@
             "3:30 Bar",
             "3:30 serve",
             "Sup Server",
-            "3:30 serve",
+            "Sup Server",
             "Farm",
             ""
           ]
@@ -1913,7 +1913,7 @@
             "",
             "",
             "3:30 serve",
-            "",
+            "3:30 serve",
             "",
             "R/O"
           ]
@@ -1940,6 +1940,18 @@
             "",
             "",
             "3:30 serve"
+          ]
+        },
+        {
+          "name": "Nam",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 training",
+            "3:30 training",
+            "",
+            ""
           ]
         },
         {
@@ -2076,15 +2088,15 @@
           ]
         },
         {
-          "name": "Helen",
+          "name": "Erica",
           "shifts": [
             "",
             "",
             "",
+            "",
             "3:30 support",
             "3:30 support",
-            "3:30 support",
-            "3:30 support"
+            ""
           ]
         },
         {
@@ -2136,6 +2148,18 @@
           ]
         },
         {
+          "name": "Nam",
+          "shifts": [
+            "",
+            "3:30 training",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
           "name": "Sabba",
           "shifts": [
             "3:30 Bar",
@@ -2177,9 +2201,9 @@
       "coverage": [
         "",
         "",
-        "3:30 serve",
-        "3:30 serve",
-        "3:30 serve",
+        "",
+        "",
+        "",
         "",
         "3:30 serve"
       ],
@@ -2269,15 +2293,15 @@
           ]
         },
         {
-          "name": "Helen",
+          "name": "Erica",
           "shifts": [
             "",
             "",
             "",
+            "",
             "3:30 support",
             "3:30 support",
-            "3:30 support",
-            "3:30 support"
+            ""
           ]
         },
         {
@@ -2326,6 +2350,18 @@
             "",
             "",
             "3:30 serve"
+          ]
+        },
+        {
+          "name": "Nam",
+          "shifts": [
+            "",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            ""
           ]
         },
         {
@@ -2462,15 +2498,15 @@
           ]
         },
         {
-          "name": "Helen",
+          "name": "Erica",
           "shifts": [
             "",
             "",
             "",
+            "",
             "3:30 support",
             "3:30 support",
-            "3:30 support",
-            "3:30 support"
+            ""
           ]
         },
         {
@@ -2514,6 +2550,18 @@
           "shifts": [
             "3:30 serve",
             "3:30 serve",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Nam",
+          "shifts": [
+            "",
+            "",
             "",
             "",
             "",
@@ -2655,15 +2703,15 @@
           ]
         },
         {
-          "name": "Helen",
+          "name": "Erica",
           "shifts": [
             "",
             "",
             "",
+            "",
             "3:30 support",
             "3:30 support",
-            "3:30 support",
-            "3:30 support"
+            ""
           ]
         },
         {
@@ -2715,6 +2763,18 @@
           ]
         },
         {
+          "name": "Nam",
+          "shifts": [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
           "name": "Sabba",
           "shifts": [
             "3:30 Bar",
@@ -2754,11 +2814,11 @@
       "label": "Farm Dinners",
       "notes": [],
       "coverage": [
-        "3:30 Bar",
         "",
-        "3:30 serve",
-        "3:30 serve",
-        "3:30 serve",
+        "",
+        "",
+        "",
+        "",
         "",
         ""
       ],
@@ -2848,15 +2908,15 @@
           ]
         },
         {
-          "name": "Helen",
+          "name": "Erica",
           "shifts": [
             "",
             "",
             "",
+            "",
             "3:30 support",
             "3:30 support",
-            "3:30 support",
-            "3:30 support"
+            ""
           ]
         },
         {
@@ -2874,7 +2934,7 @@
         {
           "name": "Josie",
           "shifts": [
-            "3:30 serve",
+            "3:30 Bar",
             "",
             "",
             "",
@@ -2903,6 +2963,18 @@
             "",
             "",
             "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Nam",
+          "shifts": [
+            "3:30 serve",
+            "",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
             "",
             ""
           ]
@@ -2947,11 +3019,11 @@
       "label": "",
       "notes": [],
       "coverage": [
-        "3:30 Bar",
+        "",
+        "",
+        "",
+        "",
         "3:30 serve",
-        "3:30 serve",
-        "3:30 serve",
-        "3:30 serve x 2",
         "",
         ""
       ],
@@ -3041,15 +3113,15 @@
           ]
         },
         {
-          "name": "Helen",
+          "name": "Erica",
           "shifts": [
             "",
             "",
             "",
+            "",
             "3:30 support",
             "3:30 support",
-            "3:30 support",
-            "3:30 support"
+            ""
           ]
         },
         {
@@ -3067,7 +3139,7 @@
         {
           "name": "Josie",
           "shifts": [
-            "3:30 serve",
+            "3:30 Bar",
             "",
             "",
             "",
@@ -3096,6 +3168,18 @@
             "",
             "",
             "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Nam",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
+            "3:30 serve",
             "",
             ""
           ]
@@ -3140,8 +3224,8 @@
       "label": "",
       "notes": [],
       "coverage": [
-        "3:30 Bar",
-        "3:30 serve",
+        "",
+        "",
         "",
         "",
         "",
@@ -3234,15 +3318,15 @@
           ]
         },
         {
-          "name": "Helen",
+          "name": "Erica",
           "shifts": [
             "",
             "",
             "",
+            "",
             "3:30 support",
             "3:30 support",
-            "3:30 support",
-            "3:30 support"
+            ""
           ]
         },
         {
@@ -3260,7 +3344,7 @@
         {
           "name": "Josie",
           "shifts": [
-            "3:30 serve",
+            "3:30 Bar",
             "",
             "",
             "",
@@ -3283,6 +3367,18 @@
         },
         {
           "name": "Mac",
+          "shifts": [
+            "3:30 serve",
+            "3:30 serve",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Nam",
           "shifts": [
             "3:30 serve",
             "3:30 serve",
@@ -3336,7 +3432,7 @@
         "",
         "",
         "",
-        "3:30 serve",
+        "",
         "",
         "",
         ""
@@ -3427,15 +3523,15 @@
           ]
         },
         {
-          "name": "Helen",
+          "name": "Erica",
           "shifts": [
             "",
             "",
             "",
+            "",
             "3:30 support",
             "3:30 support",
-            "3:30 support",
-            "3:30 support"
+            ""
           ]
         },
         {
@@ -3481,6 +3577,18 @@
             "3:30 serve",
             "",
             "",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "name": "Nam",
+          "shifts": [
+            "",
+            "",
+            "",
+            "3:30 serve",
             "",
             "",
             ""
