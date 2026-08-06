@@ -1586,7 +1586,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1785826059';   // stamped by build-data.py at every deploy
+const BUILD='1786022076';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5312,7 +5312,12 @@ function lnNotesBlock(n){
   if(!n)return '';
   const bits=[];
   if(n.peak)bits.push(['Peak',n.peak]);
-  if(n.tail)bits.push(['Tail',n.tail]);
+  /* Tail removed 2026-08-06, Sam's call. The end of the night always has the lowest sales and
+     labor never drops there, because San Fermo does not phase staff out: every hourly body front
+     and back is on the clock until close, by design. Rendering it nightly described the staffing
+     model back to the person who chose it. Peak stays, because it genuinely varies.
+     Old docs still carry a `notes.tail` string and it is deliberately ignored rather than
+     migrated, so nothing has to be rewritten and an old night still reads correctly. */
   if(n.service)bits.push(['Floor',n.service]);
   if(!bits.length)return '';
   let h='<div class="ln-sec">The Night</div><div class="ln-card">';
@@ -6060,10 +6065,12 @@ function rcNightHTML(){
   }
   h+=rcAheadBlock();
   h+=rcReportBlock(d,rev);
-  if(d.notes&&(d.notes.peak||d.notes.tail)){
+  /* Peak only. Tail removed 2026-08-06 — see lnNotesBlock() for why. The gate is now `peak`
+     alone, deliberately: gating on (peak||tail) would still open a "How the night ran" card on an
+     old doc that has a tail and no peak, and render it empty. */
+  if(d.notes&&d.notes.peak){
     h+='<div class="ln-sec">How the night ran</div><div class="ln-card">';
-    if(d.notes.peak)h+='<div class="ln-note2"><span class="ln-note-k">Peak</span>'+esc(d.notes.peak)+'</div>';
-    if(d.notes.tail)h+='<div class="ln-note2"><span class="ln-note-k">Tail</span>'+esc(d.notes.tail)+'</div>';
+    h+='<div class="ln-note2"><span class="ln-note-k">Peak</span>'+esc(d.notes.peak)+'</div>';
     h+='</div>';
   }
   return h;

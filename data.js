@@ -6565,7 +6565,7 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
+       "Sup Server",
        "3:30 serve",
        "3:30 serve",
        ""
@@ -7105,7 +7105,7 @@ window.SF = {
      {
       "name": "Sam",
       "shifts": [
-       "MD",
+       "",
        "Admin/MD 5-8",
        "",
        "",
@@ -7117,7 +7117,7 @@ window.SF = {
      {
       "name": "Adrian",
       "shifts": [
-       "Sup Server",
+       "",
        "Sup Server",
        "MD",
        "MD",
@@ -7201,7 +7201,7 @@ window.SF = {
      {
       "name": "Jackie",
       "shifts": [
-       "3:30 serve",
+       "",
        "3:30 serve",
        "",
        "",
@@ -7213,7 +7213,7 @@ window.SF = {
      {
       "name": "Josie",
       "shifts": [
-       "3:30 Bar",
+       "",
        "",
        "",
        "",
@@ -7237,7 +7237,7 @@ window.SF = {
      {
       "name": "Mac",
       "shifts": [
-       "3:30 serve",
+       "",
        "3:30 serve",
        "",
        "",
@@ -7249,7 +7249,7 @@ window.SF = {
      {
       "name": "Nam",
       "shifts": [
-       "3:30 serve",
+       "",
        "",
        "3:30 serve",
        "3:30 serve",
@@ -7273,7 +7273,7 @@ window.SF = {
      {
       "name": "Sully",
       "shifts": [
-       "3:30 serve",
+       "",
        "",
        "Sup Server",
        "",
@@ -10101,8 +10101,8 @@ window.SF = {
       "name": "Cat",
       "shifts": [
        "1-close",
-       "9-5",
-       "9-5",
+       "1-close",
+       "1-close",
        "",
        "1-close",
        "",
@@ -10149,8 +10149,8 @@ window.SF = {
       "name": "Ignacio",
       "shifts": [
        "1-close",
-       "1-close",
-       "1-close",
+       "9-5",
+       "9-5",
        "1-close",
        "",
        "",
@@ -12405,5 +12405,5 @@ window.SF = {
    }
   }
  },
- "build": "1785826059"
+ "build": "1786022076"
 };
