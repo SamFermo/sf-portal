@@ -9896,8 +9896,8 @@ window.SF = {
       "name": "Joe",
       "shifts": [
        "",
-       "1-close",
-       "1-close",
+       "9-5",
+       "9-5",
        "R/O",
        "R/O",
        "R/O",
@@ -9911,7 +9911,7 @@ window.SF = {
        "1-close",
        "",
        "",
-       "1-close",
+       "",
        "1-close",
        "1-close"
       ]
@@ -9956,10 +9956,10 @@ window.SF = {
       "name": "Ignacio",
       "shifts": [
        "1-close",
-       "9-5",
-       "9-5",
        "1-close",
-       "",
+       "1-close",
+       "1-close",
+       "1-close",
        "",
        ""
       ]
@@ -9995,7 +9995,7 @@ window.SF = {
        "",
        "1-close",
        "1-close",
-       "12-10",
+       "1-close",
        "12-10",
        ""
       ]
@@ -12405,5 +12405,5 @@ window.SF = {
    }
   }
  },
- "build": "1786042900"
+ "build": "1786064036"
 };
