@@ -287,6 +287,27 @@ body.tour-on{padding-bottom:230px;}
 .shift.farm{color:var(--accent-dark); font-weight:700;} .shift.md{color:var(--gold-deep); font-weight:700;}
 .legend{font-size:11px; color:var(--ink-mute); margin-top:8px; line-height:1.7;}
 .legend b{color:var(--ink-soft);}
+/* my schedule — the personal cut of the same data, a day list instead of a grid */
+.mine-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:0 3px 10px;}
+.mine-title{font-size:16px; font-weight:700; color:var(--ink);}
+.mine-count{flex:0 0 auto; font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--gold);}
+.mine-card{background:radial-gradient(130% 130% at 28% 12%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:14px; padding:4px 14px; margin-bottom:14px; box-shadow:0 6px 16px rgba(0,0,0,.28);}
+.mine-day,.mine-openrow{display:flex; align-items:center; gap:12px; padding:11px 2px; border-bottom:1px solid var(--moon-edge);}
+.mine-day:last-child,.mine-openrow:last-child{border-bottom:0;}
+.mine-day.today,.mine-openrow.today{background:rgba(230,200,120,.34); border-radius:9px; padding-left:8px; padding-right:8px;}
+.mine-when{flex:0 0 62px; line-height:1.2;}
+.mine-dow{display:block; font-size:12.5px; font-weight:800; letter-spacing:.03em; color:var(--wood);}
+.mine-date{display:block; font-size:10.5px; color:var(--card-mute);}
+.mine-what{flex:1 1 auto; min-width:0;}
+.mine-shift{font-size:13.5px; font-weight:700; color:var(--card-ink); overflow-wrap:break-word; word-break:break-word;}
+.mine-shift.ro{color:var(--rust);} .mine-shift.farm{color:var(--accent-dark);} .mine-shift.md{color:var(--gold-deep);}
+.mine-sidetag{display:inline-block; margin-left:7px; font-size:9px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--card-mute); vertical-align:middle;}
+.mine-todaytag{display:inline-block; margin-left:7px; padding:1px 7px; border-radius:999px; background:var(--gold); color:#241f15; font-size:9px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;}
+.mine-note{display:block; margin-top:3px; font-size:10.5px; line-height:1.45; color:var(--card-mute);}
+.mine-note.warn{color:var(--rust); font-weight:700;}
+.mine-openhead{font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--rust); margin:16px 3px 8px;}
+.mine-empty{font-size:13px; font-style:italic; color:var(--ink-mute); text-align:center; padding:20px 2px;}
+.mine-foot{font-size:11px; font-style:italic; line-height:1.6; color:var(--ink-mute); text-align:center; margin:2px 4px 8px;}
 .ro-claim{display:inline-flex; flex-direction:column; align-items:center; background:rgba(176,74,26,.10); border:1.5px dashed var(--rust); color:var(--rust); border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; cursor:pointer; line-height:1.15; font-family:inherit;}
 .ro-claim small{font-size:8px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;}
 .ro-claimed{display:inline-flex; flex-direction:column; align-items:center; background:rgba(74,106,58,.14); border:1.5px solid var(--accent); color:var(--accent-dark); border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; cursor:pointer; line-height:1.15;}
@@ -1406,7 +1427,7 @@ body.locked{overflow:hidden;}
   <div class="view-head"><p class="view-eyebrow">Schedule</p><h2 class="view-title">Who's On</h2>
     <p class="view-sub">Front and back of house, this week and the month ahead.</p></div>
   <div class="subtabs-wrap"><div class="subtabs" id="schedSideTabs"><span class="subpill" id="schedSidePill"></span>
-    <button class="subtab active" data-side="foh">FOH</button><button class="subtab" data-side="boh">BOH</button><button class="subtab" data-side="timeoff">Time Off</button></div></div>
+    <button class="subtab" data-side="mine" style="display:none;">Mine</button><button class="subtab active" data-side="foh">FOH</button><button class="subtab" data-side="boh">BOH</button><button class="subtab" data-side="timeoff">Time Off</button></div></div>
   <div id="schedClaims"></div>
   <div class="filterbar" id="schedRanges" style="justify-content:center; padding-top:2px;"></div>
   <div id="schedBody"></div>
@@ -1596,7 +1617,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1786064036';   // stamped by build-data.py at every deploy
+const BUILD='1786070070';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1947,6 +1968,7 @@ function refreshAuthUI(){
   if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
   if($('access')&&$('access').classList.contains('active'))renderAccess();
   renderBoard();
+  applySchedDefault();// show/hide the Mine tab and pick the landing side for this person
   renderSchedule();   // re-render so the signed-in user's row highlight follows the login
   startFrontDeskSync();
   startMenuEditSync();
@@ -3380,12 +3402,215 @@ function renderSchedClaims(){
   });
   el.innerHTML=h+'</div>';
 }
+/* ── MY SCHEDULE ─────────────────────────────────────────────────────────────
+   A personal cut of the same schedule data: only the signed-in person's own
+   days, for whichever range chip is active, with past days dropped. A day list,
+   not a grid, because a one-row grid on a phone is mostly empty columns.
+
+   Three rules this view has to respect, all of them load-bearing:
+
+   1. It NEVER passes the literal side 'mine' to a claim function. claimKey()
+      builds the Firestore doc id out of the side string, so an open shift
+      claimed from here has to resolve to the real 'foh'/'boh' first, or it
+      writes a second orphaned claim doc for a shift the grid already shows as
+      claimed, and confirming one would not clear the other.
+   2. The tab is hidden outright for anyone with no matching schedule rows (Tim,
+      the investor profile, the demo guest). Here the name match is load-bearing
+      rather than cosmetic: a personal view that renders empty because a name
+      failed to match reads as "you are not on this week", which is a worse
+      failure than not having the tab at all.
+   3. Matching is the same schedName/nickname/first-name rule the grid uses for
+      its row highlight, but scoped to the person's own side(s), so a future
+      first-name collision across FOH and BOH cannot leak someone else's days in.
+
+   Shift COUNT only, never hours. The sheet's shift strings are things like
+   '3:30 serve', 'MD', 'Expo', 'Sup Server' and '1-close'. Most carry no end
+   time and several carry no time at all, so an hours total would be invented.
+*/
+function mySides(){
+  if(!me)return[];
+  const MYN=myRowNames(); if(!MYN.length)return[];
+  const hit=s=>(((SF.schedule&&SF.schedule[s])||[]).some(w=>(w.rows||[]).some(r=>MYN.indexOf(String(r.name).trim().toLowerCase())>=0)));
+  const out=['foh','boh'].filter(hit);
+  // Sam reads as both sides with genuinely different shifts some days. His own
+  // area is 'office', which is not a side, so this only reorders when it applies.
+  if(out.length>1&&(me.area==='foh'||me.area==='boh'))return[me.area].concat(out.filter(s=>s!==me.area));
+  return out;
+}
+function hasMine(){return mySides().length>0;}
+/* Every scheduled day for this person, both sides, flattened and sorted. Deduped
+   on date+shift so identical FOH/BOH rows collapse to one line, while a day the
+   two grids genuinely disagree on still shows both. */
+function myDayRows(){
+  const MYN=myRowNames(),out=[],seen={};
+  mySides().forEach(function(side){
+    ((SF.schedule&&SF.schedule[side])||[]).forEach(function(w){
+      const rows=(w.rows||[]).filter(r=>MYN.indexOf(String(r.name).trim().toLowerCase())>=0);
+      if(!rows.length)return;
+      (w.dates||[]).forEach(function(d,i){
+        rows.forEach(function(r){
+          const s=String((r.shifts||[])[i]||'').trim(); if(!s)return;
+          const k=d+'|'+s.toLowerCase(); if(seen[k])return; seen[k]=1;
+          out.push({iso:d,shift:s,side:side,label:w.label||''});
+        });
+      });
+    });
+  });
+  return out.sort((a,b)=>a.iso.localeCompare(b.iso)||a.shift.localeCompare(b.shift));
+}
+function myWeekBounds(offset){
+  const sides=mySides(); if(!sides.length)return null;
+  const weeks=(SF.schedule&&SF.schedule[sides[0]])||[]; if(!weeks.length)return null;
+  const w=weeks[currentWeekIndex(weeks)+(offset||0)];
+  return w&&w.dates?{start:w.dates[0],end:w.dates[6]}:null;
+}
+/* What the active range chip means here. Past days are dropped for This Week and
+   for the current month; a future month shows whole. Month filtering is by the
+   DAY's month rather than the week's weekStart, so the week straddling Aug 31
+   puts its September days under September where they belong.
+   If the rest of this week comes back empty (Sunday night, or a run of days off)
+   it rolls forward to next week rather than showing a blank screen, and says so. */
+function myRangeDays(range){
+  const today=todayISO(),all=myDayRows();
+  if(range==='week'){
+    const wk=myWeekBounds(0);
+    const days=wk?all.filter(d=>d.iso>=today&&d.iso<=wk.end):[];
+    if(!days.length){
+      const nx=myWeekBounds(1);
+      if(nx){const d2=all.filter(d=>d.iso>=nx.start&&d.iso<=nx.end);
+        if(d2.length)return{days:d2,title:'Next week',rolled:true,from:nx.start,to:nx.end};}
+    }
+    return{days:days,title:'Rest of this week',rolled:false,from:today,to:wk?wk.end:today};
+  }
+  if(range.indexOf('m:')===0){
+    const ym=range.slice(2),future=ym>today.slice(0,7);
+    const days=all.filter(d=>d.iso.slice(0,7)===ym&&(future||d.iso>=today));
+    const mm=Number(ym.split('-')[1]);
+    return{days:days,title:future?MON[mm-1]:'Rest of this month',rolled:false,
+           from:future?ym+'-01':today,to:ym+'-31'};
+  }
+  return{days:all.filter(d=>d.iso>=today),title:'Ahead',rolled:false,from:today,to:'9999-12-31'};
+}
+/* Approved time off for this person as a date map. Two jobs: it surfaces days
+   approved off that the built sheet has not caught up to yet, and it flags the
+   disagreement when the sheet still has you working a day you were approved off.
+   A silent gap between those two sources is exactly how someone no-shows. */
+function myApprovedOff(){
+  const who=currentUserName(),map={};
+  if(!who)return map;
+  (getReqs()||[]).forEach(function(r){
+    if(!r||r.status!=='approved'||r.name!==who||!r.start)return;
+    const z=new Date((r.end||r.start)+'T00:00:00'),p=n=>String(n).padStart(2,'0');
+    for(let d=new Date(r.start+'T00:00:00');d<=z;d.setDate(d.getDate()+1))
+      map[d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())]=true;
+  });
+  return map;
+}
+/* Open coverage shifts on this person's own side(s) inside the active window.
+   The slot index mirrors the grid's per-cell filtered index so the claim key is
+   byte-identical to the one the grid would build for the same shift. */
+function myOpenShifts(from,to){
+  const out=[];
+  mySides().forEach(function(side){
+    ((SF.schedule&&SF.schedule[side])||[]).forEach(function(w){
+      const cov=w.coverage||[];
+      (w.dates||[]).forEach(function(d,i){
+        if(d<from||d>to)return;
+        String(cov[i]||'').split(',').map(x=>x.trim()).filter(Boolean).forEach(function(lab,j){
+          out.push({side:side,iso:d,label:lab,slot:j,key:claimKey(side,d,'cv-'+lab+'-'+j)});
+        });
+      });
+    });
+  });
+  return out.sort((a,b)=>a.iso.localeCompare(b.iso)||a.label.localeCompare(b.label));
+}
+function mineWhenHTML(iso){
+  return '<div class="mine-when"><span class="mine-dow">'+DOW[schedIsoWeekday(iso)]+'</span>'+
+         '<span class="mine-date">'+esc(fmtShort(iso))+'</span></div>';
+}
+function mineDayHTML(d,today,offMap,multi){
+  const cls=shiftClass(d.shift),isRO=cls==='ro';
+  let note='';
+  if(offMap[d.iso]&&!isRO)note='<span class="mine-note warn">You have approved time off this day, but the schedule still has you on. Check with Sam.</span>';
+  else if(d.label)note='<span class="mine-note">'+esc(d.label)+'</span>';
+  return '<div class="mine-day'+(d.iso===today?' today':'')+'">'+mineWhenHTML(d.iso)+
+    '<div class="mine-what"><span class="mine-shift '+cls+'">'+esc(d.shift)+'</span>'+
+    (multi?'<span class="mine-sidetag">'+esc(d.side)+'</span>':'')+
+    (d.iso===today?'<span class="mine-todaytag">Today</span>':'')+note+'</div></div>';
+}
+function mineOffHTML(iso,today){
+  return '<div class="mine-day'+(iso===today?' today':'')+'">'+mineWhenHTML(iso)+
+    '<div class="mine-what"><span class="mine-shift ro">Approved off</span>'+
+    '<span class="mine-note">Approved, not yet on the built schedule.</span></div></div>';
+}
+function mineOpenHTML(o,today,multi){
+  const c=CLAIMS[o.key];let right;
+  if(c){
+    const nm=esc(String(c.claimedBy).split(' ')[0]);
+    right=claimPending(c)
+      ?'<span class="ro-claim-pend" onclick="unclaimByKey(\''+o.key+'\')">'+esc(o.label)+'<small>'+nm+' · claimed</small></span>'
+      :'<span class="ro-claimed" onclick="unclaimByKey(\''+o.key+'\')">'+esc(o.label)+'<small>✓ '+nm+'</small></span>';
+  }else{
+    right='<button class="ro-claim" onclick="claimShiftCv(\''+o.side+'\',\''+o.iso+'\',\''+jq(o.label)+'\','+o.slot+')">'+esc(o.label)+'<small>claim</small></button>';
+  }
+  return '<div class="mine-openrow'+(o.iso===today?' today':'')+'">'+mineWhenHTML(o.iso)+
+    '<div class="mine-what">'+right+(multi?'<span class="mine-sidetag">'+esc(o.side)+'</span>':'')+'</div></div>';
+}
+function renderMine(){
+  const body=$('schedBody'); if(!body)return;
+  if(!hasMine()){body.innerHTML='<p class="mine-empty">No personal schedule to show.</p>';return;}
+  const today=todayISO(),sides=mySides(),multi=sides.length>1;
+  const R=myRangeDays(schedState.range),offMap=myApprovedOff(),days=R.days;
+  const have={};days.forEach(d=>{have[d.iso]=true;});
+  const extra=Object.keys(offMap).filter(i=>!have[i]&&i>=R.from&&i<=R.to&&i>=today).sort();
+
+  let h='<div class="mine-head"><span class="mine-title serif">'+esc(R.title)+'</span>'+
+        '<span class="mine-count">'+days.length+(days.length===1?' shift':' shifts')+'</span></div>';
+  if(R.rolled)h+='<p class="mine-foot">Nothing left this week, so this is next week.</p>';
+  if(days.length||extra.length){
+    const merged=days.map(d=>({iso:d.iso,d:d})).concat(extra.map(i=>({iso:i,d:null})))
+      .sort((a,b)=>a.iso.localeCompare(b.iso));
+    h+='<div class="mine-card">'+merged.map(m=>m.d?mineDayHTML(m.d,today,offMap,multi):mineOffHTML(m.iso,today)).join('')+'</div>';
+  }else{
+    h+='<p class="mine-empty">No shifts scheduled in this range.</p>';
+  }
+  const open=myOpenShifts(R.from,R.to);
+  if(open.length){
+    h+='<div class="mine-openhead">Still open'+(multi?'':' · '+sides[0].toUpperCase())+'</div>'+
+       '<div class="mine-card">'+open.map(o=>mineOpenHTML(o,today,multi)).join('')+'</div>';
+  }
+  h+='<p class="mine-foot">Sam confirms the final schedule. If a day looks wrong here, check the '+
+     (multi?'FOH and BOH grids':sides[0].toUpperCase()+' grid')+' and let him know.</p>';
+  body.innerHTML=h;
+}
+/* The Mine tab exists only for people who actually appear on the schedule, and it
+   is the landing view for them. The pick is remembered for the rest of the day so
+   switching to FOH mid-shift sticks, then falls back to Mine when the session
+   rolls over at 3am. */
+function schedSideRemember(s){try{localStorage.setItem('sf-sched-side',JSON.stringify({s:s,d:todayISO()}));}catch(e){}}
+function schedSideRecall(){try{const o=JSON.parse(localStorage.getItem('sf-sched-side')||'null');if(o&&o.d===todayISO())return o.s;}catch(e){}return null;}
+function setSchedSide(s,quiet){
+  schedState.side=s;
+  const tabs=$('schedSideTabs');
+  if(tabs){tabs.querySelectorAll('.subtab').forEach(b=>b.classList.toggle('active',b.dataset.side===s));
+    requestAnimationFrame(replaceAllPills);}
+  if(!quiet)schedSideRemember(s);
+}
+function applySchedDefault(){
+  const mine=hasMine(),btn=document.querySelector('#schedSideTabs .subtab[data-side="mine"]');
+  if(btn)btn.style.display=mine?'':'none';
+  let want=schedSideRecall();
+  if(want==='mine'&&!mine)want=null;
+  if(['mine','foh','boh','timeoff'].indexOf(want)<0)want=mine?'mine':'foh';
+  setSchedSide(want,true);
+}
 function renderSchedule(){
   renderSchedClaims();               // manager pending-claims panel — every subtab, before the side-specific view
-  const onTimeoff=schedState.side==='timeoff';
+  const onTimeoff=schedState.side==='timeoff', onMine=schedState.side==='mine';
   $('schedRanges').style.display=onTimeoff?'none':'flex';
-  const lg=$('schedLegend');if(lg)lg.style.display=onTimeoff?'none':'block';
+  const lg=$('schedLegend');if(lg)lg.style.display=(onTimeoff||onMine)?'none':'block';
   if(onTimeoff){renderTimeoff();return;}
+  if(onMine){renderMine();return;}   // must return before SF.schedule['mine'] is dereferenced
   const weeks=SF.schedule[schedState.side],today=todayISO();let sel;
   if(schedState.range==='week'){const w=weeks[currentWeekIndex(weeks)];sel=w?[w]:[];}
   else if(schedState.range.startsWith('m:')){const ym=schedState.range.slice(2);sel=weeks.filter(w=>w.weekStart.startsWith(ym));}
@@ -8006,7 +8231,7 @@ function init(){
   renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderCrew(); renderAccess();
   initPill($('crewTabs'),$('crewPill'),'ct',v=>{crewTab=v;renderCrew();});
   initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';$('ftAllergens').style.display=v==='allergens'?'block':'none';});
-  initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{schedState.side=v;renderSchedule();});
+  initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{setSchedSide(v);renderSchedule();});
   initPill($('dutyTabs'),$('dutyPill'),'duty',v=>{dutyTab=v;renderDuties();});
   initPill($('compTabs'),$('compPill'),'comp',v=>{compTab=v;renderCompliance();});
   initPill($('stdTabs'),$('stdPill'),'std',v=>{stdTab=v;showStdPane(v);});
