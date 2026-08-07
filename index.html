@@ -308,6 +308,32 @@ body.tour-on{padding-bottom:230px;}
 .mine-openhead{font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--rust); margin:16px 3px 8px;}
 .mine-empty{font-size:13px; font-style:italic; color:var(--ink-mute); text-align:center; padding:20px 2px;}
 .mine-foot{font-size:11px; font-style:italic; line-height:1.6; color:var(--ink-mute); text-align:center; margin:2px 4px 8px;}
+/* calendar board — the week strip and the month grid share every cell rule */
+.mine-board{margin-bottom:2px;}
+.mb-dow,.mb-grid{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:3px;}
+.mb-dow{margin-bottom:5px;}
+.mb-dow span{text-align:center; font-size:10px; font-weight:800; letter-spacing:.04em; color:var(--ink-mute);}
+.mb-cell{min-height:42px; padding:6px 1px 8px; border-radius:7px; text-align:center; cursor:pointer; background:rgba(205,216,244,.06); -webkit-tap-highlight-color:transparent;}
+.mb-cell.mb-pad{background:none; cursor:default; min-height:0;}
+.mb-cell.on{background:radial-gradient(130% 130% at 28% 12%, var(--moon-hi), var(--moon) 62%, var(--moon-lo));}
+.mb-cell.open{background:none; border:1.5px dashed var(--rust); padding:4.5px 0 6.5px;}
+.mb-cell.past{opacity:.32;}
+.mb-cell.today{box-shadow:0 0 0 2px var(--gold);}
+.mb-cell:active{transform:scale(.96);}
+.mb-num{display:block; font-size:11px; font-weight:800; line-height:1.1; color:var(--ink-mute);}
+.mb-cell.on .mb-num{color:var(--wood);}
+.mb-cell.open .mb-num{color:var(--rust);}
+.mb-ab{display:block; margin-top:2px; font-size:9.5px; font-weight:800; line-height:1.15; color:var(--card-ink); overflow-wrap:break-word; word-break:break-word;}
+.mb-ab.ro{color:var(--rust);} .mb-ab.farm{color:var(--accent-dark);} .mb-ab.md{color:var(--gold-deep);}
+.mb-openlab{font-size:9px; color:var(--rust);}
+.mine-legend{display:flex; flex-wrap:wrap; gap:11px; margin:11px 3px 0; font-size:10px; color:var(--ink-mute);}
+.mine-legend i{display:inline-block; width:9px; height:9px; margin-right:4px; border-radius:2px; vertical-align:-1px; font-style:normal;}
+.mine-legend .ml-on{background:var(--moon);}
+.mine-legend .ml-open{border:1.5px dashed var(--rust);}
+.mine-legend .ml-today{background:var(--moon); box-shadow:0 0 0 2px var(--gold);}
+.sdp-you{margin:2px 0 10px; padding:9px 12px; border-radius:9px; background:rgba(230,200,120,.16); border:1px solid rgba(230,200,120,.4);}
+.sdp-you b{display:block; font-size:9.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:2px;}
+.sdp-you span{font-size:14px; font-weight:700; color:var(--ink);}
 .ro-claim{display:inline-flex; flex-direction:column; align-items:center; background:rgba(176,74,26,.10); border:1.5px dashed var(--rust); color:var(--rust); border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; cursor:pointer; line-height:1.15; font-family:inherit;}
 .ro-claim small{font-size:8px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;}
 .ro-claimed{display:inline-flex; flex-direction:column; align-items:center; background:rgba(74,106,58,.14); border:1.5px solid var(--accent); color:var(--accent-dark); border-radius:7px; padding:2px 5px; font-size:10.5px; font-weight:700; cursor:pointer; line-height:1.15;}
@@ -1617,7 +1643,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1786070242';   // stamped by build-data.py at every deploy
+const BUILD='1786071166';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3470,7 +3496,9 @@ function myWeekBounds(offset){
   const sides=mySides(); if(!sides.length)return null;
   const weeks=(SF.schedule&&SF.schedule[sides[0]])||[]; if(!weeks.length)return null;
   const w=weeks[currentWeekIndex(weeks)+(offset||0)];
-  return w&&w.dates?{start:w.dates[0],end:w.dates[6]}:null;
+  // dates[] comes back too: the week strip draws all seven columns including the
+  // days you are off, which is the whole point of a board over a list.
+  return w&&w.dates?{start:w.dates[0],end:w.dates[6],dates:w.dates.slice()}:null;
 }
 /* What the active range chip means here. Past days are dropped for This Week and
    for the current month; a future month shows whole. Month filtering is by the
@@ -3486,18 +3514,19 @@ function myRangeDays(range){
     if(!days.length){
       const nx=myWeekBounds(1);
       if(nx){const d2=all.filter(d=>d.iso>=nx.start&&d.iso<=nx.end);
-        if(d2.length)return{days:d2,title:'Next week',rolled:true,from:nx.start,to:nx.end};}
+        if(d2.length)return{days:d2,title:'Next week',rolled:true,partial:false,dates:nx.dates,from:nx.start,to:nx.end};}
     }
-    return{days:days,title:'Rest of this week',rolled:false,from:today,to:wk?wk.end:today};
+    return{days:days,title:'Rest of this week',rolled:false,partial:true,dates:wk?wk.dates:[],
+           from:today,to:wk?wk.end:today};
   }
   if(range.indexOf('m:')===0){
     const ym=range.slice(2),future=ym>today.slice(0,7);
     const days=all.filter(d=>d.iso.slice(0,7)===ym&&(future||d.iso>=today));
     const mm=Number(ym.split('-')[1]);
-    return{days:days,title:future?MON[mm-1]:'Rest of this month',rolled:false,
+    return{days:days,title:future?MON[mm-1]:'Rest of this month',rolled:false,partial:!future,ym:ym,
            from:future?ym+'-01':today,to:ym+'-31'};
   }
-  return{days:all.filter(d=>d.iso>=today),title:'Ahead',rolled:false,from:today,to:'9999-12-31'};
+  return{days:all.filter(d=>d.iso>=today),title:'Ahead',rolled:false,partial:true,from:today,to:'9999-12-31'};
 }
 /* Approved time off for this person as a date map. Two jobs: it surfaces days
    approved off that the built sheet has not caught up to yet, and it flags the
@@ -3564,6 +3593,66 @@ function mineOpenHTML(o,today,multi){
   return '<div class="mine-openrow'+(o.iso===today?' today':'')+'">'+mineWhenHTML(o.iso)+
     '<div class="mine-what">'+right+(multi?'<span class="mine-sidetag">'+esc(o.side)+'</span>':'')+'</div></div>';
 }
+/* A calendar cell is roughly 44px wide on a phone, so the shift string has to be
+   cut down. The rule is that whatever is ACTIONABLE survives: the call time. A
+   server reading '3:30' knows when to be there; 'serve' told them nothing they
+   did not already know. Where there is no time, the role word survives instead.
+   Nothing is ever invented or guessed — the full string is one tap away, which is
+   why the tiles are tappable at all. */
+function mineAbbr(s){
+  const t=String(s||'').trim(); if(!t)return '';
+  if(/^r\/o$/i.test(t))return 'R/O';
+  if(/^md$/i.test(t))return 'MD';
+  if(/^farm/i.test(t))return 'Farm';
+  if(/^float/i.test(t))return 'Float';
+  if(/^expo/i.test(t))return 'Expo';
+  if(/^sup\b/i.test(t))return 'Sup';
+  if(/^admin/i.test(t)){const a=t.match(/(\d{1,2}(?::\d{2})?)\s*[-–]\s*(\d{1,2}(?::\d{2})?)/);return a?'Adm '+a[1]+'-'+a[2]:'Admin';}
+  const r=t.match(/^(\d{1,2}(?::\d{2})?)\s*[-–]\s*(close|\d{1,2}(?::\d{2})?)/i);
+  const head=r?r[1]+'-'+(/close/i.test(r[2])?'cl':r[2]):((t.match(/^(\d{1,2}:\d{2})/)||[])[1]||'');
+  if(head){
+    if(/\bbar\b/i.test(t))return head+' B';
+    if(/support/i.test(t))return head+' s';
+    if(/train/i.test(t))return head+' t';
+    return head;
+  }
+  return t.length>5?t.slice(0,5):t;
+}
+function mineCellHTML(iso,dayMap,openMap,today,dnum){
+  const ent=dayMap[iso],op=openMap[iso],cls=['mb-cell'];
+  if(ent)cls.push('on'); else if(op)cls.push('open');
+  if(iso<today)cls.push('past');
+  if(iso===today)cls.push('today');
+  let inner='<span class="mb-num">'+dnum+'</span>';
+  if(ent)inner+='<span class="mb-ab '+shiftClass(ent.shift)+'">'+esc(mineAbbr(ent.shift))+'</span>';
+  else if(op)inner+='<span class="mb-ab mb-openlab">open</span>';
+  return '<div class="'+cls.join(' ')+'" onclick="schedDayPopup(\''+iso+'\')">'+inner+'</div>';
+}
+function mineDowHTML(){return '<div class="mb-dow">'+DOW.map(d=>'<span>'+d.charAt(0)+'</span>').join('')+'</div>';}
+/* Seven columns, Mon to Sun, every day of the week whether you are on it or not. */
+function mineWeekStrip(dates,dayMap,openMap,today){
+  if(!dates||!dates.length)return '';
+  return '<div class="mine-board">'+mineDowHTML()+'<div class="mb-grid">'+
+    dates.map(d=>mineCellHTML(d,dayMap,openMap,today,Number(d.split('-')[2]))).join('')+'</div></div>';
+}
+/* A real month grid. Leading and trailing pad cells keep the columns aligned to
+   the weekday headers, so the 1st lands under the right letter. */
+function mineMonthBoard(ym,dayMap,openMap,today){
+  const y=Number(ym.split('-')[0]),m=Number(ym.split('-')[1]);
+  const lead=(new Date(y,m-1,1).getDay()+6)%7, dim=new Date(y,m,0).getDate();
+  const p=n=>String(n).padStart(2,'0');
+  let h='<div class="mine-board">'+mineDowHTML()+'<div class="mb-grid">';
+  for(let i=0;i<lead;i++)h+='<div class="mb-cell mb-pad"></div>';
+  for(let d=1;d<=dim;d++)h+=mineCellHTML(y+'-'+p(m)+'-'+p(d),dayMap,openMap,today,d);
+  const tail=(7-((lead+dim)%7))%7;
+  for(let i=0;i<tail;i++)h+='<div class="mb-cell mb-pad"></div>';
+  return h+'</div></div>';
+}
+function mineLegendHTML(){
+  return '<div class="mine-legend"><span><i class="ml-on"></i>on</span>'+
+    '<span><i class="ml-open"></i>open, tap to claim below</span>'+
+    '<span><i class="ml-today"></i>today</span></div>';
+}
 function renderMine(){
   const body=$('schedBody'); if(!body)return;
   if(!hasMine()){body.innerHTML='<p class="mine-empty">No personal schedule to show.</p>';return;}
@@ -3572,14 +3661,38 @@ function renderMine(){
   const have={};days.forEach(d=>{have[d.iso]=true;});
   const extra=Object.keys(offMap).filter(i=>!have[i]&&i>=R.from&&i<=R.to&&i>=today).sort();
 
+  /* The BOARD draws the whole period, past days included but dimmed, because a
+     calendar missing its first cells reads as broken rather than as filtered.
+     The "rest of" meaning lives in the count instead. So the board indexes every
+     day this person has, not the range-filtered subset the list below uses. */
+  const dayMap={},openMap={};
+  myDayRows().forEach(function(d){if(!dayMap[d.iso])dayMap[d.iso]=d;});
+  myOpenShifts('0000-01-01','9999-12-31').forEach(function(o){openMap[o.iso]=true;});
+
   let h='<div class="mine-head"><span class="mine-title serif">'+esc(R.title)+'</span>'+
-        '<span class="mine-count">'+days.length+(days.length===1?' shift':' shifts')+'</span></div>';
+        '<span class="mine-count">'+days.length+(days.length===1?' shift':' shifts')+
+        (R.partial?' left':'')+'</span></div>';
   if(R.rolled)h+='<p class="mine-foot">Nothing left this week, so this is next week.</p>';
-  if(days.length||extra.length){
-    const merged=days.map(d=>({iso:d.iso,d:d})).concat(extra.map(i=>({iso:i,d:null})))
-      .sort((a,b)=>a.iso.localeCompare(b.iso));
-    h+='<div class="mine-card">'+merged.map(m=>m.d?mineDayHTML(m.d,today,offMap,multi):mineOffHTML(m.iso,today)).join('')+'</div>';
-  }else{
+
+  const onWeek=schedState.range==='week';
+  h+=onWeek?mineWeekStrip(R.dates,dayMap,openMap,today)
+           :(R.ym?mineMonthBoard(R.ym,dayMap,openMap,today):'');
+  h+=mineLegendHTML();
+
+  /* The week keeps its detail list under the strip: seven cells can only carry an
+     abbreviation, and at three or four shifts the full text costs almost nothing.
+     The month does not, since twelve rows of the same string is the noise the
+     board was built to replace. */
+  if(onWeek){
+    if(days.length||extra.length){
+      const merged=days.map(d=>({iso:d.iso,d:d})).concat(extra.map(i=>({iso:i,d:null})))
+        .sort((a,b)=>a.iso.localeCompare(b.iso));
+      h+='<div class="mine-card" style="margin-top:14px;">'+
+         merged.map(m=>m.d?mineDayHTML(m.d,today,offMap,multi):mineOffHTML(m.iso,today)).join('')+'</div>';
+    }else{
+      h+='<p class="mine-empty">No shifts left this week.</p>';
+    }
+  }else if(!days.length){
     h+='<p class="mine-empty">No shifts scheduled in this range.</p>';
   }
   const open=myOpenShifts(R.from,R.to);
@@ -4920,6 +5033,23 @@ function schedDayRender(){
     <div class="sdp-date serif">${esc(fmtLong(iso))}</div>
     <button class="sdp-nav" onclick="schedDayShift(1)" aria-label="Next day">›</button>
   </div>`;
+  // Your own shift, unabbreviated, at the top. This popup is what a Mine board
+  // tile opens, so the full string the 44px tile had to cut down has to land here.
+  const myn=(typeof myRowNames==='function')?myRowNames():[];
+  if(myn.length){
+    const mine=[];
+    ['foh','boh'].forEach(function(s){
+      ((SF.schedule&&SF.schedule[s])||[]).forEach(function(w){
+        const i=(w.dates||[]).indexOf(iso); if(i<0)return;
+        (w.rows||[]).forEach(function(r){
+          if(myn.indexOf(String(r.name).trim().toLowerCase())<0)return;
+          const v=String((r.shifts||[])[i]||'').trim();
+          if(v&&mine.indexOf(v)<0)mine.push(v);
+        });
+      });
+    });
+    if(mine.length)h+=`<div class="sdp-you"><b>You</b><span>${esc(mine.join(' · '))}</span></div>`;
+  }
   h+=`<div class="sdp-counts">
     <div class="glance-side"><span class="glance-side-lab">FOH</span>${fohHtml}<span class="sdp-tot">${totFoh}</span></div>
     <div class="glance-side"><span class="glance-side-lab">BOH</span>${bohHtml}<span class="sdp-tot">${totBoh}</span></div>
