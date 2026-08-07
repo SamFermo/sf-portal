@@ -1617,7 +1617,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1786070070';   // stamped by build-data.py at every deploy
+const BUILD='1786070242';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3447,11 +3447,19 @@ function myDayRows(){
     ((SF.schedule&&SF.schedule[side])||[]).forEach(function(w){
       const rows=(w.rows||[]).filter(r=>MYN.indexOf(String(r.name).trim().toLowerCase())>=0);
       if(!rows.length)return;
+      // Event banners are day-scoped, not week-wide. The grid shows one banner per
+      // week with a "· Sat–Sun" suffix; a day list has no week header to hang that
+      // on, so each event is attached only to the days it actually covers. Without
+      // this a Thursday shift in a farm-dinner week reads as "Farm Dinners", which
+      // is a confident wrong answer of exactly the kind that costs the portal trust.
+      const evs=[w.label].concat(w.notes||[]).filter(Boolean);
       (w.dates||[]).forEach(function(d,i){
+        const wd=schedIsoWeekday(d);
+        const ev=evs.filter(function(n){return schedEventScope(n).days.indexOf(wd)>=0;});
         rows.forEach(function(r){
           const s=String((r.shifts||[])[i]||'').trim(); if(!s)return;
           const k=d+'|'+s.toLowerCase(); if(seen[k])return; seen[k]=1;
-          out.push({iso:d,shift:s,side:side,label:w.label||''});
+          out.push({iso:d,shift:s,side:side,label:ev.join(' · ')});
         });
       });
     });
