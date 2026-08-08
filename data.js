@@ -11476,7 +11476,7 @@ window.SF = {
   ]
  },
  "compliance": {
-  "updated": "2026-07-03",
+  "updated": "2026-08-08",
   "note": "Mirrors the live Compliance Notebook. FWC = Washington Food Worker Card. MAST = Mixology/Alcohol Server permit. Neither auto-renews; renewal means taking the class again.",
   "binderUrl": "https://drive.google.com/file/d/1VpoB2F_Sae104TcJFMSsksCexVqIxzoM/view",
   "roster": {
@@ -11571,6 +11571,15 @@ window.SF = {
      "fwc": {
       "status": "good",
       "text": "Valid through Apr 26, 2027 · Signed"
+     },
+     "mast": null
+    },
+    {
+     "name": "Joshua Lardizabal",
+     "role": "Line Cook",
+     "fwc": {
+      "status": "warn",
+      "text": "Needs verify — no card on file yet, collect on next shift (new to roster)"
      },
      "mast": null
     },
@@ -11736,6 +11745,18 @@ window.SF = {
      "mast": {
       "status": "good",
       "text": "Valid through Jan 13, 2029 (American Safety Council, completed 1/13/2024)"
+     }
+    },
+    {
+     "name": "Nam Huynh",
+     "role": "Server",
+     "fwc": {
+      "status": "warn",
+      "text": "Needs verify — no card on file yet, collect on next shift (new to roster)"
+     },
+     "mast": {
+      "status": "warn",
+      "text": "Needs verify — required for server, no permit on file yet"
      }
     },
     {
@@ -12501,5 +12522,5 @@ window.SF = {
    }
   }
  },
- "build": "1786228416"
+ "build": "1786228620"
 };
