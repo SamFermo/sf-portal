@@ -331,6 +331,22 @@ body.tour-on{padding-bottom:230px;}
 .mine-legend .ml-on{background:var(--moon);}
 .mine-legend .ml-open{border:1.5px dashed var(--rust);}
 .mine-legend .ml-today{background:var(--moon); box-shadow:0 0 0 2px var(--gold);}
+/* login alerts — somebody said something to you */
+.alert-modal{align-items:center; justify-content:center; padding:18px;}
+.al-card{width:100%; max-width:380px; max-height:82vh; overflow-y:auto; padding:20px 18px 16px; border-radius:16px; background:radial-gradient(130% 130% at 28% 12%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); box-shadow:0 14px 40px rgba(0,0,0,.45);}
+.al-head{margin:0 0 14px; font-size:19px; font-weight:700; color:var(--wood); text-align:center;}
+.al-item{padding:12px 0; border-top:1px solid var(--moon-edge);}
+.al-item:first-of-type{border-top:0; padding-top:2px;}
+.al-meta{margin-bottom:5px; font-size:10.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--card-mute);}
+.al-text{font-size:14.5px; line-height:1.5; color:var(--card-ink); overflow-wrap:break-word;}
+.al-text b{font-weight:800;}
+.al-approved{color:var(--accent-dark);} .al-denied{color:var(--rust);}
+.al-reply{display:flex; gap:7px; margin-top:10px;}
+.al-reply input{flex:1 1 auto; min-width:0; padding:9px 12px; border:1px solid rgba(74,63,42,.28); border-radius:999px; background:rgba(255,255,255,.55); font-family:inherit; font-size:13.5px; color:var(--card-ink);}
+.al-reply input::placeholder{color:var(--card-mute);}
+.al-reply button{flex:0 0 auto; padding:9px 16px; border:0; border-radius:999px; background:var(--wood); color:var(--moon-hi); font-family:inherit; font-size:13px; font-weight:800; cursor:pointer;}
+.al-done{width:100%; margin-top:14px; padding:12px; border:0; border-radius:999px; background:var(--gold); color:#241f15; font-family:inherit; font-size:14px; font-weight:800; letter-spacing:.03em; cursor:pointer;}
+#schedSideTabs .subtab .chip-count{margin-left:5px; padding:0 5px; border-radius:999px; background:var(--rust); color:#fff; font-size:10px; font-weight:800; vertical-align:1px;}
 .sdp-you{margin:2px 0 10px; padding:9px 12px; border-radius:9px; background:rgba(230,200,120,.16); border:1px solid rgba(230,200,120,.4);}
 .sdp-you b{display:block; font-size:9.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:2px;}
 .sdp-you span{font-size:14px; font-weight:700; color:var(--ink);}
@@ -1643,7 +1659,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1786228620';   // stamped by build-data.py at every deploy
+const BUILD='1786315000';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2228,6 +2244,9 @@ function afterLogin(){
   if(!me.contactSet){openConsent();return;}
   if(tourPending()){setTimeout(welcomeOpen,400);return;}
   setTimeout(maybeShowAnnounce,300);
+  // the timeoff snapshot usually gets here first; this covers a login that lands
+  // after the data was already synced, when no new snapshot is coming
+  setTimeout(maybeShowAlerts,1200);
 }
 
 /* ===== ANNOUNCEMENT / RSVP POP-UP =========================================
@@ -2343,7 +2362,9 @@ function annOpen(){
   if(!m){ m=document.createElement('div'); m.id='announceModal'; m.className='comp-modal ann-modal'; m.onclick=function(e){if(e.target===m)annClose();}; document.body.appendChild(m); }
   m.innerHTML=annCardHTML(existing); m.style.display='flex';
 }
-function annClose(){ const m=$('announceModal'); if(m)m.style.display='none'; }
+function annClose(){ const m=$('announceModal'); if(m)m.style.display='none';
+  // alerts deliberately queue behind the announcement rather than stacking on it
+  try{ setTimeout(maybeShowAlerts,350); }catch(e){} }
 function annCardHTML(existing){
   const A=ANNOUNCE;
   if(annIsInfo()){
@@ -3318,6 +3339,7 @@ function startClaimsSync(){
     claimsUnsub=fbDb.collection('claims').onSnapshot(function(snap){
       CLAIMS={}; snap.docs.forEach(function(d){CLAIMS[d.id]=d.data();});
       renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge();
+      if(typeof maybeShowAlerts==='function')maybeShowAlerts();
     },function(){ CLAIMS=clLsGet(); renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge(); });
   } else { CLAIMS=clLsGet(); }
 }
@@ -3748,20 +3770,167 @@ function startTimeoffSync(){
     if(toUnsub)toUnsub();
     toUnsub=fbDb.collection('timeoff').orderBy('createdAt','desc').limit(120).onSnapshot(function(snap){
       toState=snap.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o;});
+      toLoaded=true;   // success path ONLY — never the fallback below
       if(schedState.side==='timeoff')renderTimeoff();
-      updatePendingBadge();
+      updatePendingBadge(); maybeShowAlerts();
     },function(){ toState=toLsGet(); if(schedState.side==='timeoff')renderTimeoff(); updatePendingBadge(); });
   }else{ toState=toLsGet(); updatePendingBadge(); }
 }
+/* ===== ALERTS — "somebody said something to you" ===========================
+   Notes on a time-off thread, decisions on your own request, and coverage claims
+   Sam has confirmed were all invisible unless you went looking. Sam asked Gopala
+   a question on 6 Aug 2026 and there was no surface in the app that would ever
+   have told him. This is that surface.
+
+   The outstanding test for a note is deliberately NOT a "last seen" timestamp.
+   It is: someone else wrote the most recent note in a thread you are part of, and
+   you have not written anything since. That self-clears the moment you reply,
+   needs no backfill on first deploy, and cannot resurrect a conversation that
+   already ended. Checked against live data before shipping, it fired for exactly
+   one person on exactly the note that prompted it: Katie's thread stayed quiet
+   because she had already replied, and Sam's own test note did not count
+   against him.
+
+   "A thread you are part of" = you are the requester OR you wrote a note in it.
+   That is what makes it symmetric, so Sam's question reaches Gopala and Gopala's
+   answer reaches Sam. It also means commenting on someone else's request opts you
+   into their replies. That is the price of the symmetry, not an accident.
+
+   Ack lives on the staff profile in Firestore, same shape as noticeAck, so it
+   follows a person from their phone to the shared iPad. Acking silences the
+   MODAL. For a note the badge stays until you actually reply, because "I read it"
+   is not the thing being waited on.
+
+   Gated on toLoaded, which is set only in the onSnapshot SUCCESS path and never
+   by the localStorage fallback. Same lesson as the nav glow: acting on cached
+   data here would mean popping a modal about a note that has since been answered.
+   It fails closed and silent rather than confidently wrong. ===== */
+/* Decisions and confirmed claims need a floor; notes do not. A note carries its
+   own resolution (you replied, so it is settled), which is why the rule is safe
+   to run over all history. An approval has no such signal, so without a floor
+   every request ever decided reads as unacknowledged: testing this against live
+   data showed Brittany getting 8 popups and Katie 5, all about time off approved
+   weeks ago and shifts already worked. The floor is the moment this shipped, so
+   nothing historical ever fires, plus a 21-day window so a stale item cannot
+   resurface months later. Notes deliberately skip the floor, otherwise Sam's
+   6 Aug question to Gopala would never reach him, which is the whole point. */
+const ALERT_EPOCH=Date.parse('2026-08-09T00:00:00');
+function alertFresh(at){ return !!at && at>=ALERT_EPOCH && (Date.now()-at)<21*864e5; }
+let alertsShownSession=false, toLoaded=false;
+function alertAckMap(){ return (me&&me.alertAck)||{}; }
+function alertIsAcked(k){ return !!alertAckMap()[k]; }
+function alertAck(keys){
+  if(!me||!keys||!keys.length)return;
+  const m=Object.assign({},alertAckMap()),now=Date.now();
+  keys.forEach(function(k){m[k]=now;});
+  const ks=Object.keys(m).sort(function(a,b){return (m[b]||0)-(m[a]||0);}).slice(0,50);
+  const trim={}; ks.forEach(function(k){trim[k]=m[k];});
+  me.alertAck=trim;
+  if(fbReady&&fbDb&&me.id&&!DEMO)fbDb.collection('staff').doc(me.id).update({alertAck:trim}).catch(function(){});
+}
+function myAlerts(){
+  const who=currentUserName(); if(!who||DEMO||!toLoaded)return [];
+  const out=[];
+  (getReqs()||[]).forEach(function(r){
+    if(!r)return;
+    const cm=(r.comments||[]).slice().sort(function(a,b){return (a.at||0)-(b.at||0);});
+    const isMine=r.name===who, wrote=cm.some(function(c){return c.by===who;});
+    if(isMine||wrote){
+      const last=cm[cm.length-1];
+      if(last&&last.by!==who){
+        const mineAt=cm.reduce(function(t,c){return (c.by===who&&(c.at||0)>t)?(c.at||0):t;},0);
+        if((last.at||0)>mineAt)out.push({kind:'note',key:'n:'+r.id+':'+(last.at||0),
+          reqId:r.id,req:r,by:last.by,text:last.text||'',at:last.at||0});
+      }
+    }
+    if(isMine&&(r.status==='approved'||r.status==='denied')&&alertFresh(r.decidedAt))
+      out.push({kind:'decision',key:'d:'+r.id+':'+r.status+':'+r.decidedAt,reqId:r.id,req:r,
+        by:r.decidedBy||'A manager',status:r.status,at:r.decidedAt});
+  });
+  Object.keys(CLAIMS||{}).forEach(function(k){
+    const c=CLAIMS[k];
+    if(c&&c.claimedBy===who&&c.status==='confirmed'&&alertFresh(c.confirmedAt))
+      out.push({kind:'claim',key:'c:'+k+':confirmed:'+c.confirmedAt,claim:c,
+        by:c.confirmedBy||'Sam',at:c.confirmedAt});
+  });
+  return out.sort(function(a,b){return (b.at||0)-(a.at||0);});
+}
+/* Badge: a note stays until you reply, a decision or confirmed claim clears on
+   acknowledge, because there is nothing to reply to. */
+function myAlertCount(){ return myAlerts().filter(function(a){return a.kind==='note'||!alertIsAcked(a.key);}).length; }
+function alertsForModal(){ return myAlerts().filter(function(a){return !alertIsAcked(a.key);}); }
+function alertLineHTML(a){
+  if(a.kind==='note'){
+    return '<div class="al-item"><div class="al-meta">'+esc(String(a.by).split(' ')[0])+
+      ' · on your '+esc(reqDates(a.req))+' request</div>'+
+      '<div class="al-text">'+esc(a.text)+'</div>'+
+      '<div class="al-reply"><input id="alert-reply-'+esc(a.reqId)+'" placeholder="Write back…" '+
+      'onkeydown="if(event.key===\'Enter\')alertReply(\''+esc(a.reqId)+'\')">'+
+      '<button onclick="alertReply(\''+esc(a.reqId)+'\')">Send</button></div></div>';
+  }
+  if(a.kind==='decision'){
+    return '<div class="al-item"><div class="al-meta">'+esc(a.by)+'</div>'+
+      '<div class="al-text">Your time off for '+esc(reqDates(a.req))+' was <b class="al-'+esc(a.status)+'">'+
+      esc(a.status)+'</b>.</div></div>';
+  }
+  return '<div class="al-item"><div class="al-meta">'+esc(a.by)+'</div>'+
+    '<div class="al-text">Your claim on the <b>'+esc(String(a.claim.shift||'open'))+'</b> shift for '+
+    esc(fmtLong(a.claim.date))+' is confirmed. You are on.</div></div>';
+}
+function alertsOpen(list){
+  if(!list||!list.length)return;
+  let m=$('alertModal');
+  if(!m){ m=document.createElement('div'); m.id='alertModal'; m.className='comp-modal alert-modal';
+    m.onclick=function(e){if(e.target===m)alertsDismiss();}; document.body.appendChild(m); }
+  m.setAttribute('data-keys',list.map(function(a){return a.key;}).join('|'));
+  m.innerHTML='<div class="al-card"><div class="al-head serif">'+
+    (list.length===1?'You have a message':'You have '+list.length+' messages')+'</div>'+
+    list.map(alertLineHTML).join('')+
+    '<button class="al-done" onclick="alertsDismiss()">Got it</button></div>';
+  m.style.display='flex';
+}
+function alertsClose(){ const m=$('alertModal'); if(m)m.style.display='none'; }
+function alertsDismiss(){
+  const m=$('alertModal');
+  alertAck(((m&&m.getAttribute('data-keys'))||'').split('|').filter(Boolean));
+  alertsClose(); updatePendingBadge();
+}
+function alertReply(reqId){
+  const who=currentUserName(); if(!who)return;
+  const inp=$('alert-reply-'+reqId); if(!inp)return;
+  const v=(inp.value||'').trim(); if(!v)return;
+  const c={by:who,text:v,at:Date.now()};
+  const r0=(toState||[]).find(function(x){return x.id===reqId;});
+  if(r0)r0.comments=(r0.comments||[]).concat([c]);
+  if(fbReady&&fbDb&&!DEMO&&String(reqId).indexOf('ls')!==0)
+    fbDb.collection('timeoff').doc(reqId).update({comments:firebase.firestore.FieldValue.arrayUnion(c)}).catch(function(){});
+  inp.value='';
+  const rest=alertsForModal();
+  if(rest.length)alertsOpen(rest); else alertsClose();
+  updatePendingBadge();
+  if(schedState.side==='timeoff')renderTimeoff();
+}
+function maybeShowAlerts(){
+  if(!me||DEMO||isInvestor()||alertsShownSession||!toLoaded)return;
+  const am=$('announceModal');
+  if(am&&am.style.display==='flex')return;   // never stack on the announcement; annClose retries
+  const list=alertsForModal();
+  if(!list.length)return;
+  alertsShownSession=true; alertsOpen(list);
+}
 /* Pending time-off badge — Sam only, on the Schedule chip + Time Off subtab + app icon.
-   Other admins can approve but don't get the badge (scope decision 2026-06-20). */
+   Other admins can approve but don't get the badge (scope decision 2026-06-20).
+   Everyone gets their OWN outstanding-message count added on top, which is what
+   keeps a dismissed modal from losing the thread. */
 function pendingTimeoffCount(){return (toState||toLsGet()).filter(function(r){return r&&r.status==='pending';}).length;}
 function updatePendingBadge(){
-  var n = (currentUserName()==='Sam West') ? (pendingTimeoffCount()+pendingClaimsCount()) : 0;
+  var mgr = (currentUserName()==='Sam West') ? (pendingTimeoffCount()+pendingClaimsCount()) : 0;
+  var n = mgr + myAlertCount();
   function setOn(el,cls){ if(!el)return; var b=el.querySelector('.'+cls);
     if(n>0){ if(!b){b=document.createElement('span');b.className=cls;el.appendChild(b);} b.textContent=n; }
     else if(b){ b.remove(); } }
   setOn(document.querySelector('#navChips .chip[data-go="schedule"]'),'chip-count');
+  setOn(document.querySelector('#schedSideTabs .subtab[data-side="timeoff"]'),'chip-count');
   try{ if('setAppBadge' in navigator){ if(n>0) navigator.setAppBadge(n); else navigator.clearAppBadge(); } }catch(e){}
 }
 function reqDates(r){if(!r.end||r.end===r.start)return fmtLong(r.start);return fmtShort(r.start)+' – '+fmtShort(r.end);}
