@@ -11779,8 +11779,8 @@ window.SF = {
       "text": "Complete through May 9, 2029 (national cert accepted in lieu of WA card)"
      },
      "mast": {
-      "status": "alarm",
-      "text": "Pending — email nudge sent 4/30"
+      "status": "good",
+      "text": "Complete — MAST course done 7/29/26 (Craft Serving); WA permit in the mail"
      }
     }
    ]
@@ -12522,5 +12522,5 @@ window.SF = {
    }
   }
  },
- "build": "1786403777"
+ "build": "1786458849"
 };

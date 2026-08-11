@@ -33,7 +33,7 @@
       { "name": "Mac Solomon", "role": "Server", "fwc": { "status": "good", "text": "Valid through Jan 10, 2028 · confirm cardholder signature" }, "mast": { "status": "good", "text": "Valid through Jan 13, 2029 (American Safety Council, completed 1/13/2024)" } },
       { "name": "Nam Huynh", "role": "Server", "fwc": { "status": "warn", "text": "Needs verify — no card on file yet, collect on next shift (new to roster)" }, "mast": { "status": "warn", "text": "Needs verify — required for server, no permit on file yet" } },
       { "name": "Sabba Hawash", "role": "Server", "fwc": { "status": "alarm", "text": "Expires Jun 18, 2026 — raise in person" }, "mast": { "status": "good", "text": "Class 12, valid through Jan 1, 2030" } },
-      { "name": "Sully Baker", "role": "Server", "fwc": { "status": "good", "text": "Complete through May 9, 2029 (national cert accepted in lieu of WA card)" }, "mast": { "status": "alarm", "text": "Pending — email nudge sent 4/30" } }
+      { "name": "Sully Baker", "role": "Server", "fwc": { "status": "good", "text": "Complete through May 9, 2029 (national cert accepted in lieu of WA card)" }, "mast": { "status": "good", "text": "Complete — MAST course done 7/29/26 (Craft Serving); WA permit in the mail" } }
     ]
   },
   "comingDue": [
