@@ -3594,6 +3594,175 @@ window.SF = {
     }
    ],
    "added": "2026-08-01"
+  },
+  {
+   "section": "Bubbles",
+   "name": "Folicello “Il Rosso” Lambrusco dell’Emilia",
+   "vintage": "",
+   "region": "Emilia-Romagna, Italy",
+   "type": "sparkling",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Lambrusco Grasparossa",
+   "pour": "Deep ruby with a velvety mauve foam — aromatic blackberry, dried thyme and sage, and crushed red carnation over musky earth and a whisper of leather. Juicy black cherry and tart blueberry on the palate with salted licorice and a hint of olive brine; bright acidity balances grippy tannins. Dry, old-school, thirst-quenching Lambrusco — pour it with charcuterie, hot-sausage lasagna, or pizza.",
+   "producer": "Folicello is an organic family farm in Emilia-Romagna run by Marco and Antonella Folicello, working traditional methods with native yeasts and no chemical additions. ABV was not on the fresh sheet — the estate’s ancestral Lambruscos generally run about 11–12%; confirm the number on the bottle with your lead before quoting.",
+   "winemaking": "Red sparkling made by the ancestral method (Metodo Ancestrale, a.k.a. pét-nat) — spontaneous fermentation with indigenous yeasts and a secondary fermentation finished in the bottle, then lees-aged. Organically farmed Lambrusco Grasparossa; bottled with no added chemicals.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 3,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 4,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 3,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Folicello",
+     "pron": "foh-lee-CHEL-loh"
+    },
+    {
+     "term": "Lambrusco",
+     "pron": "lam-BROO-skoh"
+    },
+    {
+     "term": "Grasparossa",
+     "pron": "grahs-pah-ROH-sah"
+    },
+    {
+     "term": "Emilia",
+     "pron": "eh-MEE-lyah"
+    }
+   ],
+   "added": "2026-08-12"
+  },
+  {
+   "section": "Red",
+   "name": "Ciacci Piccolomini d’Aragona Brunello di Montalcino DOCG",
+   "vintage": "2019",
+   "region": "Montalcino, Tuscany, Italy",
+   "type": "red",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Sangiovese",
+   "pour": "Ruby red verging on garnet — an intense, fruit-forward nose of red berries lifted by floral and delicate spice notes. Warm, soft, and very well balanced on the palate; well structured with soft tannins and a long finish. A classic Montalcino match for roasted or stewed game, mature cheeses, and hand-made pasta with a red-meat or game ragù.",
+   "producer": "Ciacci Piccolomini d’Aragona is a historic estate in Castelnuovo dell’Abate, in the warm southern reaches of Montalcino near the abbey of Sant’Antimo. Note: this is the estate (annata) Brunello — the 15% ABV and 36-month Slavonian-oak aging that turn up in research belong to the single-vineyard “Pianrosso” bottling, so confirm the ABV and aging for this wine with your lead before quoting.",
+   "winemaking": "100% Sangiovese, fermented in stainless steel and glass-lined concrete vats with temperature control, then aged a long period in oak barrels followed by bottle refinement before release.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 4,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 4,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Ciacci Piccolomini d’Aragona",
+     "pron": "CHAH-chee pee-koh-LOH-mee-nee dah-rah-GOH-nah"
+    },
+    {
+     "term": "Brunello di Montalcino",
+     "pron": "broo-NEL-loh dee mon-tahl-CHEE-noh"
+    },
+    {
+     "term": "Sangiovese",
+     "pron": "san-joh-VEH-zeh"
+    }
+   ],
+   "added": "2026-08-12"
+  },
+  {
+   "section": "Red",
+   "name": "La Gerla Brunello di Montalcino DOCG",
+   "vintage": "2018",
+   "region": "Montalcino, Tuscany, Italy",
+   "type": "red",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Sangiovese Grosso",
+   "pour": "Intense ruby verging on garnet — soft, warm, and velvety, harmonic and persistent, rich in fruit. Ethereal aromatics of sweet violet and iris melt into tobacco, cinnamon, and leather. Built for red meats and, best of all, wild game.",
+   "producer": "La Gerla sits in Montalcino on a site that once belonged to the Biondi Santi family (the old “Colombaio”). Sergio Rossi, a former advertising executive, bought the land in 1976 and launched the La Gerla label in 1978; the estate has kept his emphasis on quality and detail since his passing in 2011. Note: importer materials list roughly 14.5% ABV and about three years in Slavonian-oak botti plus bottle aging — confirm on the bottle with your lead before quoting.",
+   "winemaking": "100% Sangiovese Grosso, fermented and aged in large Slavonian-oak botti in the traditional Montalcino manner so the grape shows its full range, with a period of bottle rest before release.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 4,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 4,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "La Gerla",
+     "pron": "lah JEHR-lah"
+    },
+    {
+     "term": "Brunello di Montalcino",
+     "pron": "broo-NEL-loh dee mon-tahl-CHEE-noh"
+    },
+    {
+     "term": "Sangiovese Grosso",
+     "pron": "san-joh-VEH-zeh GROH-soh"
+    }
+   ],
+   "added": "2026-08-12"
   }
  ],
  "bar": {
@@ -12522,5 +12691,5 @@ window.SF = {
    }
   }
  },
- "build": "1786458849"
+ "build": "1786540856"
 };
