@@ -1659,7 +1659,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1786540856';   // stamped by build-data.py at every deploy
+const BUILD='1786653714';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -8614,7 +8614,11 @@ function scwsCompute(o){
   if(!rel.length){flags.push('no service crew on the clock');return base;}
   if(!(pool>0)){flags.push('no service-fee pool recorded for this date');return base;}
 
-  const full=Math.max.apply(null,rel.map(s=>s.h));
+  // A "full shift" is capped at 8h. Anchoring the baseline to the longest clock let one
+  // long shift (Sully 12.89h, 2026-08-12, no log) make every normal ~7h dinner shift look
+  // "short" and collapse the split to a 1-way. The nightly script now auto-reconstructs
+  // no-log nights so this fallback rarely runs, but it must not collapse if it does.
+  const full=Math.min(Math.max.apply(null,rel.map(s=>s.h)),8);
   const hours={}, role={};
   rel.forEach(s=>{const n=scwsN(s.name);
     hours[n]=Math.max(hours[n]||0,s.h);
