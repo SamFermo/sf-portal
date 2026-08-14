@@ -557,6 +557,123 @@ body.tour-on{padding-bottom:230px;}
 .combo-chip{display:inline-flex; align-items:center; gap:4px; background:rgba(230,200,120,.12); border:1px solid rgba(230,200,120,.5); color:var(--gold); border-radius:999px; padding:4px 10px; font-size:11.5px; font-weight:700; margin:0 6px 6px 0;}
 .combo-chip .x{cursor:pointer; opacity:.75;}
 .mm-combo{stroke-dasharray:10 7;}
+/* ===== THE ATTIC ===========================================================
+   Tiles are HTML, not SVG: a table has to expand into a panel with buttons, a
+   stepper and a textarea, and that is miserable inside an SVG. The Standards
+   floor map stays vector; this is a control surface, not a map. */
+.at-bar{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 12px;}
+.at-roles{display:inline-flex; padding:3px; gap:3px; background:rgba(205,216,244,.05);
+  border:1px solid rgba(205,216,244,.13); border-radius:11px;}
+.at-rb{background:transparent; border:0; color:var(--ink-mute); padding:6px 15px; border-radius:8px;
+  font-family:inherit; font-size:12.5px; font-weight:800; letter-spacing:.04em; cursor:pointer;}
+.at-rb.on{background:rgba(230,200,120,.16); color:var(--gold);}
+.at-secbtn{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.16); color:var(--ink-soft);
+  padding:7px 13px; border-radius:999px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;}
+.at-caret{color:var(--ink-mute); margin-left:3px;}
+.at-secs{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px;}
+.at-warn{background:rgba(212,101,74,.14); border:1px solid rgba(212,101,74,.5); color:#f0c3b4;
+  border-radius:10px; padding:9px 12px; font-size:12.5px; line-height:1.45; margin:0 0 12px;}
+.at-movebar{display:flex; align-items:center; gap:10px; background:rgba(230,200,120,.12);
+  border:1px solid rgba(230,200,120,.4); color:var(--ink); border-radius:10px; padding:8px 12px;
+  font-size:12.5px; margin:0 0 12px;}
+.at-movebar b{color:var(--gold);}
+.at-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); gap:10px;}
+.at-tile{position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:3px; min-height:92px; padding:10px 6px; cursor:pointer; font-family:inherit;
+  background:rgba(8,12,26,.55); border:1.5px solid rgba(205,216,244,.18); border-radius:14px; color:var(--ink);}
+.at-tile .at-num{font-size:25px; font-weight:800; line-height:1;}
+.at-tile .at-sub{display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--ink-mute);}
+.at-tsub{letter-spacing:.04em;}
+.at-syms{font-size:13px; line-height:1;}
+.at-sym{margin:0 1px;}
+.at-pax{color:var(--ink-soft); font-weight:700;}
+.at-cd{font-weight:800; color:var(--ink-soft);}
+.at-cd.big{font-size:27px; line-height:1;}
+.at-cd-yel{color:#e0b14e !important;}
+.at-cd-red{color:#e8705a !important;}
+.at-tile.at-on{background:rgba(205,216,244,.09); border-color:rgba(205,216,244,.34);}
+.at-tile.at-warm{border-color:rgba(224,177,78,.65);}
+.at-tile.at-hot{border-color:#e8705a; animation:atPulse 1.4s ease-in-out infinite;}
+.at-tile.at-target{border-style:dashed; border-color:var(--gold); color:var(--gold);}
+@keyframes atPulse{0%,100%{box-shadow:0 0 0 0 rgba(232,112,90,.42);}50%{box-shadow:0 0 0 7px rgba(232,112,90,0);}}
+@keyframes atGold{0%,100%{box-shadow:0 0 0 0 rgba(230,200,120,.45);}50%{box-shadow:0 0 0 8px rgba(230,200,120,0);}}
+.at-glow-gold{border-color:var(--gold) !important; background:rgba(230,200,120,.13); animation:atGold 1.5s ease-in-out infinite;}
+.at-glow-o{border-color:#e08a3c !important; background:rgba(224,138,60,.14);}
+.at-glow-b{border-color:#5aa9d6 !important; background:rgba(90,169,214,.14);}
+.at-glow-r{border-color:#d4654a !important; background:rgba(212,101,74,.15); animation:atPulse 1.4s ease-in-out infinite;}
+.at-glow-g{border-color:#6db657 !important; background:rgba(109,182,87,.14);}
+.at-fdot{position:absolute; top:7px; right:7px; width:9px; height:9px; border-radius:50%;}
+.at-f-o .at-fdot,.at-fdot.at-f-o{background:#e08a3c;} .at-f-b .at-fdot,.at-fdot.at-f-b{background:#5aa9d6;}
+.at-f-r .at-fdot,.at-fdot.at-f-r{background:#d4654a;} .at-f-g .at-fdot,.at-fdot.at-f-g{background:#6db657;}
+/* the open table takes the whole row — this IS the expanded button */
+.at-panel{grid-column:1/-1; background:rgba(8,12,26,.72); border:1.5px solid rgba(230,200,120,.42);
+  border-radius:16px; padding:13px 13px 15px;}
+.at-p-head{display:flex; align-items:center; gap:9px; margin-bottom:11px;}
+.at-p-num{font-size:29px; font-weight:800; color:var(--gold); line-height:1;}
+.at-p-role{font-size:10.5px; font-weight:800; letter-spacing:.09em; color:var(--ink-mute);
+  border:1px solid rgba(205,216,244,.2); border-radius:999px; padding:3px 8px;}
+.at-p-x{margin-left:auto; background:transparent; border:0; color:var(--ink-mute); font-size:17px; cursor:pointer;}
+.at-lab{font-size:10.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-mute); margin:11px 0 6px;}
+.at-row{display:flex; flex-wrap:wrap; align-items:center; gap:7px;}
+.at-row .at-lab{margin:0; min-width:56px;}
+.at-oc,.at-fl{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); color:var(--ink-soft);
+  border-radius:999px; padding:7px 12px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;}
+.at-oc.on{background:rgba(230,200,120,.18); border-color:var(--gold); color:var(--gold);}
+.at-fl.at-f-o{border-color:rgba(224,138,60,.55); color:#eaa76a;}
+.at-fl.at-f-b{border-color:rgba(90,169,214,.55); color:#8fc9e6;}
+.at-fl.at-f-r{border-color:rgba(212,101,74,.55); color:#eb9179;}
+.at-fl.at-f-g{border-color:rgba(109,182,87,.55); color:#96d182;}
+.at-step b{font-size:16px; font-weight:800; min-width:62px; text-align:center; color:var(--ink);}
+.at-sb{background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.2); color:var(--ink);
+  border-radius:9px; min-width:44px; padding:7px 9px; font-family:inherit; font-size:13px; font-weight:800; cursor:pointer;}
+.at-note{width:100%; box-sizing:border-box; margin-top:11px; min-height:62px; resize:vertical;
+  background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); border-radius:10px;
+  color:var(--ink); padding:9px 11px; font-family:inherit; font-size:13.5px; line-height:1.45;}
+.at-acts{display:flex; flex-wrap:wrap; gap:8px; margin-top:11px;}
+.at-btn{background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.2); color:var(--ink);
+  border-radius:10px; padding:9px 15px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;}
+.at-btn.at-go{background:rgba(230,200,120,.2); border-color:var(--gold); color:var(--gold);}
+.at-btn.at-cancel{color:var(--ink-mute);}
+.at-live{display:flex; align-items:center; justify-content:space-between; gap:10px;
+  background:rgba(205,216,244,.05); border-radius:11px; padding:10px 12px;}
+.at-live-l{display:flex; flex-direction:column; gap:2px;}
+.at-live-r{display:flex; align-items:center; gap:8px; font-size:13px;}
+.at-meta{font-size:11.5px; color:var(--ink-mute);}
+.at-seatline{margin:8px 0 0;}
+.at-seen{color:#9fcf8c;} .at-unseen{color:#e0b14e;}
+.at-mdnote{margin-top:9px; background:rgba(230,200,120,.1); border-left:3px solid var(--gold);
+  border-radius:0 8px 8px 0; padding:9px 11px; font-size:13.5px; line-height:1.45; color:var(--ink);}
+.at-flagbar{display:flex; flex-wrap:wrap; align-items:center; gap:9px; border-radius:11px;
+  padding:10px 12px; margin-bottom:11px; border:1px solid rgba(205,216,244,.2); font-size:13px;}
+.at-flagbar.at-f-o{background:rgba(224,138,60,.14); border-color:rgba(224,138,60,.5);}
+.at-flagbar.at-f-b{background:rgba(90,169,214,.14); border-color:rgba(90,169,214,.5);}
+.at-flagbar.at-f-r{background:rgba(212,101,74,.15); border-color:rgba(212,101,74,.5);}
+.at-flagbar.at-f-g{background:rgba(109,182,87,.14); border-color:rgba(109,182,87,.5);}
+.at-flagbar.at-done{opacity:.62;}
+.at-fn{color:var(--ink-soft);}
+.at-flagbar .at-btn{margin-left:auto;}
+.at-log{margin-top:12px; font-size:12px; color:var(--ink-mute);}
+.at-log summary{cursor:pointer; letter-spacing:.04em;}
+.at-logline{padding:4px 0 0 2px;} .at-logline b{color:var(--ink-soft);}
+/* Chat */
+.chat-wrap{max-height:56vh; overflow-y:auto; -webkit-overflow-scrolling:touch; display:flex;
+  flex-direction:column; gap:9px; padding:2px 2px 4px;}
+.chat-msg{background:rgba(8,12,26,.55); border:1px solid rgba(205,216,244,.14); border-radius:12px;
+  padding:9px 12px; max-width:88%; align-self:flex-start;}
+.chat-msg.mine{align-self:flex-end; background:rgba(230,200,120,.11); border-color:rgba(230,200,120,.3);}
+.chat-meta{display:flex; align-items:center; gap:7px; font-size:11px; color:var(--ink-mute); margin-bottom:3px;}
+.chat-meta b{color:var(--ink-soft); font-size:12px;}
+.chat-role{font-size:9.5px; font-weight:800; letter-spacing:.09em; color:var(--gold);
+  border:1px solid rgba(230,200,120,.4); border-radius:999px; padding:1px 6px;}
+.chat-at{margin-left:auto;}
+.chat-body{font-size:14px; line-height:1.45; color:var(--ink); white-space:pre-wrap; word-break:break-word;}
+.chat-seen{font-size:10.5px; color:#9fcf8c; margin-top:4px;}
+.chat-seen.chat-unseen{color:var(--ink-mute);}
+.chat-input-row{display:flex; gap:8px; align-items:flex-end; margin-top:12px;}
+.chat-in{flex:1; box-sizing:border-box; min-height:44px; max-height:130px; resize:vertical;
+  background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); border-radius:11px;
+  color:var(--ink); padding:11px 12px; font-family:inherit; font-size:14px; line-height:1.4;}
 /* my-tables picker */
 .tpick-wrap{display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 12px;}
 .tpick{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:9px; min-width:38px; padding:6px 0; text-align:center; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
@@ -934,6 +1051,23 @@ body.tour-on{padding-bottom:230px;}
 .seat-placeholder{border:2px dashed var(--moon-edge); border-radius:12px; padding:46px 22px; text-align:center; color:var(--card-mute); font-family:'Caladea',Georgia,serif;}
 .seat-placeholder .big{font-size:34px; margin-bottom:8px;}
 .seat-note{font-size:12.5px; color:var(--card-soft); margin-top:12px; line-height:1.5; text-align:center;}
+/* Floor map — vector rebuild of the OpenTable floorplan (replaced the flat PNG 2026-08-14).
+   Tables tint by section, every seat position prints its seat number. Seat 1 is the pivot. */
+.fp-legend{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 10px;}
+.fp-chip{display:inline-flex; align-items:center; gap:6px; background:rgba(36,31,21,.05);
+  border:1px solid var(--moon-edge); color:var(--card-soft); padding:5px 10px; border-radius:999px;
+  font-family:inherit; font-size:11.5px; font-weight:700; line-height:1; cursor:pointer;}
+.fp-chip .fp-dot{width:9px; height:9px; border-radius:50%; background:var(--c); flex:0 0 auto;}
+.fp-chip.on{background:var(--card-ink); color:var(--moon); border-color:var(--card-ink);}
+.fp-chip.fp-all{--c:transparent;}
+.fp-map{background:#141b33; border-radius:10px; padding:10px; overflow:hidden;}
+.fp-map svg{width:100%; height:auto; display:block; max-height:62vh;}
+.fp-map text{pointer-events:none;}
+.fp-t{fill-opacity:.22; stroke-width:4;}
+.fp-tn{fill:#eaf0ff; font-size:40px; font-weight:800; text-anchor:middle;}
+.fp-seat{fill-opacity:.55;}
+.fp-sn{fill:#0d1226; font-size:21px; font-weight:800; text-anchor:middle;}
+.zoom-wrap svg{transform-origin:center center; will-change:transform; -webkit-user-select:none; user-select:none;}
 
 .est-note{font-size:11px; color:var(--ink-mute); font-style:italic; text-align:center; margin-top:6px;}
 /* corrections mode */
@@ -1534,8 +1668,11 @@ body.locked{overflow:hidden;}
 </section>
 
 <section class="view" id="board">
-  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">Tables</h2>
-    <p class="view-sub">Notes and statuses on tonight's tables — tap the map to start one.</p>
+  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">The Attic</h2>
+    <div class="subtabs" id="atticTabs"><span class="subpill" id="atticPill"></span>
+      <button class="subtab active" data-at="tables">Tables</button>
+      <button class="subtab" data-at="chat">Chat</button>
+    </div>
   </div>
   <div id="boardBody"></div>
 </section>
@@ -1659,7 +1796,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1786653720';   // stamped by build-data.py at every deploy
+const BUILD='1786691562';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1705,7 +1842,7 @@ function makeStars(){
   sky.innerHTML=h;
 }
 
-const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','Tables'],['schedule','Schedule'],['crew','Crew Board'],['standards','Standards'],['directory','Directory']];
+const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','The Attic'],['schedule','Schedule'],['crew','Crew Board'],['standards','Standards'],['directory','Directory']];
 function navTabs(){
   // Investors see the numbers and the menu those numbers came from. No ordering, tables,
   // verbals, schedule, directory, standards, crew board, front desk or day sheet.
@@ -1716,7 +1853,10 @@ function navTabs(){
   if(typeof rcCanTab==='function'&&rcCanTab())head=head.concat([['recap','Recap']]);
   if(typeof scwsCanTab==='function'&&scwsCanTab())head=head.concat([['scws','Service Charge']]);
   else if(typeof lnCanTab==='function'&&lnCanTab())head=head.concat([['lastnight','Last Night']]);
-  let t=isMgr()?head.concat(TABS,[['frontdesk','Front Desk'],['orders','Farm Order']]):head.concat(TABS);
+  // The Attic is a floor tool. The line has no use for a seat clock and it only adds
+  // a chip they will never open, so BOH does not get it.
+  const base=(me&&String(me.area||'').toLowerCase()==='boh')?TABS.filter(function(x){return x[0]!=='board';}):TABS;
+  let t=isMgr()?head.concat(base,[['frontdesk','Front Desk'],['orders','Farm Order']]):head.concat(base);
   return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
@@ -1733,6 +1873,7 @@ function go(id){
   if(id==='fresh')markFreshSeen();
   if(id==='verbals')markVerbalsSeen();
   if(id==='crew')markCrewSeen();
+  if(id==='board'&&atSub==='chat')chatMarkSeen();
   if(id==='orders')markOrdersSeen();
   if(id==='today')markCalloffSeen();
   updateAttn();
@@ -1815,7 +1956,7 @@ function renderHome(){
     : annChip + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():''))
       + (typeof scwsCanTab==='function'&&scwsCanTab()?scwsCardHTML():'')
       + freshCardHTML() + verbalsCardHTML();
-  const std=[['board','⌗','Tables','Tonight\'s table notes & statuses'],
+  const std=[['board','⌗','The Attic','Seat, time & flag tonight\'s tables'],
     ['schedule','◷','Schedule','This week + the month'],
     ['crew','⚑','Crew Board','Events · shifts · heads up'],
     ['standards','▦','Standards','Room, duties, certs & service'],
@@ -2134,7 +2275,7 @@ const TOUR_COPY={
   fresh:{t:'Fresh Talk',b:'Tonight\'s menu in full, with separate tabs for wine, cocktails and allergens. Every dish lists its components, and every wine carries tasting notes and a pronunciation guide. Search the wine list by name, grape, or what a guest tells you they like.',
     boh:'Tonight\'s menu in full. The BOH tab is the one you want: every dish with its components, exactly as it should go out. Allergens live here too, so this is the fastest way to answer a question from the floor mid-service.'},
   verbals:{t:'Verbals',b:'Standing verbals, the 86 list, and tonight\'s specials. Read this before every service. If something got 86\'d an hour ago, this is where it shows up first.'},
-  board:{t:'Tables',b:'The floor plan. Tap any table to leave a note or set a status so the rest of the team can see what is happening in your section.'},
+  board:{t:'The Attic',b:'Tonight\'s tables upstairs. Tap a table to open it: the MD seats it with a turn time and any occasion, the server acknowledges and flags anything that needs the MD. Chat is the same room, in words. Other sections are one tap behind the section button.'},
   schedule:{t:'Schedule',b:'This week and the month ahead, front and back of house. Time off requests go in here too, under the Time Off tab, and you can see where they stand.'},
   crew:{t:'Crew Board',b:'From the team, for the team. Notes posted for tonight clear at the 3am reset; anything pinned to the Pinboard stays.'},
   standards:{t:'Standards',b:'How we do things: daily duties, steps of service, sidework and closing lists. Your food handler card and any other certifications get uploaded and tracked in here as well.',
@@ -4071,15 +4212,81 @@ function showStdPane(v){
   else if(v==='service')renderService();
   requestAnimationFrame(replaceAllPills);
 }
+/* FLOOR MAP — vector rebuild of the OpenTable floorplan, 2026-08-14. Replaced the flat
+   PNG, which was unreadable on a phone. Geometry + traced seat positions come from
+   SF.seating.layout; nothing here is hardcoded, so a table added to seating.json appears
+   on its own. Seat 1 is the pivot point, then clockwise. */
+const SEC_COLORS={'Front Room':'#7fb3e8','Streetside Cafe':'#e0b14e','Attic':'#b58fd6',
+  'Back Six':'#6db657','Bar':'#d4654a','North Deck Patio':'#4fc3b0'};
+let fpSec='';   /* '' = every section lit; otherwise isolate one */
+function secColor(n){return SEC_COLORS[n]||'#cdd8f4';}
+function fpSeatGeom(o,s,sameSide){
+  /* nub sits just outside the table edge; the number sits just outside the nub */
+  const hw=o.r?o.r:o.w/2, hh=o.r?o.r:o.h/2, D=28, L=48, GAP=3;
+  let cx=o.x, cy=o.y, w=L, h=D;
+  const spread=(sameSide>1)?((s.o===0?-1:1)):0;
+  if(s.p==='t'||s.p==='b'){
+    cx=o.x+spread*(hw/2); cy=o.y+(s.p==='t'?-1:1)*(hh+GAP+D/2); w=L; h=D;
+  }else{
+    cy=o.y+spread*(hh/2); cx=o.x+(s.p==='l'?-1:1)*(hw+GAP+D/2); w=D; h=L;
+  }
+  /* the seat number rides INSIDE its own nub. Printing it outside collided between
+     tables that sit close together (11/12, 40/41, 32/33) and made the map unreadable. */
+  return {cx:cx,cy:cy,w:w,h:h,lx:cx,ly:cy};
+}
+function fpSideCount(o,p){return (o.seats||[]).filter(function(z){return z.p===p;}).length;}
+function floorMapSVG(){
+  const lay=SF.seating&&SF.seating.layout, sec=SF.seating&&SF.seating.sections;
+  if(!lay||!sec||!sec.order)return '';
+  const secOf={}; sec.order.forEach(function(n){(sec.map[n]||[]).forEach(function(t){secOf[t]=n;});});
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  const grow=function(x,y){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);};
+  Object.keys(lay).forEach(function(t){
+    const o=lay[t],hw=o.r?o.r:o.w/2,hh=o.r?o.r:o.h/2;
+    grow(o.x-hw,o.y-hh);grow(o.x+hw,o.y+hh);
+    (o.seats||[]).forEach(function(s){const q=fpSeatGeom(o,s,fpSideCount(o,s.p));grow(q.cx-q.w/2,q.cy-q.h/2);grow(q.cx+q.w/2,q.cy+q.h/2);});
+  });
+  const pad=26;x0-=pad;y0-=pad;x1+=pad;y1+=pad;
+  let svg='<svg viewBox="0 0 '+Math.round(x1-x0)+' '+Math.round(y1-y0)+'" xmlns="http://www.w3.org/2000/svg">';
+  Object.keys(lay).forEach(function(t){
+    const o=lay[t], name=secOf[t]||'', c=secColor(name);
+    const dim=(fpSec&&fpSec!==name);
+    svg+='<g opacity="'+(dim?'.14':'1')+'">';
+    (o.seats||[]).forEach(function(s){
+      const q=fpSeatGeom(o,s,fpSideCount(o,s.p));
+      svg+='<rect class="fp-seat" style="fill:'+c+'" x="'+(q.cx-q.w/2-x0)+'" y="'+(q.cy-q.h/2-y0)+'" width="'+q.w+'" height="'+q.h+'" rx="6"/>';
+      svg+='<text class="fp-sn" x="'+(q.lx-x0)+'" y="'+(q.ly-y0)+'" dy="0.36em">'+esc(s.n)+'</text>';
+    });
+    if(o.r)svg+='<circle class="fp-t" style="fill:'+c+';stroke:'+c+'" cx="'+(o.x-x0)+'" cy="'+(o.y-y0)+'" r="'+o.r+'"/>';
+    else svg+='<rect class="fp-t" style="fill:'+c+';stroke:'+c+'" x="'+(o.x-o.w/2-x0)+'" y="'+(o.y-o.h/2-y0)+'" width="'+o.w+'" height="'+o.h+'" rx="10"/>';
+    svg+='<text class="fp-tn" x="'+(o.x-x0)+'" y="'+(o.y-y0)+'" dy="0.36em">'+esc(t)+'</text></g>';
+  });
+  return svg+'</svg>';
+}
+function fpLegendHTML(){
+  const sec=SF.seating&&SF.seating.sections; if(!sec||!sec.order)return '';
+  let h='<div class="fp-legend">'+sec.order.map(function(n){
+    return '<button class="fp-chip'+(fpSec===n?' on':'')+'" style="--c:'+secColor(n)+'" onclick="fpPick(\''+esc(n)+'\')"><span class="fp-dot"></span>'+esc(n)+'</button>';
+  }).join('');
+  if(fpSec)h+='<button class="fp-chip fp-all" onclick="fpPick(\'\')">Show all</button>';
+  return h+'</div>';
+}
+function fpPick(n){fpSec=(fpSec===n)?'':n;renderSeating();}
 function renderSeating(){
   const s=SF.seating;
-  if(s&&s.image){
+  if(s&&s.layout&&s.sections&&s.sections.order){
+    $('seatBody').innerHTML='<div class="seat-wrap">'+fpLegendHTML()+
+      '<div class="fp-map"><div class="zoom-wrap" id="zoomWrap">'+floorMapSVG()+'</div></div>'+
+      '<div class="seat-note">Seat 1 is the pivot point, then clockwise. Tap a section to isolate it. Pinch to zoom, drag to pan, double-tap to reset.</div></div>';
+    attachZoom($('zoomWrap'),$('zoomWrap').firstElementChild);
+  }else if(s&&s.image){
+    /* fallback only — the vector map is the real view */
     $('seatBody').innerHTML=`<div class="seat-wrap"><div class="zoom-wrap" id="zoomWrap"><img id="seatImg" src="${esc(s.image)}" alt="San Fermo floorplan"></div>
       <div class="seat-note">Pinch to zoom, drag to pan, double-tap to reset.</div></div>`;
     attachZoom($('zoomWrap'),$('seatImg'));
   }else{
-    $('seatBody').innerHTML=`<div class="seat-wrap"><div class="seat-placeholder"><div class="big">▦</div>Floorplan image goes here.<br>Drop the OpenTable floorplan in and it appears here.</div>
-      <div class="seat-note">Once Sam adds the floorplan image to <b>data/floorplan.png</b> (and sets it in <b>service / seating</b> data), this tab shows the room with table numbers.</div></div>`;
+    $('seatBody').innerHTML=`<div class="seat-wrap"><div class="seat-placeholder"><div class="big">▦</div>Floorplan goes here.<br>Add table coordinates to <b>data/seating.json</b> and it appears here.</div>
+      <div class="seat-note">Once the layout block in <b>data/seating.json</b> carries x/y and seat positions, this tab draws the room with table and seat numbers.</div></div>`;
   }
 }
 
@@ -5279,15 +5486,14 @@ function verbalsUnseen(){ const v=getVerbals(), s=attnGet('verbals');
 }
 function verbalsGlow(){ if(!verbalsLoaded)return false; const u=verbalsUnseen(); return u.n>0||u.std; }   // only glow once the FIRESTORE verbals doc has loaded; canonical std sig so seen sticks (was glowing every login)
 
-/* --- Tables: any unacked flag (raised by someone else) in the selected section --- */
-function tablesInScope(){
-  const b=getBoard(), items=b.tables||[], sec=boardSecGet();
-  if(sec==='all')return items;
-  if(sec==='mine'){const mineU=getMyTables().map(t=>comboPrimary(t).toUpperCase());return items.filter(t=>mineU.indexOf(comboPrimary(t.table).toUpperCase())>=0);}
-  const secs=Array.isArray(sec)?sec:[sec];
-  return items.filter(t=>secs.indexOf(tableSection(comboPrimary(t.table)))>=0);
+/* --- The Attic: anything waiting on ME, plus unread chat. Gated on the Firestore
+       load (per the seen-state rule) so it cannot glow off a stale local cache. --- */
+function tablesGlow(){
+  if(!atblLoaded&&!chatLoaded)return false;
+  if(chatLoaded&&chatUnread()>0)return true;
+  if(!atblLoaded)return false;
+  return Object.keys(ATBL).some(function(k){return atNeedsMe(ATBL[k]);});
 }
-function tablesGlow(){ const me0=currentUserName(); return tablesInScope().some(t=>!t.ack && t.by!==me0); }
 
 /* --- Crew Board: live posts (not mine) newer than the last time I opened it --- */
 function crewMaxAt(){ const me0=currentUserName(), now=Date.now(), cutoff=now-30*864e5, today=todayISO(); let mx=0;
@@ -7251,6 +7457,8 @@ function startBoardSync(){
     },function(){ boardState=lsGetBoard(); renderBoard(); });
   }else{ boardState=lsGetBoard(); }
   startVerbalsSync();
+  startTablesSync();
+  startChatSync();
 }
 function persistBoard(b){
   boardState=b;
@@ -7258,16 +7466,6 @@ function persistBoard(b){
   if(fbReady&&fbDb){ fbDb.collection('board').doc(boardDocId()).set(b).catch(function(){lsSetBoard(b);}); }
   else { lsSetBoard(b); }
 }
-function boardSecGet(){
-  // 'all' | 'mine' | array of section names (multi-select for shared iPads)
-  try{
-    const v=localStorage.getItem('sf-board-section')||'all';
-    if(v==='all'||v==='mine')return v;
-    if(v.charAt(0)==='[')return JSON.parse(v);
-    return [v];   // legacy single-section string
-  }catch(e){return 'all';}
-}
-function boardSecSet(v){try{localStorage.setItem('sf-board-section',typeof v==='string'?v:JSON.stringify(v));}catch(e){}}
 /* (The legacy nightly "86 Tonight" board list was retired 2026-06-23 — the 86
    verbal type in board/verbals is now the single source. Its per-device seen
    tracking and the verbals gold-pill it drove are gone; glow is handled by
@@ -7279,27 +7477,15 @@ function renderBoard(){const b=getBoard();
     items.forEach((it,i)=>h+=`<div class="board-item"><span>${esc(it)}</span><span class="x" onclick="rmBoard('${kind}',${i})">✕</span></div>`);
     return h+`</div>`;};
   const live=fbReady?`<span style="color:#bfe0a8">● live</span> — shared across every device.`:`saved on this device only.`;
-  $('boardBody').innerHTML=`<p class="board-note">${esc(SF.service.board.note)} ${live}</p>`+secChipsHTML()+tablesPaneHTML(b);
+  /* The pre-service blurb that used to sit here was written for the old notes board and
+     never applied to this tab. Removed 2026-08-14 along with the add-a-note bar. */
+  if($('boardBody')){ const _ui=atCaptureUI();
+    $('boardBody').innerHTML=(atSub==='chat')?chatPaneHTML():atticPaneHTML();
+    atRestoreUI(_ui); }
   $('verbalsBody').innerHTML=`<p class="board-note">Verbals are built by a lead in Day at a Glance and persist until changed; specials below clear nightly. ${live}</p>`+
     verbalsViewHTML()+col('Specials','board-sp',b.specials||[],'specials');
   if($('verbals')&&$('verbals').classList.contains('active'))markVerbalsSeen();   // viewing the tab = seeing the items
   updateAttn();
-}
-function secChipsHTML(){
-  const order=(SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[];
-  const cur=boardSecGet(), arr=Array.isArray(cur)?cur:[];
-  return `<div class="sec-chips"><button class="fchip ${cur==='all'?'active':''}" onclick="setBoardSec('all')">Full floor</button>`+
-    order.map(n=>`<button class="fchip ${arr.indexOf(n)>=0?'active':''}" onclick="setBoardSec('${esc(n)}')">${esc(n)}</button>`).join('')+
-    `<button class="fchip ${cur==='mine'?'active':''}" onclick="setBoardSec('mine')">My tables</button></div>`;
-}
-function setBoardSec(v){
-  if(v==='all'||v==='mine'){boardSecSet(v);renderBoard();return;}   // exclusive — clears any section picks
-  const cur=boardSecGet();
-  const arr=Array.isArray(cur)?cur.slice():[];   // coming from all/mine starts a fresh pick
-  const i=arr.indexOf(v);
-  if(i>=0)arr.splice(i,1);else arr.push(v);
-  boardSecSet(arr.length?arr:'all');
-  renderBoard();
 }
 /* TABLE COMBOS — MD pushes tables together for tonight (51+52+53 → "51").
    Lives in the day's board doc, so it syncs live and clears with the nightly reset. */
@@ -7343,261 +7529,468 @@ function comboUIHTML(){
   return h+`</div>`;
 }
 
-/* MY TABLES — per-device, per-night custom table set (sections get split up;
-   tables 1+2 fold into Front Room when Streetside isn't running, etc.) */
-function myTablesKey(){return 'sf-mytables-'+todayISO();}
-function getMyTables(){try{return JSON.parse(localStorage.getItem(myTablesKey()))||[];}catch(e){return [];}}
-function toggleMyTable(t){
-  let m=getMyTables();
-  if(m.indexOf(t)>=0)m=m.filter(x=>x!==t); else m.push(t);
-  try{localStorage.setItem(myTablesKey(),JSON.stringify(m));}catch(e){}
-  renderBoard();
-}
+function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;const b=getBoard();b[k]=b[k]||[];b[k].push(v);persistBoard(b);renderBoard();setTimeout(()=>{const x=$('in-'+k);if(x)x.focus();},0);}
+function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);renderBoard();}
+
+/* ===== THE ATTIC — the floor board, rebuilt 2026-08-14 =======================
+   Replaced the old "Tables" tab. Three things drove the rewrite:
+
+   1. The board only earns its keep upstairs. Downstairs you turn around and tell
+      the person. So the Attic is the default and only visible section; every other
+      section is still here, one tap behind "Other sections".
+   2. The dropdown + note + plus bar is gone. The TABLE is the control: tap it, it
+      expands, and what is inside depends on whether you are the MD or a server.
+   3. Tables moved OUT of the day's `board` doc into their own per-table docs.
+      `board` is written with a whole-document set(), so two people acting at the
+      same time silently overwrote each other. That was survivable when a flag was
+      rare. It is not survivable with live countdowns. One doc per table per night.
+
+   Firestore: collection `tables`, doc id `{YYYY-MM-DD}__{TABLE}`, queried by a
+   single-field equality on `date` (no composite index, per the index-free rule).
+   Record shape:
+     {date, table, state:'open'|'seated', covers, occ:[], outAt, note,
+      by, at, seatAck:{by,at}, flag, flagNote, flagBy, flagAt, flagAck:{by,at}, log:[]}
+   Everything is stamped: who did it, when, and who saw it. */
+
+const AT_OCC={bday:{s:'🎂',l:'Birthday'},anniv:{s:'🥂',l:'Anniversary'},vip:{s:'⭐',l:'VIP'}};
+const AT_OCC_ORDER=['bday','anniv','vip'];
+/* server -> MD flags. `reset` is the one that closes the loop: MD acking it clears the table. */
+const AT_FLAG={incomplete:{l:'Party incomplete',c:'o'},bussing:{l:'Bussing needed',c:'b'},
+  dragging:{l:'Dragging',c:'r'},reset:{l:'Reset',c:'g'}};
+const AT_FLAG_ORDER=['incomplete','bussing','dragging','reset'];
+const AT_DEFAULT_MIN=120;   /* a table turns in two hours unless the MD says otherwise */
+
+let ATBL={}, atblLoaded=false, atblUnsub=null, atSyncErr=false;
+let CHAT={}, chatLoaded=false, chatUnsub=null, chatSyncErr=false;
+let atSec='Attic', atSecOpen=false, atOpen='', atDraft=null, atMoveFrom='', atSub='tables';
+let atTimer=null, atAudio=null, atChimeArmed=false;
+
+/* --- the table list the tiles are built from -------------------------------- */
 function allTablesInOrder(){
   const sec=SF.seating&&SF.seating.sections; if(!sec)return [];
-  let out=[]; sec.order.forEach(n=>{out=out.concat(sec.map[n]||[]);});
+  let out=[]; sec.order.forEach(function(n){out=out.concat(sec.map[n]||[]);});
   // straight numeric order, bar seats at the end — section grouping reads as jumbled here
-  return out.sort((a,b)=>{
+  return out.sort(function(a,b){
     const ba=/^B/i.test(a)?1:0, bb=/^B/i.test(b)?1:0;
     const na=parseInt(String(a).replace(/\D/g,''))||999, nb=parseInt(String(b).replace(/\D/g,''))||999;
     return ba-bb||na-nb;});
 }
-function gridMapHTML(tabs,noted,glows){
-  glows=glows||{};
-  if(!tabs.length)return '';
-  const seen={},disp=[];
-  tabs.forEach(t=>{const c=comboFor(t),k=c?String(c.primary):String(t),ku=k.toUpperCase();
-    if(seen[ku])return;seen[ku]=1;disp.push({label:k,extra:c?c.tables.length-1:0});});
-  const sorted=disp.sort((a,b)=>{
-    const ba=/^B/i.test(a.label)?1:0, bb=/^B/i.test(b.label)?1:0;
-    const na=parseInt(a.label.replace(/\D/g,''))||999, nb=parseInt(b.label.replace(/\D/g,''))||999;
-    return ba-bb||na-nb;});
-  const cols=Math.min(5,Math.max(2,Math.ceil(Math.sqrt(sorted.length))));
-  const S=110,G=18, rows=Math.ceil(sorted.length/cols);
-  const W=cols*S+(cols-1)*G, H=rows*S+(rows-1)*G;
-  let svg=`<svg viewBox="-10 -10 ${W+20} ${H+20}" xmlns="http://www.w3.org/2000/svg">`;
-  sorted.forEach((d,i)=>{const c=i%cols,r=Math.floor(i/cols),x=c*(S+G),y=r*(S+G),hot=noted.indexOf(d.label.toUpperCase())>=0;
-    const gl=glows[d.label.toUpperCase()];
-    svg+=`<rect class="${hot?'mm-t mm-noted':'mm-t'}${d.extra?' mm-combo':''}${gl?' mm-glow-'+gl:''}" onclick="selectTblFromMap('${esc(d.label)}')" x="${x}" y="${y}" width="${S}" height="${S}" rx="16"/>`;
-    svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${x+S/2}" y="${y+S/2-(d.extra?8:0)}" dy="0.36em" style="font-size:34px">${esc(d.label)}</text>`;
-    if(d.extra)svg+=`<text class="mm-x" x="${x+S/2}" y="${y+S-22}" style="font-size:19px">+${d.extra}</text>`;});
-  svg+=`</svg>`;
-  return `<div class="mini-map">${svg}<div class="mm-cap">your tables tonight — gold have notes</div></div>`;
+function atSecList(){
+  const map=(SF.seating&&SF.seating.sections&&SF.seating.sections.map)||{};
+  const raw=(map[atSec]||[]).slice(), seen={}, out=[];
+  // a combined party shows once, under its reference table
+  raw.forEach(function(t){const p=comboPrimary(t), u=p.toUpperCase(); if(seen[u])return; seen[u]=1; out.push(p);});
+  return out.sort(function(a,b){
+    const na=parseInt(String(a).replace(/\D/g,''))||999, nb=parseInt(String(b).replace(/\D/g,''))||999;
+    return na-nb;});
 }
-function tablesPaneHTML(b){
-  const sec=boardSecGet(), items=b.tables||[];
-  if(sec==='all'){
-    const notedAll=items.map(t=>comboPrimary(t.table).toUpperCase());
-    return comboUIHTML()+fullMapHTML(notedAll,glowMapFor(items))+tablesColHTML(items);   // MD full-floor view + combo controls
-  }
-  if(sec==='mine'){
-    const mine=getMyTables(), mineU=mine.map(t=>comboPrimary(t).toUpperCase());
-    const inMine=items.map((t,i)=>({t:t,i:i})).filter(o=>mineU.indexOf(comboPrimary(o.t.table).toUpperCase())>=0);
-    let h=`<div class="tpick-label">Tap the tables you're covering tonight (resets daily)</div><div class="tpick-wrap">`+
-      allTablesInOrder().map(t=>`<button class="tpick${mine.indexOf(t)>=0?' on':''}" onclick="toggleMyTable('${esc(t)}')">${esc(t)}</button>`).join('')+`</div>`;
-    h+=gridMapHTML(mine,inMine.map(o=>comboPrimary(o.t.table).toUpperCase()),glowMapFor(inMine.map(o=>o.t)));
-    if(mine.length){
-      h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">My Tables — Tonight</span>
-      <div class="tbl-input-row">
-        <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
-        <select class="tbl-occ" id="tbl-occ" onchange="occChanged()">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select><select class="tbl-occ" id="tbl-outby" style="display:none"></select>
-        <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note" onkeydown="if(event.key==='Enter')addTable()">
-        <button class="board-add" onclick="addTable()">+</button>
-      </div>`;
-      if(!inMine.length)h+=`<div class="board-empty">No notes on your tables tonight.</div>`;
-      inMine.forEach(o=>h+=tblItemHTML(o.t,o.i));
-      h+=`</div>`;
-    }
-    return h;
-  }
-  const secs=Array.isArray(sec)?sec:[sec];
-  const inSec=items.map((t,i)=>({t:t,i:i})).filter(o=>secs.indexOf(tableSection(comboPrimary(o.t.table)))>=0);
-  const noted=inSec.map(o=>comboPrimary(o.t.table).toUpperCase()), glows=glowMapFor(inSec.map(o=>o.t));
-  const title=secs.join(' + ');
-  let h;
-  if(secs.length===1){
-    h=miniMapHTML(secs[0],noted,glows);   // single section keeps the real room shape
-  }else{
-    const map=(SF.seating&&SF.seating.sections&&SF.seating.sections.map)||{};
-    let tabs=[]; secs.forEach(n=>{tabs=tabs.concat(map[n]||[]);});
-    h=gridMapHTML(tabs,noted,glows);      // combined sections use the numeric grid, like My tables
-  }
-  h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">${esc(title)} — Tables Tonight</span>
-    <div class="tbl-input-row">
-      <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
-      <select class="tbl-occ" id="tbl-occ" onchange="occChanged()">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select><select class="tbl-occ" id="tbl-outby" style="display:none"></select>
-      <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note (e.g. comping dessert)" onkeydown="if(event.key==='Enter')addTable()">
-      <button class="board-add" onclick="addTable()">+</button>
-    </div>`;
-  if(!inSec.length)h+=`<div class="board-empty">No notes for ${esc(title)} tonight.</div>`;
-  inSec.forEach(o=>h+=tblItemHTML(o.t,o.i));
-  return h+`</div>`;
-}
-function glowMapFor(items){
-  const g={},pri={r:3,a:2,g:1};
-  (items||[]).forEach(t=>{
-    if(t.ack)return;
-    const c=t.occasion==='dragging'?'r':(t.occasion==='outby'?'a':(t.occasion==='reset'?'g':''));
-    if(!c)return;
-    const key=comboPrimary(t.table).toUpperCase();
-    if(!g[key]||pri[c]>pri[g[key]])g[key]=c;
-  });
-  return g;
-}
-function selectTblFromMap(t){
-  const num=$('tbl-num'); if(!num)return;
-  num.value=comboPrimary(t);
-  const note=$('tbl-note'); if(note)note.focus();
-}
-function miniMapHTML(sec,noted,glows){
-  const map=SF.seating&&SF.seating.sections&&SF.seating.sections.map;
-  if(!map||!map[sec])return '';
-  return tableMapHTML(map[sec],noted,sec+' — tap a table to start a note · gold have notes',glows);
-}
-function fullMapHTML(noted,glows){
-  return tableMapHTML(allTablesInOrder(),noted,'tap a table to start a note · gold have notes',glows);
-}
-function tableMapHTML(tabsIn,noted,cap,glows){
-  glows=glows||{};
-  const lay=SF.seating&&SF.seating.layout; if(!lay)return '';
-  const tabs=tabsIn.filter(t=>lay[t]); if(!tabs.length)return '';
-  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
-  tabs.forEach(t=>{const o=lay[t],w=o.r?o.r*2:o.w,hh=o.r?o.r*2:o.h;
-    x0=Math.min(x0,o.x-w/2);y0=Math.min(y0,o.y-hh/2);x1=Math.max(x1,o.x+w/2);y1=Math.max(y1,o.y+hh/2);});
-  const pad=50;x0-=pad;y0-=pad;x1+=pad;y1+=pad;
-  let svg=`<svg viewBox="0 0 ${Math.round(x1-x0)} ${Math.round(y1-y0)}" xmlns="http://www.w3.org/2000/svg">`;
-  tabs.forEach(t=>{const o=lay[t],c=comboFor(t),lbl=c?String(c.primary):t;
-    const hot=noted.indexOf(String(lbl).toUpperCase())>=0;
-    let cls=hot?'mm-t mm-noted':'mm-t'; if(c&&String(t)!==String(c.primary))cls+=' mm-combo';
-    const gl=glows[String(lbl).toUpperCase()]; if(gl)cls+=' mm-glow-'+gl;
-    const tap=`onclick="selectTblFromMap('${esc(t)}')"`;
-    if(o.r)svg+=`<circle class="${cls}" ${tap} cx="${o.x-x0}" cy="${o.y-y0}" r="${o.r}"/>`;
-    else svg+=`<rect class="${cls}" ${tap} x="${o.x-o.w/2-x0}" y="${o.y-o.h/2-y0}" width="${o.w}" height="${o.h}" rx="12"/>`;
-    svg+=`<text class="mm-x${hot?' mm-xn':''}" x="${o.x-x0}" y="${o.y-y0}" dy="0.36em">${esc(lbl)}</text>`;});
-  svg+=`</svg>`;
-  return `<div class="mini-map">${svg}<div class="mm-cap">${esc(cap)}</div></div>`;
-}
-function addBoard(k){const inp=$('in-'+k),v=(inp.value||'').trim();if(!v)return;const b=getBoard();b[k]=b[k]||[];b[k].push(v);persistBoard(b);renderBoard();setTimeout(()=>{const x=$('in-'+k);if(x)x.focus();},0);}
-function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);renderBoard();}
 
-/* TABLES TONIGHT — occasions / VIP notes (maitre d') */
-const OCCASIONS=[['birthday','Birthday'],['anniversary','Anniversary'],['vip','VIP'],['special','Special'],['note','Note'],['reset','Reset'],['dragging','Dragging'],['outby','Out by…']];
-/* OUT BY — 15-min slots, only times still ahead of now */
-function outbyOptionsHTML(){
-  const now=new Date();
-  let mins=(Math.floor((now.getHours()*60+now.getMinutes())/15)+1)*15;
-  let h='';
-  for(;mins<=23*60+45;mins+=15){
-    const hh=Math.floor(mins/60), mm=mins%60;
-    const lbl=`${hh%12||12}:${String(mm).padStart(2,'0')}${hh<12?'am':'pm'}`;
-    h+=`<option value="${lbl}">${lbl}</option>`;
+/* --- role: MD or server. Managers default to MD, everyone else to Server, and
+       anybody can flip it. Resets with the nightly session rollover. ---------- */
+function atRoleKey(){return 'sf-role-'+todayISO();}
+function atRole(){try{const v=localStorage.getItem(atRoleKey());if(v==='md'||v==='server')return v;}catch(e){}return isMgr()?'md':'server';}
+function atSetRole(r){try{localStorage.setItem(atRoleKey(),r);}catch(e){}atOpen='';atDraft=null;atMoveFrom='';renderBoard();}
+function atIsMD(){return atRole()==='md';}
+
+/* --- time helpers ----------------------------------------------------------- */
+function atClock(ms){if(!ms)return '';const d=new Date(ms),h=d.getHours(),m=d.getMinutes();
+  return (h%12||12)+':'+String(m).padStart(2,'0')+(h<12?'a':'p');}
+function atStamp(ms){return ms?atClock(ms):'';}
+function atLeft(r){return (r&&r.state==='seated'&&r.outAt)?Math.round((r.outAt-Date.now())/60000):null;}
+function atCdText(m){if(m==null)return '';
+  if(m<0)return '+'+Math.abs(m)+'m';
+  if(m>=60)return Math.floor(m/60)+'h'+String(m%60).padStart(2,'0');
+  return m+'m';}
+function atCdCls(m){if(m==null)return '';return m<=10?'at-cd-red':(m<=20?'at-cd-yel':'');}
+function atRoundQuarter(ms){return Math.round(ms/9e5)*9e5;}
+
+/* --- records ---------------------------------------------------------------- */
+function atDocId(t){return todayISO()+'__'+String(comboPrimary(t)).toUpperCase();}
+function atRec(t){return ATBL[atDocId(t)]||null;}
+function atLsGet(){try{return JSON.parse(localStorage.getItem('sf-tables-'+todayISO())||'{}');}catch(e){return {};}}
+function atLsSet(){try{localStorage.setItem('sf-tables-'+todayISO(),JSON.stringify(ATBL));}catch(e){}}
+function atOccList(o){return AT_OCC_ORDER.filter(function(k){return o&&o[k];});}
+function atGlow(r){
+  if(!r)return '';
+  if(r.flag&&!r.flagAck)return AT_FLAG[r.flag]?AT_FLAG[r.flag].c:'';
+  if(r.state==='seated'&&!r.seatAck)return 'gold';
+  return '';
+}
+/* who still needs to act on this table, used for the chime and the nav glow */
+function atNeedsMe(r){
+  if(!r)return false;
+  const meN=currentUserName();
+  if(r.flag&&!r.flagAck)return atIsMD()&&r.flagBy!==meN;
+  if(r.state==='seated'&&!r.seatAck)return !atIsMD()&&r.by!==meN;
+  return false;
+}
+
+function atWrite(t,patch,what){
+  const id=atDocId(t), now=Date.now(), who=currentUserName()||'';
+  const cur=ATBL[id]||{};
+  const next=Object.assign({},cur,patch,{date:todayISO(),table:comboPrimary(t)});
+  if(what)next.log=(cur.log||[]).concat([{at:now,by:who,what:what}]).slice(-40);
+  ATBL[id]=next; atLsSet();
+  if(!DEMO&&fbReady&&fbDb){
+    fbDb.collection('tables').doc(id).set(next,{merge:true}).catch(function(){atSyncErr=true;renderBoard();});
   }
+  renderBoard();
+}
+
+function startTablesSync(){
+  try{const s=localStorage.getItem('sf-attic-sec-'+todayISO()); if(s)atSec=s;}catch(e){}
+  if(fbReady&&fbDb){
+    if(atblUnsub)atblUnsub();
+    atblUnsub=fbDb.collection('tables').where('date','==',todayISO()).onSnapshot(function(snap){
+      const prev=ATBL, first=!atblLoaded;
+      ATBL={}; snap.docs.forEach(function(d){ATBL[d.id]=d.data();});
+      atblLoaded=true; atSyncErr=false; atLsSet();
+      if(!first)atChimeCheck(prev,ATBL);
+      renderBoard();
+    },function(){ /* LOUD: the tab says so rather than pretending the floor is quiet */
+      atSyncErr=true; ATBL=atLsGet(); atblLoaded=false; renderBoard(); });
+  }else{ atSyncErr=!DEMO; ATBL=atLsGet(); renderBoard(); }
+  atStartTick();
+}
+
+/* --- the chime. A gold glow is invisible on a screen nobody is looking at, so a
+       new seat (server) or a new flag (MD) makes a sound while the app is open.
+       iOS will not start an AudioContext without a gesture, so it is unlocked on
+       the first tap anywhere and stays unlocked for the session. ------------- */
+function atAudioUnlock(){
+  if(atChimeArmed)return;
+  try{const C=window.AudioContext||window.webkitAudioContext; if(!C)return;
+    atAudio=atAudio||new C(); if(atAudio.state==='suspended')atAudio.resume();
+    atChimeArmed=true;}catch(e){}
+}
+function atBeep(){
+  if(!atChimeArmed||!atAudio)return;
+  if(document.visibilityState!=='visible')return;
+  try{
+    [[880,0],[1320,.14]].forEach(function(p){
+      const o=atAudio.createOscillator(), g=atAudio.createGain();
+      o.connect(g); g.connect(atAudio.destination); o.type='sine'; o.frequency.value=p[0];
+      const t0=atAudio.currentTime+p[1];
+      g.gain.setValueAtTime(0.0001,t0);
+      g.gain.exponentialRampToValueAtTime(0.16,t0+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t0+0.42);
+      o.start(t0); o.stop(t0+0.45);
+    });
+  }catch(e){}
+}
+function atChimeCheck(prev,next){
+  const meN=currentUserName();
+  let hit=false;
+  Object.keys(next).forEach(function(k){
+    const a=prev[k]||{}, b=next[k];
+    if(atIsMD()){
+      if(b.flag&&!b.flagAck&&b.flagBy!==meN&&(b.flagAt||0)>(a.flagAt||0))hit=true;
+    }else{
+      if(b.state==='seated'&&!b.seatAck&&b.by!==meN&&(b.at||0)>(a.at||0))hit=true;
+    }
+  });
+  if(hit)atBeep();
+}
+
+/* --- the ticking clock. Re-rendering the whole tab every 15s would eat an open
+       note mid-sentence, so the tick touches only the countdown nodes. -------- */
+function atStartTick(){
+  if(atTimer)return;
+  atTimer=setInterval(atTickCds,15000);
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')atTickCds();});
+}
+function atTickCds(){
+  const els=document.querySelectorAll('[data-cd]');
+  if(!els.length)return;
+  els.forEach(function(el){
+    const r=atRec(el.getAttribute('data-cd')), m=atLeft(r);
+    el.textContent=atCdText(m);
+    el.classList.remove('at-cd-red','at-cd-yel');
+    const c=atCdCls(m); if(c)el.classList.add(c);
+    const tile=el.closest('.at-tile');
+    if(tile){tile.classList.remove('at-warm','at-hot');
+      if(m!=null){if(m<=10)tile.classList.add('at-hot');else if(m<=20)tile.classList.add('at-warm');}}
+  });
+}
+
+/* --- actions ---------------------------------------------------------------- */
+function atTap(t){
+  atAudioUnlock();
+  if(atMoveFrom){ atDoMove(atMoveFrom,t); return; }
+  if(atOpen===t){atOpen='';atDraft=null;}
+  else{
+    atOpen=t;
+    const r=atRec(t);
+    atDraft={table:t, occ:{}, covers:(r&&r.covers)||2,
+      outAt:(r&&r.state==='seated'&&r.outAt)?r.outAt:atRoundQuarter(Date.now()+AT_DEFAULT_MIN*60000),
+      note:''};
+    if(r&&r.state==='seated')(r.occ||[]).forEach(function(k){atDraft.occ[k]=true;});
+  }
+  renderBoard();
+}
+function atClose(){atOpen='';atDraft=null;atMoveFrom='';renderBoard();}
+function atToggleOcc(k){if(!atDraft)return;atDraft.occ[k]=!atDraft.occ[k];renderBoard();}
+function atCovers(d){if(!atDraft)return;atDraft.covers=Math.max(1,Math.min(20,(atDraft.covers||0)+d));renderBoard();}
+function atBump(mins){if(!atDraft)return;
+  const floor=atRoundQuarter(Date.now()+15*60000);
+  atDraft.outAt=Math.max(floor,atRoundQuarter(atDraft.outAt+mins*60000));renderBoard();}
+function atDraftNote(v){if(atDraft)atDraft.note=v;}
+function atSeat(t){
+  if(!atIsMD()||!atDraft||atDraft.table!==t)return;
+  const d=atDraft;
+  atWrite(t,{state:'seated',covers:d.covers||0,occ:atOccList(d.occ),outAt:d.outAt,note:(d.note||'').trim(),
+    by:currentUserName()||'',at:Date.now(),seatAck:null,flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},
+    'seated '+(d.covers||'?')+', out by '+atClock(d.outAt));
+  atOpen='';atDraft=null;
+}
+function atAdjust(t,mins){
+  if(!atIsMD())return;
+  const r=atRec(t); if(!r||r.state!=='seated')return;
+  const next=Math.max(atRoundQuarter(Date.now()+15*60000),atRoundQuarter((r.outAt||Date.now())+mins*60000));
+  atWrite(t,{outAt:next},'out time moved to '+atClock(next));
+}
+function atSaveNote(t){
+  const el=$('at-note-'+String(t).replace(/\W/g,''));
+  if(!el)return;
+  const v=(el.value||'').trim();
+  if(atIsMD())atWrite(t,{note:v},'note updated');
+  else atWrite(t,{flagNote:v},'note updated');
+}
+function atUnseat(t){
+  if(!atIsMD())return;
+  atWrite(t,{state:'open',covers:0,occ:[],outAt:0,note:'',by:'',at:0,seatAck:null,
+    flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},'unseated');
+  atOpen='';atDraft=null;
+}
+function atStartMove(t){if(!atIsMD())return;atMoveFrom=t;atOpen='';atDraft=null;renderBoard();}
+function atCancelMove(){atMoveFrom='';renderBoard();}
+function atDoMove(from,to){
+  if(String(from).toUpperCase()===String(to).toUpperCase()){atMoveFrom='';renderBoard();return;}
+  const r=atRec(from), dst=atRec(to);
+  if(!r||r.state!=='seated'){atMoveFrom='';renderBoard();return;}
+  if(dst&&dst.state==='seated'){atMoveFrom='';renderBoard();return;}   // never move onto a live table
+  atWrite(to,{state:'seated',covers:r.covers||0,occ:r.occ||[],outAt:r.outAt||0,note:r.note||'',
+    by:r.by||'',at:r.at||Date.now(),seatAck:r.seatAck||null,flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},
+    'moved in from '+comboPrimary(from));
+  atWrite(from,{state:'open',covers:0,occ:[],outAt:0,note:'',by:'',at:0,seatAck:null,
+    flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},'moved to '+comboPrimary(to));
+  atMoveFrom=''; atOpen=to; atDraft=null;
+}
+function atFlagIt(t,kind){
+  const note=atDraft&&atDraft.table===t?(atDraft.note||'').trim():'';
+  atWrite(t,{flag:kind,flagNote:note,flagBy:currentUserName()||'',flagAt:Date.now(),flagAck:null},
+    'flagged '+(AT_FLAG[kind]?AT_FLAG[kind].l.toLowerCase():kind));
+  atOpen='';atDraft=null;
+}
+function atAckSeat(t){
+  atWrite(t,{seatAck:{by:currentUserName()||'',at:Date.now()}},'seat acknowledged');
+  atOpen='';atDraft=null;
+}
+function atAckFlag(t){
+  const r=atRec(t); if(!r||!r.flag)return;
+  if(r.flag==='reset'){
+    /* acking a reset is what clears the table. Nothing else empties it. */
+    atWrite(t,{state:'open',covers:0,occ:[],outAt:0,note:'',by:'',at:0,seatAck:null,
+      flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},'reset acknowledged, table cleared');
+  }else{
+    atWrite(t,{flagAck:{by:currentUserName()||'',at:Date.now()}},'flag acknowledged');
+  }
+  atOpen='';atDraft=null;
+}
+function atPickSec(n){atSec=n;atOpen='';atDraft=null;atMoveFrom='';try{localStorage.setItem('sf-attic-sec-'+todayISO(),n);}catch(e){}renderBoard();}
+function atToggleSecs(){atSecOpen=!atSecOpen;renderBoard();}
+function atSubGo(v){atSub=v;atOpen='';atDraft=null;if(v==='chat')chatMarkSeen();renderBoard();}
+
+/* A snapshot from anyone else re-renders this tab. Without this, a server typing a
+   note loses it mid-sentence the moment the MD seats another table. Capture the
+   focused field and its caret, restore both after the swap. */
+function atCaptureUI(){
+  const a=document.activeElement, body=$('boardBody');
+  const st={id:'',val:'',s0:0,s1:0,scroll:0};
+  const w=$('chatWrap'); if(w)st.scroll=w.scrollTop;
+  if(a&&a.id&&body&&body.contains(a)&&(a.tagName==='TEXTAREA'||a.tagName==='INPUT')){
+    st.id=a.id; st.val=a.value;
+    try{st.s0=a.selectionStart;st.s1=a.selectionEnd;}catch(e){}
+  }
+  return st;
+}
+function atRestoreUI(st){
+  const w=$('chatWrap');
+  if(w)w.scrollTop=st&&st.scroll?st.scroll:w.scrollHeight;
+  if(!st||!st.id)return;
+  const el=$(st.id); if(!el)return;
+  if(st.val&&!el.value)el.value=st.val;
+  try{el.focus({preventScroll:true});el.setSelectionRange(st.s0,st.s1);}catch(e){}
+}
+/* --- rendering -------------------------------------------------------------- */
+function atSymbols(occ){return (occ||[]).map(function(k){return AT_OCC[k]?'<span class="at-sym" title="'+esc(AT_OCC[k].l)+'">'+AT_OCC[k].s+'</span>':'';}).join('');}
+function atSeenLine(a,lab){
+  if(!a||!a.at)return '<span class="at-unseen">'+esc(lab)+'</span>';
+  return '<span class="at-seen">✓ seen '+esc(atStamp(a.at))+(a.by?' by '+esc(String(a.by).split(' ')[0]):'')+'</span>';
+}
+function atTileHTML(t){
+  const r=atRec(t), seated=!!(r&&r.state==='seated'), m=atLeft(r), g=atGlow(r), key=String(t).replace(/\W/g,'');
+  if(atOpen===t)return atPanelHTML(t);
+  let cls='at-tile'+(seated?' at-on':'')+(g?' at-glow-'+g:'')+(atMoveFrom&&!seated?' at-target':'');
+  if(m!=null){if(m<=10)cls+=' at-hot';else if(m<=20)cls+=' at-warm';}
+  let sub='';
+  if(seated){
+    sub='<span class="at-cd '+atCdCls(m)+'" data-cd="'+esc(t)+'">'+esc(atCdText(m))+'</span>';
+    if(r.covers)sub+='<span class="at-pax">'+esc(r.covers)+'p</span>';
+  }else if(atMoveFrom){ sub='<span class="at-tsub">move here</span>'; }
+  else sub='<span class="at-tsub">open</span>';
+  const flag=(r&&r.flag&&!r.flagAck)?'<span class="at-fdot at-f-'+AT_FLAG[r.flag].c+'"></span>':'';
+  return '<button class="'+cls+'" onclick="atTap(\''+esc(t)+'\')">'+flag+
+    '<span class="at-num">'+esc(t)+'</span>'+
+    (seated?'<span class="at-syms">'+atSymbols(r.occ)+'</span>':'')+
+    '<span class="at-sub">'+sub+'</span></button>';
+}
+function atPanelHTML(t){
+  const r=atRec(t), seated=!!(r&&r.state==='seated'), md=atIsMD(), key=String(t).replace(/\W/g,'');
+  let h='<div class="at-panel"><div class="at-p-head"><span class="at-p-num">'+esc(t)+'</span>'+
+    '<span class="at-p-role">'+(md?'MD':'Server')+'</span>'+
+    '<button class="at-p-x" onclick="atClose()" aria-label="Close">✕</button></div>';
+
+  /* a pending server flag is the first thing an MD should see */
+  if(r&&r.flag&&!r.flagAck){
+    h+='<div class="at-flagbar at-f-'+AT_FLAG[r.flag].c+'"><b>'+esc(AT_FLAG[r.flag].l)+'</b>'+
+      (r.flagNote?'<span class="at-fn">'+esc(r.flagNote)+'</span>':'')+
+      '<span class="at-meta">'+esc(r.flagBy?String(r.flagBy).split(' ')[0]:'')+' · '+esc(atStamp(r.flagAt))+'</span>';
+    if(md)h+='<button class="at-btn at-go" onclick="atAckFlag(\''+esc(t)+'\')">'+(r.flag==='reset'?'ACK &amp; clear table':'ACK')+'</button>';
+    h+='</div>';
+  }else if(r&&r.flag&&r.flagAck){
+    h+='<div class="at-flagbar at-f-'+AT_FLAG[r.flag].c+' at-done"><b>'+esc(AT_FLAG[r.flag].l)+'</b>'+
+      '<span class="at-meta">'+atSeenLine(r.flagAck,'')+'</span></div>';
+  }
+
+  if(seated){
+    h+='<div class="at-live"><div class="at-live-l">'+
+      '<span class="at-cd big '+atCdCls(atLeft(r))+'" data-cd="'+esc(t)+'">'+esc(atCdText(atLeft(r)))+'</span>'+
+      '<span class="at-meta">out by '+esc(atClock(r.outAt))+'</span></div>'+
+      '<div class="at-live-r">'+atSymbols(r.occ)+
+      (r.covers?'<span class="at-pax">'+esc(r.covers)+' cover'+(r.covers>1?'s':'')+'</span>':'')+'</div></div>';
+    h+='<div class="at-meta at-seatline">seated '+esc(atStamp(r.at))+(r.by?' by '+esc(String(r.by).split(' ')[0]):'')+
+      ' · '+atSeenLine(r.seatAck,'not seen yet')+'</div>';
+    if(r.note)h+='<div class="at-mdnote">'+esc(r.note)+'</div>';
+  }
+
+  if(md){
+    if(!seated){
+      h+='<div class="at-lab">Occasion</div><div class="at-row">'+
+        AT_OCC_ORDER.map(function(k){return '<button class="at-oc'+(atDraft&&atDraft.occ[k]?' on':'')+'" onclick="atToggleOcc(\''+k+'\')">'+AT_OCC[k].s+' '+esc(AT_OCC[k].l)+'</button>';}).join('')+'</div>';
+      h+='<div class="at-row at-step"><span class="at-lab">Covers</span>'+
+        '<button class="at-sb" onclick="atCovers(-1)">−</button><b>'+esc(atDraft?atDraft.covers:2)+'</b><button class="at-sb" onclick="atCovers(1)">+</button></div>';
+      h+='<div class="at-row at-step"><span class="at-lab">Out by</span>'+
+        '<button class="at-sb" onclick="atBump(-15)">−15</button><b>'+esc(atClock(atDraft?atDraft.outAt:0))+'</b><button class="at-sb" onclick="atBump(15)">+15</button>'+
+        '<span class="at-meta">'+esc(atCdText(atDraft?Math.round((atDraft.outAt-Date.now())/60000):null))+' from now</span></div>';
+      h+='<textarea class="at-note" id="at-note-'+key+'" placeholder="Note for the server" oninput="atDraftNote(this.value)">'+esc(atDraft?atDraft.note:'')+'</textarea>';
+      h+='<div class="at-acts"><button class="at-btn at-go" onclick="atSeat(\''+esc(t)+'\')">Seat</button>'+
+        '<button class="at-btn at-cancel" onclick="atClose()">Cancel</button></div>';
+    }else{
+      h+='<div class="at-row at-step"><span class="at-lab">Out by</span>'+
+        '<button class="at-sb" onclick="atAdjust(\''+esc(t)+'\',-15)">−15</button><b>'+esc(atClock(r.outAt))+'</b><button class="at-sb" onclick="atAdjust(\''+esc(t)+'\',15)">+15</button></div>';
+      h+='<textarea class="at-note" id="at-note-'+key+'" placeholder="Note for the server">'+esc(r.note||'')+'</textarea>';
+      h+='<div class="at-acts"><button class="at-btn" onclick="atSaveNote(\''+esc(t)+'\')">Save note</button>'+
+        '<button class="at-btn" onclick="atStartMove(\''+esc(t)+'\')">Move…</button>'+
+        '<button class="at-btn at-cancel" onclick="atUnseat(\''+esc(t)+'\')">Unseat</button></div>';
+    }
+  }else{
+    if(seated&&!r.seatAck){
+      h+='<div class="at-acts"><button class="at-btn at-go" onclick="atAckSeat(\''+esc(t)+'\')">Got it</button></div>';
+    }
+    h+='<div class="at-lab">Tell the MD</div><div class="at-row">'+
+      AT_FLAG_ORDER.map(function(k){return '<button class="at-fl at-f-'+AT_FLAG[k].c+'" onclick="atFlagIt(\''+esc(t)+'\',\''+k+'\')">'+esc(AT_FLAG[k].l)+'</button>';}).join('')+'</div>';
+    h+='<textarea class="at-note" id="at-note-'+key+'" placeholder="Add a note (optional) then tap one above" oninput="atDraftNote(this.value)">'+esc(atDraft?atDraft.note:'')+'</textarea>';
+  }
+
+  if(r&&r.log&&r.log.length){
+    h+='<details class="at-log"><summary>History ('+r.log.length+')</summary>'+
+      r.log.slice().reverse().map(function(e){return '<div class="at-logline"><b>'+esc(atStamp(e.at))+'</b> '+esc(e.what)+(e.by?' · '+esc(String(e.by).split(' ')[0]):'')+'</div>';}).join('')+'</details>';
+  }
+  return h+'</div>';
+}
+function atticPaneHTML(){
+  const order=(SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[];
+  let h='';
+  if(atSyncErr)h+='<div class="at-warn">Live sync is down. What you see is this device only, and nothing you tap will reach the floor. Tell the MD out loud.</div>';
+  h+='<div class="at-bar"><div class="at-roles"><button class="at-rb'+(atIsMD()?' on':'')+'" onclick="atSetRole(\'md\')">MD</button>'+
+    '<button class="at-rb'+(!atIsMD()?' on':'')+'" onclick="atSetRole(\'server\')">Server</button></div>'+
+    '<button class="at-secbtn" onclick="atToggleSecs()">'+esc(atSec)+' <span class="at-caret">'+(atSecOpen?'⌃':'⌄')+'</span></button></div>';
+  if(atSecOpen){
+    h+='<div class="at-secs">'+order.map(function(n){
+      return '<button class="fchip'+(atSec===n?' active':'')+'" onclick="atPickSec(\''+esc(n)+'\')">'+esc(n)+'</button>';}).join('')+'</div>';
+  }
+  if(atMoveFrom)h+='<div class="at-movebar">Moving <b>'+esc(atMoveFrom)+'</b> — tap an open table<button class="at-btn at-cancel" onclick="atCancelMove()">Cancel</button></div>';
+  const tabs=atSecList();
+  h+='<div class="at-grid">'+(tabs.length?tabs.map(atTileHTML).join(''):'<div class="board-empty">No tables mapped for '+esc(atSec)+'.</div>')+'</div>';
+  if(atIsMD())h+=comboUIHTML();
   return h;
 }
-function occChanged(){
-  const sel=$('tbl-occ'), tw=$('tbl-outby');
-  if(!sel||!tw)return;
-  if(sel.value==='outby'){tw.innerHTML=outbyOptionsHTML();tw.style.display='';}
-  else tw.style.display='none';
+
+/* ===== CHAT — one room, everyone on shift, clears with the nightly reset ======
+   Its own collection, one doc per message. A message is never rewritten by
+   anyone but its own sender, so two people typing at once cannot collide. */
+function chatLsGet(){try{return JSON.parse(localStorage.getItem('sf-chat-'+todayISO())||'{}');}catch(e){return {};}}
+function chatLsSet(){try{localStorage.setItem('sf-chat-'+todayISO(),JSON.stringify(CHAT));}catch(e){}}
+function startChatSync(){
+  if(fbReady&&fbDb){
+    if(chatUnsub)chatUnsub();
+    chatUnsub=fbDb.collection('chat').where('date','==',todayISO()).onSnapshot(function(snap){
+      CHAT={}; snap.docs.forEach(function(d){CHAT[d.id]=d.data();});
+      chatLoaded=true; chatSyncErr=false; chatLsSet();
+      if(atSub==='chat'&&$('board')&&$('board').classList.contains('active'))chatMarkSeen();
+      renderBoard();
+    },function(){ chatSyncErr=true; CHAT=chatLsGet(); chatLoaded=false; renderBoard(); });
+  }else{ chatSyncErr=!DEMO; CHAT=chatLsGet(); }
 }
-function occLabel(o){const f=OCCASIONS.find(x=>x[0]===o);return f?f[1]:o;}
-function tableSection(t){
-  const sec=SF.seating&&SF.seating.sections;if(!sec||!sec.map)return null;
-  const key=String(t).trim().toUpperCase();
-  for(const name of sec.order){if((sec.map[name]||[]).some(x=>String(x).toUpperCase()===key))return name;}
-  return null;
+function chatList(){
+  return Object.keys(CHAT).map(function(k){return Object.assign({id:k},CHAT[k]);})
+    .sort(function(a,b){return (a.at||0)-(b.at||0);});   // client sort, no index needed
 }
-/* EDIT a table flag in place — author or manager (added 2026-06-20). */
-let boardEditIdx=-1;
-function canEditTbl(t){return isMgr() || (!!currentUserName() && t && t.by===currentUserName());}
-function editTable(i){boardEditIdx=i;renderBoard();setTimeout(function(){var n=$('te-note');if(n){n.focus();try{n.setSelectionRange(n.value.length,n.value.length);}catch(e){}}},0);}
-function cancelTableEdit(){boardEditIdx=-1;renderBoard();}
-function occChangedEdit(){var sel=$('te-occ'),tw=$('te-outby');if(!sel||!tw)return;
-  if(sel.value==='outby'){if(!tw.innerHTML.trim())tw.innerHTML=outbyOptionsHTML();tw.style.display='';}else tw.style.display='none';}
-function tblEditHTML(t,i){
-  var opts=OCCASIONS.map(function(o){return '<option value="'+o[0]+'"'+(o[0]===t.occasion?' selected':'')+'>'+o[1]+'</option>';}).join('');
-  var isOutby=t.occasion==='outby';
-  var outbyOpts=isOutby?('<option value="'+esc(t.outby||'')+'" selected>'+esc(t.outby||'—')+'</option>'+outbyOptionsHTML()):'';
-  return '<div class="tbl-edit-box"><div class="tbl-input-row">'+
-    '<input class="board-input tbl-num" id="te-num" inputmode="numeric" value="'+esc(t.table)+'">'+
-    '<select class="tbl-occ" id="te-occ" onchange="occChangedEdit()">'+opts+'</select>'+
-    '<select class="tbl-occ" id="te-outby" style="display:'+(isOutby?'':'none')+'">'+outbyOpts+'</select>'+
-    '<input class="board-input tbl-note-in" id="te-note" placeholder="Note" value="'+esc(t.note||'')+'" onkeydown="if(event.key===\'Enter\')saveTableEdit('+i+')">'+
-    '<button class="board-add" onclick="saveTableEdit('+i+')">✓</button>'+
-    '<button class="board-add tbl-edit-cancel" onclick="cancelTableEdit()">✕</button>'+
-    '</div></div>';
+function chatSend(){
+  const el=$('chat-in'); if(!el)return;
+  const v=(el.value||'').trim(); if(!v)return;
+  const id='c'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
+  const doc={date:todayISO(),at:Date.now(),by:currentUserName()||'',role:atRole(),text:v,seen:[]};
+  CHAT[id]=doc; chatLsSet(); el.value='';
+  if(!DEMO&&fbReady&&fbDb)fbDb.collection('chat').doc(id).set(doc).catch(function(){chatSyncErr=true;renderBoard();});
+  renderBoard();
 }
-function saveTableEdit(i){var b=getBoard();if(!(b.tables&&b.tables[i])){boardEditIdx=-1;renderBoard();return;}
-  var t=b.tables[i];
-  if(!canEditTbl(t)){boardEditIdx=-1;renderBoard();return;}
-  var numEl=$('te-num'),num=(numEl?numEl.value:'').trim();
-  if(!num){if(numEl){numEl.classList.add('flash-req');numEl.focus();setTimeout(function(){numEl.classList.remove('flash-req');},1200);}return;}
-  var occ=$('te-occ').value,note=($('te-note').value||'').trim(),outby='';
-  if(occ==='outby'){var o=$('te-outby');outby=o?o.value:'';if(!outby){if(o){o.classList.add('flash-req');setTimeout(function(){o.classList.remove('flash-req');},1200);}return;}}
-  t.table=comboPrimary(num);t.occasion=occ;t.note=note;t.outby=outby;
-  boardEditIdx=-1;persistBoard(b);renderBoard();
-}
-function tblItemHTML(t,i){
-  if(boardEditIdx===i)return tblEditHTML(t,i);
-  // reset/dragging are server→MD flags (MD acks); out-by is MD→server (anyone acks)
-  const isStatus=(t.occasion==='reset'||t.occasion==='dragging');
-  const isOutby=t.occasion==='outby';
-  let glow='';
-  if(!t.ack){
-    if(isStatus)glow=(t.occasion==='reset'?' tbl-glow-g':' tbl-glow-r');
-    else if(isOutby)glow=' tbl-glow-a';
-  }
-  const tagTxt=(t.occasion==='outby'&&t.outby)?('Out by '+t.outby):occLabel(t.occasion);
-  let meta='';
-  if(t.by)meta+='added by '+esc(t.by);
-  if(t.ack){meta+=(meta?' · ':'')+'✓ seen'+(t.ackBy?' by '+esc(String(t.ackBy).split(' ')[0]):'');}
-  let mid=`<span class="tbl-occ-tag occ-${esc(t.occasion)}">${esc(tagTxt)}</span>
-    ${t.note?`<div class="tbl-note">${esc(t.note)}</div>`:''}${meta?`<div class="tbl-by">${meta}</div>`:''}`;
-  let right='';
-  if(!t.ack&&me&&t.by!==currentUserName())right+=`<button class="tbl-ack" onclick="ackTable(${i})">ACK</button>`;
-  if(canEditTbl(t))right+=`<span class="tbl-edit-btn" onclick="editTable(${i})" title="Edit">✎</span>`;
-  right+=`<span class="tbl-x" onclick="rmTable(${i})">✕</span>`;
-  return `<div class="tbl-item${glow}"><span class="tbl-badge">${esc(t.table)}</span>
-    <div class="tbl-mid">${mid}</div>${right}</div>`;
-}
-function ackTable(i){
-  const b=getBoard();if(!(b.tables&&b.tables[i]))return;
-  const t=b.tables[i];
-  if(!(me&&t.by!==currentUserName()))return;   // only acknowledge someone else's flag
-  b.tables[i].ack=true;b.tables[i].ackBy=currentUserName()||'';persistBoard(b);renderBoard();
-}
-function tablesColHTML(items){
-  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Tables Tonight</span>
-    <div class="tbl-input-row">
-      <input class="board-input tbl-num" id="tbl-num" placeholder="Tbl" inputmode="numeric">
-      <select class="tbl-occ" id="tbl-occ" onchange="occChanged()">${OCCASIONS.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}</select><select class="tbl-occ" id="tbl-outby" style="display:none"></select>
-      <input class="board-input tbl-note-in" id="tbl-note" placeholder="Note (e.g. comping dessert)" onkeydown="if(event.key==='Enter')addTable()">
-      <button class="board-add" onclick="addTable()">+</button>
-    </div>`;
-  if(!items.length)return h+`<div class="board-empty">No tables flagged yet.</div></div>`;
-  // group by floor section, preserving each item's original index for removal
-  const groups={};
-  items.forEach((t,i)=>{const s=tableSection(t.table)||'Other';(groups[s]=groups[s]||[]).push({t:t,i:i});});
-  const order=((SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[]).concat(['Other']);
-  order.forEach(secName=>{
-    const g=groups[secName];if(!g||!g.length)return;
-    h+=`<div class="tbl-sec-label">${esc(secName)}</div>`;
-    g.forEach(o=>h+=tblItemHTML(o.t,o.i));
+function chatMarkSeen(){
+  const meN=currentUserName(); if(!meN||DEMO)return;
+  Object.keys(CHAT).forEach(function(k){
+    const m=CHAT[k]; if(!m||m.by===meN)return;
+    const s=m.seen||[]; if(s.indexOf(meN)>=0)return;
+    m.seen=s.concat([meN]);
+    if(fbReady&&fbDb)fbDb.collection('chat').doc(k).set({seen:m.seen},{merge:true}).catch(function(){});
   });
-  return h+`</div>`;
+  chatLsSet();
 }
-function addTable(){const numEl=$('tbl-num'),t=(numEl.value||'').trim();
-  if(!t){if(numEl){numEl.classList.add('flash-req');numEl.focus();setTimeout(()=>numEl.classList.remove('flash-req'),1200);}return;}
-  const occ=$('tbl-occ').value,note=($('tbl-note').value||'').trim();
-  let outby='';
-  if(occ==='outby'){
-    const o=$('tbl-outby');outby=o?o.value:'';
-    if(!outby){if(o){o.classList.add('flash-req');setTimeout(()=>o.classList.remove('flash-req'),1200);}return;}
-  }
-  const b=getBoard();b.tables=b.tables||[];b.tables.push({table:comboPrimary(t),occasion:occ,note:note,by:currentUserName()||'',outby:outby});
-  persistBoard(b);renderBoard();
-  setTimeout(()=>{const x=$('tbl-num');if(x)x.focus();},0);}
-function rmTable(i){const b=getBoard();(b.tables||[]).splice(i,1);persistBoard(b);renderBoard();}
+function chatUnread(){
+  const meN=currentUserName(); if(!meN)return 0;
+  return chatList().filter(function(m){return m.by!==meN&&(m.seen||[]).indexOf(meN)<0;}).length;
+}
+function chatPaneHTML(){
+  const meN=currentUserName(), msgs=chatList();
+  let h='';
+  if(chatSyncErr)h+='<div class="at-warn">Chat is offline. Nothing you send here is reaching anyone else.</div>';
+  h+='<div class="chat-wrap" id="chatWrap">';
+  if(!msgs.length)h+='<div class="board-empty">Nothing tonight yet.</div>';
+  msgs.forEach(function(m){
+    const mine=m.by===meN, seen=(m.seen||[]).filter(function(n){return n!==m.by;});
+    h+='<div class="chat-msg'+(mine?' mine':'')+'">'+
+      '<div class="chat-meta"><b>'+esc(String(m.by||'?').split(' ')[0])+'</b>'+
+      (m.role==='md'?'<span class="chat-role">MD</span>':'')+
+      '<span class="chat-at">'+esc(atStamp(m.at))+'</span></div>'+
+      '<div class="chat-body">'+esc(m.text)+'</div>'+
+      (seen.length?'<div class="chat-seen">✓ seen by '+esc(seen.map(function(n){return String(n).split(' ')[0];}).join(', '))+'</div>'
+        :(mine?'<div class="chat-seen chat-unseen">not seen yet</div>':''))+
+      '</div>';
+  });
+  h+='</div><div class="chat-input-row"><textarea class="chat-in" id="chat-in" rows="1" placeholder="Message the floor…"></textarea>'+
+    '<button class="board-add" onclick="chatSend()">Send</button></div>';
+  return h;
+}
 
 /* MENU-LIVE OVERLAY — manager-posted items that show instantly, baked into the
    canonical JSONs by the 6am run (full Fresh Talk treatment) and cleared. */
@@ -8537,6 +8930,7 @@ function init(){
   buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
   renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderCrew(); renderAccess();
   initPill($('crewTabs'),$('crewPill'),'ct',v=>{crewTab=v;renderCrew();});
+  initPill($('atticTabs'),$('atticPill'),'at',v=>{atSubGo(v);});
   initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';$('ftAllergens').style.display=v==='allergens'?'block':'none';});
   initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{setSchedSide(v);renderSchedule();});
   initPill($('dutyTabs'),$('dutyPill'),'duty',v=>{dutyTab=v;renderDuties();});
