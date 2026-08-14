@@ -12602,12 +12602,12 @@ window.SF = {
     "h": 92,
     "seats": [
      {
-      "n": 2,
-      "p": "t"
-     },
-     {
       "n": 1,
       "p": "b"
+     },
+     {
+      "n": 2,
+      "p": "l"
      }
     ]
    },
@@ -12683,7 +12683,7 @@ window.SF = {
     "seats": [
      {
       "n": 1,
-      "p": "t"
+      "p": "r"
      },
      {
       "n": 2,
@@ -13192,5 +13192,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1786691562"
+ "build": "1786691978"
 };
