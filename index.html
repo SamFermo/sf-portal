@@ -1796,7 +1796,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1786691978';   // stamped by build-data.py at every deploy
+const BUILD='1786692883';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -7603,6 +7603,9 @@ function atCdText(m){if(m==null)return '';
   return m+'m';}
 function atCdCls(m){if(m==null)return '';return m<=10?'at-cd-red':(m<=20?'at-cd-yel':'');}
 function atRoundQuarter(ms){return Math.round(ms/9e5)*9e5;}
+/* the stepper floor has to ROUND UP, not to nearest: rounding to nearest lets the
+   floor land inside the next 15 minutes, so -15 could park an out time 6 minutes away. */
+function atFloorOut(){return Math.ceil((Date.now()+15*60000)/9e5)*9e5;}
 
 /* --- records ---------------------------------------------------------------- */
 function atDocId(t){return todayISO()+'__'+String(comboPrimary(t)).toUpperCase();}
@@ -7732,8 +7735,7 @@ function atClose(){atOpen='';atDraft=null;atMoveFrom='';renderBoard();}
 function atToggleOcc(k){if(!atDraft)return;atDraft.occ[k]=!atDraft.occ[k];renderBoard();}
 function atCovers(d){if(!atDraft)return;atDraft.covers=Math.max(1,Math.min(20,(atDraft.covers||0)+d));renderBoard();}
 function atBump(mins){if(!atDraft)return;
-  const floor=atRoundQuarter(Date.now()+15*60000);
-  atDraft.outAt=Math.max(floor,atRoundQuarter(atDraft.outAt+mins*60000));renderBoard();}
+  atDraft.outAt=Math.max(atFloorOut(),atRoundQuarter(atDraft.outAt+mins*60000));renderBoard();}
 function atDraftNote(v){if(atDraft)atDraft.note=v;}
 function atSeat(t){
   if(!atIsMD()||!atDraft||atDraft.table!==t)return;
@@ -7746,7 +7748,7 @@ function atSeat(t){
 function atAdjust(t,mins){
   if(!atIsMD())return;
   const r=atRec(t); if(!r||r.state!=='seated')return;
-  const next=Math.max(atRoundQuarter(Date.now()+15*60000),atRoundQuarter((r.outAt||Date.now())+mins*60000));
+  const next=Math.max(atFloorOut(),atRoundQuarter((r.outAt||Date.now())+mins*60000));
   atWrite(t,{outAt:next},'out time moved to '+atClock(next));
 }
 function atSaveNote(t){
@@ -7871,7 +7873,9 @@ function atPanelHTML(t){
       (r.covers?'<span class="at-pax">'+esc(r.covers)+' cover'+(r.covers>1?'s':'')+'</span>':'')+'</div></div>';
     h+='<div class="at-meta at-seatline">seated '+esc(atStamp(r.at))+(r.by?' by '+esc(String(r.by).split(' ')[0]):'')+
       ' · '+atSeenLine(r.seatAck,'not seen yet')+'</div>';
-    if(r.note)h+='<div class="at-mdnote">'+esc(r.note)+'</div>';
+    /* the MD gets the note as an editable textarea a few rows down, so showing it
+       twice reads like a bug. The server, who cannot edit it, gets the callout. */
+    if(r.note&&!md)h+='<div class="at-mdnote">'+esc(r.note)+'</div>';
   }
 
   if(md){
