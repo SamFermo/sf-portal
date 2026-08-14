@@ -594,6 +594,98 @@ window.SF = {
         "label": "huckleberry demi-glace — composition not specified"
        }
       ]
+     },
+     {
+      "name": "Farmhouse Primavera",
+      "desc": "Rigatoni, eggplant, bell peppers, heirloom tomatoes, pecorino Romano",
+      "price": "29",
+      "raw": false,
+      "story": "Eggplant, bell peppers, and heirloom tomatoes from the farm are sautéed with garlic, shallot, and red chili flake. Tossed with rigatoni in pomodoro sauce, finished with pecorino Romano and tomato leaf oil.",
+      "ingredients": [
+       {
+        "term": "Rigatoni",
+        "pronunciation": "rig-ah-TOH-nee",
+        "note": "A wide, ridged tube pasta that holds a chunky sauce well. Standard durum-wheat pasta, so it carries gluten."
+       },
+       {
+        "term": "Pecorino Romano",
+        "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
+        "note": "A hard, salty sheep's-milk cheese, grated as a finish. Carries dairy."
+       },
+       {
+        "term": "Pomodoro sauce",
+        "pronunciation": null,
+        "note": "The composition of the pomodoro sauce has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy."
+       },
+       {
+        "term": "Tomato leaf oil",
+        "pronunciation": null,
+        "note": "The composition of the tomato leaf oil has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy."
+       }
+      ],
+      "allergens": [
+       "gluten",
+       "dairy",
+       "allium"
+      ],
+      "canModify": [],
+      "allergenNote": "Gluten: the rigatoni, built in. Dairy: pecorino Romano is a finishing cheese and can be left off on request, but confirm the sauce as well. Allium: garlic and shallot are cooked into the dish. The composition of the pomodoro sauce and tomato leaf oil has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy.",
+      "flags": [
+       {
+        "component": "pomodoro sauce",
+        "riskAllergens": [],
+        "proposedStandard": "",
+        "label": "Pomodoro sauce composition not specified for this prep. Confirm with kitchen before clearing for any allergy."
+       },
+       {
+        "component": "tomato leaf oil",
+        "riskAllergens": [],
+        "proposedStandard": "",
+        "label": "Tomato leaf oil composition not specified for this prep. Confirm with kitchen before clearing for any allergy."
+       }
+      ],
+      "added": "2026-08-14"
+     },
+     {
+      "name": "Salmon Collar",
+      "desc": "Grilled salmon collar with herb and shallot salad",
+      "price": "25",
+      "raw": false,
+      "story": "Salmon collar brushed with a calabrian chili paste and grilled to medium. Served with a fresh herb and shallot salad.",
+      "ingredients": [
+       {
+        "term": "Salmon collar",
+        "pronunciation": null,
+        "note": "The fatty cut just behind the gills and fins, prized for its rich, tender meat and crisp skin. Grilled here to medium. Carries fish."
+       },
+       {
+        "term": "Calabrian chili paste",
+        "pronunciation": null,
+        "note": "The composition of this chili paste has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
+       },
+       {
+        "term": "Herb and shallot salad",
+        "pronunciation": null,
+        "note": "A fresh salad of herbs dressed with shallot alongside the fish. Carries allium from the shallot."
+       }
+      ],
+      "allergens": [
+       "fish",
+       "allium"
+      ],
+      "canModify": [],
+      "allergenNote": "Fish: salmon collar, central to the dish and not removable. Allium: shallot runs through the salad, and the chili paste flags allium risk. The composition of the calabrian chili paste has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially.",
+      "flags": [
+       {
+        "component": "collaboration chili paste",
+        "riskAllergens": [
+         "allium"
+        ],
+        "proposedStandard": "",
+        "label": "Collaboration chili paste — composition unspecified"
+       }
+      ],
+      "added": "2026-08-14"
      }
     ],
     "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
@@ -7151,18 +7243,6 @@ window.SF = {
       ]
      },
      {
-      "name": "Erica",
-      "shifts": [
-       "",
-       "",
-       "",
-       "",
-       "3:30 support",
-       "3:30 support",
-       ""
-      ]
-     },
-     {
       "name": "Jackie",
       "shifts": [
        "3:30 serve",
@@ -7352,18 +7432,6 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       ""
-      ]
-     },
-     {
-      "name": "Erica",
-      "shifts": [
-       "",
-       "",
-       "",
-       "",
-       "3:30 support",
-       "3:30 support",
        ""
       ]
      },
@@ -7561,18 +7629,6 @@ window.SF = {
       ]
      },
      {
-      "name": "Erica",
-      "shifts": [
-       "",
-       "",
-       "",
-       "",
-       "3:30 support",
-       "3:30 support",
-       ""
-      ]
-     },
-     {
       "name": "Jackie",
       "shifts": [
        "3:30 serve",
@@ -7766,18 +7822,6 @@ window.SF = {
       ]
      },
      {
-      "name": "Erica",
-      "shifts": [
-       "",
-       "",
-       "",
-       "",
-       "3:30 support",
-       "3:30 support",
-       ""
-      ]
-     },
-     {
       "name": "Jackie",
       "shifts": [
        "3:30 serve",
@@ -7967,18 +8011,6 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       ""
-      ]
-     },
-     {
-      "name": "Erica",
-      "shifts": [
-       "",
-       "",
-       "",
-       "",
-       "3:30 support",
-       "3:30 support",
        ""
       ]
      },
@@ -13192,5 +13224,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1786696413"
+ "build": "1786713375"
 };
