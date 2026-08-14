@@ -671,6 +671,12 @@ body.tour-on{padding-bottom:230px;}
 .chat-seen{font-size:10.5px; color:#9fcf8c; margin-top:4px;}
 .chat-seen.chat-unseen{color:var(--ink-mute);}
 .chat-input-row{display:flex; gap:8px; align-items:flex-end; margin-top:12px;}
+.chat-send{flex:0 0 auto; height:44px; padding:0 20px; background:rgba(230,200,120,.18);
+  border:1px solid var(--gold); border-radius:11px; color:var(--gold); font-family:inherit;
+  font-size:13.5px; font-weight:700; letter-spacing:.03em; cursor:pointer;}
+.chat-send:active{background:rgba(230,200,120,.3);}
+.chat-x{background:transparent; border:0; color:var(--ink-mute); font-size:12px; line-height:1;
+  padding:2px 0 2px 8px; cursor:pointer; font-family:inherit;}
 .chat-in{flex:1; box-sizing:border-box; min-height:44px; max-height:130px; resize:vertical;
   background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); border-radius:11px;
   color:var(--ink); padding:11px 12px; font-family:inherit; font-size:14px; line-height:1.4;}
@@ -681,25 +687,13 @@ body.tour-on{padding-bottom:230px;}
 .tpick-ref{border-style:dashed;}
 .tpick-ref.on{background:#6db657; border-color:#6db657; color:#0e1a0c;}
 .tpick-label{font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-mute); margin:8px 0 4px;}
-/* crew board */
-.crew-cat{font-size:9.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; border-radius:999px; padding:2px 8px; white-space:nowrap;}
-.cc-heads{background:rgba(176,74,26,.18); color:#eba887; border:1px solid rgba(176,74,26,.55);}
-.cc-event{background:rgba(230,200,120,.14); color:#ecd49b; border:1px solid rgba(230,200,120,.45);}
-.cc-shifts{background:rgba(96,140,76,.18); color:#bfe0a8; border:1px solid rgba(96,140,76,.55);}
-.cc-general{background:rgba(205,216,244,.08); color:var(--ink-soft); border:1px solid rgba(205,216,244,.25);}
-.crew-item{display:flex; gap:9px; align-items:flex-start; padding:9px 2px; border-bottom:1px solid rgba(205,216,244,.09);}
-.crew-mid{flex:1; min-width:0;}
-.crew-txt{font-size:13.5px; line-height:1.45;}
-.crew-by{font-size:10.5px; color:var(--ink-mute); margin-top:3px;}
-.crew-pin{cursor:pointer; font-size:14px; opacity:.55;}
-.crew-pin.on{opacity:1; color:var(--gold);}
-.crew-row{display:flex; gap:7px; margin:8px 0 4px;}
-.crew-row select{background:rgba(205,216,244,.07); border:1px solid rgba(205,216,244,.22); color:var(--ink); border-radius:9px; padding:7px 8px; font-size:12.5px; font-family:inherit;}
 .pill .pl{font-variant:small-caps; opacity:.7; margin-right:3px;}
 .st-good{background:#d6e6c4; color:#3d6325;} .st-warn{background:#f1e0bd; color:#8a5a18;}
 .st-alarm{background:#f2d2c7; color:#a8311e;} .st-info{background:#ded7c6; color:#5a4d3c;}
 .comp-cred{font-size:11px; color:var(--card-soft); grid-column:1/-1; margin:-2px 0 0;}
 .comp-cred b{color:var(--wood);}
+.comp-past{background:rgba(212,101,74,.15); border:1px solid rgba(212,101,74,.5); color:#f0c3b4;
+  border-radius:10px; padding:9px 12px; font-size:12.5px; margin:0 0 12px;}
 .comp-upload-note{font-size:11.5px; color:var(--card-soft); line-height:1.45; margin:0 0 12px;}
 /* per-employee cert badge (Standards card/chip/subtab) */
 .cert-badge{display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px; padding:0 4px; border-radius:999px; font-size:10px; font-weight:800; line-height:1; color:#fff; margin-left:6px; vertical-align:middle;}
@@ -1610,11 +1604,20 @@ body.locked{overflow:hidden;}
   <div class="legend" id="schedLegend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off · <b>Open</b> row = shifts we still need covered — tap one to claim it (Sam confirms the final schedule) · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
 </section>
 
+<section class="view" id="compliance">
+  <div class="view-head"><p class="view-eyebrow">Cards</p><h2 class="view-title">Compliance</h2>
+    <p class="view-sub" id="compSub"></p>
+    <div class="subtabs-wrap"><div class="subtabs" id="compTabs"><span class="subpill" id="compPill"></span>
+      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button></div></div>
+  </div>
+  <div id="compBody"></div>
+</section>
+
 <section class="view" id="standards">
   <div class="view-head"><p class="view-eyebrow">FOH</p><h2 class="view-title">Standards</h2>
-    <p class="view-sub">The room, daily duties, certifications, and steps of service.</p></div>
+    <p class="view-sub">The room, daily duties, and steps of service.</p></div>
   <div class="subtabs-wrap"><div class="subtabs" id="stdTabs"><span class="subpill" id="stdPill"></span>
-    <button class="subtab active" data-std="seating">Seating</button><button class="subtab" data-std="duties">Duties</button><button class="subtab" data-std="compliance">Compliance</button><button class="subtab" data-std="service">Service</button></div></div>
+    <button class="subtab active" data-std="seating">Seating</button><button class="subtab" data-std="duties">Duties</button><button class="subtab" data-std="service">Service</button></div></div>
 
   <div class="std-pane" id="std-seating">
     <div id="seatBody"></div>
@@ -1625,13 +1628,6 @@ body.locked{overflow:hidden;}
     <div class="subtabs-wrap"><div class="subtabs" id="dutyTabs"><span class="subpill" id="dutyPill"></span>
       <button class="subtab active" data-duty="opening">Opening</button><button class="subtab" data-duty="closing">Closing</button><button class="subtab" data-duty="sidework">Sidework</button></div></div>
     <div id="dutyBody"></div>
-  </div>
-
-  <div class="std-pane" id="std-compliance" style="display:none">
-    <p class="view-sub" id="compSub"></p>
-    <div class="subtabs-wrap"><div class="subtabs" id="compTabs"><span class="subpill" id="compPill"></span>
-      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button></div></div>
-    <div id="compBody"></div>
   </div>
 
   <div class="std-pane" id="std-service" style="display:none">
@@ -1682,17 +1678,6 @@ body.locked{overflow:hidden;}
     <p class="view-sub">Standing verbals, the 86 list, and tonight's specials.</p>
   </div>
   <div id="verbalsBody"></div>
-</section>
-
-<section class="view" id="crew">
-  <div class="view-head"><p class="view-eyebrow">The Crew</p><h2 class="view-title">Crew Board</h2>
-    <p class="view-sub">From the team, for the team. Tonight clears with the 3am reset; the pinboard keeps.</p>
-    <div class="subtabs" id="crewTabs"><span class="subpill" id="crewPill"></span>
-      <button class="subtab active" data-ct="tonight">Tonight</button>
-      <button class="subtab" data-ct="pin">Pinboard</button>
-    </div>
-  </div>
-  <div id="crewBody"></div>
 </section>
 
 <section class="view" id="access">
@@ -1796,7 +1781,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1786692883';   // stamped by build-data.py at every deploy
+const BUILD='1786694070';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1842,7 +1827,7 @@ function makeStars(){
   sky.innerHTML=h;
 }
 
-const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','The Attic'],['schedule','Schedule'],['crew','Crew Board'],['standards','Standards'],['directory','Directory']];
+const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','The Attic'],['schedule','Schedule'],['compliance','Compliance'],['standards','Standards'],['directory','Directory']];
 function navTabs(){
   // Investors see the numbers and the menu those numbers came from. No ordering, tables,
   // verbals, schedule, directory, standards, crew board, front desk or day sheet.
@@ -1869,10 +1854,10 @@ function go(id){
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
   if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender();
-  if(id==='standards'){showStdPane(stdTab);markStandardsSeen();}
+  if(id==='standards')showStdPane(stdTab);
+  if(id==='compliance'){renderCompliance();markComplianceSeen();}
   if(id==='fresh')markFreshSeen();
   if(id==='verbals')markVerbalsSeen();
-  if(id==='crew')markCrewSeen();
   if(id==='board'&&atSub==='chat')chatMarkSeen();
   if(id==='orders')markOrdersSeen();
   if(id==='today')markCalloffSeen();
@@ -1958,8 +1943,8 @@ function renderHome(){
       + freshCardHTML() + verbalsCardHTML();
   const std=[['board','⌗','The Attic','Seat, time & flag tonight\'s tables'],
     ['schedule','◷','Schedule','This week + the month'],
-    ['crew','⚑','Crew Board','Events · shifts · heads up'],
-    ['standards','▦','Standards','Room, duties, certs & service'],
+    ['compliance','✓','Compliance','FWC & MAST cards, yours and the roster'],
+    ['standards','▦','Standards','Room, duties & steps of service'],
     ['directory','✉','Directory','The team & contacts']];
   if(mgr) std.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);   // sits beside Directory
   // Investors get Recap + Fresh Talk only. The standard card block and Farm Order are staff surfaces.
@@ -2277,7 +2262,7 @@ const TOUR_COPY={
   verbals:{t:'Verbals',b:'Standing verbals, the 86 list, and tonight\'s specials. Read this before every service. If something got 86\'d an hour ago, this is where it shows up first.'},
   board:{t:'The Attic',b:'Tonight\'s tables upstairs. Tap a table to open it: the MD seats it with a turn time and any occasion, the server acknowledges and flags anything that needs the MD. Chat is the same room, in words. Other sections are one tap behind the section button.'},
   schedule:{t:'Schedule',b:'This week and the month ahead, front and back of house. Time off requests go in here too, under the Time Off tab, and you can see where they stand.'},
-  crew:{t:'Crew Board',b:'From the team, for the team. Notes posted for tonight clear at the 3am reset; anything pinned to the Pinboard stays.'},
+  compliance:{t:'Compliance',b:'Food worker and MAST cards for the whole roster. Snap a photo of your own card on your row and a manager verifies it. Coming Due is computed from the dates on file, so it is current every time you open it.'},
   standards:{t:'Standards',b:'How we do things: daily duties, steps of service, sidework and closing lists. Your food handler card and any other certifications get uploaded and tracked in here as well.',
     boh:'How we do things: daily duties, prep and closing lists, and the room itself. Your food handler card and any other certifications get uploaded and tracked in here, and the app will warn you before one expires.'},
   directory:{t:'Directory',b:'Everyone on the team and how to reach them. You only appear the ways you chose a moment ago, and you can change that anytime by tapping your name up top.'},
@@ -4205,10 +4190,9 @@ function attachZoom(wrap,img){
 /* STANDARDS — one tab housing Seating / Duties / Compliance / Service via a pill switcher. */
 let stdTab='seating';
 function showStdPane(v){
-  ['seating','duties','compliance','service'].forEach(function(k){var p=$('std-'+k);if(p)p.style.display=(k===v)?'':'none';});
+  ['seating','duties','service'].forEach(function(k){var p=$('std-'+k);if(p)p.style.display=(k===v)?'':'none';});
   if(v==='seating')renderSeating();
   else if(v==='duties')renderDuties();
-  else if(v==='compliance')renderCompliance();
   else if(v==='service')renderService();
   requestAnimationFrame(replaceAllPills);
 }
@@ -4329,9 +4313,9 @@ function startComplianceSync(){
     if(compUpUnsub)compUpUnsub();
     compUpUnsub=fbDb.collection('compliance').onSnapshot(function(snap){
       COMP_UP={}; snap.docs.forEach(function(d){COMP_UP[d.id]=d.data();});
-      if($('std-compliance'))renderCompliance();
+      if($('compBody'))renderCompliance();
       if(typeof updateAttn==='function')updateAttn();
-    },function(){ COMP_UP=compLsGet(); if($('std-compliance'))renderCompliance(); });
+    },function(){ COMP_UP=compLsGet(); if($('compBody'))renderCompliance(); });
   } else { COMP_UP=compLsGet(); }
 }
 function compClamp(v,a,b){return Math.max(a,Math.min(b,v));}
@@ -4567,8 +4551,10 @@ function compShowModal(dataUrl,name,cred){
 }
 function compCloseModal(){ const m=$('compModal'); if(m)m.style.display='none'; }
 function compPendingSig(){ return Object.keys(COMP_UP).filter(function(k){return COMP_UP[k]&&COMP_UP[k].status==='pending';}).sort().join(','); }
-function markStandardsSeen(){ attnSet('standards', compPendingSig()); }
-function standardsGlow(){ if(!isMgr())return false; const sig=compPendingSig(); return !!sig && sig!==(attnGet('standards')||''); }
+/* Moved off the Standards key 2026-08-14 when Compliance became its own tab. The old
+   'standards' attn key is simply abandoned, so everyone gets one first-open glow. */
+function markComplianceSeen(){ attnSet('compliance', compPendingSig()); }
+function complianceGlow(){ if(!isMgr())return false; const sig=compPendingSig(); return !!sig && sig!==(attnGet('compliance')||''); }
 function compRowUploadsHTML(p){
   const canUp=compCanUpload(p.name), creds=['FWC','MAST'], chunks=[];
   creds.forEach(function(cred){
@@ -4661,9 +4647,8 @@ function myCertStatus(){
       return;
     }
     if(!c||c.status==='good'||c.status==='info')return;   // valid or N/A — no badge
-    let dm=null;
-    (C.comingDue||[]).forEach(function(d){ if(d.name===me.name&&d.cred===cred){ const x=certDateMatch(d.date); if(x)dm=x; } });
-    if(!dm)dm=certDateMatch(c.text);
+    const dd=compDueDate(cred,me.name,c);   /* same source as the Coming Due list */
+    const dm=dd?{date:dd.date,str:dd.str}:null;
     if(dm){
       const days=Math.round((dm.date-today)/864e5);
       if(days<0)out.pastDue.push({cred:cred,dateStr:dm.str,days:days});
@@ -4684,7 +4669,7 @@ function stdBadge(){
 }
 function dismissCertSoon(){
   try{localStorage.setItem(certDismissKey(),certSoonSig(myCertStatus()));}catch(e){}
-  updateStdBadges(); if($('std-compliance'))renderCompliance();
+  updateStdBadges(); if($('compBody'))renderCompliance();
 }
 function applyCertBadge(el,state,corner){
   if(!el)return;
@@ -4698,9 +4683,9 @@ function applyCertBadge(el,state,corner){
 function updateStdBadges(){
   try{
     const st=stdBadge();
-    applyCertBadge(document.querySelector('.home-card[data-card="standards"]'),st,true);
-    applyCertBadge(document.querySelector('#navChips .chip[data-go="standards"]'),st,false);
-    applyCertBadge(document.querySelector('#stdTabs .subtab[data-std="compliance"]'),st,false);
+    applyCertBadge(document.querySelector('.home-card[data-card="compliance"]'),st,true);
+    applyCertBadge(document.querySelector('#navChips .chip[data-go="compliance"]'),st,false);
+    applyCertBadge(document.querySelector('#compTabs .subtab[data-comp="due"]'),st,false);
   }catch(e){}
 }
 function certBannerHTML(){
@@ -4734,11 +4719,64 @@ function compWithExtras(){
   ['foh','boh'].forEach(function(k){ out[k].sort(function(a,b){ return a.name.localeCompare(b.name); }); });
   return out;
 }
+/* COMING DUE — computed on every render from the dates already on the roster.
+   The baked `comingDue` block in compliance.json was written by hand on 19 May and
+   still read "30 days · alarm" for a card that expired 18 June, so by mid-August it
+   was reporting a two-month-expired card as merely approaching. It was also FWC only.
+   Nothing reads that block any more; the JSON key is left in place because the
+   compliance-intake skill still writes to it. A verified Firestore upload beats the
+   roster text, the same precedence the status pills use. */
+const COMP_DUE_HORIZON=275;   /* about nine months */
+function compDueDate(cred,name,obj){
+  const rec=compVerifiedRec(cred,name);
+  if(rec&&rec.expires){const d=compExpDate(rec.expires); if(d)return {date:d,str:compNiceDate(rec.expires)};}
+  if(!obj)return null;
+  const m=certDateMatch(obj.text);
+  return m?{date:m.date,str:m.str}:null;
+}
+function compDueList(){
+  const R=compWithExtras(), t=new Date(); t.setHours(0,0,0,0);
+  const due=[], undated=[];
+  [['foh','FOH'],['boh','BOH']].forEach(function(pair){
+    (R[pair[0]]||[]).forEach(function(p){
+      [['FWC',p.fwc],['MAST',p.mast]].forEach(function(c){
+        const cred=c[0], obj=c[1];
+        if(!obj&&!compVerifiedRec(cred,p.name))return;   /* credential does not apply to this person */
+        const area=pair[1]+' · '+(p.role||'Staff');
+        const d=compDueDate(cred,p.name,obj);
+        if(!d){
+          /* flagged but carrying no parseable date — surfaced rather than dropped */
+          if(obj&&(obj.status==='warn'||obj.status==='alarm'))undated.push({name:p.name,cred:cred,area:area,text:obj.text||''});
+          return;
+        }
+        const days=Math.round((d.date-t)/864e5);
+        if(days>COMP_DUE_HORIZON)return;
+        due.push({name:p.name,cred:cred,area:area,date:d.str,days:days,
+          urgency:(days<=30)?'alarm':(days<=120?'warn':'info'),
+          window:(days<0)?(Math.abs(days)+(Math.abs(days)===1?' day':' days')+' ago'):(days===0?'today':days+(days===1?' day':' days'))});
+      });
+    });
+  });
+  due.sort(function(a,b){return a.days-b.days;});
+  undated.sort(function(a,b){return a.name.localeCompare(b.name);});
+  return {due:due, undated:undated};
+}
 function renderCompliance(){const C=SF.compliance, R=compWithExtras();
-  $('compSub').textContent=`Updated ${fmtShort(C.updated)} · ${R.foh.length+R.boh.length} active · FWC & MAST`;
-  if(compTab==='due'){let h=`<p class="view-sub" style="margin-bottom:14px;">Cards expiring in the next nine months. Renewal means re-taking the class.</p><div class="comp-card">`;
-    C.comingDue.forEach(d=>h+=`<div class="due-row"><span class="pill st-${d.urgency==='info'?'info':d.urgency}">${esc(d.window)}</span><div><span class="comp-name">${esc(d.name)}</span> <span class="comp-role">${esc(d.cred)} · ${esc(d.area)}</span></div><span class="due-when">${esc(d.date)}</span></div>`);
-    $('compBody').innerHTML=h+`</div>`;return;}
+  $('compSub').textContent=`Roster as of ${fmtShort(C.updated)} · ${R.foh.length+R.boh.length} active · FWC & MAST`;
+  if(compTab==='due'){
+    const L=compDueList(), past=L.due.filter(function(d){return d.days<0;});
+    let h=`<p class="view-sub" style="margin-bottom:14px;">Read live off the dates on file, FWC and MAST, out to nine months. Renewal means re-taking the class.</p>`;
+    if(past.length)h+=`<div class="comp-past">${past.length} card${past.length>1?'s are':' is'} already past the date on file.</div>`;
+    h+=`<div class="comp-card">`;
+    if(!L.due.length)h+=`<div class="board-empty">Nothing due in the next nine months.</div>`;
+    L.due.forEach(d=>h+=`<div class="due-row"><span class="pill st-${d.urgency}">${esc(d.window)}</span><div><span class="comp-name">${esc(d.name)}</span> <span class="comp-role">${esc(d.cred)} · ${esc(d.area)}</span></div><span class="due-when">${esc(d.date)}</span></div>`);
+    h+=`</div>`;
+    if(L.undated.length){
+      h+=`<div class="section-label">Flagged, no date on file</div><div class="comp-card">`;
+      L.undated.forEach(d=>h+=`<div class="due-row"><span class="pill st-warn">no date</span><div><span class="comp-name">${esc(d.name)}</span> <span class="comp-role">${esc(d.cred)} · ${esc(d.area)}</span></div><span class="due-when">${esc(d.text)}</span></div>`);
+      h+=`</div>`;
+    }
+    $('compBody').innerHTML=h; updateStdBadges(); return;}
   let h=certBannerHTML();
   h+=`<a class="binder-link" href="${esc(C.binderUrl)}" target="_blank" rel="noopener">Open Card Binder PDF ›</a><p class="board-note">${esc(C.note)}</p>`;
   h+=`<p class="comp-upload-note">📷 Snap a photo of your own FWC or MAST card on your row below to add it to the binder — a manager verifies it.${isMgr()?' Managers can upload on anyone’s row and tap Verify.':''}</p>`;
@@ -5495,14 +5533,6 @@ function tablesGlow(){
   return Object.keys(ATBL).some(function(k){return atNeedsMe(ATBL[k]);});
 }
 
-/* --- Crew Board: live posts (not mine) newer than the last time I opened it --- */
-function crewMaxAt(){ const me0=currentUserName(), now=Date.now(), cutoff=now-30*864e5, today=todayISO(); let mx=0;
-  Object.keys(CREW||{}).forEach(k=>{const p=CREW[k]; if(!p||p.by===me0)return;
-    const live=p.kind==='tonight'?(p.day===today):(p.pinned||p.at>cutoff);
-    if(live&&p.at>mx)mx=p.at;}); return mx; }
-function markCrewSeen(){ attnSet('crew', crewMaxAt()); }
-function crewGlow(){ const mx=crewMaxAt(); return mx>0 && mx>(attnGet('crew')||0); }
-
 /* --- Farm Order (manager): change detector for Kelly's responses + availability --- */
 function ordStable(o){ if(Array.isArray(o))return '['+o.map(ordStable).join(',')+']'; if(o&&typeof o==='object')return '{'+Object.keys(o).sort().map(function(k){return JSON.stringify(k)+':'+ordStable(o[k]);}).join(',')+'}'; return JSON.stringify(o); }
 function ordFarmSig(){
@@ -5546,8 +5576,7 @@ function updateAttn(){
     setCardAttn('fresh', mliveLoaded && freshUnseen().length>0);
     setCardAttn('verbals', verbalsGlow());
     setCardAttn('board', tablesGlow());
-    setCardAttn('crew', crewGlow());
-    setCardAttn('standards', standardsGlow());
+    setCardAttn('compliance', complianceGlow());
     if(isMgr())setCardAttn('orders', ordGlow());
     setCardAttnRed('today', calloffGlow());
     updateStdBadges();
@@ -7312,8 +7341,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startMenuPubSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startMenuPubSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -7970,6 +7999,14 @@ function chatMarkSeen(){
   });
   chatLsSet();
 }
+/* Your own words, or an MD clearing anything. A wrong 86 should not sit up all
+   night waiting for whoever typed it to come back to their phone. */
+function chatCanDelete(m){const meN=currentUserName();return !!meN&&!!m&&(m.by===meN||atIsMD());}
+function chatDelete(id){
+  const m=CHAT[id]; if(!chatCanDelete(m))return;
+  delete CHAT[id]; chatLsSet(); renderBoard();
+  if(!DEMO&&fbReady&&fbDb)fbDb.collection('chat').doc(id).delete().catch(function(){chatSyncErr=true;renderBoard();});
+}
 function chatUnread(){
   const meN=currentUserName(); if(!meN)return 0;
   return chatList().filter(function(m){return m.by!==meN&&(m.seen||[]).indexOf(meN)<0;}).length;
@@ -7985,14 +8022,15 @@ function chatPaneHTML(){
     h+='<div class="chat-msg'+(mine?' mine':'')+'">'+
       '<div class="chat-meta"><b>'+esc(String(m.by||'?').split(' ')[0])+'</b>'+
       (m.role==='md'?'<span class="chat-role">MD</span>':'')+
-      '<span class="chat-at">'+esc(atStamp(m.at))+'</span></div>'+
+      '<span class="chat-at">'+esc(atStamp(m.at))+'</span>'+
+      (chatCanDelete(m)?'<button class="chat-x" onclick="chatDelete(\''+esc(m.id)+'\')" aria-label="Delete">✕</button>':'')+'</div>'+
       '<div class="chat-body">'+esc(m.text)+'</div>'+
       (seen.length?'<div class="chat-seen">✓ seen by '+esc(seen.map(function(n){return String(n).split(' ')[0];}).join(', '))+'</div>'
         :(mine?'<div class="chat-seen chat-unseen">not seen yet</div>':''))+
       '</div>';
   });
   h+='</div><div class="chat-input-row"><textarea class="chat-in" id="chat-in" rows="1" placeholder="Message the floor…"></textarea>'+
-    '<button class="board-add" onclick="chatSend()">Send</button></div>';
+    '<button class="chat-send" onclick="chatSend()">Send</button></div>';
   return h;
 }
 
@@ -8504,29 +8542,11 @@ function cfCommit(){
   cfClose();
 }
 
-/* CREW BOARD — staff message board, Firestore `crew` collection.
-   Tonight posts are day-keyed and stop showing after the 3am reset rolls the date.
-   Pinboard posts show for 30 days, longer if a manager pins them. Author or admin deletes. */
-const CREW_CATS=[['heads','Heads up'],['event','Event'],['shifts','Shifts wanted'],['general','General']];
-let CREW={}, crewUnsub=null, crewTab='tonight', crewLive=false;
-function crewLsGet(){try{return JSON.parse(localStorage.getItem('sf-crew')||'{}');}catch(e){return {};}}
-function crewLsSet(){try{localStorage.setItem('sf-crew',JSON.stringify(CREW));}catch(e){}}
-function startCrewSync(){
-  if(fbReady&&fbDb){
-    if(crewUnsub)crewUnsub();
-    crewUnsub=fbDb.collection('crew').onSnapshot(function(snap){
-      CREW={};snap.docs.forEach(function(d){CREW[d.id]=d.data();});crewLive=true;renderCrew();
-    },function(){ crewLive=false;CREW=crewLsGet();renderCrew(); });
-  }else{ crewLive=false;CREW=crewLsGet(); }
-}
-function catChip(c){const f=CREW_CATS.find(x=>x[0]===c);return `<span class="crew-cat cc-${esc(c)}">${esc(f?f[1]:c)}</span>`;}
+/* Crew Board was removed 2026-08-14. Its `crew` collection was empty, zero posts and
+   nothing pinned, so nothing was lost. This timestamp formatter outlived it: the
+   menu-live cards and the published-menu stamp both call it. */
 function crewWhen(at){const d=new Date(at);return `${MON[d.getMonth()]} ${d.getDate()}, ${d.getHours()%12||12}:${String(d.getMinutes()).padStart(2,'0')}${d.getHours()<12?'am':'pm'}`;}
-function crewPosts(){
-  const now=Date.now(), cutoff=now-30*86400000, today=todayISO();
-  return Object.keys(CREW).map(k=>Object.assign({id:k},CREW[k]))
-    .filter(p=>crewTab==='tonight' ? (p.kind==='tonight'&&p.day===today) : (p.kind==='pin'&&(p.pinned||p.at>cutoff)))
-    .sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||b.at-a.at);
-}
+
 /* ===== FARM ORDER — Swan House order loop, Phase 1 v0 (sms-announce mode) =====
    Availability feed: published to the seasonal-tracker Pages repo by the Neelix
    morning sweep (same origin, plain fetch). Orders save to localStorage as the
@@ -8879,61 +8899,15 @@ function ordRenderComposerPane(){
   return h;
 }
 
-function renderCrew(){
-  const liveNote=crewLive?`<span style="color:#bfe0a8">● live</span> — shared across every device.`
-    :`<span style="color:var(--gold)">device-only</span> — live sync needs the crew rule published in Firebase.`;
-  let h=`<p class="board-note">Post it here instead of hoping word gets around. ${liveNote}</p>
-    <div class="board-col"><span class="board-title">${crewTab==='tonight'?'Tonight':'Pinboard'}</span>
-    <div class="crew-row">
-      <select id="crew-cat">${CREW_CATS.map(c=>`<option value="${c[0]}">${c[1]}</option>`).join('')}</select>
-      <input class="board-input" id="crew-in" placeholder="${crewTab==='tonight'?'What does the crew need to know tonight?':'Post for the long haul…'}" onkeydown="if(event.key==='Enter')addCrew()" style="flex:1">
-      <button class="board-add" onclick="addCrew()">+</button>
-    </div>`;
-  const posts=crewPosts();
-  if(!posts.length)h+=`<div class="board-empty">${crewTab==='tonight'?'Nothing yet tonight.':'Nothing on the pinboard.'}</div>`;
-  posts.forEach(p=>{
-    const mine=p.by===currentUserName();
-    h+=`<div class="crew-item">${catChip(p.cat)}<div class="crew-mid"><div class="crew-txt">${esc(p.text)}</div>
-      <div class="crew-by">${esc(p.by||'someone')} · ${crewWhen(p.at)}${p.pinned?' · pinned':''}</div></div>`;
-    if(crewTab==='pin'&&isAdmin())h+=`<span class="crew-pin${p.pinned?' on':''}" title="Pin" onclick="pinCrew('${p.id}')">${p.pinned?'★':'☆'}</span>`;
-    if(mine||isAdmin())h+=`<span class="tbl-x" onclick="rmCrew('${p.id}')">✕</span>`;
-    h+=`</div>`;});
-  $('crewBody').innerHTML=h+`</div>`;
-  if($('crew')&&$('crew').classList.contains('active'))markCrewSeen();
-  if(typeof updateAttn==='function')updateAttn();
-}
-function addCrew(){
-  if(!me){openLogin();return;}
-  const inp=$('crew-in'),v=(inp.value||'').trim();if(!v)return;
-  const at=Date.now(), id=todayISO()+'_'+at+'_'+Math.random().toString(36).slice(2,7);
-  const rec={text:v,cat:$('crew-cat').value,by:currentUserName(),at:at,day:todayISO(),kind:crewTab==='tonight'?'tonight':'pin',pinned:false};
-  CREW[id]=rec;renderCrew();
-  if(!DEMO){ if(fbReady&&fbDb){ fbDb.collection('crew').doc(id).set(rec).catch(function(){crewLsSet();}); } else crewLsSet(); }
-  setTimeout(function(){const x=$('crew-in');if(x)x.focus();},0);
-}
-function rmCrew(id){
-  const p=CREW[id];if(!p)return;
-  if(!(isAdmin()||p.by===currentUserName())){alert('Only '+String(p.by).split(' ')[0]+' or a manager can remove this.');return;}
-  delete CREW[id];renderCrew();
-  if(!DEMO){ if(fbReady&&fbDb){ fbDb.collection('crew').doc(id).delete().catch(function(){crewLsSet();}); } else crewLsSet(); }
-}
-function pinCrew(id){
-  if(!isAdmin())return;
-  const p=CREW[id];if(!p)return;
-  p.pinned=!p.pinned;renderCrew();
-  if(fbReady&&fbDb){ fbDb.collection('crew').doc(id).set(p).catch(function(){crewLsSet();}); } else crewLsSet();
-}
-
 /* INIT */
 function init(){
   initFirebase();
-  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startCrewSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); }
+  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); }
   document.body.classList.add('locked'); openLogin();   // start gated; unlocks once the session checks out
   setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='failed'; onProfiles(); } },9000);
   $('appDate').textContent=fmtShort(todayISO());
   buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
-  renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderCrew(); renderAccess();
-  initPill($('crewTabs'),$('crewPill'),'ct',v=>{crewTab=v;renderCrew();});
+  renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderAccess();
   initPill($('atticTabs'),$('atticPill'),'at',v=>{atSubGo(v);});
   initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';$('ftAllergens').style.display=v==='allergens'?'block':'none';});
   initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{setSchedSide(v);renderSchedule();});
