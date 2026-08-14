@@ -615,8 +615,14 @@ body.tour-on{padding-bottom:230px;}
 .at-p-x{margin-left:auto; background:transparent; border:0; color:var(--ink-mute); font-size:17px; cursor:pointer;}
 .at-lab{font-size:10.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
   color:var(--ink-mute); margin:11px 0 6px;}
-.at-row{display:flex; flex-wrap:wrap; align-items:center; gap:7px;}
-.at-row .at-lab{margin:0; min-width:56px;}
+.at-row{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:0 0 12px;}
+.at-row:last-child{margin-bottom:0;}
+.at-row .at-lab{margin:0; min-width:58px; flex:0 0 auto;}
+.at-row.at-step{gap:8px;}
+.at-row.at-step .at-meta{flex:1 1 100%;}   /* the 'x from now' note wraps instead of squeezing the stepper */
+.at-tile.at-open{border-color:var(--gold) !important; border-width:2.5px; background:rgba(230,200,120,.16);}
+.at-tile.at-open .at-num{color:var(--gold);}
+.at-tile.at-open .at-sub,.at-tile.at-open .at-cd{color:var(--gold);}
 .at-oc,.at-fl{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); color:var(--ink-soft);
   border-radius:999px; padding:7px 12px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;}
 .at-oc.on{background:rgba(230,200,120,.18); border-color:var(--gold); color:var(--gold);}
@@ -1781,7 +1787,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1786694070';   // stamped by build-data.py at every deploy
+const BUILD='1786696413';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -7510,7 +7516,7 @@ function renderBoard(){const b=getBoard();
      never applied to this tab. Removed 2026-08-14 along with the add-a-note bar. */
   if($('boardBody')){ const _ui=atCaptureUI();
     $('boardBody').innerHTML=(atSub==='chat')?chatPaneHTML():atticPaneHTML();
-    atRestoreUI(_ui); }
+    atRestoreUI(_ui); atPlacePanel(); }
   $('verbalsBody').innerHTML=`<p class="board-note">Verbals are built by a lead in Day at a Glance and persist until changed; specials below clear nightly. ${live}</p>`+
     verbalsViewHTML()+col('Specials','board-sp',b.specials||[],'specials');
   if($('verbals')&&$('verbals').classList.contains('active'))markVerbalsSeen();   // viewing the tab = seeing the items
@@ -7728,6 +7734,7 @@ function atChimeCheck(prev,next){
        note mid-sentence, so the tick touches only the countdown nodes. -------- */
 function atStartTick(){
   if(atTimer)return;
+  window.addEventListener('resize',function(){atPlacePanel();});
   atTimer=setInterval(atTickCds,15000);
   document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')atTickCds();});
 }
@@ -7754,7 +7761,10 @@ function atTap(t){
     atOpen=t;
     const r=atRec(t);
     atDraft={table:t, occ:{}, covers:(r&&r.covers)||2,
-      outAt:(r&&r.state==='seated'&&r.outAt)?r.outAt:atRoundQuarter(Date.now()+AT_DEFAULT_MIN*60000),
+      /* exact tap + 2h. Rounding the default hid what the clock actually said; the
+         stepper is where quarter hours get imposed. Reopening an unseated table
+         builds a fresh draft, so the two hours restart from the new tap. */
+      outAt:(r&&r.state==='seated'&&r.outAt)?r.outAt:(Date.now()+AT_DEFAULT_MIN*60000),
       note:''};
     if(r&&r.state==='seated')(r.occ||[]).forEach(function(k){atDraft.occ[k]=true;});
   }
@@ -7763,8 +7773,13 @@ function atTap(t){
 function atClose(){atOpen='';atDraft=null;atMoveFrom='';renderBoard();}
 function atToggleOcc(k){if(!atDraft)return;atDraft.occ[k]=!atDraft.occ[k];renderBoard();}
 function atCovers(d){if(!atDraft)return;atDraft.covers=Math.max(1,Math.min(20,(atDraft.covers||0)+d));renderBoard();}
+/* Off an odd minute, the first press snaps to a quarter hour in the direction pressed:
+   +15 from 8:37 gives 8:45, never 8:30. On the grid it steps a clean 15. */
+function atStep(cur,mins){const q=9e5;
+  if(cur%q===0)return cur+mins*60000;
+  return mins>0?Math.ceil(cur/q)*q:Math.floor(cur/q)*q;}
 function atBump(mins){if(!atDraft)return;
-  atDraft.outAt=Math.max(atFloorOut(),atRoundQuarter(atDraft.outAt+mins*60000));renderBoard();}
+  atDraft.outAt=Math.max(atFloorOut(),atStep(atDraft.outAt,mins));renderBoard();}
 function atDraftNote(v){if(atDraft)atDraft.note=v;}
 function atSeat(t){
   if(!atIsMD()||!atDraft||atDraft.table!==t)return;
@@ -7777,7 +7792,7 @@ function atSeat(t){
 function atAdjust(t,mins){
   if(!atIsMD())return;
   const r=atRec(t); if(!r||r.state!=='seated')return;
-  const next=Math.max(atFloorOut(),atRoundQuarter((r.outAt||Date.now())+mins*60000));
+  const next=Math.max(atFloorOut(),atStep(r.outAt||Date.now(),mins));
   atWrite(t,{outAt:next},'out time moved to '+atClock(next));
 }
 function atSaveNote(t){
@@ -7861,8 +7876,10 @@ function atSeenLine(a,lab){
 }
 function atTileHTML(t){
   const r=atRec(t), seated=!!(r&&r.state==='seated'), m=atLeft(r), g=atGlow(r), key=String(t).replace(/\W/g,'');
-  if(atOpen===t)return atPanelHTML(t);
-  let cls='at-tile'+(seated?' at-on':'')+(g?' at-glow-'+g:'')+(atMoveFrom&&!seated?' at-target':'');
+
+  /* the open table keeps its slot and goes gold. Swapping the button out for the panel
+     made the whole grid jump under your thumb mid-tap. */
+  let cls='at-tile'+(seated?' at-on':'')+(g?' at-glow-'+g:'')+(atMoveFrom&&!seated?' at-target':'')+(atOpen===t?' at-open':'');
   if(m!=null){if(m<=10)cls+=' at-hot';else if(m<=20)cls+=' at-warm';}
   let sub='';
   if(seated){
@@ -7942,6 +7959,17 @@ function atPanelHTML(t){
   }
   return h+'</div>';
 }
+/* The panel spans the full grid width, so which row it belongs under depends on how many
+   tiles fit at this screen width. Measure after paint instead of assuming a column count. */
+function atPlacePanel(){
+  const grid=document.querySelector('#boardBody .at-grid'); if(!grid)return;
+  const panel=grid.querySelector('.at-panel'); if(!panel)return;
+  grid.appendChild(panel);                        // measure with it out of the way
+  const open=grid.querySelector('.at-tile.at-open'); if(!open)return;
+  const row=open.offsetTop; let last=open;
+  grid.querySelectorAll('.at-tile').forEach(function(t){ if(Math.abs(t.offsetTop-row)<2)last=t; });
+  if(last.nextSibling!==panel)grid.insertBefore(panel,last.nextSibling);
+}
 function atticPaneHTML(){
   const order=(SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[];
   let h='';
@@ -7955,7 +7983,8 @@ function atticPaneHTML(){
   }
   if(atMoveFrom)h+='<div class="at-movebar">Moving <b>'+esc(atMoveFrom)+'</b> — tap an open table<button class="at-btn at-cancel" onclick="atCancelMove()">Cancel</button></div>';
   const tabs=atSecList();
-  h+='<div class="at-grid">'+(tabs.length?tabs.map(atTileHTML).join(''):'<div class="board-empty">No tables mapped for '+esc(atSec)+'.</div>')+'</div>';
+  h+='<div class="at-grid">'+(tabs.length?tabs.map(atTileHTML).join(''):'<div class="board-empty">No tables mapped for '+esc(atSec)+'.</div>')+
+    (atOpen?atPanelHTML(atOpen):'')+'</div>';
   if(atIsMD())h+=comboUIHTML();
   return h;
 }
