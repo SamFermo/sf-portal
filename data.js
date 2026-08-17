@@ -3855,6 +3855,124 @@ window.SF = {
     }
    ],
    "added": "2026-08-12"
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "Vigna del Lauro Sauvignon Blanc, Collio DOC",
+   "vintage": "2024",
+   "region": "Collio, Friuli-Venezia Giulia, Italy",
+   "type": "white",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Sauvignon Blanc",
+   "pour": "An intense, aromatic Collio Sauvignon off the ponca hills of Cormons — passion fruit and melon over sage, cut grass, and white pepper, with a savory, saline mineral edge. Stainless steel, aged on the fine lees; crisp and persistent on the finish.",
+   "producer": "Vigna del Lauro is a family-run Collio project rooted in Cormòns, farming the region's distinctive 'ponca' marl-and-sandstone soils in a savory, Italian counter-style to French Sancerre. Around 13% ABV per importer references — confirm with your lead before quoting.",
+   "winemaking": "100% Sauvignon Blanc, fermented entirely in stainless steel and aged on its fine lees; no oak.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 2,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 4,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Vigna del Lauro",
+     "pron": "VEEN-yah del LOW-roh"
+    },
+    {
+     "term": "Collio",
+     "pron": "KOH-lyoh"
+    },
+    {
+     "term": "Cormòns",
+     "pron": "KOR-mohns"
+    },
+    {
+     "term": "ponca",
+     "pron": "POHN-kah"
+    }
+   ],
+   "added": "2026-08-15"
+  },
+  {
+   "section": "Bubbles",
+   "name": "Apres Sol Brut Rosé NV",
+   "vintage": "",
+   "region": "Ravenna IGT, Emilia-Romagna, Italy",
+   "type": "sparkling",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Longanesi",
+   "pour": "Vibrant salmon-pink with fresh red berries, white flowers, and brioche — fine, creamy bubbles carrying wild strawberry, raspberry, and pink grapefruit to a dry finish. A Charmat-method sparkling from the indigenous Longanesi grape.",
+   "producer": "Randi is a fifth-generation Ravenna estate run by the mother-and-son team of Giovanna and Massimo Randi, specializing in indigenous grapes and organic-in-practice farming.",
+   "winemaking": "Charmat method with native yeast; cool fermentation to preserve freshness, four months on the fine lees for body and toast. Fined with bentonite (volcanic-ash derived) for vegan-friendly clarity. Certified sustainable, organic in practice.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 2,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 4,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Apres Sol",
+     "pron": "ah-PREH SOL"
+    },
+    {
+     "term": "Longanesi",
+     "pron": "lohn-gah-NEH-zee"
+    },
+    {
+     "term": "Randi",
+     "pron": "RAHN-dee"
+    },
+    {
+     "term": "Charmat",
+     "pron": "shar-MAH"
+    }
+   ],
+   "added": "2026-08-15"
   }
  ],
  "bar": {
@@ -13224,5 +13342,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1786713375"
+ "build": "1786957694"
 };
