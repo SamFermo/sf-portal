@@ -1795,7 +1795,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1787094487';   // stamped by build-data.py at every deploy
+const BUILD='1787096498';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -8240,7 +8240,12 @@ function startSpecialsSync(){
   }else{ SPSTATE=spLsGet(); }
 }
 function spSlug(name){return String(name||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-+$/,'');}
-function specialsAll(){return (SF.menu&&SF.menu.specials)||[];}
+/* removed:true on the state doc is a portal-side tombstone — the dish stays in
+   menu.json until the next menu-content session deletes it for real (and clears
+   the state doc), same catch-up convention as promotion. Filtering here, at the
+   single choke point, drops removed specials from every surface at once:
+   the block, the hidden list, lookups, publish, the edit modal. */
+function specialsAll(){return ((SF.menu&&SF.menu.specials)||[]).filter(function(it){var s=SPSTATE[spSlug(it._originalName||it.name)];return !(s&&s.removed);});}
 function spStateOf(it){return SPSTATE[spSlug(it._originalName||it.name)]||null;}
 function spActive(it){var s=spStateOf(it);return !!(s&&s.active);}
 function spPromoted(it){var s=spStateOf(it);return (s&&s.promoted)||null;}
@@ -8272,6 +8277,15 @@ function spDemote(slug){
   if(!confirm('Move "'+(sp?sp.name:slug)+'" back to the Specials block?'))return;
   spWrite(slug,{promoted:null});
 }
+/* Remove lives on the HIDDEN list only — a special has to come off the menu
+   before it can be deleted, so a live card can't be nuked in one tap. */
+function spRemove(slug){
+  if(!isMgr())return;
+  var sp=specialsAll().filter(function(it){return spSlug(it.name)===slug;})[0];
+  if(!sp)return;
+  if(!confirm('Remove "'+sp.name+'" entirely?\n\nIt disappears from this list too. Bringing it back later means re-adding it through a menu update — there is no undo from the portal.'))return;
+  spWrite(slug,{active:false,promoted:null,removed:true});
+}
 function spSectionOpts(){
   var names=(SF.menu.food||[]).map(function(s){return s.section;}).concat(['Dessert']);
   return names.map(function(n){return '<option>'+esc(n)+'</option>';}).join('');
@@ -8301,7 +8315,7 @@ function specialsBlockHTML(){
     h+='<div class="sp-hidden-head">Off the menu right now — managers only</div>';
     hidden.forEach(function(it){
       var slug=spSlug(it.name);
-      h+='<div class="sp-hidden-row"><span class="serif">'+esc(it.name)+'</span><button class="sp-btn" onclick="spSetActive(\''+slug+'\',true)">Put back on</button></div>';
+      h+='<div class="sp-hidden-row"><span class="serif">'+esc(it.name)+'</span><span class="sp-promote"><button class="sp-btn" onclick="spSetActive(\''+slug+'\',true)">Put back on</button><button class="sp-btn" onclick="spRemove(\''+slug+'\')">Remove</button></span></div>';
     });
   }
   return h+'</div>';
