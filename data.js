@@ -11897,10 +11897,13 @@ window.SF = {
      "name": "Joshua Lardizabal",
      "role": "Line Cook",
      "fwc": {
-      "status": "warn",
-      "text": "Needs verify — no card on file yet, collect on next shift (new to roster)"
+      "status": "good",
+      "text": "Valid through Aug 15, 2028"
      },
-     "mast": null
+     "mast": {
+      "status": "good",
+      "text": "Expired Oct 15, 2025 — not required (BOH); revisit if FOH shifts"
+     }
     },
     {
      "name": "Kenji Carskaddan",
@@ -12071,7 +12074,7 @@ window.SF = {
      "role": "Server",
      "fwc": {
       "status": "warn",
-      "text": "Needs verify — no card on file yet, collect on next shift (new to roster)"
+      "text": "Valid through Sep 12, 2026"
      },
      "mast": {
       "status": "warn",
@@ -13342,5 +13345,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1786957694"
+ "build": "1787022569"
 };

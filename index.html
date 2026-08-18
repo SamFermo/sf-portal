@@ -1787,7 +1787,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1786957694';   // stamped by build-data.py at every deploy
+const BUILD='1787022569';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3930,8 +3930,11 @@ function startTimeoffSync(){
 
    Ack lives on the staff profile in Firestore, same shape as noticeAck, so it
    follows a person from their phone to the shared iPad. Acking silences the
-   MODAL. For a note the badge stays until you actually reply, because "I read it"
-   is not the thing being waited on.
+   MODAL and the badge — for notes too (changed 2026-08-17 at Sam's request; the
+   old rule kept a note badged until you replied, which left permanent badges on
+   threads that had resolved themselves offline, e.g. Katie's Aug 6-9 coverage).
+   The safety property lives in the key: a note's ack key embeds the comment
+   timestamp, so a NEW comment mints a new key and re-badges fresh.
 
    Gated on toLoaded, which is set only in the onSnapshot SUCCESS path and never
    by the localStorage fallback. Same lesson as the nav glow: acting on cached
@@ -3987,9 +3990,10 @@ function myAlerts(){
   });
   return out.sort(function(a,b){return (b.at||0)-(a.at||0);});
 }
-/* Badge: a note stays until you reply, a decision or confirmed claim clears on
-   acknowledge, because there is nothing to reply to. */
-function myAlertCount(){ return myAlerts().filter(function(a){return a.kind==='note'||!alertIsAcked(a.key);}).length; }
+/* Badge: everything clears on acknowledge ("Got it"), notes included. Replying
+   to a note also clears it (your comment becomes the last). A new incoming
+   comment carries a new timestamp → new key → badges again. */
+function myAlertCount(){ return myAlerts().filter(function(a){return !alertIsAcked(a.key);}).length; }
 function alertsForModal(){ return myAlerts().filter(function(a){return !alertIsAcked(a.key);}); }
 function alertLineHTML(a){
   if(a.kind==='note'){
