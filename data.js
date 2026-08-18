@@ -615,12 +615,12 @@ window.SF = {
        {
         "term": "Pomodoro sauce",
         "pronunciation": null,
-        "note": "The composition of the pomodoro sauce has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy."
+        "note": "Our pomodoro is a simple tomato sauce built on garlic and onion — garlic, onion, tomato, nothing else. It's the base for the dish, so the eggplant and peppers cook into it. No cream, no meat, no herbs beyond what's in the sauce itself. Carries allium from the garlic and onion."
        },
        {
         "term": "Tomato leaf oil",
         "pronunciation": null,
-        "note": "The composition of the tomato leaf oil has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy."
+        "note": "Made in-house by blending tomato leaves into neutral canola oil and straining it clear, capturing the grassy, green flavor of the plant itself rather than the fruit. Just leaves and oil — no allergens of its own."
        }
       ],
       "allergens": [
@@ -629,22 +629,8 @@ window.SF = {
        "allium"
       ],
       "canModify": [],
-      "allergenNote": "Gluten: the rigatoni, built in. Dairy: pecorino Romano is a finishing cheese and can be left off on request, but confirm the sauce as well. Allium: garlic and shallot are cooked into the dish. The composition of the pomodoro sauce and tomato leaf oil has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy.",
-      "flags": [
-       {
-        "component": "pomodoro sauce",
-        "riskAllergens": [],
-        "proposedStandard": "",
-        "label": "Pomodoro sauce composition not specified for this prep. Confirm with kitchen before clearing for any allergy."
-       },
-       {
-        "component": "tomato leaf oil",
-        "riskAllergens": [],
-        "proposedStandard": "",
-        "label": "Tomato leaf oil composition not specified for this prep. Confirm with kitchen before clearing for any allergy."
-       }
-      ],
-      "added": "2026-08-14"
+      "allergenNote": "Gluten: the rigatoni, built in. Dairy: pecorino Romano is a finishing cheese and can be left off on request. Allium: garlic and onion are in the pomodoro base, and garlic and shallot are cooked into the sauté — it runs through the dish and can't come out. The tomato leaf oil is just tomato leaves and canola oil, no allergens of its own.",
+      "added": "2026-08-18"
      },
      {
       "name": "Salmon Collar",
@@ -660,8 +646,8 @@ window.SF = {
        },
        {
         "term": "Calabrian chili paste",
-        "pronunciation": null,
-        "note": "The composition of this chili paste has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
+        "pronunciation": "kah-LAY-bree-an",
+        "note": "Just Calabrian chilies, blended — nothing else in the paste. Chilies from Calabria in southern Italy with a fruity, smoky heat. No allium in the paste; the shallot in the salad is this dish's allium."
        },
        {
         "term": "Herb and shallot salad",
@@ -674,18 +660,8 @@ window.SF = {
        "allium"
       ],
       "canModify": [],
-      "allergenNote": "Fish: salmon collar, central to the dish and not removable. Allium: shallot runs through the salad, and the chili paste flags allium risk. The composition of the calabrian chili paste has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially.",
-      "flags": [
-       {
-        "component": "collaboration chili paste",
-        "riskAllergens": [
-         "allium"
-        ],
-        "proposedStandard": "",
-        "label": "Collaboration chili paste — composition unspecified"
-       }
-      ],
-      "added": "2026-08-14"
+      "allergenNote": "Fish: salmon collar, central to the dish and not removable. Allium: the shallot in the salad — the salad can be left off or served without shallot on request, confirm with the kitchen. The chili paste is just blended Calabrian chilies, no allium in it.",
+      "added": "2026-08-18"
      }
     ],
     "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
@@ -13345,5 +13321,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1787058823"
+ "build": "1787093309"
 };
