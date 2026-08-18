@@ -489,6 +489,14 @@ body.tour-on{padding-bottom:230px;}
 .review-toggle.on .badge{background:rgba(255,255,255,.28);}
 .review-hint{display:block; margin-top:6px; font-size:11px; color:var(--ink-mute); line-height:1.4;}
 .review-empty{background:rgba(74,106,58,.08); border:1px solid rgba(74,106,58,.3); border-radius:12px; padding:14px 16px; font-size:13px; color:#2a2419; line-height:1.5;}
+/* Specials — a pinned home at the top of the Food tab. Baked content, manager-toggled visibility. */
+.specials-block{background:rgba(214,158,46,.06); border:1.5px solid rgba(214,158,46,.3); border-radius:14px; padding:14px 16px; margin-bottom:16px;}
+.sp-mgr-row{margin:-8px 0 14px; padding:7px 10px; border:1px dashed rgba(214,158,46,.45); border-radius:10px; font-size:11px; color:var(--ink-mute); display:flex; flex-wrap:wrap; gap:7px; align-items:center;}
+.sp-btn{background:none; border:1px solid #b8862e; color:#8a5a12; border-radius:999px; padding:3px 10px; font-size:11px; font-weight:700; cursor:pointer; font-family:inherit;}
+.sp-promote{display:inline-flex; gap:6px; align-items:center; margin-left:auto;}
+.sp-promote select{font-size:11px; padding:3px 6px; border-radius:8px; font-family:inherit; max-width:150px;}
+.sp-hidden-head{font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-mute); margin:10px 0 6px;}
+.sp-hidden-row{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:7px 10px; border:1px solid rgba(214,158,46,.3); border-radius:10px; margin-bottom:6px; font-size:13px; opacity:.8;}
 #editModal .modal-card{max-height:88dvh;}
 #editBody{overflow-y:auto; -webkit-overflow-scrolling:touch; min-height:0; flex:1;}
 #editModal textarea{flex:none; min-height:48px; max-height:120px; font-family:inherit; font-size:13.5px; resize:vertical;}
@@ -1787,7 +1795,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1787093309';   // stamped by build-data.py at every deploy
+const BUILD='1787094487';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2729,7 +2737,7 @@ const ALLERGEN_ORDER=['allium','dairy','egg','fish','gluten','nuts','shellfish']
 const ALLERGEN_OPT={allium:'Allium (onion / garlic)',dairy:'Dairy',egg:'Egg',fish:'Fish',gluten:'Gluten',nuts:'Tree nuts',shellfish:'Shellfish'};
 const ALLERGEN_LBL={allium:'allium (onion/garlic)',dairy:'dairy',egg:'egg',fish:'fish',gluten:'gluten',nuts:'tree nuts',shellfish:'shellfish'};
 let algTags=[];   // multiple allergens can be checked at once (one guest, several allergies)
-function algFoodItems(){var out=[];(SF.menu.food||[]).forEach(function(s){(s.items||[]).forEach(function(it){out.push(it);});});(SF.menu.desserts||[]).forEach(function(it){out.push(it);});return out;}
+function algFoodItems(){var out=[];(SF.menu.food||[]).forEach(function(s){(s.items||[]).forEach(function(it){out.push(it);});});(SF.menu.desserts||[]).forEach(function(it){out.push(it);});if(typeof activeSpecials==='function')activeSpecials().forEach(function(it){out.push(it);});return out;}
 var ALG_UNCERTAIN=/(confirm|unconfirmed|pending|verify|checking|\bcheck\b|status|tbd)/;
 /* Classify one dish against one allergen: 'off' (contains, can't remove) >
    'check' (note hints at it, unconfirmed) > 'mod' (contains, kitchen can remove) >
@@ -2823,7 +2831,10 @@ function renderFoodTab(){
   let f=editBarHTML()+reviewBarHTML(reviewCount);
 
   if(reviewFilter){
-    const due=allDishes.filter(dishNeedsReview);
+    // Active specials are on the menu tonight, so their open flags are just as
+    // much a manager task as a baked dish's. Hidden specials stay out: a dish
+    // that isn't being served has nothing to confirm yet.
+    const due=allDishes.concat(activeSpecials()).filter(dishNeedsReview);
     if(!due.length){
       f+=`<div class="review-empty">Nothing pending review. Every composed component on tonight's menu has been confirmed with the kitchen.</div>`;
     }else{
@@ -2834,6 +2845,10 @@ function renderFoodTab(){
     return;
   }
 
+  // Specials keep a pinned home at the top until a manager removes them —
+  // deliberately NOT the "Just added" block, whose cards age out on their own.
+  f+=specialsBlockHTML();
+
   // Normal view. "Just added" is keyed off the item's own added date and nothing
   // else — an edit does not resurface a dish here (see build-data.py's fingerprint).
   const newDishes=allDishes.filter(isNew);
@@ -2842,10 +2857,15 @@ function renderFoodTab(){
   // back into their normal spot (past SHUFFLE_DAYS) — no note above a pinned card.
   if(pinned.length){f+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(it=>f+=dishCardHTML(it));f+=`</div>`;}
   f+=allergenLegendHTML();
+  // Promoted specials render inside their chosen section for everyone; the
+  // manager-only row under the card is the paper trail until the bake catches up.
+  const promotedIn=sec=>activeSpecials().filter(it=>{const p=spPromoted(it);return p&&p.section===sec;});
   SF.menu.food.forEach(sec=>{f+=`<div class="section-label">${esc(sec.section)}</div>`;
     if(sec.intro)f+=`<div class="intro-card serif">${esc(sec.intro)}</div>`;
-    sec.items.forEach(it=>{if(!pinnedSet.has(it))f+=dishCardHTML(it);});});
+    sec.items.forEach(it=>{if(!pinnedSet.has(it))f+=dishCardHTML(it);});
+    promotedIn(sec.section).forEach(it=>{f+=dishCardHTML(it);if(isMgr())f+=spMgrRowHTML(it);});});
   f+=`<div class="section-label">Dessert</div>`; SF.menu.desserts.forEach(it=>{if(!pinnedSet.has(it))f+=dishCardHTML(it);});
+  promotedIn('Dessert').forEach(it=>{f+=dishCardHTML(it);if(isMgr())f+=spMgrRowHTML(it);});
   f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
   $('ftFood').innerHTML=liveBlockHTML('dish')+f;
 }
@@ -2857,6 +2877,7 @@ function foodFlagCount(){
   let n=0; const seen=function(it){const d=getEditedDish(it);const fl=(d._flags!==undefined)?d._flags:(d.flags||[]);if(fl&&fl.length)n++;};
   (SF.menu.food||[]).forEach(s=>(s.items||[]).forEach(seen));
   (SF.menu.desserts||[]).forEach(seen);
+  activeSpecials().forEach(seen);   // hidden specials aren't served, so nothing to confirm yet
   return n;
 }
 function updateFlagBadges(){
@@ -5519,6 +5540,9 @@ function freshNewList(){
   (SF.wines||[]).forEach(w=>push(w,'wine'));
   ((SF.bar&&SF.bar.cocktails)||[]).forEach(c=>push(c,'cocktail'));
   try{ Object.keys(MLIVE||{}).forEach(k=>{ const p=MLIVE[k]; if(p&&p.at&&(Date.now()-p.at)<=NEW_DAYS*864e5) out.push({key:'live:'+k, label:String(p.name||p.itemName||'New item'), type:p.type||'dish'}); }); }catch(e){}
+  // A special coming back on is news to the floor. Keyed on the toggle timestamp
+  // so each return glows once; gated on the Firestore load per the seen-state rule.
+  try{ if(spstateLoaded) activeSpecials().forEach(it=>{ const s=spStateOf(it); if(s&&s.at&&(Date.now()-s.at)<=NEW_DAYS*864e5) out.push({key:'special:'+spSlug(it.name)+':'+s.at, label:String(it.name), type:'dish'}); }); }catch(e){}
   const seen={}; return out.filter(o=>seen[o.key]?false:(seen[o.key]=1));
 }
 function freshUnseen(){ const seen=attnGet('fresh')||[]; return freshNewList().filter(o=>seen.indexOf(o.key)<0); }
@@ -7351,8 +7375,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startMenuPubSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startMenuPubSync(); startSpecialsSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startSpecialsSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -8074,7 +8098,7 @@ const LIVE_TYPES=[['dish','Food'],['wine','Wine'],['cocktail','Cocktail']];
 let MLIVE={}, mliveLoaded=false, mliveUnsub=null;
 function isMgr(){return !!(me&&(me.admin||me.mgr));}
 function currentItemNames(type){
-  if(type==='dish'){const n=[];SF.menu.food.forEach(s=>s.items.forEach(i=>n.push(i.name)));SF.menu.desserts.forEach(i=>n.push(i.name));return n;}
+  if(type==='dish'){const n=[];SF.menu.food.forEach(s=>s.items.forEach(i=>n.push(i.name)));SF.menu.desserts.forEach(i=>n.push(i.name));activeSpecials().forEach(i=>n.push(i.name));return n;}
   if(type==='wine')return SF.wines.map(w=>w.name);
   if(type==='cocktail'){const n=[];SF.bar.cocktails.forEach(c=>n.push(c.name));return n;}
   return [];
@@ -8193,6 +8217,96 @@ function rmLive(id){
   if(fbReady&&fbDb){ fbDb.collection('menu-live').doc(id).delete().catch(function(){mliveLsSet();}); } else mliveLsSet();
 }
 
+/* ===== SPECIALS — baked content, portal-toggled visibility (added 2026-08-18) =====
+   Dishes in SF.menu.specials are baked exactly like menu items (full stories,
+   locked compositions, edit/confirm flow all apply) but they live OFF the menu
+   until a manager turns them on. Visibility lives in Firestore `specials-state`,
+   ONE DOC PER DISH keyed by slug — per-doc writes so two managers toggling
+   different specials can never clobber each other (the menu-edits confirm flow
+   showed what a whole-document set() does under concurrency).
+   A special with NO state doc is HIDDEN — the safe default is off the menu.
+   "Add to permanent menu" is a flag on the same doc: the card renders in its
+   chosen section immediately for everyone, and the next menu-content session
+   moves it into menu.json for real and clears the flag. */
+let SPSTATE={}, spstateLoaded=false, spstateUnsub=null;
+function spLsGet(){try{return JSON.parse(localStorage.getItem('sf-spstate')||'{}');}catch(e){return {};}}
+function spLsSet(){try{localStorage.setItem('sf-spstate',JSON.stringify(SPSTATE));}catch(e){}}
+function startSpecialsSync(){
+  if(fbReady&&fbDb){
+    if(spstateUnsub)spstateUnsub();
+    spstateUnsub=fbDb.collection('specials-state').onSnapshot(function(snap){
+      SPSTATE={};snap.docs.forEach(function(d){SPSTATE[d.id]=d.data();});spstateLoaded=true;renderFresh();
+    },function(){ SPSTATE=spLsGet();renderFresh(); });
+  }else{ SPSTATE=spLsGet(); }
+}
+function spSlug(name){return String(name||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-+$/,'');}
+function specialsAll(){return (SF.menu&&SF.menu.specials)||[];}
+function spStateOf(it){return SPSTATE[spSlug(it._originalName||it.name)]||null;}
+function spActive(it){var s=spStateOf(it);return !!(s&&s.active);}
+function spPromoted(it){var s=spStateOf(it);return (s&&s.promoted)||null;}
+/* Active specials join every staff-facing lookup (allergy check, review count,
+   the live-add "replaces" list, publish). Hidden ones join none of them. */
+function activeSpecials(){return specialsAll().filter(spActive);}
+function spWrite(slug,patch){
+  if(!isMgr())return;
+  var rec=Object.assign({},SPSTATE[slug]||{},patch,{at:Date.now(),by:(typeof currentUserName==='function'&&currentUserName())||'manager'});
+  SPSTATE[slug]=rec;renderFresh();
+  if(fbReady&&fbDb){fbDb.collection('specials-state').doc(slug).set(rec).catch(function(){spLsSet();});}else{spLsSet();}
+}
+function spSetActive(slug,on){
+  if(!isMgr())return;
+  if(on){spWrite(slug,{active:true});}
+  else{spWrite(slug,{active:false,promoted:null});}
+}
+function spPromote(slug){
+  if(!isMgr())return;
+  var sel=$('sp-sec-'+slug); var section=sel?sel.value:'';
+  var sp=specialsAll().filter(function(it){return spSlug(it.name)===slug;})[0];
+  if(!sp||!section)return;
+  if(!confirm('Add "'+sp.name+'" to the permanent menu under '+section+'?\n\nIt moves out of Specials into that section for everyone, and bakes into the menu files on the next menu update.'))return;
+  spWrite(slug,{active:true,promoted:{section:section,at:Date.now()}});
+}
+function spDemote(slug){
+  if(!isMgr())return;
+  var sp=specialsAll().filter(function(it){return spSlug(it.name)===slug;})[0];
+  if(!confirm('Move "'+(sp?sp.name:slug)+'" back to the Specials block?'))return;
+  spWrite(slug,{promoted:null});
+}
+function spSectionOpts(){
+  var names=(SF.menu.food||[]).map(function(s){return s.section;}).concat(['Dessert']);
+  return names.map(function(n){return '<option>'+esc(n)+'</option>';}).join('');
+}
+function spMgrRowHTML(it){
+  var slug=spSlug(it._originalName||it.name);
+  var pr=spPromoted(it);
+  if(pr)return '<div class="sp-mgr-row">Manager only — on the permanent menu ('+esc(pr.section)+'); bakes in on the next menu update.'+
+    '<span class="sp-promote"><button class="sp-btn" onclick="spDemote(\''+slug+'\')">Back to Specials</button>'+
+    '<button class="sp-btn" onclick="spSetActive(\''+slug+'\',false)">Take off the menu</button></span></div>';
+  return '<div class="sp-mgr-row">Manager only<span class="sp-promote">'+
+    '<button class="sp-btn" onclick="spSetActive(\''+slug+'\',false)">Hide</button>'+
+    '<select id="sp-sec-'+slug+'" onclick="event.stopPropagation()">'+spSectionOpts()+'</select>'+
+    '<button class="sp-btn" onclick="spPromote(\''+slug+'\')">Add to permanent menu</button></span></div>';
+}
+function spSectionExists(name){return name==='Dessert'||((SF.menu&&SF.menu.food)||[]).some(function(s){return s.section===name;});}
+function specialsBlockHTML(){
+  var sp=specialsAll(); if(!sp.length)return '';
+  // A promoted special whose target section no longer exists (sections change
+  // with the menu) falls BACK here rather than rendering nowhere.
+  var active=sp.filter(function(it){var p=spPromoted(it);return spActive(it)&&(!p||!spSectionExists(p.section));});
+  var hidden=sp.filter(function(it){return !spActive(it);});
+  if(!active.length&&!(isMgr()&&hidden.length))return '';
+  var h='<div class="specials-block"><div class="section-label pinned-label" style="margin-top:0">Specials</div>';
+  active.forEach(function(it){h+=dishCardHTML(it);if(isMgr())h+=spMgrRowHTML(it);});
+  if(isMgr()&&hidden.length){
+    h+='<div class="sp-hidden-head">Off the menu right now — managers only</div>';
+    hidden.forEach(function(it){
+      var slug=spSlug(it.name);
+      h+='<div class="sp-hidden-row"><span class="serif">'+esc(it.name)+'</span><button class="sp-btn" onclick="spSetActive(\''+slug+'\',true)">Put back on</button></div>';
+    });
+  }
+  return h+'</div>';
+}
+
 /* MENU EDITS — Firestore-backed edit overlays on base data.js dishes.
    Manager makes corrections → Remy polishes → saved to menu-edits collection.
    Render code merges overlays over base data before building cards. */
@@ -8275,9 +8389,17 @@ function pubItem(it){
 }
 function buildMenuSnapshot(){
   const sections=[];
+  // Active specials publish too — they run for days or weeks, unlike tonight-only
+  // live adds, so a guest planning a visit should see them. Hidden ones never
+  // publish; promoted ones publish inside their chosen section instead.
+  const spOn=activeSpecials();
+  const spBlock=spOn.filter(function(it){var p=spPromoted(it);return !p||!spSectionExists(p.section);})
+    .map(function(it){return pubItem(getEditedDish(it));}).filter(function(i){return i.name;});
+  if(spBlock.length)sections.push({section:'Specials',items:spBlock});
   ((SF.menu&&SF.menu.food)||[]).forEach(function(sec){
     const items=(sec.items||[]).map(function(it){return pubItem(getEditedDish(it));})
       .filter(function(i){return i.name;});
+    spOn.forEach(function(it){var p=spPromoted(it);if(p&&p.section===sec.section){var o=pubItem(getEditedDish(it));if(o.name)items.push(o);}});
     if(items.length)sections.push({section:sec.section,items:items});
   });
   const cocktails=((SF.bar&&SF.bar.cocktails)||[]).map(function(c){
@@ -8288,6 +8410,7 @@ function buildMenuSnapshot(){
   if(cocktails.length)sections.push({section:'Cocktails',items:cocktails});
   const dolci=((SF.menu&&SF.menu.desserts)||[]).map(function(it){return pubItem(getEditedDish(it));})
     .filter(function(i){return i.name;});
+  spOn.forEach(function(it){var p=spPromoted(it);if(p&&p.section==='Dessert'){var o=pubItem(getEditedDish(it));if(o.name)dolci.push(o);}});
   if(dolci.length)sections.push({section:'Dolci',items:dolci});
   return {sections:sections, note:((SF.menu&&SF.menu.raw_note)||'').trim(),
     menuDate:(SF.menu&&SF.menu.menuDate)||'', publishedAt:Date.now(),
@@ -8304,6 +8427,9 @@ function menuSnapshotSig(s){
    not "stale", and glowing on every login is how these indicators lose meaning. */
 function menuPubDirty(){
   if(!mpubLoaded)return false;
+  // Same discipline for specials: until their state doc has loaded, the snapshot
+  // is "unknown", not "stale" — computing it without them would false-glow dirty.
+  if(specialsAll().length&&!spstateLoaded)return false;
   if(!MPUB)return true;
   return menuSnapshotSig(buildMenuSnapshot())!==menuSnapshotSig(MPUB);
 }
@@ -8335,6 +8461,7 @@ function openEditModal(origName){
     if(it.name===origName){dish=it;section=sec.section;}
   });});
   if(!dish)SF.menu.desserts.forEach(function(it){if(it.name===origName){dish=it;section='Dessert';}});
+  if(!dish)specialsAll().forEach(function(it){if(it.name===origName){dish=it;section=(spPromoted(it)||{}).section||'Specials';}});
   if(!dish)return;
   const ed=getEditedDish(dish);
   editTarget={originalName:origName,section:section,isDessert:section==='Dessert'};
@@ -8447,6 +8574,7 @@ function findDishByName(origName){
   var dish=null, section='';
   SF.menu.food.forEach(function(sec){sec.items.forEach(function(it){if(it.name===origName){dish=it;section=sec.section;}});});
   if(!dish)SF.menu.desserts.forEach(function(it){if(it.name===origName){dish=it;section='Dessert';}});
+  if(!dish)specialsAll().forEach(function(it){if(it.name===origName){dish=it;section=(spPromoted(it)||{}).section||'Specials';}});
   return dish?{dish:dish,section:section}:null;
 }
 function openConfirmModal(origName,idx){
@@ -8935,7 +9063,7 @@ function ordRenderComposerPane(){
 /* INIT */
 function init(){
   initFirebase();
-  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); }
+  if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startSpecialsSync(); }
   document.body.classList.add('locked'); openLogin();   // start gated; unlocks once the session checks out
   setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='failed'; onProfiles(); } },9000);
   $('appDate').textContent=fmtShort(todayISO());
