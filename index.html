@@ -1795,7 +1795,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1787096498';   // stamped by build-data.py at every deploy
+const BUILD='1787249443';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5075,7 +5075,7 @@ function dsBuildNameIndex(){
 }
 // Schedule nicknames that aren't the directory name's first word or quoted nickname.
 // Add to this map if a new short name shows up unresolved on the Day Sheet.
-const DS_ALIASES={joe:'joseph steuby'};
+const DS_ALIASES={joe:'joseph steuby',josh:'joshua lardizabal'};
 function dsResolve(shortName,idx){
   const nl=String(shortName||'').trim().toLowerCase(); if(!nl)return {full:shortName,role:''};
   if(idx.full[nl])return idx.full[nl];
