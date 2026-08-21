@@ -6841,7 +6841,7 @@ window.SF = {
      "",
      "",
      "",
-     "3:30 serve"
+     ""
     ],
     "rows": [
      {
@@ -7021,7 +7021,7 @@ window.SF = {
        "",
        "",
        "MD",
-       "MD"
+       "3:30 serve"
       ]
      }
     ]
@@ -13323,5 +13323,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1787249443"
+ "build": "1787318024"
 };
