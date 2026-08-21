@@ -163,20 +163,20 @@
     },
     {
      "name": "Farm House Salad",
-     "desc": "red onion, bread and butter pickled onion, charred apricot vinaigrette, nectarines, candied almonds",
+     "desc": "mixed greens, apple, shaved fennel, bread and butter pickled onion, candied almonds, apple vinaigrette",
      "price": "18",
      "raw": false,
-     "story": "Bright and textured. The charred apricot vinaigrette brings acid and a subtle depth to the greens. Fresh nectarines and candied almonds add sweetness and crunch. Red and pickled onions give you sharp bite throughout.",
+     "story": "Mixed baby lettuces with shaved fennel and fresh apple, brightened by crisp bread and butter pickled onions. Candied slivered almonds add sweetness and crunch, and an apple vinaigrette ties the fruit through the dressing.",
      "ingredients": [
-      {
-       "term": "Charred apricot vinaigrette",
-       "pronunciation": null,
-       "note": "Apricots charred on high heat, then blended into a vinaigrette with acid and oil. The char adds a smoky-sweet depth behind the fruit's natural acidity."
-      },
       {
        "term": "Bread and butter pickled onion",
        "pronunciation": null,
        "note": "A sweet-and-tangy pickle style — onions cured in a vinegar brine with sugar and spice. Despite the name there's no bread or butter; it refers to the classic sweet pickle profile. Bright and sharp against the greens."
+      },
+      {
+       "term": "Shaved fennel",
+       "pronunciation": null,
+       "note": "The crisp anise-scented bulb, shaved thin and raw. Adds a clean, fresh crunch. No allergens of its own."
       },
       {
        "term": "Candied almonds",
@@ -184,9 +184,9 @@
        "note": "The composition of the candied almonds has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially."
       },
       {
-       "term": "Nectarines",
+       "term": "Apple vinaigrette",
        "pronunciation": null,
-       "note": "Smooth-skinned stone fruit, sweeter and softer than a peach when ripe. Fresh and raw here for juicy sweetness."
+       "note": "Apple cider vinegar and lemon juice blended with green peppercorn, mustard, and shallot, emulsified with canola oil and stabilized with xanthan gum. Carries allium from the shallot, and mustard — which we do not track as a chip, so mention it for a mustard allergy."
       }
      ],
      "allergens": [
@@ -196,8 +196,8 @@
      "canModify": [
       "nuts"
      ],
-     "allergenNote": "Tree nuts: the candied almonds, they come off cleanly for a nut allergy. Allium: raw red onion and the pickled onion are throughout, not removable. The composition of the candied almonds has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
-     "added": "2026-06-19",
+     "allergenNote": "Tree nuts: the candied almonds come off cleanly for a nut allergy. Allium: the pickled onion and the shallot in the vinaigrette run through the salad, not removable. The vinaigrette also carries mustard, which we do not track as a chip — flag it for a mustard allergy. The candied almonds are an unspecified prep — confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
+     "added": "2026-08-21",
      "flags": [
       {
        "component": "candied almonds",
@@ -212,11 +212,11 @@
     },
     {
      "name": "Burrata",
-     "desc": "strawberries, chamomile gelée, strawberry buttermilk poppy seed vinaigrette, crostini",
-     "price": "18",
+     "desc": "Swan House Farm heirloom tomatoes, basil, tomato leaf oil, aged balsamic, crostini",
+     "price": "20",
      "raw": false,
      "pron": "boo-RAH-tah",
-     "story": "Creamy burrata with fresh strawberries and a chamomile gelée that adds subtle floral sweetness. The strawberry buttermilk vinaigrette brings acid and brightness. Crostini on the side for texture.",
+     "story": "Creamy burrata with heirloom tomatoes from Swan House Farm and fresh basil, drizzled with tomato leaf oil and aged balsamic. Crostini on the side for texture.",
      "ingredients": [
       {
        "term": "Burrata",
@@ -224,14 +224,14 @@
        "note": "a fresh cow's-milk cheese from Puglia: a mozzarella shell holding a center of stracciatella (cheese curds) and cream. Cut into it and the middle should flow."
       },
       {
-       "term": "Chamomile gelée",
-       "pronunciation": "kam-oh-MEEL zhuh-LAY",
-       "note": "The composition of this gelée has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian."
+       "term": "Tomato leaf oil",
+       "pronunciation": null,
+       "note": "Made in-house by blending tomato leaves into neutral canola oil and straining it clear, capturing the grassy, green flavor of the plant itself rather than the fruit. Just leaves and oil — no allergens of its own."
       },
       {
-       "term": "Strawberry buttermilk poppy seed vinaigrette",
+       "term": "Aged balsamic",
        "pronunciation": null,
-       "note": "A creamy vinaigrette built on cultured buttermilk and strawberry, flecked with poppy seeds. Tangy and bright — the acid that cuts the rich cheese. Carries dairy from the buttermilk."
+       "note": "Balsamic vinegar aged until thick and sweet — cooked grape must and time, nothing else. No allergens of its own."
       }
      ],
      "allergens": [
@@ -241,44 +241,36 @@
      "canModify": [
       "gluten"
      ],
-     "allergenNote": "Dairy: the burrata and the buttermilk vinaigrette, central and not removable. Gluten: crostini come on the side so the rest of the table can still have them. The vinaigrette carries poppy seeds, which we do not track as a chip. The composition of the chamomile gelée has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, and before promising it as vegetarian.",
-     "added": "2026-08-02",
-     "flags": [
-      {
-       "component": "chamomile gelée",
-       "riskAllergens": [],
-       "proposedStandard": "",
-       "label": "chamomile gelée — composition not specified"
-      }
-     ]
+     "allergenNote": "Dairy: the burrata is the dish, not removable. Gluten: crostini come on the side and come off cleanly. The tomato leaf oil is just tomato leaves and canola oil — no allium anywhere on the plate.",
+     "added": "2026-08-21"
     },
     {
-     "name": "Chilled Cherry Gazpacho",
-     "desc": "bing cherry, tomato, cucumber, red onion, bell pepper, champagne vinegar, crème fraîche, sumac",
+     "name": "Grilled Corn Gazpacho",
+     "desc": "grilled corn, tomato, bell pepper, cucumber, onion, champagne vinegar, crème fraîche, red onion agro dolce, micro basil",
      "price": "15",
      "raw": false,
      "pron": "gahz-PAH-choh",
-     "story": "Cold soup built on bing cherries and tomatoes with cucumber, red onion, and red bell pepper. Champagne vinegar adds brightness. Finished with crème fraîche and sumac for tang and color.",
+     "story": "Grilled corn sweetness anchors this cold soup. Tomato, bell pepper, cucumber, and onion are puréed with champagne vinegar and corn cob stock, finished with olive oil and white pepper. Crème fraîche cools the top, red onion agro dolce adds sharp pickle and bite, and micro basil finishes it.",
      "ingredients": [
       {
        "term": "Gazpacho",
        "pronunciation": "gahz-PAH-choh",
-       "note": "A cold, raw-blended Spanish soup of vegetables and acid, served chilled. This version leans on bing cherries alongside the tomato for a sweet-savory depth."
+       "note": "A cold, blended Spanish soup of vegetables and acid, served chilled. This version leans on grilled corn for sweetness and smoke against the tomato and vinegar."
       },
       {
-       "term": "Bing cherry",
+       "term": "Corn cob stock",
        "pronunciation": null,
-       "note": "Dark, sweet summer cherry — deep red, rich, and low in acidity. Here it carries the soup's body and sweetness against the tomato and vinegar."
+       "note": "A light stock simmered from the stripped corn cobs, deepening the corn flavor without dairy or meat. No allergens of its own."
       },
       {
        "term": "Crème fraîche",
        "pronunciation": "krem FRESH",
-       "note": "French cultured cream — thicker and tangier than sour cream, milder than Greek yogurt. Swirled in to finish, for richness and a cool counterpoint to the acid."
+       "note": "French cultured cream — thicker and tangier than sour cream, milder than Greek yogurt. Spooned on top for richness and a cool counterpoint to the acid."
       },
       {
-       "term": "Sumac",
-       "pronunciation": "SOO-mak",
-       "note": "A tart, deep-red Middle Eastern spice ground from dried sumac berries. Lemony and astringent — dusted on top for color and a bright, sour lift."
+       "term": "Agro dolce",
+       "pronunciation": "AH-groh DOHL-cheh",
+       "note": "Italian for sour-sweet: red onion cooked down in vinegar and sugar into a sharp, bright pickle-like garnish. Carries allium."
       }
      ],
      "allergens": [
@@ -288,8 +280,8 @@
      "canModify": [
       "dairy"
      ],
-     "allergenNote": "Naturally gluten-free. Dairy: the crème fraîche finish can come off cleanly. Allium: red onion and garlic are blended into the base — not removable.",
-     "added": "2026-08-02"
+     "allergenNote": "Naturally gluten-free. Dairy: the crème fraîche garnish comes off cleanly. Allium: onion is puréed into the base and the red onion agro dolce sits on top — the garnish can come off, the base cannot.",
+     "added": "2026-08-21"
     }
    ]
   },
@@ -331,44 +323,42 @@
      "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
     },
     {
-     "name": "Rigatoni",
-     "_originalName": "Paccheri",
-     "desc": "roasted broccoli, onion, bread-crumble cream, garlic, shallot, chili flake, lemon, pecorino romano, pine nuts",
-     "price": "29",
+     "name": "Eggplant Parm",
+     "desc": "breaded fried eggplant, mozzarella, rigatoni, eggplant pomodoro, parmesan, basil",
+     "price": "31",
      "raw": false,
-     "pron": "ree-gah-TOH-nee",
-     "story": "Broccoli and onion roasted until caramelized, then built into a pan sauce with garlic, shallot, red chili flake, and cubed bread. White wine and cream go in, and the bread melts down as it cooks to thicken it. Finished with lemon juice, zest, and butter, then topped with Pecorino Romano and pine nuts.",
+     "story": "Eggplant cut thick and salted overnight to draw out bitterness, then breaded and fried. It goes into the oven under mozzarella to melt, and lands on a bed of rigatoni tossed in an eggplant pomodoro sauce. Finished with Parmesan and basil.",
      "ingredients": [
       {
        "term": "Rigatoni",
        "pronunciation": "ree-gah-TOH-nee",
-       "note": "Ridged tube pasta, shorter and narrower than paccheri. The ridges and hollow centers grab and hold the sauce."
+       "note": "Ridged tube pasta — the ridges and hollow centers grab and hold the sauce. Standard durum-wheat pasta, so it carries gluten."
       },
       {
-       "term": "Bread-crumble cream",
+       "term": "Eggplant pomodoro sauce",
+       "pronunciation": "poh-moh-DOH-roh",
+       "note": "Our house pomodoro base — garlic, onion, and tomato — with eggplant cooked down into it. No cream, no meat. Carries allium from the garlic and onion."
+      },
+      {
+       "term": "Breading",
        "pronunciation": null,
-       "note": "The sauce thickener — cubed bread cooked into the roasted broccoli, onion, garlic, shallot, and chili with white wine and cream until the bread melts down and bodies the sauce. Carries gluten (bread) and dairy (cream)."
+       "note": "Flour, egg wash, and breadcrumb on the fried eggplant. Carries gluten and egg, both built in."
       },
       {
-       "term": "Pecorino Romano",
-       "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
-       "note": "A hard, salty sheep's-milk cheese from Lazio — sharper than Parmigiano. Grated over the finish."
-      },
-      {
-       "term": "Pine nuts",
-       "pronunciation": null,
-       "note": "Soft, buttery seeds of the stone pine, toasted for the finish. Treated as a tree-nut allergen on the plate."
+       "term": "Mozzarella",
+       "pronunciation": "moht-sah-REH-lah",
+       "note": "Melted over the fried eggplant in the oven. Carries dairy, as does the Parmesan finish."
       }
      ],
      "allergens": [
       "gluten",
       "dairy",
-      "nuts",
+      "egg",
       "allium"
      ],
      "canModify": [],
-     "allergenNote": "Gluten and dairy are both built into the sauce — the cubed bread melts in to thicken it, and the cream, butter, and Pecorino carry the dairy, so neither comes out cleanly. Allium: onion, garlic, and shallot are all roasted or cooked into the sauce, not removable. Tree nuts: pine nuts finish the plate, and per the kitchen notes they may also go into the pan — do NOT clear this for a nut allergy until Chris confirms they can be left out entirely.",
-     "added": "2026-06-27"
+     "allergenNote": "Gluten: the breading and the rigatoni, both built in. Dairy: mozzarella and Parmesan, built in. Egg: the egg wash in the breading, built in. Allium: garlic and onion in the pomodoro base, not removable.",
+     "added": "2026-08-21"
     },
     {
      "name": "Stuffed Farfalle",
