@@ -183,7 +183,7 @@ window.SF = {
        {
         "term": "Candied almonds",
         "pronunciation": null,
-        "note": "The composition of the candied almonds has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially."
+        "note": "Our candied almonds are slivered almonds tossed with powdered sugar and salt — nothing else, so no dairy or egg. Sweet and crisp, a textural contrast in the salad. Guests with tree nut allergies need to know these are here."
        },
        {
         "term": "Apple vinaigrette",
@@ -198,19 +198,9 @@ window.SF = {
       "canModify": [
        "nuts"
       ],
-      "allergenNote": "Tree nuts: the candied almonds come off cleanly for a nut allergy. Allium: the pickled onion and the shallot in the vinaigrette run through the salad, not removable. The vinaigrette also carries mustard, which we do not track as a chip — flag it for a mustard allergy. The candied almonds are an unspecified prep — confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
+      "allergenNote": "Tree nuts: the candied almonds come off cleanly for a nut allergy. Allium: the pickled onion and the shallot in the vinaigrette run through the salad, not removable. The vinaigrette also carries mustard, which we do not track as a chip — flag it for a mustard allergy. The candied almonds are just slivered almonds, powdered sugar, and salt — no dairy or egg.",
       "added": "2026-08-21",
-      "flags": [
-       {
-        "component": "candied almonds",
-        "riskAllergens": [
-         "dairy",
-         "egg"
-        ],
-        "proposedStandard": "",
-        "label": "candied almonds — composition not specified"
-       }
-      ]
+      "flags": []
      },
      {
       "name": "Burrata",
@@ -13313,5 +13303,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1787355863"
+ "build": "1787356036"
 };
