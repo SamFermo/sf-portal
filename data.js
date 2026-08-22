@@ -262,7 +262,7 @@ window.SF = {
        {
         "term": "Agro dolce",
         "pronunciation": "AH-groh DOHL-cheh",
-        "note": "Italian for sour-sweet: red onion cooked down in vinegar and sugar into a sharp, bright pickle-like garnish. Carries allium."
+        "note": "Italian for sour-sweet: red onion cooked down in butter with vinegar and sugar into a sharp, bright pickle-like garnish. Carries allium and dairy from the butter."
        }
       ],
       "allergens": [
@@ -272,7 +272,7 @@ window.SF = {
       "canModify": [
        "dairy"
       ],
-      "allergenNote": "Naturally gluten-free. Dairy: the crème fraîche garnish comes off cleanly. Allium: onion is puréed into the base and the red onion agro dolce sits on top — the garnish can come off, the base cannot.",
+      "allergenNote": "Naturally gluten-free. Dairy: two places — the crème fraîche and the butter in the red onion agro dolce. Both are garnishes and come off cleanly together for a dairy allergy. Allium: onion is puréed into the base and the agro dolce sits on top — the garnish can come off, the base cannot.",
       "added": "2026-08-21"
      }
     ]
@@ -13303,5 +13303,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1787356036"
+ "build": "1787356848"
 };
