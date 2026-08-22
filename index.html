@@ -1795,7 +1795,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1787356848';   // stamped by build-data.py at every deploy
+const BUILD='1787357430';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4053,19 +4053,39 @@ function alertsDismiss(){
   alertsClose(); updatePendingBadge();
 }
 function alertReply(reqId){
+  /* Write-first, loud on failure (2026-08-21). The old version echoed the reply into
+     local state BEFORE the Firestore write and swallowed the write's rejection with an
+     empty catch — a failed send looked sent on the sender's screen, then vanished on
+     the next sync. That ate a real reply from Gopala (found 2026-08-21: thread ended
+     at Sam's 8/6 question, no reply anywhere in Firestore). Rules here:
+     1. No local echo until the write resolves.
+     2. A failure keeps the typed text in the box and says so via alert().
+     3. If Firebase isn't ready (or demo / a local-only 'ls' request), refuse loudly
+        instead of silently skipping the write. */
   const who=currentUserName(); if(!who)return;
   const inp=$('alert-reply-'+reqId); if(!inp)return;
   const v=(inp.value||'').trim(); if(!v)return;
   const c={by:who,text:v,at:Date.now()};
-  const r0=(toState||[]).find(function(x){return x.id===reqId;});
-  if(r0)r0.comments=(r0.comments||[]).concat([c]);
-  if(fbReady&&fbDb&&!DEMO&&String(reqId).indexOf('ls')!==0)
-    fbDb.collection('timeoff').doc(reqId).update({comments:firebase.firestore.FieldValue.arrayUnion(c)}).catch(function(){});
-  inp.value='';
-  const rest=alertsForModal();
-  if(rest.length)alertsOpen(rest); else alertsClose();
-  updatePendingBadge();
-  if(schedState.side==='timeoff')renderTimeoff();
+  if(DEMO)return;
+  if(!(fbReady&&fbDb)||String(reqId).indexOf('ls')===0){
+    alert('Not connected right now — your reply was NOT sent. It is still in the box; try again in a moment.');
+    return;
+  }
+  const btn=inp.nextElementSibling; if(btn)btn.disabled=true;
+  fbDb.collection('timeoff').doc(reqId).update({comments:firebase.firestore.FieldValue.arrayUnion(c)})
+    .then(function(){
+      const r0=(toState||[]).find(function(x){return x.id===reqId;});
+      if(r0)r0.comments=(r0.comments||[]).concat([c]);
+      inp.value='';
+      const rest=alertsForModal();
+      if(rest.length)alertsOpen(rest); else alertsClose();
+      updatePendingBadge();
+      if(schedState.side==='timeoff')renderTimeoff();
+    })
+    .catch(function(err){
+      if(btn)btn.disabled=false;
+      alert('Your reply did NOT send ('+((err&&err.code)||'connection error')+'). It is still in the box — tap Send to retry.');
+    });
 }
 function maybeShowAlerts(){
   if(!me||DEMO||isInvestor()||alertsShownSession||!toLoaded)return;
@@ -4117,10 +4137,25 @@ function addToComment(id){
   var who=currentUserName();if(!who){openLogin();return;}
   var inp=$('toc-'+id);if(!inp)return;var v=(inp.value||'').trim();if(!v)return;
   var c={by:who,text:v,at:Date.now()};
-  if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0){r0.comments=r0.comments||[];r0.comments.push(c);}}
-  if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).update({comments:firebase.firestore.FieldValue.arrayUnion(c)}).catch(function(){}); }
-  else { var a=toLsGet();var r=a.find(function(x){return x.id===id;});if(r){r.comments=r.comments||[];r.comments.push(c);}toLsSet(a);toState=a; }
-  inp.value='';renderTimeoff();
+  if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){
+    /* Write-first, loud on failure — same repair as alertReply (2026-08-21). The old
+       version pre-echoed into toState and swallowed the rejection, so a failed note
+       looked posted, then vanished on the next sync. Local echo only after resolve;
+       failure keeps the text in the box. The else branch below is the genuine
+       localStorage store for local-only 'ls' requests — that path is unchanged. */
+    fbDb.collection('timeoff').doc(id).update({comments:firebase.firestore.FieldValue.arrayUnion(c)})
+      .then(function(){
+        if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0){r0.comments=r0.comments||[];r0.comments.push(c);}}
+        inp.value='';renderTimeoff();
+      })
+      .catch(function(err){
+        alert('Your note did NOT send ('+((err&&err.code)||'connection error')+'). It is still in the box — tap to retry.');
+      });
+  }
+  else {
+    var a=toLsGet();var r=a.find(function(x){return x.id===id;});if(r){r.comments=r.comments||[];r.comments.push(c);}toLsSet(a);toState=a;
+    inp.value='';renderTimeoff();
+  }
 }
 function rmTimeoff(id){
   var r=getReqs().find(function(x){return x.id===id;});if(!r)return;
