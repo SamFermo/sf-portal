@@ -2421,7 +2421,7 @@
             "",
             "",
             "Expo",
-            "Expo",
+            "MD",
             "R/O"
           ]
         },
@@ -2445,7 +2445,7 @@
             "3:30 Bar",
             "3:30 Bar",
             "Sup Server",
-            "MD",
+            "3:30 serve",
             "Float"
           ]
         },
@@ -2505,7 +2505,7 @@
             "",
             "",
             "3:30 support",
-            "3:30 support",
+            "R/O",
             ""
           ]
         },
@@ -2537,7 +2537,7 @@
           "name": "Julian",
           "shifts": [
             "",
-            "",
+            "3:30 serve",
             "",
             "",
             "3:30 serve",
@@ -2549,7 +2549,7 @@
           "name": "Mac",
           "shifts": [
             "3:30 serve",
-            "3:30 serve",
+            "R/O",
             "",
             "",
             "",
@@ -2633,7 +2633,7 @@
         {
           "name": "Adrian",
           "shifts": [
-            "Sup Server",
+            "MD",
             "Sup Server",
             "MD",
             "MD",
@@ -2658,7 +2658,7 @@
           "name": "Abby",
           "shifts": [
             "",
-            "3:30 Bar",
+            "R/O",
             "3:30 serve",
             "Sup Server",
             "3:30 serve",
@@ -2754,7 +2754,7 @@
           "name": "Nam",
           "shifts": [
             "",
-            "",
+            "3:30 serve",
             "",
             "",
             "",
@@ -2766,7 +2766,7 @@
           "name": "Sabba",
           "shifts": [
             "3:30 Bar",
-            "3:30 serve",
+            "3:30 Bar",
             "3:30 serve",
             "3:30 serve",
             "3:30 serve",
@@ -2777,7 +2777,7 @@
         {
           "name": "Sully",
           "shifts": [
-            "3:30 serve",
+            "Sup Server",
             "",
             "Sup Server",
             "",
@@ -6200,7 +6200,7 @@
             "",
             "",
             "",
-            "",
+            "Farm",
             "1-close"
           ]
         },

@@ -7037,7 +7037,7 @@ window.SF = {
        "",
        "",
        "Expo",
-       "Expo",
+       "MD",
        "R/O"
       ]
      },
@@ -7061,7 +7061,7 @@ window.SF = {
        "3:30 Bar",
        "3:30 Bar",
        "Sup Server",
-       "MD",
+       "3:30 serve",
        "Float"
       ]
      },
@@ -7121,7 +7121,7 @@ window.SF = {
        "",
        "",
        "3:30 support",
-       "3:30 support",
+       "R/O",
        ""
       ]
      },
@@ -7153,7 +7153,7 @@ window.SF = {
       "name": "Julian",
       "shifts": [
        "",
-       "",
+       "3:30 serve",
        "",
        "",
        "3:30 serve",
@@ -7165,7 +7165,7 @@ window.SF = {
       "name": "Mac",
       "shifts": [
        "3:30 serve",
-       "3:30 serve",
+       "R/O",
        "",
        "",
        "",
@@ -7249,7 +7249,7 @@ window.SF = {
      {
       "name": "Adrian",
       "shifts": [
-       "Sup Server",
+       "MD",
        "Sup Server",
        "MD",
        "MD",
@@ -7274,7 +7274,7 @@ window.SF = {
       "name": "Abby",
       "shifts": [
        "",
-       "3:30 Bar",
+       "R/O",
        "3:30 serve",
        "Sup Server",
        "3:30 serve",
@@ -7370,7 +7370,7 @@ window.SF = {
       "name": "Nam",
       "shifts": [
        "",
-       "",
+       "3:30 serve",
        "",
        "",
        "",
@@ -7382,7 +7382,7 @@ window.SF = {
       "name": "Sabba",
       "shifts": [
        "3:30 Bar",
-       "3:30 serve",
+       "3:30 Bar",
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
@@ -7393,7 +7393,7 @@ window.SF = {
      {
       "name": "Sully",
       "shifts": [
-       "3:30 serve",
+       "Sup Server",
        "",
        "Sup Server",
        "",
@@ -10816,7 +10816,7 @@ window.SF = {
        "",
        "",
        "",
-       "",
+       "Farm",
        "1-close"
       ]
      },
@@ -13303,5 +13303,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1787357430"
+ "build": "1787414477"
 };
