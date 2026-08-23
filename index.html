@@ -667,6 +667,15 @@ body.tour-on{padding-bottom:230px;}
 .at-flagbar.at-done{opacity:.62;}
 .at-fn{color:var(--ink-soft);}
 .at-flagbar .at-btn{margin-left:auto;}
+/* the per-table note thread (2026-08-21) */
+.at-thread{margin-top:11px;}
+.at-nline{display:flex; flex-direction:column; gap:2px; padding:8px 11px; margin-top:6px;
+  background:rgba(205,216,244,.07); border-left:3px solid rgba(205,216,244,.28);
+  border-radius:0 8px 8px 0; font-size:13.5px; line-height:1.45;}
+.at-nline.at-nmd{background:rgba(230,200,120,.09); border-left-color:var(--gold);}
+.at-nline.at-nnew{border-left-color:#e0b14e; box-shadow:0 0 0 1px rgba(224,177,78,.35);}
+.at-ntext{color:var(--ink);}
+.at-thread .at-acts{margin-top:8px;}
 .at-log{margin-top:12px; font-size:12px; color:var(--ink-mute);}
 .at-log summary{cursor:pointer; letter-spacing:.04em;}
 .at-logline{padding:4px 0 0 2px;} .at-logline b{color:var(--ink-soft);}
@@ -1795,7 +1804,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1787414477';   // stamped by build-data.py at every deploy
+const BUILD='1787449662';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -7646,9 +7655,15 @@ function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);
    Firestore: collection `tables`, doc id `{YYYY-MM-DD}__{TABLE}`, queried by a
    single-field equality on `date` (no composite index, per the index-free rule).
    Record shape:
-     {date, table, state:'open'|'seated', covers, occ:[], outAt, note,
-      by, at, seatAck:{by,at}, flag, flagNote, flagBy, flagAt, flagAck:{by,at}, log:[]}
-   Everything is stamped: who did it, when, and who saw it. */
+     {date, table, state:'open'|'seated', covers, occ:[], outAt,
+      by, at, seatAck:{by,at}, flag, flagBy, flagAt, flagAck:{by,at},
+      notes:[{by, role:'md'|'server', at, text, seenBy:[]}], log:[]}
+   Everything is stamped: who did it, when, and who saw it.
+   2026-08-21: notes[] subsumed the old single `note` and `flagNote` fields — servers
+   had no way to SEND a note without pressing a flag, so notes silently went nowhere.
+   Either side posts, unseen notes glow gold, an explicit Got it acks (adds you to
+   seenBy). Legacy `note`/`flagNote` on today's docs still render read-only; neither
+   is written any more. Docs are date-keyed so there is no backfill to migrate. */
 
 const AT_OCC={bday:{s:'🎂',l:'Birthday'},anniv:{s:'🥂',l:'Anniversary'},vip:{s:'⭐',l:'VIP'}};
 const AT_OCC_ORDER=['bday','anniv','vip'];
@@ -7714,14 +7729,25 @@ function atOccList(o){return AT_OCC_ORDER.filter(function(k){return o&&o[k];});}
 function atGlow(r){
   if(!r)return '';
   if(r.flag&&!r.flagAck)return AT_FLAG[r.flag]?AT_FLAG[r.flag].c:'';
+  if(atNotesUnseen(r))return 'gold';
   if(r.state==='seated'&&!r.seatAck)return 'gold';
   return '';
+}
+/* --- the note thread. notes:[{by,role,at,text,seenBy:[]}] on the table doc.
+       Unseen = not written by me and my name is not in seenBy. --------------- */
+function atNotes(r){return (r&&Array.isArray(r.notes))?r.notes:[];}
+function atNotesUnseen(r){
+  const meN=currentUserName();
+  return atNotes(r).filter(function(n){
+    return n&&n.by!==meN&&(n.seenBy||[]).indexOf(meN)<0;
+  }).length;
 }
 /* who still needs to act on this table, used for the chime and the nav glow */
 function atNeedsMe(r){
   if(!r)return false;
   const meN=currentUserName();
   if(r.flag&&!r.flagAck)return atIsMD()&&r.flagBy!==meN;
+  if(atNotesUnseen(r))return true;
   if(r.state==='seated'&&!r.seatAck)return !atIsMD()&&r.by!==meN;
   return false;
 }
@@ -7789,6 +7815,12 @@ function atChimeCheck(prev,next){
     }else{
       if(b.state==='seated'&&!b.seatAck&&b.by!==meN&&(b.at||0)>(a.at||0))hit=true;
     }
+    /* a new note from the other side chimes for whoever it's aimed at */
+    const bn=(b.notes||[]);
+    if(bn.length>((a.notes||[]).length)){
+      const last=bn[bn.length-1];
+      if(last&&last.by!==meN&&(last.seenBy||[]).indexOf(meN)<0)hit=true;
+    }
   });
   if(hit)atBeep();
 }
@@ -7846,9 +7878,13 @@ function atBump(mins){if(!atDraft)return;
 function atDraftNote(v){if(atDraft)atDraft.note=v;}
 function atSeat(t){
   if(!atIsMD()||!atDraft||atDraft.table!==t)return;
-  const d=atDraft;
-  atWrite(t,{state:'seated',covers:d.covers||0,occ:atOccList(d.occ),outAt:d.outAt,note:(d.note||'').trim(),
-    by:currentUserName()||'',at:Date.now(),seatAck:null,flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},
+  const d=atDraft, who=currentUserName()||'', v=(d.note||'').trim();
+  /* the seat-time note posts into the thread, not the old single field. Pre-seat
+     notes on the table carry forward — a party being seated doesn't erase them. */
+  let ns=atNotes(atRec(t));
+  if(v)ns=ns.concat([{by:who,role:'md',at:Date.now(),text:v,seenBy:[who]}]).slice(-30);
+  atWrite(t,{state:'seated',covers:d.covers||0,occ:atOccList(d.occ),outAt:d.outAt,note:'',notes:ns,
+    by:who,at:Date.now(),seatAck:null,flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},
     'seated '+(d.covers||'?')+', out by '+atClock(d.outAt));
   atOpen='';atDraft=null;
 }
@@ -7858,16 +7894,26 @@ function atAdjust(t,mins){
   const next=Math.max(atFloorOut(),atStep(r.outAt||Date.now(),mins));
   atWrite(t,{outAt:next},'out time moved to '+atClock(next));
 }
-function atSaveNote(t){
-  const el=$('at-note-'+String(t).replace(/\W/g,''));
+function atPostNote(t){
+  const el=$('at-nt-'+String(t).replace(/\W/g,''));
   if(!el)return;
-  const v=(el.value||'').trim();
-  if(atIsMD())atWrite(t,{note:v},'note updated');
-  else atWrite(t,{flagNote:v},'note updated');
+  const v=(el.value||'').trim(); if(!v)return;
+  const who=currentUserName()||'';
+  el.value='';
+  atWrite(t,{notes:atNotes(atRec(t)).concat([
+    {by:who,role:atIsMD()?'md':'server',at:Date.now(),text:v,seenBy:[who]}]).slice(-30)},'note sent');
+}
+function atAckNotes(t){
+  const meN=currentUserName()||'';
+  const r=atRec(t); if(!r||!atNotesUnseen(r))return;
+  atWrite(t,{notes:atNotes(r).map(function(n){
+    if(!n||n.by===meN||(n.seenBy||[]).indexOf(meN)>=0)return n;
+    return Object.assign({},n,{seenBy:(n.seenBy||[]).concat([meN])});
+  })},'notes acknowledged');
 }
 function atUnseat(t){
   if(!atIsMD())return;
-  atWrite(t,{state:'open',covers:0,occ:[],outAt:0,note:'',by:'',at:0,seatAck:null,
+  atWrite(t,{state:'open',covers:0,occ:[],outAt:0,note:'',notes:[],by:'',at:0,seatAck:null,
     flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},'unseated');
   atOpen='';atDraft=null;
 }
@@ -7878,31 +7924,53 @@ function atDoMove(from,to){
   const r=atRec(from), dst=atRec(to);
   if(!r||r.state!=='seated'){atMoveFrom='';renderBoard();return;}
   if(dst&&dst.state==='seated'){atMoveFrom='';renderBoard();return;}   // never move onto a live table
-  atWrite(to,{state:'seated',covers:r.covers||0,occ:r.occ||[],outAt:r.outAt||0,note:r.note||'',
+  atWrite(to,{state:'seated',covers:r.covers||0,occ:r.occ||[],outAt:r.outAt||0,note:r.note||'',notes:atNotes(r),
     by:r.by||'',at:r.at||Date.now(),seatAck:r.seatAck||null,flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},
     'moved in from '+comboPrimary(from));
-  atWrite(from,{state:'open',covers:0,occ:[],outAt:0,note:'',by:'',at:0,seatAck:null,
+  atWrite(from,{state:'open',covers:0,occ:[],outAt:0,note:'',notes:[],by:'',at:0,seatAck:null,
     flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},'moved to '+comboPrimary(to));
   atMoveFrom=''; atOpen=to; atDraft=null;
 }
 function atFlagIt(t,kind){
-  const note=atDraft&&atDraft.table===t?(atDraft.note||'').trim():'';
-  atWrite(t,{flag:kind,flagNote:note,flagBy:currentUserName()||'',flagAt:Date.now(),flagAck:null},
-    'flagged '+(AT_FLAG[kind]?AT_FLAG[kind].l.toLowerCase():kind));
+  /* a note typed in the box rides into the THREAD alongside the flag — flagNote is
+     legacy read-only now. Flags no longer need a note, and notes no longer need a flag. */
+  const el=$('at-nt-'+String(t).replace(/\W/g,'')), who=currentUserName()||'';
+  const v=el?(el.value||'').trim():'';
+  const patch={flag:kind,flagNote:'',flagBy:who,flagAt:Date.now(),flagAck:null};
+  if(v){
+    patch.notes=atNotes(atRec(t)).concat([{by:who,role:atIsMD()?'md':'server',at:Date.now(),text:v,seenBy:[who]}]).slice(-30);
+    if(el)el.value='';
+  }
+  atWrite(t,patch,'flagged '+(AT_FLAG[kind]?AT_FLAG[kind].l.toLowerCase():kind));
   atOpen='';atDraft=null;
 }
 function atAckSeat(t){
-  atWrite(t,{seatAck:{by:currentUserName()||'',at:Date.now()}},'seat acknowledged');
+  /* one Got it covers the seat AND any notes riding with it — the seat-time note
+     lives in the thread now, and owing a second ack for the same tap is noise */
+  const meN=currentUserName()||'', r=atRec(t);
+  const patch={seatAck:{by:meN,at:Date.now()}};
+  if(r&&atNotesUnseen(r))patch.notes=atNotes(r).map(function(n){
+    if(!n||n.by===meN||(n.seenBy||[]).indexOf(meN)>=0)return n;
+    return Object.assign({},n,{seenBy:(n.seenBy||[]).concat([meN])});
+  });
+  atWrite(t,patch,'seat acknowledged');
   atOpen='';atDraft=null;
 }
 function atAckFlag(t){
   const r=atRec(t); if(!r||!r.flag)return;
   if(r.flag==='reset'){
     /* acking a reset is what clears the table. Nothing else empties it. */
-    atWrite(t,{state:'open',covers:0,occ:[],outAt:0,note:'',by:'',at:0,seatAck:null,
+    atWrite(t,{state:'open',covers:0,occ:[],outAt:0,note:'',notes:[],by:'',at:0,seatAck:null,
       flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},'reset acknowledged, table cleared');
   }else{
-    atWrite(t,{flagAck:{by:currentUserName()||'',at:Date.now()}},'flag acknowledged');
+    /* one ACK covers the flag and any note that rode in with it, same as the seat ack */
+    const meN=currentUserName()||'';
+    const patch={flagAck:{by:meN,at:Date.now()}};
+    if(atNotesUnseen(r))patch.notes=atNotes(r).map(function(n){
+      if(!n||n.by===meN||(n.seenBy||[]).indexOf(meN)>=0)return n;
+      return Object.assign({},n,{seenBy:(n.seenBy||[]).concat([meN])});
+    });
+    atWrite(t,patch,'flag acknowledged');
   }
   atOpen='';atDraft=null;
 }
@@ -7936,6 +8004,31 @@ function atSymbols(occ){return (occ||[]).map(function(k){return AT_OCC[k]?'<span
 function atSeenLine(a,lab){
   if(!a||!a.at)return '<span class="at-unseen">'+esc(lab)+'</span>';
   return '<span class="at-seen">✓ seen '+esc(atStamp(a.at))+(a.by?' by '+esc(String(a.by).split(' ')[0]):'')+'</span>';
+}
+/* the note thread block, shared by both roles. The caller appends the input + Send. */
+function atThreadHTML(t,r){
+  const meN=currentUserName(), list=atNotes(r);
+  /* legacy single-field notes from docs written before 2026-08-21 render read-only */
+  const legacy=[];
+  if(r&&r.note)legacy.push({text:r.note,by:r.by||'',at:r.at||0,role:'md'});
+  if(r&&r.flagNote)legacy.push({text:r.flagNote,by:r.flagBy||'',at:r.flagAt||0,role:'server'});
+  if(!list.length&&!legacy.length)return '';
+  let h='<div class="at-thread"><div class="at-lab">Notes</div>';
+  legacy.forEach(function(n){
+    h+='<div class="at-nline'+(n.role==='md'?' at-nmd':'')+'"><span class="at-ntext">'+esc(n.text)+'</span>'+
+      '<span class="at-meta">'+esc(String(n.by||'').split(' ')[0])+(n.at?' · '+esc(atStamp(n.at)):'')+'</span></div>';
+  });
+  list.forEach(function(n){
+    if(!n)return;
+    const unseen=n.by!==meN&&(n.seenBy||[]).indexOf(meN)<0;
+    const seenByOther=(n.seenBy||[]).some(function(s){return s!==n.by;});
+    h+='<div class="at-nline'+(unseen?' at-nnew':'')+(n.role==='md'?' at-nmd':'')+'">'+
+      '<span class="at-ntext">'+esc(n.text)+'</span>'+
+      '<span class="at-meta">'+esc(String(n.by||'').split(' ')[0])+' · '+esc(atStamp(n.at))+(seenByOther?' · ✓ seen':'')+'</span></div>';
+  });
+  if(atNotesUnseen(r))
+    h+='<div class="at-acts"><button class="at-btn at-go" onclick="atAckNotes(\''+esc(t)+'\')">Got it</button></div>';
+  return h+'</div>';
 }
 function atTileHTML(t){
   const r=atRec(t), seated=!!(r&&r.state==='seated'), m=atLeft(r), g=atGlow(r), key=String(t).replace(/\W/g,'');
@@ -7982,13 +8075,11 @@ function atPanelHTML(t){
       (r.covers?'<span class="at-pax">'+esc(r.covers)+' cover'+(r.covers>1?'s':'')+'</span>':'')+'</div></div>';
     h+='<div class="at-meta at-seatline">seated '+esc(atStamp(r.at))+(r.by?' by '+esc(String(r.by).split(' ')[0]):'')+
       ' · '+atSeenLine(r.seatAck,'not seen yet')+'</div>';
-    /* the MD gets the note as an editable textarea a few rows down, so showing it
-       twice reads like a bug. The server, who cannot edit it, gets the callout. */
-    if(r.note&&!md)h+='<div class="at-mdnote">'+esc(r.note)+'</div>';
   }
 
   if(md){
     if(!seated){
+      h+=atThreadHTML(t,r);
       h+='<div class="at-lab">Occasion</div><div class="at-row">'+
         AT_OCC_ORDER.map(function(k){return '<button class="at-oc'+(atDraft&&atDraft.occ[k]?' on':'')+'" onclick="atToggleOcc(\''+k+'\')">'+AT_OCC[k].s+' '+esc(AT_OCC[k].l)+'</button>';}).join('')+'</div>';
       h+='<div class="at-row at-step"><span class="at-lab">Covers</span>'+
@@ -8002,8 +8093,9 @@ function atPanelHTML(t){
     }else{
       h+='<div class="at-row at-step"><span class="at-lab">Out by</span>'+
         '<button class="at-sb" onclick="atAdjust(\''+esc(t)+'\',-15)">−15</button><b>'+esc(atClock(r.outAt))+'</b><button class="at-sb" onclick="atAdjust(\''+esc(t)+'\',15)">+15</button></div>';
-      h+='<textarea class="at-note" id="at-note-'+key+'" placeholder="Note for the server">'+esc(r.note||'')+'</textarea>';
-      h+='<div class="at-acts"><button class="at-btn" onclick="atSaveNote(\''+esc(t)+'\')">Save note</button>'+
+      h+=atThreadHTML(t,r);
+      h+='<textarea class="at-note" id="at-nt-'+key+'" placeholder="Note to the server"></textarea>';
+      h+='<div class="at-acts"><button class="at-btn at-go" onclick="atPostNote(\''+esc(t)+'\')">Send note</button>'+
         '<button class="at-btn" onclick="atStartMove(\''+esc(t)+'\')">Move…</button>'+
         '<button class="at-btn at-cancel" onclick="atUnseat(\''+esc(t)+'\')">Unseat</button></div>';
     }
@@ -8011,9 +8103,12 @@ function atPanelHTML(t){
     if(seated&&!r.seatAck){
       h+='<div class="at-acts"><button class="at-btn at-go" onclick="atAckSeat(\''+esc(t)+'\')">Got it</button></div>';
     }
+    h+=atThreadHTML(t,r);
+    h+='<textarea class="at-note" id="at-nt-'+key+'" placeholder="Note to the MD"></textarea>';
+    h+='<div class="at-acts"><button class="at-btn at-go" onclick="atPostNote(\''+esc(t)+'\')">Send note</button></div>';
     h+='<div class="at-lab">Tell the MD</div><div class="at-row">'+
-      AT_FLAG_ORDER.map(function(k){return '<button class="at-fl at-f-'+AT_FLAG[k].c+'" onclick="atFlagIt(\''+esc(t)+'\',\''+k+'\')">'+esc(AT_FLAG[k].l)+'</button>';}).join('')+'</div>';
-    h+='<textarea class="at-note" id="at-note-'+key+'" placeholder="Add a note (optional) then tap one above" oninput="atDraftNote(this.value)">'+esc(atDraft?atDraft.note:'')+'</textarea>';
+      AT_FLAG_ORDER.map(function(k){return '<button class="at-fl at-f-'+AT_FLAG[k].c+'" onclick="atFlagIt(\''+esc(t)+'\',\''+k+'\')">'+esc(AT_FLAG[k].l)+'</button>';}).join('')+
+      '<div class="at-meta">A flag sends whatever is typed above along with it.</div></div>';
   }
 
   if(r&&r.log&&r.log.length){
