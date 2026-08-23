@@ -667,7 +667,7 @@ body.tour-on{padding-bottom:230px;}
 .at-flagbar.at-done{opacity:.62;}
 .at-fn{color:var(--ink-soft);}
 .at-flagbar .at-btn{margin-left:auto;}
-/* the per-table note thread (2026-08-21) */
+/* the per-table note thread (2026-08-22) */
 .at-thread{margin-top:11px;}
 .at-nline{display:flex; flex-direction:column; gap:2px; padding:8px 11px; margin-top:6px;
   background:rgba(205,216,244,.07); border-left:3px solid rgba(205,216,244,.28);
@@ -1804,7 +1804,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1787449662';   // stamped by build-data.py at every deploy
+const BUILD='1787449850';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4062,10 +4062,10 @@ function alertsDismiss(){
   alertsClose(); updatePendingBadge();
 }
 function alertReply(reqId){
-  /* Write-first, loud on failure (2026-08-21). The old version echoed the reply into
+  /* Write-first, loud on failure (2026-08-22). The old version echoed the reply into
      local state BEFORE the Firestore write and swallowed the write's rejection with an
      empty catch — a failed send looked sent on the sender's screen, then vanished on
-     the next sync. That ate a real reply from Gopala (found 2026-08-21: thread ended
+     the next sync. That ate a real reply from Gopala (found 2026-08-22: thread ended
      at Sam's 8/6 question, no reply anywhere in Firestore). Rules here:
      1. No local echo until the write resolves.
      2. A failure keeps the typed text in the box and says so via alert().
@@ -4147,7 +4147,7 @@ function addToComment(id){
   var inp=$('toc-'+id);if(!inp)return;var v=(inp.value||'').trim();if(!v)return;
   var c={by:who,text:v,at:Date.now()};
   if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){
-    /* Write-first, loud on failure — same repair as alertReply (2026-08-21). The old
+    /* Write-first, loud on failure — same repair as alertReply (2026-08-22). The old
        version pre-echoed into toState and swallowed the rejection, so a failed note
        looked posted, then vanished on the next sync. Local echo only after resolve;
        failure keeps the text in the box. The else branch below is the genuine
@@ -7659,7 +7659,7 @@ function rmBoard(k,i){const b=getBoard();(b[k]||[]).splice(i,1);persistBoard(b);
       by, at, seatAck:{by,at}, flag, flagBy, flagAt, flagAck:{by,at},
       notes:[{by, role:'md'|'server', at, text, seenBy:[]}], log:[]}
    Everything is stamped: who did it, when, and who saw it.
-   2026-08-21: notes[] subsumed the old single `note` and `flagNote` fields — servers
+   2026-08-22: notes[] subsumed the old single `note` and `flagNote` fields — servers
    had no way to SEND a note without pressing a flag, so notes silently went nowhere.
    Either side posts, unseen notes glow gold, an explicit Got it acks (adds you to
    seenBy). Legacy `note`/`flagNote` on today's docs still render read-only; neither
@@ -8008,7 +8008,7 @@ function atSeenLine(a,lab){
 /* the note thread block, shared by both roles. The caller appends the input + Send. */
 function atThreadHTML(t,r){
   const meN=currentUserName(), list=atNotes(r);
-  /* legacy single-field notes from docs written before 2026-08-21 render read-only */
+  /* legacy single-field notes from docs written before 2026-08-22 render read-only */
   const legacy=[];
   if(r&&r.note)legacy.push({text:r.note,by:r.by||'',at:r.at||0,role:'md'});
   if(r&&r.flagNote)legacy.push({text:r.flagNote,by:r.flagBy||'',at:r.flagAt||0,role:'server'});

@@ -199,7 +199,7 @@ window.SF = {
        "nuts"
       ],
       "allergenNote": "Tree nuts: the candied almonds come off cleanly for a nut allergy. Allium: the pickled onion and the shallot in the vinaigrette run through the salad, not removable. The vinaigrette also carries mustard, which we do not track as a chip — flag it for a mustard allergy. The candied almonds are just slivered almonds, powdered sugar, and salt — no dairy or egg.",
-      "added": "2026-08-21",
+      "added": "2026-08-22",
       "flags": []
      },
      {
@@ -234,7 +234,7 @@ window.SF = {
        "gluten"
       ],
       "allergenNote": "Dairy: the burrata is the dish, not removable. Gluten: crostini come on the side and come off cleanly. The tomato leaf oil is just tomato leaves and canola oil — no allium anywhere on the plate.",
-      "added": "2026-08-21"
+      "added": "2026-08-22"
      },
      {
       "name": "Grilled Corn Gazpacho",
@@ -273,7 +273,7 @@ window.SF = {
        "dairy"
       ],
       "allergenNote": "Naturally gluten-free. Dairy: two places — the crème fraîche and the butter in the red onion agro dolce. Both are garnishes and come off cleanly together for a dairy allergy. Allium: onion is puréed into the base and the agro dolce sits on top — the garnish can come off, the base cannot.",
-      "added": "2026-08-21"
+      "added": "2026-08-22"
      }
     ]
    },
@@ -350,7 +350,7 @@ window.SF = {
       ],
       "canModify": [],
       "allergenNote": "Gluten: the breading and the rigatoni, both built in. Dairy: mozzarella and Parmesan, built in. Egg: the egg wash in the breading, built in. Allium: garlic and onion in the pomodoro base, not removable.",
-      "added": "2026-08-21"
+      "added": "2026-08-22"
      },
      {
       "name": "Stuffed Farfalle",
@@ -13303,5 +13303,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1787449662"
+ "build": "1787449850"
 };
