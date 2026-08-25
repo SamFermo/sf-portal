@@ -2525,7 +2525,7 @@
           "name": "Josie",
           "shifts": [
             "R/O",
-            "",
+            "3:30 serve",
             "",
             "",
             "3:30 serve",
@@ -2573,7 +2573,7 @@
           "name": "Sabba",
           "shifts": [
             "3:30 Bar",
-            "3:30 serve",
+            "",
             "3:30 serve",
             "3:30 serve",
             "R/O",
@@ -2843,7 +2843,7 @@
             "3:30 Bar",
             "3:30 Bar",
             "Sup Server",
-            "MD",
+            "3:30 Bar",
             "Float"
           ]
         },
@@ -2879,7 +2879,7 @@
             "",
             "3:30 serve",
             "3:30 Bar",
-            "3:30 Bar",
+            "R/O",
             "3:30 Bar"
           ]
         },
@@ -2927,7 +2927,7 @@
             "",
             "",
             "3:30 serve",
-            "3:30 serve",
+            "Sup Server",
             "Sup Server"
           ]
         },
@@ -2939,7 +2939,7 @@
             "",
             "",
             "",
-            "",
+            "3:30 serve",
             ""
           ]
         },
@@ -2975,7 +2975,7 @@
             "Sup Server",
             "",
             "",
-            "Sup Server",
+            "MD",
             "MD"
           ]
         }
@@ -5979,11 +5979,11 @@
           "name": "Cat",
           "shifts": [
             "1-close",
-            "",
+            "1-close",
             "",
             "",
             "1-close",
-            "1-close",
+            "",
             "R/O"
           ]
         },
@@ -5991,11 +5991,11 @@
           "name": "Cooper",
           "shifts": [
             "1-close",
+            "",
+            "",
+            "",
+            "",
             "1-close",
-            "",
-            "",
-            "",
-            "",
             "1-close"
           ]
         },
