@@ -7267,7 +7267,7 @@ window.SF = {
        "3:30 Bar",
        "3:30 Bar",
        "MD",
-       "Float"
+       "3:30 serve"
       ]
      },
      {
@@ -7275,11 +7275,11 @@ window.SF = {
       "shifts": [
        "",
        "R/O",
-       "3:30 serve",
+       "",
        "Sup Server",
        "3:30 serve",
        "",
-       ""
+       "3:30 Bar"
       ]
      },
      {
@@ -7319,13 +7319,25 @@ window.SF = {
       ]
      },
      {
+      "name": "Erica",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "3:30 support",
+       "",
+       ""
+      ]
+     },
+     {
       "name": "Jackie",
       "shifts": [
        "3:30 serve",
        "3:30 serve",
        "",
        "",
-       "",
+       "Sup Server",
        "3:30 serve",
        "3:30 serve"
       ]
@@ -7335,11 +7347,11 @@ window.SF = {
       "shifts": [
        "3:30 serve",
        "",
-       "",
+       "3:30 serve",
        "",
        "3:30 serve",
        "",
-       "3:30 serve"
+       ""
       ]
      },
      {
@@ -7349,7 +7361,7 @@ window.SF = {
        "",
        "",
        "",
-       "Sup Server",
+       "R/O",
        "",
        "Sup Server"
       ]
@@ -10956,7 +10968,7 @@ window.SF = {
      {
       "name": "Sam",
       "shifts": [
-       "MD",
+       "",
        "MD",
        "",
        "",
@@ -10980,7 +10992,7 @@ window.SF = {
      {
       "name": "Jose",
       "shifts": [
-       "Expo",
+       "",
        "",
        "Expo",
        "Expo",
@@ -11004,7 +11016,7 @@ window.SF = {
      {
       "name": "Cat",
       "shifts": [
-       "1-close",
+       "",
        "1-close",
        "1-close",
        "",
@@ -11016,7 +11028,7 @@ window.SF = {
      {
       "name": "Cooper",
       "shifts": [
-       "1-close",
+       "",
        "1-close",
        "",
        "",
@@ -11028,7 +11040,7 @@ window.SF = {
      {
       "name": "Darren",
       "shifts": [
-       "9-5",
+       "",
        "",
        "",
        "9-5",
@@ -11052,7 +11064,7 @@ window.SF = {
      {
       "name": "Ignacio",
       "shifts": [
-       "1-close",
+       "",
        "1-close",
        "1-close",
        "1-close",
@@ -11076,7 +11088,7 @@ window.SF = {
      {
       "name": "Josh",
       "shifts": [
-       "9-7",
+       "",
        "9-7",
        "",
        "",
@@ -11112,7 +11124,7 @@ window.SF = {
      {
       "name": "Tony",
       "shifts": [
-       "1-close",
+       "",
        "",
        "",
        "",
@@ -11191,7 +11203,7 @@ window.SF = {
        "Expo",
        "",
        "",
-       "12-10"
+       "Expo"
       ]
      },
      {
@@ -11227,7 +11239,7 @@ window.SF = {
        "",
        "",
        "",
-       "1-close"
+       ""
       ]
      },
      {
@@ -11251,7 +11263,7 @@ window.SF = {
        "",
        "1-close",
        "1-close",
-       "Expo"
+       "1-close"
       ]
      },
      {
@@ -11372,7 +11384,7 @@ window.SF = {
        "",
        "MD",
        "MD",
-       "Expo"
+       "MD"
       ]
      },
      {
@@ -11396,7 +11408,7 @@ window.SF = {
        "Expo",
        "",
        "",
-       "12-10"
+       "Expo"
       ]
      },
      {
@@ -11424,18 +11436,6 @@ window.SF = {
       ]
      },
      {
-      "name": "Cooper",
-      "shifts": [
-       "1-close",
-       "",
-       "",
-       "",
-       "",
-       "",
-       "1-close"
-      ]
-     },
-     {
       "name": "Darren",
       "shifts": [
        "",
@@ -11456,7 +11456,7 @@ window.SF = {
        "",
        "1-close",
        "1-close",
-       "Expo"
+       "1-close"
       ]
      },
      {
@@ -11486,8 +11486,8 @@ window.SF = {
      {
       "name": "Josh",
       "shifts": [
-       "9-7",
-       "9-7",
+       "1-close",
+       "10-8",
        "1-close",
        "",
        "1-close",
@@ -11601,7 +11601,7 @@ window.SF = {
        "Expo",
        "",
        "",
-       "12-10"
+       "Expo"
       ]
      },
      {
@@ -11629,18 +11629,6 @@ window.SF = {
       ]
      },
      {
-      "name": "Cooper",
-      "shifts": [
-       "1-close",
-       "",
-       "",
-       "",
-       "",
-       "",
-       "1-close"
-      ]
-     },
-     {
       "name": "Darren",
       "shifts": [
        "9-5",
@@ -11661,7 +11649,7 @@ window.SF = {
        "",
        "1-close",
        "1-close",
-       "Expo"
+       "1-close"
       ]
      },
      {
@@ -11691,8 +11679,8 @@ window.SF = {
      {
       "name": "Josh",
       "shifts": [
-       "9-7",
-       "9-7",
+       "1-close",
+       "10-8",
        "1-close",
        "",
        "1-close",
@@ -13303,5 +13291,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1787663634"
+ "build": "1788457235"
 };
