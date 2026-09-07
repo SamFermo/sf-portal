@@ -6641,11 +6641,11 @@
         {
           "name": "Gopala",
           "shifts": [
-            "",
+            "1-close",
             "1-close",
             "",
             "",
-            "1-close",
+            "",
             "1-close",
             "1-close"
           ]
@@ -6653,11 +6653,11 @@
         {
           "name": "Ignacio",
           "shifts": [
-            "1-close",
-            "1-close",
-            "1-close",
-            "1-close",
             "",
+            "1-close",
+            "1-close",
+            "1-close",
+            "1-close",
             "",
             ""
           ]

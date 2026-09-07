@@ -11257,11 +11257,11 @@ window.SF = {
      {
       "name": "Gopala",
       "shifts": [
-       "",
+       "1-close",
        "1-close",
        "",
        "",
-       "1-close",
+       "",
        "1-close",
        "1-close"
       ]
@@ -11269,11 +11269,11 @@ window.SF = {
      {
       "name": "Ignacio",
       "shifts": [
-       "1-close",
-       "1-close",
-       "1-close",
-       "1-close",
        "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
        "",
        ""
       ]
@@ -13291,5 +13291,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1788457235"
+ "build": "1788793711"
 };
