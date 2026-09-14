@@ -7683,7 +7683,7 @@ window.SF = {
      {
       "name": "Allegra",
       "shifts": [
-       "",
+       "3:30 serve",
        "3:30 serve",
        "3:30 serve",
        "",
@@ -7755,7 +7755,7 @@ window.SF = {
      {
       "name": "Mac",
       "shifts": [
-       "3:30 serve",
+       "",
        "3:30 serve",
        "",
        "",
@@ -11500,7 +11500,7 @@ window.SF = {
       "shifts": [
        "9-7",
        "9-7",
-       "9-7",
+       "R/O",
        "",
        "",
        "",
@@ -13291,5 +13291,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1789221582"
+ "build": "1789394911"
 };
