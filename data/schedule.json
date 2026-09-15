@@ -3023,9 +3023,9 @@
             "Admin/MD 5-8",
             "",
             "",
-            "Expo",
-            "Expo",
-            "Expo"
+            "Float",
+            "Float",
+            "R/O"
           ]
         },
         {
@@ -3049,7 +3049,7 @@
             "3:30 Bar",
             "Sup Server",
             "MD",
-            "Float"
+            "MD"
           ]
         },
         {
@@ -3181,7 +3181,7 @@
             "",
             "",
             "Sup Server",
-            "MD"
+            "R/O"
           ]
         }
       ]
@@ -3216,9 +3216,9 @@
             "Admin/MD 5-8",
             "",
             "",
-            "Expo",
-            "Expo",
-            "Expo"
+            "Float",
+            "Float",
+            "Float"
           ]
         },
         {
@@ -3409,9 +3409,9 @@
             "Admin/MD 5-8",
             "",
             "",
-            "Expo",
-            "Expo",
-            "Expo"
+            "Float",
+            "Float",
+            "Float"
           ]
         },
         {
@@ -6571,8 +6571,8 @@
           "shifts": [
             "",
             "Expo",
-            "Expo",
-            "Expo",
+            "Admin",
+            "Admin",
             "Expo",
             "Expo",
             ""
@@ -6777,7 +6777,7 @@
             "",
             "Expo",
             "Expo",
-            "Expo",
+            "Admin",
             "Expo",
             "Expo",
             ""
@@ -6788,11 +6788,11 @@
           "shifts": [
             "Expo",
             "",
-            "Expo",
+            "1-close",
             "Expo",
             "",
             "",
-            "Expo"
+            "11-9"
           ]
         },
         {
@@ -6840,7 +6840,7 @@
             "",
             "1-close",
             "1-close",
-            "1-close"
+            "Expo"
           ]
         },
         {
@@ -6870,9 +6870,9 @@
         {
           "name": "Josh",
           "shifts": [
-            "1-close",
             "10-8",
-            "1-close",
+            "10-8",
+            "10-8",
             "",
             "1-close",
             "",
@@ -6901,6 +6901,18 @@
             "12-10",
             "12-10",
             ""
+          ]
+        },
+        {
+          "name": "Sophie",
+          "shifts": [
+            "1-close training",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "1-close training"
           ]
         },
         {
@@ -6959,8 +6971,8 @@
             "MD",
             "",
             "",
-            "MD",
-            "MD",
+            "Expo",
+            "Expo",
             "MD"
           ]
         },
@@ -6969,10 +6981,10 @@
           "shifts": [
             "",
             "Expo",
-            "Expo",
-            "Expo",
-            "Expo",
-            "Expo",
+            "Admin",
+            "R/O",
+            "R/O",
+            "R/O",
             ""
           ]
         },
@@ -6985,7 +6997,7 @@
             "Expo",
             "",
             "",
-            "Expo"
+            "11-9"
           ]
         },
         {
@@ -7033,7 +7045,7 @@
             "",
             "1-close",
             "1-close",
-            "1-close"
+            "Expo"
           ]
         },
         {
@@ -7063,7 +7075,7 @@
         {
           "name": "Josh",
           "shifts": [
-            "1-close",
+            "10-8",
             "10-8",
             "1-close",
             "",
@@ -7094,6 +7106,18 @@
             "12-10",
             "12-10",
             ""
+          ]
+        },
+        {
+          "name": "Sophie",
+          "shifts": [
+            "1-close training",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "1-close training"
           ]
         },
         {
