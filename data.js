@@ -8014,7 +8014,7 @@ window.SF = {
      "",
      "",
      "",
-     "3:30 serve",
+     "3:30 serve x 2",
      "3:30 serve"
     ],
     "rows": [
@@ -8025,9 +8025,9 @@ window.SF = {
        "Admin/MD 5-8",
        "",
        "",
-       "Float",
-       "Float",
-       "Float"
+       "Expo",
+       "Expo",
+       "Expo"
       ]
      },
      {
@@ -8177,12 +8177,12 @@ window.SF = {
      {
       "name": "Sully",
       "shifts": [
-       "3:30 serve",
+       "R/O",
        "",
        "Sup Server",
        "",
        "",
-       "Sup Server",
+       "R/O",
        "MD"
       ]
      }
@@ -13315,5 +13315,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1789538305"
+ "build": "1789564410"
 };

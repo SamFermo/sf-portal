@@ -3398,7 +3398,7 @@
         "",
         "",
         "",
-        "3:30 serve",
+        "3:30 serve x 2",
         "3:30 serve"
       ],
       "rows": [
@@ -3409,9 +3409,9 @@
             "Admin/MD 5-8",
             "",
             "",
-            "Float",
-            "Float",
-            "Float"
+            "Expo",
+            "Expo",
+            "Expo"
           ]
         },
         {
@@ -3561,12 +3561,12 @@
         {
           "name": "Sully",
           "shifts": [
-            "3:30 serve",
+            "R/O",
             "",
             "Sup Server",
             "",
             "",
-            "Sup Server",
+            "R/O",
             "MD"
           ]
         }
