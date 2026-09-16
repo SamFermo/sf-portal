@@ -793,6 +793,27 @@ body.tour-on{padding-bottom:230px;}
 .ann-home{grid-column:1/-1; display:flex; align-items:center; gap:10px; background:linear-gradient(90deg, rgba(192,57,43,.16), rgba(40,70,150,.16)); border:1px solid rgba(214,158,46,.4); border-radius:14px; padding:12px 15px; cursor:pointer; font-family:inherit; text-align:left;}
 .ann-home-ic{font-size:20px;}
 .ann-home-txt{font-size:13.5px; font-weight:700; color:var(--wood);}
+/* Shifts Needed — open-shift pickup (home chip + modal). Reuses ann-card/comp-modal. */
+.os-home{grid-column:1/-1; display:flex; align-items:center; gap:10px; background:linear-gradient(90deg, rgba(192,57,43,.20), rgba(214,158,46,.16)); border:1px solid rgba(192,57,43,.5); border-radius:14px; padding:12px 15px; cursor:pointer; font-family:inherit; text-align:left;}
+.os-home-ic{font-size:20px;}
+.os-home-txt{font-size:13.5px; font-weight:700; color:var(--wood); line-height:1.35;}
+.os-home-txt b{color:var(--gold-deep);}
+.os-slot{width:100%; text-align:left; border:1px solid rgba(214,158,46,.35); border-radius:12px; padding:11px 13px; margin-top:9px; background:rgba(245,238,222,.06);}
+.os-slot.filled{border-color:rgba(90,140,90,.5); background:rgba(90,140,90,.10);}
+.os-slot-top{display:flex; justify-content:space-between; align-items:baseline; gap:8px;}
+.os-slot-date{font-family:'Cormorant Garamond','Caladea',serif; font-size:17px; font-weight:600; color:var(--wood);}
+.os-slot-need{font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; color:var(--card-mute);}
+.os-slot-need.done{color:#3f7a3f;}
+.os-roster{margin-top:6px; font-size:12.5px; color:var(--card-soft); line-height:1.55;}
+.os-roster .os-pend{color:var(--gold-deep);}
+.os-roster .os-conf{color:#3f7a3f; font-weight:700;}
+.os-slot-actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:9px;}
+.os-btn{border:none; border-radius:9px; padding:8px 14px; font-size:12.5px; font-weight:700; font-family:inherit; cursor:pointer;}
+.os-btn.take{background:var(--gold); color:#241f15;}
+.os-btn.release{background:rgba(120,120,120,.2); color:var(--card-soft);}
+.os-btn.confirm{background:#3f7a3f; color:#fff;}
+.os-you{font-size:12.5px; font-weight:700; color:var(--gold-deep); margin-top:8px;}
+.os-you.working{color:var(--card-mute); font-weight:600;}
 /* staff Day at a Glance: weather rec, offer banner, covers, volunteer + actions */
 .ds-wxrec-banner{background:rgba(214,149,46,.16); border:1px solid rgba(214,149,46,.5); border-radius:11px; padding:11px 14px; font-size:13px; font-weight:600; color:#8a5e15; margin:0 0 10px; line-height:1.45;}
 .ds-offer-banner{background:#e7bf5e; border:1px solid var(--gold-deep); border-radius:12px; padding:13px 15px; font-size:14px; font-weight:700; color:#2a1f08; margin:0 0 10px; line-height:1.45; animation:offerPulse 2.4s ease-in-out infinite;}
@@ -1804,7 +1825,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1789484779';   // stamped by build-data.py at every deploy
+const BUILD='1789533478';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1961,7 +1982,7 @@ function renderHome(){
   const annChip = annChipShow?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${annChipTxt}</span></button>`:'';
   let html = isInvestor()
     ? rcCardHTML() + freshCardHTML()
-    : annChip + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():''))
+    : annChip + osHomeChipHTML() + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():''))
       + (typeof scwsCanTab==='function'&&scwsCanTab()?scwsCardHTML():'')
       + freshCardHTML() + verbalsCardHTML();
   const std=[['board','⌗','The Attic','Seat, time & flag tonight\'s tables'],
@@ -2163,6 +2184,7 @@ function refreshAuthUI(){
   renderSchedule();   // re-render so the signed-in user's row highlight follows the login
   startFrontDeskSync();
   startMenuEditSync();
+  startOpenShiftsSync();
 }
 function renderAccountBar(){
   if(!$('idBar'))return;
@@ -2396,6 +2418,8 @@ function afterLogin(){
   // the timeoff snapshot usually gets here first; this covers a login that lands
   // after the data was already synced, when no new snapshot is coming
   setTimeout(maybeShowAlerts,1200);
+  // open-shift pop-up queues behind announce/alerts (maybeShowOpenShifts self-defers if one is up)
+  setTimeout(maybeShowOpenShifts,1600);
 }
 
 /* ===== ANNOUNCEMENT / RSVP POP-UP =========================================
@@ -2541,6 +2565,190 @@ function annCardHTML(existing){
     <button class="ann-dismiss" onclick="annDismiss()">I'll confirm later</button>
     ${tally}
   </div>`;
+}
+
+/* ===== SHIFTS NEEDED — open-shift pickup ===================================
+   Manager posts open floor shifts (OPENSHIFTS below). Every FOH staffer sees a
+   home chip; those NOT working that day get a login pop-up. Anyone eligible taps
+   "Pick this up" -> a pending claim in Firestore `openshifts`, live to every
+   device. A manager confirms; confirmed pickups fill the slot. Mirrors the
+   ANNOUNCE pop-up and the coverage-claims patterns already in this app.
+   To run a future ask: change OPENSHIFTS (a new id resets everyone). ===== */
+const OPENSHIFTS={
+  id:'oct-3-4-2026',
+  active:true,
+  showUntil:'2026-10-04',
+  emoji:'🙋',
+  title:'Shifts needed',
+  note:'We’re short on the floor. If you’re free, tap to pick one up — Sam confirms it.',
+  slots:[
+    {date:'2026-10-03', need:2},
+    {date:'2026-10-04', need:1}
+  ]
+};
+let OSCLAIMS={}, osUnsub=null, osLoaded=false, osShownSession=false;
+/* Local preview only (serve-local.command on localhost): unlocks the login pop-up
+   and the pick-up/confirm buttons for whoever is signed in, so Sam can walk the
+   full staff experience before deploy. NEVER true on the deployed site, and preview
+   taps are kept off Firestore so they don't touch the real board. */
+const OS_PREVIEW=(location.hostname==='localhost'||location.hostname==='127.0.0.1');
+function osActive(){ return OPENSHIFTS.active && todayISO()<=OPENSHIFTS.showUntil; }
+function osDocId(date,name){ return (OPENSHIFTS.id+'__'+date+'__'+String(name)).toLowerCase().replace(/[^a-z0-9_]+/g,'-'); }
+/* Pickups live in ONE doc, board/openshifts, as {osId, entries:[...]} — the same
+   singleton pattern as board/announceGuests. This reuses the already-permitted
+   `board` collection (a brand-new top-level collection is blocked by the project's
+   Firestore rules). Mutations run in a transaction so two simultaneous grabs can't
+   clobber each other. entry: {key,osId,date,by,at,status[,confirmedBy,confirmedAt]}. */
+function osDocRef(){ return fbDb.collection('board').doc('openshifts'); }
+function osIngest(d){
+  d=d||{};
+  const entries=(d.osId===OPENSHIFTS.id)?(d.entries||[]):[];   // a new OPENSHIFTS.id resets the board
+  OSCLAIMS={}; entries.forEach(function(e){ if(e&&e.key)OSCLAIMS[e.key]=Object.assign({_id:e.key},e); });
+}
+function osTx(mutate){
+  if(!(fbReady&&fbDb))return Promise.resolve();
+  const ref=osDocRef();
+  return fbDb.runTransaction(function(tx){
+    return tx.get(ref).then(function(snap){
+      const d=snap.data()||{};
+      let entries=(d.osId===OPENSHIFTS.id)?((d.entries||[]).slice()):[];
+      entries=mutate(entries)||entries;
+      tx.set(ref,{osId:OPENSHIFTS.id, entries:entries});
+    });
+  }).catch(function(){});
+}
+function startOpenShiftsSync(){
+  if(fbReady&&fbDb){
+    if(osUnsub)osUnsub();
+    osUnsub=osDocRef().onSnapshot(function(snap){
+      osIngest(snap.data()); osLoaded=true;
+      if($('home')&&$('home').classList.contains('active'))renderHome();
+      const m=$('osModal'); if(m&&m.style.display==='flex')osRenderModal();
+      if(typeof maybeShowOpenShifts==='function')maybeShowOpenShifts();
+    },function(){ osLoaded=false; });
+  }
+}
+/* claims scoped to the CURRENT OPENSHIFTS instance + a given date */
+function osForDate(date){ return Object.keys(OSCLAIMS).map(function(k){return OSCLAIMS[k];})
+  .filter(function(c){return c&&c.osId===OPENSHIFTS.id&&c.date===date;}); }
+function osConfirmedCount(date){ return osForDate(date).filter(function(c){return c.status==='confirmed';}).length; }
+function osSlotFilled(slot){ return osConfirmedCount(slot.date)>=slot.need; }
+function osMine(date){ const who=currentUserName(); if(!who)return null;
+  const list=osForDate(date); for(let i=0;i<list.length;i++){ if(list[i].by===who)return list[i]; } return null; }
+/* schedule read for the signed-in person on a day: 'working' | 'ro' | 'free' | null(unknown).
+   'ro' (requested off) is treated as unavailable — Sam's call: don't ping people who
+   asked off. Both 'working' and 'ro' are excluded from the ask; only 'free'/unknown qualify. */
+function osAvailOn(iso){
+  const w=(typeof dsWeekFor==='function')?dsWeekFor('foh',iso):null; if(!w)return null;
+  const MYN=(typeof myRowNames==='function')?myRowNames():[]; if(!MYN.length)return null;
+  const i=(w.dates||[]).indexOf(iso); if(i<0)return null;
+  const row=(w.rows||[]).find(function(r){return MYN.indexOf(String(r.name).trim().toLowerCase())>=0;});
+  if(!row)return 'free';                          // FOH but not on the sheet this week -> free
+  const cell=String((row.shifts||[])[i]||'').trim();
+  if(!cell)return 'free';                          // blank -> off, available
+  if(cell.toUpperCase()==='R/O')return 'ro';       // requested off -> excluded
+  return 'working';
+}
+function osIsFoh(){ return !!(me && me.area==='foh'); }   // all-FOH eligibility (Sam's call)
+/* a slot the signed-in person could pick up right now: FOH, free that day (not
+   working, not R/O), not already theirs, and not yet filled */
+function osOpenForMe(slot){
+  if(!osIsFoh())return false;
+  if(osSlotFilled(slot))return false;
+  if(osMine(slot.date))return false;
+  const a=osAvailOn(slot.date);
+  return a==='free'||a===null;                     // free or unknown only
+}
+function osAnyOpenForMe(){ return osActive() && OPENSHIFTS.slots.some(osOpenForMe); }
+/* ---- pickup / release / confirm ---- */
+function osTake(date){
+  if(!me){openLogin();return;}
+  if(osMine(date))return;
+  if(!confirm('Pick up the '+fmtLong(date)+' shift? Sam still confirms it.'))return;
+  const key=osDocId(date,me.name);
+  const entry={key:key, osId:OPENSHIFTS.id, date:date, by:me.name, at:Date.now(), status:'pending'};
+  OSCLAIMS[key]=Object.assign({_id:key},entry); osRenderModal(); renderHome();   // optimistic
+  if(fbReady&&fbDb&&!DEMO&&!OS_PREVIEW){ osTx(function(entries){
+    if(entries.some(function(e){return e.key===key;}))return entries; entries.push(entry); return entries; }); }
+}
+function osRelease(date){
+  const mine=osMine(date); if(!mine)return;
+  if(!(isAdmin()||mine.by===currentUserName())){alert('Only '+String(mine.by).split(' ')[0]+' or Sam can release this.');return;}
+  if(!confirm('Release the '+fmtLong(date)+' pickup?'))return;
+  const key=mine.key||mine._id; delete OSCLAIMS[key]; osRenderModal(); renderHome();
+  if(fbReady&&fbDb&&!DEMO&&!OS_PREVIEW){ osTx(function(entries){ return entries.filter(function(e){return e.key!==key;}); }); }
+}
+function osConfirm(id){
+  if(!isAdmin()){alert('Only a manager can confirm a pickup.');return;}
+  const c=OSCLAIMS[id]; if(!c)return;
+  const by=currentUserName()||'Sam', at=Date.now();
+  c.status='confirmed'; c.confirmedBy=by; c.confirmedAt=at; OSCLAIMS[id]=c; osRenderModal(); renderHome();
+  if(fbReady&&fbDb&&!DEMO&&!OS_PREVIEW){ osTx(function(entries){
+    return entries.map(function(e){ return e.key===id?Object.assign({},e,{status:'confirmed',confirmedBy:by,confirmedAt:at}):e; }); }); }
+}
+/* ---- home chip (landing screen) ---- */
+function osHomeChipHTML(){
+  if(!osActive())return '';
+  if(!(osIsFoh()||isMgr()))return '';            // FOH staff + any manager
+  const open=OPENSHIFTS.slots.filter(function(s){return !osSlotFilled(s);}).length;
+  const txt = open ? ('<b>'+esc(OPENSHIFTS.title)+'</b> — '+open+' date'+(open>1?'s':'')+' still need coverage. Tap to help.')
+                   : ('<b>'+esc(OPENSHIFTS.title)+'</b> — all covered ✓ (tap to view)');
+  return '<button class="os-home" onclick="osOpen()"><span class="os-home-ic">'+OPENSHIFTS.emoji+'</span><span class="os-home-txt">'+txt+'</span></button>';
+}
+/* ---- modal (login pop-up + tap-through) ---- */
+function osSlotHTML(slot){
+  const list=osForDate(slot.date).slice().sort(function(a,b){return (a.at||0)-(b.at||0);});
+  const conf=osConfirmedCount(slot.date), filled=osSlotFilled(slot), mgr=isAdmin();
+  const roster = list.length ? list.map(function(c){
+      const nm=esc(String(c.by));
+      if(c.status==='confirmed')return '<span class="os-conf">'+nm+' ✓ on</span>';
+      const cbtn=mgr?' <button class="os-btn confirm" onclick="osConfirm(\''+esc(c._id)+'\')">Confirm</button>':'';
+      return '<span class="os-pend">'+nm+' · pending</span>'+cbtn;
+    }).join('<br>') : '<span style="color:var(--card-mute);font-style:italic">No one yet.</span>';
+  const mine=osMine(slot.date), avail=osAvailOn(slot.date), working=avail==='working', ro=avail==='ro';
+  let youLine='';
+  if(mine) youLine='<div class="os-you">You’re down for this '+(mine.status==='confirmed'?'— confirmed ✓':'— pending Sam’s confirm')+'.</div>';
+  else if(working) youLine='<div class="os-you working">You’re on the floor this day.</div>';
+  else if(ro) youLine='<div class="os-you working">You’re off (R/O) this day.</div>';
+  let actions='';
+  if(mine) actions='<div class="os-slot-actions"><button class="os-btn release" onclick="osRelease(\''+slot.date+'\')">Release</button></div>';
+  else if(OS_PREVIEW || (!filled && !working && !ro && osIsFoh())) actions='<div class="os-slot-actions"><button class="os-btn take" onclick="osTake(\''+slot.date+'\')">Pick this up</button></div>';
+  const needTxt = filled ? 'Filled ✓' : (conf+' of '+slot.need+' filled');
+  return '<div class="os-slot'+(filled?' filled':'')+'">'+
+    '<div class="os-slot-top"><span class="os-slot-date">'+esc(fmtLong(slot.date))+'</span>'+
+    '<span class="os-slot-need'+(filled?' done':'')+'">'+needTxt+'</span></div>'+
+    '<div class="os-roster">'+roster+'</div>'+youLine+actions+'</div>';
+}
+function osCardHTML(){
+  return '<div class="ann-card">'+
+    '<div class="ann-emoji">'+OPENSHIFTS.emoji+'</div>'+
+    '<div class="ann-title serif">'+esc(OPENSHIFTS.title)+'</div>'+
+    '<div class="ann-note">'+esc(OPENSHIFTS.note)+'</div>'+
+    OPENSHIFTS.slots.map(osSlotHTML).join('')+
+    '<button class="ann-dismiss" onclick="osDismiss()">Close</button>'+
+  '</div>';
+}
+function osRenderModal(){ const m=$('osModal'); if(m&&m.style.display==='flex')m.innerHTML=osCardHTML(); }
+function osOpen(){
+  if(!me)return;
+  let m=$('osModal');
+  if(!m){ m=document.createElement('div'); m.id='osModal'; m.className='comp-modal ann-modal'; m.onclick=function(e){if(e.target===m)osClose();}; document.body.appendChild(m); }
+  m.innerHTML=osCardHTML(); m.style.display='flex';
+}
+function osClose(){ const m=$('osModal'); if(m)m.style.display='none'; }
+function osDismissKey(){ return 'sf-openshifts-'+OPENSHIFTS.id; }
+function osDismissedNow(){ try{const s=JSON.parse(localStorage.getItem(osDismissKey())||'null'); return !!(s&&s.exp&&Date.now()<s.exp);}catch(e){return false;} }
+function osDismiss(){ try{localStorage.setItem(osDismissKey(),JSON.stringify({exp:next3am(Date.now())}));}catch(e){} osClose(); }
+function maybeShowOpenShifts(){
+  if(osShownSession)return;
+  if(!(me&&me.contactSet&&osActive()&&osLoaded&&!osDismissedNow()))return;
+  if(!OS_PREVIEW){
+    if(isInvestor()||DEMO)return;
+    if(!osAnyOpenForMe())return;
+  }
+  const a=$('announceModal'),al=$('alertModal');
+  if((a&&a.style.display==='flex')||(al&&al.style.display==='flex')){ setTimeout(maybeShowOpenShifts,600); return; }
+  osShownSession=true; osOpen();
 }
 
 /* FRESH — FOOD + corrections mode */
