@@ -804,6 +804,7 @@ body.tour-on{padding-bottom:230px;}
 .os-slot-date{font-family:'Cormorant Garamond','Caladea',serif; font-size:17px; font-weight:600; color:var(--wood);}
 .os-slot-need{font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; color:var(--card-mute);}
 .os-slot-need.done{color:#3f7a3f;}
+.os-slot-sub{margin-top:2px; font-size:12px; color:var(--card-mute); font-weight:600;}
 .os-roster{margin-top:6px; font-size:12.5px; color:var(--card-soft); line-height:1.55;}
 .os-roster .os-pend{color:var(--gold-deep);}
 .os-roster .os-conf{color:#3f7a3f; font-weight:700;}
@@ -1825,7 +1826,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1789533478';   // stamped by build-data.py at every deploy
+const BUILD='1789538305';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2567,53 +2568,102 @@ function annCardHTML(existing){
   </div>`;
 }
 
-/* ===== SHIFTS NEEDED — open-shift pickup ===================================
-   Manager posts open floor shifts (OPENSHIFTS below). Every FOH staffer sees a
-   home chip; those NOT working that day get a login pop-up. Anyone eligible taps
-   "Pick this up" -> a pending claim in Firestore `openshifts`, live to every
-   device. A manager confirms; confirmed pickups fill the slot. Mirrors the
-   ANNOUNCE pop-up and the coverage-claims patterns already in this app.
-   To run a future ask: change OPENSHIFTS (a new id resets everyone). ===== */
-const OPENSHIFTS={
-  id:'oct-3-4-2026',
-  active:true,
-  showUntil:'2026-10-04',
-  emoji:'🙋',
-  title:'Shifts needed',
-  note:'We’re short on the floor. If you’re free, tap to pick one up — Sam confirms it.',
-  slots:[
-    {date:'2026-10-03', need:2},
-    {date:'2026-10-04', need:1}
-  ]
-};
+/* ===== SHIFTS NEEDED — open-shift pickup (autonomous, coverage-driven) =======
+   The FOH/BOH schedule sheets carry a "Coverage Needs" row per week; build-schedule.py
+   parses it into week.coverage[7] (Mon..Sun), already shipped in data.js. This feature
+   reads that coverage on every render — so it refreshes with the daily schedule deploy,
+   no manual posting — and for each needed shift within the next OS_HORIZON_DAYS shows the
+   OFF-staff on that SIDE a landing chip + a login pop-up to pick it up. The sheet is the
+   source of truth: put a shift in a day's Coverage Needs cell and it appears; clear it (or
+   let the date pass) and it disappears.
+
+   A coverage cell holds the shift needed (e.g. "3:30 serve"). Put more than one on a day
+   with commas/semicolons ("3:30 serve, Sup Server" = two asks) and a count with a leading
+   number ("2 3:30 serve" or "2x 3:30 serve" = two of that shift). Empty (or "x") = nothing.
+
+   Targeting: only staff whose area === the ask's side AND who are free that day qualify for
+   the pop-up (blank cell; a real shift OR R/O are both excluded — Sam's call). Everyone on
+   that side is eligible, leads included. Managers always see the chip and do the confirming.
+
+   Pickups live in board/openshifts {entries:[{key,askId,side,date,shift,by,at,status,...}]},
+   reusing the already-permitted `board` collection (a new top-level collection is blocked by
+   the project's Firestore rules). Mutations run in a transaction so simultaneous grabs can't
+   clobber. Auto-clear: asks are derived fresh each render, so a past date or a cleared cell
+   stops producing an ask; orphaned/past pickups are pruned on ingest and on write. ===== */
+const OS_HORIZON_DAYS=14;
+const OS_TITLE='Shifts needed';
+const OS_EMOJI='🙋';
+const OS_NOTE='We’re short-handed. If you’re free, tap to pick one up — a manager confirms it.';
+/* Manual overrides: asks Sam wants shown regardless of the sheet or the two-week window
+   (e.g. a shift further out than 14 days). Same shape as a derived ask. Shown for any
+   future date; on id collision (same side+date+shift) the manual entry wins over the sheet,
+   so a manual need=2 isn't overwritten by the sheet's need=1 once the date enters the window.
+   Clear these out when they're no longer needed. */
+const OS_MANUAL=[
+  {side:'foh', date:'2026-10-03', need:2, shift:'3:30 serve'},
+  {side:'foh', date:'2026-10-04', need:1, shift:'3:30 serve'}
+];
 let OSCLAIMS={}, osUnsub=null, osLoaded=false, osShownSession=false;
-/* Local preview only (serve-local.command on localhost): unlocks the login pop-up
-   and the pick-up/confirm buttons for whoever is signed in, so Sam can walk the
-   full staff experience before deploy. NEVER true on the deployed site, and preview
-   taps are kept off Firestore so they don't touch the real board. */
+/* Local preview only (serve-local.command on localhost): unlocks the pop-up and the
+   pick-up/confirm buttons for whoever is signed in, and suppresses all Firestore writes,
+   so Sam can walk the full staff flow before deploy. NEVER true on the deployed site. */
 const OS_PREVIEW=(location.hostname==='localhost'||location.hostname==='127.0.0.1');
-function osActive(){ return OPENSHIFTS.active && todayISO()<=OPENSHIFTS.showUntil; }
-function osDocId(date,name){ return (OPENSHIFTS.id+'__'+date+'__'+String(name)).toLowerCase().replace(/[^a-z0-9_]+/g,'-'); }
-/* Pickups live in ONE doc, board/openshifts, as {osId, entries:[...]} — the same
-   singleton pattern as board/announceGuests. This reuses the already-permitted
-   `board` collection (a brand-new top-level collection is blocked by the project's
-   Firestore rules). Mutations run in a transaction so two simultaneous grabs can't
-   clobber each other. entry: {key,osId,date,by,at,status[,confirmedBy,confirmedAt]}. */
+function osSlug(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
+function osIsoAdd(iso,days){ const d=new Date(iso+'T00:00:00'); d.setDate(d.getDate()+days);
+  const p=function(n){return String(n).padStart(2,'0');}; return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+/* Derive the live list of asks from the schedule's Coverage Needs row, within the horizon. */
+function osAsks(){
+  const t=todayISO(), maxISO=osIsoAdd(t,OS_HORIZON_DAYS), byId={};
+  function add(side,date,need,shift){
+    const id='cov-'+side+'-'+date+'-'+osSlug(shift);
+    if(!byId[id])byId[id]={id:id, side:side, date:date, need:need, shift:shift};   // first writer wins
+  }
+  // manual overrides first (intentional; any future date, ignoring the horizon)
+  (OS_MANUAL||[]).forEach(function(a){ if(a&&a.date>=t)add(a.side,a.date,Math.max(1,a.need||1),a.shift||'Shift'); });
+  // then the sheet's Coverage Needs row, within the two-week window
+  ['foh','boh'].forEach(function(side){
+    ((SF.schedule&&SF.schedule[side])||[]).forEach(function(w){
+      const cov=w.coverage||[], dates=w.dates||[];
+      dates.forEach(function(date,i){
+        if(date<t||date>maxISO)return;
+        const raw=String(cov[i]||'').trim(); if(!raw||raw.toLowerCase()==='x')return;
+        raw.split(/[;,]/).forEach(function(part){
+          part=part.trim(); if(!part)return;
+          let need=1, shift=part;
+          const m=part.match(/^(\d+)\s*[xX]?\s+(\S.*)$/);
+          if(m){ need=Math.max(1,parseInt(m[1],10)||1); shift=m[2].trim(); }
+          add(side,date,need,shift);
+        });
+      });
+    });
+  });
+  return Object.keys(byId).map(function(k){return byId[k];});
+}
+function osActive(){ return osAsks().length>0; }
+function osAskById(id){ return osAsks().find(function(a){return a.id===id;})||null; }
+function osValidAskIds(){ const s={}; osAsks().forEach(function(a){s[a.id]=1;}); return s; }
+/* Pickups live in ONE doc, board/openshifts, as {entries:[...]} — the singleton pattern
+   from board/announceGuests. Reuses the already-permitted `board` collection (a new
+   top-level collection is blocked by the project's Firestore rules). Each entry carries its
+   own askId (side+date+shift), so the one doc holds pickups across every open ask. Mutations
+   run in a transaction so simultaneous grabs can't clobber each other. */
 function osDocRef(){ return fbDb.collection('board').doc('openshifts'); }
 function osIngest(d){
-  d=d||{};
-  const entries=(d.osId===OPENSHIFTS.id)?(d.entries||[]):[];   // a new OPENSHIFTS.id resets the board
-  OSCLAIMS={}; entries.forEach(function(e){ if(e&&e.key)OSCLAIMS[e.key]=Object.assign({_id:e.key},e); });
+  d=d||{}; const valid=osValidAskIds();
+  OSCLAIMS={}; (d.entries||[]).forEach(function(e){
+    if(e&&e.key&&e.askId&&valid[e.askId])OSCLAIMS[e.key]=Object.assign({_id:e.key},e);   // drop orphans
+  });
 }
 function osTx(mutate){
   if(!(fbReady&&fbDb))return Promise.resolve();
-  const ref=osDocRef();
+  const ref=osDocRef(), t=todayISO();
   return fbDb.runTransaction(function(tx){
     return tx.get(ref).then(function(snap){
       const d=snap.data()||{};
-      let entries=(d.osId===OPENSHIFTS.id)?((d.entries||[]).slice()):[];
+      let entries=(d.entries||[]).slice();
       entries=mutate(entries)||entries;
-      tx.set(ref,{osId:OPENSHIFTS.id, entries:entries});
+      entries=entries.filter(function(e){return !e.date || e.date>=t;});   // prune past pickups
+      tx.set(ref,{entries:entries});
     });
   }).catch(function(){});
 }
@@ -2628,103 +2678,114 @@ function startOpenShiftsSync(){
     },function(){ osLoaded=false; });
   }
 }
-/* claims scoped to the CURRENT OPENSHIFTS instance + a given date */
-function osForDate(date){ return Object.keys(OSCLAIMS).map(function(k){return OSCLAIMS[k];})
-  .filter(function(c){return c&&c.osId===OPENSHIFTS.id&&c.date===date;}); }
-function osConfirmedCount(date){ return osForDate(date).filter(function(c){return c.status==='confirmed';}).length; }
-function osSlotFilled(slot){ return osConfirmedCount(slot.date)>=slot.need; }
-function osMine(date){ const who=currentUserName(); if(!who)return null;
-  const list=osForDate(date); for(let i=0;i<list.length;i++){ if(list[i].by===who)return list[i]; } return null; }
-/* schedule read for the signed-in person on a day: 'working' | 'ro' | 'free' | null(unknown).
-   'ro' (requested off) is treated as unavailable — Sam's call: don't ping people who
-   asked off. Both 'working' and 'ro' are excluded from the ask; only 'free'/unknown qualify. */
-function osAvailOn(iso){
-  const w=(typeof dsWeekFor==='function')?dsWeekFor('foh',iso):null; if(!w)return null;
+/* pickups by ask */
+function osEntryKey(askId,name){ return (askId+'__'+osSlug(name)).replace(/[^a-z0-9_-]+/g,'-'); }
+function osForAsk(id){ return Object.keys(OSCLAIMS).map(function(k){return OSCLAIMS[k];}).filter(function(c){return c&&c.askId===id;}); }
+function osConfirmedCount(id){ return osForAsk(id).filter(function(c){return c.status==='confirmed';}).length; }
+function osFilled(ask){ return osConfirmedCount(ask.id)>=ask.need; }
+function osMine(id){ const who=currentUserName(); if(!who)return null; const l=osForAsk(id);
+  for(let i=0;i<l.length;i++){ if(l[i].by===who)return l[i]; } return null; }
+function osMyArea(){ return me?(me.area||''):''; }   // 'foh' | 'boh' | 'office'
+/* the signed-in person on a side/day: 'working' | 'ro' | 'free' | null(unknown). Both
+   'working' and 'ro' are excluded from the ask (Sam's call: don't ping people who asked off);
+   only 'free'/unknown qualify. */
+function osAvailOn(side,iso){
+  const w=(typeof dsWeekFor==='function')?dsWeekFor(side,iso):null; if(!w)return null;
   const MYN=(typeof myRowNames==='function')?myRowNames():[]; if(!MYN.length)return null;
   const i=(w.dates||[]).indexOf(iso); if(i<0)return null;
   const row=(w.rows||[]).find(function(r){return MYN.indexOf(String(r.name).trim().toLowerCase())>=0;});
-  if(!row)return 'free';                          // FOH but not on the sheet this week -> free
+  if(!row)return 'free';                          // on this side but not on the sheet this week -> free
   const cell=String((row.shifts||[])[i]||'').trim();
   if(!cell)return 'free';                          // blank -> off, available
   if(cell.toUpperCase()==='R/O')return 'ro';       // requested off -> excluded
   return 'working';
 }
-function osIsFoh(){ return !!(me && me.area==='foh'); }   // all-FOH eligibility (Sam's call)
-/* a slot the signed-in person could pick up right now: FOH, free that day (not
-   working, not R/O), not already theirs, and not yet filled */
-function osOpenForMe(slot){
-  if(!osIsFoh())return false;
-  if(osSlotFilled(slot))return false;
-  if(osMine(slot.date))return false;
-  const a=osAvailOn(slot.date);
-  return a==='free'||a===null;                     // free or unknown only
+/* an ask this person could pick up now: their side, free that day, not theirs, not filled */
+function osOpenForMe(ask){
+  if(osMyArea()!==ask.side)return false;
+  if(osFilled(ask))return false;
+  if(osMine(ask.id))return false;
+  const a=osAvailOn(ask.side,ask.date);
+  return a==='free'||a===null;
 }
-function osAnyOpenForMe(){ return osActive() && OPENSHIFTS.slots.some(osOpenForMe); }
-/* ---- pickup / release / confirm ---- */
-function osTake(date){
+function osAnyOpenForMe(){ return osAsks().some(osOpenForMe); }
+/* what to show in the card/modal: managers see every side's asks; staff see their side's. */
+function osVisibleAsks(){
+  const all=osAsks().slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:(a.side<b.side?-1:1);});
+  if(isMgr())return all;
+  const area=osMyArea();
+  return all.filter(function(a){return a.side===area;});
+}
+/* ---- pickup / release / confirm (all keyed by askId) ---- */
+function osTake(askId){
   if(!me){openLogin();return;}
-  if(osMine(date))return;
-  if(!confirm('Pick up the '+fmtLong(date)+' shift? Sam still confirms it.'))return;
-  const key=osDocId(date,me.name);
-  const entry={key:key, osId:OPENSHIFTS.id, date:date, by:me.name, at:Date.now(), status:'pending'};
+  const ask=osAskById(askId); if(!ask)return;
+  if(osMine(askId))return;
+  if(!confirm('Pick up the '+ask.shift+' shift on '+fmtLong(ask.date)+'? A manager still confirms it.'))return;
+  const key=osEntryKey(askId,me.name);
+  const entry={key:key, askId:askId, side:ask.side, date:ask.date, shift:ask.shift, by:me.name, at:Date.now(), status:'pending'};
   OSCLAIMS[key]=Object.assign({_id:key},entry); osRenderModal(); renderHome();   // optimistic
   if(fbReady&&fbDb&&!DEMO&&!OS_PREVIEW){ osTx(function(entries){
     if(entries.some(function(e){return e.key===key;}))return entries; entries.push(entry); return entries; }); }
 }
-function osRelease(date){
-  const mine=osMine(date); if(!mine)return;
-  if(!(isAdmin()||mine.by===currentUserName())){alert('Only '+String(mine.by).split(' ')[0]+' or Sam can release this.');return;}
-  if(!confirm('Release the '+fmtLong(date)+' pickup?'))return;
+function osRelease(askId){
+  const mine=osMine(askId); if(!mine)return;
+  if(!(isAdmin()||mine.by===currentUserName())){alert('Only '+String(mine.by).split(' ')[0]+' or a manager can release this.');return;}
+  if(!confirm('Release this pickup?'))return;
   const key=mine.key||mine._id; delete OSCLAIMS[key]; osRenderModal(); renderHome();
   if(fbReady&&fbDb&&!DEMO&&!OS_PREVIEW){ osTx(function(entries){ return entries.filter(function(e){return e.key!==key;}); }); }
 }
-function osConfirm(id){
+function osConfirm(key){
   if(!isAdmin()){alert('Only a manager can confirm a pickup.');return;}
-  const c=OSCLAIMS[id]; if(!c)return;
-  const by=currentUserName()||'Sam', at=Date.now();
-  c.status='confirmed'; c.confirmedBy=by; c.confirmedAt=at; OSCLAIMS[id]=c; osRenderModal(); renderHome();
+  const c=OSCLAIMS[key]; if(!c)return;
+  const by=currentUserName()||'a manager', at=Date.now();
+  c.status='confirmed'; c.confirmedBy=by; c.confirmedAt=at; OSCLAIMS[key]=c; osRenderModal(); renderHome();
   if(fbReady&&fbDb&&!DEMO&&!OS_PREVIEW){ osTx(function(entries){
-    return entries.map(function(e){ return e.key===id?Object.assign({},e,{status:'confirmed',confirmedBy:by,confirmedAt:at}):e; }); }); }
+    return entries.map(function(e){ return e.key===key?Object.assign({},e,{status:'confirmed',confirmedBy:by,confirmedAt:at}):e; }); }); }
 }
 /* ---- home chip (landing screen) ---- */
 function osHomeChipHTML(){
-  if(!osActive())return '';
-  if(!(osIsFoh()||isMgr()))return '';            // FOH staff + any manager
-  const open=OPENSHIFTS.slots.filter(function(s){return !osSlotFilled(s);}).length;
-  const txt = open ? ('<b>'+esc(OPENSHIFTS.title)+'</b> — '+open+' date'+(open>1?'s':'')+' still need coverage. Tap to help.')
-                   : ('<b>'+esc(OPENSHIFTS.title)+'</b> — all covered ✓ (tap to view)');
-  return '<button class="os-home" onclick="osOpen()"><span class="os-home-ic">'+OPENSHIFTS.emoji+'</span><span class="os-home-txt">'+txt+'</span></button>';
+  const vis=osVisibleAsks(); if(!vis.length)return '';
+  if(!(osMyArea()==='foh'||osMyArea()==='boh'||isMgr()))return '';
+  const openN=vis.filter(function(a){return !osFilled(a);}).length;
+  const txt = openN ? ('<b>'+esc(OS_TITLE)+'</b> — '+openN+' shift'+(openN>1?'s':'')+' need coverage. Tap to help.')
+                    : ('<b>'+esc(OS_TITLE)+'</b> — all covered ✓ (tap to view)');
+  return '<button class="os-home" onclick="osOpen()"><span class="os-home-ic">'+OS_EMOJI+'</span><span class="os-home-txt">'+txt+'</span></button>';
 }
 /* ---- modal (login pop-up + tap-through) ---- */
-function osSlotHTML(slot){
-  const list=osForDate(slot.date).slice().sort(function(a,b){return (a.at||0)-(b.at||0);});
-  const conf=osConfirmedCount(slot.date), filled=osSlotFilled(slot), mgr=isAdmin();
+function osSideLabel(s){ return s==='boh'?'Kitchen':'Floor'; }
+function osAskHTML(ask){
+  const list=osForAsk(ask.id).slice().sort(function(a,b){return (a.at||0)-(b.at||0);});
+  const conf=osConfirmedCount(ask.id), filled=osFilled(ask), mgr=isAdmin();
   const roster = list.length ? list.map(function(c){
-      const nm=esc(String(c.by));
+      const nm=esc(String(c.by).split(' ')[0]);
       if(c.status==='confirmed')return '<span class="os-conf">'+nm+' ✓ on</span>';
       const cbtn=mgr?' <button class="os-btn confirm" onclick="osConfirm(\''+esc(c._id)+'\')">Confirm</button>':'';
       return '<span class="os-pend">'+nm+' · pending</span>'+cbtn;
     }).join('<br>') : '<span style="color:var(--card-mute);font-style:italic">No one yet.</span>';
-  const mine=osMine(slot.date), avail=osAvailOn(slot.date), working=avail==='working', ro=avail==='ro';
+  const mine=osMine(ask.id), onMySide=osMyArea()===ask.side, avail=osAvailOn(ask.side,ask.date), working=avail==='working', ro=avail==='ro';
   let youLine='';
-  if(mine) youLine='<div class="os-you">You’re down for this '+(mine.status==='confirmed'?'— confirmed ✓':'— pending Sam’s confirm')+'.</div>';
-  else if(working) youLine='<div class="os-you working">You’re on the floor this day.</div>';
-  else if(ro) youLine='<div class="os-you working">You’re off (R/O) this day.</div>';
+  if(mine) youLine='<div class="os-you">You’re down for this '+(mine.status==='confirmed'?'— confirmed ✓':'— pending a manager’s confirm')+'.</div>';
+  else if(onMySide && working) youLine='<div class="os-you working">You’re on the schedule this day.</div>';
+  else if(onMySide && ro) youLine='<div class="os-you working">You’re off (R/O) this day.</div>';
   let actions='';
-  if(mine) actions='<div class="os-slot-actions"><button class="os-btn release" onclick="osRelease(\''+slot.date+'\')">Release</button></div>';
-  else if(OS_PREVIEW || (!filled && !working && !ro && osIsFoh())) actions='<div class="os-slot-actions"><button class="os-btn take" onclick="osTake(\''+slot.date+'\')">Pick this up</button></div>';
-  const needTxt = filled ? 'Filled ✓' : (conf+' of '+slot.need+' filled');
+  if(mine) actions='<div class="os-slot-actions"><button class="os-btn release" onclick="osRelease(\''+ask.id+'\')">Release</button></div>';
+  else if(OS_PREVIEW || (!filled && !working && !ro && onMySide)) actions='<div class="os-slot-actions"><button class="os-btn take" onclick="osTake(\''+ask.id+'\')">Pick this up</button></div>';
+  const needTxt = filled ? 'Filled ✓' : (conf+' of '+ask.need+' filled');
   return '<div class="os-slot'+(filled?' filled':'')+'">'+
-    '<div class="os-slot-top"><span class="os-slot-date">'+esc(fmtLong(slot.date))+'</span>'+
+    '<div class="os-slot-top"><span class="os-slot-date">'+esc(fmtLong(ask.date))+'</span>'+
     '<span class="os-slot-need'+(filled?' done':'')+'">'+needTxt+'</span></div>'+
+    '<div class="os-slot-sub">'+esc(osSideLabel(ask.side))+' · '+esc(ask.shift)+'</div>'+
     '<div class="os-roster">'+roster+'</div>'+youLine+actions+'</div>';
 }
 function osCardHTML(){
+  const vis=osVisibleAsks();
+  const body = vis.length ? vis.map(osAskHTML).join('') : '<div class="os-roster" style="text-align:center">Nothing open right now.</div>';
   return '<div class="ann-card">'+
-    '<div class="ann-emoji">'+OPENSHIFTS.emoji+'</div>'+
-    '<div class="ann-title serif">'+esc(OPENSHIFTS.title)+'</div>'+
-    '<div class="ann-note">'+esc(OPENSHIFTS.note)+'</div>'+
-    OPENSHIFTS.slots.map(osSlotHTML).join('')+
+    '<div class="ann-emoji">'+OS_EMOJI+'</div>'+
+    '<div class="ann-title serif">'+esc(OS_TITLE)+'</div>'+
+    '<div class="ann-note">'+esc(OS_NOTE)+'</div>'+
+    body+
     '<button class="ann-dismiss" onclick="osDismiss()">Close</button>'+
   '</div>';
 }
@@ -2736,9 +2797,13 @@ function osOpen(){
   m.innerHTML=osCardHTML(); m.style.display='flex';
 }
 function osClose(){ const m=$('osModal'); if(m)m.style.display='none'; }
-function osDismissKey(){ return 'sf-openshifts-'+OPENSHIFTS.id; }
-function osDismissedNow(){ try{const s=JSON.parse(localStorage.getItem(osDismissKey())||'null'); return !!(s&&s.exp&&Date.now()<s.exp);}catch(e){return false;} }
-function osDismiss(){ try{localStorage.setItem(osDismissKey(),JSON.stringify({exp:next3am(Date.now())}));}catch(e){} osClose(); }
+/* Dismiss is scoped to the EXACT set of open asks (a signature of their ids). A newly
+   added needed shift changes the signature, so the pop-up returns even if you dismissed
+   yesterday's; dismissing only silences the set you actually saw, until the next 3am. */
+function osDismissSig(){ return osAsks().map(function(a){return a.id;}).sort().join('|'); }
+function osDismissKey(){ return 'sf-openshifts'; }
+function osDismissedNow(){ try{const s=JSON.parse(localStorage.getItem(osDismissKey())||'null'); return !!(s&&s.sig===osDismissSig()&&s.exp&&Date.now()<s.exp);}catch(e){return false;} }
+function osDismiss(){ try{localStorage.setItem(osDismissKey(),JSON.stringify({sig:osDismissSig(),exp:next3am(Date.now())}));}catch(e){} osClose(); }
 function maybeShowOpenShifts(){
   if(osShownSession)return;
   if(!(me&&me.contactSet&&osActive()&&osLoaded&&!osDismissedNow()))return;
