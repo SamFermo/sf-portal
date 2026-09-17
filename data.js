@@ -11765,7 +11765,7 @@ window.SF = {
   ]
  },
  "compliance": {
-  "updated": "2026-08-08",
+  "updated": "2026-09-17",
   "note": "Mirrors the live Compliance Notebook. FWC = Washington Food Worker Card. MAST = Mixology/Alcohol Server permit. Neither auto-renews; renewal means taking the class again.",
   "binderUrl": "https://drive.google.com/file/d/1VpoB2F_Sae104TcJFMSsksCexVqIxzoM/view",
   "roster": {
@@ -11796,18 +11796,6 @@ window.SF = {
       "text": "CFPM ServSafe Manager, valid through Feb 7, 2030 (also satisfies individual food worker requirement)"
      },
      "mast": null
-    },
-    {
-     "name": "Cooper Duke",
-     "role": "Line Cook",
-     "fwc": {
-      "status": "good",
-      "text": "Valid through Apr 27, 2028"
-     },
-     "mast": {
-      "status": "good",
-      "text": "Valid through Jul 1, 2028 (not required for BOH, on file)"
-     }
     },
     {
      "name": "Darren Mercier",
@@ -12247,10 +12235,6 @@ window.SF = {
      "role": "Server"
     },
     {
-     "name": "Erica Richardson",
-     "role": "Support"
-    },
-    {
      "name": "Helen Richardson",
      "role": "Support · Server in training"
     }
@@ -12278,10 +12262,6 @@ window.SF = {
     },
     {
      "name": "Catherine \"Cat\" Cox",
-     "role": "Line Cook"
-    },
-    {
-     "name": "Cooper Duke",
      "role": "Line Cook"
     },
     {
@@ -13315,5 +13295,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1789564410"
+ "build": "1789680427"
 };

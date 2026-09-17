@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-08",
+  "updated": "2026-09-17",
   "note": "Mirrors the live Compliance Notebook. FWC = Washington Food Worker Card. MAST = Mixology/Alcohol Server permit. Neither auto-renews; renewal means taking the class again.",
   "binderUrl": "https://drive.google.com/file/d/1VpoB2F_Sae104TcJFMSsksCexVqIxzoM/view",
   "roster": {
@@ -7,7 +7,6 @@
       { "name": "Anna Velasco-Ojeda", "role": "Line Cook", "fwc": { "status": "good", "text": "Valid through Feb 3, 2027" }, "mast": null },
       { "name": "Antolin \"Tony\" Reyes", "role": "Line Cook", "fwc": { "status": "warn", "text": "Needs verify — profile says Complete, no image on file" }, "mast": null },
       { "name": "Chris Hoey", "role": "Chef de Cuisine · Person in Charge", "fwc": { "status": "good", "text": "CFPM ServSafe Manager, valid through Feb 7, 2030 (also satisfies individual food worker requirement)" }, "mast": null },
-      { "name": "Cooper Duke", "role": "Line Cook", "fwc": { "status": "good", "text": "Valid through Apr 27, 2028" }, "mast": { "status": "good", "text": "Valid through Jul 1, 2028 (not required for BOH, on file)" } },
       { "name": "Darren Mercier", "role": "Line Cook", "fwc": { "status": "good", "text": "Valid through Apr 28, 2028" }, "mast": null },
       { "name": "Gopala Corral", "role": "Line Cook", "fwc": { "status": "warn", "text": "Expires Oct 10, 2026 — renewal watch" }, "mast": null },
       { "name": "Ignacio Godinez", "role": "Line Cook", "fwc": { "status": "warn", "text": "Valid through Jan 30, 2027, UNSIGNED — get signature next shift" }, "mast": null },
