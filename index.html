@@ -1826,7 +1826,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1789778189';   // stamped by build-data.py at every deploy
+const BUILD='1789781527';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2476,22 +2476,7 @@ const ANNOUNCES=[
     "Say hi when you're on with her."
   ],
   note:"She's in the Directory. Contact info shows up once she picks how she wants to be reached."
-  },
-  {
-  kind:'info',
-  id:'goodbye-hello-2026-08',
-  showUntil:'2026-09-30',
-  emoji:'\uD83C\uDF19',
-  title:'Goodbye and hello',
-  lines:[
-    "Sunday the 9th is Helen's last day. Three summers on support and she's been a rock through all of them. She's on Thursday through Sunday, so say goodbye if you're on with her.",
-    "Three new faces coming in.",
-    "Nam Huynh, server. Training Thursday and Friday, then picking up shifts through the end of September.",
-    "Erica Richardson, support. Fridays and Saturdays from the 14th. Helen's sister, and she did the same shifts for us last summer.",
-    "Joshua Lardizabal, line cook. Starts training in the next week or two, picks up a few shifts, then he's away on a trip. Fully live once he's back."
-  ],
-  note:"They're all in the Directory. Contact info shows up as each of them picks how they want to be reached, so if someone's blank today, check back. Once they're up, go to them directly for coverage."
-}
+  }
 ];
 let ANNOUNCE=ANNOUNCES[ANNOUNCES.length-1];
 function annForMe(A){ if(!A||!A.aud||A.aud==='all')return true; if(!me)return false; return me.area===A.aud||!!me.admin; }
