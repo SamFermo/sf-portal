@@ -1470,6 +1470,24 @@ body.locked{overflow:hidden;}
 .scws-ed .seg button{font-size:11px; padding:4px 11px; border:0; background:transparent;
   color:var(--card-soft); cursor:pointer; font-family:inherit;}
 .scws-ed .seg button.on{background:var(--wood); color:#fffdf7; font-weight:600;}
+/* ===== Servers tab (2026-09-19): per-server item mix, data only ===== */
+.srv-bar{display:flex; height:9px; border-radius:5px; overflow:hidden; background:rgba(205,216,244,.08); min-width:120px;}
+.srv-bar i{display:block; height:100%;}
+.srv-legend{display:flex; flex-wrap:wrap; gap:6px 14px; margin:2px 0 12px; font-size:11.5px; color:var(--ink-mute);}
+.srv-legend span{display:inline-flex; align-items:center; gap:5px;}
+.srv-legend i{width:9px; height:9px; border-radius:2px; display:inline-block;}
+.srv-tbl td,.srv-tbl th{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;}
+.srv-tbl td:first-child,.srv-tbl th:first-child{text-align:left;}
+.srv-tbl td.srv-barcell{width:34%; min-width:130px;}
+.srv-tbl tr.srv-row{cursor:pointer;}
+.srv-tbl tr.srv-row:hover td{background:rgba(205,216,244,.04);}
+.srv-tbl tr.srv-detail td{text-align:left; white-space:normal; padding:8px 8px 12px; background:rgba(205,216,244,.03); color:var(--ink-mute); font-size:12px; line-height:1.55;}
+.srv-tbl tr.srv-detail b{color:var(--ink); font-weight:600;}
+.srv-caret{display:inline-block; width:12px; color:var(--ink-mute); font-size:10px;}
+.srv-note{font-size:12px; color:#e6c878; margin:0 0 10px;}
+.srv-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+.srv-tbl td:nth-child(3){color:inherit;}
+.srv-dw{max-width:calc(100vw - 72px); white-space:normal; position:sticky; left:8px;}
 .scws-btns{display:flex; gap:9px; margin:14px 0 2px; flex-wrap:wrap;}
 .scws-btns button{font-size:12px; padding:7px 14px; border-radius:9px; cursor:pointer;
   border:1px solid rgba(205,216,244,.2); background:transparent; color:var(--ink); font-family:inherit;}
@@ -1708,6 +1726,12 @@ body.locked{overflow:hidden;}
   <div id="scwsBody"></div>
 </section>
 
+<section class="view" id="servers">
+  <div class="view-head"><p class="view-eyebrow">Sam, Tim &amp; Sully</p><h2 class="view-title">Servers</h2>
+    <p class="view-sub">What each person rang, by item, straight from Revel. Information only. It does not feed the service charge.</p></div>
+  <div id="srvBody"></div>
+</section>
+
 <section class="view" id="board">
   <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">The Attic</h2>
     <div class="subtabs" id="atticTabs"><span class="subpill" id="atticPill"></span>
@@ -1826,7 +1850,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1789836863';   // stamped by build-data.py at every deploy
+const BUILD='1789852815';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1881,6 +1905,7 @@ function navTabs(){
   // Recap supersedes Last Night for the full tier, so only one of the two ever appears.
   // Partial-tier managers keep Last Night, which is still the only view they have.
   if(typeof rcCanTab==='function'&&rcCanTab())head=head.concat([['recap','Recap']]);
+  if(typeof srvCanTab==='function'&&srvCanTab())head=head.concat([['servers','Servers']]);
   if(typeof scwsCanTab==='function'&&scwsCanTab())head=head.concat([['scws','Service Charge']]);
   else if(typeof lnCanTab==='function'&&lnCanTab())head=head.concat([['lastnight','Last Night']]);
   // The Attic is a floor tool. The line has no use for a seat clock and it only adds
@@ -1898,7 +1923,7 @@ function go(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender(); if(id==='servers')srvRender();
   if(id==='standards')showStdPane(stdTab);
   if(id==='compliance'){renderCompliance();markComplianceSeen();}
   if(id==='fresh')markFreshSeen();
@@ -10258,6 +10283,127 @@ function scwsCopyReport(rows,label){
 }
 
 /* ---------- home card ---------- */
+/* =====================================================================================
+   SERVERS TAB — per-server item mix. Built 2026-09-19.
+   Reads revel/<date>.server_mix, written nightly by bridge/server_mix_pull.js from Revel's
+   Product Mix report filtered per employee. DATA ONLY: nothing here feeds scws_sheet.
+   Dollars are product sales EX service charge. Revel credits whoever rang the item, so a
+   maitre d' or a bartender reads small and a busser never appears. The staff Family Meal is
+   lifted out of the ringer's row by the puller and shown as its own line.
+   Gate: Sam, Tim and Sully only, by first name, on top of mgr/admin — same posture as
+   SCWS_VIEWERS. Sully is here on purpose even though he is not on the Service Charge tab.
+   ===================================================================================== */
+const SRV_VIEWERS=['sam','tim','sully'];
+const SRV={ready:false, nights:{}, range:null, sub:'sales', open:{}};
+const SRV_GROUPS=[['Food','Food','#c9a66b'],['Wine Bottles','Bottles','#8e3b46'],['Wine by the Glass','Glass wine','#d98c9a'],
+                  ['Cocktails','Cocktails','#6f9bd1'],['Beer','Beer','#d9b44a'],['Non Alcoholic Beverages','NA','#7fb8a4'],['Other','Other','#8a8fa3']];
+function srvGroup(c){ if(c==='Classic Cocktails'||c==='Liquor')return 'Cocktails';
+  return SRV_GROUPS.some(g=>g[0]===c)?c:'Other'; }
+function srvCanTab(){
+  if(typeof isInvestor==='function'&&isInvestor())return false;
+  const f=scwsFirst(me&&me.name).toLowerCase();
+  return !!(me&&(me.admin||me.mgr)&&SRV_VIEWERS.indexOf(f)>=0);
+}
+function srvLoad(){
+  if(SRV.ready)return Promise.resolve();
+  if(!(fbReady&&fbDb))return Promise.resolve();
+  return fbDb.collection('revel').get().then(snap=>{
+    snap.forEach(doc=>{ const d=doc.data()||{}; if(d.server_mix&&d.server_mix.rows&&d.server_mix.rows.length)SRV.nights[doc.id]=d.server_mix; });
+    SRV.ready=true;
+  }).catch(()=>{SRV.ready='failed';});
+}
+function srvRender(){
+  const body=$('srvBody'); if(!body)return;
+  if(!srvCanTab()){body.innerHTML='<p class="board-empty">Not available.</p>';return;}
+  body.innerHTML='<p class="board-empty">Loading…</p>';
+  srvLoad().then(()=>{
+    if(SRV.ready==='failed'){body.innerHTML='<p class="board-empty">Could not read the portal database. This is a read failure, not an empty tab. Try again in a minute.</p>';return;}
+    const dates=Object.keys(SRV.nights).sort().reverse();
+    if(!dates.length){body.innerHTML='<p class="board-empty">No server data yet. The nightly pull has not written any nights.</p>';return;}
+    if(!SRV.range||(SRV.range.indexOf('n:')===0&&dates.indexOf(SRV.range.slice(2))<0))SRV.range='n:'+dates[0];
+    srvPaint(dates);
+  });
+}
+function srvPick(dates){
+  if(SRV.range.indexOf('n:')===0)return [SRV.range.slice(2)];
+  if(SRV.range==='all')return dates.slice();
+  return dates.slice(0,parseInt(SRV.range.slice(2),10)||7);
+}
+function srvAgg(list){
+  const per={}; let fm=0, farm=0, open=[];
+  list.forEach(iso=>{ const m=SRV.nights[iso]; if(!m)return;
+    fm+=(m.family_meal&&m.family_meal.total)||0; farm+=(m.farm_ringin&&m.farm_ringin.total)||0;
+    (m.open_checks||[]).forEach(o=>open.push({iso:iso,rung_by:o.rung_by,total:o.total}));
+    m.rows.forEach(r=>{ const k=r.full||r.name;
+      const p=per[k]=per[k]||{name:r.name,net:0,gross:0,disc:0,checks:0,hours:0,nights:0,groups:{},items:{},gl:0,gl_n:0,btl:0,btl_n:0};
+      p.net+=r.net||0; p.gross+=r.gross||0; p.disc+=r.discounts||0; p.checks+=r.checks||0; p.hours+=r.hours||0; p.nights++;
+      Object.keys(r.classes||{}).forEach(c=>{ const g=srvGroup(c); p.groups[g]=(p.groups[g]||0)+(r.classes[c].t||0); });
+      (r.items||[]).forEach(i=>{ const it=p.items[i.p]=p.items[i.p]||{p:i.p,c:i.c,n:0,t:0}; it.n+=i.n||0; it.t+=i.t||0; });
+      const w=r.wine||{}; p.gl+=w.gl||0; p.gl_n+=w.gl_n||0; p.btl+=w.btl||0; p.btl_n+=w.btl_n||0;
+    });
+  });
+  const rows=Object.keys(per).map(k=>per[k]).sort((a,b)=>b.net-a.net);
+  const total=rows.reduce((a,r)=>a+r.net,0);
+  return {rows:rows,total:total,fm:fm,farm:farm,open:open};
+}
+function srvPaint(dates){
+  const body=$('srvBody'), list=srvPick(dates), A=srvAgg(list), one=list.length===1;
+  let h='<div class="subtabs" id="srvTabs"><span class="subpill"></span>'
+      +`<button class="subtab ${SRV.sub==='sales'?'active':''}" data-sv="sales">Sales</button>`
+      +`<button class="subtab ${SRV.sub==='wine'?'active':''}" data-sv="wine">Wine</button></div>`;
+  h+='<div class="scws-range"><select id="srvRange" class="rc-select">'
+    +[['r:7','Last 7 nights'],['r:14','Last 14 nights'],['r:30','Last 30 nights'],['all','Everything on file']]
+       .map(o=>`<option value="${o[0]}"${SRV.range===o[0]?' selected':''}>${o[1]}</option>`).join('')
+    +dates.slice(0,45).map(d=>`<option value="n:${d}"${SRV.range==='n:'+d?' selected':''}>${fmtLong(d)}</option>`).join('')
+    +'</select></div>';
+  const checks=A.rows.reduce((a,r)=>a+r.checks,0), wine=A.rows.reduce((a,r)=>a+r.gl+r.btl,0), btl=A.rows.reduce((a,r)=>a+r.btl,0), btlN=A.rows.reduce((a,r)=>a+r.btl_n,0);
+  h+=`<div class="scws-cards">
+    <div class="scws-card"><div class="scws-k">Product sales</div><div class="scws-v">${scwsMoney(A.total)}</div><div class="scws-s">${one?fmtLong(list[0]):list.length+' nights'} · before service charge</div></div>
+    <div class="scws-card"><div class="scws-k">Checks</div><div class="scws-v">${checks}</div><div class="scws-s">${checks?scwsMoney(A.total/checks)+' average':''}</div></div>
+    <div class="scws-card"><div class="scws-k">Wine</div><div class="scws-v">${scwsMoney(wine)}</div><div class="scws-s">${A.total?Math.round(wine/A.total*100):0}% of sales</div></div>
+    <div class="scws-card"><div class="scws-k">Bottles</div><div class="scws-v">${btlN}</div><div class="scws-s">${btlN?scwsMoney(btl/btlN)+' average bottle':'none'}</div></div></div>`;
+  if(A.open.length)h+='<p class="srv-note">'+A.open.map(o=>`An open check of ${scwsMoney(o.total)} rung by ${esc(o.rung_by)} on ${fmtLong(o.iso)} was still open when this was pulled and may be inside their number.`).join(' ')+'</p>';
+  const caret=k=>`<span class="srv-caret">${SRV.open[k]?'▾':'▸'}</span>`;
+  if(SRV.sub==='wine'){
+    h+='<div class="srv-scroll"><table class="scws-tbl srv-tbl"><thead><tr><th>Name</th><th>Glass</th><th>Bottles</th><th>Count</th><th>Avg bottle</th><th>Bottle share</th><th>Wine % of sales</th></tr></thead><tbody>';
+    A.rows.filter(r=>r.gl+r.btl>0).sort((a,b)=>(b.gl+b.btl)-(a.gl+a.btl)).forEach(r=>{
+      const w=r.gl+r.btl, k='w:'+r.name;
+      h+=`<tr class="srv-row" data-k="${esc(k)}"><td class="nm">${caret(k)}${esc(r.name)}</td><td>${scwsMoney(r.gl)}</td><td>${scwsMoney(r.btl)}</td><td>${r.btl_n}</td>`
+        +`<td>${r.btl_n?scwsMoney(r.btl/r.btl_n):'—'}</td><td>${w?Math.round(r.btl/w*100):0}%</td><td>${r.net?Math.round(w/r.net*100):0}%</td></tr>`;
+      if(SRV.open[k]){
+        const its=Object.keys(r.items).map(x=>r.items[x]).filter(i=>i.c==='Wine Bottles'||i.c==='Wine by the Glass').sort((a,b)=>b.t-a.t);
+        const line=c=>its.filter(i=>i.c===c).map(i=>`${esc(i.p)} ×${i.n} ${scwsMoney(i.t)}`).join(' · ')||'none';
+        h+=`<tr class="srv-detail"><td colspan="7"><div class="srv-dw"><b>Bottles</b> ${line('Wine Bottles')}<br><b>By the glass</b> ${line('Wine by the Glass')}</div></td></tr>`;
+      }
+    });
+    h+='</tbody></table></div>';
+  } else {
+    h+='<div class="srv-legend">'+SRV_GROUPS.map(g=>`<span><i style="background:${g[2]}"></i>${g[1]}</span>`).join('')+'</div>';
+    h+='<div class="srv-scroll"><table class="scws-tbl srv-tbl"><thead><tr><th>Name</th><th>Sales</th><th>Share</th><th>Checks</th><th>Avg check</th>'+(one?'':'<th>Nights</th>')+'<th>Mix</th></tr></thead><tbody>';
+    A.rows.forEach(r=>{
+      const k='s:'+r.name, gt=SRV_GROUPS.reduce((a,g)=>a+Math.max(0,r.groups[g[0]]||0),0);
+      const bar=SRV_GROUPS.map(g=>{const v=Math.max(0,r.groups[g[0]]||0); return v&&gt?`<i style="width:${(v/gt*100).toFixed(1)}%;background:${g[2]}" title="${g[1]} ${scwsMoney(v)}"></i>`:'';}).join('');
+      h+=`<tr class="srv-row" data-k="${esc(k)}"><td class="nm">${caret(k)}${esc(r.name)}</td><td>${scwsMoney(r.net)}</td><td>${A.total?(r.net/A.total*100).toFixed(1):'0'}%</td>`
+        +`<td>${r.checks||'—'}</td><td>${r.checks?scwsMoney(r.net/r.checks):'—'}</td>${one?'':`<td>${r.nights}</td>`}<td class="srv-barcell"><div class="srv-bar">${bar}</div></td></tr>`;
+      if(SRV.open[k]){
+        const mix=SRV_GROUPS.filter(g=>(r.groups[g[0]]||0)>0).map(g=>`${g[1]} ${scwsMoney(r.groups[g[0]])} (${gt?Math.round(r.groups[g[0]]/gt*100):0}%)`).join(' · ');
+        const top=Object.keys(r.items).map(x=>r.items[x]).sort((a,b)=>b.t-a.t).slice(0,18).map(i=>`${esc(i.p)} ×${i.n} ${scwsMoney(i.t)}`).join(' · ');
+        h+=`<tr class="srv-detail"><td colspan="${one?6:7}"><div class="srv-dw"><b>Mix</b> ${mix}${r.disc?` · discounts ${scwsMoney(r.disc)}`:''}<br><b>Top items</b> ${top}</div></td></tr>`;
+      }
+    });
+    h+='</tbody></table></div>';
+  }
+  h+=`<p class="scws-foot">Sales are product dollars after discounts and before the 23% service charge. Revel credits whoever rang the item, so the door and the bar read small and support never appears. `
+    +(A.fm?`The staff family meal (${scwsMoney(A.fm)} over this range) is taken out of the row of whoever rang it. `:'')
+    +(A.farm?`Farm dinner ring-ins (${scwsMoney(A.farm)} over this range) are taken out the same way. `:'')
+    +`Online orders land under the account that owns the integration. This page is information only and does not feed the service charge split.</p>`;
+  body.innerHTML=h;
+  body.querySelectorAll('[data-sv]').forEach(b=>b.onclick=()=>{SRV.sub=b.dataset.sv; srvPaint(dates);});
+  const sel=$('srvRange'); if(sel)sel.onchange=()=>{SRV.range=sel.value; SRV.open={}; srvPaint(dates);};
+  body.querySelectorAll('tr.srv-row').forEach(tr=>tr.onclick=()=>{const k=tr.dataset.k; SRV.open[k]=!SRV.open[k]; srvPaint(dates);});
+  if(typeof replaceAllPills==='function')setTimeout(replaceAllPills,0);
+}
+
 function scwsCardHTML(){ return wideCardHTML('scws','⚖','Service Charge','Last night\'s split'); }
 
 /* Fills the card detail in the background so it reads live without opening the tab,
