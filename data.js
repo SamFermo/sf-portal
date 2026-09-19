@@ -7870,7 +7870,7 @@ window.SF = {
        "Sup Server",
        "3:30 serve",
        "",
-       ""
+       "3:30 serve"
       ]
      },
      {
@@ -7918,7 +7918,7 @@ window.SF = {
        "",
        "",
        "3:30 serve",
-       "3:30 serve"
+       ""
       ]
      },
      {
@@ -8014,8 +8014,8 @@ window.SF = {
      "",
      "",
      "",
-     "3:30 serve x 2",
-     "3:30 serve"
+     "3:30 serve",
+     ""
     ],
     "rows": [
      {
@@ -8099,7 +8099,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       ""
+       "3:30 serve"
       ]
      },
      {
@@ -8146,7 +8146,7 @@ window.SF = {
        "",
        "",
        "",
-       "",
+       "3:30 serve",
        ""
       ]
      },
@@ -11761,6 +11761,826 @@ window.SF = {
       ]
      }
     ]
+   },
+   {
+    "weekStart": "2026-10-05",
+    "dates": [
+     "2026-10-05",
+     "2026-10-06",
+     "2026-10-07",
+     "2026-10-08",
+     "2026-10-09",
+     "2026-10-10",
+     "2026-10-11"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "MD",
+       "",
+       "",
+       "MD",
+       "MD",
+       "MD"
+      ]
+     },
+     {
+      "name": "Chris",
+      "shifts": [
+       "",
+       "Expo",
+       "Expo",
+       "Admin",
+       "Expo",
+       "Expo",
+       ""
+      ]
+     },
+     {
+      "name": "Jose",
+      "shifts": [
+       "Expo",
+       "",
+       "1-close",
+       "Expo",
+       "",
+       "",
+       "Expo"
+      ]
+     },
+     {
+      "name": "Joe",
+      "shifts": [
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7",
+       ""
+      ]
+     },
+     {
+      "name": "Cat",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Darren",
+      "shifts": [
+       "",
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Gopala",
+      "shifts": [
+       "",
+       "1-close",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Ignacio",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Jackson",
+      "shifts": [
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Josh",
+      "shifts": [
+       "10-8",
+       "10-8",
+       "",
+       "",
+       "1-close",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Kenji",
+      "shifts": [
+       "9-7",
+       "9-7",
+       "9-7",
+       "",
+       "",
+       "",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Manny",
+      "shifts": [
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "12-10",
+       "12-10",
+       ""
+      ]
+     },
+     {
+      "name": "Sophie",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "R/O"
+      ]
+     },
+     {
+      "name": "Tony",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Anna",
+      "shifts": [
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       ""
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-10-12",
+    "dates": [
+     "2026-10-12",
+     "2026-10-13",
+     "2026-10-14",
+     "2026-10-15",
+     "2026-10-16",
+     "2026-10-17",
+     "2026-10-18"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "MD",
+       "",
+       "",
+       "MD",
+       "MD",
+       "MD"
+      ]
+     },
+     {
+      "name": "Chris",
+      "shifts": [
+       "",
+       "Expo",
+       "Expo",
+       "Admin",
+       "Expo",
+       "Expo",
+       ""
+      ]
+     },
+     {
+      "name": "Jose",
+      "shifts": [
+       "Expo",
+       "",
+       "1-close",
+       "Expo",
+       "",
+       "",
+       "11-8"
+      ]
+     },
+     {
+      "name": "Joe",
+      "shifts": [
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7",
+       ""
+      ]
+     },
+     {
+      "name": "Cat",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Darren",
+      "shifts": [
+       "9-5",
+       "",
+       "",
+       "9-5",
+       "9-5",
+       "9-5",
+       "9-5"
+      ]
+     },
+     {
+      "name": "Gopala",
+      "shifts": [
+       "",
+       "1-close",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "Expo"
+      ]
+     },
+     {
+      "name": "Ignacio",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "R/O"
+      ]
+     },
+     {
+      "name": "Jackson",
+      "shifts": [
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Josh",
+      "shifts": [
+       "1-close",
+       "10-8",
+       "",
+       "",
+       "1-close",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Kenji",
+      "shifts": [
+       "9-7",
+       "9-7",
+       "9-7",
+       "",
+       "",
+       "",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Manny",
+      "shifts": [
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "12-10",
+       "12-10",
+       ""
+      ]
+     },
+     {
+      "name": "Sophie",
+      "shifts": [
+       "R/O",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Tony",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Anna",
+      "shifts": [
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       ""
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-10-19",
+    "dates": [
+     "2026-10-19",
+     "2026-10-20",
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23",
+     "2026-10-24",
+     "2026-10-25"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "MD",
+       "",
+       "",
+       "MD",
+       "MD",
+       "MD"
+      ]
+     },
+     {
+      "name": "Chris",
+      "shifts": [
+       "",
+       "Expo",
+       "Expo",
+       "Admin",
+       "Expo",
+       "Expo",
+       ""
+      ]
+     },
+     {
+      "name": "Jose",
+      "shifts": [
+       "Expo",
+       "",
+       "1-close",
+       "Expo",
+       "",
+       "",
+       "Expo"
+      ]
+     },
+     {
+      "name": "Joe",
+      "shifts": [
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7",
+       ""
+      ]
+     },
+     {
+      "name": "Cat",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Darren",
+      "shifts": [
+       "",
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Gopala",
+      "shifts": [
+       "",
+       "1-close",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Ignacio",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "R/O",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Jackson",
+      "shifts": [
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Josh",
+      "shifts": [
+       "10-8",
+       "10-8",
+       "",
+       "",
+       "1-close",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Kenji",
+      "shifts": [
+       "9-7",
+       "9-7",
+       "9-7",
+       "",
+       "",
+       "",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Manny",
+      "shifts": [
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "12-10",
+       "12-10",
+       ""
+      ]
+     },
+     {
+      "name": "Sophie",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "R/O"
+      ]
+     },
+     {
+      "name": "Tony",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Anna",
+      "shifts": [
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       ""
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-10-26",
+    "dates": [
+     "2026-10-26",
+     "2026-10-27",
+     "2026-10-28",
+     "2026-10-29",
+     "2026-10-30",
+     "2026-10-31",
+     "2026-11-01"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "MD",
+       "",
+       "",
+       "MD",
+       "MD",
+       "MD"
+      ]
+     },
+     {
+      "name": "Chris",
+      "shifts": [
+       "",
+       "Expo",
+       "Expo",
+       "Expo",
+       "Expo",
+       "Expo",
+       ""
+      ]
+     },
+     {
+      "name": "Jose",
+      "shifts": [
+       "Expo",
+       "",
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "Expo"
+      ]
+     },
+     {
+      "name": "Joe",
+      "shifts": [
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7",
+       ""
+      ]
+     },
+     {
+      "name": "Cat",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "R/O",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Darren",
+      "shifts": [
+       "9-5",
+       "",
+       "",
+       "9-5",
+       "9-5",
+       "9-5",
+       "9-5"
+      ]
+     },
+     {
+      "name": "Gopala",
+      "shifts": [
+       "",
+       "1-close",
+       "",
+       "",
+       "R/O",
+       "R/O",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Ignacio",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       ""
+      ]
+     },
+     {
+      "name": "Jackson",
+      "shifts": [
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Josh",
+      "shifts": [
+       "1-close",
+       "10-8",
+       "",
+       "",
+       "1-close",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Kenji",
+      "shifts": [
+       "9-7",
+       "9-7",
+       "9-7",
+       "",
+       "",
+       "",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Manny",
+      "shifts": [
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "12-10",
+       "1-close",
+       ""
+      ]
+     },
+     {
+      "name": "Sophie",
+      "shifts": [
+       "R/O",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Tony",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Anna",
+      "shifts": [
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       ""
+      ]
+     }
+    ]
    }
   ]
  },
@@ -11878,6 +12698,15 @@ window.SF = {
      "fwc": {
       "status": "good",
       "text": "Valid through Feb 7, 2028"
+     },
+     "mast": null
+    },
+    {
+     "name": "Sophie Regovic",
+     "role": "Line Cook",
+     "fwc": {
+      "status": "warn",
+      "text": "Pending, new hire (first shift Sep 21). WA card due by Oct 5, 2026"
      },
      "mast": null
     }
@@ -13295,5 +14124,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1789680427"
+ "build": "1789778189"
 };

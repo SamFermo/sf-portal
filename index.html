@@ -1826,7 +1826,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1789680427';   // stamped by build-data.py at every deploy
+const BUILD='1789778189';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1977,6 +1977,7 @@ function renderHome(){
   const mgr=isMgr();
   /* An info notice has nothing to RSVP to and should clear itself once the person
      has acknowledged it. Only RSVP-kind announcements keep nagging until answered. */
+  annPick();
   const annChipShow = annActive() && !(annIsInfo() && annAcked());
   const annChipTxt = annIsInfo() ? esc(ANNOUNCE.title)
     : `${esc(ANNOUNCE.title)} — ${annMyRsvp()?(annMyRsvp().rsvp==='yes'?'you\'re in ✓ (tap to change)':'tap to RSVP'):'tap to RSVP'}`;
@@ -2411,8 +2412,22 @@ function tourEnd(){
 }
 /* Single place that decides what a freshly signed-in person sees first:
    consent, then the tour, then any standing announcement. */
+/* LAST-SEEN STAMP (2026-09-18): staff.lastSeen = ms of the most recent app open with a
+   valid session (PIN login or restored session). Throttled to one write per 30 min per
+   device so profile snapshots re-entering afterLogin don't spam writes. Sam reads it in
+   Staff Access to see who is actually using the portal. */
+function stampLastSeen(){
+  try{
+    if(!me||!me.id||DEMO||(typeof isInvestor==='function'&&isInvestor())||!(fbReady&&fbDb))return;
+    const k='sf-lastseen-'+me.id, now=Date.now(), prev=+(localStorage.getItem(k)||0);
+    if(now-prev<30*60*1000)return;
+    localStorage.setItem(k,String(now)); me.lastSeen=now;
+    fbDb.collection('staff').doc(me.id).update({lastSeen:now}).catch(function(){});
+  }catch(e){}
+}
 function afterLogin(){
   if(!me)return;
+  stampLastSeen();
   if(!me.contactSet){openConsent();return;}
   if(tourPending()){setTimeout(welcomeOpen,400);return;}
   setTimeout(maybeShowAnnounce,300);
@@ -2428,7 +2443,41 @@ function afterLogin(){
    lasts until the next 3am reset (matches the session), not just this view. RSVP
    is stored on the person's staff profile (synced) so managers get a live tally.
    To run a future announcement, update ANNOUNCE (new id resets everyone). ===== */
-const ANNOUNCE={
+/* QUEUE (2026-09-18): ANNOUNCES is an ordered list; each person sees, one at a time,
+   the first card that is active, addressed to them (aud: 'all' | 'boh' | 'foh'; admins see
+   every card) and not yet acked/RSVP'd. ANNOUNCE always points at the current card, so
+   everything downstream still reads one object. Acks accumulate in staff.noticeAcks
+   (arrayUnion); the legacy single noticeAck field is still honored. */
+const ANNOUNCES=[
+  {
+  kind:'info',
+  aud:'boh',
+  id:'boh-october-2026',
+  showUntil:'2026-10-18',
+  emoji:'\uD83D\uDCC5',
+  title:'October schedule is up',
+  lines:[
+    "October is live in the Schedule tab, 10/5 through 11/1. Check your weeks and your R/Os.",
+    "From here on the portal is the schedule. I'm not sending the Google Sheet around anymore, so this is where you look.",
+    "If something's wrong or you need a day, put the request in here and tell Chris or me."
+  ],
+  note:""
+  },
+  {
+  kind:'info',
+  aud:'all',
+  id:'meet-sophie-2026-09',
+  showUntil:'2026-10-18',
+  emoji:'\uD83D\uDC4B',
+  title:'Meet Sophie',
+  lines:[
+    "Sophie Regovic is joining the line. She comes to us from Chicago, where she was a chef de partie at Next, and she spent last winter opening a restaurant in Big Sky with the same group.",
+    "She's training Mondays and Sundays through the start of October, then she's on the regular schedule.",
+    "Say hi when you're on with her."
+  ],
+  note:"She's in the Directory. Contact info shows up once she picks how she wants to be reached."
+  },
+  {
   kind:'info',
   id:'goodbye-hello-2026-08',
   showUntil:'2026-09-30',
@@ -2442,7 +2491,17 @@ const ANNOUNCE={
     "Joshua Lardizabal, line cook. Starts training in the next week or two, picks up a few shifts, then he's away on a trip. Fully live once he's back."
   ],
   note:"They're all in the Directory. Contact info shows up as each of them picks how they want to be reached, so if someone's blank today, check back. Once they're up, go to them directly for coverage."
-};
+}
+];
+let ANNOUNCE=ANNOUNCES[ANNOUNCES.length-1];
+function annForMe(A){ if(!A||!A.aud||A.aud==='all')return true; if(!me)return false; return me.area===A.aud||!!me.admin; }
+function annDoneFor(A){ if(!me)return false;
+  if(A.kind==='info')return me.noticeAck===A.id||(Array.isArray(me.noticeAcks)&&me.noticeAcks.indexOf(A.id)>=0);
+  const r=me.announceRsvp; return !!(r&&r.id===A.id); }
+function annPick(){ const t=todayISO();
+  const live=ANNOUNCES.filter(function(A){return t<=A.showUntil&&annForMe(A);});
+  const pend=live.filter(function(A){return !annDoneFor(A);});
+  ANNOUNCE=pend[0]||live[0]||ANNOUNCES[ANNOUNCES.length-1]; return ANNOUNCE; }
 let annShownSession=false, annGuests=0;
 /* Non-staff RSVPs (family/friends Sam adds by hand — no staff profile to hang a
    record on) live in board/announceGuests as {id, entries:[{name,count,rsvp}]},
@@ -2463,18 +2522,22 @@ function startAnnounceGuestsSync(){
 function annDismissKey(){return 'sf-announce-'+ANNOUNCE.id;}
 function annDismissedNow(){ try{const s=JSON.parse(localStorage.getItem(annDismissKey())||'null'); return !!(s&&s.exp&&Date.now()<s.exp);}catch(e){return false;} }
 function annDismiss(){ try{localStorage.setItem(annDismissKey(),JSON.stringify({exp:next3am(Date.now())}));}catch(e){} annClose(); }
-function annActive(){ return todayISO()<=ANNOUNCE.showUntil; }
+function annActive(){ return todayISO()<=ANNOUNCE.showUntil && annForMe(ANNOUNCE); }
 function annMyRsvp(){ const r=me&&me.announceRsvp; return (r&&r.id===ANNOUNCE.id)?r:null; }
 function annIsInfo(){ return ANNOUNCE.kind==='info'; }
-function annAcked(){ return !!(me && me.noticeAck===ANNOUNCE.id); }
+function annAcked(){ return !!(me && annDoneFor(ANNOUNCE)); }
 function annAck(){
-  if(me){ me.noticeAck=ANNOUNCE.id;
-    if(fbReady&&fbDb&&me.id)fbDb.collection('staff').doc(me.id).update({noticeAck:ANNOUNCE.id}).catch(function(){}); }
+  if(me){ const _id=ANNOUNCE.id; me.noticeAck=_id;
+    if(!Array.isArray(me.noticeAcks))me.noticeAcks=[]; if(me.noticeAcks.indexOf(_id)<0)me.noticeAcks.push(_id);
+    if(fbReady&&fbDb&&me.id&&!DEMO)fbDb.collection('staff').doc(me.id).update({noticeAck:_id,noticeAcks:firebase.firestore.FieldValue.arrayUnion(_id)}).catch(function(){}); }
+  /* queue: if another card is waiting for this person, swap it in without closing */
+  annPick();
+  if(annShouldShow()){ annOpen(); try{ if(typeof renderHome==='function')renderHome(); }catch(e){} return; }
   annClose();
   /* repaint Home so the chip goes away right now, not on the next navigation */
   try{ if(typeof renderHome==='function')renderHome(); }catch(e){}
 }
-function annShouldShow(){ if(!(me && me.contactSet && annActive() && !annDismissedNow()))return false;
+function annShouldShow(){ annPick(); if(!(me && me.contactSet && annActive() && !annDismissedNow()))return false;
   return annIsInfo() ? !annAcked() : !annMyRsvp(); }
 function maybeShowAnnounce(){ if(isInvestor())return; if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
 /* Full roster behind the tally: staff (from PROFILES.announceRsvp) plus the
@@ -6166,6 +6229,12 @@ async function accAdd(){
   ['acc-name','acc-role','acc-phone','acc-email','acc-pin'].forEach(i=>{const el=$(i);if(el)el.value='';});
   const ad=$('acc-admin'); if(ad)ad.checked=false;
 }
+/* last-seen badge text for Staff Access (see stampLastSeen). Tracking began 2026-09-18,
+   so a blank means "not since tracking started", not "never". */
+function accSeenTxt(ms){ if(!ms)return 'Not seen since 9/18';
+  const d=Math.floor((Date.now()-ms)/86400000);
+  const when=new Date(ms).toLocaleDateString('en-US',{month:'numeric',day:'numeric'});
+  return d<=0?'Seen today':d===1?'Seen yesterday':('Seen '+when+' ('+d+'d ago)'); }
 function renderAccess(){
   if(!$('accessBody'))return;
   if(!isAdmin()){$('accessBody').innerHTML='<p class="req-empty">Managers only.</p>';return;}
@@ -6185,7 +6254,7 @@ function renderAccess(){
   list.forEach(p=>{const n=jq(p.name);
     h+=`<div class="acc-card ${p.active===false?'off':''}">
       <div class="acc-top"><div><span class="acc-name serif">${esc(p.name)}</span> <span class="acc-role">${esc(p.role||'')} · ${esc((p.area||'').toUpperCase())}</span></div>
-      <div class="acc-badges">${p.admin?'<span class="acc-badge b-mgr">Manager</span>':''}<span class="acc-badge ${p.pinHash?'b-pin':'b-nopin'}">${p.pinHash?'PIN set':'No PIN'}</span>${p.active===false?'<span class="acc-badge b-off">Locked out</span>':''}</div></div>
+      <div class="acc-badges">${p.admin?'<span class="acc-badge b-mgr">Manager</span>':''}<span class="acc-badge ${p.pinHash?'b-pin':'b-nopin'}">${p.pinHash?'PIN set':'No PIN'}</span><span class="acc-badge ${p.lastSeen?'b-pin':'b-nopin'}">${accSeenTxt(p.lastSeen)}</span>${p.active===false?'<span class="acc-badge b-off">Locked out</span>':''}</div></div>
       <div class="acc-actions">
         <button onclick="accSetPin('${n}')">${p.pinHash?'Reset PIN':'Set PIN'}</button>
         <button onclick="accToggleAdmin('${n}')">${p.admin?'Remove mgr':'Make mgr'}</button>

@@ -4,47 +4,390 @@
   "binderUrl": "https://drive.google.com/file/d/1VpoB2F_Sae104TcJFMSsksCexVqIxzoM/view",
   "roster": {
     "boh": [
-      { "name": "Anna Velasco-Ojeda", "role": "Line Cook", "fwc": { "status": "good", "text": "Valid through Feb 3, 2027" }, "mast": null },
-      { "name": "Antolin \"Tony\" Reyes", "role": "Line Cook", "fwc": { "status": "warn", "text": "Needs verify — profile says Complete, no image on file" }, "mast": null },
-      { "name": "Chris Hoey", "role": "Chef de Cuisine · Person in Charge", "fwc": { "status": "good", "text": "CFPM ServSafe Manager, valid through Feb 7, 2030 (also satisfies individual food worker requirement)" }, "mast": null },
-      { "name": "Darren Mercier", "role": "Line Cook", "fwc": { "status": "good", "text": "Valid through Apr 28, 2028" }, "mast": null },
-      { "name": "Gopala Corral", "role": "Line Cook", "fwc": { "status": "warn", "text": "Expires Oct 10, 2026 — renewal watch" }, "mast": null },
-      { "name": "Ignacio Godinez", "role": "Line Cook", "fwc": { "status": "warn", "text": "Valid through Jan 30, 2027, UNSIGNED — get signature next shift" }, "mast": null },
-      { "name": "Jackson Partch", "role": "Line Cook", "fwc": { "status": "good", "text": "Valid through May 4, 2028" }, "mast": null },
-      { "name": "Jose Agundez", "role": "Sous Chef", "fwc": { "status": "good", "text": "Valid through Feb 21, 2028" }, "mast": null },
-      { "name": "Joseph Steuby", "role": "Pasta Production Lead", "fwc": { "status": "good", "text": "Valid through Apr 26, 2027 · Signed" }, "mast": null },
-      { "name": "Joshua Lardizabal", "role": "Line Cook", "fwc": { "status": "good", "text": "Valid through Aug 15, 2028" }, "mast": { "status": "good", "text": "Expired Oct 15, 2025 \u2014 not required (BOH); revisit if FOH shifts" } },
-      { "name": "Kenji Carskaddan", "role": "Line Cook", "fwc": { "status": "warn", "text": "Expires Dec 2, 2026" }, "mast": null },
-      { "name": "Manny Dominguez", "role": "Line Cook", "fwc": { "status": "good", "text": "Valid through Feb 7, 2028" }, "mast": null }
+      {
+        "name": "Anna Velasco-Ojeda",
+        "role": "Line Cook",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Feb 3, 2027"
+        },
+        "mast": null
+      },
+      {
+        "name": "Antolin \"Tony\" Reyes",
+        "role": "Line Cook",
+        "fwc": {
+          "status": "warn",
+          "text": "Needs verify — profile says Complete, no image on file"
+        },
+        "mast": null
+      },
+      {
+        "name": "Chris Hoey",
+        "role": "Chef de Cuisine · Person in Charge",
+        "fwc": {
+          "status": "good",
+          "text": "CFPM ServSafe Manager, valid through Feb 7, 2030 (also satisfies individual food worker requirement)"
+        },
+        "mast": null
+      },
+      {
+        "name": "Darren Mercier",
+        "role": "Line Cook",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Apr 28, 2028"
+        },
+        "mast": null
+      },
+      {
+        "name": "Gopala Corral",
+        "role": "Line Cook",
+        "fwc": {
+          "status": "warn",
+          "text": "Expires Oct 10, 2026 — renewal watch"
+        },
+        "mast": null
+      },
+      {
+        "name": "Ignacio Godinez",
+        "role": "Line Cook",
+        "fwc": {
+          "status": "warn",
+          "text": "Valid through Jan 30, 2027, UNSIGNED — get signature next shift"
+        },
+        "mast": null
+      },
+      {
+        "name": "Jackson Partch",
+        "role": "Line Cook",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through May 4, 2028"
+        },
+        "mast": null
+      },
+      {
+        "name": "Jose Agundez",
+        "role": "Sous Chef",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Feb 21, 2028"
+        },
+        "mast": null
+      },
+      {
+        "name": "Joseph Steuby",
+        "role": "Pasta Production Lead",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Apr 26, 2027 · Signed"
+        },
+        "mast": null
+      },
+      {
+        "name": "Joshua Lardizabal",
+        "role": "Line Cook",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Aug 15, 2028"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Expired Oct 15, 2025 — not required (BOH); revisit if FOH shifts"
+        }
+      },
+      {
+        "name": "Kenji Carskaddan",
+        "role": "Line Cook",
+        "fwc": {
+          "status": "warn",
+          "text": "Expires Dec 2, 2026"
+        },
+        "mast": null
+      },
+      {
+        "name": "Manny Dominguez",
+        "role": "Line Cook",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Feb 7, 2028"
+        },
+        "mast": null
+      },
+      {
+        "name": "Sophie Regovic",
+        "role": "Line Cook",
+        "fwc": {
+          "status": "warn",
+          "text": "Pending, new hire (first shift Sep 21). WA card due by Oct 5, 2026"
+        },
+        "mast": null
+      }
     ],
     "foh": [
-      { "name": "Abby Tornquist", "role": "Server", "fwc": { "status": "good", "text": "Valid through Jun 23, 2028" }, "mast": { "status": "good", "text": "Class 12, valid through Apr 1, 2029" } },
-      { "name": "Adrian Bravo", "role": "FOH Manager", "fwc": { "status": "warn", "text": "Expires Aug 29, 2026 — renewal watch" }, "mast": { "status": "good", "text": "ServSafe Alcohol WA, valid through Jun 9, 2031" } },
-      { "name": "Allegra Dunbar", "role": "Server", "fwc": { "status": "good", "text": "Valid through May 3, 2028" }, "mast": { "status": "good", "text": "Valid through Jun 1, 2031" } },
-      { "name": "Audrey Bean", "role": "Server", "fwc": { "status": "good", "text": "Valid through Dec 13, 2027" }, "mast": { "status": "good", "text": "Valid through Jan 26, 2031" } },
-      { "name": "Brittany Hinz", "role": "Server", "fwc": { "status": "good", "text": "Valid through Aug 5, 2027" }, "mast": { "status": "good", "text": "Valid through Nov 1, 2028" } },
-      { "name": "Denise Poon", "role": "Server", "fwc": { "status": "good", "text": "Valid through Jan 9, 2027" }, "mast": { "status": "info", "text": "Renewal training completed Jul 2, 2026 (ABC Server Training); official permit en route" } },
-      { "name": "Helen Richardson", "role": "Support Staff · Server training in progress", "fwc": { "status": "good", "text": "Valid through May 7, 2028" }, "mast": { "status": "info", "text": "N/A while support staff; required when promoted to server" } },
-      { "name": "Jackie Hanley", "role": "Server", "fwc": { "status": "warn", "text": "Expires Oct 1, 2026" }, "mast": { "status": "good", "text": "Class 12, valid through May 1, 2027" } },
-      { "name": "Josie Ableman", "role": "Server", "fwc": { "status": "good", "text": "Valid through Mar 9, 2028" }, "mast": { "status": "good", "text": "Class 12, valid through May 1, 2031" } },
-      { "name": "Julian Biro", "role": "Server", "fwc": { "status": "warn", "text": "Expires Oct 6, 2026" }, "mast": { "status": "good", "text": "Valid through Apr 1, 2029" } },
-      { "name": "Katie Kuntz", "role": "Bar Manager", "fwc": { "status": "warn", "text": "Expires Dec 31, 2026" }, "mast": { "status": "good", "text": "Valid through Apr 1, 2027" } },
-      { "name": "Mac Solomon", "role": "Server", "fwc": { "status": "good", "text": "Valid through Jan 10, 2028 · confirm cardholder signature" }, "mast": { "status": "good", "text": "Valid through Jan 13, 2029 (American Safety Council, completed 1/13/2024)" } },
-      { "name": "Nam Huynh", "role": "Server", "fwc": { "status": "warn", "text": "Valid through Sep 12, 2026" }, "mast": { "status": "warn", "text": "Needs verify — required for server, no permit on file yet" } },
-      { "name": "Sabba Hawash", "role": "Server", "fwc": { "status": "alarm", "text": "Expires Jun 18, 2026 — raise in person" }, "mast": { "status": "good", "text": "Class 12, valid through Jan 1, 2030" } },
-      { "name": "Sully Baker", "role": "Server", "fwc": { "status": "good", "text": "Complete through May 9, 2029 (national cert accepted in lieu of WA card)" }, "mast": { "status": "good", "text": "Complete — MAST course done 7/29/26 (Craft Serving); WA permit in the mail" } }
+      {
+        "name": "Abby Tornquist",
+        "role": "Server",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Jun 23, 2028"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Class 12, valid through Apr 1, 2029"
+        }
+      },
+      {
+        "name": "Adrian Bravo",
+        "role": "FOH Manager",
+        "fwc": {
+          "status": "warn",
+          "text": "Expires Aug 29, 2026 — renewal watch"
+        },
+        "mast": {
+          "status": "good",
+          "text": "ServSafe Alcohol WA, valid through Jun 9, 2031"
+        }
+      },
+      {
+        "name": "Allegra Dunbar",
+        "role": "Server",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through May 3, 2028"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Valid through Jun 1, 2031"
+        }
+      },
+      {
+        "name": "Audrey Bean",
+        "role": "Server",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Dec 13, 2027"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Valid through Jan 26, 2031"
+        }
+      },
+      {
+        "name": "Brittany Hinz",
+        "role": "Server",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Aug 5, 2027"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Valid through Nov 1, 2028"
+        }
+      },
+      {
+        "name": "Denise Poon",
+        "role": "Server",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Jan 9, 2027"
+        },
+        "mast": {
+          "status": "info",
+          "text": "Renewal training completed Jul 2, 2026 (ABC Server Training); official permit en route"
+        }
+      },
+      {
+        "name": "Helen Richardson",
+        "role": "Support Staff · Server training in progress",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through May 7, 2028"
+        },
+        "mast": {
+          "status": "info",
+          "text": "N/A while support staff; required when promoted to server"
+        }
+      },
+      {
+        "name": "Jackie Hanley",
+        "role": "Server",
+        "fwc": {
+          "status": "warn",
+          "text": "Expires Oct 1, 2026"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Class 12, valid through May 1, 2027"
+        }
+      },
+      {
+        "name": "Josie Ableman",
+        "role": "Server",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Mar 9, 2028"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Class 12, valid through May 1, 2031"
+        }
+      },
+      {
+        "name": "Julian Biro",
+        "role": "Server",
+        "fwc": {
+          "status": "warn",
+          "text": "Expires Oct 6, 2026"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Valid through Apr 1, 2029"
+        }
+      },
+      {
+        "name": "Katie Kuntz",
+        "role": "Bar Manager",
+        "fwc": {
+          "status": "warn",
+          "text": "Expires Dec 31, 2026"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Valid through Apr 1, 2027"
+        }
+      },
+      {
+        "name": "Mac Solomon",
+        "role": "Server",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Jan 10, 2028 · confirm cardholder signature"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Valid through Jan 13, 2029 (American Safety Council, completed 1/13/2024)"
+        }
+      },
+      {
+        "name": "Nam Huynh",
+        "role": "Server",
+        "fwc": {
+          "status": "warn",
+          "text": "Valid through Sep 12, 2026"
+        },
+        "mast": {
+          "status": "warn",
+          "text": "Needs verify — required for server, no permit on file yet"
+        }
+      },
+      {
+        "name": "Sabba Hawash",
+        "role": "Server",
+        "fwc": {
+          "status": "alarm",
+          "text": "Expires Jun 18, 2026 — raise in person"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Class 12, valid through Jan 1, 2030"
+        }
+      },
+      {
+        "name": "Sully Baker",
+        "role": "Server",
+        "fwc": {
+          "status": "good",
+          "text": "Complete through May 9, 2029 (national cert accepted in lieu of WA card)"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Complete — MAST course done 7/29/26 (Craft Serving); WA permit in the mail"
+        }
+      }
     ]
   },
   "comingDue": [
-    { "name": "Sabba Hawash", "cred": "FWC", "date": "Jun 18, 2026", "area": "FOH · Server", "urgency": "alarm", "window": "30 days" },
-    { "name": "Adrian Bravo", "cred": "FWC", "date": "Aug 29, 2026", "area": "FOH · Manager", "urgency": "warn", "window": "102 days" },
-    { "name": "Jackie Hanley", "cred": "FWC", "date": "Oct 1, 2026", "area": "FOH · Server", "urgency": "warn", "window": "135 days" },
-    { "name": "Julian Biro", "cred": "FWC", "date": "Oct 6, 2026", "area": "FOH · Server", "urgency": "warn", "window": "140 days" },
-    { "name": "Gopala Corral", "cred": "FWC", "date": "Oct 10, 2026", "area": "BOH · Line Cook", "urgency": "warn", "window": "144 days" },
-    { "name": "Kenji Carskaddan", "cred": "FWC", "date": "Dec 2, 2026", "area": "BOH · Line Cook", "urgency": "info", "window": "197 days" },
-    { "name": "Katie Kuntz", "cred": "FWC", "date": "Dec 31, 2026", "area": "FOH · Bar Manager", "urgency": "info", "window": "226 days" },
-    { "name": "Denise Poon", "cred": "FWC", "date": "Jan 9, 2027", "area": "FOH · Server", "urgency": "info", "window": "235 days" },
-    { "name": "Ignacio Godinez", "cred": "FWC", "date": "Jan 30, 2027", "area": "BOH · Line Cook", "urgency": "info", "window": "256 days" },
-    { "name": "Anna Velasco-Ojeda", "cred": "FWC", "date": "Feb 3, 2027", "area": "BOH · Line Cook", "urgency": "info", "window": "260 days" }
+    {
+      "name": "Sabba Hawash",
+      "cred": "FWC",
+      "date": "Jun 18, 2026",
+      "area": "FOH · Server",
+      "urgency": "alarm",
+      "window": "30 days"
+    },
+    {
+      "name": "Adrian Bravo",
+      "cred": "FWC",
+      "date": "Aug 29, 2026",
+      "area": "FOH · Manager",
+      "urgency": "warn",
+      "window": "102 days"
+    },
+    {
+      "name": "Jackie Hanley",
+      "cred": "FWC",
+      "date": "Oct 1, 2026",
+      "area": "FOH · Server",
+      "urgency": "warn",
+      "window": "135 days"
+    },
+    {
+      "name": "Julian Biro",
+      "cred": "FWC",
+      "date": "Oct 6, 2026",
+      "area": "FOH · Server",
+      "urgency": "warn",
+      "window": "140 days"
+    },
+    {
+      "name": "Gopala Corral",
+      "cred": "FWC",
+      "date": "Oct 10, 2026",
+      "area": "BOH · Line Cook",
+      "urgency": "warn",
+      "window": "144 days"
+    },
+    {
+      "name": "Kenji Carskaddan",
+      "cred": "FWC",
+      "date": "Dec 2, 2026",
+      "area": "BOH · Line Cook",
+      "urgency": "info",
+      "window": "197 days"
+    },
+    {
+      "name": "Katie Kuntz",
+      "cred": "FWC",
+      "date": "Dec 31, 2026",
+      "area": "FOH · Bar Manager",
+      "urgency": "info",
+      "window": "226 days"
+    },
+    {
+      "name": "Denise Poon",
+      "cred": "FWC",
+      "date": "Jan 9, 2027",
+      "area": "FOH · Server",
+      "urgency": "info",
+      "window": "235 days"
+    },
+    {
+      "name": "Ignacio Godinez",
+      "cred": "FWC",
+      "date": "Jan 30, 2027",
+      "area": "BOH · Line Cook",
+      "urgency": "info",
+      "window": "256 days"
+    },
+    {
+      "name": "Anna Velasco-Ojeda",
+      "cred": "FWC",
+      "date": "Feb 3, 2027",
+      "area": "BOH · Line Cook",
+      "urgency": "info",
+      "window": "260 days"
+    }
   ]
 }
