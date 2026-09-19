@@ -1869,7 +1869,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1789860745';   // stamped by build-data.py at every deploy
+const BUILD='1789860849';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4685,7 +4685,10 @@ function parseRequest(req,ctx){
    AC_PREVIEW (localhost only) suppresses every write and shows what would be saved. */
 const AC_PREVIEW=(location.hostname==='localhost'||location.hostname==='127.0.0.1');
 let acState=null;
-function acCtx(){ return {roster:profilesArr().map(function(p){return {name:p.name,area:p.area,active:p.active!==false,schedName:p.schedName||''};}), sched:SF.schedule}; }
+/* alreadyEdited: for a request that was approved before the card existed, Sam has usually already
+   fixed the sheet by hand, so the sheet shows the RESULT of the swap and must not be used to decide
+   whose shift was whose (it would flip a correct read). Pending requests use the sheet normally. */
+function acCtx(alreadyEdited){ return {scheduleAlreadyEdited:!!alreadyEdited, roster:profilesArr().map(function(p){return {name:p.name,area:p.area,active:p.active!==false,schedName:p.schedName||''};}), sched:SF.schedule}; }
 function acP(name){ return name?(PROFILES[name]||null):null; }
 function acFirst(name){ const n=String(name||''), nick=(n.match(/"([^"]+)"/)||[])[1]; return nick||n.split(' ')[0]||'?'; }
 /* the saved effects, said the way Sam would say them */
@@ -4711,7 +4714,7 @@ function acTypeOfLegs(legs){ const a=legs.filter(function(l){return l.to;}); if(
 function acOpen(id,mode){
   if(!isAdmin()){alert('Only a manager can approve or deny.');return;}
   const r=(getReqs()||[]).find(function(x){return x.id===id;}); if(!r)return;
-  const p=parseRequest({name:r.name,start:r.start,end:r.end||r.start,reason:r.reason||'',createdAt:r.createdAt},acCtx());
+  const p=parseRequest({name:r.name,start:r.start,end:r.end||r.start,reason:r.reason||'',createdAt:r.createdAt},acCtx(r.status==='approved'));
   const editing=(mode==='edit'&&Array.isArray(r.effects)&&r.effects.length);
   const legs=editing?acLegsFromEffects(r.effects):acLegsFromParse(r,p);
   acState={id:id,mode:mode||'approve',r:r,parse:p,type:editing?acTypeOfLegs(legs):p.type,legs:legs,saved:null};
