@@ -1198,6 +1198,25 @@ body.tour-on{padding-bottom:230px;}
 .req-x{cursor:pointer; color:var(--card-mute); font-size:15px; padding:0 2px;}
 .req-empty{font-size:13px; color:var(--ink-mute); font-style:italic; text-align:center; padding:16px 2px;}
 .req-hint{font-size:11px; color:var(--ink-mute); font-style:italic; text-align:center; margin:-4px 0 14px;}
+.ac-modal{align-items:flex-start; overflow-y:auto;}
+.ac-card{background:var(--moon); border-radius:18px; padding:18px 16px 14px; width:min(94vw,440px); max-height:none; margin:auto; display:flex; flex-direction:column; gap:9px; box-shadow:0 14px 44px rgba(0,0,0,.5); color:var(--card-ink);}
+.ac-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px;} .ac-who{font-size:21px; font-weight:700; color:var(--wood);} .ac-dates{font-size:12.5px; font-weight:700; color:var(--card-soft);}
+.ac-note{font-size:15px; line-height:1.35; color:var(--card-ink); background:var(--moon-hi); border:1px solid var(--moon-edge); border-radius:10px; padding:9px 11px;}
+.ac-mute{color:var(--card-mute); font-style:italic;}
+.ac-preview{font-size:12px; font-weight:700; color:var(--rust); background:var(--rust-soft); border-radius:8px; padding:6px 9px; text-align:center;}
+.ac-types{display:flex; gap:6px;} .ac-type{flex:1; border:1px solid var(--moon-edge); background:var(--moon-hi); color:var(--card-soft); border-radius:9px; padding:8px 4px; font-size:13px; font-weight:700; cursor:pointer;} .ac-type.on{background:var(--wood); border-color:var(--wood); color:var(--moon-hi);}
+.ac-read{font-size:12px; color:var(--gold-deep); font-weight:700; line-height:1.35;}
+.ac-leg{border:1px solid var(--moon-edge); border-radius:12px; padding:10px; display:flex; flex-direction:column; gap:7px; background:var(--moon-hi);} .ac-leg.blocked{border-color:var(--rust);}
+.ac-row{display:flex; align-items:center; gap:8px;} .ac-row label{width:46px; flex:none; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--card-mute);} .ac-row .acc-in{flex:1; min-width:0;}
+.ac-dow{font-size:11.5px; color:var(--card-soft); white-space:nowrap;} .ac-shift{font-size:14px; font-weight:700; color:var(--accent-dark);}
+.ac-blank{border-color:var(--rust)!important; box-shadow:0 0 0 2px var(--rust-soft);} .ac-soft{border-color:var(--gold-deep)!important; background:#fff6dc!important;}
+.ac-check{font-size:12.5px; color:var(--card-soft);} .ac-block{font-size:12.5px; font-weight:700; color:var(--rust);} .ac-warn{font-size:12.5px; font-weight:700; color:var(--rust); background:var(--rust-soft); border-radius:7px; padding:5px 8px;}
+.ac-effect{font-size:12.5px; color:var(--card-soft); font-style:italic;} .ac-post{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--accent-dark);} .ac-post input{width:18px; height:18px;}
+.ac-rm,.ac-add{align-self:flex-start; border:none; background:none; color:var(--gold-deep); font-size:12.5px; font-weight:700; text-decoration:underline; cursor:pointer; padding:2px 0;}
+.ac-actions{margin-top:4px;} .ac-actions .to-go[disabled]{opacity:.45; cursor:not-allowed;}
+.ac-second{text-align:center; font-size:12.5px; color:var(--card-mute);} .ac-second a{color:var(--gold-deep); font-weight:700; text-decoration:underline; cursor:pointer;}
+.ac-foot{font-size:11.5px; color:var(--card-mute); text-align:center; font-style:italic;}
+.ac-saved pre{font-size:11px; line-height:1.3; background:#fffdf7; border:1px solid var(--moon-edge); border-radius:8px; padding:8px; max-height:46vh; overflow:auto; white-space:pre-wrap; text-align:left;} .ac-saved-h{font-size:12.5px; font-weight:700; color:var(--wood); margin-bottom:4px;}
 .req-mgrhint{margin-top:10px; font-size:12px; color:var(--card-mute); font-style:italic;}
 .req-mgrhint a{color:var(--gold-deep); font-style:normal; font-weight:700; text-decoration:underline; cursor:pointer;}
 .flash-req{border-color:var(--rust)!important; box-shadow:0 0 0 2px rgba(176,74,26,.4)!important;}
@@ -1850,7 +1869,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1789852815';   // stamped by build-data.py at every deploy
+const BUILD='1789860745';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4480,9 +4499,11 @@ function submitTimeoff(){
   toFormOpen=false;renderTimeoff();
 }
 function toLsAdd(req){req.id='ls'+Date.now();var a=toLsGet();a.unshift(req);toLsSet(a);toState=a;}
-function decideTimeoff(id,status){
+function decideTimeoff(id,status,extra){
   if(!isAdmin()){alert('Only a manager can approve or deny.');return;}
-  var patch={status:status,decidedBy:currentUserName()||'Manager',decidedAt:Date.now()};
+  if(AC_PREVIEW){ alert('Preview on this computer: nothing is saved. On the live portal this would mark it '+status+'.'); return; }
+  /* extra = the approval card's effects/parse; same update as the status so a half-approved request can't exist */
+  var patch=Object.assign({status:status,decidedBy:currentUserName()||'Manager',decidedAt:Date.now()},extra||{});
   if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0)Object.assign(r0,patch);}
   if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).update(patch).catch(function(){}); }
   else { var a=toLsGet();var r=a.find(function(x){return x.id===id;});if(r)Object.assign(r,patch);toLsSet(a);toState=a; }
@@ -4526,8 +4547,9 @@ function reqCardHTML(r){
   if(r.reason)h+=`<div class="req-reason serif">"${esc(r.reason)}"</div>`;
   h+=`</div><div style="display:flex;align-items:center;gap:6px;"><span class="req-status ${sc}">${esc(r.status)}</span>${canRm?`<span class="req-x" onclick="rmTimeoff('${esc(r.id)}')">✕</span>`:''}</div></div>`;
   if(r.status!=='pending'&&r.decidedBy)h+=`<div class="req-decided">${r.status==='approved'?'Approved':'Denied'} by ${esc(r.decidedBy)}</div>`;
+  if(isAdmin()&&!DEMO)h+=acReqLinkHTML(r);
   if(r.status==='pending'){
-    if(isAdmin())h+=`<div class="req-mgr"><button class="btn-approve" onclick="decideTimeoff('${esc(r.id)}','approved')">Approve</button><button class="btn-deny" onclick="decideTimeoff('${esc(r.id)}','denied')">Deny</button></div>`;
+    if(isAdmin())h+=`<div class="req-mgr"><button class="btn-approve" onclick="acApproveClick('${esc(r.id)}')">Approve</button><button class="btn-deny" onclick="decideTimeoff('${esc(r.id)}','denied')">Deny</button></div>`;
     else h+=`<div class="req-mgrhint">Awaiting Sam's approval.</div>`;
   }
   h+=`<div class="req-thread"><div class="thread-label">Notes</div>`;
@@ -4535,6 +4557,284 @@ function reqCardHTML(r){
   h+= cmts.length? cmts.map(function(c){return `<div class="cmt"><b>${esc(c.by)}</b> ${esc(c.text)}<span class="when">${esc(fmtShort(new Date(c.at).toISOString().slice(0,10)))}</span></div>`;}).join('') : `<div class="cmt-none">No notes yet — offer to cover or leave a heads-up.</div>`;
   h+=`<div class="cmt-row"><input id="toc-${esc(r.id)}" placeholder="Add a note… (e.g. I can cover Saturday)" onkeydown="if(event.key==='Enter')addToComment('${esc(r.id)}')"><button onclick="addToComment('${esc(r.id)}')">Post</button></div>`;
   return h+`</div></div>`;
+}
+/* REQUEST PARSER (2026-09-18) — reads a time-off request note the way staff already write
+   them and proposes a structured read for the approval card. Pure function, no DOM, no
+   Firestore; same source runs in node tests and (later) inline in index.html.
+   Doctrine: a field it can't resolve is BLANK (listed in `blanks`), never guessed.
+   ctx = { roster:[{name,area,active,schedName}], sched:{foh:[week],boh:[week]} }        */
+var RP_ALIASES={jules:'julian',josh:'joshua',joe:'joseph',cat:'catherine',tony:'antolin',abs:'abby',britt:'brittany',iggy:'ignacio',nacho:'ignacio'};
+var RP_MONTHS=['january','february','march','april','may','june','july','august','september','october','november','december'];
+var RP_DOW=['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+function rpIso(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+function rpDate(iso){var p=iso.split('-');return new Date(+p[0],+p[1]-1,+p[2],12);}
+function rpAdd(iso,n){var d=rpDate(iso);d.setDate(d.getDate()+n);return rpIso(d);}
+function rpNorm(s){return String(s||'').replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\s+/g,' ').trim();}
+function rpTokens(p){var full=p.name||'',out=[],first=(full.split(' ')[0]||'').toLowerCase();
+  var nick=(full.match(/"([^"]+)"/)||[])[1]; if(first)out.push(first); if(nick)out.push(nick.toLowerCase());
+  if(p.schedName)out.push(String(p.schedName).toLowerCase());
+  Object.keys(RP_ALIASES).forEach(function(a){if(RP_ALIASES[a]===first)out.push(a);});
+  return out.filter(function(t,i){return t.length>1&&out.indexOf(t)===i;});}
+/* nearest calendar date to `anchor` with this month/day (handles year wrap) */
+function rpNearestMD(anchor,m,d){var y=rpDate(anchor).getFullYear(),best=null;
+  [y-1,y,y+1].forEach(function(yy){var c=new Date(yy,m-1,d,12); if(c.getMonth()!==m-1)return;
+    if(!best||Math.abs(c-rpDate(anchor))<Math.abs(best-rpDate(anchor)))best=c;}); return best?rpIso(best):null;}
+function rpNearestDom(anchor,d){var a=rpDate(anchor),best=null;
+  [-1,0,1].forEach(function(k){var c=new Date(a.getFullYear(),a.getMonth()+k,d,12); if(c.getDate()!==d)return;
+    if(!best||Math.abs(c-a)<Math.abs(best-a))best=c;}); return best?rpIso(best):null;}
+function rpNearestDow(anchor,dow,notBefore){var best=null,bestOk=null; for(var k=-6;k<=6;k++){var iso=rpAdd(anchor,k);
+    if(rpDate(iso).getDay()!==dow)continue; if(best===null||Math.abs(k)<Math.abs(best))best=k;
+    if(notBefore&&iso>=notBefore&&(bestOk===null||Math.abs(k)<Math.abs(bestOk)))bestOk=k;} return rpAdd(anchor,bestOk!==null?bestOk:best);}
+function rpDates(text,req){var t=text.toLowerCase(),out=[],used=[];
+  function push(iso,idx,len,how){ if(!iso)return; for(var i=0;i<used.length;i++){if(idx<used[i][1]&&idx+len>used[i][0])return;}
+    used.push([idx,idx+len]); out.push({iso:iso,idx:idx,how:how}); }
+  var m,re;
+  re=/\b(\d{1,2})\/(\d{1,2})\b/g; while((m=re.exec(t)))push(rpNearestMD(req.start,+m[1],+m[2]),m.index,m[0].length,'m/d');
+  var mon='('+RP_MONTHS.map(function(x){return x+'|'+x.slice(0,3)+(x==='september'?'|sept':'');}).join('|')+')';
+  re=new RegExp('\\b'+mon+'\\.?\\s+(\\d{1,2})(?:st|nd|rd|th)?\\b','g');
+  while((m=re.exec(t))){var mi=RP_MONTHS.findIndex(function(x){return x.slice(0,3)===m[1].slice(0,3);}); push(rpNearestMD(req.start,mi+1,+m[2]),m.index,m[0].length,'month d');}
+  re=new RegExp('\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+of\\s+'+mon+'\\b','g');
+  while((m=re.exec(t))){var mj=RP_MONTHS.findIndex(function(x){return x.slice(0,3)===m[2].slice(0,3);}); push(rpNearestMD(req.start,mj+1,+m[1]),m.index,m[0].length,'d of month');}
+  re=/\b(?:the\s+)?(\d{1,2})(?:st|nd|rd|th)\b/g; while((m=re.exec(t)))push(rpNearestDom(req.start,+m[1]),m.index,m[0].length,'Nth');
+  re=/\b(tonight|today)\b/g; while((m=re.exec(t))){var c=req.createdAt?rpIso(new Date(req.createdAt)):null; push(c,m.index,m[0].length,'tonight');}
+  re=new RegExp('\\b('+RP_DOW.map(function(x){return x+'|'+x.slice(0,3)+(x==='tuesday'?'|tues':'')+(x==='thursday'?'|thurs':'');}).join('|')+')\\b','g');
+  while((m=re.exec(t))){var di=RP_DOW.findIndex(function(x){return x.slice(0,3)===m[1].slice(0,3);});
+    /* a weekday glued to an explicit date ("Sunday Sept 27") is that date, not a second one */
+    var near=out.some(function(o){return o.idx>m.index&&o.idx-(m.index+m[0].length)<=2;}); if(near)continue;
+    push(rpNearestDow(req.start,di,req.createdAt?rpIso(new Date(req.createdAt)):null),m.index,m[0].length,'weekday');}
+  /* cue: whose shift is this date? look just left of it. gives = requester's own shift, takes = requester picks it up */
+  out.forEach(function(o){ var left=t.slice(Math.max(0,o.idx-34),o.idx);
+    o.cue=/(\bhis\b|\bher\b|\btheir\b|i'?m (?:now )?(?:working|picking up|taking|covering)|\bi\)? am (?:now )?(?:working|picking up|taking|covering)|i'?ll (?:take|work|cover)|i will (?:take|work|cover)|\bi take\b)[^.;,]*$/.test(left)?'takes'
+         :/\bmy\b[^.;,]*$/.test(left)?'gives':''; });
+  return out.sort(function(a,b){return a.idx-b.idx;});}
+function rpCell(ctx,person,iso){ if(!person)return{state:'unknown'};
+  var side=person.area==='boh'?'boh':person.area==='foh'?'foh':null; if(!side||!ctx.sched||!ctx.sched[side])return{state:'unknown'};
+  var toks=rpTokens(person), wk=null, weeks=ctx.sched[side];
+  for(var i=0;i<weeks.length;i++){var di=(weeks[i].dates||[]).indexOf(iso); if(di>=0){wk=[weeks[i],di];break;}}
+  if(!wk)return{state:'unknown',why:'date not on the published schedule'};
+  var row=(wk[0].rows||[]).find(function(r){return toks.indexOf(String(r.name||'').toLowerCase())>=0;});
+  if(!row)return{state:'unknown',why:'no schedule row'};
+  var v=String(row.shifts[wk[1]]||'').trim(), lo=v.toLowerCase();
+  if(!v||lo==='x'||lo==='-')return{state:'off',cell:v};
+  if(/^r\/?o\b/.test(lo))return{state:'ro',cell:v};
+  return{state:'working',cell:v};}
+function rpEdit1(a,b){ if(a===b)return false; if(Math.abs(a.length-b.length)>1)return false; var i=0,j=0,d=0;
+  while(i<a.length&&j<b.length){ if(a[i]===b[j]){i++;j++;continue;} if(++d>1)return false;
+    if(a.length>b.length)i++; else if(b.length>a.length)j++; else{i++;j++;} } return d+(a.length-i)+(b.length-j)<=1; }
+function parseRequest(req,ctx){
+  var text=rpNorm(req.reason), lo=text.toLowerCase(), roster=ctx.roster||[], blanks=[], notes=[], soft=[];
+  var me=roster.find(function(p){return p.name===req.name;})||{name:req.name};
+  /* who else is named */
+  var hits=[]; roster.forEach(function(p){ if(p.name===req.name)return; rpTokens(p).forEach(function(tok){
+      var re=new RegExp("\\b"+tok.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+"(?:'s|s')?\\b",'i'), m=re.exec(text);
+      if(m)hits.push({p:p,idx:m.index,tok:tok}); }); });
+  if(!hits.length){ var words=text.match(/[A-Za-z]{4,}/g)||[]; roster.forEach(function(p){ if(p.name===req.name)return; rpTokens(p).forEach(function(tok){ if(tok.length<4)return;
+      words.forEach(function(w){ if(rpEdit1(w.toLowerCase(),tok)){ hits.push({p:p,idx:text.indexOf(w),tok:tok,fuzzy:w}); } }); }); }); }
+  hits.sort(function(a,b){return a.idx-b.idx;});
+  var byTok={}; hits.forEach(function(h){(byTok[h.tok]=byTok[h.tok]||[]).push(h.p);});
+  var people=[]; hits.forEach(function(h){ if(people.indexOf(h.p)<0)people.push(h.p); });
+  var swapRe=/\b(switch(?:ed|ing|es)?|swap(?:ped|ping|s)?|trad(?:e|ed|ing|es)|exchang(?:e|ed|ing))\b/i;
+  var coverRe=/\b(cover(?:ing|ed|s)?|pick(?:ing|ed|s)?\s+up|tak(?:e|es|ing)|work(?:ing|s)?\s+(?:for|my))\b/i;
+  var type='timeoff', partner=null, reversed=false, cands=[];
+  if(people.length&&(swapRe.test(text)||coverRe.test(text))){
+    type=swapRe.test(text)?'swap':'cover';
+    /* partner = first named person; same-token ambiguity (two Jackies) leaves it blank */
+    var firstTok=hits[0].tok, same=byTok[firstTok].filter(function(p,i,a){return a.indexOf(p)===i;});
+    var live=same.filter(function(p){return p.active!==false;}); if(live.length===1)same=live;
+    if(same.length===1)partner=same[0]; else{ cands=same.map(function(p){return p.name;}); blanks.push('partner'); notes.push('"'+firstTok+'" matches '+cands.join(' / ')); }
+    if(hits[0].fuzzy){ soft.push('partner'); notes.push('read "'+hits[0].fuzzy+'" as '+(partner?partner.name:'?')); }
+    if(people.length>1)notes.push('also mentions '+people.slice(1).map(function(p){return p.name;}).join(', '));
+    if(type==='cover'&&partner){ var tk=rpTokens(partner).concat(hits[0].fuzzy?[hits[0].fuzzy.toLowerCase()]:[]).join('|');
+      /* "Taking Mac's shift" / "I'm covering for Mac": the REQUESTER is the one picking up */
+      reversed=new RegExp("(?:^|\\bi'?m\\s+|\\bi am\\s+|\\bi\\s+)(?:taking|covering|picking up|working)\\s+(?:for\\s+)?(?:"+tk+")\\b",'i').test(text); }
+  } else if(people.length){ notes.push('mentions '+people.map(function(p){return p.name;}).join(', ')+' with no cover/switch wording'); }
+  var dates=rpDates(text,req), days=[]; for(var d=req.start;d<=req.end;d=rpAdd(d,1)){days.push(d); if(days.length>60)break;}
+  var outside=dates.filter(function(x){return days.indexOf(x.iso)<0;}), legs=[];
+  if(type==='cover'&&outside.length){
+    var tk2=outside.filter(function(x){return x.cue==='takes';})[0];
+    if(tk2){ type='swap'; reversed=false; notes.push('no "switch" wording, but the note trades two dates'); }
+    else { type='timeoff'; notes.push((partner?partner.name.split(' ')[0]:'someone')+' is named for '+outside[0].iso+', which is outside this request'); partner=null; reversed=false; blanks=blanks.filter(function(b){return b!=='partner';}); } }
+  function leg(from,to,iso){ var c=rpCell(ctx,from,iso), l={from:from?from.name:null,to:to?to.name:null,date:iso,shift:c.state==='working'?c.cell:'',check:c.state};
+    if(c.state==='off')l.warn=(from?from.name.split(' ')[0]:'?')+" isn't scheduled "+iso; if(c.state==='unknown'&&c.why)l.warn=c.why; legs.push(l); }
+  if(type==='timeoff'){ days.forEach(function(iso){ var c=rpCell(ctx,me,iso);
+      legs.push({from:me.name,to:null,date:iso,shift:c.state==='working'?c.cell:'',check:c.state,
+        effect:c.state==='working'?'R/O + open the shift for pickup':c.state==='ro'?'already R/O':c.state==='off'?'note only (not scheduled)':'unknown'}); }); }
+  else if(type==='cover'){ days.forEach(function(iso){ reversed?leg(partner,me,iso):leg(me,partner,iso); }); }
+  else { /* swap. Default: the request's own date is the shift the requester GIVES; the first date outside it is the one they TAKE.
+       Cues in the note override that ("I'm working Tuesday now" = takes; "my 9/18" = gives). Then the schedule gets the last word. */
+    var G=days[0], T=outside[0]?outside[0].iso:null;
+    var cueT=dates.filter(function(x){return x.cue==='takes';})[0], cueG=dates.filter(function(x){return x.cue==='gives';})[0];
+    if(cueT&&cueT.iso===G){ T=G; G=cueG&&cueG.iso!==T?cueG.iso:(outside[0]?outside[0].iso:null); }
+    else if(cueG&&cueG.iso!==G&&!cueT){ T=G; G=cueG.iso; soft.push('date'); notes.push('the note calls '+G+' "my" shift but the request is dated '+T+', check which is whose'); }
+    else if(cueT){ T=cueT.iso; }
+    if(G&&T&&partner&&ctx.sched&&!ctx.scheduleAlreadyEdited){ var a=(rpCell(ctx,me,G).state==='working')+(rpCell(ctx,partner,T).state==='working'), b=(rpCell(ctx,me,T).state==='working')+(rpCell(ctx,partner,G).state==='working');
+      if(b===2&&a===0){ var x=G;G=T;T=x; notes.push('flipped to match the schedule: each person is giving the shift they actually hold'); } }
+    if(G)leg(me,partner,G); else{ blanks.push('requesterDate'); legs.push({from:me.name,to:partner?partner.name:null,date:null,shift:'',check:'unknown'}); }
+    if(T)leg(partner,me,T); else{ blanks.push('partnerDate'); legs.push({from:partner?partner.name:null,to:me.name,date:null,shift:'',check:'unknown'}); }
+    dates.forEach(function(x){ if(x.how==='weekday'&&(x.iso===G||x.iso===T)&&soft.indexOf('date')<0){ soft.push('date'); notes.push('a date was read from a weekday name only, check it'); } }); }
+  return{type:type,partner:partner?partner.name:null,reversed:reversed,legs:legs,blanks:blanks,soft:soft,notes:notes,datesFound:dates.map(function(x){return x.iso+'('+x.how+')';})};
+}
+
+/* ===== APPROVAL CARD (Phase A, 2026-09-18) ====================================
+   Approve on a time-off request opens this card when the note implies a schedule
+   change (swap, cover, time off on a scheduled day) or the read has a blank. The
+   parser (parseRequest, above) pre-fills it from the note; every field is editable;
+   nothing is applied that Sam has not seen. Approving writes `effects[]` onto the
+   SAME timeoff doc in the SAME update as the status. PHASE A: nothing renders from
+   effects yet, so staff see no change. Scope: approved-requests-to-schedule-scope.md.
+   AC_PREVIEW (localhost only) suppresses every write and shows what would be saved. */
+const AC_PREVIEW=(location.hostname==='localhost'||location.hostname==='127.0.0.1');
+let acState=null;
+function acCtx(){ return {roster:profilesArr().map(function(p){return {name:p.name,area:p.area,active:p.active!==false,schedName:p.schedName||''};}), sched:SF.schedule}; }
+function acP(name){ return name?(PROFILES[name]||null):null; }
+function acFirst(name){ const n=String(name||''), nick=(n.match(/"([^"]+)"/)||[])[1]; return nick||n.split(' ')[0]||'?'; }
+/* the saved effects, said the way Sam would say them */
+function acSummary(eff){ return (eff||[]).map(function(e){
+    if(e.kind==='assign')return acFirst(e.taker)+' takes '+acFirst(e.giver)+"'s "+(e.shift||'shift')+' on '+fmtLong(e.date)+'.';
+    if(e.kind==='off')return acFirst(e.name)+' is off '+fmtLong(e.date)+(e.cell&&!/^r\/?o/i.test(e.cell)?' (was '+e.cell+')':'')+'.';
+    if(e.kind==='open')return 'The '+e.shift+' shift on '+fmtLong(e.date)+' goes up for pickup.'; return ''; }).filter(Boolean); }
+function acCell(name,iso){ const p=acP(name); if(!p||!iso)return {state:'unknown'}; return rpCell(acCtx(),{name:p.name,area:p.area,schedName:p.schedName||''},iso); }
+function acDays(r){ const out=[]; for(let d=r.start;d&&d<=(r.end||r.start);d=rpAdd(d,1)){out.push(d); if(out.length>60)break;} return out; }
+/* does this read need the card, or is it a heads-up that stays one tap? */
+function acNeedsCard(p){ if(p.type!=='timeoff'||p.blanks.length)return true; return p.legs.some(function(l){return l.check==='working';}); }
+function acLegsFromParse(r,p){
+  return p.legs.map(function(l){ return {from:l.from||'',to:l.to||'',date:l.date||'',post:true}; });
+}
+function acLegsFromEffects(eff){
+  const legs=[]; (eff||[]).forEach(function(e){
+    if(e.kind==='off')legs.push({from:e.name,to:'',date:e.date,post:(eff||[]).some(function(o){return o.kind==='open'&&o.date===e.date&&o.forName===e.name;})});
+    else if(e.kind==='assign')legs.push({from:e.giver,to:e.taker,date:e.date,post:false}); });
+  return legs;
+}
+function acTypeOfLegs(legs){ const a=legs.filter(function(l){return l.to;}); if(!a.length)return 'timeoff';
+  return (a.length>=2&&a.some(function(l){return a.some(function(m){return m!==l&&m.from===l.to&&m.to===l.from;});}))?'swap':'cover'; }
+function acOpen(id,mode){
+  if(!isAdmin()){alert('Only a manager can approve or deny.');return;}
+  const r=(getReqs()||[]).find(function(x){return x.id===id;}); if(!r)return;
+  const p=parseRequest({name:r.name,start:r.start,end:r.end||r.start,reason:r.reason||'',createdAt:r.createdAt},acCtx());
+  const editing=(mode==='edit'&&Array.isArray(r.effects)&&r.effects.length);
+  const legs=editing?acLegsFromEffects(r.effects):acLegsFromParse(r,p);
+  acState={id:id,mode:mode||'approve',r:r,parse:p,type:editing?acTypeOfLegs(legs):p.type,legs:legs,saved:null};
+  acRender();
+}
+function acClose(){ acState=null; const m=$('acModal'); if(m)m.style.display='none'; }
+/* Approve button entry point. One tap survives for plain heads-ups. */
+function acApproveClick(id){
+  if(!isAdmin()){alert('Only a manager can approve or deny.');return;}
+  const r=(getReqs()||[]).find(function(x){return x.id===id;}); if(!r)return;
+  let p=null; try{ p=parseRequest({name:r.name,start:r.start,end:r.end||r.start,reason:r.reason||'',createdAt:r.createdAt},acCtx()); }catch(e){ p=null; }
+  if(!p){ decideTimeoff(id,'approved'); return; }            // parser trouble never blocks an approval
+  if(!acNeedsCard(p)&&!AC_PREVIEW){ decideTimeoff(id,'approved',{effects:[],parse:acParseStamp(p)}); return; }
+  acOpen(id,'approve');
+}
+function acParseStamp(p){ return {type:p.type,partner:p.partner||'',reversed:!!p.reversed,soft:p.soft||[],blanks:p.blanks||[],
+  legs:(p.legs||[]).map(function(l){return (l.from||'')+'>'+(l.to||'')+'@'+(l.date||'');})}; }
+/* changing the type reshapes the legs but keeps whatever people and dates are already in hand */
+function acSetType(t){ const s=acState; if(!s||s.type===t)return; const r=s.r, me0=r.name;
+  const partner=(s.legs.map(function(l){return l.to&&l.to!==me0?l.to:(l.from&&l.from!==me0?l.from:'');}).filter(Boolean)[0])||'';
+  const otherDate=(s.legs.filter(function(l){return l.from&&l.from!==me0;})[0]||{}).date||'';
+  if(t==='timeoff')s.legs=acDays(r).map(function(d){return {from:me0,to:'',date:d,post:true};});
+  else if(t==='cover')s.legs=acDays(r).map(function(d){return {from:me0,to:partner,date:d,post:false};});
+  else s.legs=[{from:me0,to:partner,date:r.start,post:false},{from:partner,to:me0,date:otherDate,post:false}];
+  s.type=t; acRender(); }
+function acSet(i,field,val){ const s=acState; if(!s||!s.legs[i])return; s.legs[i][field]=(field==='post')?!!val:val;
+  /* in a swap the two rows mirror each other: my taker is their giver */
+  if(s.type==='swap'&&s.legs.length===2&&(field==='from'||field==='to')){ const o=s.legs[1-i]; if(field==='to')o.from=val; else o.to=val; }
+  acRender(); }
+function acAddLeg(){ const s=acState; if(!s)return; const last=s.legs[s.legs.length-1]||{from:s.r.name,to:'',date:s.r.start};
+  s.legs.push({from:last.from,to:last.to,date:last.date?rpAdd(last.date,1):'',post:s.type==='timeoff'}); acRender(); }
+function acRmLeg(i){ const s=acState; if(!s||s.legs.length<2)return; s.legs.splice(i,1); acRender(); }
+/* everything the card says about one row, in plain words */
+function acLegInfo(l,type){
+  const out={shift:'',check:'',warns:[],block:''};
+  if(!l.from){out.block='Pick who is giving up the shift.';return out;}
+  if(!l.date){out.block='Pick the date.';return out;}
+  if(type!=='timeoff'&&!l.to){out.block='Pick who is taking it.';return out;}
+  if(l.to&&l.to===l.from){out.block='Same person on both sides.';return out;}
+  const c=acCell(l.from,l.date), f=acFirst(l.from);
+  if(c.state==='working'){ out.shift=c.cell; out.check=f+' is on '+c.cell+' that day.'; }
+  else if(c.state==='ro'){ out.check=f+' is already R/O that day.'; if(type!=='timeoff')out.warns.push('Nothing to hand over: '+f+' is already marked off.'); }
+  else if(c.state==='off'){ out.check=f+" isn't scheduled that day."; if(type!=='timeoff')out.warns.push(f+" isn't scheduled "+fmtLong(l.date)+', so there is no shift to take.'); }
+  else out.check=(c.why==='date not on the published schedule')?"That date isn't on the published schedule yet.":"Can't find "+f+' on the schedule for that day.';
+  if(l.date<todayISO())out.warns.push('That date has already passed.');
+  if(l.to){ const tp=acP(l.to), fp=acP(l.from), t=acFirst(l.to), tc=acCell(l.to,l.date);
+    if(tp&&fp&&tp.area!==fp.area)out.warns.push(t+' is '+String(tp.area||'').toUpperCase()+' and '+f+' is '+String(fp.area||'').toUpperCase()+'.');
+    if(tc.state==='working')out.warns.push(t+' is already on '+tc.cell+' that day.');
+    if(tc.state==='ro')out.warns.push(t+' is R/O that day.');
+    const n=acWorkDays(l.to,l.date); if(n!==null&&tc.state!=='working'&&n+1>5)out.warns.push('This puts '+t+' on '+(n+1)+' days that week.'); }
+  return out;
+}
+/* working days in the week containing iso, from the published sheet (other legs on this card not counted) */
+function acWorkDays(name,iso){ const p=acP(name); if(!p)return null; const side=p.area==='boh'?'boh':p.area==='foh'?'foh':null; if(!side)return null;
+  const w=((SF.schedule&&SF.schedule[side])||[]).find(function(x){return (x.dates||[]).indexOf(iso)>=0;}); if(!w)return null;
+  let n=0; w.dates.forEach(function(d){ if(acCell(name,d).state==='working')n++; }); return n; }
+function acEffects(){ const s=acState, out=[]; if(!s)return out;
+  s.legs.forEach(function(l){ const c=acCell(l.from,l.date), fp=acP(l.from)||{}, cell=(c.state==='working'||c.state==='ro')?c.cell:'';
+    if(!l.to){ out.push({kind:'off',name:l.from,side:fp.area||'',date:l.date,cell:cell});
+      if(l.post&&c.state==='working')out.push({kind:'open',side:fp.area||'',date:l.date,shift:c.cell,forName:l.from}); }
+    else out.push({kind:'assign',giver:l.from,taker:l.to,side:fp.area||'',date:l.date,shift:c.state==='working'?c.cell:'',cell:cell}); });
+  return out; }
+function acBlocked(){ const s=acState; if(!s)return 'nothing open'; if(!s.legs.length)return 'No rows.';
+  for(let i=0;i<s.legs.length;i++){ const b=acLegInfo(s.legs[i],s.type).block; if(b)return b; } return ''; }
+function acSave(withEffects){
+  const s=acState; if(!s)return; if(withEffects){ const b=acBlocked(); if(b){ alert(b); return; } }
+  const effects=withEffects?acEffects():[];
+  const extra={effects:effects,effectsBy:currentUserName()||'Manager',effectsAt:Date.now(),effectsV:((s.r&&s.r.effectsV)||0)+1,parse:acParseStamp(s.parse)};
+  if(!withEffects)extra.effectsSkipped=true;
+  if(AC_PREVIEW||DEMO){ s.saved={status:s.mode==='edit'?'(unchanged)':'approved',extra:extra}; acRender(); return; }   // preview: show, never write
+  if(s.mode==='edit')acPatchReq(s.id,extra); else decideTimeoff(s.id,'approved',extra);
+  acClose(); renderTimeoff();
+}
+/* one update() for an already-approved request's schedule changes; effects replaced whole, never appended */
+function acPatchReq(id,patch){
+  if(toState){ const r0=toState.find(function(x){return x.id===id;}); if(r0)Object.assign(r0,patch); }
+  if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).update(patch).catch(function(){ alert("Couldn't save the schedule changes. Check your connection and try again."); }); }
+  else { const a=toLsGet(), r=a.find(function(x){return x.id===id;}); if(r)Object.assign(r,patch); toLsSet(a); toState=a; }
+}
+function acPeopleOptions(sel,allowNone,side){
+  const all=activeProfiles().filter(function(p){return p.area==='foh'||p.area==='boh';});
+  if(sel&&!all.some(function(p){return p.name===sel;})&&PROFILES[sel])all.push(PROFILES[sel]);
+  all.sort(function(a,b){ const as=a.area===side?0:1, bs=b.area===side?0:1; return as-bs||a.name.localeCompare(b.name); });
+  let h=allowNone?'<option value="">'+allowNone+'</option>':(sel?'':'<option value="">Pick someone</option>');
+  all.forEach(function(p){ h+='<option value="'+esc(p.name)+'"'+(p.name===sel?' selected':'')+'>'+esc(p.name)+(p.area!==side?' ('+String(p.area).toUpperCase()+')':'')+'</option>'; });
+  return h; }
+function acRender(){
+  const s=acState; if(!s)return; let m=$('acModal');
+  if(!m){ m=document.createElement('div'); m.id='acModal'; m.className='comp-modal ac-modal'; document.body.appendChild(m); }
+  const r=s.r, p=s.parse, side=(acP(r.name)||{}).area||'', keep=m.querySelector('.ac-card')?m.querySelector('.ac-card').scrollTop:0;
+  let h='<div class="ac-card"><div class="ac-head"><div class="ac-who serif">'+esc(r.name)+'</div><div class="ac-dates">'+esc(reqDates(r))+'</div></div>';
+  h+='<div class="ac-note serif">'+(r.reason?'"'+esc(r.reason)+'"':'<span class="ac-mute">No note.</span>')+'</div>';
+  if(AC_PREVIEW)h+='<div class="ac-preview">Preview on this computer. Nothing here is saved.</div>';
+  if(s.saved){ const sum=acSummary(s.saved.extra.effects);
+    h+='<div class="ac-saved"><div class="ac-saved-h">This is what Approve would record</div>'+(sum.length?sum.map(function(x){return '<div class="ac-check">'+esc(x)+'</div>';}).join(''):'<div class="ac-check">Approved, with no schedule changes.</div>')+'<details><summary class="ac-mute" style="font-size:11.5px;cursor:pointer;margin-top:6px">Raw record</summary><pre>'+esc(JSON.stringify(s.saved,null,1))+'</pre></details></div><div class="to-submit"><button class="to-cancel" onclick="acState.saved=null;acRender()">Back to the card</button><button class="to-go" onclick="acClose()">Done</button></div></div>'; m.innerHTML=h; m.style.display='flex'; return; }
+  h+='<div class="ac-types">'+[['timeoff','Time off'],['cover','Cover'],['swap','Swap']].map(function(t){return '<button class="ac-type'+(s.type===t[0]?' on':'')+'" onclick="acSetType(\''+t[0]+'\')">'+t[1]+'</button>';}).join('')+'</div>';
+  if(p.notes&&p.notes.length&&s.mode!=='edit')h+='<div class="ac-read">'+p.notes.map(function(n){return '<div>'+esc(n.charAt(0).toUpperCase()+n.slice(1))+'.</div>';}).join('')+'</div>';
+  const softDate=(p.soft||[]).indexOf('date')>=0&&s.mode!=='edit', softPartner=(p.soft||[]).indexOf('partner')>=0&&s.mode!=='edit';
+  s.legs.forEach(function(l,i){ const info=acLegInfo(l,s.type), off=(s.type==='timeoff');
+    h+='<div class="ac-leg'+(info.block?' blocked':'')+'">';
+    h+='<div class="ac-row"><label>'+(off?'Off':'Gives')+'</label><select id="ac-from-'+i+'" class="acc-in'+(!l.from?' ac-blank':'')+'" onchange="acSet('+i+',\'from\',this.value)">'+acPeopleOptions(l.from,'',side)+'</select></div>';
+    if(!off)h+='<div class="ac-row"><label>Takes</label><select id="ac-to-'+i+'" class="acc-in'+(!l.to?' ac-blank':(softPartner?' ac-soft':''))+'" onchange="acSet('+i+',\'to\',this.value)">'+acPeopleOptions(l.to,'',side)+'</select></div>';
+    h+='<div class="ac-row"><label>Date</label><input type="date" id="ac-date-'+i+'" class="acc-in'+(!l.date?' ac-blank':(softDate?' ac-soft':''))+'" value="'+esc(l.date||'')+'" onchange="acSet('+i+',\'date\',this.value)">'+(l.date?'<span class="ac-dow">'+esc(fmtLong(l.date))+'</span>':'')+'</div>';
+    h+='<div class="ac-row"><label>Shift</label><span class="ac-shift">'+(info.shift?esc(info.shift):'<span class="ac-mute">none on the schedule</span>')+'</span></div>';
+    if(info.block)h+='<div class="ac-block">'+esc(info.block)+'</div>'; else if(info.check)h+='<div class="ac-check">'+esc(info.check)+'</div>';
+    info.warns.forEach(function(w){ h+='<div class="ac-warn">'+esc(w)+'</div>'; });
+    if(off&&!info.block){ const c=acCell(l.from,l.date);
+      if(c.state==='working')h+='<label class="ac-post"><input type="checkbox" id="ac-post-'+i+'"'+(l.post?' checked':'')+' onchange="acSet('+i+',\'post\',this.checked)"> Put the '+esc(c.cell)+' shift up for pickup</label>';
+      else h+='<div class="ac-effect">'+(c.state==='off'?'Not scheduled, so this is a note only.':c.state==='ro'?'Already R/O on the schedule.':'No shift to post.')+'</div>'; }
+    if(s.legs.length>1&&s.type!=='swap')h+='<button class="ac-rm" onclick="acRmLeg('+i+')">Remove this day</button>';
+    h+='</div>'; });
+  if(s.type!=='swap')h+='<button class="ac-add" onclick="acAddLeg()">+ Add a day</button>';
+  const b=acBlocked();
+  h+='<div class="to-submit ac-actions"><button class="to-go" '+(b?'disabled title="'+esc(b)+'"':'')+' onclick="acSave(true)">'+(s.mode==='edit'?'Save schedule changes':'Approve as shown')+'</button></div>';
+  h+='<div class="ac-second">'+(s.mode==='edit'?'':'<a onclick="acSave(false)">Approve without schedule changes</a> · ')+'<a onclick="acClose()">Cancel</a></div>';
+  if(s.type!=='timeoff'||acEffects().some(function(e){return e.kind==='open';}))h+='<div class="ac-foot">For now this records the change on the request. The schedule itself doesn\'t move yet.</div>';
+  h+='</div>'; m.innerHTML=h; m.style.display='flex'; const card=m.querySelector('.ac-card'); if(card)card.scrollTop=keep;
+}
+
+function acReqLinkHTML(r){
+  if(r.status!=='approved')return AC_PREVIEW?'<div class="req-mgrhint"><a onclick="acOpen(\''+esc(r.id)+'\',\'approve\')">Preview the approval card</a></div>':'';
+  const n=Array.isArray(r.effects)?r.effects.filter(function(e){return e.kind!=='open';}).length:0;
+  return '<div class="req-mgrhint">'+(n?('Schedule changes recorded: '+n+'. '):'')+'<a onclick="acOpen(\''+esc(r.id)+'\',\'edit\')">'+(n?'Edit':'Add schedule changes')+'</a></div>';
 }
 /* When a request was submitted — shown on every request so overlapping asks for the same
    dates resolve first-come. */
