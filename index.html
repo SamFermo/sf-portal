@@ -374,6 +374,15 @@ body.tour-on{padding-bottom:230px;}
 .rcp-x{background:transparent; color:var(--rust); border:1px solid var(--rust); border-radius:5px; font-size:8.5px; font-weight:700; padding:1px 5px; cursor:pointer; font-family:inherit;}
 .sched-table tr.covrow td{background:rgba(176,74,26,.06); border-top:1.5px solid var(--rust);}
 .sched-table tr.covrow td.today{background:rgba(230,200,120,.25);}
+.cov-note{border:none; cursor:pointer; font-family:inherit;} .cov-note small{display:block; font-size:8.5px; font-weight:700; opacity:.65; text-transform:uppercase; letter-spacing:.05em;}
+.ds-covnote{cursor:pointer;}
+.co-card{gap:10px;} .co-you{font-size:16px; font-weight:700; color:var(--accent-dark);} .co-hint{font-size:13px; color:var(--card-soft); font-style:italic;}
+.co-leave{background:none; border:none; color:var(--gold-deep); font-size:12.5px; font-weight:700; text-decoration:underline; cursor:pointer;}
+.co-list{align-self:stretch; text-align:left; border-top:1px solid var(--moon-edge); padding-top:9px; display:flex; flex-direction:column; gap:5px;}
+.co-list-h{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--card-mute);}
+.co-row{display:flex; align-items:center; gap:9px; font-size:14px; color:var(--card-ink); padding:6px 9px; border-radius:8px; background:var(--moon-hi);} .co-row.me{outline:2px solid var(--gold-deep);} .co-row.appr{background:var(--accent-soft);}
+.co-row.co-empty{color:var(--card-mute); font-style:italic; background:none; padding-left:0;}
+.co-n{width:20px; font-weight:700; color:var(--wood);} .co-name{flex:1; font-weight:700;} .co-at{font-size:11.5px; color:var(--card-mute);}
 .cov-note{display:inline-block; font-size:10.5px; font-weight:700; line-height:1.2; color:#2a1f08; background:#e7bf5e; border-radius:6px; padding:3px 6px;}
 .ds-covnote{background:var(--moon-hi); border:1px solid var(--gold-deep); border-radius:12px; padding:11px 14px; font-size:13.5px; font-weight:700; color:var(--wood); margin:0 0 10px; line-height:1.4;}
 .cov-nm{color:var(--rust)!important; font-size:10px!important; text-transform:uppercase; letter-spacing:.06em;}
@@ -1872,7 +1881,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1789863768';   // stamped by build-data.py at every deploy
+const BUILD='1789864861';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3963,7 +3972,7 @@ function weekTableHTML(w,today){
     (w.dates||[]).forEach((d0,i)=>{
       const cell=cov[i]||'';
       /* coverage NOTE (e.g. "1 call off"): information, never claimable */
-      const d=w.dates[i]; let inner=String(covN[i]||'').trim()?`<span class="cov-note">${esc(covN[i])}</span>`:'';
+      const d=w.dates[i]; let inner=String(covN[i]||'').trim()?`<button class="cov-note" onclick="coOpen('${schedState.side}','${d}')">${esc(covN[i])}<small>tap</small></button>`:'';
       String(cell||'').split(',').map(x=>x.trim()).filter(Boolean).forEach((lab,j)=>{
         const k=claimKey(schedState.side,d,'cv-'+lab+'-'+j), c=CLAIMS[k];
         if(c){
@@ -5695,6 +5704,7 @@ function dsRosterOv(iso){
 }
 function dsCalledOffSet(iso){ const s=new Set(); dsRosterOv(iso).calledOff.forEach(function(n){s.add(String(n).toLowerCase());}); return s; }
 function dsEnsureRoster(iso){
+  coWatch(iso);                                     // call-off list for this date rides along
   // Today is already live via boardState — drop any date listener and bail.
   if(iso===todayISO()){ if(dsRosterUnsub){dsRosterUnsub();dsRosterUnsub=null;dsRosterUnsubIso=null;} return; }
   if(dsRosterUnsubIso===iso)return;                 // already live-listening this date
@@ -5741,14 +5751,78 @@ function dsRemovePickup(id){ const iso=dsDate();
   dsRosterPatch(iso,{added:dsRosterOv(iso).added.filter(function(a){return a.id!==id;})}); }
 /* --- manager "offer the night off" flag + staff volunteer (first-come) --- */
 function dsToggleOffer(){ const iso=dsDate(); dsRosterPatch(iso,{offerOff:!dsRosterOv(iso).offerOff}); }
-function dsVolunteersSorted(iso){ return dsRosterOv(iso).volunteers.slice().sort(function(a,b){return (a.at||0)-(b.at||0);}); }
-function dsMyVolunteer(iso){ return me?dsRosterOv(iso).volunteers.find(function(v){return v.name===me.name;})||null:null; }
+/* ===== CALL-OFF LIST (2026-09-19) =============================================
+   Tapping a coverage NOTE chip ("1 call off", FOH Sundays) opens this: ask to be considered
+   for that night off, and see who has asked, in order. Works days or weeks ahead.
+   STORAGE: board/calloff-{iso} = {entries:[{name,side,type:'off',at}]}, written ONLY inside a
+   transaction. It is deliberately NOT board/{iso}.roster.volunteers: today's board doc is saved
+   with a whole-document set(), and a write landing before its first snapshot could wipe a queue
+   people signed up for a week ago. Order is the whole point of this list, so it gets its own doc.
+   ONE LIST: dsVolunteersSorted() merges these entries with the Day at a Glance volunteers, so on
+   the night Sam sees a single queue and his existing "Approve night off" button works unchanged. */
+let coCache={}, coUnsubs={}, coState=null;
+function coRef(iso){ return fbDb.collection('board').doc('calloff-'+iso); }
+function coWatch(iso){ if(!iso||coUnsubs[iso]||!(fbReady&&fbDb))return;
+  coUnsubs[iso]=coRef(iso).onSnapshot(function(snap){ const d=snap.exists?(snap.data()||{}):{}; coCache[iso]=Array.isArray(d.entries)?d.entries:[]; coRefresh(iso); },function(){}); }
+function coRefresh(iso){ if(coState&&coState.iso===iso)coRender();
+  try{ if(dsDate()===iso&&$('today')&&$('today').classList.contains('active'))renderToday(); }catch(e){} }
+function coEntries(iso){ return (coCache[iso]||[]).slice(); }
+/* both sources, earliest ask first, one row per person */
+function coMerged(iso){ const seen={}, out=[];
+  coEntries(iso).concat(dsRosterOv(iso).volunteers||[]).sort(function(a,b){return (a.at||0)-(b.at||0);})
+    .forEach(function(v){ const k=String(v.name||'').toLowerCase(); if(!k||seen[k])return; seen[k]=1; out.push(v); });
+  return out; }
+function coTx(iso,fn,done){
+  if(DEMO){ if(done)done(); return; }
+  if(!(fbReady&&fbDb)){ alert("Can't reach the server right now, so your spot isn't saved. Try again in a minute."); return; }
+  const ref=coRef(iso);
+  fbDb.runTransaction(function(tx){ return tx.get(ref).then(function(snap){
+      const cur=(snap.exists&&Array.isArray((snap.data()||{}).entries))?snap.data().entries.slice():[];
+      tx.set(ref,{iso:iso,entries:fn(cur)}); }); })
+    .then(function(){ if(done)done(); })
+    .catch(function(){ alert("That didn't save. Check your connection and try again."); });
+}
+function coJoin(side,iso){ if(!me)return; const name=me.name;
+  coTx(iso,function(cur){ if(cur.some(function(v){return v.name===name;}))return cur; return cur.concat([{name:name,side:side,type:'off',at:Date.now()}]); }); }
+function coLeave(iso){ if(!me)return; const name=me.name;
+  coTx(iso,function(cur){ return cur.filter(function(v){return v.name!==name;}); }); }
+function coOpen(side,iso){ if(!me){openLogin();return;} coState={side:side,iso:iso}; coWatch(iso); try{ dsEnsureRoster(iso); }catch(e){} coRender(); }
+function coClose(){ coState=null; const m=$('coModal'); if(m)m.style.display='none'; }
+function coRender(){ const s=coState; if(!s)return; let m=$('coModal');
+  if(!m){ m=document.createElement('div'); m.id='coModal'; m.className='comp-modal'; m.onclick=function(e){if(e.target===m)coClose();}; document.body.appendChild(m); }
+  const iso=s.iso, side=s.side, w=dsWeekFor(side,iso), note=w?String((w.covNotes||[])[w.dates.indexOf(iso)]||'').trim():'';
+  /* on-call volunteers ("available if you're short") are the opposite ask; they stay on Day at a Glance only */
+  const list=coMerged(iso).filter(function(v){return v.type!=='oncall';}), loaded=(iso in coCache)||!(fbReady&&fbDb), appr=dsRosterOv(iso).offApproved, apprName=appr&&appr.name;
+  const mine=me&&list.findIndex(function(v){return v.name===me.name;}), onList=mine>=0;
+  const mySide=!!(me&&me.area===side), avail=mySide?osAvailOn(side,iso):null, past=iso<todayISO();
+  let h='<div class="ann-card co-card"><div class="ann-emoji">🌙</div><div class="ann-title serif">'+esc(fmtLong(iso))+'</div>';
+  h+='<div class="ann-line">One person '+(side==='foh'?'on the floor':'in the kitchen')+' gets called off '+(iso===todayISO()?'tonight':'this night')+(note?' ('+esc(note)+')':'')+'. First to ask is first to go.</div>';
+  if(past)h+='<div class="co-hint">This night has passed.</div>';
+  else if(onList)h+='<div class="co-you">You\'re #'+(mine+1)+' in line.</div><button class="co-leave" onclick="coLeave(\''+iso+'\')">Take me off the list</button>';
+  else if(!mySide)h+='<div class="co-hint">'+(isMgr()?'You approve the night off from Day at a Glance on the day.':'This one is for the '+(side==='foh'?'floor':'kitchen')+' team.')+'</div>';
+  else if(avail==='working')h+='<div class="to-submit"><button class="to-go" onclick="coJoin(\''+side+'\',\''+iso+'\')">Yes, consider me for the night off</button></div>';
+  else h+='<div class="co-hint">'+(avail==='ro'?'You already have this day off.':"You're not on the schedule this night, so there's nothing to be called off from.")+'</div>';
+  h+='<div class="co-list"><div class="co-list-h">Asked so far</div>';
+  if(!loaded)h+='<div class="co-row co-empty">Loading…</div>';
+  else if(!list.length)h+='<div class="co-row co-empty">Nobody yet.</div>';
+  else list.forEach(function(v,i){ const isA=apprName&&v.name===apprName;
+    h+='<div class="co-row'+(me&&v.name===me.name?' me':'')+(isA?' appr':'')+'"><span class="co-n">'+(i+1)+'</span><span class="co-name">'+esc(v.name)+'</span><span class="co-at">'+(isA?'✓ off':esc(reqStamp(v.at)))+'</span></div>'; });
+  h+='</div><button class="ann-dismiss" onclick="coClose()">Close</button></div>';
+  m.innerHTML=h; m.style.display='flex';
+}
+
+function dsVolunteersSorted(iso){ return coMerged(iso); }
+function dsMyVolunteer(iso){ return me?coMerged(iso).find(function(v){return v.name===me.name;})||null:null; }
 function dsAmScheduled(iso){ return !!(me&&dsWorkingList(iso).some(function(x){return x.name===me.name;})); }
 function dsVolunteer(){ const iso=dsDate(); if(!me)return; const ov=dsRosterOv(iso);
-  if(ov.volunteers.some(function(v){return v.name===me.name;}))return;
+  if(coMerged(iso).some(function(v){return v.name===me.name;}))return;
   const type=dsAmScheduled(iso)?'off':'oncall';
+  /* asking for the night off goes to the transaction-guarded call-off list (one queue, see CALL-OFF LIST) */
+  if(type==='off'&&(me.area==='foh'||me.area==='boh')&&fbReady&&fbDb&&!DEMO){ coJoin(me.area,iso); return; }
   dsRosterPatch(iso,{volunteers:ov.volunteers.concat([{name:me.name,type:type,at:Date.now()}])}); }
 function dsUnvolunteer(){ const iso=dsDate(); if(!me)return;
+  if(coEntries(iso).some(function(v){return v.name===me.name;}))coLeave(iso);
+  if(!dsRosterOv(iso).volunteers.some(function(v){return v.name===me.name;}))return;
   dsRosterPatch(iso,{volunteers:dsRosterOv(iso).volunteers.filter(function(v){return v.name!==me.name;})}); }
 /* --- the day's lead(s) for a sick/late alert: Sam + the FOH MD or BOH Kitchen Lead --- */
 function dsLeadNames(iso){
@@ -6405,8 +6479,8 @@ function dsCovNoteHTML(iso,isToday){
   const sides=isMgr()?['foh','boh']:((me&&(me.area==='foh'||me.area==='boh'))?[me.area]:[]); let out='';
   sides.forEach(function(side){ const w=dsWeekFor(side,iso); if(!w)return; const n=String((w.covNotes||[])[w.dates.indexOf(iso)]||'').trim(); if(!n)return;
     const who=side==='foh'?'on the floor':'in the kitchen';
-    out+='<div class="ds-covnote">'+(isToday?'One person '+who+' gets called off tonight. Want to be first? '+(isMgr()?'Volunteers show up below.':'Use the button below, first come first served.')
-      :'One person '+who+' will be called off this night. To be first in line, volunteer here on the day.')+'</div>'; });
+    out+='<div class="ds-covnote" onclick="coOpen(\''+side+'\',\''+iso+'\')">'+(isToday?'One person '+who+' gets called off tonight. Want to be first? '+(isMgr()?'Volunteers show up below.':'Use the button below, first come first served.')
+      :'One person '+who+' will be called off this night. Tap to get in line or see who has asked.')+'</div>'; });
   return out; }
 function dsOfferBannerHTML(iso){ if(!dsRosterOv(iso).offerOff)return '';
   return '<div class="ds-offer-banner">🌙 The night off is on offer tonight. Want it? Volunteer below — first come, first served.</div>'; }
