@@ -4638,6 +4638,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -4823,6 +4832,15 @@ window.SF = {
     "label": "Farm Dinners",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -5024,6 +5042,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -5217,6 +5244,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -5402,6 +5438,15 @@ window.SF = {
     "label": "July 4!",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -5617,6 +5662,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -5802,6 +5856,15 @@ window.SF = {
     "label": "Farm Dinners",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -6003,6 +6066,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -6188,6 +6260,15 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -6393,6 +6474,15 @@ window.SF = {
     "label": "Farm Dinners",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -6618,6 +6708,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -6815,6 +6914,15 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -7028,6 +7136,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -7232,6 +7349,15 @@ window.SF = {
      "",
      "3:30 serve",
      "3:30 serve"
+    ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
     ],
     "rows": [
      {
@@ -7438,6 +7564,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -7623,6 +7758,15 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -7824,6 +7968,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -8017,6 +8170,15 @@ window.SF = {
      "3:30 serve",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -8187,6 +8349,814 @@ window.SF = {
       ]
      }
     ]
+   },
+   {
+    "weekStart": "2026-10-05",
+    "dates": [
+     "2026-10-05",
+     "2026-10-06",
+     "2026-10-07",
+     "2026-10-08",
+     "2026-10-09",
+     "2026-10-10",
+     "2026-10-11"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "1 call off"
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "Admin/MD 5-8",
+       "",
+       "",
+       "Float",
+       "Float",
+       "Float"
+      ]
+     },
+     {
+      "name": "Adrian",
+      "shifts": [
+       "",
+       "Sup Server",
+       "MD",
+       "MD",
+       "MD",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Katie",
+      "shifts": [
+       "",
+       "",
+       "3:30 Bar",
+       "R/O",
+       "Sup Server",
+       "3:30 Bar",
+       "Float"
+      ]
+     },
+     {
+      "name": "Abby",
+      "shifts": [
+       "",
+       "3:30 Bar",
+       "3:30 serve",
+       "R/O",
+       "3:30 serve",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Allegra",
+      "shifts": [
+       "",
+       "",
+       "3:30 serve",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Brittany",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 Bar",
+       "",
+       "3:30 Bar"
+      ]
+     },
+     {
+      "name": "Denise",
+      "shifts": [
+       "",
+       "",
+       "",
+       "R/O",
+       "3:30 serve",
+       "3:30 serve",
+       ""
+      ]
+     },
+     {
+      "name": "Jackie",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "3:30 serve",
+       "",
+       "3:30 serve",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Josie",
+      "shifts": [
+       "3:30 serve",
+       "",
+       "",
+       "3:30 serve",
+       "",
+       "",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Julian",
+      "shifts": [
+       "",
+       "",
+       "",
+       "Sup Server",
+       "3:30 serve",
+       "Sup Server",
+       "Sup Server"
+      ]
+     },
+     {
+      "name": "Mac",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Nam",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Sabba",
+      "shifts": [
+       "3:30 Bar",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 Bar",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Sully",
+      "shifts": [
+       "Sup Server",
+       "",
+       "Sup Server",
+       "",
+       "",
+       "MD",
+       "MD"
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-10-12",
+    "dates": [
+     "2026-10-12",
+     "2026-10-13",
+     "2026-10-14",
+     "2026-10-15",
+     "2026-10-16",
+     "2026-10-17",
+     "2026-10-18"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "1 call off"
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "Admin/MD 5-8",
+       "",
+       "",
+       "Float",
+       "Float",
+       "Float"
+      ]
+     },
+     {
+      "name": "Adrian",
+      "shifts": [
+       "",
+       "Sup Server",
+       "MD",
+       "MD",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Katie",
+      "shifts": [
+       "",
+       "",
+       "3:30 Bar",
+       "3:30 Bar",
+       "MD",
+       "3:30 Bar",
+       "Float"
+      ]
+     },
+     {
+      "name": "Abby",
+      "shifts": [
+       "",
+       "3:30 Bar",
+       "3:30 serve",
+       "Sup Server",
+       "3:30 serve",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Allegra",
+      "shifts": [
+       "",
+       "",
+       "3:30 serve",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Brittany",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 Bar",
+       "",
+       "3:30 Bar"
+      ]
+     },
+     {
+      "name": "Denise",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       ""
+      ]
+     },
+     {
+      "name": "Jackie",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Josie",
+      "shifts": [
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Julian",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "Sup Server",
+       "Sup Server",
+       "Sup Server"
+      ]
+     },
+     {
+      "name": "Mac",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Nam",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Sabba",
+      "shifts": [
+       "3:30 Bar",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Sully",
+      "shifts": [
+       "Sup Server",
+       "",
+       "Sup Server",
+       "",
+       "",
+       "MD",
+       "MD"
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-10-19",
+    "dates": [
+     "2026-10-19",
+     "2026-10-20",
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23",
+     "2026-10-24",
+     "2026-10-25"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "1 call off"
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "Admin/MD 5-8",
+       "",
+       "",
+       "Float",
+       "Float",
+       "Float"
+      ]
+     },
+     {
+      "name": "Adrian",
+      "shifts": [
+       "",
+       "Sup Server",
+       "MD",
+       "MD",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Katie",
+      "shifts": [
+       "",
+       "",
+       "3:30 Bar",
+       "3:30 Bar",
+       "Sup Server",
+       "3:30 Bar",
+       "MD"
+      ]
+     },
+     {
+      "name": "Abby",
+      "shifts": [
+       "",
+       "3:30 Bar",
+       "3:30 serve",
+       "Sup Server",
+       "3:30 serve",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Allegra",
+      "shifts": [
+       "",
+       "",
+       "3:30 serve",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Brittany",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 Bar",
+       "",
+       "3:30 Bar"
+      ]
+     },
+     {
+      "name": "Denise",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       ""
+      ]
+     },
+     {
+      "name": "Jackie",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Josie",
+      "shifts": [
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Julian",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "Sup Server",
+       "Sup Server"
+      ]
+     },
+     {
+      "name": "Mac",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Nam",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Sabba",
+      "shifts": [
+       "3:30 Bar",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Sully",
+      "shifts": [
+       "Sup Server",
+       "",
+       "Sup Server",
+       "",
+       "",
+       "MD",
+       "MD"
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-10-26",
+    "dates": [
+     "2026-10-26",
+     "2026-10-27",
+     "2026-10-28",
+     "2026-10-29",
+     "2026-10-30",
+     "2026-10-31",
+     "2026-11-01"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     "1 call off"
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "Admin/MD 5-8",
+       "",
+       "",
+       "Float",
+       "Float",
+       "Float"
+      ]
+     },
+     {
+      "name": "Adrian",
+      "shifts": [
+       "",
+       "Sup Server",
+       "MD",
+       "MD",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Katie",
+      "shifts": [
+       "",
+       "",
+       "3:30 Bar",
+       "3:30 Bar",
+       "Sup Server",
+       "MD",
+       "Float"
+      ]
+     },
+     {
+      "name": "Abby",
+      "shifts": [
+       "",
+       "3:30 Bar",
+       "3:30 serve",
+       "Sup Server",
+       "3:30 serve",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Allegra",
+      "shifts": [
+       "",
+       "",
+       "3:30 serve",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Brittany",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 Bar",
+       "3:30 Bar",
+       "3:30 Bar"
+      ]
+     },
+     {
+      "name": "Denise",
+      "shifts": [
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       ""
+      ]
+     },
+     {
+      "name": "Jackie",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Josie",
+      "shifts": [
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "3:30 serve"
+      ]
+     },
+     {
+      "name": "Julian",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "3:30 serve",
+       "3:30 serve",
+       "Sup Server"
+      ]
+     },
+     {
+      "name": "Mac",
+      "shifts": [
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Nam",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Sabba",
+      "shifts": [
+       "3:30 Bar",
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Sully",
+      "shifts": [
+       "Sup Server",
+       "",
+       "Sup Server",
+       "",
+       "",
+       "Sup Server",
+       "MD"
+      ]
+     }
+    ]
    }
   ],
   "boh": [
@@ -8204,6 +9174,15 @@ window.SF = {
     "label": "Farm Dinners",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -8405,6 +9384,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -8590,6 +9578,15 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -8791,6 +9788,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -8976,6 +9982,15 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -9179,6 +10194,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -9364,6 +10388,15 @@ window.SF = {
     "label": "Farm Dinners",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -9565,6 +10598,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -9750,6 +10792,15 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -9951,6 +11002,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -10136,6 +11196,15 @@ window.SF = {
     "label": "Farm Dinners",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -10349,6 +11418,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -10546,6 +11624,15 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -10759,6 +11846,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -10956,6 +12052,15 @@ window.SF = {
     "label": "Farm Dinners",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -11169,6 +12274,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -11366,6 +12480,15 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -11579,6 +12702,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -11776,6 +12908,15 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -11989,6 +13130,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -12194,6 +13344,15 @@ window.SF = {
      "",
      ""
     ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
     "rows": [
      {
       "name": "Sam",
@@ -12391,6 +13550,15 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
      "",
      "",
      "",
@@ -14128,5 +15296,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1789861195"
+ "build": "1789863768"
 };

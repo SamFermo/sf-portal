@@ -374,6 +374,8 @@ body.tour-on{padding-bottom:230px;}
 .rcp-x{background:transparent; color:var(--rust); border:1px solid var(--rust); border-radius:5px; font-size:8.5px; font-weight:700; padding:1px 5px; cursor:pointer; font-family:inherit;}
 .sched-table tr.covrow td{background:rgba(176,74,26,.06); border-top:1.5px solid var(--rust);}
 .sched-table tr.covrow td.today{background:rgba(230,200,120,.25);}
+.cov-note{display:inline-block; font-size:10.5px; font-weight:700; line-height:1.2; color:#2a1f08; background:#e7bf5e; border-radius:6px; padding:3px 6px;}
+.ds-covnote{background:var(--moon-hi); border:1px solid var(--gold-deep); border-radius:12px; padding:11px 14px; font-size:13.5px; font-weight:700; color:var(--wood); margin:0 0 10px; line-height:1.4;}
 .cov-nm{color:var(--rust)!important; font-size:10px!important; text-transform:uppercase; letter-spacing:.06em;}
 
 /* duties */
@@ -769,6 +771,7 @@ body.tour-on{padding-bottom:230px;}
 .ann-title{font-size:25px; font-weight:700; color:var(--wood); margin:0;}
 .ann-lines{display:flex; flex-direction:column; gap:4px; margin:4px 0;}
 .ann-line{font-size:13px; color:var(--card-soft); line-height:1.4;}
+.ann-more{font-size:11.5px; color:var(--card-mute); font-style:italic;}
 .ann-note{font-size:12.5px; font-weight:700; color:var(--gold-deep);}
 .ann-current{font-size:12px; color:var(--ink-mute); background:rgba(214,158,46,.1); border-radius:8px; padding:7px 10px;}
 .ann-guests{display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; margin-top:6px; padding:8px 12px; background:rgba(205,216,244,.05); border-radius:10px;}
@@ -1869,7 +1872,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1789861195';   // stamped by build-data.py at every deploy
+const BUILD='1789863768';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2494,6 +2497,35 @@ function afterLogin(){
    (arrayUnion); the legacy single noticeAck field is still honored. */
 const ANNOUNCES=[
   {
+  /* Sam's own words, verbatim (2026-09-19). Do not edit, tidy or regenerate this copy. */
+  kind:'info',
+  aud:'all',
+  id:'adrian-farewell-2026-10',
+  showUntil:'2026-10-31',
+  emoji:'\uD83D\uDC8C',
+  title:"Adrian's last day",
+  lines:[
+    "I've mentioned it before but the time is coming so I'll mention it again. Adrian's last day will be the 29th, and I can't say how sad we are to see him go. He's been such a steadfast part of this place for so long now, I don't know how we will cope.",
+    "Thank you for everything you've done here Adrian, and for being such a wonderful person to work alongside for so long. We love you dearly and will miss you terribly. Please send postcards that we can fill the bar with."
+  ],
+  note:"Love, Sam, Sully, Kelly, Tim, Amy, Ava, Lucy, and Johnny."
+  },
+  {
+  kind:'info',
+  aud:'foh',
+  id:'foh-october-2026',
+  showUntil:'2026-10-18',
+  emoji:'\uD83D\uDCC5',
+  title:'October floor schedule is up',
+  lines:[
+    "October is live in the Schedule tab, 10/5 through 11/1. Check your weeks and your R/Os.",
+    "Sundays show \"1 call off\" in the Open row. We're calling one person off every Sunday this month, so plan for it. If you want to be first to go, ask on Day at a Glance that day, same as always.",
+    "We're going to keep running 4 sections Sunday through Thursday as often as we can. Nobody can predict the real drop-off. If we need to scale back further, you'll hear it from us as early as possible.",
+    "The portal is the schedule from here on. I'm not sending the Google Sheet around anymore."
+  ],
+  note:""
+  },
+  {
   kind:'info',
   aud:'boh',
   id:'boh-october-2026',
@@ -2527,6 +2559,7 @@ function annForMe(A){ if(!A||!A.aud||A.aud==='all')return true; if(!me)return fa
 function annDoneFor(A){ if(!me)return false;
   if(A.kind==='info')return me.noticeAck===A.id||(Array.isArray(me.noticeAcks)&&me.noticeAcks.indexOf(A.id)>=0);
   const r=me.announceRsvp; return !!(r&&r.id===A.id); }
+function annPendingCount(){ const t=todayISO(); return ANNOUNCES.filter(function(A){return t<=A.showUntil&&annForMe(A)&&!annDoneFor(A);}).length; }
 function annPick(){ const t=todayISO();
   const live=ANNOUNCES.filter(function(A){return t<=A.showUntil&&annForMe(A);});
   const pend=live.filter(function(A){return !annDoneFor(A);});
@@ -2639,7 +2672,8 @@ function annCardHTML(existing){
       <div class="ann-title serif">${esc(A.title)}</div>
       <div class="ann-lines">${A.lines.map(l=>`<div class="ann-line">${esc(l)}</div>`).join('')}</div>
       ${A.note?`<div class="ann-note">${esc(A.note)}</div>`:''}
-      <div class="to-submit"><button class="to-go" onclick="annAck()">Got it</button></div>
+      <div class="to-submit"><button class="to-go" onclick="annAck()">${annPendingCount()>1?'Got it, next':'Got it'}</button></div>
+      ${annPendingCount()>1?`<div class="ann-more">${annPendingCount()-1} more after this</div>`:''}
     </div>`;
   }
   const cur=existing?`<div class="ann-current">Right now you're down as <b>${existing.rsvp==='yes'?('coming'+(existing.guests?` +${existing.guests} guest${existing.guests>1?'s':''}`:'')):'not coming'}</b> — change it below if needed.</div>`:'';
@@ -3923,11 +3957,13 @@ function weekTableHTML(w,today){
     h+=`<tr class="${mine?'me':''}"><td class="nm">${esc(r.name)}</td>`;
     r.shifts.forEach((s,i)=>h+=`<td class="${w.dates[i]===today?'today':''}"><span class="shift ${shiftClass(s)}">${s?esc(s):'·'}</span></td>`);h+=`</tr>`;});
   // coverage needs — the open shifts that get us to full staffing, claimable
-  const cov=w.coverage||[];
-  if(cov.some(x=>x&&String(x).trim())){
+  const cov=w.coverage||[], covN=w.covNotes||[];
+  if(cov.some(x=>x&&String(x).trim())||covN.some(x=>x&&String(x).trim())){
     h+=`<tr class="covrow"><td class="nm cov-nm">Open</td>`;
-    cov.forEach((cell,i)=>{
-      const d=w.dates[i]; let inner='';
+    (w.dates||[]).forEach((d0,i)=>{
+      const cell=cov[i]||'';
+      /* coverage NOTE (e.g. "1 call off"): information, never claimable */
+      const d=w.dates[i]; let inner=String(covN[i]||'').trim()?`<span class="cov-note">${esc(covN[i])}</span>`:'';
       String(cell||'').split(',').map(x=>x.trim()).filter(Boolean).forEach((lab,j)=>{
         const k=claimKey(schedState.side,d,'cv-'+lab+'-'+j), c=CLAIMS[k];
         if(c){
@@ -6363,6 +6399,15 @@ function dsCoversHTML(iso){
   return h+'</div>';
 }
 /* manager "offer the night off" — flag + banner (everyone) + toggle (manager) */
+/* Sheet-driven call-off note (week.covNotes, e.g. FOH Sundays "1 call off"). Shown to that
+   side's staff and to managers. It points at the volunteer button that already lives here. */
+function dsCovNoteHTML(iso,isToday){
+  const sides=isMgr()?['foh','boh']:((me&&(me.area==='foh'||me.area==='boh'))?[me.area]:[]); let out='';
+  sides.forEach(function(side){ const w=dsWeekFor(side,iso); if(!w)return; const n=String((w.covNotes||[])[w.dates.indexOf(iso)]||'').trim(); if(!n)return;
+    const who=side==='foh'?'on the floor':'in the kitchen';
+    out+='<div class="ds-covnote">'+(isToday?'One person '+who+' gets called off tonight. Want to be first? '+(isMgr()?'Volunteers show up below.':'Use the button below, first come first served.')
+      :'One person '+who+' will be called off this night. To be first in line, volunteer here on the day.')+'</div>'; });
+  return out; }
 function dsOfferBannerHTML(iso){ if(!dsRosterOv(iso).offerOff)return '';
   return '<div class="ds-offer-banner">🌙 The night off is on offer tonight. Want it? Volunteer below — first come, first served.</div>'; }
 /* Top-of-sheet night-off control: a clear (never-faded) toggle with the volunteer
@@ -6478,6 +6523,7 @@ function renderToday(){
   let h='';
   h+=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
   h+=dsDayEventHeaderHTML(iso);
+  h+=dsCovNoteHTML(iso,isToday);
   if(isToday&&calloffApprovedForMe()){ h+='<div class="ds-offapp-banner">🌙 Sam gave you the night off tonight — you\'re off. Enjoy it.</div>'; markCalloffSeen(); }
   if(mgr)h+=dsNightOffTopHTML(iso);        // top-of-sheet night-off toggle + volunteer list w/ approval
   else { h+=dsOfferBannerHTML(iso);        // staff: informational "night off is on offer" banner
