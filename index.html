@@ -1881,7 +1881,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1789864861';   // stamped by build-data.py at every deploy
+const BUILD='1790127084';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -8451,7 +8451,7 @@ const AT_DEFAULT_MIN=120;   /* a table turns in two hours unless the MD says oth
 let ATBL={}, atblLoaded=false, atblUnsub=null, atSyncErr=false;
 let CHAT={}, chatLoaded=false, chatUnsub=null, chatSyncErr=false;
 let atSec='Attic', atSecOpen=false, atOpen='', atDraft=null, atMoveFrom='', atSub='tables';
-let atTimer=null, atAudio=null, atChimeArmed=false;
+let atTimer=null;
 
 /* --- the table list the tiles are built from -------------------------------- */
 function allTablesInOrder(){
@@ -8517,7 +8517,7 @@ function atNotesUnseen(r){
     return n&&n.by!==meN&&(n.seenBy||[]).indexOf(meN)<0;
   }).length;
 }
-/* who still needs to act on this table, used for the chime and the nav glow */
+/* who still needs to act on this table, used for the nav glow */
 function atNeedsMe(r){
   if(!r)return false;
   const meN=currentUserName();
@@ -8544,10 +8544,8 @@ function startTablesSync(){
   if(fbReady&&fbDb){
     if(atblUnsub)atblUnsub();
     atblUnsub=fbDb.collection('tables').where('date','==',todayISO()).onSnapshot(function(snap){
-      const prev=ATBL, first=!atblLoaded;
       ATBL={}; snap.docs.forEach(function(d){ATBL[d.id]=d.data();});
       atblLoaded=true; atSyncErr=false; atLsSet();
-      if(!first)atChimeCheck(prev,ATBL);
       renderBoard();
     },function(){ /* LOUD: the tab says so rather than pretending the floor is quiet */
       atSyncErr=true; ATBL=atLsGet(); atblLoaded=false; renderBoard(); });
@@ -8555,50 +8553,9 @@ function startTablesSync(){
   atStartTick();
 }
 
-/* --- the chime. A gold glow is invisible on a screen nobody is looking at, so a
-       new seat (server) or a new flag (MD) makes a sound while the app is open.
-       iOS will not start an AudioContext without a gesture, so it is unlocked on
-       the first tap anywhere and stays unlocked for the session. ------------- */
-function atAudioUnlock(){
-  if(atChimeArmed)return;
-  try{const C=window.AudioContext||window.webkitAudioContext; if(!C)return;
-    atAudio=atAudio||new C(); if(atAudio.state==='suspended')atAudio.resume();
-    atChimeArmed=true;}catch(e){}
-}
-function atBeep(){
-  if(!atChimeArmed||!atAudio)return;
-  if(document.visibilityState!=='visible')return;
-  try{
-    [[880,0],[1320,.14]].forEach(function(p){
-      const o=atAudio.createOscillator(), g=atAudio.createGain();
-      o.connect(g); g.connect(atAudio.destination); o.type='sine'; o.frequency.value=p[0];
-      const t0=atAudio.currentTime+p[1];
-      g.gain.setValueAtTime(0.0001,t0);
-      g.gain.exponentialRampToValueAtTime(0.16,t0+0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001,t0+0.42);
-      o.start(t0); o.stop(t0+0.45);
-    });
-  }catch(e){}
-}
-function atChimeCheck(prev,next){
-  const meN=currentUserName();
-  let hit=false;
-  Object.keys(next).forEach(function(k){
-    const a=prev[k]||{}, b=next[k];
-    if(atIsMD()){
-      if(b.flag&&!b.flagAck&&b.flagBy!==meN&&(b.flagAt||0)>(a.flagAt||0))hit=true;
-    }else{
-      if(b.state==='seated'&&!b.seatAck&&b.by!==meN&&(b.at||0)>(a.at||0))hit=true;
-    }
-    /* a new note from the other side chimes for whoever it's aimed at */
-    const bn=(b.notes||[]);
-    if(bn.length>((a.notes||[]).length)){
-      const last=bn[bn.length-1];
-      if(last&&last.by!==meN&&(last.seenBy||[]).indexOf(meN)<0)hit=true;
-    }
-  });
-  if(hit)atBeep();
-}
+/* --- no chime. The Attic tables tab is silent by design (Sam, 2026-09-22): the MD
+       often runs the portal on the same iPad that plays music, so any sound went out
+       over every speaker in the room. The gold glow and nav badge carry the signal. */
 
 /* --- the ticking clock. Re-rendering the whole tab every 15s would eat an open
        note mid-sentence, so the tick touches only the countdown nodes. -------- */
@@ -8624,7 +8581,6 @@ function atTickCds(){
 
 /* --- actions ---------------------------------------------------------------- */
 function atTap(t){
-  atAudioUnlock();
   if(atMoveFrom){ atDoMove(atMoveFrom,t); return; }
   if(atOpen===t){atOpen='';atDraft=null;}
   else{
