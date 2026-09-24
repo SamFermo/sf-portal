@@ -1859,7 +1859,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790201903';   // stamped by build-data.py at every deploy
+const BUILD='1790268009';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2062,6 +2062,9 @@ function refreshOrdersCard(){
    (review sheet, invoice modal, photo lightbox) keep working — those are fixed relative to the
    iframe's own viewport, which would break if the iframe were stretched to its full scrollable
    content height. Remy scrolls internally within that box; the outer page/header don't move. */
+/* go('orders') calls this. Farm Order = the Remy embed, mounted in place (restored 2026-09-24:
+   the 9/23 old-form removal cut it by mistake and the tab went blank). */
+function renderOrders(){ remyMount(); }
 function remyMount(){
   if(!isMgr())return;   // managers + admins (matches who sees the Farm Order card/tab)
   // Hand the logged-in user to the embed so orders record who placed them (Kelly's feed shows it).
