@@ -285,6 +285,7 @@ body.tour-on{padding-bottom:230px;}
 .shift{display:inline-block; font-size:10.5px; line-height:1.2; color:var(--card-ink); max-width:100%; overflow-wrap:break-word; word-break:break-word; box-decoration-break:clone; -webkit-box-decoration-break:clone;}
 .shift.off{color:var(--moon-edge);} .shift.ro{color:var(--rust); font-weight:700;}
 .shift.farm{color:var(--accent-dark); font-weight:700;} .shift.md{color:var(--gold-deep); font-weight:700;}
+.shift.fx::after{content:''; display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--gold-deep); margin-left:3px; vertical-align:super;}   /* changed by an approved request (Phase B) */
 .legend{font-size:11px; color:var(--ink-mute); margin-top:8px; line-height:1.7;}
 .legend b{color:var(--ink-soft);}
 /* my schedule — the personal cut of the same data, a day list instead of a grid */
@@ -1859,7 +1860,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790371108';   // stamped by build-data.py at every deploy
+const BUILD='1790371522';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3995,7 +3996,7 @@ function weekTableHTML(w,today){
   h+=`</tr></thead><tbody>`;
   w.rows.forEach(r=>{const mine=MYN.indexOf(String(r.name).trim().toLowerCase())>=0;
     h+=`<tr class="${mine?'me':''}"><td class="nm">${esc(r.name)}</td>`;
-    r.shifts.forEach((s,i)=>h+=`<td class="${w.dates[i]===today?'today':''}"><span class="shift ${shiftClass(s)}">${s?esc(s):'·'}</span></td>`);h+=`</tr>`;});
+    r.shifts.forEach((s,i)=>h+=`<td class="${w.dates[i]===today?'today':''}"><span class="shift ${shiftClass(s)}${schedFxMarked(schedState.side,w.dates[i],r.name)?' fx':''}">${s?esc(s):'·'}</span></td>`);h+=`</tr>`;});
   // coverage needs — the open shifts that get us to full staffing, claimable
   const cov=w.coverage||[], covN=w.covNotes||[];
   if(cov.some(x=>x&&String(x).trim())||covN.some(x=>x&&String(x).trim())){
@@ -4167,6 +4168,60 @@ function myApprovedOff(){
       map[d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())]=true;
   });
   return map;
+}
+/* APPROVAL OVERLAY (Phase B, 2026-09-25). Approved requests' effects[] drawn onto the
+   schedule everyone reads. SCHED_SHEET is a pristine copy of the sheet build (data.js);
+   SF.schedule becomes sheet + effects, recomputed whenever timeoff changes. The sheet data
+   itself is never edited. Per effect: sheet cell still equals the cell recorded at approval ->
+   apply; sheet already shows the result -> settled, draws nothing; anything else -> conflict,
+   the sheet wins on screen and the request gets a manager flag. 'open' effects are NOT drawn
+   yet (Phase C: pickup ledger). Scope: approved-requests-to-schedule-scope.md. */
+let SCHED_SHEET=null, SCHED_FX={marks:{},conflicts:{},applied:0};
+function schedSheet(){ if(!SCHED_SHEET&&window.SF&&SF.schedule)SCHED_SHEET=JSON.parse(JSON.stringify(SF.schedule)); return SCHED_SHEET; }
+function schedFxKey(side,iso,row){ return side+'|'+iso+'|'+String(row||'').trim().toLowerCase(); }
+function schedFxMarked(side,iso,row){ return !!SCHED_FX.marks[schedFxKey(side,iso,row)]; }
+function schedFxLoc(sched,side,name,iso){
+  const p=(typeof acP==='function'&&acP(name))||{name:name}, toks=rpTokens({name:p.name||name,schedName:p.schedName||''});
+  const weeks=(sched&&sched[side])||[];
+  for(let i=0;i<weeks.length;i++){ const di=(weeks[i].dates||[]).indexOf(iso); if(di<0)continue;
+    const row=(weeks[i].rows||[]).find(function(r){return toks.indexOf(String(r.name||'').trim().toLowerCase())>=0;});
+    return row?{row:row,di:di}:null; }
+  return null;
+}
+function schedFxOff(v){ const lo=String(v||'').trim().toLowerCase(); return !lo||lo==='x'||lo==='-'; }
+function schedFxRO(v){ return /^r\/?o\b/i.test(String(v||'').trim()); }
+function schedWithEffects(sheet,reqs){
+  const out=JSON.parse(JSON.stringify(sheet||{})), marks={}, conflicts={}; let applied=0;
+  const ok=[]; (reqs||[]).forEach(function(r){ if(r&&r.status==='approved'&&!r.effectsSkipped&&Array.isArray(r.effects)&&r.effects.length)ok.push(r); });
+  ok.sort(function(a,b){return (a.decidedAt||0)-(b.decidedAt||0);});   // later approvals land on top
+  ok.forEach(function(r){ r.effects.forEach(function(e){
+    const side=(e.side==='boh'||e.side==='foh')?e.side:null; if(!side||!e.date)return;
+    const flag=function(why){ (conflicts[r.id]=conflicts[r.id]||[]).push(fmtShort(e.date)+': '+why); };
+    if(e.kind==='off'){
+      const L=schedFxLoc(out,side,e.name,e.date); if(!L){ if(schedFxLoc(out,side,r.name,e.date)===null&&!(out[side]||[]).some(function(w){return (w.dates||[]).indexOf(e.date)>=0;}))return; flag('no schedule row for '+e.name); return; }
+      const cur=String(L.row.shifts[L.di]||'').trim();
+      if(schedFxRO(cur))return;                                        // sheet caught up
+      if(cur===String(e.cell||'').trim()||(schedFxOff(cur)&&schedFxOff(e.cell))){ L.row.shifts[L.di]='R/O'; marks[schedFxKey(side,e.date,L.row.name)]=1; applied++; }
+      else flag('sheet now says "'+cur+'" for '+acFirst(e.name)+', left as is');
+    } else if(e.kind==='assign'){
+      const G=schedFxLoc(out,side,e.giver,e.date), T=schedFxLoc(out,side,e.taker,e.date);
+      if(!G||!T){ if(!(out[side]||[]).some(function(w){return (w.dates||[]).indexOf(e.date)>=0;}))return; flag('no schedule row for '+(!G?e.giver:e.taker)); return; }
+      const gc=String(G.row.shifts[G.di]||'').trim(), tc=String(T.row.shifts[T.di]||'').trim(), sh=String(e.shift||e.cell||'').trim();
+      if(!sh)return;
+      if(tc===sh&&gc!==String(e.cell||'').trim())return;                // sheet caught up
+      if(gc===String(e.cell||'').trim()&&(schedFxOff(tc)||schedFxRO(tc))){
+        G.row.shifts[G.di]=''; T.row.shifts[T.di]=sh;
+        marks[schedFxKey(side,e.date,G.row.name)]=1; marks[schedFxKey(side,e.date,T.row.name)]=1; applied++; }
+      else flag(acFirst(e.taker)+' taking '+acFirst(e.giver)+"'s "+sh+" doesn't match the sheet anymore, left as is");
+    }
+  }); });
+  return {sched:out,marks:marks,conflicts:conflicts,applied:applied};
+}
+function applySchedOverlay(){
+  const sheet=schedSheet(); if(!sheet)return;
+  let res; try{ res=schedWithEffects(sheet,getReqs()); }catch(err){ console.warn('[overlay] failed, showing the sheet as built',err); SF.schedule=sheet; SCHED_FX={marks:{},conflicts:{},applied:0}; return; }
+  SF.schedule=res.sched; SCHED_FX={marks:res.marks,conflicts:res.conflicts,applied:res.applied};
+  try{ const v=document.querySelector('.view.active'); if(v&&v.id==='schedule'&&schedState.side!=='timeoff')renderSchedule(); }catch(err){}
 }
 /* Open coverage shifts on this person's own side(s) inside the active window.
    The slot index mirrors the grid's per-cell filtered index so the claim key is
@@ -4374,10 +4429,11 @@ function startTimeoffSync(){
     toUnsub=fbDb.collection('timeoff').orderBy('createdAt','desc').limit(120).onSnapshot(function(snap){
       toState=snap.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o;});
       toLoaded=true;   // success path ONLY — never the fallback below
+      applySchedOverlay();
       if(schedState.side==='timeoff')renderTimeoff();
       updatePendingBadge(); maybeShowAlerts();
-    },function(){ toState=toLsGet(); if(schedState.side==='timeoff')renderTimeoff(); updatePendingBadge(); });
-  }else{ toState=toLsGet(); updatePendingBadge(); }
+    },function(){ toState=toLsGet(); applySchedOverlay(); if(schedState.side==='timeoff')renderTimeoff(); updatePendingBadge(); });
+  }else{ toState=toLsGet(); applySchedOverlay(); updatePendingBadge(); }
 }
 /* ===== ALERTS — "somebody said something to you" ===========================
    Notes on a time-off thread, decisions on your own request, and coverage claims
@@ -4583,7 +4639,7 @@ function decideTimeoff(id,status,extra){
   if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0)Object.assign(r0,patch);}
   if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).update(patch).catch(function(){}); }
   else { var a=toLsGet();var r=a.find(function(x){return x.id===id;});if(r)Object.assign(r,patch);toLsSet(a);toState=a; }
-  renderTimeoff();
+  applySchedOverlay(); renderTimeoff();
 }
 function addToComment(id){
   var who=currentUserName();if(!who){openLogin();return;}
@@ -4764,7 +4820,7 @@ let acState=null;
 /* alreadyEdited: for a request that was approved before the card existed, Sam has usually already
    fixed the sheet by hand, so the sheet shows the RESULT of the swap and must not be used to decide
    whose shift was whose (it would flip a correct read). Pending requests use the sheet normally. */
-function acCtx(alreadyEdited){ return {scheduleAlreadyEdited:!!alreadyEdited, roster:profilesArr().map(function(p){return {name:p.name,area:p.area,active:p.active!==false,schedName:p.schedName||''};}), sched:SF.schedule}; }
+function acCtx(alreadyEdited){ return {scheduleAlreadyEdited:!!alreadyEdited, roster:profilesArr().map(function(p){return {name:p.name,area:p.area,active:p.active!==false,schedName:p.schedName||''};}), sched:schedSheet()||SF.schedule}; }
 function acP(name){ return name?(PROFILES[name]||null):null; }
 function acFirst(name){ const n=String(name||''), nick=(n.match(/"([^"]+)"/)||[])[1]; return nick||n.split(' ')[0]||'?'; }
 /* the saved effects, said the way Sam would say them */
@@ -4906,14 +4962,15 @@ function acRender(){
   const b=acBlocked();
   h+='<div class="to-submit ac-actions"><button class="to-go" '+(b?'disabled title="'+esc(b)+'"':'')+' onclick="acSave(true)">'+(s.mode==='edit'?'Save schedule changes':'Approve as shown')+'</button></div>';
   h+='<div class="ac-second">'+(s.mode==='edit'?'':'<a onclick="acSave(false)">Approve without schedule changes</a> · ')+'<a onclick="acClose()">Cancel</a></div>';
-  if(s.type!=='timeoff'||acEffects().some(function(e){return e.kind==='open';}))h+='<div class="ac-foot">For now this records the change on the request. The schedule itself doesn\'t move yet.</div>';
+  if(s.type!=='timeoff'||acEffects().some(function(e){return e.kind==='open';}))h+='<div class="ac-foot">The schedule updates for everyone when you approve. Posting the open shift for pickup isn\'t automatic yet.</div>';
   h+='</div>'; m.innerHTML=h; m.style.display='flex'; const card=m.querySelector('.ac-card'); if(card)card.scrollTop=keep;
 }
 
 function acReqLinkHTML(r){
   if(r.status!=='approved')return AC_PREVIEW?'<div class="req-mgrhint"><a onclick="acOpen(\''+esc(r.id)+'\',\'approve\')">Preview the approval card</a></div>':'';
   const n=Array.isArray(r.effects)?r.effects.filter(function(e){return e.kind!=='open';}).length:0;
-  return '<div class="req-mgrhint">'+(n?('Schedule changes recorded: '+n+'. '):'')+'<a onclick="acOpen(\''+esc(r.id)+'\',\'edit\')">'+(n?'Edit':'Add schedule changes')+'</a></div>';
+  const cf=(SCHED_FX.conflicts||{})[r.id]||[];
+  return (cf.length?'<div class="req-mgrhint" style="color:var(--rust)">Not shown on the schedule: '+esc(cf.join('; '))+'</div>':'')+'<div class="req-mgrhint">'+(n?('Schedule changes recorded: '+n+'. '):'')+'<a onclick="acOpen(\''+esc(r.id)+'\',\'edit\')">'+(n?'Edit':'Add schedule changes')+'</a></div>';
 }
 /* When a request was submitted — shown on every request so overlapping asks for the same
    dates resolve first-come. */
