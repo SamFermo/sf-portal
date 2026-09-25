@@ -1859,7 +1859,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790268009';   // stamped by build-data.py at every deploy
+const BUILD='1790371108';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1989,6 +1989,54 @@ function verbalsCardHTML(){
   else if(u.std)detail=`<b>updated</b> · ${detail}`;
   return wideCardHTML('verbals','☾','Verbals',detail);
 }
+/* RemyWeek (2026-09-24): the ONE definition of San Fermo's weekly Swan House order window.
+   Cutoff Sunday 10pm Pacific; delivery = cutoff Sunday + DELIV_OFFSET days (Tuesday, Sully).
+   Late window = cutoff .. end of delivery day: adds still land on that week, marked LATE.
+   After that the next week opens. The sf-portal carries a byte-identical copy of this block. */
+window.RemyWeek=(function(){
+  var TZ='America/Los_Angeles', CUT_H=22, DELIV_OFFSET=2;
+  var WD={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
+  var F=null;
+  function pt(ms){
+    if(!F)F=new Intl.DateTimeFormat('en-US',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,weekday:'short'});
+    var p={}; F.formatToParts(new Date(ms)).forEach(function(x){p[x.type]=x.value;});
+    return {y:+p.year,m:+p.month,d:+p.day,h:(+p.hour)%24,mi:+p.minute,s:+p.second,wd:WD[p.weekday]};
+  }
+  function key(y,m,d){return new Date(Date.UTC(y,m-1,d)).toISOString().slice(0,10);}
+  function add(k,n){var t=new Date(k+'T00:00:00Z');t.setUTCDate(t.getUTCDate()+n);return t.toISOString().slice(0,10);}
+  function wall(k,h){return Date.parse(k+'T'+(h<10?'0':'')+h+':00:00Z');}
+  function ptMs(k,h){   // Pacific wall-clock k h:00 -> epoch ms (DST-safe: iterate on the offset)
+    var want=wall(k,h), g=want+8*3600e3;
+    for(var i=0;i<3;i++){var q=pt(g);g+=want-Date.UTC(q.y,q.m-1,q.d,q.h,q.mi,q.s);}
+    return g;
+  }
+  function at(ms){
+    ms=(ms==null)?Date.now():ms;
+    var q=pt(ms), lastSun=add(key(q.y,q.m,q.d),-q.wd);
+    var lastCut=ptMs(lastSun,CUT_H), lateEnd=ptMs(add(lastSun,DELIV_OFFSET+1),0);
+    var k, late;
+    if(ms<lastCut){k=lastSun;late=false;}
+    else if(ms<lateEnd){k=lastSun;late=true;}
+    else {k=add(lastSun,7);late=false;}
+    var cut=ptMs(k,CUT_H);
+    return {key:k, id:'week-san_fermo-'+k, cutoffMs:cut, late:late, msLeft:Math.max(0,cut-ms), delivery:add(k,DELIV_OFFSET)};
+  }
+  function left(ms){var m=Math.max(0,Math.floor(ms/60000)),d=Math.floor(m/1440),h=Math.floor((m%1440)/60),mi=m%60;return d?(d+'d '+h+'h'):(h?(h+'h '+mi+'m'):(mi+'m'));}
+  function day(k){var t=new Date(k+'T12:00:00Z');return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][t.getUTCDay()]+' '+(t.getUTCMonth()+1)+'/'+t.getUTCDate();}
+  return {at:at, left:left, day:day, CUT_H:CUT_H, DELIV_OFFSET:DELIV_OFFSET};
+})();
+/* Weekly farm order nudge (2026-09-24): from Saturday noon (34h before the Sunday 10pm cutoff)
+   until the cutoff, while this week's Remy order has nothing on it. */
+function ordWeekDue(){
+  try{
+    if(!window.RemyWeek)return null;
+    const w=RemyWeek.at(); if(w.late||w.msLeft>34*3600e3)return null;
+    const o=(remyOrders||[]).find(x=>x.order_id===w.id);
+    if(o&&(o.lines||[]).length)return null;
+    return w;
+  }catch(e){return null;}
+}
+setInterval(function(){ try{ if(isMgr()&&$('home')&&$('home').classList.contains('active'))refreshOrdersCard(); }catch(e){} },60000);
 function ordersCardHTML(){
   const open=(remyOrders||[]).filter(o=>['placed','acked'].includes(o.status||'placed'));
   const acked=open.filter(o=>o.status==='acked').length;
@@ -1999,7 +2047,9 @@ function ordersCardHTML(){
   if(acked)parts.push(acked+' ✓ farm');
   if(invoices)parts.push(invoices+' invoice'+(invoices>1?'s':''));
   if(flags)parts.push(flags+' flagged');
-  const detail=parts.length?esc(parts.join(' · ')):'Order from Swan House';
+  const _due=ordWeekDue();
+  const detail=_due?('<b>This week’s farm order closes Sun 10pm</b> · '+RemyWeek.left(_due.msLeft)+' left · nothing ordered yet')
+    :(parts.length?esc(parts.join(' · ')):'Order from Swan House');
   // Farm Order opens the #orders view like any other tab (2026-07-01) — go('orders') calls
   // renderOrders()/remyMount(), same single path the nav chip uses. No separate open function.
   return `<button class="home-card home-card-wide" data-card="orders" onclick="go('orders')">
@@ -6395,7 +6445,7 @@ function updateAttn(){
     setCardAttn('verbals', verbalsGlow());
     setCardAttn('board', tablesGlow());
     setCardAttn('compliance', complianceGlow());
-    if(isMgr())setCardAttn('orders', ordGlow());
+    if(isMgr())setCardAttn('orders', ordGlow()||!!ordWeekDue());
     setCardAttnRed('today', calloffGlow());
     updateStdBadges();
   }catch(e){}
