@@ -13753,7 +13753,7 @@ window.SF = {
   ]
  },
  "compliance": {
-  "updated": "2026-09-19",
+  "updated": "2026-09-26",
   "note": "Mirrors the live Compliance Notebook. FWC = Washington Food Worker Card. MAST = Mixology/Alcohol Server permit. Neither auto-renews; renewal means taking the class again.",
   "binderUrl": "https://drive.google.com/file/d/1VpoB2F_Sae104TcJFMSsksCexVqIxzoM/view",
   "roster": {
@@ -13847,8 +13847,8 @@ window.SF = {
       "text": "Valid through Aug 15, 2028"
      },
      "mast": {
-      "status": "good",
-      "text": "Expired Oct 15, 2025 — not required (BOH); revisit if FOH shifts"
+      "status": "info",
+      "text": "Lapsed 10/15/2025. Not required for BOH; revisit if he picks up FOH shifts"
      }
     },
     {
@@ -13896,8 +13896,8 @@ window.SF = {
      "name": "Adrian Bravo",
      "role": "FOH Manager",
      "fwc": {
-      "status": "warn",
-      "text": "Expires Aug 29, 2026 — renewal watch"
+      "status": "info",
+      "text": "Lapsed 8/29/2026. Not renewing, last day 10/29"
      },
      "mast": {
       "status": "good",
@@ -14028,8 +14028,8 @@ window.SF = {
      "name": "Nam Huynh",
      "role": "Server",
      "fwc": {
-      "status": "warn",
-      "text": "Valid through Sep 12, 2026"
+      "status": "alarm",
+      "text": "Expired Sep 12, 2026. Told to renew 9/26"
      },
      "mast": {
       "status": "warn",
@@ -14041,7 +14041,7 @@ window.SF = {
      "role": "Server",
      "fwc": {
       "status": "alarm",
-      "text": "Expires Jun 18, 2026 — raise in person"
+      "text": "Expired Jun 18, 2026. Told to renew 9/26"
      },
      "mast": {
       "status": "good",
@@ -15296,5 +15296,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1790371522"
+ "build": "1790471088"
 };
