@@ -1053,37 +1053,6 @@ body.tour-on{padding-bottom:230px;}
 .dhd-lab{font-size:9px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-mute); font-weight:700;}
 .dhd-val{font-size:17px; color:var(--ink); font-weight:700; font-family:'Cormorant Garamond','Caladea',serif;}
 .dhd-sub{font-size:10.5px; color:var(--ink-mute);}
-/* verbals builder (Day Sheet) + read-only view (Verbals tab) */
-.ds-verbals{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:12px; padding:12px 14px; margin-top:14px;}
-.ds-vb-note{font-size:9.5px; font-weight:600; color:var(--ink-mute); text-transform:none; letter-spacing:0; margin-left:6px;}
-.vb-type-row{display:flex; gap:7px; margin-bottom:9px; flex-wrap:wrap;}
-.vb-typebtn{flex:1 1 auto; min-width:0; background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.22); color:var(--ink-soft); border-radius:9px; padding:7px 10px; font-size:11.5px; font-weight:700; cursor:pointer; font-family:inherit; white-space:nowrap;}
-.vb-typebtn.on{background:var(--gold); border-color:var(--gold); color:#241f15;}
-.vb-standing{display:flex; flex-direction:column; gap:8px; margin-bottom:8px;}
-.vb-std-row{display:flex; align-items:center; gap:10px;}
-.vb-std-lab{flex:0 0 116px; font-size:11.5px; font-weight:700; color:var(--ink-soft);}
-.vb-std-in{flex:1; min-width:0;}
-.vb-86-tag{color:#e0795a; background:rgba(212,101,74,.12); border-color:rgba(212,101,74,.35);}
-.vb-item-row{display:flex; gap:8px; margin-bottom:8px;}
-.vb-sel{background:rgba(205,216,244,.07); border:1px solid rgba(205,216,244,.2); border-radius:10px; color:var(--ink); font-size:13px; padding:9px 10px; font-family:inherit; -webkit-appearance:none;}
-.vb-sel-grow{flex:1; min-width:0;}
-.vb-text-row{display:flex; gap:8px; margin-bottom:10px;}
-.vb-text-row .board-input{flex:1;}
-.vb-entry{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:8px 10px; background:rgba(205,216,244,.05); border-radius:9px; margin-bottom:6px;}
-.vb-entry-main{display:flex; flex-direction:column; gap:3px; min-width:0;}
-.vb-entry-text{font-size:13.5px; color:var(--ink); line-height:1.4;}
-.vb-item-tag{display:inline-block; align-self:flex-start; font-size:10px; font-weight:800; letter-spacing:.03em; color:var(--gold); background:rgba(214,158,46,.12); border:1px solid rgba(214,158,46,.3); border-radius:999px; padding:2px 9px;}
-.vb-entry .x{color:var(--ink-mute); cursor:pointer; font-size:15px; flex:0 0 auto;}
-.vb-view-main{display:flex; flex-direction:column; gap:3px;}
-.vb-edit-link{color:var(--gold); cursor:pointer; font-weight:700;}
-.vb-age{font-size:10.5px; color:var(--ink-mute); letter-spacing:.02em;}
-.vb-mini{flex:0 0 auto; cursor:pointer; color:var(--ink-mute); font-size:14px; line-height:1; padding:2px 3px; user-select:none;}
-.vb-mini:hover{color:var(--gold);}
-.vb-mini.off{opacity:.25; pointer-events:none;}
-.vb-entry-edit .vb-edit-in{width:100%; font-size:13.5px;}
-.vb-view.vb-tap{cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px;}
-.vb-view.vb-tap:hover{background:rgba(214,158,46,.07);}
-.vb-jump{flex:0 0 auto; font-size:10.5px; color:var(--gold); font-weight:700; white-space:nowrap;}
 
 /* service */
 .intro-card{background:radial-gradient(130% 130% at 28% 18%, var(--moon-hi), var(--moon) 62%, var(--moon-lo)); border-radius:12px; padding:14px 16px; margin-bottom:16px; font-size:13.5px; color:var(--card-ink); line-height:1.55; font-family:'Caladea',Georgia,serif; box-shadow:0 5px 13px rgba(0,0,0,.24);}
@@ -1137,12 +1106,8 @@ body.tour-on{padding-bottom:230px;}
 .zoom-wrap svg{transform-origin:center center; will-change:transform; -webkit-user-select:none; user-select:none;}
 
 .est-note{font-size:11px; color:var(--ink-mute); font-style:italic; text-align:center; margin-top:6px;}
-/* corrections mode */
+/* Fresh Talk publish bar */
 .editbar{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap;}
-.edit-toggle{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.2); color:var(--ink-soft); border-radius:999px; padding:7px 15px; font-size:13px; font-weight:600; cursor:pointer;}
-.edit-toggle.on{background:var(--gold); color:#241f15; border-color:var(--gold);}
-.gen-btn{background:var(--accent); color:#eef6e6; border:none; border-radius:999px; padding:8px 16px; font-size:13px; font-weight:700; cursor:pointer;}
-.gen-btn .badge{background:rgba(255,255,255,.25); border-radius:999px; padding:0 7px; margin-left:6px; font-size:11px;}
 /* Publish-to-website. Quiet outline until the settled menu actually differs from
    what the public site is showing, then it fills in — dirty means "guests are
    looking at something older than this", not "someone touched the portal". */
@@ -1150,10 +1115,6 @@ body.tour-on{padding-bottom:230px;}
   border-radius:999px; padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer;}
 .pub-btn.dirty{background:var(--accent); color:#eef6e6; border-color:transparent; font-weight:700;}
 .pub-btn .badge{background:rgba(255,255,255,.3); border-radius:999px; padding:0 6px; margin-left:6px; font-size:11px;}
-.note-box{padding:10px 14px 12px; border-top:.5px dashed var(--moon-edge);}
-.note-box label{display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--rust); margin-bottom:5px;}
-.note-box textarea{width:100%; min-height:46px; resize:vertical; border:1px solid var(--moon-edge); border-radius:8px; padding:8px 10px; font-family:-apple-system,sans-serif; font-size:13.5px; color:var(--card-ink); background:#fffdf7;}
-.note-box.filled{background:rgba(176,74,26,.06);}
 .modal{position:fixed; inset:0; z-index:200; background:rgba(5,10,28,.7); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; padding:18px;}
 .modal.open{display:flex;}
 .modal-card{background:radial-gradient(140% 140% at 28% 12%, var(--moon-hi), var(--moon) 64%, var(--moon-lo)); border-radius:16px; max-width:620px; width:100%; max-height:84vh; display:flex; flex-direction:column; padding:18px; box-shadow:0 0 50px rgba(245,238,222,.2),0 12px 30px rgba(0,0,0,.5);}
@@ -1789,13 +1750,6 @@ body.locked{overflow:hidden;}
   <div id="boardBody"></div>
 </section>
 
-<section class="view" id="verbals">
-  <div class="view-head"><p class="view-eyebrow">Tonight</p><h2 class="view-title">Verbals</h2>
-    <p class="view-sub">Standing verbals, the 86 list, and tonight's specials.</p>
-  </div>
-  <div id="verbalsBody"></div>
-</section>
-
 <section class="view" id="access">
   <div class="view-head"><p class="view-eyebrow">Admin</p><h2 class="view-title">Staff Access</h2>
     <p class="view-sub">Add people, set or reset PINs, and lock out anyone who leaves.</p></div>
@@ -1855,17 +1809,6 @@ body.locked{overflow:hidden;}
   </div>
 </div>
 
-<div class="modal" id="promptModal">
-  <div class="modal-card">
-    <h3>Menu Corrections</h3>
-    <p>Copied to your clipboard automatically — paste it into a Claude chat to apply. Clear wipes the note boxes once you've copied.</p>
-    <textarea id="promptText" readonly></textarea>
-    <div class="modal-actions">
-      <button class="copy-btn" id="copyBtn" onclick="copyMenuPrompt()">Copy to clipboard</button>
-      <button class="clear-btn" id="clearBtn" onclick="clearCorrections()" disabled>Clear notes</button>
-      <button class="close-btn" onclick="closeModal()">Close</button>
-    </div>
-  </div>
 </div>
 <div class="modal" id="schedDayModal" onclick="if(event.target===this)schedDayClose()">
   <div class="modal-card sdp-card">
@@ -1875,7 +1818,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790648485';   // stamped by build-data.py at every deploy
+const BUILD='1790665702';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1921,7 +1864,7 @@ function makeStars(){
   sky.innerHTML=h;
 }
 
-const TABS=[['fresh','Fresh Talk'],['verbals','Verbals'],['board','The Attic'],['schedule','Schedule'],['compliance','Compliance'],['standards','Standards'],['directory','Directory']];
+const TABS=[['fresh','Fresh Talk'],['board','The Attic'],['schedule','Schedule'],['compliance','Compliance'],['standards','Standards'],['directory','Directory']];
 function navTabs(){
   // Investors see the numbers and the menu those numbers came from. No ordering, tables,
   // verbals, schedule, directory, standards, crew board, front desk or day sheet.
@@ -1952,7 +1895,6 @@ function go(id){
   if(id==='standards')showStdPane(stdTab);
   if(id==='compliance'){renderCompliance();markComplianceSeen();}
   if(id==='fresh')markFreshSeen();
-  if(id==='verbals')markVerbalsSeen();
   if(id==='board'&&atSub==='chat')chatMarkSeen();
   if(id==='orders')markOrdersSeen();
   if(id==='today')markCalloffSeen();
@@ -1990,20 +1932,6 @@ function freshCardHTML(){
     detail = freshUnseen().length ? `<b>${txt}</b>` : txt;
   }
   return wideCardHTML('fresh','✦','Fresh Talk',detail);
-}
-function verbalsCardHTML(){
-  const v=getVerbals(), entries=v.entries||[];
-  const e86=entries.filter(e=>e.type==='86'), cnt=entries.filter(e=>e.type!=='86').length;
-  const stdSet=Object.keys(v.standing||{}).filter(k=>v.standing[k]&&String(v.standing[k]).trim()).length;
-  let parts=[];
-  if(e86.length)parts.push('86: '+e86.slice(0,3).map(e=>e.text).join(', ')+(e86.length>3?'…':''));
-  if(cnt)parts.push(cnt+' note'+(cnt>1?'s':''));
-  if(stdSet)parts.push(stdSet+' standing');
-  let detail=parts.length?esc(parts.join(' · ')):'Standing · 86 · specials — nothing flagged';
-  const u=verbalsUnseen();
-  if(u.n>0)detail=`<b>${u.n} new</b> · ${detail}`;
-  else if(u.std)detail=`<b>updated</b> · ${detail}`;
-  return wideCardHTML('verbals','☾','Verbals',detail);
 }
 /* RemyWeek (2026-09-24): the ONE definition of San Fermo's weekly Swan House order window.
    Cutoff Sunday 10pm Pacific; delivery = cutoff Sunday + DELIV_OFFSET days (Tuesday, Sully).
@@ -2086,7 +2014,7 @@ function renderHome(){
     ? rcCardHTML() + freshCardHTML()
     : annChip + osHomeChipHTML() + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():''))
       + (typeof scwsCanTab==='function'&&scwsCanTab()?scwsCardHTML():'')
-      + freshCardHTML() + verbalsCardHTML();
+      + freshCardHTML();
   const std=[['board','⌗','The Attic','Seat, time & flag tonight\'s tables'],
     ['schedule','◷','Schedule','This week + the month'],
     ['compliance','✓','Compliance','FWC & MAST cards, yours and the roster'],
@@ -2409,7 +2337,6 @@ const TOUR_COPY={
   today:{t:'Day at a Glance',b:'Tonight in one screen: how busy we expect to be, who is on with you, and anything the managers flagged for the shift. Check it when you clock in.'},
   fresh:{t:'Fresh Talk',b:'Tonight\'s menu in full, with separate tabs for wine, cocktails and allergens. Every dish lists its components, and every wine carries tasting notes and a pronunciation guide. Search the wine list by name, grape, or what a guest tells you they like.',
     boh:'Tonight\'s menu in full. The BOH tab is the one you want: every dish with its components, exactly as it should go out. Allergens live here too, so this is the fastest way to answer a question from the floor mid-service.'},
-  verbals:{t:'Verbals',b:'Standing verbals, the 86 list, and tonight\'s specials. Read this before every service. If something got 86\'d an hour ago, this is where it shows up first.'},
   board:{t:'The Attic',b:'Tonight\'s tables upstairs. Tap a table to open it: the MD seats it with a turn time and any occasion, the server acknowledges and flags anything that needs the MD. Chat is the same room, in words. Other sections are one tap behind the section button.'},
   schedule:{t:'Schedule',b:'This week and the month ahead, front and back of house. Time off requests go in here too, under the Time Off tab, and you can see where they stand.'},
   compliance:{t:'Compliance',b:'Food worker and MAST cards for the whole roster. Snap a photo of your own card on your row and a manager verifies it. Coming Due is computed from the dates on file, so it is current every time you open it.'},
@@ -2998,15 +2925,10 @@ function maybeShowOpenShifts(){
   osShownSession=true; osOpen();
 }
 
-/* FRESH — FOOD + corrections mode */
-let editMode=false;
-function getCorr(){try{return JSON.parse(localStorage.getItem('sf-corrections')||'{}');}catch(e){return {};}}
-function corrCount(){const c=getCorr();return ['food','wine','bar'].reduce((n,k)=>n+Object.keys(c[k]||{}).length,0);}
-function cssEsc(s){return String(s).replace(/"/g,'\\"');}
-function saveCorr(cat,name,val){const c=getCorr();c[cat]=c[cat]||{};if(val&&val.trim())c[cat][name]=val;else delete c[cat][name];try{localStorage.setItem('sf-corrections',JSON.stringify(c));}catch(e){}document.querySelectorAll('.gen-count').forEach(b=>b.textContent=corrCount());const box=document.querySelector(`.note-box[data-cat="${cat}"][data-for="${cssEsc(name)}"]`);if(box)box.classList.toggle('filled',!!(val&&val.trim()));}
-function noteBox(cat,name){if(!editMode)return '';const note=(getCorr()[cat]||{})[name]||'';return `<div class="note-box ${note?'filled':''}" data-cat="${cat}" data-for="${esc(name)}" onclick="event.stopPropagation()"><label>Correction for ${esc(name)}</label><textarea placeholder="What needs fixing?" oninput="saveCorr('${cat}',this.closest('.note-box').getAttribute('data-for'),this.value)">${esc(note)}</textarea></div>`;}
-function editBarHTML(){let h=`<div class="editbar"><button class="edit-toggle ${editMode?'on':''}" onclick="toggleEdit()">✎ Corrections${editMode?' · on':''}</button>`;if(editMode)h+=`<button class="gen-btn" onclick="genPrompt()">Generate deploy prompt<span class="badge gen-count">${corrCount()}</span></button>`;if(isMgr()&&typeof menuPubDirty==='function')h+=`<button class="pub-btn${menuPubDirty()?' dirty':''}" onclick="publishMenuToWebsite()" title="Last published: ${esc(menuPubWhen())}">⇪ Publish menu to website${menuPubDirty()?'<span class="badge">•</span>':''}</button>`;h+=`</div>`;if(editMode)h+=`<p class="est-note" style="text-align:left;margin:-6px 0 14px;">Notes save on this device. Add corrections under any item across Food, Wine &amp; Cocktails, then generate one prompt to hand back for deploy.</p>`;return h;}
-function toggleEdit(){editMode=!editMode;renderFoodTab();renderWine();renderBar();}
+/* FRESH — FOOD */
+/* Publish-to-website only shows once the settled menu differs from what the public site holds
+   (menuPubDirty: a committed edit, a special toggled, a rebake). Nothing pending, no button. */
+function editBarHTML(){if(!isMgr()||typeof menuPubDirty!=='function'||!menuPubDirty())return '';return `<div class="editbar"><button class="pub-btn dirty" onclick="publishMenuToWebsite()" title="Last published: ${esc(menuPubWhen())}">⇪ Publish menu to website<span class="badge">•</span></button></div>`;}
 const ALG={dairy:'D',gluten:'G',egg:'E',fish:'F',nuts:'N',shellfish:'SF',sesame:'SE',soy:'SO',peanut:'P',allium:'AL'};
 /* Allergen chips. A dish carrying an unresolved composed-component flag gets a
    provisional marker HERE, in the chip row, not buried in the expandable body —
@@ -3175,7 +3097,7 @@ function dishCardHTML(baseIt){
     if(it._edited)h+=`<div style="font-size:10px;color:var(--ink-mute);margin-top:8px;">Edited by ${esc(MEDITS[it._editId]?.editedBy||'manager')}</div>`;
     h+=`</div>`;
   }
-  h+=noteBox('food',origName);
+  
   return h+`</div>`;
 }
 function allergenLegendHTML(){
@@ -3279,7 +3201,8 @@ function dishNeedsReview(it){
 }
 function toggleReviewFilter(){ reviewFilter=!reviewFilter; renderFoodTab(); }
 function reviewBarHTML(n){
-  if(!isMgr())return '';
+  // Only there when something needs review (or while the filter is on, so the empty-state has a way out).
+  if(!isMgr()||(!n&&!reviewFilter))return '';
   return `<div class="reviewbar"><button class="review-toggle${reviewFilter?' on':''}" onclick="toggleReviewFilter()">`+
     `⚑ Needs review${n?`<span class="badge">${n}</span>`:''}</button>`+
     (reviewFilter?`<span class="review-hint">Showing only dishes with a component still to confirm. Servers never see this view.</span>`:'')+
@@ -3351,33 +3274,6 @@ function updateFlagBadges(){
   if(n>0){ if(!b){b=document.createElement('span');b.className='tab-badge';btn.appendChild(b);} b.textContent=n; }
   else if(b){ b.remove(); }
 }
-let corrCopied=false;
-function genPrompt(){
-  const c=getCorr();
-  const cats=[['food','data/menu.json','dish'],['wine','data/wines.json','wine'],['bar','data/bar.json','bar item']];
-  let total=0, body='';
-  cats.forEach(([cat,file,label])=>{const o=c[cat]||{};const keys=Object.keys(o);if(!keys.length)return;total+=keys.length;body+=`\n## ${file} (${label}s)\n`;keys.forEach(k=>{body+=`\n• ${k}:\n  ${o[k].trim().replace(/\n/g,'\n  ')}\n`;});});
-  if(!total){$('promptText').value='No corrections typed yet. Turn on Corrections and add notes under any item.';corrCopied=false;updateClearBtn();$('promptModal').classList.add('open');return;}
-  let p='San Fermo Staff Portal — Fresh Talk corrections to apply.\n\n';
-  p+='Project folder: Codename: Riker/staff-portal/\n';
-  p+='Apply each correction to the matching item in the named data file (match by name): dishes update story / ingredients / desc / pron / price / allergens; wines update specs / pour / producer / winemaking / grapes; bar items update notes / flight descriptions. Keep the Fresh Talk voice. Then rebuild (python3 build-data.py) and redeploy (deploy-to-github.command).\n';
-  p+=body+`\n(Generated ${new Date().toLocaleString()})`;
-  $('promptText').value=p;
-  corrCopied=false; updateClearBtn();
-  try{ navigator.clipboard.writeText(p).then(function(){corrCopied=true;markCopied(true);},function(){}); }catch(e){}
-  $('promptModal').classList.add('open');
-}
-function markCopied(auto){const b=$('copyBtn');if(b){b.textContent=auto?'Copied automatically ✓':'Copied ✓';b.classList.add('done');}updateClearBtn();}
-function updateClearBtn(){const c=$('clearBtn');if(c){c.disabled=!corrCopied;}}
-function copyMenuPrompt(){const ta=$('promptText');ta.select();let ok=false;try{navigator.clipboard.writeText(ta.value);ok=true;}catch(e){try{ok=document.execCommand('copy');}catch(e2){}}if(ok){corrCopied=true;markCopied(false);}}
-function clearCorrections(){
-  if(!corrCopied)return;
-  if(!confirm('Clear every correction note? Make sure the copied prompt made it to Claude first.'))return;
-  try{localStorage.removeItem('sf-corrections');}catch(e){}
-  corrCopied=false; closeModal();
-  renderFoodTab(); renderWine(); renderBar();
-}
-function closeModal(){const b=$('copyBtn');if(b){b.textContent='Copy to clipboard';b.classList.remove('done');}$('promptModal').classList.remove('open');}
 
 /* FRESH — WINE */
 const WTYPE={white:'wt-white',red:'wt-red','rosé':'wt-rose',rose:'wt-rose',orange:'wt-orange',sparkling:'wt-sparkling'};
@@ -3418,7 +3314,7 @@ function wineCardHTML(w,matchHTML){
         ${w.producer?`<div class="wine-sec-label">Producer</div><div class="wine-sec-body serif">${esc(w.producer)}</div>`:''}
         ${w.winemaking?`<div class="wine-sec-label">Winemaking</div><div class="wine-sec-body serif">${esc(w.winemaking)}</div>`:''}
         ${pronHTML(w.pronguide)}
-      </div>`:''}${matchHTML||''}${noteBox('wine',w.name)}</div>`;
+      </div>`:''}${matchHTML||''}</div>`;
 }
 /* ---- WINE GUEST-MATCH ENGINE (v1, specs only) ---------------------------
    Structure bands come from w.specs (Body/Dryness/Acidity/Tannins, 1-5).
@@ -3813,7 +3709,7 @@ function ckCardHTML(c){
     c.ingredients.forEach(g=>h+=`<div class="ck-ing ${g.highlight?'has-hl':''}"><div class="ck-ing-head"><span class="ck-ing-name serif">${esc(g.name)}${g.highlight?`<span class="hl-badge">${esc(g.highlight)}</span>`:''}</span><span class="ck-ing-amt">${esc(g.amount||'')}</span></div><div class="ck-ing-desc">${esc(g.description)}</div></div>`);
     h+=pronHTML(c.pronguide);
     h+=`</div>`;}
-  h+=noteBox('bar',c.name);
+  
   return h+`</div>`;
 }
 function renderBar(){
@@ -3824,7 +3720,7 @@ function renderBar(){
   h+=`<div class="section-label">Cocktails</div>`;
   SF.bar.cocktails.forEach(c=>{if(!pinnedSet.has(c))h+=ckCardHTML(c);});
   const listSec=items=>{let s=`<div class="card listcard">`;
-    items.forEach(n=>{s+=`<div class="pl-item"><div class="pl-row"><span class="pl-name">${esc(n.name)}</span><span class="pl-price">${esc(n.price)}</span></div>${n.note?`<div class="pl-note serif">${esc(n.note)}</div>`:''}${noteBox('bar',n.name)}</div>`;});
+    items.forEach(n=>{s+=`<div class="pl-item"><div class="pl-row"><span class="pl-name">${esc(n.name)}</span><span class="pl-price">${esc(n.price)}</span></div>${n.note?`<div class="pl-note serif">${esc(n.note)}</div>`:''}</div>`;});
     return s+`</div>`;};
   h+=`<div class="section-label">Non-Alcoholic</div>`+listSec(SF.bar.nonAlcoholic);
   h+=`<div class="section-label">Beer</div>`+listSec(SF.bar.beer);
@@ -3833,7 +3729,7 @@ function renderBar(){
     if(fl.desc)h+=`<div class="fl-desc serif">${esc(fl.desc)}</div>`;
     fl.pours.forEach(p=>{h+=`<div class="fpour">${esc(p.name)} <span class="forigin">— ${esc(p.origin)}</span></div>`;
       if(p.note)h+=`<div class="fpour-note">${esc(p.note)}</div>`;});
-    h+=noteBox('bar',fl.name)+`</div>`;});
+    h+=`</div>`;});
   h+=`<div class="section-label">After-Dinner Libations</div>`;
   SF.bar.afterDinner.forEach(n=>h+=`<div class="ad-item"><div class="ad-row"><span class="ad-name">${esc(n.name)}</span><span class="ad-price">${esc(n.price)}</span></div>${n.note?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`);
   $('ftBar').innerHTML=liveBlockHTML('cocktail')+(h);
@@ -6517,16 +6413,6 @@ function freshNewList(){
 function freshUnseen(){ const seen=attnGet('fresh')||[]; return freshNewList().filter(o=>seen.indexOf(o.key)<0); }
 function markFreshSeen(){ attnSet('fresh', freshNewList().map(o=>o.key)); }
 
-/* --- Verbals: entries this device hasn't seen (by id) + a standing-slots change --- */
-function vbStdSig(st){ st=st||{}; return JSON.stringify(Object.keys(st).filter(function(k){return st[k]&&String(st[k]).trim();}).sort().map(function(k){return k+'='+String(st[k]).trim();})); }
-function markVerbalsSeen(){ const v=getVerbals(); attnSet('verbals',{ids:(v.entries||[]).map(e=>e.id), std:vbStdSig(v.standing)}); }
-function verbalsUnseen(){ const v=getVerbals(), s=attnGet('verbals');
-  if(!s)return {n:(v.entries||[]).length, std:false};
-  const ne=(v.entries||[]).filter(e=>(s.ids||[]).indexOf(e.id)<0);
-  return {n:ne.length, std:vbStdSig(v.standing)!==(s.std||vbStdSig({}))};
-}
-function verbalsGlow(){ if(!verbalsLoaded)return false; const u=verbalsUnseen(); return u.n>0||u.std; }   // only glow once the FIRESTORE verbals doc has loaded; canonical std sig so seen sticks (was glowing every login)
-
 /* --- The Attic: anything waiting on ME, plus unread chat. Gated on the Firestore
        load (per the seen-state rule) so it cannot glow off a stale local cache. --- */
 function tablesGlow(){
@@ -6577,7 +6463,6 @@ function markCalloffSeen(){ attnSet('calloff', calloffSig()); }
 function updateAttn(){
   try{
     setCardAttn('fresh', mliveLoaded && freshUnseen().length>0);
-    setCardAttn('verbals', verbalsGlow());
     setCardAttn('board', tablesGlow());
     setCardAttn('compliance', complianceGlow());
     if(isMgr())setCardAttn('orders', ordGlow()||!!ordWeekDue());
@@ -6779,7 +6664,6 @@ function renderToday(){
     h+=dsMgrSelfOfferHTML(iso);
     h+=dsContactHTML(iso);
     h+=dsCoverageHTML(iso);
-    h+=`<div class="ds-verbals" id="ds-verbals-wrap">`+dsVerbalsBuilderHTML()+`</div>`;
   } else if(isToday){
     h+=dsStaffAlertsHTML(iso);   // sick / running late — staff, today only (offer button is up top)
   }
@@ -8369,132 +8253,6 @@ function lsKey(){return 'sf-board-'+todayISO();}
 function lsGetBoard(){try{const s=JSON.parse(localStorage.getItem(lsKey()));if(s){s.tables=s.tables||[];s.roster=s.roster||{calledOff:[],added:[]};return s;}}catch(e){}return {eightySixed:[...(SF.service.board.eightySixed||[])],specials:[...(SF.service.board.specials||[])],tables:[],combos:[],roster:{calledOff:[],added:[]}};}
 function lsSetBoard(b){try{localStorage.setItem(lsKey(),JSON.stringify(b));}catch(e){}}
 function getBoard(){return boardState||lsGetBoard();}
-/* (Legacy free-text "Standing Verbals" — the board/standing doc and its
-   standingColHTML/addStanding/rmStanding/startStandingSync helpers — were removed
-   2026-06-23. Standing verbals now live as the four named slots in board/verbals
-   under `standing` (VB_STANDING), built in the Day Sheet.) */
-/* ===== VERBALS (rework v2) — PERSIST across days (single board/verbals doc, not
-   day-keyed), so recurring verbals carry over. Manager builds in the Day Sheet via
-   four tabs: General Note (default), 86 (menu typeahead), About a menu item, and
-   Standing (named persistent slots). Servers read in the Verbals tab. ===== */
-let verbalsState=null, verbalsLoaded=false, verbalsUnsub=null, vbAddType='note', vbItemType='dish';
-const VB_STANDING=[['glassRed','Glass Pour — Red'],['glassWhite','Glass Pour — White'],['farinata','Farinata Side'],['gelato','Gelato']];
-function lsGetVerbals(){try{return JSON.parse(localStorage.getItem('sf-verbals'))||{entries:[],standing:{}};}catch(e){return {entries:[],standing:{}};}}
-function lsSetVerbals(){try{localStorage.setItem('sf-verbals',JSON.stringify(verbalsState));}catch(e){}}
-function getVerbals(){const v=verbalsState||lsGetVerbals();return {entries:v.entries||[],standing:v.standing||{}};}
-function startVerbalsSync(){
-  if(fbReady&&fbDb){
-    if(verbalsUnsub)verbalsUnsub();
-    verbalsUnsub=fbDb.collection('board').doc('verbals').onSnapshot(function(snap){
-      verbalsState=snap.exists?snap.data():{entries:[],standing:{}}; verbalsLoaded=true; renderVerbalsViews();
-    },function(){ verbalsState=lsGetVerbals(); renderVerbalsViews(); });
-  }else{ verbalsState=lsGetVerbals(); }
-}
-function persistVerbals(st){
-  verbalsState=st;
-  if(fbReady&&fbDb){ fbDb.collection('board').doc('verbals').set(st).catch(function(){lsSetVerbals();}); }
-  else { lsSetVerbals(); }
-  renderVerbalsViews();
-}
-function renderVerbalsViews(){ if($('verbals'))renderBoard(); renderVbBuilder(); }
-function vbSetType(t){vbAddType=t;renderVbBuilder();}
-function vbSetItemType(t){vbItemType=t;renderVbBuilder();}
-function vbId(){return 'v'+Date.now()+Math.random().toString(36).slice(2,6);}
-function allMenuNames(){const seen={},out=[];['dish','wine','cocktail'].forEach(function(t){currentItemNames(t).forEach(function(n){const k=n.toLowerCase();if(!seen[k]){seen[k]=1;out.push(n);}});});return out.sort();}
-function vbAdd(){
-  if(!isMgr())return;
-  const v=getVerbals(), entries=v.entries.slice();
-  if(vbAddType==='item'){
-    const text=(($('vb-text')&&$('vb-text').value)||'').trim(); if(!text)return;
-    entries.push({id:vbId(),type:'item',itemType:vbItemType,itemName:(($('vb-itemname')&&$('vb-itemname').value)||'').trim(),text:text,by:currentUserName()||'manager',at:Date.now()});
-  } else if(vbAddType==='86'){
-    const name=(($('vb-86')&&$('vb-86').value)||'').trim(); if(!name)return;
-    entries.push({id:vbId(),type:'86',text:name,by:currentUserName()||'manager',at:Date.now()});
-  } else {
-    const text=(($('vb-text')&&$('vb-text').value)||'').trim(); if(!text)return;
-    entries.push({id:vbId(),type:'note',text:text,by:currentUserName()||'manager',at:Date.now()});
-  }
-  persistVerbals({entries:entries,standing:v.standing});
-  setTimeout(function(){const x=$('vb-86')||$('vb-text');if(x)x.focus();},0);
-}
-function vbDel(id){ if(!isMgr())return; const v=getVerbals(); persistVerbals({entries:v.entries.filter(function(e){return e.id!==id;}),standing:v.standing}); }
-function vbSetStanding(key,val){ if(!isMgr())return; const v=getVerbals(); const st=Object.assign({},v.standing); st[key]=String(val||'').trim(); persistVerbals({entries:v.entries,standing:st}); }
-function vbEntryTag(e){
-  if(e.type==='86')return `<span class="vb-item-tag vb-86-tag">86</span>`;
-  if(e.type==='item'&&e.itemName)return `<span class="vb-item-tag">${esc(e.itemName)}</span>`;
-  return '';
-}
-/* --- v2 polish: age, inline edit, reorder, jump-to-card --- */
-function vbAge(at){ if(!at)return ''; const d=(Date.now()-at)/864e5; if(d<1)return 'added today'; if(d<2)return 'online 1d'; return 'online '+Math.floor(d)+'d'; }
-function vbJsq(s){return esc(s).replace(/'/g,"\\'");}
-let vbEditId=null;
-function vbEditStart(id){ if(!isMgr())return; vbEditId=id; renderVbBuilder(); setTimeout(function(){const x=$('vb-edit-in');if(x){x.focus();if(x.select)x.select();}},0); }
-function vbEditCancel(){ vbEditId=null; renderVbBuilder(); }
-function vbEditSave(id){ if(!isMgr())return; const el=$('vb-edit-in'); if(!el){vbEditId=null;renderVbBuilder();return;} const val=(el.value||'').trim();
-  if(!val){vbEditId=null;renderVbBuilder();return;}
-  const v=getVerbals(), entries=v.entries.map(function(e){return e.id===id?Object.assign({},e,{text:val}):e;});
-  vbEditId=null; persistVerbals({entries:entries,standing:v.standing}); }
-function vbMove(id,dir){ if(!isMgr())return; const v=getVerbals(), entries=v.entries.slice(); const i=entries.findIndex(function(e){return e.id===id;}); if(i<0)return; const j=i+dir; if(j<0||j>=entries.length)return; const t=entries[i];entries[i]=entries[j];entries[j]=t; persistVerbals({entries:entries,standing:v.standing}); }
-function vbCardId(itemType,name){ if(itemType==='wine'){const i=(SF.wines||[]).findIndex(function(w){return w.name===name;});return i>=0?'wcard-'+i:'';} if(itemType==='cocktail')return 'ckcard-'+fcSlug(name); return 'dcard-'+fcSlug(name); }
-function vbFindType(name){const n=String(name).toLowerCase(); if((((SF.bar&&SF.bar.cocktails))||[]).some(function(c){return String(c.name).toLowerCase()===n;}))return 'cocktail'; if((SF.wines||[]).some(function(w){return String(w.name).toLowerCase()===n;}))return 'wine'; return 'dish';}
-function vbJump(itemType,name){ go('fresh'); const ftMap={wine:'wine',cocktail:'bar',dish:'food'}, ft=ftMap[itemType]||'food'; const btn=document.querySelector('#freshTabs .subtab[data-ft="'+ft+'"]'); if(btn)btn.click(); const id=vbCardId(itemType,name); setTimeout(function(){if(id)jumpToCard(id);},180); }
-function dsVerbalsBuilderHTML(){
-  const v=getVerbals(), entries=v.entries, st=v.standing;
-  const tabs=[['note','General Note'],['86','86'],['item','Menu item'],['standing','Standing']];
-  let h=`<div class="ds-side-head">Verbals <span class="ds-vb-note">persist across days · servers read-only</span></div>`;
-  h+=`<div class="vb-type-row">`+tabs.map(function(t){return `<button class="vb-typebtn${vbAddType===t[0]?' on':''}" onclick="vbSetType('${t[0]}')">${esc(t[1])}</button>`;}).join('')+`</div>`;
-  if(vbAddType==='standing'){
-    h+=`<div class="vb-standing">`+VB_STANDING.map(function(s){return `<div class="vb-std-row"><label class="vb-std-lab">${esc(s[1])}</label><input class="board-input vb-std-in" value="${esc(st[s[0]]||'')}" placeholder="Not set" onchange="vbSetStanding('${s[0]}',this.value)" onkeydown="if(event.key==='Enter')this.blur()"></div>`;}).join('')+`</div>`;
-    h+=`<div class="ds-empty" style="padding-top:2px">These stick until you change them.</div>`;
-    return h;
-  }
-  if(vbAddType==='item'){
-    h+=`<div class="vb-item-row"><select id="vb-itemtype" class="vb-sel" onchange="vbSetItemType(this.value)">`+
-      [['dish','Food'],['wine','Wine'],['cocktail','Cocktail']].map(function(o){return `<option value="${o[0]}"${vbItemType===o[0]?' selected':''}>${o[1]}</option>`;}).join('')+`</select>`+
-      `<select id="vb-itemname" class="vb-sel vb-sel-grow">`+currentItemNames(vbItemType).map(function(n){return `<option value="${esc(n)}">${esc(n)}</option>`;}).join('')+`</select></div>`;
-    h+=`<div class="vb-text-row"><input class="board-input" id="vb-text" placeholder="What to tell guests about it…" onkeydown="if(event.key==='Enter')vbAdd()"><button class="board-add" onclick="vbAdd()">+</button></div>`;
-  } else if(vbAddType==='86'){
-    h+=`<datalist id="vb-menu-list">`+allMenuNames().map(function(n){return `<option value="${esc(n)}"></option>`;}).join('')+`</datalist>`;
-    h+=`<div class="vb-text-row"><input class="board-input" id="vb-86" list="vb-menu-list" placeholder="Type a dish, wine, or cocktail…" onkeydown="if(event.key==='Enter')vbAdd()"><button class="board-add" onclick="vbAdd()">+</button></div>`;
-  } else {
-    h+=`<div class="vb-text-row"><input class="board-input" id="vb-text" placeholder="Verbal note for the team…" onkeydown="if(event.key==='Enter')vbAdd()"><button class="board-add" onclick="vbAdd()">+</button></div>`;
-  }
-  if(!entries.length)h+=`<div class="ds-empty">No verbals yet.</div>`;
-  entries.forEach(function(e,i){
-    if(vbEditId===e.id){
-      h+=`<div class="vb-entry vb-entry-edit"><div class="vb-entry-main">${vbEntryTag(e)}<input class="board-input vb-edit-in" id="vb-edit-in" value="${esc(e.text)}" onkeydown="if(event.key==='Enter')vbEditSave('${vbJsq(e.id)}');if(event.key==='Escape')vbEditCancel()"></div><span class="vb-mini" title="Save" onclick="vbEditSave('${vbJsq(e.id)}')">✓</span><span class="vb-mini" title="Cancel" onclick="vbEditCancel()">✕</span></div>`;
-    } else {
-      h+=`<div class="vb-entry"><div class="vb-entry-main">${vbEntryTag(e)}<span class="vb-entry-text">${esc(e.text)}</span>${e.at?`<span class="vb-age">${vbAge(e.at)}</span>`:''}</div>`+
-        `<span class="vb-mini${i===0?' off':''}" title="Move up" onclick="vbMove('${vbJsq(e.id)}',-1)">↑</span>`+
-        `<span class="vb-mini${i===entries.length-1?' off':''}" title="Move down" onclick="vbMove('${vbJsq(e.id)}',1)">↓</span>`+
-        `<span class="vb-mini" title="Edit" onclick="vbEditStart('${vbJsq(e.id)}')">✎</span>`+
-        `<span class="x" title="Remove" onclick="vbDel('${vbJsq(e.id)}')">✕</span></div>`;
-    }
-  });
-  return h;
-}
-function renderVbBuilder(){const el=$('ds-verbals-wrap'); if(el)el.innerHTML=dsVerbalsBuilderHTML();}
-function verbalsViewHTML(){
-  const v=getVerbals(), entries=v.entries, st=v.standing;
-  let h=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Verbals</span>`;
-  if(!entries.length)h+=`<div class="board-empty">None set${isMgr()?' — build them in Day at a Glance':' — a lead sets these'}.</div>`;
-  entries.forEach(function(e){
-    const age=e.at?`<span class="vb-age">${vbAge(e.at)}</span>`:'';
-    if(e.type==='86'){
-      h+=`<div class="board-item vb-view vb-tap" onclick="vbJump('${vbFindType(e.text)}','${vbJsq(e.text)}')"><div class="vb-view-main"><div class="vb-item-tag vb-86-tag">86 — ${esc(e.text)}</div>${age}</div><span class="vb-jump">view ›</span></div>`;
-    } else if(e.type==='item'&&e.itemName){
-      h+=`<div class="board-item vb-view vb-tap" onclick="vbJump('${esc(e.itemType||'dish')}','${vbJsq(e.itemName)}')"><div class="vb-view-main"><div class="vb-item-tag">${esc(e.itemName)}</div><span>${esc(e.text)}</span>${age}</div><span class="vb-jump">view ›</span></div>`;
-    } else {
-      h+=`<div class="board-item vb-view"><div class="vb-view-main"><span>${esc(e.text)}</span>${age}</div></div>`;
-    }
-  });
-  if(isMgr())h+=`<div class="mm-cap" style="text-align:left"><span class="vb-edit-link" onclick="go('today')">Build &amp; edit in Day at a Glance ›</span></div>`;
-  h+=`</div>`;
-  h+=`<div class="board-col"><span class="board-title" style="color:var(--gold)">Standing Verbals</span>`;
-  VB_STANDING.forEach(function(s){const val=st[s[0]]||'';h+=`<div class="board-item vb-view"><div class="vb-view-main"><div class="vb-item-tag">${esc(s[1])}</div><span>${val?esc(val):'—'}</span></div></div>`;});
-  h+=`<div class="mm-cap" style="text-align:left">These stick until a lead changes them.</div></div>`;
-  return h;
-}
 function startBoardSync(){
   if(fbReady&&fbDb){
     if(boardUnsub)boardUnsub();
@@ -8504,7 +8262,6 @@ function startBoardSync(){
       renderBoard();
     },function(){ boardState=lsGetBoard(); renderBoard(); });
   }else{ boardState=lsGetBoard(); }
-  startVerbalsSync();
   startTablesSync();
   startChatSync();
 }
@@ -8518,21 +8275,12 @@ function persistBoard(b){
    verbal type in board/verbals is now the single source. Its per-device seen
    tracking and the verbals gold-pill it drove are gone; glow is handled by
    updateAttn().) */
-function renderBoard(){const b=getBoard();
-  const col=(title,cls,items,kind)=>{let h=`<div class="board-col ${cls}"><span class="board-title">${title}</span>
-    <div class="board-input-row"><input class="board-input" id="in-${kind}" placeholder="Add…" onkeydown="if(event.key==='Enter')addBoard('${kind}')"><button class="board-add" onclick="addBoard('${kind}')">+</button></div>`;
-    if(!items.length)h+=`<div class="board-empty">Nothing yet.</div>`;
-    items.forEach((it,i)=>h+=`<div class="board-item"><span>${esc(it)}</span><span class="x" onclick="rmBoard('${kind}',${i})">✕</span></div>`);
-    return h+`</div>`;};
-  const live=fbReady?`<span style="color:#bfe0a8">● live</span> — shared across every device.`:`saved on this device only.`;
+function renderBoard(){
   /* The pre-service blurb that used to sit here was written for the old notes board and
      never applied to this tab. Removed 2026-08-14 along with the add-a-note bar. */
   if($('boardBody')){ const _ui=atCaptureUI();
     $('boardBody').innerHTML=(atSub==='chat')?chatPaneHTML():atticPaneHTML();
     atRestoreUI(_ui); atPlacePanel(); }
-  $('verbalsBody').innerHTML=`<p class="board-note">Verbals are built by a lead in Day at a Glance and persist until changed; specials below clear nightly. ${live}</p>`+
-    verbalsViewHTML()+col('Specials','board-sp',b.specials||[],'specials');
-  if($('verbals')&&$('verbals').classList.contains('active'))markVerbalsSeen();   // viewing the tab = seeing the items
   updateAttn();
 }
 /* TABLE COMBOS — MD pushes tables together for tonight (51+52+53 → "51").
