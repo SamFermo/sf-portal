@@ -14040,8 +14040,8 @@ window.SF = {
      "name": "Sabba Hawash",
      "role": "Server",
      "fwc": {
-      "status": "alarm",
-      "text": "Expired Jun 18, 2026. Told to renew 9/26"
+      "status": "good",
+      "text": "Valid through Sep 28, 2028"
      },
      "mast": {
       "status": "good",
@@ -14063,14 +14063,6 @@ window.SF = {
    ]
   },
   "comingDue": [
-   {
-    "name": "Sabba Hawash",
-    "cred": "FWC",
-    "date": "Jun 18, 2026",
-    "area": "FOH · Server",
-    "urgency": "alarm",
-    "window": "30 days"
-   },
    {
     "name": "Adrian Bravo",
     "cred": "FWC",
@@ -15296,5 +15288,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1790471714"
+ "build": "1790642576"
 };

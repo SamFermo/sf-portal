@@ -729,6 +729,16 @@ body.tour-on{padding-bottom:230px;}
 .comp-cred b{color:var(--wood);}
 .comp-past{background:rgba(212,101,74,.15); border:1px solid rgba(212,101,74,.5); color:#f0c3b4;
   border-radius:10px; padding:9px 12px; font-size:12.5px; margin:0 0 12px;}
+.cg-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:12px; margin-bottom:12px;}
+.cg-person{margin:0; padding:10px 13px;}
+.cg-head{padding:2px 0 8px;}
+.cg-card{margin:0 0 9px;}
+.cg-img{min-height:110px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.07); border-radius:8px; overflow:hidden; cursor:zoom-in;}
+.cg-img img{width:100%; height:auto; display:block;}
+.cg-load{font-size:11.5px; color:var(--card-soft);}
+.cg-card figcaption{font-size:11.5px; color:var(--card-soft); padding-top:4px; letter-spacing:.02em;}
+.cg-missing{display:inline-block; margin:2px 6px 6px 0; padding:4px 9px; border-radius:6px; font-size:12px; font-weight:700; background:#f2d2c7; color:#a8311e;}
+.cg-sum{font-size:13px; margin:0 0 12px;}
 .comp-upload-note{font-size:11.5px; color:var(--card-soft); line-height:1.45; margin:0 0 12px;}
 /* per-employee cert badge (Standards card/chip/subtab) */
 .cert-badge{display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px; padding:0 4px; border-radius:999px; font-size:10px; font-weight:800; line-height:1; color:#fff; margin-left:6px; vertical-align:middle;}
@@ -1703,7 +1713,7 @@ body.locked{overflow:hidden;}
   <div class="view-head"><p class="view-eyebrow">Cards</p><h2 class="view-title">Compliance</h2>
     <p class="view-sub" id="compSub"></p>
     <div class="subtabs-wrap"><div class="subtabs" id="compTabs"><span class="subpill" id="compPill"></span>
-      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button></div></div>
+      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button><button class="subtab" data-comp="all">All Cards</button><button class="subtab" data-comp="tonight">Tonight's Staff</button></div></div>
   </div>
   <div id="compBody"></div>
 </section>
@@ -1860,7 +1870,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790471714';   // stamped by build-data.py at every deploy
+const BUILD='1790642576';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5294,7 +5304,7 @@ function compApplyCrop(){
   compSaveUpload(cred,name,data);
 }
 function compSaveUpload(cred,name,dataUrl){
-  const key=compKey(cred,name);
+  const key=compKey(cred,name); delete COMP_IMG[key];
   const meta={name:name,cred:cred,status:'pending',uploadedBy:currentUserName()||'',uploadedAt:Date.now()};
   if(fbReady&&fbDb){
     COMP_UP[key]=meta;
@@ -5382,7 +5392,7 @@ function compVerify(cred,name,expires){
 function compRemove(cred,name){
   if(!compCanUpload(name))return;
   if(!confirm('Remove '+cred+' card for '+name+'?'))return;
-  const key=compKey(cred,name); delete COMP_UP[key];
+  const key=compKey(cred,name); delete COMP_UP[key]; delete COMP_IMG[key];
   if(fbReady&&fbDb){ fbDb.collection('compliance').doc(key).delete().catch(function(){}); fbDb.collection('complianceImg').doc(key).delete().catch(function(){}); }
   else compLsSet();
   renderCompliance(); if(typeof updateAttn==='function')updateAttn();
@@ -5428,8 +5438,9 @@ function compRowUploadsHTML(p){
       } else {
         inner+= up.status==='verified'
           ? '<span class="cu-stat ok">✓ verified'+(up.reviewedBy?' · '+esc(String(up.reviewedBy).split(' ')[0]):'')+'</span>'
+          : up.status==='onfile' ? '<span class="cu-stat ok">✓ on file</span>'
           : '<span class="cu-stat pend">• pending review</span>';
-        if(isMgr()){
+        if(isMgr()&&up.status!=='onfile'){
           inner+= up.status==='verified'
             ? '<button class="cu-btn" onclick="compStartVerify(\''+cred+'\',\''+jq(p.name)+'\')">'+(up.expires?'Exp '+esc(compNiceDate(up.expires)):'Set expiry')+'</button>'
             : '<button class="cu-btn ok" onclick="compStartVerify(\''+cred+'\',\''+jq(p.name)+'\')">Verify</button>';
@@ -5628,6 +5639,57 @@ function compDueList(){
   undated.sort(function(a,b){return a.name.localeCompare(b.name);});
   return {due:due, undated:undated};
 }
+/* ===== CARD GALLERY: All Cards + Tonight's Staff (2026-09-28) ==========
+   Replaced the Drive card binder. Every card image lives in `complianceImg`.
+   status 'onfile' = a card loaded from the local employee files on 2026-09-28:
+   it shows the image and a "✓ on file" tag but never overrides the hand-kept
+   roster text or Coming Due (only 'verified' does). Optional `label` carries a
+   caveat like "CFPM (ServSafe Manager)". Images are fetched once and cached. */
+const COMP_IMG={};
+function compCardsFor(name){ return ['FWC','MAST'].map(function(cred){ const k=compKey(cred,name), u=COMP_UP[k]; return u?{cred:cred,key:k,label:u.label||cred,up:u}:null; }).filter(Boolean); }
+function compRosterIndex(){ const R=compWithExtras(), ix={}; ['boh','foh'].forEach(function(s){ (R[s]||[]).forEach(function(p){ ix[p.name.toLowerCase()]={p:p,side:s}; }); }); return ix; }
+function compGaps(p,cards,onRoster){
+  if(!onRoster)return ['Not on the compliance roster'];
+  const g=[]; if(!cards.some(function(c){return c.cred==='FWC';}))g.push('No FWC card on file');
+  if(p.mast&&p.mast.status!=='info'&&!cards.some(function(c){return c.cred==='MAST';}))g.push('No MAST card on file');
+  return g;
+}
+function compPersonHTML(name,role,cards,gaps){
+  let h='<div class="comp-card cg-person"><div class="cg-head"><span class="comp-name">'+esc(name)+'</span> <span class="comp-role">'+esc(role||'')+'</span></div>';
+  cards.forEach(function(c){ const exp=c.up.expires?' · exp '+compNiceDate(c.up.expires):'';
+    h+='<figure class="cg-card" onclick="compViewImage(\''+c.cred+'\',\''+jq(name)+'\')"><div class="cg-img" id="cg-'+c.key+'"><span class="cg-load">Loading…</span></div><figcaption>'+esc(c.label)+esc(exp)+'</figcaption></figure>'; });
+  gaps.forEach(function(t){ h+='<span class="cg-missing">'+esc(t)+'</span>'; });
+  return h+'</div>';
+}
+function compGalleryHTML(mode){
+  const ix=compRosterIndex(); let h='', people=[];
+  if(mode==='tonight'){
+    const iso=todayISO(), list=dsWorkingList(iso);
+    h+='<p class="view-sub" style="margin-bottom:10px;">Everyone on the schedule today ('+esc(fmtShort(iso))+'), prep and dinner, with their cards. Call-offs are left out and pickups are in. Tap a card to enlarge.</p>';
+    if(!list.length)return h+'<div class="comp-card"><div class="board-empty">No schedule loaded for today.</div></div>';
+    list.forEach(function(x){ const r=ix[x.name.toLowerCase()]; people.push({name:x.name, side:(r?r.side:x.side), p:(r?r.p:null)}); });
+  } else {
+    h+='<p class="view-sub" style="margin-bottom:10px;">Every card on file, Back of House then Front of House. Tap a card to enlarge.</p>';
+    const R=compWithExtras(); ['boh','foh'].forEach(function(s){ (R[s]||[]).forEach(function(p){ people.push({name:p.name, side:s, p:p}); }); });
+  }
+  let gapN=0; const blocks={boh:'',foh:''};
+  people.forEach(function(x){ const cards=compCardsFor(x.name), gaps=compGaps(x.p||{},cards,!!x.p); if(gaps.length)gapN++;
+    const role=x.p?x.p.role:((PROFILES[x.name]||{}).role||'');
+    blocks[x.side==='boh'?'boh':'foh']+=compPersonHTML(x.name,role,cards,gaps); });
+  h+='<p class="cg-sum">'+people.length+(mode==='tonight'?' on today':' on the roster')+' · '+(gapN?'<span class="cg-missing" style="margin:0">'+gapN+' missing a card</span>':'✓ everyone has their cards on file')+'</p>';
+  [['Back of House','boh'],['Front of House','foh']].forEach(function(a){ if(blocks[a[1]])h+='<div class="section-label">'+a[0]+'</div><div class="cg-grid">'+blocks[a[1]]+'</div>'; });
+  return h;
+}
+function compFillImages(){
+  document.querySelectorAll('.cg-img[id^="cg-"]').forEach(function(el){
+    const key=el.id.slice(3);
+    const put=function(d,msg){ const cur=document.getElementById('cg-'+key); if(cur)cur.innerHTML=d?'<img src="'+d+'" alt="">':'<span class="cg-load">'+msg+'</span>'; };
+    if(COMP_IMG[key]){ put(COMP_IMG[key]); return; }
+    if(!fbReady||!fbDb){ const u=COMP_UP[key]; put(u&&u.img, 'Offline, image not loaded'); return; }
+    fbDb.collection('complianceImg').doc(key).get().then(function(snap){ const d=snap.exists?((snap.data()||{}).data||null):null; if(d)COMP_IMG[key]=d; put(d,'Image not available'); })
+      .catch(function(){ put(null,'Could not load, check Wi-Fi'); });
+  });
+}
 function renderCompliance(){const C=SF.compliance, R=compWithExtras();
   $('compSub').textContent=`Roster as of ${fmtShort(C.updated)} · ${R.foh.length+R.boh.length} active · FWC & MAST`;
   if(compTab==='due'){
@@ -5644,9 +5706,10 @@ function renderCompliance(){const C=SF.compliance, R=compWithExtras();
       h+=`</div>`;
     }
     $('compBody').innerHTML=h; updateStdBadges(); return;}
+  if(compTab==='all'||compTab==='tonight'){ $('compBody').innerHTML=compGalleryHTML(compTab); compFillImages(); updateStdBadges(); return; }
   let h=certBannerHTML();
-  h+=`<a class="binder-link" href="${esc(C.binderUrl)}" target="_blank" rel="noopener">Open Card Binder PDF ›</a><p class="board-note">${esc(C.note)}</p>`;
-  h+=`<p class="comp-upload-note">📷 Snap a photo of your own FWC or MAST card on your row below to add it to the binder — a manager verifies it.${isMgr()?' Managers can upload on anyone’s row and tap Verify.':''}</p>`;
+  h+=`<p class="board-note">${esc(C.note)}</p>`;
+  h+=`<p class="comp-upload-note">📷 Snap a photo of your own FWC or MAST card on your row below to put it on file — a manager verifies it.${isMgr()?' Managers can upload on anyone’s row and tap Verify.':''}</p>`;
   [['Back of House','boh'],['Front of House','foh']].forEach(([lab,key])=>{
     h+=`<div class="section-label">${lab}</div><div class="comp-card">`;
     R[key].forEach(p=>h+=`<div class="comp-row"><div><div class="comp-name">${esc(p.name)}</div><div class="comp-role">${esc(p.role)}${p.isNew?' · new':''}</div></div>

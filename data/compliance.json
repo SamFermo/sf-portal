@@ -286,8 +286,8 @@
         "name": "Sabba Hawash",
         "role": "Server",
         "fwc": {
-          "status": "alarm",
-          "text": "Expired Jun 18, 2026. Told to renew 9/26"
+          "status": "good",
+          "text": "Valid through Sep 28, 2028"
         },
         "mast": {
           "status": "good",
@@ -309,14 +309,6 @@
     ]
   },
   "comingDue": [
-    {
-      "name": "Sabba Hawash",
-      "cred": "FWC",
-      "date": "Jun 18, 2026",
-      "area": "FOH · Server",
-      "urgency": "alarm",
-      "window": "30 days"
-    },
     {
       "name": "Adrian Bravo",
       "cred": "FWC",
