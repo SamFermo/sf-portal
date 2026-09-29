@@ -1765,6 +1765,15 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 .wi-qty button{border:1px solid var(--moon-edge); background:var(--moon-lo); color:var(--wood); border-radius:10px; padding:0 14px; font-weight:700; cursor:pointer; font-family:inherit;}
 .wi-card-act{display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:4px;}
 .wi-card .ann-dismiss{color:var(--card-mute);}
+.wi-row{cursor:pointer;} .wi-row.wi-open{border-color:var(--gold); border-bottom-left-radius:0; border-bottom-right-radius:0; margin-bottom:0;}
+.wi-adj{display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:10px 12px; margin-bottom:6px; border:1px solid var(--gold); border-top:none; border-radius:0 0 12px 12px; background:rgba(230,200,120,.06);}
+.wi-adj-btns{display:flex; gap:6px;}
+.wi-adj-btns button{min-width:48px; padding:9px 0; border-radius:10px; border:1.5px solid rgba(230,200,120,.55); background:rgba(230,200,120,.12); color:var(--gold); font-size:15px; font-weight:800; cursor:pointer; font-family:inherit;}
+.wi-adj-btns button:disabled,.wi-adj-act .wi-btn:disabled{opacity:.35; cursor:default;}
+.wi-adj-v{flex:1; min-width:110px; font-size:13px; color:var(--ink-soft);} .wi-adj-v b{font-size:18px; color:var(--ink);}
+.wi-adj-act{display:flex; align-items:center; gap:8px;}
+.wi-in input{width:64px;}
+.wi-step{flex-shrink:0; border:1px solid var(--moon-edge); background:var(--moon-lo); color:var(--wood); border-radius:8px; padding:7px 8px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
 </style>
 </head>
 <body class="not-home">
@@ -1970,7 +1979,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790672977';   // stamped by build-data.py at every deploy
+const BUILD='1790674394';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3953,10 +3962,13 @@ function fdMatchesQuery(e,q){
    STORAGE: board/wineinv = {counts:[{id,at,by,when,svc,q:{key:bottles}}], receipts:[{id,at,by,key,qty,note}]}.
    It rides in the already-permitted board collection (a new top-level collection needs a
    console rules publish) and is written ONLY inside a transaction, like board/openshifts.
+   ADJUST (added 2026-09-29): tap a wine to nudge it -1/+1/+6 and save. On a counted wine that
+   writes a receipt with kind:'adj' (kept apart from deliveries); on an uncounted wine it writes
+   a one-wine count, so that wine starts from the number saved.
    SALES WINDOW: a count taken "before service" includes that service date's sales; "after
    close" starts the next service date. Service date = local time minus 3 hours, so a count
    at 1am belongs to the night before. Sales come from the revel collection (4am brief). */
-let WI={doc:null,loaded:false,unsub:null,revel:null,revelAt:0,revelErr:false,filter:'core',armDel:null};
+let WI={doc:null,loaded:false,unsub:null,revel:null,revelAt:0,revelErr:false,filter:'core',armDel:null,adj:null};
 function wiData(){ const d=(window.SF&&SF.wineInv)||{}; return {wines:d.wines||[],buttons:d.buttons||{},ignore:d.ignore||[],gpb:+d.glassesPerBottle||4}; }
 function wiRef(){ return fbDb.collection('board').doc('wineinv'); }
 function wiIso(d){ const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
@@ -3984,8 +3996,8 @@ function wiCompute(D,doc,rv){
   const out={};
   D.wines.forEach(function(w){ let last=null;
     counts.forEach(function(c){ if(c.q&&c.q[w.key]!=null&&c.q[w.key]!=='')last=c; });
-    out[w.key]={w:w,count:last?+last.q[w.key]:null,countAt:last?last.at:null,svc:last?last.svc:null,by:last?last.by:'',inQ:0,sold:0,wk:0}; });
-  rec.forEach(function(r){ const s=out[r.key]; if(!s||s.countAt==null||!(r.at>s.countAt))return; s.inQ+=(+r.qty||0); });
+    out[w.key]={w:w,count:last?+last.q[w.key]:null,countAt:last?last.at:null,svc:last?last.svc:null,by:last?last.by:'',inQ:0,adj:0,sold:0,wk:0}; });
+  rec.forEach(function(r){ const s=out[r.key]; if(!s||s.countAt==null||!(r.at>s.countAt))return; if(r.kind==='adj')s.adj+=(+r.qty||0); else s.inQ+=(+r.qty||0); });
   const dates=Object.keys(rv||{}).sort(), lastDate=dates.length?dates[dates.length-1]:null, from28=lastDate?wiAddDays(lastDate,-27):null;
   const unmapped={}, ign={}; D.ignore.forEach(function(n){ign[n]=1;});
   dates.forEach(function(ds){ ['b','g'].forEach(function(kind){ (rv[ds][kind]||[]).forEach(function(it){
@@ -3998,7 +4010,7 @@ function wiCompute(D,doc,rv){
     if(s.svc&&ds>=s.svc)s.sold+=bt;
     if(from28&&ds>=from28)s.wk+=bt/4;
   }); }); });
-  Object.keys(out).forEach(function(k){ const s=out[k]; s.onHand=s.count==null?null:s.count+s.inQ-s.sold; s.weeks=(s.onHand!=null&&s.wk>0)?s.onHand/s.wk:null; });
+  Object.keys(out).forEach(function(k){ const s=out[k]; s.onHand=s.count==null?null:s.count+s.inQ+s.adj-s.sold; s.weeks=(s.onHand!=null&&s.wk>0)?s.onHand/s.wk:null; });
   return {byKey:out,lastDate:lastDate,unmapped:unmapped,counts:counts,receipts:rec};
 }
 const WI_TYPES=['Sparkling','White','Orange','Rosé','Red'];
@@ -4029,23 +4041,29 @@ function wiRender(){
       let sub=[];
       if(s.count!=null)sub.push('counted '+wiNum(s.count)+' ('+esc(wiShort(wiSvcDate(s.countAt)))+')');
       if(s.inQ)sub.push('+'+wiNum(s.inQ)+' in');
+      if(s.adj)sub.push((s.adj>0?'+':'−')+wiNum(Math.abs(s.adj))+' adjusted');
       if(s.count!=null)sub.push('−'+wiNum(s.sold)+' sold');
       if(s.wk>0)sub.push(wiNum(s.wk)+'/wk'+(s.weeks!=null&&s.onHand>0?' · ~'+(s.weeks>=10?'10+':wiNum(Math.round(s.weeks*10)/10))+' wks left':''));
-      h+='<div class="'+cls+'"><div class="wi-main"><div class="wi-name">'+esc(w.name)+'</div><div class="wi-sub">'+(w.status==='core-glass'?'<span class="wi-tag">glass</span>':'')+(w.status==='cellar'?'<span class="wi-tag wi-tag-c">cellar</span>':'')+(sub.join(' · ')||(w.vendor?esc(w.vendor):'vendor not on file'))+'</div></div><div class="wi-oh">'+oh+'</div></div>';
+      const open=WI.adj&&WI.adj.key===w.key; if(open)cls+=' wi-open';
+      h+='<div class="'+cls+'" onclick="wiAdjOpen(\''+w.key+'\')"><div class="wi-main"><div class="wi-name">'+esc(w.name)+'</div><div class="wi-sub">'+(w.status==='core-glass'?'<span class="wi-tag">glass</span>':'')+(w.status==='cellar'?'<span class="wi-tag wi-tag-c">cellar</span>':'')+(sub.join(' · ')||(w.vendor?esc(w.vendor):'vendor not on file'))+'</div></div><div class="wi-oh">'+oh+'</div></div>';
+      if(open){ const base=s.onHand==null?0:s.onHand, d=WI.adj.d;
+        h+='<div class="wi-adj"><div class="wi-adj-btns"><button onclick="wiAdjBy(-1)"'+(d<=wiAdjFloor(base)?' disabled':'')+'>−1</button><button onclick="wiAdjBy(1)">+1</button><button onclick="wiAdjBy(6)">+6</button></div>'
+          +'<div class="wi-adj-v">'+(s.onHand==null?'Starting count':wiNum(base))+' → <b>'+wiNum(base+d)+'</b></div>'
+          +'<div class="wi-adj-act"><button class="wi-btn" onclick="wiAdjSave()"'+(d?'':' disabled')+'>Save</button><button class="ann-dismiss" onclick="wiAdjClose()">Cancel</button></div></div>'; }
     });
   });
   const ev=S.counts.map(function(c){return {t:'count',at:c.at,id:c.id,by:c.by,n:Object.keys(c.q||{}).length,when:c.when};})
-    .concat(S.receipts.map(function(r){return {t:'rec',at:r.at,id:r.id,by:r.by,key:r.key,qty:r.qty,note:r.note};}))
+    .concat(S.receipts.map(function(r){return {t:'rec',at:r.at,id:r.id,by:r.by,key:r.key,qty:r.qty,note:r.note,kind:r.kind};}))
     .sort(function(a,b){return b.at-a.at;}).slice(0,12);
   if(ev.length){
     h+='<div class="fd-cat">Recent counts and deliveries</div><div class="wi-hist">';
     ev.forEach(function(e){ const nm=e.t==='rec'?((D.wines.find(function(w){return w.key===e.key;})||{}).name||e.key):'';
-      const txt=e.t==='count'?'Count of '+e.n+' wine'+(e.n===1?'':'s')+' ('+(e.when==='after'?'after close':'before service')+')':'+'+wiNum(+e.qty||0)+' '+esc(nm)+(e.note?' · '+esc(e.note):'');
+      const txt=e.t==='count'?'Count of '+e.n+' wine'+(e.n===1?'':'s')+' ('+(e.when==='after'?'after close':'before service')+')':((+e.qty||0)<0?'−':'+')+wiNum(Math.abs(+e.qty||0))+' '+esc(nm)+(e.kind==='adj'?' (adjusted)':'')+(e.note?' · '+esc(e.note):'');
       const armed=WI.armDel===e.id;
       h+='<div class="wi-ev"><span class="wi-ev-t">'+esc(reqStamp(e.at))+'</span><span class="wi-ev-x">'+txt+(e.by?' <i>'+esc(e.by)+'</i>':'')+'</span><button class="wi-del'+(armed?' armed':'')+'" onclick="wiDel(\''+e.t+'\',\''+e.id+'\')">'+(armed?'Tap to delete':'×')+'</button></div>'; });
     h+='</div>';
   }
-  h+='<p class="wi-foot">Glass pours count as 1/'+D.gpb+' of a bottle. Weekly pace is the last 4 weeks of Revel sales. Wines that aren’t counted yet show a dash until their first count.</p>';
+  h+='<p class="wi-foot">Tap a wine to adjust it by −1, +1 or +6. Glass pours count as 1/'+D.gpb+' of a bottle. Weekly pace is the last 4 weeks of Revel sales. Wines that aren’t counted yet show a dash until their first count.</p>';
   body.innerHTML=h;
 }
 function wiTx(fn,done){
@@ -4080,7 +4098,7 @@ function wiModalRender(){
     h+='<div class="wi-list">';
     WI_TYPES.forEach(function(t){ const rows=D.wines.filter(function(w){return w.type===t&&(M.scope==='all'||(M.scope==='core'?w.status!=='cellar':w.status==='cellar'));}); if(!rows.length)return;
       h+='<div class="wi-lh">'+esc(t)+'</div>';
-      rows.forEach(function(w){ h+='<label class="wi-in"><span>'+esc(w.name)+'</span><input type="number" inputmode="decimal" min="0" step="0.25" data-k="'+w.key+'" value="'+esc(M.vals[w.key]!=null?M.vals[w.key]:'')+'"></label>'; }); });
+      rows.forEach(function(w){ h+='<label class="wi-in"><span>'+esc(w.name)+'</span><input type="number" inputmode="decimal" min="0" step="0.25" data-k="'+w.key+'" value="'+esc(M.vals[w.key]!=null?M.vals[w.key]:'')+'"><button type="button" class="wi-step" onclick="wiStep(event,1)">+1</button><button type="button" class="wi-step" onclick="wiStep(event,6)">+6</button></label>'; }); });
     h+='</div><div class="wi-card-act"><button class="wi-btn" onclick="wiSaveCount()">Save count</button><button class="ann-dismiss" onclick="wiClose()">Cancel</button></div>';
   } else {
     h+='<div class="wi-card-h">Log a delivery</div><div class="wi-card-s">Bottles received, checked against the invoice. Deliveries count toward what’s on hand from the wine’s last count forward.</div>';
@@ -4110,6 +4128,26 @@ function wiSaveReceipt(){ wiKeep(); const M=WI.modal, qty=parseFloat(M.rQty);
   if(!(isFinite(qty)&&qty>0)){ alert('Enter how many bottles came in.'); return; }
   const rec={id:wiNewId(),at:Date.now(),by:me?me.name:'',key:M.rKey,qty:qty,note:String(M.rNote||'').trim().slice(0,80)};
   wiTx(function(cur){ cur.receipts.push(rec); return cur; },function(){ wiClose(); });
+}
+/* +1/+6 in the count list: bump the input in place (no re-render, so the list keeps its scroll) */
+function wiStep(ev,n){ ev.preventDefault(); ev.stopPropagation(); const i=ev.currentTarget.parentNode.querySelector('input'); if(!i)return;
+  const v=Math.round(((parseFloat(i.value)||0)+n)*100)/100; i.value=String(v); }
+/* row adjust: one wine open at a time; the change is held until Save */
+function wiAdjOpen(key){ if(!me){openLogin();return;} if(WI.adj&&WI.adj.key===key)return; WI.adj={key:key,d:0}; wiRender(); }
+function wiAdjClose(){ WI.adj=null; wiRender(); }
+function wiAdjBy(n){ const A=WI.adj; if(!A)return; if(window.event)window.event.stopPropagation();
+  const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey[A.key]; const base=s&&s.onHand!=null?s.onHand:0;
+  A.d=Math.round(Math.max(A.d+n,wiAdjFloor(base))*100)/100; wiRender(); }
+/* lowest change allowed: down to 0 bottles; a wine already below 0 can only go up */
+function wiAdjFloor(base){ return base>0?-base:0; }
+function wiAdjSave(){ const A=WI.adj; if(!A||!A.d)return; if(window.event)window.event.stopPropagation();
+  const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey[A.key]; if(!s)return;
+  const at=Date.now(), by=me?me.name:'';
+  if(s.count==null){ const hr=new Date(at).getHours(), when=(hr>=3&&hr<16)?'before':'after', svc0=wiSvcDate(at);
+    const rec={id:wiNewId(),at:at,by:by,when:when,svc:when==='before'?svc0:wiAddDays(svc0,1),q:{[A.key]:Math.max(0,A.d)}};
+    wiTx(function(cur){ cur.counts.push(rec); return cur; },function(){ WI.adj=null; wiRender(); });
+  } else { const rec={id:wiNewId(),at:at,by:by,key:A.key,qty:A.d,note:'',kind:'adj'};
+    wiTx(function(cur){ cur.receipts.push(rec); return cur; },function(){ WI.adj=null; wiRender(); }); }
 }
 
 function renderFrontDesk(keepSearch){
