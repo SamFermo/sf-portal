@@ -285,7 +285,7 @@ body.tour-on{padding-bottom:230px;}
 .shift{display:inline-block; font-size:10.5px; line-height:1.2; color:var(--card-ink); max-width:100%; overflow-wrap:break-word; word-break:break-word; box-decoration-break:clone; -webkit-box-decoration-break:clone;}
 .shift.off{color:var(--moon-edge);} .shift.ro{color:var(--rust); font-weight:700;}
 .shift.farm{color:var(--accent-dark); font-weight:700;} .shift.md{color:var(--gold-deep); font-weight:700;}
-.shift.fx::after{content:''; display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--gold-deep); margin-left:3px; vertical-align:super;}   /* changed by an approved request (Phase B) */
+/* .shift.fx (changed by an approved request) is deliberately unstyled: Sam 2026-09-28, the gold dot confused staff. Edited days look like any other day. */
 .legend{font-size:11px; color:var(--ink-mute); margin-top:8px; line-height:1.7;}
 .legend b{color:var(--ink-soft);}
 /* my schedule — the personal cut of the same data, a day list instead of a grid */
@@ -1870,7 +1870,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790642792';   // stamped by build-data.py at every deploy
+const BUILD='1790647750';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.

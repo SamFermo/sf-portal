@@ -13873,8 +13873,8 @@ window.SF = {
      "name": "Sophie Regovic",
      "role": "Line Cook",
      "fwc": {
-      "status": "warn",
-      "text": "Pending, new hire (first shift Sep 21). WA card due by Oct 5, 2026"
+      "status": "good",
+      "text": "Complete through Aug 25, 2029 (national cert accepted in lieu of WA card)"
      },
      "mast": null
     }
@@ -15288,5 +15288,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1790642792"
+ "build": "1790647750"
 };

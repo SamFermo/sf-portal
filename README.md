@@ -17,7 +17,7 @@ Lives at `Codename: Riker/staff-portal/`. Deploys to GitHub Pages at
 - **Duties** — Opening, closing, and running sidework. Tap to check off; resets
   daily (stored on the device).
 - **Compliance** — Food handler (FWC) and MAST status for every active staffer,
-  plus what's coming due. Links to the card binder PDF.
+  plus what's coming due. All Cards and Tonight's Staff tabs show the card images (the Drive binder was retired 2026-09-28).
 - **Directory** — The team with tap-to-call / tap-to-email, leads pinned on top.
 - **Service** — Steps of service and house standards (service charge, wine
   service, allergens).
