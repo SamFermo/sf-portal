@@ -412,7 +412,9 @@ body.tour-on{padding-bottom:230px;}
 .comp-role{font-size:11.5px; font-style:italic; color:var(--card-mute);}
 .pill{display:inline-block; font-size:10px; font-weight:700; letter-spacing:.04em; padding:2px 8px; border-radius:999px; white-space:nowrap;}
 /* gold attention: nav chip + home card when new 86 items are unseen on this device */
-.chip.attn-chip{background:linear-gradient(155deg,#e8cd79,#c9a64e); color:#241f15; border-color:transparent; animation:goldPulse 1.7s ease-in-out infinite;}
+.chip.attn-chip{background:rgba(230,200,120,.10); color:var(--gold); border-color:rgba(230,200,120,.75); animation:goldPulse 1.7s ease-in-out infinite;}
+.chip.attn-chip::after{content:''; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--gold); margin-left:7px; vertical-align:2px;}
+.chip.active.attn-chip{background:var(--gold); color:#241f15; border-color:var(--gold);}   /* selected wins; glow means 'something new', not 'you are here' (2026-09-29) */
 .home-card.attn-card{animation:goldPulse 1.7s ease-in-out infinite;}
 .chip.attn-chip-red{background:#c0392b; color:#fff; border-color:transparent; animation:certPulse 1.6s ease-in-out infinite;}
 .home-card.attn-card-red{animation:certPulse 1.6s ease-in-out infinite; box-shadow:0 0 0 2px rgba(192,57,43,.55), 0 8px 20px rgba(0,0,0,.34);}
@@ -539,6 +541,9 @@ body.tour-on{padding-bottom:230px;}
 .fd-detail:last-child{border-bottom:none;}
 .fd-dlabel{font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--card-mute); flex-shrink:0; margin-right:12px;}
 .fd-dval{font-size:13px; color:var(--ink); text-align:right; overflow-wrap:break-word; word-wrap:break-word; word-break:normal; font-family:'SF Mono',ui-monospace,monospace; min-width:0;}
+.fd-secret{cursor:pointer; display:inline-flex; align-items:baseline; gap:8px;}
+.fd-mask{letter-spacing:.12em; color:var(--ink-soft);}
+.fd-show{font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--gold); border:1px solid rgba(230,200,120,.45); border-radius:6px; padding:1px 6px;}
 .fd-quick{color:var(--gold); text-decoration:none; border-bottom:1px dashed rgba(230,200,120,.4);}
 .fd-quick:hover{border-bottom-style:solid;}
 .fd-details{margin-top:8px; padding-top:6px; border-top:1px solid rgba(200,190,170,.2);}
@@ -824,8 +829,11 @@ body.tour-on{padding-bottom:230px;}
 /* Shifts Needed — open-shift pickup (home chip + modal). Reuses ann-card/comp-modal. */
 .os-home{grid-column:1/-1; display:flex; align-items:center; gap:10px; background:linear-gradient(90deg, rgba(192,57,43,.20), rgba(214,158,46,.16)); border:1px solid rgba(192,57,43,.5); border-radius:14px; padding:12px 15px; cursor:pointer; font-family:inherit; text-align:left;}
 .os-home-ic{font-size:20px;}
-.os-home-txt{font-size:13.5px; font-weight:700; color:var(--wood); line-height:1.35;}
-.os-home-txt b{color:var(--gold-deep);}
+.os-home-txt{font-size:13.5px; font-weight:700; color:#f6e3d6; line-height:1.35;}
+.os-home-txt b{color:var(--gold);}
+.os-home.ok{background:rgba(74,106,58,.16); border-color:rgba(130,180,110,.4);}
+.os-home.ok .os-home-txt{color:#cfe3c2; font-weight:600;}
+.os-home.ok .os-home-txt b{color:#e3efd9;}
 .os-slot{width:100%; text-align:left; border:1px solid rgba(214,158,46,.35); border-radius:12px; padding:11px 13px; margin-top:9px; background:rgba(245,238,222,.06);}
 .os-slot.filled{border-color:rgba(90,140,90,.5); background:rgba(90,140,90,.10);}
 .os-slot-top{display:flex; justify-content:space-between; align-items:baseline; gap:8px;}
@@ -1868,7 +1876,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790668281';   // stamped by build-data.py at every deploy
+const BUILD='1790669366';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1949,7 +1957,7 @@ function go(id){
   if(id==='orders')markOrdersSeen();
   if(id==='today')markCalloffSeen();
   updateAttn();
-  window.scrollTo(0,0); requestAnimationFrame(replaceAllPills);}
+  window.scrollTo(0,0); requestAnimationFrame(replaceAllPills); setTimeout(replaceAllPills,80);}
 
 function initPill(tabsEl,pillEl,attr,onSwitch){
   const btns=[...tabsEl.querySelectorAll('.subtab')];
@@ -1957,6 +1965,7 @@ function initPill(tabsEl,pillEl,attr,onSwitch){
   btns.forEach(b=>b.onclick=()=>{btns.forEach(x=>x.classList.toggle('active',x===b));place(b);onSwitch(b.dataset[attr]);});
   requestAnimationFrame(()=>{const a=tabsEl.querySelector('.subtab.active');if(a)place(a);});
 }
+document.addEventListener('visibilitychange',function(){ if(!document.hidden)replaceAllPills(); });   // rAF-only placement misses loads in a background tab (2026-09-29)
 function replaceAllPills(){document.querySelectorAll('.subtabs').forEach(t=>{const a=t.querySelector('.subtab.active'),p=t.querySelector('.subpill');if(a&&p){p.style.width=a.offsetWidth+'px';p.style.transform=`translateX(${a.offsetLeft-4}px)`;}});}
 
 /* HOME */
@@ -2909,7 +2918,7 @@ function osHomeChipHTML(){
   const openN=vis.filter(function(a){return !osFilled(a);}).length;
   const txt = openN ? ('<b>'+esc(OS_TITLE)+'</b> — '+openN+' shift'+(openN>1?'s':'')+' need coverage. Tap to help.')
                     : ('<b>'+esc(OS_TITLE)+'</b> — all covered ✓ (tap to view)');
-  return '<button class="os-home" onclick="osOpen()"><span class="os-home-ic">'+OS_EMOJI+'</span><span class="os-home-txt">'+txt+'</span></button>';
+  return '<button class="os-home'+(openN?'':' ok')+'" onclick="osOpen()"><span class="os-home-ic">'+OS_EMOJI+'</span><span class="os-home-txt">'+txt+'</span></button>';
 }
 /* ---- modal (login pop-up + tap-through) ---- */
 function osSideLabel(s){ return s==='boh'?'Kitchen':'Floor'; }
@@ -3826,6 +3835,7 @@ function renderFrontDesk(keepSearch){
         const isContact=e.cat==='Contacts & Support';
         const lbl=(d.label||'').toLowerCase();
         const contactLabel=/phone|support|contact|rep|call|alt/.test(lbl);
+        const isSecret=/pass|pin\b|pin$|passcode|code|key|secret|security|answer/.test(lbl)&&!/phone|support|contact|call|alt/.test(lbl);
         let valH=esc(v);
         /* Phone: linkify inline phone patterns (handles compound "X or Y" and "Name - 555-1234") */
         valH=valH.replace(/(\+?1?\s*)?(\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4})/g,function(m){
@@ -3834,6 +3844,7 @@ function renderFrontDesk(keepSearch){
         if(isContact||contactLabel){
           valH=valH.replace(/([^\s@<]+@[^\s@>]+\.[^\s@>,]+)/g,'<a href="mailto:$1" class="fd-quick">$1</a>');
         }
+        if(isSecret&&v)valH=`<span class="fd-secret" data-v="${esc(v)}" onclick="fdReveal(this)"><span class="fd-mask">••••••••</span><span class="fd-show">show</span></span>`;
         h+=`<div class="fd-detail"><span class="fd-dlabel">${esc(d.label)}</span><span class="fd-dval">${valH}</span></div>`;
       });
       h+=`</div>`;
@@ -3842,6 +3853,13 @@ function renderFrontDesk(keepSearch){
   });
   $('fdBody').innerHTML=h;
   if(keepSearch&&$('fd-search')){const s=$('fd-search');s.focus();s.setSelectionRange(s.value.length,s.value.length);}
+}
+/* Passwords, PINs, codes and keys stay hidden on screen until tapped, then re-hide after 20s.
+   The iPad sits on the host stand; a glance shouldn't read the office password (2026-09-29). */
+function fdReveal(el){
+  if(el.classList.contains('open')){ el.classList.remove('open'); el.innerHTML='<span class="fd-mask">••••••••</span><span class="fd-show">show</span>'; return; }
+  el.classList.add('open'); el.innerHTML=esc(el.getAttribute('data-v'))+'<span class="fd-show">hide</span>';
+  clearTimeout(el._t); el._t=setTimeout(function(){ if(el.isConnected&&el.classList.contains('open'))fdReveal(el); },20000);
 }
 function fdShowForm(editId){
   fdEditId=editId||null;
