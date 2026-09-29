@@ -1717,6 +1717,54 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 .ds-tools-s{flex:1; font-size:12px; color:var(--ink-mute); min-width:0;}
 .ds-tools-chev{color:var(--ink-soft); font-size:14px;}
 .ds-tools-body{padding:0 12px 12px;}
+/* WINE INVENTORY (2026-09-29) */
+.wi-bar{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; margin:4px 0 12px;}
+.wi-meta{font-size:12.5px; color:var(--ink-soft);}
+.wi-warn{color:#e79a8a; font-weight:700;}
+.wi-actions{display:flex; gap:8px;}
+.wi-btn{background:var(--gold); color:#241f15; border:none; border-radius:10px; padding:9px 14px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;}
+.wi-btn2{background:rgba(230,200,120,.12); color:var(--gold); border:1.5px solid rgba(230,200,120,.55);}
+.wi-seg{display:flex; gap:6px; margin:0 0 6px; flex-wrap:wrap;}
+.wi-seg button{background:rgba(205,216,244,.07); border:1px solid rgba(205,216,244,.18); color:var(--ink-soft); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
+.wi-seg button.on{background:var(--gold); color:#241f15; border-color:var(--gold);}
+.wi-alert{border:1px solid rgba(192,57,43,.5); background:rgba(192,57,43,.10); border-radius:12px; padding:10px 13px; margin:10px 0; font-size:12.5px; color:var(--ink);}
+.wi-alert b{color:#e79a8a;}
+.wi-row{display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.10); margin-bottom:6px;}
+.wi-row.wi-low{border-color:rgba(230,200,120,.6); background:rgba(230,200,120,.08);}
+.wi-row.wi-neg{border-color:rgba(224,128,112,.6); background:rgba(192,57,43,.10);}
+.wi-main{flex:1; min-width:0;}
+.wi-name{font-family:'Cormorant Garamond','Caladea',serif; font-size:16px; font-weight:600; color:var(--ink); line-height:1.25;}
+.wi-sub{font-size:11.5px; color:var(--ink-mute); margin-top:2px;}
+.wi-tag{display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#241f15; background:var(--silver); border-radius:4px; padding:0 5px; margin-right:6px; vertical-align:1px;}
+.wi-tag-c{background:var(--wood-soft); color:#fdfaf1;}
+.wi-oh{display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; min-width:64px;}
+.wi-oh-n{font-size:22px; font-weight:800; color:var(--ink); line-height:1;}
+.wi-oh-n.wi-none{color:var(--ink-mute);}
+.wi-low .wi-oh-n{color:var(--gold);} .wi-neg .wi-oh-n{color:#e79a8a;}
+.wi-oh-l{font-size:10px; color:var(--ink-mute); text-transform:uppercase; letter-spacing:.05em; margin-top:3px;}
+.wi-hist{display:flex; flex-direction:column; gap:4px;}
+.wi-ev{display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--ink-soft); padding:6px 2px; border-bottom:1px solid rgba(205,216,244,.08);}
+.wi-ev-t{flex-shrink:0; color:var(--ink-mute); font-size:11.5px; min-width:108px;}
+.wi-ev-x{flex:1; min-width:0;} .wi-ev-x i{color:var(--ink-mute);}
+.wi-del{background:none; border:1px solid rgba(224,128,112,.35); color:#e08070; border-radius:8px; padding:2px 9px; font-size:12px; cursor:pointer; font-family:inherit;}
+.wi-del.armed{background:rgba(192,57,43,.25); font-weight:700;}
+.wi-foot{font-size:11.5px; color:var(--ink-mute); margin:16px 2px 6px; font-style:italic;}
+.wi-card{background:var(--moon); color:var(--card-ink); border-radius:18px; padding:18px 16px; width:min(94vw,520px); max-height:88vh; display:flex; flex-direction:column; gap:10px; box-shadow:0 14px 44px rgba(0,0,0,.5);}
+.wi-card-h{font-family:'Cormorant Garamond','Caladea',serif; font-size:22px; font-weight:600; color:var(--wood);}
+.wi-card-s{font-size:12.5px; color:var(--card-soft);}
+.wi-card .wi-seg button{background:var(--moon-hi); border-color:var(--moon-edge); color:var(--card-soft);}
+.wi-card .wi-seg button.on{background:var(--accent); border-color:var(--accent); color:#eef6e6;}
+.wi-seg-sm button{padding:5px 11px; font-size:12px;}
+.wi-list{overflow-y:auto; flex:1; min-height:120px; border-top:1px solid var(--moon-edge); padding-top:4px;}
+.wi-lh{font-size:10.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--card-mute); margin:10px 0 4px;}
+.wi-in{display:flex; align-items:center; gap:10px; padding:5px 0; border-bottom:1px solid rgba(154,140,108,.2); font-size:13.5px; color:var(--card-ink);}
+.wi-in span{flex:1; min-width:0; line-height:1.25;}
+.wi-in input{width:78px; flex-shrink:0; font-size:16px; padding:6px 8px; border:1px solid var(--moon-edge); border-radius:8px; background:var(--moon-hi); color:var(--card-ink); text-align:center; font-family:inherit;}
+.wi-sel{width:100%; font-size:16px; padding:9px 10px; border:1px solid var(--moon-edge); border-radius:10px; background:var(--moon-hi); color:var(--card-ink); font-family:inherit;}
+.wi-qty{display:flex; gap:8px;} .wi-qty input{flex:1; min-width:0; font-size:16px; padding:9px 10px; border:1px solid var(--moon-edge); border-radius:10px; background:var(--moon-hi); color:var(--card-ink); font-family:inherit;}
+.wi-qty button{border:1px solid var(--moon-edge); background:var(--moon-lo); color:var(--wood); border-radius:10px; padding:0 14px; font-weight:700; cursor:pointer; font-family:inherit;}
+.wi-card-act{display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:4px;}
+.wi-card .ann-dismiss{color:var(--card-mute);}
 </style>
 </head>
 <body class="not-home">
@@ -1860,6 +1908,12 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
   <div id="fdBody"></div>
 </section>
 
+<section class="view" id="wineinv">
+  <div class="view-head"><p class="view-eyebrow">Managers Only</p><h2 class="view-title">Wine Inventory</h2>
+    <p class="view-sub">Bottles on hand: the last count, plus deliveries, minus what Revel says we sold.</p></div>
+  <div id="wiBody"></div>
+</section>
+
 <section class="view view-flush" id="orders">
   <div id="ordBody"></div>
 </section>
@@ -1916,7 +1970,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790672404';   // stamped by build-data.py at every deploy
+const BUILD='1790672977';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1978,7 +2032,7 @@ function navTabs(){
   // The Attic is a floor tool. The line has no use for a seat clock and it only adds
   // a chip they will never open, so BOH does not get it.
   const base=(me&&String(me.area||'').toLowerCase()==='boh')?TABS.filter(function(x){return x[0]!=='board';}):TABS;
-  let t=isMgr()?head.concat(base,[['frontdesk','Front Desk'],['orders','Farm Order']]):head.concat(base);
+  let t=isMgr()?head.concat(base,[['frontdesk','Front Desk'],['wineinv','Wine Inventory'],['orders','Farm Order']]):head.concat(base);
   return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
@@ -2023,7 +2077,7 @@ function go(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id||(c.dataset.go==='numbers'&&isNumView(id))));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender(); if(id==='servers')srvRender();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='wineinv')wiRender(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender(); if(id==='servers')srvRender();
   if(id==='standards')showStdPane(stdTab);
   if(id==='compliance'){renderCompliance();markComplianceSeen();}
   if(id==='fresh')markFreshSeen();
@@ -2481,6 +2535,7 @@ const TOUR_COPY={
   lastnight:{t:'Last Night',b:'How last night landed, pulled straight from the morning brief.'},
   scws:{t:'Service Charge',b:'The nightly service charge worksheet rebuilt from Revel. Useful for checking a night, but Tim\'s numbers remain the system of record.'},
   frontdesk:{t:'Front Desk',b:'Passwords, vendor contacts and account info. Managers can add, edit and remove entries here.'},
+  wineinv:{t:'Wine Inventory',b:'Bottles on hand for every wine: the last count, plus deliveries logged since, minus what Revel says sold. Do counts and log deliveries here.'},
   orders:{t:'Farm Order',b:'Place and track the farm order without leaving the app.'},
   access:{t:'Staff Access',b:'Add people, set or reset PINs, and lock out anyone who leaves.'}
 };
@@ -3888,6 +3943,175 @@ function fdMatchesQuery(e,q){
   const t=(e.name+' '+e.desc+' '+(e.items||[]).map(d=>d.label+' '+d.value).join(' ')).toLowerCase();
   return q.split(/\s+/).every(w=>t.includes(w));
 }
+/* ===== WINE INVENTORY (2026-09-29) ============================================
+   Manager-only. Bottles on hand = the last count of each wine + deliveries logged since
+   that count - bottles Revel says we sold since that count. Display only: no ordering yet.
+   MASTER: SF.wineInv (data/wine-inventory.json) = wines + the Revel button -> wine map.
+   A glass button takes 1/glassesPerBottle of a bottle. Buttons on SF.wineInv.ignore
+   (corkage, open ring-ins, specials) are not inventory. Any other button that is not on the
+   map is listed under "Revel buttons not on the map" instead of being dropped silently.
+   STORAGE: board/wineinv = {counts:[{id,at,by,when,svc,q:{key:bottles}}], receipts:[{id,at,by,key,qty,note}]}.
+   It rides in the already-permitted board collection (a new top-level collection needs a
+   console rules publish) and is written ONLY inside a transaction, like board/openshifts.
+   SALES WINDOW: a count taken "before service" includes that service date's sales; "after
+   close" starts the next service date. Service date = local time minus 3 hours, so a count
+   at 1am belongs to the night before. Sales come from the revel collection (4am brief). */
+let WI={doc:null,loaded:false,unsub:null,revel:null,revelAt:0,revelErr:false,filter:'core',armDel:null};
+function wiData(){ const d=(window.SF&&SF.wineInv)||{}; return {wines:d.wines||[],buttons:d.buttons||{},ignore:d.ignore||[],gpb:+d.glassesPerBottle||4}; }
+function wiRef(){ return fbDb.collection('board').doc('wineinv'); }
+function wiIso(d){ const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+function wiSvcDate(ms){ return wiIso(new Date(ms-3*3600*1000)); }
+function wiAddDays(iso,n){ const [y,m,d]=iso.split('-').map(Number); return wiIso(new Date(y,m-1,d+n)); }
+function wiShort(iso){ if(!iso)return ''; const [y,m,d]=iso.split('-').map(Number); return MON[m-1]+' '+d; }
+function wiNum(x){ const r=Math.round(x*100)/100; return (Math.abs(r-Math.round(r))<0.005?String(Math.round(r)):r.toFixed(2).replace(/0$/,'')); }
+function wiWatch(){ if(WI.unsub||!(fbReady&&fbDb))return;
+  WI.unsub=wiRef().onSnapshot(function(s){ WI.doc=s.exists?(s.data()||{}):{}; WI.loaded=true; wiRefresh(); },
+    function(){ WI.loaded=true; WI.docErr=true; wiRefresh(); }); }
+function wiLoadRevel(force){
+  if(!(fbReady&&fbDb))return;
+  if(WI.revel&&!force&&Date.now()-WI.revelAt<10*60*1000)return;
+  fbDb.collection('revel').get().then(function(snap){ const m={};
+    snap.docs.forEach(function(d){ const w=((d.data()||{}).drinks||{}).wine; if(w&&(w.bottle_items||w.glass_items))m[d.id]={b:w.bottle_items||[],g:w.glass_items||[]}; });
+    WI.revel=m; WI.revelAt=Date.now(); WI.revelErr=false; wiRefresh(); })
+  .catch(function(){ WI.revelErr=true; wiRefresh(); });
+}
+function wiRefresh(){ if($('wineinv')&&$('wineinv').classList.contains('active'))wiRender(); if(WI.modal)wiModalRender(); }
+
+/* Pure calculation, exported for the test harness: (master, doc, revelByDate) -> state */
+function wiCompute(D,doc,rv){
+  const counts=(Array.isArray(doc.counts)?doc.counts:[]).slice().sort(function(a,b){return (a.at||0)-(b.at||0);});
+  const rec=Array.isArray(doc.receipts)?doc.receipts:[];
+  const out={};
+  D.wines.forEach(function(w){ let last=null;
+    counts.forEach(function(c){ if(c.q&&c.q[w.key]!=null&&c.q[w.key]!=='')last=c; });
+    out[w.key]={w:w,count:last?+last.q[w.key]:null,countAt:last?last.at:null,svc:last?last.svc:null,by:last?last.by:'',inQ:0,sold:0,wk:0}; });
+  rec.forEach(function(r){ const s=out[r.key]; if(!s||s.countAt==null||!(r.at>s.countAt))return; s.inQ+=(+r.qty||0); });
+  const dates=Object.keys(rv||{}).sort(), lastDate=dates.length?dates[dates.length-1]:null, from28=lastDate?wiAddDays(lastDate,-27):null;
+  const unmapped={}, ign={}; D.ignore.forEach(function(n){ign[n]=1;});
+  dates.forEach(function(ds){ ['b','g'].forEach(function(kind){ (rv[ds][kind]||[]).forEach(function(it){
+    const name=String(it.name||''), q=+it.qty||0; if(!q)return;
+    if(ign[name])return;
+    const key=D.buttons[name];
+    if(!key){ if(from28&&ds>=from28)unmapped[name]=(unmapped[name]||0)+q; return; }
+    const s=out[key]; if(!s)return;
+    const bt=kind==='g'?q/D.gpb:q;
+    if(s.svc&&ds>=s.svc)s.sold+=bt;
+    if(from28&&ds>=from28)s.wk+=bt/4;
+  }); }); });
+  Object.keys(out).forEach(function(k){ const s=out[k]; s.onHand=s.count==null?null:s.count+s.inQ-s.sold; s.weeks=(s.onHand!=null&&s.wk>0)?s.onHand/s.wk:null; });
+  return {byKey:out,lastDate:lastDate,unmapped:unmapped,counts:counts,receipts:rec};
+}
+const WI_TYPES=['Sparkling','White','Orange','Rosé','Red'];
+function wiInFilter(w){ return WI.filter==='all'||(WI.filter==='core'?w.status!=='cellar':w.status==='cellar'); }
+function wiRender(){
+  const body=$('wiBody'); if(!body)return;
+  if(!isMgr()){ body.innerHTML='<p class="board-empty">Manager access required.</p>'; return; }
+  wiWatch(); wiLoadRevel(false);
+  const D=wiData();
+  if(!D.wines.length){ body.innerHTML='<p class="board-empty">No wine master loaded (data/wine-inventory.json is missing from this build).</p>'; return; }
+  const S=wiCompute(D,WI.doc||{},WI.revel||{});
+  const lastCount=S.counts.length?S.counts[S.counts.length-1]:null;
+  let h='<div class="wi-bar">';
+  h+='<div class="wi-meta">'+(lastCount?'Last count '+esc(wiShort(wiSvcDate(lastCount.at)))+(lastCount.by?' by '+esc(lastCount.by):''):(WI.loaded?'No count yet. Start with a full count.':'Loading counts…'))
+    +' · '+(WI.revelErr?'<span class="wi-warn">Couldn’t load sales</span>':(S.lastDate?'Sales through '+esc(wiShort(S.lastDate)):'Loading sales…'))+'</div>';
+  h+='<div class="wi-actions"><button class="wi-btn" onclick="wiOpen(\'count\')">New count</button><button class="wi-btn wi-btn2" onclick="wiOpen(\'receive\')">Log a delivery</button></div></div>';
+  h+='<div class="wi-seg">'+[['core','On the list'],['cellar','Cellar'],['all','All']].map(function(f){return '<button class="'+(WI.filter===f[0]?'on':'')+'" onclick="WI.filter=\''+f[0]+'\';wiRender()">'+f[1]+'</button>';}).join('')+'</div>';
+  const um=Object.keys(S.unmapped);
+  if(um.length)h+='<div class="wi-alert"><b>Revel buttons not on the map</b> (last 4 weeks). Their sales aren’t coming off any wine until they’re added to the wine master: '+um.map(function(n){return esc(n)+' ('+S.unmapped[n]+')';}).join(', ')+'</div>';
+  WI_TYPES.forEach(function(t){
+    const rows=D.wines.filter(function(w){return w.type===t&&wiInFilter(w);}); if(!rows.length)return;
+    h+='<div class="fd-cat">'+esc(t)+'</div>';
+    rows.forEach(function(w){ const s=S.byKey[w.key];
+      let cls='wi-row', oh='<span class="wi-oh-n wi-none">–</span><span class="wi-oh-l">not counted</span>';
+      if(s.onHand!=null){ const low=w.status!=='cellar'&&s.weeks!=null&&s.weeks<1, neg=s.onHand<0;
+        if(neg)cls+=' wi-neg'; else if(low)cls+=' wi-low';
+        oh='<span class="wi-oh-n">'+wiNum(s.onHand)+'</span><span class="wi-oh-l">'+(neg?'check count':'on hand')+'</span>'; }
+      let sub=[];
+      if(s.count!=null)sub.push('counted '+wiNum(s.count)+' ('+esc(wiShort(wiSvcDate(s.countAt)))+')');
+      if(s.inQ)sub.push('+'+wiNum(s.inQ)+' in');
+      if(s.count!=null)sub.push('−'+wiNum(s.sold)+' sold');
+      if(s.wk>0)sub.push(wiNum(s.wk)+'/wk'+(s.weeks!=null&&s.onHand>0?' · ~'+(s.weeks>=10?'10+':wiNum(Math.round(s.weeks*10)/10))+' wks left':''));
+      h+='<div class="'+cls+'"><div class="wi-main"><div class="wi-name">'+esc(w.name)+'</div><div class="wi-sub">'+(w.status==='core-glass'?'<span class="wi-tag">glass</span>':'')+(w.status==='cellar'?'<span class="wi-tag wi-tag-c">cellar</span>':'')+(sub.join(' · ')||(w.vendor?esc(w.vendor):'vendor not on file'))+'</div></div><div class="wi-oh">'+oh+'</div></div>';
+    });
+  });
+  const ev=S.counts.map(function(c){return {t:'count',at:c.at,id:c.id,by:c.by,n:Object.keys(c.q||{}).length,when:c.when};})
+    .concat(S.receipts.map(function(r){return {t:'rec',at:r.at,id:r.id,by:r.by,key:r.key,qty:r.qty,note:r.note};}))
+    .sort(function(a,b){return b.at-a.at;}).slice(0,12);
+  if(ev.length){
+    h+='<div class="fd-cat">Recent counts and deliveries</div><div class="wi-hist">';
+    ev.forEach(function(e){ const nm=e.t==='rec'?((D.wines.find(function(w){return w.key===e.key;})||{}).name||e.key):'';
+      const txt=e.t==='count'?'Count of '+e.n+' wine'+(e.n===1?'':'s')+' ('+(e.when==='after'?'after close':'before service')+')':'+'+wiNum(+e.qty||0)+' '+esc(nm)+(e.note?' · '+esc(e.note):'');
+      const armed=WI.armDel===e.id;
+      h+='<div class="wi-ev"><span class="wi-ev-t">'+esc(reqStamp(e.at))+'</span><span class="wi-ev-x">'+txt+(e.by?' <i>'+esc(e.by)+'</i>':'')+'</span><button class="wi-del'+(armed?' armed':'')+'" onclick="wiDel(\''+e.t+'\',\''+e.id+'\')">'+(armed?'Tap to delete':'×')+'</button></div>'; });
+    h+='</div>';
+  }
+  h+='<p class="wi-foot">Glass pours count as 1/'+D.gpb+' of a bottle. Weekly pace is the last 4 weeks of Revel sales. Wines that aren’t counted yet show a dash until their first count.</p>';
+  body.innerHTML=h;
+}
+function wiTx(fn,done){
+  if(DEMO){ if(done)done(); return; }
+  if(!(fbReady&&fbDb)){ alert("Can't reach the server right now, so this isn't saved. Try again in a minute."); return; }
+  const ref=wiRef();
+  fbDb.runTransaction(function(tx){ return tx.get(ref).then(function(snap){
+      const d=snap.exists?(snap.data()||{}):{};
+      const cur={counts:Array.isArray(d.counts)?d.counts.slice():[],receipts:Array.isArray(d.receipts)?d.receipts.slice():[]};
+      tx.set(ref,fn(cur)); }); })
+    .then(function(){ if(done)done(); })
+    .catch(function(){ alert("That didn't save. Check your connection and try again."); });
+}
+function wiDel(t,id){
+  if(WI.armDel!==id){ WI.armDel=id; wiRender(); setTimeout(function(){ if(WI.armDel===id){WI.armDel=null; wiRender();} },4000); return; }
+  WI.armDel=null;
+  wiTx(function(cur){ if(t==='count')cur.counts=cur.counts.filter(function(c){return c.id!==id;}); else cur.receipts=cur.receipts.filter(function(r){return r.id!==id;}); return cur; });
+}
+function wiNewId(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function wiOpen(kind){ if(!me){openLogin();return;} const hr=new Date().getHours();
+  WI.modal={kind:kind,when:(hr>=3&&hr<16)?'before':'after',vals:{},rKey:'',rQty:'',rNote:'',scope:WI.filter==='cellar'?'cellar':(WI.filter==='all'?'all':'core')};
+  wiModalRender(); }
+function wiClose(){ WI.modal=null; const m=$('wiModal'); if(m)m.style.display='none'; }
+function wiModalRender(){
+  const M=WI.modal; if(!M)return; const D=wiData(); let m=$('wiModal');
+  if(!m){ m=document.createElement('div'); m.id='wiModal'; m.className='comp-modal'; m.onclick=function(e){if(e.target===m)wiClose();}; document.body.appendChild(m); }
+  let h='<div class="wi-card">';
+  if(M.kind==='count'){
+    h+='<div class="wi-card-h">New count</div><div class="wi-card-s">Enter bottles on hand, partials as decimals (half a bottle = 0.5). Leave a wine blank to keep its last count.</div>';
+    h+='<div class="wi-seg wi-seg-sm">'+[['before','Before tonight’s service'],['after','After close']].map(function(f){return '<button class="'+(M.when===f[0]?'on':'')+'" onclick="wiKeep();WI.modal.when=\''+f[0]+'\';wiModalRender()">'+f[1]+'</button>';}).join('')+'</div>';
+    h+='<div class="wi-seg wi-seg-sm">'+[['core','On the list'],['cellar','Cellar'],['all','All']].map(function(f){return '<button class="'+(M.scope===f[0]?'on':'')+'" onclick="wiKeep();WI.modal.scope=\''+f[0]+'\';wiModalRender()">'+f[1]+'</button>';}).join('')+'</div>';
+    h+='<div class="wi-list">';
+    WI_TYPES.forEach(function(t){ const rows=D.wines.filter(function(w){return w.type===t&&(M.scope==='all'||(M.scope==='core'?w.status!=='cellar':w.status==='cellar'));}); if(!rows.length)return;
+      h+='<div class="wi-lh">'+esc(t)+'</div>';
+      rows.forEach(function(w){ h+='<label class="wi-in"><span>'+esc(w.name)+'</span><input type="number" inputmode="decimal" min="0" step="0.25" data-k="'+w.key+'" value="'+esc(M.vals[w.key]!=null?M.vals[w.key]:'')+'"></label>'; }); });
+    h+='</div><div class="wi-card-act"><button class="wi-btn" onclick="wiSaveCount()">Save count</button><button class="ann-dismiss" onclick="wiClose()">Cancel</button></div>';
+  } else {
+    h+='<div class="wi-card-h">Log a delivery</div><div class="wi-card-s">Bottles received, checked against the invoice. Deliveries count toward what’s on hand from the wine’s last count forward.</div>';
+    h+='<select class="wi-sel" id="wiRKey"><option value="">Choose a wine…</option>';
+    [['core-glass','By the glass'],['core-bottle','Bottle only'],['cellar','Cellar']].forEach(function(g){
+      h+='<optgroup label="'+g[1]+'">'+D.wines.filter(function(w){return w.status===g[0];}).map(function(w){return '<option value="'+w.key+'"'+(M.rKey===w.key?' selected':'')+'>'+esc(w.name)+'</option>';}).join('')+'</optgroup>'; });
+    h+='</select><div class="wi-qty"><input type="number" inputmode="decimal" min="0" step="1" id="wiRQty" placeholder="Bottles" value="'+esc(M.rQty)+'">'
+      +'<button onclick="wiQty(6)">+6</button><button onclick="wiQty(12)">+12</button></div>'
+      +'<input class="wi-sel" id="wiRNote" placeholder="Note, e.g. invoice number (optional)" value="'+esc(M.rNote)+'">';
+    h+='<div class="wi-card-act"><button class="wi-btn" onclick="wiSaveReceipt()">Save delivery</button><button class="ann-dismiss" onclick="wiClose()">Cancel</button></div>';
+  }
+  h+='</div>'; m.innerHTML=h; m.style.display='flex';
+}
+/* keep typed values across a re-render of the count modal */
+function wiKeep(){ const M=WI.modal; if(!M)return;
+  document.querySelectorAll('#wiModal input[data-k]').forEach(function(i){ if(i.value!=='')M.vals[i.dataset.k]=i.value; else delete M.vals[i.dataset.k]; });
+  if($('wiRKey'))M.rKey=$('wiRKey').value; if($('wiRQty'))M.rQty=$('wiRQty').value; if($('wiRNote'))M.rNote=$('wiRNote').value; }
+function wiQty(n){ wiKeep(); WI.modal.rQty=String((+WI.modal.rQty||0)+n); wiModalRender(); }
+function wiSaveCount(){ wiKeep(); const M=WI.modal, q={};
+  Object.keys(M.vals).forEach(function(k){ const v=parseFloat(M.vals[k]); if(isFinite(v)&&v>=0)q[k]=Math.round(v*100)/100; });
+  if(!Object.keys(q).length){ alert('Enter at least one count first.'); return; }
+  const at=Date.now(), svc0=wiSvcDate(at), rec={id:wiNewId(),at:at,by:me?me.name:'',when:M.when,svc:M.when==='before'?svc0:wiAddDays(svc0,1),q:q};
+  wiTx(function(cur){ cur.counts.push(rec); return cur; },function(){ wiClose(); });
+}
+function wiSaveReceipt(){ wiKeep(); const M=WI.modal, qty=parseFloat(M.rQty);
+  if(!M.rKey){ alert('Choose the wine first.'); return; }
+  if(!(isFinite(qty)&&qty>0)){ alert('Enter how many bottles came in.'); return; }
+  const rec={id:wiNewId(),at:Date.now(),by:me?me.name:'',key:M.rKey,qty:qty,note:String(M.rNote||'').trim().slice(0,80)};
+  wiTx(function(cur){ cur.receipts.push(rec); return cur; },function(){ wiClose(); });
+}
+
 function renderFrontDesk(keepSearch){
   if(!isMgr()){$('fdBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
   const prev=keepSearch&&$('fd-search')?$('fd-search').value:'';
