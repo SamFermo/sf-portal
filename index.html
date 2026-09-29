@@ -1619,6 +1619,56 @@ body.locked{overflow:hidden;}
 .to-await-when{color:var(--ink-mute); font-size:11.5px; margin-top:2px;}
 .to-await-reason{color:var(--ink-mute); font-size:12.5px; font-style:italic; margin-top:2px;}
 .to-await-note{font-size:11.5px; color:var(--ink-mute); margin-top:8px; line-height:1.4;}
+/* Day Sheet weather card, patio-first (2026-09-29). Solid sky backgrounds by condition;
+   limit shading ok / edge / out against Sam's patio limits (see WXP in the script). */
+.wxp-card{border-radius:16px; padding:16px 16px 12px; margin-bottom:15px; color:#f4f7ff; position:relative; overflow:hidden;
+  background:linear-gradient(160deg,#4a5b78 0%,#2c3a55 100%); box-shadow:0 8px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12);}
+.wxp-card.clear{background:linear-gradient(160deg,#4f8fd6 0%,#2f64a8 60%,#e3a45a 130%);}
+.wxp-card.partly{background:linear-gradient(160deg,#5a86b8 0%,#3b5d8a 70%,#c99a63 140%);}
+.wxp-card.cloud{background:linear-gradient(160deg,#5d6d88 0%,#36445f 100%);}
+.wxp-card.rain{background:linear-gradient(160deg,#3f5068 0%,#222e44 100%);}
+.wxp-card.storm{background:linear-gradient(160deg,#3a3552 0%,#1b1a2c 100%);}
+.wxp-card.night{background:linear-gradient(160deg,#27305a 0%,#121833 100%);}
+.wxp-card.none{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); box-shadow:none;}
+.wxp-hero{display:flex; gap:14px; align-items:center;}
+.wxp-hero-l{display:flex; align-items:center; gap:6px; flex:0 0 auto;}
+.wxp-hero-ic{font-size:40px; line-height:1; filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));}
+.wxp-hero-t{font-family:'Cormorant Garamond','Caladea',serif; font-size:54px; font-weight:600; line-height:.9; letter-spacing:-.02em;}
+.wxp-hero-r{min-width:0; flex:1;}
+.wxp-eyebrow{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; color:rgba(244,247,255,.72);}
+.wxp-sentence{font-size:14.5px; font-weight:600; line-height:1.35; margin:2px 0 4px;}
+.wxp-meta{font-size:12px; color:rgba(244,247,255,.8);}
+.wxp-dot{margin:0 6px; opacity:.55;}
+.wxp-pre{margin-top:12px; background:rgba(0,0,0,.2); border-radius:10px; padding:8px 11px; font-size:12.5px; line-height:1.4;}
+.wxp-sec{margin-top:14px; background:rgba(0,0,0,.18); border-radius:12px; padding:10px 10px 9px;}
+.wxp-sec-head{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; color:rgba(244,247,255,.75); margin:0 0 7px 2px;}
+.wxp-grid{display:grid; grid-template-columns:42px repeat(var(--n),minmax(0,1fr)); gap:3px;}
+.wxp-rl{font-size:10px; text-transform:uppercase; letter-spacing:.05em; font-weight:800; color:rgba(244,247,255,.7); display:flex; align-items:center;}
+.wxp-c{border-radius:7px; text-align:center; padding:5px 1px; cursor:pointer; font-size:14px; font-weight:700; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:34px; line-height:1.15;}
+.wxp-c.wxp-head{background:none; padding:2px 1px 3px; font-weight:600; justify-content:flex-start;}
+.wxp-c.wxp-head.dark{opacity:.8;}
+.wxp-hr{font-size:11px; color:rgba(244,247,255,.85);}
+.wxp-ic{font-size:17px; line-height:1.2;}
+.wxp-sun{font-size:9px; min-height:12px; line-height:12px; color:#ffd59a; white-space:nowrap; font-weight:700;}
+.wxp-c.hero.wxp-head .wxp-hr{color:#fff; font-weight:800; text-decoration:underline; text-underline-offset:3px;}
+.wxp-pop{font-size:13px;}
+.wxp-amt{font-size:9.5px; font-weight:600; opacity:.85;}
+.lim.ok{background:rgba(120,196,120,.30); box-shadow:inset 0 0 0 1px rgba(150,220,150,.35);}
+.lim.edge{background:rgba(240,190,80,.34); box-shadow:inset 0 0 0 1px rgba(255,210,110,.45);}
+.lim.out{background:rgba(226,96,76,.45); box-shadow:inset 0 0 0 1px rgba(255,130,110,.55);}
+.wxp-c.sel{outline:2px solid #fff; outline-offset:-1px;}
+.wxp-legend{display:flex; flex-wrap:wrap; align-items:center; gap:4px 6px; margin:8px 0 0 2px; font-size:10.5px; color:rgba(244,247,255,.78);}
+.wxp-key{display:inline-block; width:10px; height:10px; border-radius:3px; margin-left:4px;}
+.wxp-key:first-child{margin-left:0;}
+.wxp-key.ok{background:rgba(120,196,120,.75);} .wxp-key.edge{background:rgba(240,190,80,.85);} .wxp-key.out{background:rgba(226,96,76,.9);}
+.wxp-limits{flex-basis:100%; opacity:.75;}
+.wxp-detail{margin-top:9px; background:rgba(0,0,0,.22); border-radius:10px; padding:10px 12px;}
+.wxp-detail .dhd-time{color:#fff;} .wxp-detail .dhd-lab{color:rgba(244,247,255,.65);} .wxp-detail .dhd-val{color:#fff;} .wxp-detail .dhd-sub{color:rgba(244,247,255,.7);}
+.lim-t.edge{color:#ffd27a;} .lim-t.out{color:#ff9d8a;}
+.wxp-cov{display:flex; gap:8px; align-items:flex-start; margin-top:10px; font-size:12.5px; line-height:1.4; color:rgba(244,247,255,.9);}
+.wxp-cov-ic{flex:0 0 auto;}
+.wxp-stamp{font-size:10.5px; color:rgba(244,247,255,.6); margin-top:9px; cursor:pointer; text-decoration:underline dotted; text-underline-offset:2px;}
+@media (max-width:420px){ .wxp-hero-t{font-size:46px;} .wxp-hero-ic{font-size:34px;} .wxp-grid{grid-template-columns:36px repeat(var(--n),minmax(0,1fr)); gap:2px;} .wxp-c{font-size:13px;} .wxp-rl{font-size:9px;} }
 </style>
 </head>
 <body class="not-home">
@@ -1818,7 +1868,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790665702';   // stamped by build-data.py at every deploy
+const BUILD='1790668281';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -6177,76 +6227,154 @@ function wxIcon(code){code=+code||0;
   if(code<=86)return {i:'🌨️',t:'snow'};
   return {i:'⛈️',t:'storms'};
 }
+/* ===== DAY SHEET WEATHER CARD — patio-first (2026-09-29) =====================
+   Built for one decision: can we run the North Deck patio tonight. Conditions only,
+   no verdict (Sam's call): each service hour is shaded against Sam's patio limits and
+   the manager reads the grid. Limits assume awnings (shed light rain) + heaters.
+     Feels like  ok >= 55°   edge 50–54° (heaters)   out < 50°
+     Rain        ok < .02"/hr  edge .02–.10" or any rain with gusts > 15   out > .10" or thunder
+     Gusts       ok < 15 mph   edge 15–24   out >= 25
+   res.hours (16–22) and res.summary keep their old shape: the home Day at a Glance
+   chip (glanceCardWeather) reads them. v:2 adds sunset, hi/lo and pre-service hours. */
+const WXP={feelsOk:55,feelsHeat:50,rainOk:0.02,rainMax:0.10,gustOk:15,gustMax:25,indoorSeats:57,turns:3};
 function dsFetchWeather(iso){
-  let c=dsWxCache[iso]||wxLsGet(iso); if(c)dsWxCache[iso]=c;
+  let c=dsWxCache[iso]||wxLsGet(iso); if(c&&c.v!==2)c=null;   // pre-v2 cache lacks sunset/pre-service: refetch
+  if(c)dsWxCache[iso]=c;
   if(c && (Date.now()-(c.fetchedAt||0))<DS_WX_TTL)return Promise.resolve(c);
   const url='https://api.open-meteo.com/v1/forecast?latitude=47.668&longitude=-122.384'+
     '&hourly=temperature_2m,apparent_temperature,precipitation,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m'+
+    '&daily=sunset,temperature_2m_max,temperature_2m_min'+
     '&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FLos_Angeles&start_date='+iso+'&end_date='+iso;
-  const p=wxFetchTO(url,8000).then(r=>{if(!r.ok)throw new Error('forecast '+r.status);return r.json();}).then(d=>{
-    const H=d.hourly||{}, hrs=[];
-    (H.time||[]).forEach((t,i)=>{const hr=+t.slice(11,13);if(hr>=16&&hr<=22)hrs.push({hr,temp:H.temperature_2m?H.temperature_2m[i]:null,feels:H.apparent_temperature?H.apparent_temperature[i]:null,code:H.weather_code?H.weather_code[i]:0,precip:H.precipitation[i]||0,pop:H.precipitation_probability[i]||0,wind:H.wind_speed_10m[i]||0,gust:H.wind_gusts_10m[i]||0,dir:H.wind_direction_10m?H.wind_direction_10m[i]:null});});
-    let summary=null;
-    if(hrs.length){
-      const maxWind=Math.max.apply(null,hrs.map(x=>x.wind)),maxGust=Math.max.apply(null,hrs.map(x=>x.gust)),totP=hrs.reduce((s,x)=>s+x.precip,0),maxPop=Math.max.apply(null,hrs.map(x=>x.pop));
-      const temps=hrs.map(x=>x.temp).filter(v=>v!=null), tAvg=temps.length?Math.round(temps.reduce((a,b)=>a+b,0)/temps.length):null;
-      const worstCode=hrs.map(x=>x.code).sort((a,b)=>wxSeverity(b)-wxSeverity(a))[0];
-      summary={maxWind,maxGust,totP,maxPop,temp:tAvg,code:worstCode};
-    }
-    const res={hours:hrs,summary:summary,fetchedAt:Date.now()}; dsWxCache[iso]=res; wxLsSet(iso,res); return res;
-  }).catch(function(err){ const cc=dsWxCache[iso]||wxLsGet(iso); if(cc)return cc; throw err; });   // on failure keep the last good pull
-  // stale-while-revalidate: if we have a cached copy, show it instantly and let the refresh repaint in the background
+  const p=wxFetchTO(url,8000).then(r=>{if(!r.ok)throw new Error('forecast '+r.status);return r.json();}).then(d=>wxpParse(d,iso))
+    .catch(function(err){ const cc=dsWxCache[iso]||wxLsGet(iso); if(cc&&cc.v===2)return cc; throw err; });   // on failure keep the last good pull
+  // stale-while-revalidate: show the cached copy now, repaint when the refresh lands
   if(c){ p.then(function(){ if(dsDate()===iso){ dsRenderWeather(iso); glanceCardWeather(); } }).catch(function(){}); return Promise.resolve(c); }
   return p;
 }
-function dsCompass(deg){if(deg==null)return '';return ['N','NE','E','SE','S','SW','W','NW'][Math.round((deg%360)/45)%8];}
-function dsHrFull(h){const ap=h>=12?'pm':'am';let hh=h%12;if(hh===0)hh=12;return hh+':00 '+ap;}
-function dsShowHour(i){
+function wxpParse(d,iso){
+  const H=d.hourly||{}, hrs=[], pre=[], D=d.daily||{};
+  const pick=(k,i,dflt)=>(H[k]&&H[k][i]!=null)?H[k][i]:dflt;
+  (H.time||[]).forEach((t,i)=>{const hr=+t.slice(11,13);
+    const x={hr,temp:pick('temperature_2m',i,null),feels:pick('apparent_temperature',i,null),code:pick('weather_code',i,0),precip:pick('precipitation',i,0),pop:pick('precipitation_probability',i,0),wind:pick('wind_speed_10m',i,0),gust:pick('wind_gusts_10m',i,0),dir:pick('wind_direction_10m',i,null)};
+    if(hr>=16&&hr<=22)hrs.push(x); else if(hr>=12&&hr<=15)pre.push(x);});
+  let summary=null;
+  if(hrs.length){
+    const maxWind=Math.max.apply(null,hrs.map(x=>x.wind)),maxGust=Math.max.apply(null,hrs.map(x=>x.gust)),totP=hrs.reduce((s,x)=>s+x.precip,0),maxPop=Math.max.apply(null,hrs.map(x=>x.pop));
+    const temps=hrs.map(x=>x.temp).filter(v=>v!=null), tAvg=temps.length?Math.round(temps.reduce((a,b)=>a+b,0)/temps.length):null;
+    const worstCode=hrs.map(x=>x.code).sort((a,b)=>wxSeverity(b)-wxSeverity(a))[0];
+    summary={maxWind,maxGust,totP,maxPop,temp:tAvg,code:worstCode};
+  }
+  const ss=(D.sunset&&D.sunset[0])||'';
+  const res={v:2,hours:hrs,pre:pre,summary:summary,fetchedAt:Date.now(),
+    sunset:ss?{h:+ss.slice(11,13),m:+ss.slice(14,16)}:null,
+    hi:(D.temperature_2m_max&&D.temperature_2m_max[0]!=null)?Math.round(D.temperature_2m_max[0]):null,
+    lo:(D.temperature_2m_min&&D.temperature_2m_min[0]!=null)?Math.round(D.temperature_2m_min[0]):null};
+  dsWxCache[iso]=res; wxLsSet(iso,res); return res;
+}
+/* ---- patio limits ---- */
+function wxpFeels(v){ if(v==null)return ''; v=Math.round(v); return v>=WXP.feelsOk?'ok':(v>=WXP.feelsHeat?'edge':'out'); }
+function wxpRain(x){ const a=x.precip||0; if((+x.code||0)>=95||a>WXP.rainMax)return 'out';
+  if(a>=WXP.rainOk||(a>=0.01&&Math.round(x.gust)>WXP.gustOk))return 'edge'; return 'ok'; }
+function wxpGust(g){ g=Math.round(g); return g>=WXP.gustMax?'out':(g>=WXP.gustOk?'edge':'ok'); }
+/* ---- small formatters ---- */
+function wxpClock(h,m){ const ap=h>=12?'pm':'am'; let hh=h%12||12; return hh+':'+(m<10?'0':'')+m+ap; }
+function wxpCompass(deg){ if(deg==null)return ''; return ['N','NE','E','SE','S','SW','W','NW'][Math.round((deg%360)/45)%8]; }
+function wxpIn(a){ return (a||0).toFixed(2).replace(/^0/,'')+'″'; }
+function wxpSunFrac(res){ return res.sunset?res.sunset.h+res.sunset.m/60:null; }
+function wxpHeroIdx(hrs,iso){
+  if(iso===todayISO()){ const h=new Date().getHours(); const i=hrs.findIndex(x=>x.hr===h); if(i>=0)return i; }
+  const i5=hrs.findIndex(x=>x.hr===17); return i5>=0?i5:0;
+}
+function wxpTheme(x,res){
+  const sf=wxpSunFrac(res), night=sf!=null&&x.hr+0.5>=sf, c=+x.code||0;
+  if(c>=95)return 'storm';
+  if(c>=51)return night?'rain night':'rain';
+  if(c>=3)return night?'cloud night':'cloud';
+  return night?'clear night':(c>=1?'partly':'clear');
+}
+/* One plain sentence: sky, temp trend, rain timing. Facts only, no call. */
+function wxpSentence(res,hero){
+  const hrs=res.hours, first=hrs[0], last=hrs[hrs.length-1];
+  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+  let s=cap(wxIcon(hero.code).t);
+  if(hero.temp!=null&&last.temp!=null&&hero!==last){ const a=Math.round(hero.temp), b=Math.round(last.temp);
+    s+= (a-b>=2)?', '+a+'° easing to '+b+'°':(b-a>=2?', '+a+'° warming to '+b+'°':', holding near '+Math.round((a+b)/2)+'°')+(a-b>=2||b-a>=2?' by '+dsHr(last.hr):''); }
+  const wet=hrs.filter(x=>x.precip>=0.01);
+  let mi=0; hrs.forEach((x,i)=>{if(x.pop>hrs[mi].pop)mi=i;});
+  if(wet.length){ s+='. Rain '+dsHr(wet[0].hr)+(wet.length>1?'–'+dsHr(wet[wet.length-1].hr):'')+', '+wxpIn(wet.reduce((t,x)=>t+x.precip,0))+' total'; }
+  else if(hrs[mi].pop>=30){ const clr=hrs.findIndex((x,i)=>i>mi&&x.pop<30);
+    s+='. '+hrs[mi].pop+'% rain chance at '+dsHr(hrs[mi].hr)+(clr>0?', fading by '+dsHr(hrs[clr].hr):''); }
+  else s+='. Dry through service';
+  return s+'.';
+}
+function wxpCoversHTML(iso){
+  const c=(iso===todayISO())?(getBoard()||{}).covers:(typeof dsCoversCache!=='undefined'?dsCoversCache[iso]:null);
+  const room='indoor room: '+WXP.indoorSeats+' seats × '+WXP.turns+' turns';
+  if(!c||c.closed||!c.booked)return '<div class="wxp-cov"><span class="wxp-cov-ic">📋</span><span>No booking count for this night yet · '+room+'</span></div>';
+  return '<div class="wxp-cov"><span class="wxp-cov-ic">📋</span><span><b>'+c.booked+'</b> booked'+(c.expectedTotal?' · ~'+c.expectedTotal+' expected with walk-ins':'')+' · '+room+'</span></div>';
+}
+function wxpCardHTML(res,iso){
+  const hrs=res.hours, hi=wxpHeroIdx(hrs,iso), hero=hrs[hi], sf=wxpSunFrac(res);
+  const isNow=(iso===todayISO())&&new Date().getHours()===hero.hr;
+  const ic=wxIcon(hero.code);
+  const meta=[];
+  if(hero.feels!=null)meta.push('Feels '+Math.round(hero.feels)+'°');
+  if(res.hi!=null&&res.lo!=null)meta.push('H '+res.hi+'° · L '+res.lo+'°');
+  if(res.sunset)meta.push('🌇 Sunset '+wxpClock(res.sunset.h,res.sunset.m));
+  let h='<div class="wxp-hero">'+
+    '<div class="wxp-hero-l"><span class="wxp-hero-ic">'+ic.i+'</span><span class="wxp-hero-t">'+(hero.temp!=null?Math.round(hero.temp)+'°':'–')+'</span></div>'+
+    '<div class="wxp-hero-r"><div class="wxp-eyebrow">'+(isNow?'Now':'At '+dsHr(hero.hr))+' · service 4–10pm</div>'+
+    '<div class="wxp-sentence">'+esc(wxpSentence(res,hero))+'</div>'+
+    '<div class="wxp-meta">'+meta.map(esc).join('<span class="wxp-dot">·</span>')+'</div></div></div>';
+  // Before-service rain matters for setup: a wet deck and wet furniture at 4.
+  const preWet=(res.pre||[]).filter(x=>x.precip>=0.01), preTot=(res.pre||[]).reduce((t,x)=>t+(x.precip||0),0);
+  if(preTot>=0.02)h+='<div class="wxp-pre">☔ Before service: '+wxpIn(preTot)+' of rain '+dsHr(preWet[0].hr)+(preWet.length>1?'–'+dsHr(preWet[preWet.length-1].hr+1):'')+'. Deck and furniture will be wet at setup.</div>';
+  // Patio grid: hour columns, three limit rows.
+  const col=(x,i,inner,cls)=>'<div class="wxp-c '+(cls||'')+(i===hi?' hero':'')+'" data-i="'+i+'" onclick="wxpShowHour('+i+')">'+inner+'</div>';
+  let g='<div class="wxp-grid" style="--n:'+hrs.length+'">';
+  g+='<div class="wxp-rl"></div>'+hrs.map((x,i)=>{ const inSun=sf!=null&&x.hr<=sf&&sf<x.hr+1, dark=sf!=null&&x.hr>=sf;
+      return col(x,i,'<span class="wxp-hr">'+dsHr(x.hr)+'</span><span class="wxp-ic">'+wxIcon(x.code).i+'</span>'+'<span class="wxp-sun">'+(inSun?'🌇 '+wxpClock(res.sunset.h,res.sunset.m).replace(/pm|am/,''):'&nbsp;')+'</span>','wxp-head'+(dark?' dark':'')); }).join('');
+  g+='<div class="wxp-rl">Feels</div>'+hrs.map((x,i)=>col(x,i,x.feels!=null?Math.round(x.feels)+'°':'–','lim '+wxpFeels(x.feels))).join('');
+  g+='<div class="wxp-rl">Rain</div>'+hrs.map((x,i)=>col(x,i,'<span class="wxp-pop">'+x.pop+'%</span>'+(x.precip>=0.01?'<span class="wxp-amt">'+wxpIn(x.precip)+'</span>':''),'lim '+wxpRain(x))).join('');
+  g+='<div class="wxp-rl">Gusts</div>'+hrs.map((x,i)=>col(x,i,Math.round(x.gust),'lim '+wxpGust(x.gust))).join('');
+  g+='</div>';
+  h+='<div class="wxp-sec"><div class="wxp-sec-head">Patio conditions</div>'+g+
+    '<div class="wxp-legend"><span class="wxp-key ok"></span>within limits<span class="wxp-key edge"></span>heaters / awnings / borderline<span class="wxp-key out"></span>past limits'+
+    '<span class="wxp-limits">Feels 55°+ · rain under .02″/hr · gusts under 15 mph</span></div>'+
+    '<div class="wxp-detail" id="ds-hour-detail" style="display:none"></div></div>';
+  h+=wxpCoversHTML(iso);
+  if(res.fetchedAt)h+='<div class="wxp-stamp" onclick="dsRefreshWeather()">Forecast pulled '+dsWxStamp(res.fetchedAt)+' · tap to refresh · tap any hour for detail</div>';
+  return h;
+}
+function wxpShowHour(i){
   const res=dsWxCache[dsDate()]; if(!res||!res.hours||!res.hours[i])return;
   const x=res.hours[i], el=$('ds-hour-detail'); if(!el)return;
-  const dir=dsCompass(x.dir);
-  el.innerHTML='<div class="dhd-time">'+dsHrFull(x.hr)+' · service hour</div><div class="dhd-grid">'+
-    '<div class="dhd-cell"><span class="dhd-lab">Temp</span><span class="dhd-val">'+(x.temp!=null?Math.round(x.temp)+'°':'–')+'</span>'+(x.feels!=null?'<span class="dhd-sub">feels '+Math.round(x.feels)+'°</span>':'')+'</div>'+
-    '<div class="dhd-cell"><span class="dhd-lab">Rain</span><span class="dhd-val">'+x.pop+'%</span><span class="dhd-sub">'+x.precip.toFixed(2)+'" this hr</span></div>'+
-    '<div class="dhd-cell"><span class="dhd-lab">Wind</span><span class="dhd-val">'+Math.round(x.wind)+' mph</span><span class="dhd-sub">'+(dir?'from '+dir+' · ':'')+'gust '+Math.round(x.gust)+'</span></div>'+
+  const cur=document.querySelector('#ds-wx-body .wxp-c.sel'); if(cur&&+cur.getAttribute('data-i')===i&&el.style.display!=='none'){ el.style.display='none'; document.querySelectorAll('#ds-wx-body .wxp-c').forEach(c=>c.classList.remove('sel')); return; }
+  const dir=wxpCompass(x.dir), sf=wxpSunFrac(res);
+  const light=sf==null?'':(x.hr+1<=sf?'daylight':(x.hr>=sf?'after sunset':'sunset '+wxpClock(res.sunset.h,res.sunset.m)));
+  const cell=(lab,val,sub,cls)=>'<div class="dhd-cell"><span class="dhd-lab">'+lab+'</span><span class="dhd-val '+(cls||'')+'">'+val+'</span><span class="dhd-sub">'+sub+'</span></div>';
+  el.innerHTML='<div class="dhd-time">'+wxpClock(x.hr,0)+' · '+esc(wxIcon(x.code).t)+(light?' · '+light:'')+'</div><div class="dhd-grid">'+
+    cell('Temp',x.temp!=null?Math.round(x.temp)+'°':'–',x.feels!=null?'<span class="lim-t '+wxpFeels(x.feels)+'">feels '+Math.round(x.feels)+'°</span>':'')+
+    cell('Rain',x.pop+'%',wxpIn(x.precip)+' this hr','lim-t '+wxpRain(x))+
+    cell('Wind',Math.round(x.wind)+' mph',(dir?'from '+dir+' · ':'')+'gust '+Math.round(x.gust),'lim-t '+wxpGust(x.gust))+
   '</div>';
   el.style.display='block';
-  document.querySelectorAll('#ds-wx-body .ds-wx-hr').forEach((c,j)=>c.classList.toggle('sel',j===i));
-}
-function dsWindGraph(hrs){
-  const n=hrs.length; if(!n)return '';
-  const W=320,H=80,padX=4,padTop=8,padBot=6;
-  const winds=hrs.map(x=>x.wind), gusts=hrs.map(x=>x.gust);
-  const peak=Math.max.apply(null,gusts);
-  const maxV=Math.max(10, Math.ceil(peak/5)*5), mid=maxV/2;   // nice round top for the y-axis
-  const xf=i=> n<=1? W/2 : padX+(i*(W-2*padX)/(n-1));
-  const yf=v=> padTop+(1-(v/maxV))*(H-padTop-padBot);
-  const line=arr=>arr.map((v,i)=>(i?'L':'M')+xf(i).toFixed(1)+' '+yf(v).toFixed(1)).join(' ');
-  let svg=`<svg class="ds-wind-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">`;
-  [0,mid,maxV].forEach(v=>{svg+=`<line x1="0" y1="${yf(v).toFixed(1)}" x2="${W}" y2="${yf(v).toFixed(1)}" stroke="rgba(205,216,244,.13)" stroke-width="1" vector-effect="non-scaling-stroke"/>`;});
-  svg+=`<path d="${line(gusts)}" fill="none" stroke="rgba(127,169,232,.42)" stroke-width="1.4" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`;
-  svg+=`<path d="${line(winds)}" fill="none" stroke="#7fa9e8" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
-  for(let i=0;i<n;i++){const x0=i?(xf(i-1)+xf(i))/2:0, x1=i<n-1?(xf(i)+xf(i+1))/2:W; svg+=`<rect x="${x0.toFixed(1)}" y="0" width="${(x1-x0).toFixed(1)}" height="${H}" fill="transparent" style="cursor:pointer" onclick="dsShowHour(${i})"/>`;}
-  svg+=`</svg>`;
-  const peakWind=Math.round(Math.max.apply(null,winds));
-  return `<div class="ds-wind-graph"><div class="ds-wind-head">Wind speed (mph) · peak ${peakWind}, gust ${Math.round(peak)} — tap an hour</div>
-    <div class="ds-wind-plot"><div class="ds-wind-yaxis"><span>${maxV}</span><span>${mid}</span><span>0</span></div><div class="ds-wind-svgwrap">${svg}</div></div>
-    <div class="ds-wind-x">`+hrs.map((x,i)=>`<span onclick="dsShowHour(${i})">${dsHr(x.hr)}</span>`).join('')+`</div>
-    <div class="ds-hour-detail" id="ds-hour-detail" style="display:none"></div></div>`;
+  document.querySelectorAll('#ds-wx-body .wxp-c').forEach(c=>c.classList.toggle('sel',+c.getAttribute('data-i')===i));
 }
 function dsRenderWeather(iso){
   const b=$('ds-wx-body'); if(!b)return;
   dsFetchWeather(iso).then(res=>{
     if(dsDate()!==iso)return; const bb=$('ds-wx-body'); if(!bb)return;
-    if(!res.hours.length){bb.innerHTML='<span class="ds-wx-none">Weather not tracked for this day — it\'s outside the forecast range.</span>';return;}
-    const hrs=res.hours, sm=res.summary||{};
-    let cards='<div class="ds-wx-hours">'+hrs.map((x,i)=>'<div class="ds-wx-hr" onclick="dsShowHour('+i+')"><div class="ds-wx-t">'+dsHr(x.hr)+'</div><div class="ds-wx-temp">'+(x.temp!=null?Math.round(x.temp)+'°':'–')+'</div><div class="ds-wx-precip">'+x.pop+'%</div>'+(x.precip>0?'<div class="ds-wx-rainamt">'+x.precip.toFixed(2)+'"</div>':'')+'</div>').join('')+'</div>';
-    const graph=dsWindGraph(hrs);
-    let note=''; if((sm.maxGust||0)>=20||(sm.maxWind||0)>=15)note+='Breezy — watch the patio. '; if((sm.maxPop||0)>=50||(sm.totP||0)>=0.05)note+='Rain likely in the window.';
-    const stamp=res.fetchedAt?'<div class="ds-wx-stamp" onclick="dsRefreshWeather()">Forecast pulled '+dsWxStamp(res.fetchedAt)+' · tap to refresh</div>':'';
-    bb.innerHTML=stamp+cards+graph+(note?'<div class="ds-wx-note">'+esc(note.trim())+'</div>':'');
-  }).catch(e=>{const bb=$('ds-wx-body');if(bb)bb.innerHTML='<span class="ds-wx-none ds-wx-retry" onclick="dsRefreshWeather()">Forecast service is slow right now — tap to retry.</span>';});
+    if(!res.hours.length){bb.className='wxp-card none';bb.innerHTML='<span class="ds-wx-none">Weather not tracked for this day — it\'s outside the forecast range.</span>';return;}
+    const hero=res.hours[wxpHeroIdx(res.hours,iso)];
+    bb.className='wxp-card '+wxpTheme(hero,res);
+    bb.innerHTML=wxpCardHTML(res,iso);
+  }).catch(e=>{const bb=$('ds-wx-body');if(bb){bb.className='wxp-card none';bb.innerHTML='<span class="ds-wx-none ds-wx-retry" onclick="dsRefreshWeather()">Forecast service is slow right now — tap to retry.</span>';}});
 }
+
+/* Auto-refresh while the Day Sheet is on screen: every 30 min it redraws the card so the
+   'Now' hour rolls forward; the forecast itself refetches only when older than DS_WX_TTL. */
+setInterval(function(){ try{ if(!document.hidden&&$('today')&&$('today').classList.contains('active'))dsRenderWeather(dsDate()); }catch(e){} },30*60*1000);
 /* Service-affecting head count for the glance banner. Only roles that touch
    service are counted, per Sam's spec. FOH from the shift's position; BOH:
    Expo, Cooks (1-close line), Float (daytime production 10-8/11-9/12-10 that
@@ -6655,7 +6783,7 @@ function renderToday(){
     if(isToday)h+=dsStaffOfferHTML(iso); } // then the clear offer-to-be-called-off button at top (today only)
   h+=`<div id="ds-wxrec"></div>`;
   h+=dsCoversHTML(iso);
-  h+=`<div class="ds-weather"><div class="ds-wx-head">Service window · 4–10pm</div><div class="ds-wx-body" id="ds-wx-body">Loading forecast…</div></div>`;
+  h+=`<div class="wxp-card none" id="ds-wx-body"><span class="ds-wx-none">Loading forecast…</span></div>`;
   if(mgr)h+=dsEditStaffBarHTML();
   h+=dsSideHTML('Front of House','foh',iso,idx);
   h+=dsSideHTML('Back of House','boh',iso,idx);
