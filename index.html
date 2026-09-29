@@ -541,6 +541,15 @@ body.tour-on{padding-bottom:230px;}
 .fd-detail:last-child{border-bottom:none;}
 .fd-dlabel{font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--card-mute); flex-shrink:0; margin-right:12px;}
 .fd-dval{font-size:13px; color:var(--ink); text-align:right; overflow-wrap:break-word; word-wrap:break-word; word-break:normal; font-family:'SF Mono',ui-monospace,monospace; min-width:0;}
+.fd-doclink{display:flex; flex-direction:column; gap:2px; text-decoration:none; background:rgba(230,200,120,.08); border:1.5px solid rgba(230,200,120,.45); border-radius:12px; padding:12px 14px; margin:12px 0 4px;}
+.fd-doclink-t{font-family:'Cormorant Garamond','Caladea',serif; font-size:18px; font-weight:600; color:var(--gold);}
+.fd-doclink-s{font-size:12.5px; color:var(--ink-soft);}
+.fd-legacy{border:1px solid rgba(192,57,43,.5); background:rgba(192,57,43,.08); border-radius:12px; padding:11px 14px; margin:10px 0 4px;}
+.fd-legacy-h{font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#e79a8a;}
+.fd-legacy p{font-size:12.5px; color:var(--ink-soft); margin:4px 0 8px;}
+.fd-legacy-row{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:5px 0; border-top:1px solid rgba(205,216,244,.08); font-size:13px; color:var(--ink);}
+.fd-legacy-row button{background:none; border:1px solid rgba(200,190,170,.3); border-radius:8px; padding:4px 11px; font-size:11px; font-weight:600; cursor:pointer; color:var(--ink-soft); font-family:inherit;}
+.fd-legacy-row button.fd-del{color:#e08070; border-color:rgba(224,128,112,.45);}
 .fd-secret{cursor:pointer; display:inline-flex; align-items:baseline; gap:8px;}
 .fd-mask{letter-spacing:.12em; color:var(--ink-soft);}
 .fd-show{font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--gold); border:1px solid rgba(230,200,120,.45); border-radius:6px; padding:1px 6px;}
@@ -1901,7 +1910,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790669774';   // stamped by build-data.py at every deploy
+const BUILD='1790671383';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3823,6 +3832,12 @@ function renderBar(){
    Collection: `frontdesk`. Each doc: {name, desc, cat, items:[{label,value}], order, updatedBy, updatedAt}
    Manager CRUD: add, edit, delete. Not in data.js (sensitive). */
 const FD_CATS=['Logins & Passwords','Contacts & Support','Troubleshooting'];
+/* Logins moved out of the portal 2026-09-29: this collection is readable by any anonymous
+   client, so passwords live in a Google Doc shared by name. The portal links to it, hides the
+   legacy Logins category, lists leftovers for admins to delete, and refuses new secret fields. */
+const FD_DOC_URL='https://docs.google.com/document/d/1Fz2dJzWAnn6xl9AXAokwJbvt5zS5pcNIZt1y3DKgR5g/edit';
+const FD_SECRET_RE=/pass|pin\b|pin$|passcode|code|key|secret|security|answer/;
+function fdIsSecretLabel(l){ l=String(l||'').toLowerCase(); return FD_SECRET_RE.test(l)&&!/phone|support|contact|call|alt/.test(l); }
 let FDDATA={}, fdUnsub=null, fdEditId=null;
 function startFrontDeskSync(){
   if(!fbReady||!fbDb||!isMgr())return;
@@ -3842,10 +3857,18 @@ function renderFrontDesk(keepSearch){
   if(!isMgr()){$('fdBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
   const prev=keepSearch&&$('fd-search')?$('fd-search').value:'';
   const q=(prev||'').toLowerCase().trim();
-  const all=fdSorted().filter(e=>fdMatchesQuery(e,q));
+  const legacy=fdSorted().filter(e=>e.cat==='Logins & Passwords'||(e.items||[]).some(d=>fdIsSecretLabel(d.label)&&d.value));
+  const all=fdSorted().filter(e=>e.cat!=='Logins & Passwords'&&fdMatchesQuery(e,q));
   let h=`<div class="fd-search-wrap"><input id="fd-search" class="fd-search" placeholder="What do you need help with?" value="${esc(prev)}" oninput="renderFrontDesk(true)"></div>`;
   h+=`<button class="fd-add-btn" onclick="fdShowForm()">+ Add entry</button>`;
   h+=`<div id="fdFormSlot"></div>`;
+  h+=`<a class="fd-doclink" href="${FD_DOC_URL}" target="_blank" rel="noopener"><span class="fd-doclink-t">Logins &amp; passwords</span><span class="fd-doclink-s">In the Front Desk doc. Ask Sam to add you if it won't open. ›</span></a>`;
+  if(legacy.length&&isAdmin()){
+    h+=`<div class="fd-legacy"><div class="fd-legacy-h">Still stored in the portal</div><p>Anyone with the portal address can read these. Change each password in the doc, then remove it here.</p>`+
+      legacy.map(e=>e.cat==='Logins & Passwords'
+        ?`<div class="fd-legacy-row"><span>${esc(e.name)}</span><button class="fd-del" onclick="fdDelete('${e.id}','${esc(e.name).replace(/'/g,"\\'")}')">Delete</button></div>`
+        :`<div class="fd-legacy-row"><span>${esc(e.name)}: remove the ${esc((e.items||[]).filter(d=>fdIsSecretLabel(d.label)&&d.value).map(d=>d.label).join(', '))} row</span><button onclick="fdShowForm('${e.id}')">Edit</button></div>`).join('')+`</div>`;
+  }
   if(!all.length&&q){h+=`<p class="board-empty">No matches for "${esc(prev)}". Try different keywords.</p>`;$('fdBody').innerHTML=h;$('fd-search').focus();return;}
   if(!all.length){h+='<p class="board-empty">No entries yet. Tap + to add one.</p>';$('fdBody').innerHTML=h;return;}
   let curCat='';
@@ -3891,7 +3914,7 @@ function fdShowForm(editId){
   const e=editId?FDDATA[editId]:null;
   const items=e&&e.items?e.items:[{label:'',value:''}];
   let h=`<div class="fd-form" id="fdForm">
-    <label>Category</label><select id="fd-cat">${FD_CATS.map(c=>`<option${e&&e.cat===c?' selected':''}>${c}</option>`).join('')}</select>
+    <label>Category</label><select id="fd-cat">${FD_CATS.filter(c=>c!=='Logins & Passwords'||(e&&e.cat===c)).map(c=>`<option${e&&e.cat===c?' selected':''}>${c}</option>`).join('')}</select>
     <label>Name</label><input id="fd-name" value="${e?esc(e.name):''}" placeholder="e.g. OpenTable, Revel, Airgas">
     <label>Description</label><input id="fd-desc" value="${e?esc(e.desc||''):''}" placeholder="What is this for?">
     <label>Details</label><div id="fd-items">${items.map((d,i)=>`<div class="fd-detail-row"><input placeholder="Label" value="${esc(d.label)}"><input placeholder="Value" value="${esc(d.value)}"><button onclick="this.parentElement.remove()">✕</button></div>`).join('')}</div>
@@ -3912,6 +3935,8 @@ function fdSave(){
   const rows=[...$('fd-items').querySelectorAll('.fd-detail-row')];
   const items=rows.map(r=>{const ins=r.querySelectorAll('input');return{label:(ins[0].value||'').trim(),value:(ins[1].value||'').trim()};}).filter(d=>d.label||d.value);
   const catSel=$('fd-cat');
+  const bad=items.filter(d=>fdIsSecretLabel(d.label)&&d.value);
+  if(bad.length){alert('Passwords, PINs and codes go in the Front Desk doc, not the portal. Remove the '+bad.map(d=>d.label).join(', ')+' row to save.');return;}
   const rec={name:name,desc:($('fd-desc').value||'').trim(),cat:catSel.value,items:items,order:FD_CATS.indexOf(catSel.value)*100,updatedBy:currentUserName(),updatedAt:Date.now()};
   if(fdEditId){
     fbDb.collection('frontdesk').doc(fdEditId).update(rec).then(()=>{fdCancelForm();}).catch(e=>alert('Save failed: '+e.message));
