@@ -541,15 +541,6 @@ body.tour-on{padding-bottom:230px;}
 .fd-detail:last-child{border-bottom:none;}
 .fd-dlabel{font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--card-mute); flex-shrink:0; margin-right:12px;}
 .fd-dval{font-size:13px; color:var(--ink); text-align:right; overflow-wrap:break-word; word-wrap:break-word; word-break:normal; font-family:'SF Mono',ui-monospace,monospace; min-width:0;}
-.fd-doclink{display:flex; flex-direction:column; gap:2px; text-decoration:none; background:rgba(230,200,120,.08); border:1.5px solid rgba(230,200,120,.45); border-radius:12px; padding:12px 14px; margin:12px 0 4px;}
-.fd-doclink-t{font-family:'Cormorant Garamond','Caladea',serif; font-size:18px; font-weight:600; color:var(--gold);}
-.fd-doclink-s{font-size:12.5px; color:var(--ink-soft);}
-.fd-legacy{border:1px solid rgba(192,57,43,.5); background:rgba(192,57,43,.08); border-radius:12px; padding:11px 14px; margin:10px 0 4px;}
-.fd-legacy-h{font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#e79a8a;}
-.fd-legacy p{font-size:12.5px; color:var(--ink-soft); margin:4px 0 8px;}
-.fd-legacy-row{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:5px 0; border-top:1px solid rgba(205,216,244,.08); font-size:13px; color:var(--ink);}
-.fd-legacy-row button{background:none; border:1px solid rgba(200,190,170,.3); border-radius:8px; padding:4px 11px; font-size:11px; font-weight:600; cursor:pointer; color:var(--ink-soft); font-family:inherit;}
-.fd-legacy-row button.fd-del{color:#e08070; border-color:rgba(224,128,112,.45);}
 .fd-secret{cursor:pointer; display:inline-flex; align-items:baseline; gap:8px;}
 .fd-mask{letter-spacing:.12em; color:var(--ink-soft);}
 .fd-show{font-family:-apple-system,BlinkMacSystemFont,sans-serif; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--gold); border:1px solid rgba(230,200,120,.45); border-radius:6px; padding:1px 6px;}
@@ -834,7 +825,7 @@ body.tour-on{padding-bottom:230px;}
 .ann-list-empty{color:var(--card-mute); font-style:italic;}
 .ann-home{grid-column:1/-1; display:flex; align-items:center; gap:10px; background:linear-gradient(90deg, rgba(192,57,43,.16), rgba(40,70,150,.16)); border:1px solid rgba(214,158,46,.4); border-radius:14px; padding:12px 15px; cursor:pointer; font-family:inherit; text-align:left;}
 .ann-home-ic{font-size:20px;}
-.ann-home-txt{font-size:13.5px; font-weight:700; color:var(--wood);}
+.ann-home-txt{font-size:13.5px; font-weight:700; color:#f3e6cf;}   /* was card-brown on the night sky (2026-09-29) */
 /* Shifts Needed — open-shift pickup (home chip + modal). Reuses ann-card/comp-modal. */
 .os-home{grid-column:1/-1; display:flex; align-items:center; gap:10px; background:linear-gradient(90deg, rgba(192,57,43,.20), rgba(214,158,46,.16)); border:1px solid rgba(192,57,43,.5); border-radius:14px; padding:12px 15px; cursor:pointer; font-family:inherit; text-align:left;}
 .os-home-ic{font-size:20px;}
@@ -861,7 +852,7 @@ body.tour-on{padding-bottom:230px;}
 .os-you{font-size:12.5px; font-weight:700; color:var(--gold-deep); margin-top:8px;}
 .os-you.working{color:var(--card-mute); font-weight:600;}
 /* staff Day at a Glance: weather rec, offer banner, covers, volunteer + actions */
-.ds-wxrec-banner{background:rgba(214,149,46,.16); border:1px solid rgba(214,149,46,.5); border-radius:11px; padding:11px 14px; font-size:13px; font-weight:600; color:#8a5e15; margin:0 0 10px; line-height:1.45;}
+.ds-wxrec-banner{background:rgba(214,149,46,.16); border:1px solid rgba(214,149,46,.5); border-radius:11px; padding:11px 14px; font-size:13px; font-weight:600; color:#f0cf8a; margin:0 0 10px; line-height:1.45;}
 .ds-offer-banner{background:#e7bf5e; border:1px solid var(--gold-deep); border-radius:12px; padding:13px 15px; font-size:14px; font-weight:700; color:#2a1f08; margin:0 0 10px; line-height:1.45; animation:offerPulse 2.4s ease-in-out infinite;}
 @keyframes offerPulse{0%,100%{box-shadow:0 0 0 0 rgba(214,158,46,0);}50%{box-shadow:0 0 16px 1px rgba(214,158,46,.55);}}
 .ds-covers{background:rgba(205,216,244,.05); border:1px solid rgba(205,216,244,.16); border-radius:11px; padding:10px 13px; font-size:13px; color:var(--ink); margin:0 0 10px;}
@@ -1711,6 +1702,21 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 .scws-night .scws-tbl td:nth-child(1){width:17%;}
 .scws-night .scws-tbl td:nth-child(2){width:33%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .scws-night .scws-tbl td:nth-child(3){width:10%;}
+
+/* Numbers group + Day Sheet tools (2026-09-29) */
+.num-switch{display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin:0 0 10px;}
+.num-seg{background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.2); color:var(--ink-soft); border-radius:999px; padding:6px 15px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
+.num-seg.on{background:var(--gold); color:#241f15; border-color:var(--gold);}
+.home-card-num{padding-bottom:12px;}
+.hc-num-line{display:flex; gap:12px; align-items:baseline; text-align:left; padding:8px 0 0; margin-top:8px; border-top:1px solid rgba(90,58,26,.1);}
+.hc-num-lab{flex:0 0 108px; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; font-weight:800; color:var(--gold-deep);}
+.hc-num-val{font-size:13px; color:var(--card-soft); min-width:0;}
+.ds-tools{margin:14px 0 10px; border:1px solid rgba(205,216,244,.16); border-radius:12px; background:rgba(14,22,48,.7);}
+.ds-tools-head{display:flex; align-items:center; gap:12px; width:100%; background:none; border:none; padding:12px 14px; cursor:pointer; font-family:inherit; text-align:left;}
+.ds-tools-t{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.09em; color:var(--gold);}
+.ds-tools-s{flex:1; font-size:12px; color:var(--ink-mute); min-width:0;}
+.ds-tools-chev{color:var(--ink-soft); font-size:14px;}
+.ds-tools-body{padding:0 12px 12px;}
 </style>
 </head>
 <body class="not-home">
@@ -1910,7 +1916,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790671383';   // stamped by build-data.py at every deploy
+const BUILD='1790672404';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -1964,10 +1970,11 @@ function navTabs(){
   let head=isMgr()?[['today','Day Sheet']]:[['today','Day at a Glance']];
   // Recap supersedes Last Night for the full tier, so only one of the two ever appears.
   // Partial-tier managers keep Last Night, which is still the only view they have.
-  if(typeof rcCanTab==='function'&&rcCanTab())head=head.concat([['recap','Recap']]);
-  if(typeof srvCanTab==='function'&&srvCanTab())head=head.concat([['servers','Servers']]);
-  if(typeof scwsCanTab==='function'&&scwsCanTab())head=head.concat([['scws','Service Charge']]);
-  else if(typeof lnCanTab==='function'&&lnCanTab())head=head.concat([['lastnight','Last Night']]);
+  // Recap / Servers / Service Charge (or Last Night) share one "Numbers" chip when a person has
+  // two or more of them (2026-09-29). Each view keeps its own gate; see numViews().
+  const nv=numViews();
+  if(nv.length>=2)head=head.concat([['numbers','Numbers']]);
+  else head=head.concat(nv.map(function(v){return [v[0],v[2]];}));
   // The Attic is a floor tool. The line has no use for a seat clock and it only adds
   // a chip they will never open, so BOH does not get it.
   const base=(me&&String(me.area||'').toLowerCase()==='boh')?TABS.filter(function(x){return x[0]!=='board';}):TABS;
@@ -1976,13 +1983,46 @@ function navTabs(){
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
   if(typeof updatePendingBadge==='function')updatePendingBadge();}
+/* ===== NUMBERS group (2026-09-29) =========================================
+   One nav chip + one home card for the money views. Same gates as before, in the same
+   order navTabs used: Recap if rcCanTab, Servers if srvCanTab, Service Charge if
+   scwsCanTab else Last Night if lnCanTab. The views themselves are untouched; a switcher
+   is injected at the top of whichever one is open. */
+let numLast=null;
+function numViews(){ const v=[];
+  if(typeof rcCanTab==='function'&&rcCanTab())v.push(['recap','Recap','Recap']);
+  if(typeof srvCanTab==='function'&&srvCanTab())v.push(['servers','By server','Servers']);
+  if(typeof scwsCanTab==='function'&&scwsCanTab())v.push(['scws','Service charge','Service Charge']);
+  else if(typeof lnCanTab==='function'&&lnCanTab())v.push(['lastnight','Last night','Last Night']);
+  return (typeof isInvestor==='function'&&isInvestor())?[]:v; }
+function isNumView(id){ return id==='recap'||id==='servers'||id==='scws'||id==='lastnight'; }
+function numSwitchRender(id){
+  const sec=$(id); if(!sec)return; const nv=numViews();
+  let el=sec.querySelector('.num-switch');
+  if(nv.length<2){ if(el)el.remove(); return; }
+  if(!el){ el=document.createElement('div'); el.className='num-switch'; sec.insertBefore(el,sec.firstChild); }
+  el.innerHTML=nv.map(function(v){return '<button class="num-seg'+(v[0]===id?' on':'')+'" onclick="go(\''+v[0]+'\')">'+v[1]+'</button>';}).join('');
+}
+function numbersCardHTML(){
+  const lines=[];
+  if(rcCanTab())lines.push(['recap','Last night','Last night in context']);
+  else if(lnCanTab())lines.push(['lastnight','Last night','Last night\u2019s numbers']);
+  if(typeof scwsCanTab==='function'&&scwsCanTab())lines.push(['scws','Service charge','Last night\'s split']);
+  if(typeof srvCanTab==='function'&&srvCanTab())lines.push(['servers','By server','Sales, checks and wine by person']);
+  return '<button class="home-card home-card-wide home-card-num" data-card="numbers" onclick="go(\'numbers\')">'+
+    '<div class="glance-card-top"><div class="glance-card-head"><span class="hc-icon">◐</span><span class="hc-title">Numbers</span></div></div>'+
+    lines.map(function(l){return '<div class="hc-num-line" data-numline="'+l[0]+'" onclick="event.stopPropagation();go(\''+l[0]+'\')"><span class="hc-num-lab">'+l[1]+'</span><span class="hc-num-val">'+l[2]+'</span></div>';}).join('')+
+    '</button>';
+}
 function go(id){
+  if(id==='numbers'){ const nv=numViews(); id=(numLast&&nv.some(function(v){return v[0]===numLast;}))?numLast:(nv[0]?nv[0][0]:'home'); }
+  if(isNumView(id)){ numLast=id; numSwitchRender(id); }
   // 'orders' is a normal view like every other tab (2026-07-01) — Farm Order/Remy renders INSIDE
   // #orders via renderOrders(), so the sticky header, nav chips, and page background stay put
   // exactly like Fresh Talk/Schedule/etc. No full-screen overlay, no second header.
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
-  $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id));
+  $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id||(c.dataset.go==='numbers'&&isNumView(id))));
   if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender(); if(id==='servers')srvRender();
   if(id==='standards')showStdPane(stdTab);
   if(id==='compliance'){renderCompliance();markComplianceSeen();}
@@ -2105,8 +2145,9 @@ function renderHome(){
   const annChip = annChipShow?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${annChipTxt}</span></button>`:'';
   let html = isInvestor()
     ? rcCardHTML() + freshCardHTML()
-    : annChip + osHomeChipHTML() + glanceCardHTML() + (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():''))
-      + (typeof scwsCanTab==='function'&&scwsCanTab()?scwsCardHTML():'')
+    : annChip + osHomeChipHTML() + glanceCardHTML()
+      + (numViews().length>=2 ? numbersCardHTML()
+         : (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():'')) + (typeof scwsCanTab==='function'&&scwsCanTab()?scwsCardHTML():''))
       + freshCardHTML();
   const std=[['board','⌗','The Attic','Seat, time & flag tonight\'s tables'],
     ['schedule','◷','Schedule','This week + the month'],
@@ -3832,12 +3873,6 @@ function renderBar(){
    Collection: `frontdesk`. Each doc: {name, desc, cat, items:[{label,value}], order, updatedBy, updatedAt}
    Manager CRUD: add, edit, delete. Not in data.js (sensitive). */
 const FD_CATS=['Logins & Passwords','Contacts & Support','Troubleshooting'];
-/* Logins moved out of the portal 2026-09-29: this collection is readable by any anonymous
-   client, so passwords live in a Google Doc shared by name. The portal links to it, hides the
-   legacy Logins category, lists leftovers for admins to delete, and refuses new secret fields. */
-const FD_DOC_URL='https://docs.google.com/document/d/1Fz2dJzWAnn6xl9AXAokwJbvt5zS5pcNIZt1y3DKgR5g/edit';
-const FD_SECRET_RE=/pass|pin\b|pin$|passcode|code|key|secret|security|answer/;
-function fdIsSecretLabel(l){ l=String(l||'').toLowerCase(); return FD_SECRET_RE.test(l)&&!/phone|support|contact|call|alt/.test(l); }
 let FDDATA={}, fdUnsub=null, fdEditId=null;
 function startFrontDeskSync(){
   if(!fbReady||!fbDb||!isMgr())return;
@@ -3857,18 +3892,10 @@ function renderFrontDesk(keepSearch){
   if(!isMgr()){$('fdBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
   const prev=keepSearch&&$('fd-search')?$('fd-search').value:'';
   const q=(prev||'').toLowerCase().trim();
-  const legacy=fdSorted().filter(e=>e.cat==='Logins & Passwords'||(e.items||[]).some(d=>fdIsSecretLabel(d.label)&&d.value));
-  const all=fdSorted().filter(e=>e.cat!=='Logins & Passwords'&&fdMatchesQuery(e,q));
+  const all=fdSorted().filter(e=>fdMatchesQuery(e,q));
   let h=`<div class="fd-search-wrap"><input id="fd-search" class="fd-search" placeholder="What do you need help with?" value="${esc(prev)}" oninput="renderFrontDesk(true)"></div>`;
   h+=`<button class="fd-add-btn" onclick="fdShowForm()">+ Add entry</button>`;
   h+=`<div id="fdFormSlot"></div>`;
-  h+=`<a class="fd-doclink" href="${FD_DOC_URL}" target="_blank" rel="noopener"><span class="fd-doclink-t">Logins &amp; passwords</span><span class="fd-doclink-s">In the Front Desk doc. Ask Sam to add you if it won't open. ›</span></a>`;
-  if(legacy.length&&isAdmin()){
-    h+=`<div class="fd-legacy"><div class="fd-legacy-h">Still stored in the portal</div><p>Anyone with the portal address can read these. Change each password in the doc, then remove it here.</p>`+
-      legacy.map(e=>e.cat==='Logins & Passwords'
-        ?`<div class="fd-legacy-row"><span>${esc(e.name)}</span><button class="fd-del" onclick="fdDelete('${e.id}','${esc(e.name).replace(/'/g,"\\'")}')">Delete</button></div>`
-        :`<div class="fd-legacy-row"><span>${esc(e.name)}: remove the ${esc((e.items||[]).filter(d=>fdIsSecretLabel(d.label)&&d.value).map(d=>d.label).join(', '))} row</span><button onclick="fdShowForm('${e.id}')">Edit</button></div>`).join('')+`</div>`;
-  }
   if(!all.length&&q){h+=`<p class="board-empty">No matches for "${esc(prev)}". Try different keywords.</p>`;$('fdBody').innerHTML=h;$('fd-search').focus();return;}
   if(!all.length){h+='<p class="board-empty">No entries yet. Tap + to add one.</p>';$('fdBody').innerHTML=h;return;}
   let curCat='';
@@ -3914,7 +3941,7 @@ function fdShowForm(editId){
   const e=editId?FDDATA[editId]:null;
   const items=e&&e.items?e.items:[{label:'',value:''}];
   let h=`<div class="fd-form" id="fdForm">
-    <label>Category</label><select id="fd-cat">${FD_CATS.filter(c=>c!=='Logins & Passwords'||(e&&e.cat===c)).map(c=>`<option${e&&e.cat===c?' selected':''}>${c}</option>`).join('')}</select>
+    <label>Category</label><select id="fd-cat">${FD_CATS.map(c=>`<option${e&&e.cat===c?' selected':''}>${c}</option>`).join('')}</select>
     <label>Name</label><input id="fd-name" value="${e?esc(e.name):''}" placeholder="e.g. OpenTable, Revel, Airgas">
     <label>Description</label><input id="fd-desc" value="${e?esc(e.desc||''):''}" placeholder="What is this for?">
     <label>Details</label><div id="fd-items">${items.map((d,i)=>`<div class="fd-detail-row"><input placeholder="Label" value="${esc(d.label)}"><input placeholder="Value" value="${esc(d.value)}"><button onclick="this.parentElement.remove()">✕</button></div>`).join('')}</div>
@@ -3935,8 +3962,6 @@ function fdSave(){
   const rows=[...$('fd-items').querySelectorAll('.fd-detail-row')];
   const items=rows.map(r=>{const ins=r.querySelectorAll('input');return{label:(ins[0].value||'').trim(),value:(ins[1].value||'').trim()};}).filter(d=>d.label||d.value);
   const catSel=$('fd-cat');
-  const bad=items.filter(d=>fdIsSecretLabel(d.label)&&d.value);
-  if(bad.length){alert('Passwords, PINs and codes go in the Front Desk doc, not the portal. Remove the '+bad.map(d=>d.label).join(', ')+' row to save.');return;}
   const rec={name:name,desc:($('fd-desc').value||'').trim(),cat:catSel.value,items:items,order:FD_CATS.indexOf(catSel.value)*100,updatedBy:currentUserName(),updatedAt:Date.now()};
   if(fdEditId){
     fbDb.collection('frontdesk').doc(fdEditId).update(rec).then(()=>{fdCancelForm();}).catch(e=>alert('Save failed: '+e.message));
@@ -6686,7 +6711,7 @@ function dsRenderWxRec(iso){
       if((sm.maxPop||0)>=60||(sm.totP||0)>=0.1)reasons.push('rain likely'); }
     if(aqi!=null&&aqi>=101)reasons.push('smoke / poor air (AQI '+aqi+')');
     const isT=(iso===todayISO()); const lead=isT?'Tonight could run light':'This day could run light';
-    const tail=isT?' A call-off is possible; if you\'d like the night off, use the offer button up top.':'';
+    const tail=isT?((typeof isMgr==='function'&&isMgr())?' A call-off is possible: offer the night off from Manager tools below.':' A call-off is possible; if you\'d like the night off, use the offer button up top.'):'';
     const offering=dsRosterOv(iso).offerOff;   // night off already on offer → warning is redundant, hide it
     el.innerHTML=(reasons.length&&!offering)?'<div class="ds-wxrec-banner">⚠ '+lead+' — '+esc(reasons.join(' · '))+'.'+tail+'</div>':'';
   });
@@ -6834,6 +6859,8 @@ function dsDayEventHeaderHTML(iso){
   const evs=dsDayEvents(iso); if(!evs.length)return '';
   return '<div class="ds-event-hdr">'+evs.map(e=>`<span class="ds-event-tag ds-event-${e.tone}">${esc(e.name)}${e.span?` · ${e.span}`:''}</span>`).join('')+'</div>';
 }
+let dsToolsOpen=false;
+function dsToolsToggle(){ dsToolsOpen=!dsToolsOpen; renderToday(); }
 function renderToday(){
   const mgr=isMgr();
   const iso=dsDate();                  // everyone can browse dates now (read-only look-ahead for staff)
@@ -6846,20 +6873,33 @@ function renderToday(){
   h+=dsDayEventHeaderHTML(iso);
   h+=dsCovNoteHTML(iso,isToday);
   if(isToday&&calloffApprovedForMe()){ h+='<div class="ds-offapp-banner">🌙 Sam gave you the night off tonight — you\'re off. Enjoy it.</div>'; markCalloffSeen(); }
-  if(mgr)h+=dsNightOffTopHTML(iso);        // top-of-sheet night-off toggle + volunteer list w/ approval
-  else { h+=dsOfferBannerHTML(iso);        // staff: informational "night off is on offer" banner
+  // Night-off block stays on top only while it's live (offer on, or volunteers waiting); otherwise its
+  // button lives in Manager tools (2026-09-29 split: the read on top, the tools folded below).
+  const nightLive=mgr&&(offerOn||dsVolunteersSorted(iso).length>0);
+  if(nightLive)h+=dsNightOffTopHTML(iso);
+  else if(!mgr){ h+=dsOfferBannerHTML(iso);        // staff: informational "night off is on offer" banner
     if(isToday)h+=dsStaffOfferHTML(iso); } // then the clear offer-to-be-called-off button at top (today only)
   h+=`<div id="ds-wxrec"></div>`;
   h+=dsCoversHTML(iso);
   h+=`<div class="wxp-card none" id="ds-wx-body"><span class="ds-wx-none">Loading forecast…</span></div>`;
-  if(mgr)h+=dsEditStaffBarHTML();
+  if(mgr&&dsEditStaff)h+=dsEditStaffBarHTML();
   h+=dsSideHTML('Front of House','foh',iso,idx);
   h+=dsSideHTML('Back of House','boh',iso,idx);
   if(mgr){
     if(dsEditStaff)h+=dsShiftChangeHTML(iso);
-    h+=dsMgrSelfOfferHTML(iso);
-    h+=dsContactHTML(iso);
-    h+=dsCoverageHTML(iso);
+    const open=dsToolsOpen||dsEditStaff||!!dsCovSide||dsPickupOpen||(dsContactSel&&dsContactSel.size>0);
+    h+='<div class="ds-tools'+(open?' open':'')+'"><button class="ds-tools-head" onclick="dsToolsToggle()"><span class="ds-tools-t">Manager tools</span>'+
+       '<span class="ds-tools-s">'+(open?'Hide':'Night off · edit staff · on-call · contact · coverage')+'</span><span class="ds-tools-chev">'+(open?'⌃':'⌄')+'</span></button>';
+    if(open){
+      h+='<div class="ds-tools-body">';
+      if(!nightLive)h+=dsNightOffTopHTML(iso);
+      if(!dsEditStaff)h+=dsEditStaffBarHTML();
+      h+=dsMgrSelfOfferHTML(iso);
+      h+=dsContactHTML(iso);
+      h+=dsCoverageHTML(iso);
+      h+='</div>';
+    }
+    h+='</div>';
   } else if(isToday){
     h+=dsStaffAlertsHTML(iso);   // sick / running late — staff, today only (offer button is up top)
   }
@@ -7295,7 +7335,7 @@ function lnHomePrime(){
     if(wantRev&&rev&&rev.net!=null)parts.push(lnMoney0(rev.net));
     else if((tier==='full'||tier==='foh')&&d.avg_check!=null)parts.push(lnMoney0(d.avg_check)+' avg');
     if(d.labor&&d.labor.pct_clocked_proxy!=null)parts.push(lnPct(d.labor.pct_clocked_proxy)+' labor');
-    const el=document.querySelector('.home-card[data-card="lastnight"] .hc-sub');
+    const el=(document.querySelector('[data-numline="lastnight"] .hc-num-val')||document.querySelector('.home-card[data-card="lastnight"] .hc-sub'));
     if(el)el.innerHTML=esc(lnDateLabel(d)+' · '+parts.join(' · '));
   }).catch(function(){});
 }
@@ -8385,7 +8425,7 @@ function rcHomePrime(){
       const mean=s.reduce(function(a,b){return a+b;},0)/s.length, p=(r/mean-1)*100;
       parts.push((p>=0?'+':'')+p.toFixed(0)+'% vs a usual '+wd);
     }
-    const el=document.querySelector('.home-card[data-card="recap"] .hc-sub');
+    const el=(document.querySelector('[data-numline="recap"] .hc-num-val')||document.querySelector('.home-card[data-card="recap"] .hc-sub'));
     if(el)el.innerHTML=esc(lnDateLabel(d)+' · '+parts.join(' · '));
   }).catch(function(){});
 }
@@ -10702,7 +10742,7 @@ function scwsHomePrime(){
     const inP=nights.filter(x=>x.date>=R.from&&x.date<=R.to);
     const flagged=inP.filter(x=>!x.ok).length;
     if(flagged)parts.push('<b>'+flagged+' to review</b>');
-    const el=document.querySelector('.home-card[data-card="scws"] .hc-sub');
+    const el=(document.querySelector('[data-numline="scws"] .hc-num-val')||document.querySelector('.home-card[data-card="scws"] .hc-sub'));
     if(el)el.innerHTML=fmtShort(n.date)+' \u00b7 '+parts.join(' \u00b7 ');
   }).catch(function(){});
 }
