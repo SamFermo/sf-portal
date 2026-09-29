@@ -1677,6 +1677,31 @@ body.locked{overflow:hidden;}
 .wxp-cov-ic{flex:0 0 auto;}
 .wxp-stamp{font-size:10.5px; color:rgba(244,247,255,.6); margin-top:9px; cursor:pointer; text-decoration:underline dotted; text-underline-offset:2px;}
 @media (max-width:420px){ .wxp-hero-t{font-size:46px;} .wxp-hero-ic{font-size:34px;} .wxp-grid{grid-template-columns:36px repeat(var(--n),minmax(0,1fr)); gap:2px;} .wxp-c{font-size:13px;} .wxp-rl{font-size:9px;} }
+/* ===== STYLE PASS 2026-09-29 (review items 5, 7, 8, 9, 10) ===================== */
+/* 5. Readability: darker veil over the pasta photo, solid rows on the Day Sheet, and the
+      Compliance upload note (it sat in card-brown on the night sky). */
+body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), url('data/bg.jpg');
+  background-size:cover; background-position:center; background-repeat:no-repeat;}
+.ds-person{background:rgba(14,22,48,.82); border:1px solid rgba(205,216,244,.08);}
+.ds-person.ds-pickup{background:rgba(36,66,40,.72);}
+.comp-upload-note{color:var(--ink-soft);}
+/* 7. One chart palette: Recap's magnitude bars and lines were a default electric blue.
+      Moon-silver fits the portal and stays distinct from restaurant amber / farm green. */
+:root{--rc-mag:#a9b8de;}
+/* 8. Destructive actions are a quiet text link, not a peer button. Both already confirm. */
+.acc-actions button.acc-del{flex:0 0 auto; min-width:0; background:none; border-color:transparent; color:#b8603c; font-weight:600; text-decoration:underline; text-underline-offset:3px; padding-left:6px; padding-right:6px;}
+.cu-btn.x{border-color:transparent; background:none; color:#a85454; text-decoration:underline; text-underline-offset:2px;}
+/* 9. Fresh Talk: the "tap for the story" line shows once per list; every expandable dish
+      carries a small chevron by its price instead. */
+#ftFood .card.expandable ~ .card.expandable .expand-hint{display:none;}
+.card.expandable .dish-price::after{content:'⌄'; display:inline-block; margin-left:7px; font-size:13px; color:var(--card-mute); transform:translateY(-3px); font-family:-apple-system,BlinkMacSystemFont,sans-serif;}
+.card.expandable.expanded .dish-price::after{content:'⌃'; transform:translateY(3px);}
+/* 10. Service Charge nights: fixed columns so name / role / hours line up night to night,
+       whether or not the night had card tips. */
+.scws-night .scws-tbl{table-layout:fixed;}
+.scws-night .scws-tbl td:nth-child(1){width:17%;}
+.scws-night .scws-tbl td:nth-child(2){width:33%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.scws-night .scws-tbl td:nth-child(3){width:10%;}
 </style>
 </head>
 <body class="not-home">
@@ -1876,7 +1901,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790669366';   // stamped by build-data.py at every deploy
+const BUILD='1790669774';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
