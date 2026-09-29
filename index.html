@@ -602,6 +602,10 @@ body.tour-on{padding-bottom:230px;}
   gap:3px; min-height:92px; padding:10px 6px; cursor:pointer; font-family:inherit;
   background:rgba(8,12,26,.55); border:1.5px solid rgba(205,216,244,.18); border-radius:14px; color:var(--ink);}
 .at-tile .at-num{font-size:25px; font-weight:800; line-height:1;}
+.at-grid.at-room{grid-template-columns:repeat(var(--at-cols),minmax(0,1fr)); grid-auto-rows:minmax(92px,auto); gap:8px;}   /* Attic drawn like the room, 2026-09-28 */
+@media(max-width:560px){ .at-grid.at-room{grid-auto-rows:minmax(76px,auto); gap:5px;}
+  .at-room .at-tile{min-height:76px; padding:6px 2px; border-radius:11px;} .at-room .at-tile .at-num{font-size:19px;}
+  .at-room .at-tile .at-sub{font-size:10px; gap:3px;} .at-room .at-tile .at-with{font-size:11px; margin-left:2px;} }
 .at-tile .at-with{font-size:13px; font-weight:700; color:var(--ink-mute); margin-left:4px;}   /* pushed-together partner(s), 2026-09-28 */
 .at-tile .at-sub{display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--ink-mute);}
 .at-tsub{letter-spacing:.04em;}
@@ -1871,7 +1875,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790648148';   // stamped by build-data.py at every deploy
+const BUILD='1790648485';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -8632,6 +8636,20 @@ function allTablesInOrder(){
    sits where the lowest-numbered member sits, so tables around it stay in place.
    Only members in this section count toward the span; capped at 3 so a big combo
    never forces extra columns on a phone. */
+/* Sections drawn like the actual room instead of a wrapping number grid (Sam 2026-09-28).
+   Cell = [col,row,colSpan,rowSpan] on a cols x rows grid. Attic: 51-57 run west to east
+   along the bottom; 58 is a four-top long table running north-south, directly above 57.
+   Tables missing from the map fall back to auto-placement after the room. */
+const AT_ROOM={Attic:{cols:6,cells:{'51':[1,3,1,1],'52':[2,3,1,1],'53':[3,3,1,1],'54':[4,3,1,1],'55':[5,3,1,1],'57':[6,3,1,1],'58':[6,1,1,2]}}};
+function atRoomPlace(g){
+  const R=AT_ROOM[atSec]; if(!R)return null;
+  const cells=g.members.map(function(t){return R.cells[String(t)];}).filter(Boolean); if(!cells.length)return null;
+  let c0=99,r0=99,c1=0,r1=0,area=0;
+  cells.forEach(function(x){ c0=Math.min(c0,x[0]); r0=Math.min(r0,x[1]); c1=Math.max(c1,x[0]+x[2]-1); r1=Math.max(r1,x[1]+x[3]-1); area+=x[2]*x[3]; });
+  // pushed-together tables stretch to cover every member; if they aren't neighbours, stay on the reference table's cell
+  if((c1-c0+1)*(r1-r0+1)!==area){ const p=R.cells[String(g.t)]||cells[0]; c0=p[0]; r0=p[1]; c1=p[0]+p[2]-1; r1=p[1]+p[3]-1; }
+  return 'grid-column:'+c0+' / span '+(c1-c0+1)+'; grid-row:'+r0+' / span '+(r1-r0+1);
+}
 function atSecTiles(){
   const map=(SF.seating&&SF.seating.sections&&SF.seating.sections.map)||{};
   const num=function(t){return parseInt(String(t).replace(/\D/g,''))||999;};
@@ -8639,7 +8657,7 @@ function atSecTiles(){
   (map[atSec]||[]).forEach(function(t){ const p=comboPrimary(t), u=String(p).toUpperCase();
     if(!groups[u]){ groups[u]={t:p,members:[],key:num(t)}; out.push(groups[u]); }
     groups[u].members.push(String(t)); groups[u].key=Math.min(groups[u].key,num(t)); });
-  out.forEach(function(g){ g.members=comboSort(g.members); g.span=Math.min(3,Math.max(1,g.members.length)); });
+  out.forEach(function(g){ g.members=comboSort(g.members); g.span=Math.min(3,Math.max(1,g.members.length)); g.place=atRoomPlace(g); });
   return out.sort(function(a,b){return a.key-b.key;});
 }
 function atSecList(){
@@ -8955,7 +8973,7 @@ function atTileHTML(t,grp){
   }else if(atMoveFrom){ sub='<span class="at-tsub">move here</span>'; }
   else sub='<span class="at-tsub">open</span>';
   const flag=(r&&r.flag&&!r.flagAck)?'<span class="at-fdot at-f-'+AT_FLAG[r.flag].c+'"></span>':'';
-  return '<button class="'+cls+'"'+(span>1?' style="grid-column:span '+span+'"':'')+' onclick="atTap(\''+esc(t)+'\')">'+flag+
+  return '<button class="'+cls+'"'+((grp&&grp.place)?' style="'+grp.place+'"':(span>1?' style="grid-column:span '+span+'"':''))+' onclick="atTap(\''+esc(t)+'\')">'+flag+
     '<span class="at-num">'+esc(t)+(others.length?'<span class="at-with">+'+others.map(esc).join('+')+'</span>':'')+'</span>'+
     (seated?'<span class="at-syms">'+atSymbols(r.occ)+'</span>':'')+
     '<span class="at-sub">'+sub+'</span></button>';
@@ -9052,7 +9070,8 @@ function atticPaneHTML(){
   }
   if(atMoveFrom)h+='<div class="at-movebar">Moving <b>'+esc(atMoveFrom)+'</b> — tap an open table<button class="at-btn at-cancel" onclick="atCancelMove()">Cancel</button></div>';
   const tabs=atSecTiles();
-  h+='<div class="at-grid">'+(tabs.length?tabs.map(function(g){return atTileHTML(g.t,g);}).join(''):'<div class="board-empty">No tables mapped for '+esc(atSec)+'.</div>')+
+  const room=AT_ROOM[atSec];
+  h+='<div class="at-grid'+(room?' at-room" style="--at-cols:'+room.cols:'')+'">'+(tabs.length?tabs.map(function(g){return atTileHTML(g.t,g);}).join(''):'<div class="board-empty">No tables mapped for '+esc(atSec)+'.</div>')+
     (atOpen?atPanelHTML(atOpen):'')+'</div>';
   if(atIsMD())h+=comboUIHTML();
   return h;
