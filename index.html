@@ -602,6 +602,7 @@ body.tour-on{padding-bottom:230px;}
   gap:3px; min-height:92px; padding:10px 6px; cursor:pointer; font-family:inherit;
   background:rgba(8,12,26,.55); border:1.5px solid rgba(205,216,244,.18); border-radius:14px; color:var(--ink);}
 .at-tile .at-num{font-size:25px; font-weight:800; line-height:1;}
+.at-tile .at-with{font-size:13px; font-weight:700; color:var(--ink-mute); margin-left:4px;}   /* pushed-together partner(s), 2026-09-28 */
 .at-tile .at-sub{display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--ink-mute);}
 .at-tsub{letter-spacing:.04em;}
 .at-syms{font-size:13px; line-height:1;}
@@ -1870,7 +1871,7 @@ body.locked{overflow:hidden;}
 </div>
 
 <script>
-const BUILD='1790647750';   // stamped by build-data.py at every deploy
+const BUILD='1790648148';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -8556,8 +8557,10 @@ function comboUIHTML(){
   getCombos().forEach((c,i)=>h+=`<span class="combo-chip">${esc(c.tables.join('+'))} → ${esc(c.primary)}<span class="x" onclick="rmCombo(${i})">✕</span></span>`);
   if(comboPick){
     const taken={};getCombos().forEach(c=>c.tables.forEach(t=>taken[String(t).toUpperCase()]=1));
-    h+=`<div class="tpick-label">Tap the tables being pushed together</div><div class="tpick-wrap">`+
-      allTablesInOrder().filter(t=>!taken[String(t).toUpperCase()]).map(t=>`<button class="tpick${comboPick.indexOf(t)>=0?' on':''}" onclick="toggleComboPick('${esc(t)}')">${esc(t)}</button>`).join('')+`</div>`;
+    const secT=(SF.seating&&SF.seating.sections&&SF.seating.sections.map&&SF.seating.sections.map[atSec])||null;
+    const pool=secT&&secT.length?comboSort(secT.map(String)):allTablesInOrder();   // only this section's tables (Sam 2026-09-28)
+    h+=`<div class="tpick-label">Tap the tables being pushed together${secT&&secT.length?' in '+esc(atSec):''}</div><div class="tpick-wrap">`+
+      pool.filter(t=>!taken[String(t).toUpperCase()]).map(t=>`<button class="tpick${comboPick.indexOf(t)>=0?' on':''}" onclick="toggleComboPick('${esc(t)}')">${esc(t)}</button>`).join('')+`</div>`;
     if(comboPick.length>=2){
       const chosen=comboChosenPrimary();
       h+=`<div class="tpick-label">Reference table — the number staff will see for this party</div><div class="tpick-wrap">`+
@@ -8623,6 +8626,21 @@ function allTablesInOrder(){
     const ba=/^B/i.test(a)?1:0, bb=/^B/i.test(b)?1:0;
     const na=parseInt(String(a).replace(/\D/g,''))||999, nb=parseInt(String(b).replace(/\D/g,''))||999;
     return ba-bb||na-nb;});
+}
+/* Pushed-together tables draw as ONE long tile that spans the grid slots of every
+   table in the combo (Sam 2026-09-28: "twice as long, keep the floor plan"). The tile
+   sits where the lowest-numbered member sits, so tables around it stay in place.
+   Only members in this section count toward the span; capped at 3 so a big combo
+   never forces extra columns on a phone. */
+function atSecTiles(){
+  const map=(SF.seating&&SF.seating.sections&&SF.seating.sections.map)||{};
+  const num=function(t){return parseInt(String(t).replace(/\D/g,''))||999;};
+  const groups={}, out=[];
+  (map[atSec]||[]).forEach(function(t){ const p=comboPrimary(t), u=String(p).toUpperCase();
+    if(!groups[u]){ groups[u]={t:p,members:[],key:num(t)}; out.push(groups[u]); }
+    groups[u].members.push(String(t)); groups[u].key=Math.min(groups[u].key,num(t)); });
+  out.forEach(function(g){ g.members=comboSort(g.members); g.span=Math.min(3,Math.max(1,g.members.length)); });
+  return out.sort(function(a,b){return a.key-b.key;});
 }
 function atSecList(){
   const map=(SF.seating&&SF.seating.sections&&SF.seating.sections.map)||{};
@@ -8922,7 +8940,8 @@ function atThreadHTML(t,r){
     h+='<div class="at-acts"><button class="at-btn at-go" onclick="atAckNotes(\''+esc(t)+'\')">Got it</button></div>';
   return h+'</div>';
 }
-function atTileHTML(t){
+function atTileHTML(t,grp){
+  const span=(grp&&grp.span>1)?grp.span:1, others=(grp&&grp.members?grp.members:[]).filter(function(x){return String(x).toUpperCase()!==String(t).toUpperCase();});
   const r=atRec(t), seated=!!(r&&r.state==='seated'), m=atLeft(r), g=atGlow(r), key=String(t).replace(/\W/g,'');
 
   /* the open table keeps its slot and goes gold. Swapping the button out for the panel
@@ -8936,8 +8955,8 @@ function atTileHTML(t){
   }else if(atMoveFrom){ sub='<span class="at-tsub">move here</span>'; }
   else sub='<span class="at-tsub">open</span>';
   const flag=(r&&r.flag&&!r.flagAck)?'<span class="at-fdot at-f-'+AT_FLAG[r.flag].c+'"></span>':'';
-  return '<button class="'+cls+'" onclick="atTap(\''+esc(t)+'\')">'+flag+
-    '<span class="at-num">'+esc(t)+'</span>'+
+  return '<button class="'+cls+'"'+(span>1?' style="grid-column:span '+span+'"':'')+' onclick="atTap(\''+esc(t)+'\')">'+flag+
+    '<span class="at-num">'+esc(t)+(others.length?'<span class="at-with">+'+others.map(esc).join('+')+'</span>':'')+'</span>'+
     (seated?'<span class="at-syms">'+atSymbols(r.occ)+'</span>':'')+
     '<span class="at-sub">'+sub+'</span></button>';
 }
@@ -9032,8 +9051,8 @@ function atticPaneHTML(){
       return '<button class="fchip'+(atSec===n?' active':'')+'" onclick="atPickSec(\''+esc(n)+'\')">'+esc(n)+'</button>';}).join('')+'</div>';
   }
   if(atMoveFrom)h+='<div class="at-movebar">Moving <b>'+esc(atMoveFrom)+'</b> — tap an open table<button class="at-btn at-cancel" onclick="atCancelMove()">Cancel</button></div>';
-  const tabs=atSecList();
-  h+='<div class="at-grid">'+(tabs.length?tabs.map(atTileHTML).join(''):'<div class="board-empty">No tables mapped for '+esc(atSec)+'.</div>')+
+  const tabs=atSecTiles();
+  h+='<div class="at-grid">'+(tabs.length?tabs.map(function(g){return atTileHTML(g.t,g);}).join(''):'<div class="board-empty">No tables mapped for '+esc(atSec)+'.</div>')+
     (atOpen?atPanelHTML(atOpen):'')+'</div>';
   if(atIsMD())h+=comboUIHTML();
   return h;

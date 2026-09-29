@@ -15288,5 +15288,5 @@ window.SF = {
   },
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
- "build": "1790647750"
+ "build": "1790648148"
 };
