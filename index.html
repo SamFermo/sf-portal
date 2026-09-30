@@ -1986,7 +1986,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790797555';   // stamped by build-data.py at every deploy
+const BUILD='1790797761';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2955,7 +2955,7 @@ const OS_NOTE='We’re short-handed. If you’re free, tap to pick one up — a 
    so a manual need=2 isn't overwritten by the sheet's need=1 once the date enters the window.
    Clear these out when they're no longer needed. */
 const OS_MANUAL=[
-  {side:'foh', date:'2026-10-03', need:2, shift:'3:30 serve'},
+  /* 2026-10-03 3:30 serve (need 2) removed 2026-09-30: patio closed, Saturday calls one off instead (Sam). */
   {side:'foh', date:'2026-10-04', need:1, shift:'3:30 serve'}
 ];
 let OSCLAIMS={}, osUnsub=null, osLoaded=false, osShownSession=false;
@@ -3102,8 +3102,12 @@ function osConfirm(key){
 function osHomeChipHTML(){
   const vis=osVisibleAsks(); if(!vis.length)return '';
   if(!(osMyArea()==='foh'||osMyArea()==='boh'||isMgr()))return '';
+  /* 2026-09-30: no chip until pickups have loaded (it used to flash "N need coverage" before
+     the snapshot), and none once every ask is filled (Sam: it should disappear when covered). */
+  if(!osLoaded)return '';
   const openN=vis.filter(function(a){return !osFilled(a);}).length;
-  const txt = openN ? ('<b>'+esc(OS_TITLE)+'</b> — '+openN+' shift'+(openN>1?'s':'')+' need coverage. Tap to help.')
+  if(!openN)return '';
+  const txt = openN ? ('<b>'+esc(OS_TITLE)+'</b> — '+openN+' shift'+(openN>1?'s need':' needs')+' coverage. Tap to help.')
                     : ('<b>'+esc(OS_TITLE)+'</b> — all covered ✓ (tap to view)');
   return '<button class="os-home'+(openN?'':' ok')+'" onclick="osOpen()"><span class="os-home-ic">'+OS_EMOJI+'</span><span class="os-home-txt">'+txt+'</span></button>';
 }
