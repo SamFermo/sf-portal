@@ -756,6 +756,9 @@ body.tour-on{padding-bottom:230px;}
 .cg-card figcaption{font-size:11.5px; color:var(--card-soft); padding-top:4px; letter-spacing:.02em;}
 .cg-missing{display:inline-block; margin:2px 6px 6px 0; padding:4px 9px; border-radius:6px; font-size:12px; font-weight:700; background:#f2d2c7; color:#a8311e;}
 .cg-sum{font-size:13px; margin:0 0 12px;}
+.cg-credf{display:inline-flex; gap:4px; padding:4px; margin:0 0 12px; border-radius:999px; background:rgba(0,0,0,.28);}
+.cg-credf-b{font:inherit; font-size:13px; font-weight:700; padding:7px 14px; border:0; border-radius:999px; background:transparent; color:#e9e2d0; cursor:pointer;}
+.cg-credf-b.on{background:var(--moon-hi); color:var(--wood);}
 .off-box{display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; background:radial-gradient(130% 130% at 28% 12%, var(--moon-hi), var(--moon) 64%, var(--moon-lo)); border-radius:12px; padding:11px 15px; margin:0 0 14px; box-shadow:0 5px 13px rgba(0,0,0,.24);}
 .off-txt{flex:1 1 260px; font-size:12px; line-height:1.45; color:var(--card-soft);}
 .off-txt b{display:block; font-size:13.5px; color:var(--wood); margin-bottom:2px;}
@@ -1994,7 +1997,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790801372';   // stamped by build-data.py at every deploy
+const BUILD='1790801535';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -6037,11 +6040,19 @@ function compPersonHTML(name,role,cards,gaps){
   gaps.forEach(function(t){ h+='<span class="cg-missing">'+esc(t)+'</span>'; });
   return h+'</div>';
 }
+/* Tonight's Staff card switch (2026-09-30): managers show Both, Food Worker only, or MAST only,
+   e.g. when a liquor inspector asks for MAST. MAST only drops people with no MAST on the roster. */
+let compCredF='both';
+function compCredSet(v){ compCredF=v; renderCompliance(); }
+function compCredChipsHTML(){ if(!isMgr())return '';
+  return '<div class="cg-credf">'+[['both','Both'],['FWC','Food Worker'],['MAST','MAST']].map(function(a){ return '<button class="cg-credf-b'+(compCredF===a[0]?' on':'')+'" onclick="compCredSet(\''+a[0]+'\')">'+a[1]+'</button>'; }).join('')+'</div>'; }
 function compGalleryHTML(mode){
   const ix=compRosterIndex(); let h='', people=[];
+  const cf=(mode==='tonight'&&isMgr())?compCredF:'both';
   if(mode==='tonight'){
     const iso=todayISO(), list=dsWorkingList(iso);
     h+='<p class="view-sub" style="margin-bottom:10px;">Everyone on the schedule today ('+esc(fmtShort(iso))+'), prep and dinner, with their cards. Call-offs are left out and pickups are in. Tap a card to enlarge.</p>';
+    h+=compCredChipsHTML();
     if(!list.length)return h+'<div class="comp-card"><div class="board-empty">No schedule loaded for today.</div></div>';
     list.forEach(function(x){ const r=ix[x.name.toLowerCase()]; people.push({name:x.name, side:(r?r.side:x.side), p:(r?r.p:null)}); });
   } else {
@@ -6050,10 +6061,13 @@ function compGalleryHTML(mode){
     const R=compWithExtras(); ['boh','foh'].forEach(function(s){ (R[s]||[]).forEach(function(p){ people.push({name:p.name, side:s, p:p}); }); });
   }
   let gapN=0; const blocks={boh:'',foh:''};
-  people.forEach(function(x){ const cards=compCardsFor(x.name), gaps=compGaps(x.p||{},cards,!!x.p); if(gaps.length)gapN++;
+  if(cf==='MAST') people=people.filter(function(x){ return compCardsFor(x.name).some(function(c){return c.cred==='MAST';}) || !x.p || (x.p.mast&&x.p.mast.status!=='info'); });
+  people.forEach(function(x){ let cards=compCardsFor(x.name), gaps=compGaps(x.p||{},cards,!!x.p);
+    if(cf!=='both'){ cards=cards.filter(function(c){return c.cred===cf;}); gaps=gaps.filter(function(g){ return g.indexOf(cf==='FWC'?'MAST':'FWC')<0; }); }
+    if(gaps.length)gapN++;
     const role=x.p?x.p.role:((PROFILES[x.name]||{}).role||'');
     blocks[x.side==='boh'?'boh':'foh']+=compPersonHTML(x.name,role,cards,gaps); });
-  h+='<p class="cg-sum">'+people.length+(mode==='tonight'?' on today':' on the roster')+' · '+(gapN?'<span class="cg-missing" style="margin:0">'+gapN+' missing a card</span>':'✓ everyone has their cards on file')+'</p>';
+  h+='<p class="cg-sum">'+people.length+(mode==='tonight'?(cf==='MAST'?' on today who need MAST':' on today'):' on the roster')+' · '+(gapN?'<span class="cg-missing" style="margin:0">'+gapN+' missing a card</span>':'✓ everyone has their cards on file')+'</p>';
   [['Back of House','boh'],['Front of House','foh']].forEach(function(a){ if(blocks[a[1]])h+='<div class="section-label">'+a[0]+'</div><div class="cg-grid">'+blocks[a[1]]+'</div>'; });
   return h;
 }
