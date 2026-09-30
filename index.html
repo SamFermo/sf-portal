@@ -1986,7 +1986,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790797281';   // stamped by build-data.py at every deploy
+const BUILD='1790797555';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2869,7 +2869,7 @@ function annOpen(){
 }
 /* Multi-night call-off card. Each row is one night's board/calloff-{iso} list, the same list
    the grid chip and Day at a Glance open, so approving on the night works unchanged. */
-function annCalloffHTML(A){ const t=todayISO(), side=A.aud||'foh', mySide=!!(me&&me.area===side);
+function annCalloffHTML(A){ const t=todayISO(), side=A.aud||'foh', mySide=!!(me&&(me.area===side||isMgr()));
   let rows='';
   (A.nights||[]).filter(function(iso){return iso>=t;}).forEach(function(iso){ coWatch(iso);
     const w=dsWeekFor(side,iso), note=w?String((w.covNotes||[])[w.dates.indexOf(iso)]||'').trim():'', n=coHeads(note);
@@ -2877,7 +2877,7 @@ function annCalloffHTML(A){ const t=todayISO(), side=A.aud||'foh', mySide=!!(me&
     const avail=mySide?osAvailOn(side,iso):null, day=fmtLong(iso).split(',')[0].slice(0,3)+' '+fmtShort(iso);
     let ctl;
     if(k>=0)ctl='<span class="acn-you">You\'re #'+(k+1)+'</span><button class="co-leave" onclick="coLeave(\''+iso+'\')">Take me off</button>';
-    else if(!mySide)ctl='<span class="acn-na">'+(isMgr()?'You approve on the night':'Floor team only')+'</span>';
+    else if(!mySide)ctl='<span class="acn-na">Floor team only</span>';
     else if(avail==='working')ctl='<button class="acn-go" onclick="coJoin(\''+side+'\',\''+iso+'\')">Put me down</button>';
     else ctl='<span class="acn-na">'+(avail==='ro'?'Already off':'Not on')+'</span>';
     rows+='<div class="acn-row'+(k>=0?' me':'')+'"><div class="acn-day"><b>'+esc(day)+(iso===t?' · tonight':'')+'</b><span>'+n+' going · '+list.length+' asked</span></div><div class="acn-ctl">'+ctl+'</div></div>'; });
@@ -6320,7 +6320,7 @@ function coRender(){ const s=coState; if(!s)return; let m=$('coModal');
   /* on-call volunteers ("available if you're short") are the opposite ask; they stay on Day at a Glance only */
   const list=coMerged(iso).filter(function(v){return v.type!=='oncall';}), loaded=(iso in coCache)||!(fbReady&&fbDb), appr=dsRosterOv(iso).offApproved, apprName=appr&&appr.name;
   const mine=me&&list.findIndex(function(v){return v.name===me.name;}), onList=mine>=0;
-  const mySide=!!(me&&me.area===side), avail=mySide?osAvailOn(side,iso):null, past=iso<todayISO();
+  const mySide=!!(me&&(me.area===side||isMgr())), avail=mySide?osAvailOn(side,iso):null, past=iso<todayISO();
   let h='<div class="ann-card co-card"><div class="ann-emoji">🌙</div><div class="ann-title serif">'+esc(fmtLong(iso))+'</div>';
   h+='<div class="ann-line">'+coWho(coHeads(note))+' '+(side==='foh'?'on the floor':'in the kitchen')+(coHeads(note)>1?' get':' gets')+' called off '+(iso===todayISO()?'tonight':'this night')+(note?' ('+esc(note)+')':'')+'. First to ask is first to go.</div>';
   if(past)h+='<div class="co-hint">This night has passed.</div>';
