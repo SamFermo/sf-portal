@@ -108,6 +108,8 @@ nav.chips::-webkit-scrollbar{display:none;}
 .home-card:hover{transform:translateY(-2px); box-shadow:0 0 40px rgba(245,238,222,.22), 0 10px 24px rgba(0,0,0,.4);}
 /* odd card count: center the orphan card in its own row (width matches a normal card: 50% minus half the 14px gap) */
 .home-card:last-child:nth-child(odd){grid-column:1/-1; justify-self:center; width:calc(50% - 7px);}
+.home-card-solo{grid-column:1/-1; justify-self:center; width:calc(50% - 7px);}
+.home-card-wide:last-child:nth-child(odd){justify-self:stretch; width:auto;}   /* a wide card is never an orphan (2026-09-29) */
 .home-card .hc-icon{font-size:21px; margin-bottom:7px; display:block; color:var(--gold-deep);}
 .home-card .hc-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:20px; font-weight:600; color:var(--wood); margin:0 0 2px;}
 .home-card .hc-sub{font-size:12px; color:var(--card-mute); line-height:1.4;}
@@ -1918,7 +1920,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </section>
 
 <section class="view" id="wineinv">
-  <div class="view-head"><p class="view-eyebrow">Managers Only</p><h2 class="view-title">Wine Inventory</h2>
+  <div class="view-head"><p class="view-eyebrow">Wine Team</p><h2 class="view-title">Wine Inventory</h2>
     <p class="view-sub">Bottles on hand: the last count, plus deliveries, minus what Revel says we sold.</p></div>
   <div id="wiBody"></div>
 </section>
@@ -1979,7 +1981,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790674394';   // stamped by build-data.py at every deploy
+const BUILD='1790745015';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2041,7 +2043,9 @@ function navTabs(){
   // The Attic is a floor tool. The line has no use for a seat clock and it only adds
   // a chip they will never open, so BOH does not get it.
   const base=(me&&String(me.area||'').toLowerCase()==='boh')?TABS.filter(function(x){return x[0]!=='board';}):TABS;
-  let t=isMgr()?head.concat(base,[['frontdesk','Front Desk'],['wineinv','Wine Inventory'],['orders','Farm Order']]):head.concat(base);
+  let t=isMgr()?head.concat(base,[['frontdesk','Front Desk']]):head.concat(base);
+  if(typeof wiCanTab==='function'&&wiCanTab())t=t.concat([['wineinv','Wine Inventory']]);   // managers + wine team
+  if(isMgr())t=t.concat([['orders','Farm Order']]);
   return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
   $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
@@ -2218,8 +2222,10 @@ function renderHome(){
     ['standards','▦','Standards','Room, duties & steps of service'],
     ['directory','✉','Directory','The team & contacts']];
   if(mgr) std.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);   // sits beside Directory
+  if(typeof wiCanTab==='function'&&wiCanTab()) std.push(['wineinv','❦','Wine Inventory','Bottles on hand, counts & deliveries']);
   // Investors get Recap + Fresh Talk only. The standard card block and Farm Order are staff surfaces.
-  if(!isInvestor()) html += std.map(stdCardHTML).join('');
+  // An odd card count leaves one card alone on its row: center it, same look as the orphan rule.
+  if(!isInvestor()){ const sc=std.map(stdCardHTML); if(sc.length%2) sc[sc.length-1]=sc[sc.length-1].replace('class="home-card"','class="home-card home-card-solo"'); html += sc.join(''); }
   if(mgr && !isInvestor()) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
   $('homeGrid').innerHTML=html;
   glanceCardWeather();
@@ -3969,6 +3975,12 @@ function fdMatchesQuery(e,q){
    close" starts the next service date. Service date = local time minus 3 hours, so a count
    at 1am belongs to the night before. Sales come from the revel collection (4am brief). */
 let WI={doc:null,loaded:false,unsub:null,revel:null,revelAt:0,revelErr:false,filter:'core',armDel:null,adj:null};
+/* Who sees Wine Inventory (tab, home card, edits): every manager, plus the wine team by first
+   name, same convention as SRV_VIEWERS. Sam 2026-09-29: Adrian, Katie, Tim and Sully. */
+const WI_VIEWERS=['sam','adrian','katie','tim','sully'];
+function wiCanTab(){ if(!me)return false; if(typeof isInvestor==='function'&&isInvestor())return false;
+  if(me.admin||me.mgr)return true;
+  return WI_VIEWERS.indexOf(String(me.name||'').trim().split(/\s+/)[0].toLowerCase())>=0; }
 function wiData(){ const d=(window.SF&&SF.wineInv)||{}; return {wines:d.wines||[],buttons:d.buttons||{},ignore:d.ignore||[],gpb:+d.glassesPerBottle||4}; }
 function wiRef(){ return fbDb.collection('board').doc('wineinv'); }
 function wiIso(d){ const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
@@ -4017,7 +4029,7 @@ const WI_TYPES=['Sparkling','White','Orange','Rosé','Red'];
 function wiInFilter(w){ return WI.filter==='all'||(WI.filter==='core'?w.status!=='cellar':w.status==='cellar'); }
 function wiRender(){
   const body=$('wiBody'); if(!body)return;
-  if(!isMgr()){ body.innerHTML='<p class="board-empty">Manager access required.</p>'; return; }
+  if(!wiCanTab()){ body.innerHTML='<p class="board-empty">Wine team access required.</p>'; return; }
   wiWatch(); wiLoadRevel(false);
   const D=wiData();
   if(!D.wines.length){ body.innerHTML='<p class="board-empty">No wine master loaded (data/wine-inventory.json is missing from this build).</p>'; return; }
