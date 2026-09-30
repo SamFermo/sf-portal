@@ -379,6 +379,11 @@ body.tour-on{padding-bottom:230px;}
 .sched-table tr.covrow td.today{background:rgba(230,200,120,.25);}
 .cov-note{border:none; cursor:pointer; font-family:inherit;} .cov-note small{display:block; font-size:8.5px; font-weight:700; opacity:.65; text-transform:uppercase; letter-spacing:.05em;}
 .ds-covnote{cursor:pointer;}
+.acn-list{display:flex; flex-direction:column; gap:6px; margin:4px 0;}
+.acn-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 10px; border-radius:9px; background:var(--moon-hi);} .acn-row.me{outline:2px solid var(--gold-deep);}
+.acn-day{display:flex; flex-direction:column; font-size:14px; color:var(--card-ink); text-align:left;} .acn-day span{font-size:12px; color:var(--card-soft);}
+.acn-ctl{display:flex; align-items:center; gap:8px; flex-shrink:0;} .acn-you{font-weight:700; color:var(--accent-dark); font-size:13.5px;} .acn-na{font-size:12.5px; color:var(--card-mute); font-style:italic;}
+.acn-go{background:var(--accent-dark); color:#fff; border:none; border-radius:8px; padding:7px 12px; font-size:13px; font-weight:700; cursor:pointer;}
 .co-card{gap:10px;} .co-you{font-size:16px; font-weight:700; color:var(--accent-dark);} .co-hint{font-size:13px; color:var(--card-soft); font-style:italic;}
 .co-leave{background:none; border:none; color:var(--gold-deep); font-size:12.5px; font-weight:700; text-decoration:underline; cursor:pointer;}
 .co-list{align-self:stretch; text-align:left; border-top:1px solid var(--moon-edge); padding-top:9px; display:flex; flex-direction:column; gap:5px;}
@@ -1981,7 +1986,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790745015';   // stamped by build-data.py at every deploy
+const BUILD='1790795942';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2684,6 +2689,20 @@ function afterLogin(){
    (arrayUnion); the legacy single noticeAck field is still honored. */
 const ANNOUNCES=[
   {
+  kind:'calloff',
+  aud:'foh',
+  id:'patio-calloff-2026-09-30',
+  showUntil:'2026-10-05',
+  emoji:'\uD83C\uDF19',
+  title:"Patio's closed through Monday",
+  lines:[
+    "The awnings are getting repaired, so the patio is closed tonight through Monday 10/5. We'll be calling people off the floor each night: one a night, two on Friday.",
+    "If you want a night off, put your name down on any night you're on. First to ask is first to go. If someone calls out sick, we may not need the list that night."
+  ],
+  note:"Changed your mind? Tap the call-off line on Day at a Glance or the gold chip on the schedule.",
+  nights:['2026-09-30','2026-10-01','2026-10-02','2026-10-03','2026-10-04','2026-10-05']
+  },
+  {
   /* Sam's own words, verbatim (2026-09-19). Do not edit, tidy or regenerate this copy. */
   kind:'info',
   aud:'all',
@@ -2744,7 +2763,7 @@ const ANNOUNCES=[
 let ANNOUNCE=ANNOUNCES[ANNOUNCES.length-1];
 function annForMe(A){ if(!A||!A.aud||A.aud==='all')return true; if(!me)return false; return me.area===A.aud||!!me.admin; }
 function annDoneFor(A){ if(!me)return false;
-  if(A.kind==='info')return me.noticeAck===A.id||(Array.isArray(me.noticeAcks)&&me.noticeAcks.indexOf(A.id)>=0);
+  if(A.kind==='info'||A.kind==='calloff')return me.noticeAck===A.id||(Array.isArray(me.noticeAcks)&&me.noticeAcks.indexOf(A.id)>=0);
   const r=me.announceRsvp; return !!(r&&r.id===A.id); }
 function annPendingCount(){ const t=todayISO(); return ANNOUNCES.filter(function(A){return t<=A.showUntil&&annForMe(A)&&!annDoneFor(A);}).length; }
 function annPick(){ const t=todayISO();
@@ -2773,7 +2792,7 @@ function annDismissedNow(){ try{const s=JSON.parse(localStorage.getItem(annDismi
 function annDismiss(){ try{localStorage.setItem(annDismissKey(),JSON.stringify({exp:next3am(Date.now())}));}catch(e){} annClose(); }
 function annActive(){ return todayISO()<=ANNOUNCE.showUntil && annForMe(ANNOUNCE); }
 function annMyRsvp(){ const r=me&&me.announceRsvp; return (r&&r.id===ANNOUNCE.id)?r:null; }
-function annIsInfo(){ return ANNOUNCE.kind==='info'; }
+function annIsInfo(){ return ANNOUNCE.kind==='info'||ANNOUNCE.kind==='calloff'; }
 function annAcked(){ return !!(me && annDoneFor(ANNOUNCE)); }
 function annAck(){
   if(me){ const _id=ANNOUNCE.id; me.noticeAck=_id;
@@ -2848,11 +2867,34 @@ function annOpen(){
   if(!m){ m=document.createElement('div'); m.id='announceModal'; m.className='comp-modal ann-modal'; m.onclick=function(e){if(e.target===m)annClose();}; document.body.appendChild(m); }
   m.innerHTML=annCardHTML(existing); m.style.display='flex';
 }
+/* Multi-night call-off card. Each row is one night's board/calloff-{iso} list, the same list
+   the grid chip and Day at a Glance open, so approving on the night works unchanged. */
+function annCalloffHTML(A){ const t=todayISO(), side=A.aud||'foh', mySide=!!(me&&me.area===side);
+  let rows='';
+  (A.nights||[]).filter(function(iso){return iso>=t;}).forEach(function(iso){ coWatch(iso);
+    const w=dsWeekFor(side,iso), note=w?String((w.covNotes||[])[w.dates.indexOf(iso)]||'').trim():'', n=coHeads(note);
+    const list=coMerged(iso).filter(function(v){return v.type!=='oncall';}), k=me?list.findIndex(function(v){return v.name===me.name;}):-1;
+    const avail=mySide?osAvailOn(side,iso):null, day=fmtLong(iso).split(',')[0].slice(0,3)+' '+fmtShort(iso);
+    let ctl;
+    if(k>=0)ctl='<span class="acn-you">You\'re #'+(k+1)+'</span><button class="co-leave" onclick="coLeave(\''+iso+'\')">Take me off</button>';
+    else if(!mySide)ctl='<span class="acn-na">'+(isMgr()?'You approve on the night':'Floor team only')+'</span>';
+    else if(avail==='working')ctl='<button class="acn-go" onclick="coJoin(\''+side+'\',\''+iso+'\')">Put me down</button>';
+    else ctl='<span class="acn-na">'+(avail==='ro'?'Already off':'Not on')+'</span>';
+    rows+='<div class="acn-row'+(k>=0?' me':'')+'"><div class="acn-day"><b>'+esc(day)+(iso===t?' · tonight':'')+'</b><span>'+n+' going · '+list.length+' asked</span></div><div class="acn-ctl">'+ctl+'</div></div>'; });
+  if(!rows)rows='<div class="co-hint">These nights have passed.</div>';
+  const more=annPendingCount()>1;
+  return '<div class="ann-card co-card"><div class="ann-emoji">'+A.emoji+'</div><div class="ann-title serif">'+esc(A.title)+'</div>'
+    +'<div class="ann-lines">'+A.lines.map(function(l){return '<div class="ann-line">'+esc(l)+'</div>';}).join('')+'</div>'
+    +'<div class="acn-list">'+rows+'</div>'+(A.note?'<div class="ann-note">'+esc(A.note)+'</div>':'')
+    +'<div class="to-submit"><button class="to-go" onclick="annAck()">'+(more?'Done, next':'Done')+'</button></div>'
+    +(more?'<div class="ann-more">'+(annPendingCount()-1)+' more after this</div>':'')+'</div>'; }
+function annCoRefresh(){ const m=$('announceModal'); if(!m||m.style.display!=='flex'||!ANNOUNCE||ANNOUNCE.kind!=='calloff')return; m.innerHTML=annCardHTML(null); }
 function annClose(){ const m=$('announceModal'); if(m)m.style.display='none';
   // alerts deliberately queue behind the announcement rather than stacking on it
   try{ setTimeout(maybeShowAlerts,350); }catch(e){} }
 function annCardHTML(existing){
   const A=ANNOUNCE;
+  if(A.kind==='calloff')return annCalloffHTML(A);
   if(annIsInfo()){
     return `<div class="ann-card">
       <div class="ann-emoji">${A.emoji}</div>
@@ -6179,7 +6221,7 @@ function dsRosterOv(iso){
   if(iso===todayISO()){ const b=getBoard(); r=b&&b.roster; }
   else r=dsRosterCache[iso];
   r=r||{};
-  return {calledOff:r.calledOff||[], added:r.added||[], volunteers:r.volunteers||[], offerOff:!!r.offerOff, offApproved:r.offApproved||null};
+  return {calledOff:r.calledOff||[], added:r.added||[], volunteers:r.volunteers||[], offerOff:!!r.offerOff, offApproved:r.offApproved||null, offApprovedList:Array.isArray(r.offApprovedList)?r.offApprovedList:(r.offApproved?[r.offApproved]:[])};
 }
 function dsCalledOffSet(iso){ const s=new Set(); dsRosterOv(iso).calledOff.forEach(function(n){s.add(String(n).toLowerCase());}); return s; }
 function dsEnsureRoster(iso){
@@ -6208,16 +6250,19 @@ function dsSetRoster(iso,roster){
 /* Merge a patch into the day's roster doc, preserving the other fields
    (calledOff / added / volunteers / offerOff all live in one doc). */
 function dsRosterPatch(iso,patch){ const c=dsRosterOv(iso);
-  dsSetRoster(iso, Object.assign({calledOff:c.calledOff,added:c.added,volunteers:c.volunteers,offerOff:c.offerOff,offApproved:c.offApproved}, patch)); }
+  dsSetRoster(iso, Object.assign({calledOff:c.calledOff,added:c.added,volunteers:c.volunteers,offerOff:c.offerOff,offApproved:c.offApproved,offApprovedList:c.offApprovedList}, patch)); }
+function dsApprEntry(iso,name){ const k=String(name||'').toLowerCase(); if(!k)return null; return dsRosterOv(iso).offApprovedList.find(function(a){return String(a.name||'').toLowerCase()===k;})||null; }
 /* Manager approves a flex volunteer for the night off: records the pick + auto-marks
    them called off (drops from tonight's counts, contact list, coverage). Undo reverses both. */
 function dsApproveCallOff(name){ const iso=dsDate();
   if(!isAdmin()){alert('Only a manager can approve a call-off.');return;}
   const c=dsRosterOv(iso), co=c.calledOff.slice();
   if(co.map(function(x){return x.toLowerCase();}).indexOf(String(name).toLowerCase())<0)co.push(name);
-  dsRosterPatch(iso,{offApproved:{name:name,at:Date.now(),by:currentUserName()||'Sam'}, calledOff:co}); }
+  const ent={name:name,at:Date.now(),by:currentUserName()||'Sam'}, lst=c.offApprovedList.filter(function(a){return String(a.name||'').toLowerCase()!==String(name).toLowerCase();}).concat([ent]);
+  dsRosterPatch(iso,{offApproved:ent, offApprovedList:lst, calledOff:co}); }
 function dsUndoApproveCallOff(name){ const iso=dsDate(), c=dsRosterOv(iso);
-  dsRosterPatch(iso,{offApproved:null, calledOff:c.calledOff.filter(function(x){return x.toLowerCase()!==String(name).toLowerCase();})}); }
+  const lst=c.offApprovedList.filter(function(a){return String(a.name||'').toLowerCase()!==String(name).toLowerCase();});
+  dsRosterPatch(iso,{offApproved:lst.length?lst[lst.length-1]:null, offApprovedList:lst, calledOff:c.calledOff.filter(function(x){return x.toLowerCase()!==String(name).toLowerCase();})}); }
 function dsCallOff(name){ const iso=dsDate(),co=dsRosterOv(iso).calledOff.slice();
   if(co.map(function(x){return x.toLowerCase();}).indexOf(String(name).toLowerCase())<0)co.push(name);
   dsRosterPatch(iso,{calledOff:co}); }
@@ -6243,8 +6288,10 @@ let coCache={}, coUnsubs={}, coState=null;
 function coRef(iso){ return fbDb.collection('board').doc('calloff-'+iso); }
 function coWatch(iso){ if(!iso||coUnsubs[iso]||!(fbReady&&fbDb))return;
   coUnsubs[iso]=coRef(iso).onSnapshot(function(snap){ const d=snap.exists?(snap.data()||{}):{}; coCache[iso]=Array.isArray(d.entries)?d.entries:[]; coRefresh(iso); },function(){}); }
-function coRefresh(iso){ if(coState&&coState.iso===iso)coRender();
+function coRefresh(iso){ if(coState&&coState.iso===iso)coRender(); try{ annCoRefresh(); }catch(e){}
   try{ if(dsDate()===iso&&$('today')&&$('today').classList.contains('active'))renderToday(); }catch(e){} }
+function coHeads(note){ const m=String(note||'').match(/(\d+)/); const n=m?parseInt(m[1],10):1; return n>0?n:1; }
+function coWho(n){ return n===1?'One person':((['','One','Two','Three','Four','Five'][n]||String(n))+' people'); }
 function coEntries(iso){ return (coCache[iso]||[]).slice(); }
 /* both sources, earliest ask first, one row per person */
 function coMerged(iso){ const seen={}, out=[];
@@ -6275,7 +6322,7 @@ function coRender(){ const s=coState; if(!s)return; let m=$('coModal');
   const mine=me&&list.findIndex(function(v){return v.name===me.name;}), onList=mine>=0;
   const mySide=!!(me&&me.area===side), avail=mySide?osAvailOn(side,iso):null, past=iso<todayISO();
   let h='<div class="ann-card co-card"><div class="ann-emoji">🌙</div><div class="ann-title serif">'+esc(fmtLong(iso))+'</div>';
-  h+='<div class="ann-line">One person '+(side==='foh'?'on the floor':'in the kitchen')+' gets called off '+(iso===todayISO()?'tonight':'this night')+(note?' ('+esc(note)+')':'')+'. First to ask is first to go.</div>';
+  h+='<div class="ann-line">'+coWho(coHeads(note))+' '+(side==='foh'?'on the floor':'in the kitchen')+(coHeads(note)>1?' get':' gets')+' called off '+(iso===todayISO()?'tonight':'this night')+(note?' ('+esc(note)+')':'')+'. First to ask is first to go.</div>';
   if(past)h+='<div class="co-hint">This night has passed.</div>';
   else if(onList)h+='<div class="co-you">You\'re #'+(mine+1)+' in line.</div><button class="co-leave" onclick="coLeave(\''+iso+'\')">Take me off the list</button>';
   else if(!mySide)h+='<div class="co-hint">'+(isMgr()?'You approve the night off from Day at a Glance on the day.':'This one is for the '+(side==='foh'?'floor':'kitchen')+' team.')+'</div>';
@@ -6284,7 +6331,7 @@ function coRender(){ const s=coState; if(!s)return; let m=$('coModal');
   h+='<div class="co-list"><div class="co-list-h">Asked so far</div>';
   if(!loaded)h+='<div class="co-row co-empty">Loading…</div>';
   else if(!list.length)h+='<div class="co-row co-empty">Nobody yet.</div>';
-  else list.forEach(function(v,i){ const isA=apprName&&v.name===apprName;
+  else list.forEach(function(v,i){ const isA=!!dsApprEntry(iso,v.name);
     h+='<div class="co-row'+(me&&v.name===me.name?' me':'')+(isA?' appr':'')+'"><span class="co-n">'+(i+1)+'</span><span class="co-name">'+esc(v.name)+'</span><span class="co-at">'+(isA?'✓ off':esc(reqStamp(v.at)))+'</span></div>'; });
   h+='</div><button class="ann-dismiss" onclick="coClose()">Close</button></div>';
   m.innerHTML=h; m.style.display='flex';
@@ -6951,8 +6998,8 @@ function setCardAttnRed(id,on){
 }
 /* Call-off approval directed at the signed-in person: red badge on Day at a Glance
    card + nav chip until they open it (marks seen). */
-function calloffApprovedForMe(){ if(!me)return false; const a=dsRosterOv(todayISO()).offApproved; return !!(a&&a.name===me.name); }
-function calloffSig(){ const a=dsRosterOv(todayISO()).offApproved; return (a&&a.name===(me&&me.name))?String(a.at||1):''; }
+function calloffApprovedForMe(){ if(!me)return false; return !!dsApprEntry(todayISO(),me.name); }
+function calloffSig(){ const a=me?dsApprEntry(todayISO(),me.name):null; return a?String(a.at||1):''; }
 function calloffGlow(){ if(!calloffApprovedForMe())return false; const sig=calloffSig(); return sig!=='' && sig!==(attnGet('calloff')||''); }
 function markCalloffSeen(){ attnSet('calloff', calloffSig()); }
 function updateAttn(){
@@ -7025,8 +7072,8 @@ function dsCovNoteHTML(iso,isToday){
   const sides=isMgr()?['foh','boh']:((me&&(me.area==='foh'||me.area==='boh'))?[me.area]:[]); let out='';
   sides.forEach(function(side){ const w=dsWeekFor(side,iso); if(!w)return; const n=String((w.covNotes||[])[w.dates.indexOf(iso)]||'').trim(); if(!n)return;
     const who=side==='foh'?'on the floor':'in the kitchen';
-    out+='<div class="ds-covnote" onclick="coOpen(\''+side+'\',\''+iso+'\')">'+(isToday?'One person '+who+' gets called off tonight. Want to be first? '+(isMgr()?'Volunteers show up below.':'Use the button below, first come first served.')
-      :'One person '+who+' will be called off this night. Tap to get in line or see who has asked.')+'</div>'; });
+    out+='<div class="ds-covnote" onclick="coOpen(\''+side+'\',\''+iso+'\')">'+(isToday?coWho(coHeads(n))+' '+who+(coHeads(n)>1?' get':' gets')+' called off tonight. Want to be first? '+(isMgr()?'Volunteers show up below.':'Use the button below, first come first served.')
+      :coWho(coHeads(n))+' '+who+' will be called off this night. Tap to get in line or see who has asked.')+'</div>'; });
   return out; }
 function dsOfferBannerHTML(iso){ if(!dsRosterOv(iso).offerOff)return '';
   return '<div class="ds-offer-banner">🌙 The night off is on offer tonight. Want it? Volunteer below — first come, first served.</div>'; }
@@ -7041,7 +7088,7 @@ function dsNightOffTopHTML(iso){ const on=dsRosterOv(iso).offerOff, vs=dsVolunte
 function dsVolunteerListHTML(iso){ const vs=dsVolunteersSorted(iso); if(!vs.length)return '';
   const appr=dsRosterOv(iso).offApproved, apprName=appr&&appr.name;
   let h='<div class="ds-vol-list"><div class="ds-side-head">Volunteered to flex · first-come</div>';
-  vs.forEach(function(v,i){ const isAppr=apprName&&v.name===apprName;
+  vs.forEach(function(v,i){ const isAppr=!!dsApprEntry(iso,v.name);
     h+='<div class="ds-vol-row'+(isAppr?' approved':'')+'"><span class="ds-vol-n">'+(i+1)+'</span><span class="ds-vol-name">'+esc(v.name)+'</span><span class="ds-vol-type">'+(v.type==='oncall'?'on-call':'night off')+'</span><span class="ds-vol-at">'+dsWxStamp(v.at)+'</span>';
     if(isAdmin()){
       if(isAppr)h+='<button class="ds-vol-appr on" onclick="dsUndoApproveCallOff(\''+jq(v.name)+'\')">✓ Off tonight · undo</button>';
