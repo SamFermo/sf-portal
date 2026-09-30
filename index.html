@@ -1994,7 +1994,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790800525';   // stamped by build-data.py at every deploy
+const BUILD='1790801372';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5854,7 +5854,7 @@ function compCredTextHTML(cred,name,obj){
       const lead=st==='past'?('✗ EXPIRED '+nd):(st==='warn'?('Card on file — expires '+nd+' (renew soon)'):('✓ Card on file — exp '+nd));
       return '<b>'+cred+'</b> '+lead+by; }
     return '<b>'+cred+'</b> ✓ Card on file'+by; }
-  return obj?'<b>'+cred+'</b> '+esc(obj.text):'';
+  return (obj&&obj.text)?'<b>'+cred+'</b> '+esc(obj.text):'';
 }
 
 /* ===== PER-EMPLOYEE CERT EXPIRATION BADGES ================================
@@ -6025,7 +6025,8 @@ function compCardsFor(name){ return ['FWC','MAST'].map(function(cred){ const k=c
 function compRosterIndex(){ const R=compWithExtras(), ix={}; ['boh','foh'].forEach(function(s){ (R[s]||[]).forEach(function(p){ ix[p.name.toLowerCase()]={p:p,side:s}; }); }); return ix; }
 function compGaps(p,cards,onRoster){
   if(!onRoster)return ['Not on the compliance roster'];
-  const g=[]; if(!cards.some(function(c){return c.cred==='FWC';}))g.push('No FWC card on file');
+  // An FWC row set to 'info' is untracked on Sam's call (2026-09-30): no missing-card tag, same rule MAST uses.
+  const g=[]; if(!(p.fwc&&p.fwc.status==='info')&&!cards.some(function(c){return c.cred==='FWC';}))g.push('No FWC card on file');
   if(p.mast&&p.mast.status!=='info'&&!cards.some(function(c){return c.cred==='MAST';}))g.push('No MAST card on file');
   return g;
 }
@@ -6137,7 +6138,7 @@ async function offBuild(){
       y=M+54; F('normal',10.5,70);
       doc.setFontSize(10.5); doc.splitTextToSize('Copy made '+stamp+' by '+who+' from the staff portal. The portal is the live record. This copy is for showing cards when the Wi-Fi is down, and it does not update itself: rebuild it from Compliance, All Cards after new cards are verified.',W-2*M).forEach(function(l){ nl(14); T(l,M); });
       nl(22); F('bold',11,0); T(people.length+' people on the roster, '+(jobs.length-failed.length)+' card images in this copy.',M);
-      if(gapLines.length){ nl(22); F('bold',10.5,168,49,30); T('Missing from this copy',M); F('normal',10.5,168,49,30);
+      if(gapLines.length){ nl(22); F('bold',10.5,168,49,30); T('Not in this copy',M); F('normal',10.5,168,49,30);
         gapLines.forEach(function(g){ nl(13); T(g,M+8); }); }
       nl(24); F('bold',11,0); T('Who is on which page',M); F('normal',10,0);
       for(let r=0;r<rows;r++){ nl(13); [0,1].forEach(function(col){ const i=col*rows+r; if(i>=people.length)return; const xx=M+col*colW;

@@ -13771,8 +13771,8 @@ window.SF = {
      "name": "Antolin \"Tony\" Reyes",
      "role": "Line Cook",
      "fwc": {
-      "status": "warn",
-      "text": "Needs verify — profile says Complete, no image on file"
+      "status": "info",
+      "text": ""
      },
      "mast": null
     },
@@ -15849,5 +15849,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1790800525"
+ "build": "1790801372"
 };
