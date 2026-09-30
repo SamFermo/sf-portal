@@ -1,227 +1,80 @@
 {
  "cocktails": [
   {
-   "name": "Wuthering Heights",
-   "build": "dill infused vodka, swan house farm damask rose simple, lime, dry vermouth, cucumber, soda",
+   "name": "Minivan Mega-Fun",
+   "build": "vodka, blistered shishito pepper simple, veso tomato vermouth, lime, gran classico, soda",
    "price": "15",
-   "highlight": "Swan House rose",
-   "tagline": "Swan House damask rose with a savory dill edge",
    "ingredients": [
     {
-     "name": "Dill-infused vodka",
-     "description": "Vodka steeped with fresh dill. It keeps the neutral base but adds a green, savory herbaceousness that carries the drink and keeps the florals from reading sweet."
+     "name": "Vodka",
+     "description": "Neutral base spirit."
     },
     {
-     "name": "Swan House Farm damask rose simple",
-     "description": "Made from damask roses grown at Sam's family farm in Skagit Valley. The petals are steeped into a simple syrup, giving a delicate sweetness and real rose perfume. This is the soul of the drink and the reason to order it.",
-     "highlight": "Swan House Farm"
+     "name": "Blistered shishito pepper simple",
+     "description": "The composition of this blistered shishito pepper simple has not been specified for this prep. Confirm with your bar lead before clearing it for any allergy."
     },
     {
-     "name": "Lime juice",
-     "description": "Fresh-squeezed. Sharpens the rose and keeps the drink bright."
+     "name": "Veso tomato vermouth",
+     "description": "A tomato vermouth from Veso."
     },
     {
-     "name": "Dry vermouth",
-     "description": "A fortified white wine aromatized with herbs. Adds crisp botanical structure and a faint wormwood bitterness without weight."
+     "name": "Lime",
+     "description": "Fresh lime."
     },
     {
-     "name": "Cucumber",
-     "description": "Cool and clean, echoing the dill and keeping the whole drink crisp."
+     "name": "Gran Classico",
+     "description": "A Swiss-made bitter aperitivo in the Campari family: bittersweet, with orange peel and herbs."
     },
     {
-     "name": "Soda water",
-     "description": "Lengthens the drink and lifts it. Finishes refreshing and slightly bitter."
+     "name": "Soda",
+     "description": "Soda water top for lift and length."
     }
    ],
    "pronguide": [
+    {
+     "term": "shishito",
+     "pron": "shee-SHEE-toh"
+    },
+    {
+     "term": "Gran Classico",
+     "pron": "grahn KLAH-see-koh"
+    },
     {
      "term": "vermouth",
      "pron": "vehr-MOOTH"
-    },
-    {
-     "term": "damask",
-     "pron": "DAM-usk"
-    }
-   ],
-   "added": "2026-07-25"
-  },
-  {
-   "name": "Material Girl",
-   "build": "st. germain, bianco vermouth, cucumber, lemon, soda, prosecco, lavender bitters",
-   "price": "16",
-   "highlight": "",
-   "tagline": "Sparkling, floral, and effortless",
-   "ingredients": [
-    {
-     "name": "St-Germain elderflower liqueur",
-     "amount": "1 oz",
-     "description": "Made from hand-harvested elderflowers collected each spring from the foothills of the French Alps in Haute-Savoie. Only a three-to-four-week window each year. The flavor is famously hard to pin down: lychee, pear, white peach, and a soft honeyed floral note. One of the most important liqueurs of the last twenty years.",
-     "highlight": "French Alps"
-    },
-    {
-     "name": "Bianco vermouth",
-     "amount": "1 oz",
-     "description": "A sweet white vermouth — floral, vanilla-forward, and lightly herbal. Sweeter than dry vermouth but more delicate than red. It rounds out the elderflower without adding weight."
-    },
-    {
-     "name": "Cucumber",
-     "amount": "3 slices, muddled",
-     "description": "Fresh cucumber muddled into the base adds a cool, green, almost watery freshness that pairs perfectly with elderflower."
-    },
-    {
-     "name": "Lemon juice",
-     "amount": "0.5 oz",
-     "description": "Fresh-squeezed. Keeps the sweetness honest and adds a clean bright edge."
-    },
-    {
-     "name": "Soda water",
-     "amount": "splash",
-     "description": "A short top before the prosecco, adding lift and dilution."
-    },
-    {
-     "name": "Prosecco",
-     "amount": "2 oz",
-     "description": "Italian sparkling wine from Veneto. Dry, light, and effervescent — it turns the whole thing into a spritz and gives the drink its celebratory character."
-    },
-    {
-     "name": "Lavender bitters",
-     "amount": "2 dashes",
-     "description": "Aromatic bitters infused with dried lavender. A few dashes tie the elderflower to the floral top notes and add a soft herbal finish."
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "St-Germain",
-     "pron": "san zhehr-MAN"
-    },
-    {
-     "term": "Haute-Savoie",
-     "pron": "oht sah-VWAH"
-    },
-    {
-     "term": "bianco vermouth",
-     "pron": "BYAHN-koh vehr-MOOTH"
-    },
-    {
-     "term": "Prosecco",
-     "pron": "proh-SEK-koh"
     }
    ]
   },
   {
-   "name": "Pink Pony Club",
-   "build": "uncle val's botanical gin, strawberry and rhubarb maceration, white balsamic, bianco vermouth, lemon, bergamot bitters",
-   "price": "17",
-   "highlight": "",
-   "tagline": "Bright, fruity, and floral — a strawberry-rhubarb gin sour",
+   "name": "Oh My Word!",
+   "build": "gin, aperol, peach and nectarine maceration, lemon, grapefruit bitters",
+   "price": "16",
    "ingredients": [
     {
-     "name": "Uncle Val's Botanical Gin",
-     "amount": "1.5 oz",
-     "description": "Made with five botanicals: juniper, lemon, sage, lavender, and cucumber. The result is a gin that leans floral and citrus-forward rather than piney — exceptionally smooth, with a cucumber coolness and herbal sage note that make it the right canvas for a fruit-forward cocktail.",
-     "highlight": "floral gin"
+     "name": "Gin",
+     "description": "Juniper-forward base spirit."
     },
     {
-     "name": "Strawberry and rhubarb maceration",
-     "amount": "0.75 oz",
-     "description": "A house-made infusion: ripe strawberries and rhubarb steeped together until the flavor turns jammy, tart, and bright. Strawberry brings the sweetness, rhubarb brings the sour, green edge that keeps it from going candy-sweet.",
-     "highlight": "house-made"
+     "name": "Aperol",
+     "description": "Italian bitter-orange aperitivo: lighter, sweeter and lower in alcohol than Campari, with orange and rhubarb."
     },
     {
-     "name": "White balsamic",
-     "amount": "0.25 oz",
-     "description": "A pale, mild balsamic vinegar — sweet and gently tart without the dark color or heavy molasses notes of aged balsamic. A small amount adds rounded acidity and a savory depth behind the fruit."
+     "name": "Peach and nectarine maceration",
+     "description": "The composition of this peach and nectarine maceration has not been specified for this prep. Confirm with your bar lead before clearing it for any allergy."
     },
     {
-     "name": "Bianco vermouth",
-     "amount": "0.5 oz",
-     "description": "A sweet white vermouth — floral, vanilla-forward, and lightly herbal. Sweeter than dry vermouth but more delicate than red. It rounds out the fruit and adds body."
-    },
-    {
-     "name": "Lemon juice",
-     "amount": "0.5 oz",
-     "description": "Fresh-squeezed. Keeps the sweetness honest and gives the drink its sour backbone."
-    },
-    {
-     "name": "Bergamot bitters",
-     "amount": "2 dashes",
-     "description": "Aromatic bitters built on bergamot — the floral, slightly bitter citrus that gives Earl Grey its character. A few dashes tie the strawberry and the gin's botanicals together on the nose."
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "bianco vermouth",
-     "pron": "BYAHN-koh vehr-MOOTH"
-    },
-    {
-     "term": "bergamot",
-     "pron": "BEHR-gah-mot"
-    }
-   ],
-   "added": "2026-06-19"
-  },
-  {
-   "name": "Cool Cat",
-   "build": "mezcal, sunflower seed orgeat, brucato kumquat and chili liqueur, lime, dry vermouth, saline, grapefruit bitters",
-   "price": "17",
-   "highlight": "",
-   "tagline": "Smoky, nutty, bright, and alive",
-   "ingredients": [
-    {
-     "name": "Mezcal",
-     "amount": "1.5 oz",
-     "description": "A Mexican spirit distilled from roasted agave. Unlike tequila, the agave piñas are pit-roasted over hot rocks before fermentation, giving mezcal its signature smokiness. Earthy, complex, and layered — vegetal sweetness under the smoke, with a long finish. The base of the whole cocktail.",
-     "highlight": "smoky agave"
-    },
-    {
-     "name": "Sunflower seed orgeat",
-     "amount": "0.5 oz",
-     "description": "A riff on the classic almond-based tiki syrup. Orgeat is a French-origin sweetener made from nuts, sugar, and a touch of flower water — nutty, rich, and slightly floral. This version uses sunflower seeds instead of almonds: nuttier, more savory, and a little earthier. It softens the mezcal and provides body.",
-     "highlight": "house-made"
-    },
-    {
-     "name": "Brucato Oro y Fierro Kumquat & Chili Liqueur",
-     "amount": "0.5 oz",
-     "description": "Made in San Francisco by Brucato Spirits (named for SF's city motto, Oro en Paz, Fierro en Guerra). Peak-season Nagami kumquats from California farms, dried and macerated with orange peel in unaged grape brandy, then finished with chile de árbol and Calabrian chili. Bright citrus, pithy bitterness, and a slow-building heat that lingers.",
-     "highlight": "S.F. craft"
-    },
-    {
-     "name": "Lime juice",
-     "amount": "0.75 oz",
-     "description": "Fresh-squeezed. Cuts through the smoke and richness, provides the sour backbone."
-    },
-    {
-     "name": "Dry vermouth",
-     "amount": "0.25 oz",
-     "description": "Herbaceous, bone-dry fortified wine. A small amount adds structure and a subtle herbal note that connects the mezcal to the other ingredients."
-    },
-    {
-     "name": "Saline solution",
-     "amount": "2 dashes",
-     "description": "A few drops of salt water — a bartender's tool, not a flavor. Salt suppresses bitterness and makes every other flavor in the glass read more clearly. You won't taste it; you'll taste everything else better."
+     "name": "Lemon",
+     "description": "Fresh lemon."
     },
     {
      "name": "Grapefruit bitters",
-     "amount": "2 dashes",
-     "description": "Aromatic bitters with grapefruit peel at the center. Adds a bright citrus note on the nose and ties the kumquat liqueur to the lime."
+     "description": "Aromatic bitters flavored with grapefruit peel."
     }
    ],
    "pronguide": [
     {
-     "term": "mezcal",
-     "pron": "mess-KAHL"
-    },
-    {
-     "term": "orgeat",
-     "pron": "or-ZHAT"
-    },
-    {
-     "term": "Brucato",
-     "pron": "broo-KAH-toh"
-    },
-    {
-     "term": "chile de árbol",
-     "pron": "CHEE-leh deh AR-bohl"
+     "term": "Aperol",
+     "pron": "AH-peh-rohl"
     }
    ]
   },
@@ -285,56 +138,92 @@
    ]
   },
   {
-   "name": "Giraffes Eat Bones",
-   "build": "duck fat rinsed bourbon, sazerac rye, yzaguirre barrel aged sweet vermouth, dom benedictine, angostura",
-   "price": "19",
-   "highlight": "",
-   "tagline": "a richer, rounder Manhattan",
+   "name": "Imaginary Friend",
+   "build": "mezcal, spiced red wine and balsamic agrodolce, amaro lucano, lime, veso fig leaf vermouth, black lemon bitters",
+   "price": "18",
    "ingredients": [
     {
-     "name": "Duck-fat-rinsed bourbon",
-     "amount": "1.5 oz",
-     "description": "Bourbon fat-washed with duck fat: the spirit is infused with rendered fat, then chilled so the fat is removed, leaving a silky, savory richness behind.",
-     "highlight": "fat-washed"
+     "name": "Mezcal",
+     "description": "A Mexican spirit distilled from roasted agave. Unlike tequila, the agave piñas are pit-roasted over hot rocks before fermentation, giving mezcal its signature smokiness. Earthy, complex, and layered — vegetal sweetness under the smoke, with a long finish. The base of the whole cocktail."
     },
     {
-     "name": "Sazerac rye",
-     "amount": "0.5 oz",
-     "description": "A spicy, high-rye whiskey from New Orleans; adds backbone and pepper against the round bourbon."
+     "name": "Spiced red wine and balsamic agrodolce",
+     "description": "The composition of this spiced red wine and balsamic agrodolce has not been specified for this prep. Confirm with your bar lead before clearing it for any allergy."
     },
     {
-     "name": "Yzaguirre barrel-aged sweet vermouth",
-     "amount": "1 oz",
-     "description": "Barrel-rested Catalan sweet vermouth — dark fruit, baking spice, and length."
+     "name": "Amaro Lucano",
+     "description": "A bittersweet amaro from Basilicata in southern Italy, made since 1894 from a blend of herbs."
     },
     {
-     "name": "Dom Bénédictine",
-     "amount": "barspoon",
-     "description": "A honeyed French herbal liqueur (27 botanicals) from Normandy; adds sweetness and a complex herbal note.",
-     "highlight": "herbal"
+     "name": "Lime",
+     "description": "Fresh lime."
     },
     {
-     "name": "Angostura bitters",
-     "amount": "2 dashes",
-     "description": "Classic aromatic bitters — clove, cinnamon, and gentian that tie the spirits together."
+     "name": "Veso fig leaf vermouth",
+     "description": "A fig-leaf vermouth from Veso."
+    },
+    {
+     "name": "Black lemon bitters",
+     "description": "Bitters built on black lemon, the dried, darkened citrus of Middle Eastern cooking: smoky, sour and earthy."
     }
    ],
    "pronguide": [
     {
-     "term": "Sazerac",
-     "pron": "SAZ-uh-rak"
+     "term": "mezcal",
+     "pron": "mez-KAHL"
+    },
+    {
+     "term": "agrodolce",
+     "pron": "ah-groh-DOHL-cheh"
+    },
+    {
+     "term": "Lucano",
+     "pron": "loo-KAH-noh"
+    }
+   ]
+  },
+  {
+   "name": "Grandma's Ash Tray",
+   "build": "bourbon, martell cognac, yzaguirre rose vermouth, amaro rucolino, mr. black, lavender bitters",
+   "price": "19",
+   "ingredients": [
+    {
+     "name": "Bourbon",
+     "description": "American whiskey, corn-led: the base of the drink."
+    },
+    {
+     "name": "Martell cognac",
+     "description": "French grape brandy from the house of Martell, founded in 1715."
+    },
+    {
+     "name": "Yzaguirre rose vermouth",
+     "description": "A Spanish rosado vermouth from Yzaguirre in Catalonia."
+    },
+    {
+     "name": "Amaro Rucolino",
+     "description": "An Italian amaro made from arugula (rucola): peppery, green and bittersweet."
+    },
+    {
+     "name": "Mr. Black",
+     "description": "An Australian cold-brew coffee liqueur, drier and more coffee-forward than most."
+    },
+    {
+     "name": "Lavender bitters",
+     "description": "Aromatic bitters flavored with lavender."
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Martell",
+     "pron": "mar-TELL"
     },
     {
      "term": "Yzaguirre",
      "pron": "ee-thah-GHEE-reh"
     },
     {
-     "term": "Bénédictine",
-     "pron": "beh-neh-deek-TEEN"
-    },
-    {
-     "term": "Angostura",
-     "pron": "ang-oh-STOO-rah"
+     "term": "Rucolino",
+     "pron": "roo-koh-LEE-noh"
     }
    ]
   }
@@ -351,7 +240,7 @@
    "note": "Seattle-born zero-proof spirit: fermented hemp, distilled in copper pots, layered with wormwood, angelica, sage, ginger, and Douglas fir. Reads like an amaro — earthy, bittersweet, crisp — stirred here into a Negroni-style build. No cannabinoids, nothing psychoactive. First poured at Life on Mars in 2021."
   },
   {
-   "name": "Aplos Red Shiso Ginger \"Sour\"",
+   "name": "Aplos Ginger and Red Shiso \"Sour\"",
    "price": "13",
    "note": "Zero-proof sour built on Aplos, a hemp-infused alcohol-free spirit, shaken with a red shiso ginger syrup (made from Katie's own red shiso) over lemon. Tart and herbaceous, with a gingery bite and a garden edge from the shiso."
   },
@@ -363,14 +252,19 @@
  ],
  "beer": [
   {
-   "name": "Manabrea Lager",
-   "price": "6",
-   "note": "Birra Manabrea 1846 — a family-run lager from Biella in the Piedmont Alps, brewed with pure mountain water since 1846. Crisp and clean with a gentle floral aroma and a delicate bitter finish. An award-winning Italian classic."
+   "name": "Menabrea Lager",
+   "price": "8",
+   "note": "Birra Menabrea 1846 — a family-run lager from Biella in the Piedmont Alps, brewed with pure mountain water since 1846. Crisp and clean with a gentle floral aroma and a delicate bitter finish. An award-winning Italian classic."
   },
   {
    "name": "Fremont Brewing Lush IPA",
    "price": "7",
    "note": "From Fremont Brewing, a few neighborhoods over — family-owned since 2009. Their year-round juicy IPA: Citra and Mosaic hops, tropical and citrus up front, smooth finish. 7%, drinks easier than it is."
+  },
+  {
+   "name": "Athletic Brewing \"Upside Dawn\" Non-Alcoholic",
+   "price": "7",
+   "note": "Athletic Brewing's non-alcoholic golden ale, under 0.5% ABV."
   }
  ],
  "amaroFlights": [

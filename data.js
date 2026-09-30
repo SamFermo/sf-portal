@@ -754,74 +754,45 @@ window.SF = {
  "wines": [
   {
    "section": "Bubbles",
-   "name": "Le Origini dal 1919 \"Passanello\" Lambrusco Grasparossa DOC",
-   "vintage": "2024",
-   "region": "Castelvetro, Emilia-Romagna, Italy",
+   "name": "House Prosecco: Bellenda \"San Fermo\" Prosecco",
+   "vintage": "",
+   "region": "Conegliano, Veneto, Italy",
    "type": "sparkling",
-   "glass": "14",
-   "bottle": "55",
-   "grapes": "100% Lambrusco Grasparossa di Castelvetro",
-   "pour": "Violet and undergrowth on the nose, with good tannicity and aromatic persistence — a structured, dry Lambrusco from clay-rich hillside vines above Castelvetro.",
-   "producer": "Le Origini dal 1919 is rooted in the hills between Vignola and Castelvetro in Emilia-Romagna. The Passanello vineyard (4.8 ha, planted 1978 via GDC method at 280m elevation) takes its name from the local landscape. Clay soils give the wine its characteristic tannicity and aromatic roundness.",
-   "winemaking": "Controlled fermentation with indigenous yeasts. 4-day maceration in stainless steel, 3–4 day fermentation, then 5 weeks aging in autoclave.",
+   "glass": "13",
+   "bottle": "50",
+   "grapes": "Glera",
+   "pour": "Luminous, with a dense, continuous bead of pin-point bubbles. Delicate and fragrant on the nose; savory on the palate with a fine vein of minerality, finishing on a crisp walnut-husk tang.",
+   "producer": "Bellenda's San Fermo is named for the country church next to the vineyard where the grapes grow, in the Carpesica area of the Conegliano hills. The glera vines sit around 180 m on limestone-clay soils rich in morainic deposits left by the ancient Piave glacier.",
+   "winemaking": "Grapes de-stemmed and gently pressed; must gravity-settled and fermented at 18-20°C, then 1-3 months on the lees. Second fermentation by the Italian (tank) method in 100 hl steel pressure fermenters for about 2 months.",
    "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 2,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
+   "specs": [],
    "pronguide": [
     {
-     "term": "Le Origini",
-     "pron": "leh oh-REE-jee-nee"
+     "term": "Bellenda",
+     "pron": "bel-LEN-dah"
     },
     {
-     "term": "Passanello",
-     "pron": "pah-sah-NELL-oh"
+     "term": "Glera",
+     "pron": "GLEH-rah"
     },
     {
-     "term": "Lambrusco Grasparossa",
-     "pron": "lahm-BROOS-koh grah-spah-ROSS-ah"
-    },
-    {
-     "term": "Castelvetro",
-     "pron": "kah-stel-VEH-troh"
+     "term": "Conegliano",
+     "pron": "koh-neh-LYAH-noh"
     }
    ]
   },
   {
    "section": "Bubbles",
-   "name": "Domaine Lingot-Martin Pet Nat Rosé",
-   "vintage": "",
-   "region": "Cerdon, Bugey, France",
+   "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara",
+   "vintage": "2024",
+   "region": "Sorbara, Modena, Emilia-Romagna, Italy",
    "type": "sparkling",
-   "glass": "14",
+   "grapes": "Lambrusco di Sorbara",
+   "glass": "15",
    "bottle": "55",
-   "grapes": "Gamay",
-   "pour": "A naturally lightly sparkling pet-nat from the Alpine hamlet of Bugey — hints of raspberry and alpine fruits with just a hint of spice on the dry finish. Fresh, fun, and dangerously easy to drink.",
-   "producer": "Bugey is a tiny, largely unknown appellation halfway between Lyon and Geneva, earning AOC status in 2009. Domaine Lingot-Martin works the crisp mountain air and clay-limestone soils of the Jura foothills, producing eclectic, high-acid, low-alcohol wines that rarely travel far beyond local tables.",
-   "winemaking": "Méthode ancestrale (pet-nat). Naturally lightly sparkling, produced too dry to officially qualify for the Bugey-Cerdon AOC designation.",
+   "pour": "Vibrant pink with fine, persistent bubbles — fresh raspberry and strawberry, a lift of violet, dry and refreshing with bright acidity. The most delicate style of Lambrusco.",
+   "producer": "Founded in 1920, Paltrinieri farms 17 hectares between the Secchia and Panaro rivers in Modena; 15 of them are the sandy-loam 'Cristo' vineyard where these grapes grow. The wine is named for St. Agatha, patron saint of Sorbara. Alberto Paltrinieri, who took over in 1998, was among the first to gamble on a mono-varietal Sorbara. (Research puts it at ~11% ABV and notes some bottlings blend in Salomino rather than being 100% Sorbara — confirm the vintage and blend with your lead before quoting.)",
+   "winemaking": "Grapes are gently pressed and vatted for a first fermentation, then a second fermentation by the Martinotti (Charmat) method in pressurized autoclaves, using native yeasts. Bottled at low pressure to preserve the fruit and varietal aromatics.",
    "has_notes": true,
    "specs": [
     {
@@ -838,7 +809,7 @@ window.SF = {
     },
     {
      "label": "Acidity",
-     "rating": 5,
+     "rating": 4,
      "low": "soft",
      "high": "bright"
     },
@@ -851,22 +822,19 @@ window.SF = {
    ],
    "pronguide": [
     {
-     "term": "Domaine Lingot-Martin",
-     "pron": "doh-MEN lan-GOH mar-TAN"
+     "term": "Paltrinieri",
+     "pron": "pal-tree-nee-EH-ree"
     },
     {
-     "term": "Cerdon",
-     "pron": "sehr-DON"
+     "term": "Sant'Agata",
+     "pron": "sahnt-AH-gah-tah"
     },
     {
-     "term": "Bugey",
-     "pron": "boo-ZHAY"
-    },
-    {
-     "term": "méthode ancestrale",
-     "pron": "meh-TOD ahn-sess-TRAHL"
+     "term": "Lambrusco di Sorbara",
+     "pron": "lahm-BROOS-koh dee sor-BAH-rah"
     }
-   ]
+   ],
+   "added": "2026-07-30"
   },
   {
    "section": "Bubbles",
@@ -928,21 +896,21 @@ window.SF = {
   },
   {
    "section": "Bubbles",
-   "name": "Il Ceo \"Vespri\" Pet Nat",
-   "vintage": "",
-   "region": "Veneto, Italy",
+   "name": "Claudio Plessi \"Muntanera\" Rosato",
+   "vintage": "2024",
+   "region": "Emilia-Romagna, Italy",
    "type": "sparkling",
    "glass": "",
    "bottle": "70",
-   "grapes": "Vespaiola",
-   "pour": "Between green and oxidative — notes of meadow herbs, dried and macerated fruit, and fresh flowers, with great saltiness and length. A refined col fondo with crystalline notes of stone, mandarine, and salt.",
-   "producer": "Il Ceo produces this iconic Vespaiola frizzante from a blend of five plots, some up to fifty years old, planted over basalt in the Veneto.",
-   "winemaking": "Spontaneous fermentation with indigenous yeasts, no additives. Half directly pressed, half macerated on skins for four days. Aged six months in stainless steel and fibreglass, then bottled with a small addition of Vespaiola passita must for secondary fermentation. Col fondo style.",
+   "grapes": "100% Uva Tosca",
+   "pour": "An earthy, funky, cloudy pink fizz with real tannic grip — cherry, wild berries, dusty roses, sage and a hint of pine. Ancestral method with no added sulfur; serve cold but not icy and let it open with air.",
+   "producer": "Claudio Plessi farms near Modena in Emilia-Romagna, where his parents planted vines in 1958. A professor of agriculture, he took over the estate in 1986 and founded Il Salto, a consortium of biodynamic growers and natural winemakers. Uva Tosca is a rare, hyper-local variety — reputedly the only grape able to ripen at these elevations — grown on super-calcareous silty clay-loam that was a riverbed a thousand years ago. 12% ABV.",
+   "winemaking": "Metodo ancestrale (pét-nat): a few hours of skin contact, then bottle-fermented and capped off without disgorging (sboccatura), per local tradition. Biodynamic farming, no added SO2, unfiltered and cloudy.",
    "has_notes": true,
    "specs": [
     {
      "label": "Body",
-     "rating": 2,
+     "rating": 3,
      "low": "light",
      "high": "full"
     },
@@ -960,83 +928,30 @@ window.SF = {
     },
     {
      "label": "Tannins",
-     "rating": 1,
+     "rating": 3,
      "low": "none",
      "high": "grippy"
     }
    ],
    "pronguide": [
     {
-     "term": "Il Ceo",
-     "pron": "eel CHEH-oh"
+     "term": "Claudio Plessi",
+     "pron": "KLOW-dyoh PLESS-ee"
     },
     {
-     "term": "Vespaiola",
-     "pron": "veh-spah-YOH-lah"
+     "term": "Muntanera",
+     "pron": "moon-tah-NEH-rah"
     },
     {
-     "term": "col fondo",
-     "pron": "kohl FON-doh"
-    }
-   ]
-  },
-  {
-   "section": "Bubbles",
-   "name": "Pojere E Sandri \"Zero Infinito\" Pet Nat",
-   "vintage": "",
-   "region": "Alto Adige, Italy",
-   "type": "sparkling",
-   "glass": "",
-   "bottle": "80",
-   "grapes": "Solaris",
-   "pour": "Lip-smacking and minerally with flavors of poached apricot, white raspberry, and orange peel — hints of flint and dried herbs through the salty finish. A gauzy sparkler with fine, pinprick-sized bubbles.",
-   "producer": "Pojer e Sandri is based in Faedo, Alto Adige, with eighty years of research behind this \"zero chemical impact\" ancestral wine — zero inputs in the vineyard and zero additives in the cellar.",
-   "winemaking": "Ancestral method (pet-nat). Certified organic farming. No exogenous additions at any stage.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
+     "term": "Uva Tosca",
+     "pron": "OO-vah TOS-kah"
     },
     {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
+     "term": "metodo ancestrale",
+     "pron": "MEH-toh-doh ahn-chess-TRAH-leh"
     }
    ],
-   "pronguide": [
-    {
-     "term": "Pojer e Sandri",
-     "pron": "POH-yehr eh SAHN-dree"
-    },
-    {
-     "term": "Solaris",
-     "pron": "soh-LAH-rees"
-    },
-    {
-     "term": "Alto Adige",
-     "pron": "AHL-toh AH-dee-jeh"
-    },
-    {
-     "term": "Faedo",
-     "pron": "fah-EH-doh"
-    }
-   ]
+   "added": "2026-07-11"
   },
   {
    "section": "Bubbles",
@@ -1094,8 +1009,37 @@ window.SF = {
   },
   {
    "section": "White/Rosé/Orange",
-   "name": "Borgo Savaian \"Skins are Kings\"",
+   "name": "House White: Santa Barbara \"Le Vaglie\" Verdicchio dei Castelli di Jesi Classico",
    "vintage": "",
+   "region": "Marche, Italy",
+   "type": "white",
+   "glass": "13",
+   "bottle": "50",
+   "grapes": "100% Verdicchio",
+   "pour": "Bright pale yellow with a touch of gold. Floral, citrus and fresh almond on the nose; fresh and smooth on the palate, with that signature almond note carrying through to a crisp finish.",
+   "producer": "Le Vaglie was created in 1992 to step outside the classic Verdicchio mold while paying tribute to the Marche's winemaking history: the typical almond character, with more complexity and freshness. Vines average 25 years, between the Adriatic and the Apennines.",
+   "winemaking": "Fermented in temperature-controlled stainless steel at 10-12°C; 8 months in stainless steel before bottling.",
+   "has_notes": true,
+   "specs": [],
+   "pronguide": [
+    {
+     "term": "Le Vaglie",
+     "pron": "leh VAHL-yeh"
+    },
+    {
+     "term": "Verdicchio",
+     "pron": "vehr-DEEK-kyoh"
+    },
+    {
+     "term": "Castelli di Jesi",
+     "pron": "kah-STEL-lee dee YEH-zee"
+    }
+   ]
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "Borgo Savaian Masaret \"Skins are Kings\" Orange",
+   "vintage": "NV",
    "region": "Cormons, Friuli, Italy",
    "type": "orange",
    "glass": "14",
@@ -1147,107 +1091,6 @@ window.SF = {
     {
      "term": "Cormons",
      "pron": "KOR-mohns"
-    }
-   ]
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Gilbert Cellars Orange Wine",
-   "vintage": "2024",
-   "region": "Columbia Valley, Washington",
-   "type": "orange",
-   "glass": "",
-   "bottle": "",
-   "grapes": "77% Riesling, 23% Chardonnay",
-   "pour": "Raw honey, herbal tea, and tree fruit on a skin-contact co-ferment of estate Riesling and Chardonnay — 13 days on the skins, unfined and unfiltered. A Yakima-grown orange wine with the texture of skin contact and the high-toned lift of Columbia Valley Riesling.",
-   "producer": "Gilbert Cellars is a family-run Yakima winery. The Riesling and Chardonnay for this wine come from its estate Sunrise Vineyard on the Hackett Ranch, farmed Certified Sustainable WA and transitioning to organic (year 2). Roughly 300 cases produced; 12.9% ABV. Heads up: the 77/23 blend split and the 12.9% ABV are from Gilbert's published notes for the 2023 release — the fresh-sheet card is the 2024, so confirm those figures with your lead before quoting them to a table.",
-   "winemaking": "An \"orange\" or skin-contact wine. Natural fermentation including a pied de cuve, with 13 days on the skins to extract additional color and flavor from contact between juice and skin. Finished in stainless steel tanks. Unfined and unfiltered.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 3,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "pied de cuve",
-     "pron": "pyay duh KOOV"
-    }
-   ],
-   "added": "2026-06-16"
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Pietramore Trebbiano d'Abruzzo Superiore DOC",
-   "vintage": "2021",
-   "region": "Abruzzo, Italy",
-   "type": "white",
-   "glass": "15",
-   "bottle": "60",
-   "grapes": "Trebbiano d'Abruzzo",
-   "pour": "Fragrant straw-yellow with ripe yellow fruit and aromatic herbs — pleasant soft body, dry and warm with good persistence and an herbaceous finish. From a certified organic and biodynamic estate between the Maiella mountains and the Adriatic.",
-   "producer": "Antica Tenuta Pietramore was founded in 2011 by Maria Pia and partner Massimiliano. The name means \"stone love.\" 70 hectares of organically and biodynamically farmed vines in a unique microclimate of diverse soils. Maria works exclusively with indigenous varieties.",
-   "winemaking": "Hand-picked, pressed, macerated on skins for 8–12 months, fermented at controlled temperature, aged on the lees in steel vats, then three months in bottle.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Pietramore",
-     "pron": "pyeh-trah-MOH-reh"
-    },
-    {
-     "term": "Trebbiano d'Abruzzo",
-     "pron": "treh-BYAH-noh dah-BROOD-zoh"
-    },
-    {
-     "term": "Maiella",
-     "pron": "mah-YEL-lah"
     }
    ]
   },
@@ -1311,16 +1154,16 @@ window.SF = {
   },
   {
    "section": "White/Rosé/Orange",
-   "name": "Le Vigne di Faraone Cerasuolo d'Abruzzo DOC",
+   "name": "Vigna del Lauro Sauvignon Blanc, Collio DOC",
    "vintage": "2024",
-   "region": "Abruzzo, Italy",
-   "type": "rosé",
-   "glass": "15",
-   "bottle": "60",
-   "grapes": "Montepulciano",
-   "pour": "Not a rosé but a true cherry red — hints of cherry and rose, obtained by bleeding the free-run must after ~48 hours of maceration. The noblest part of the grape, with a thousand pairings.",
-   "producer": "Le Vigne di Faraone produces Cerasuolo in the traditional Abruzzese style — the everyday wine of the region's homes, obtained from Montepulciano grapes fermented briefly with skins to extract little color and few tannins.",
-   "winemaking": "Free-run must drawn off after approximately 48 hours of maceration, without any pressing action. Fermented as a saignée-style wine to preserve freshness and delicacy.",
+   "region": "Collio, Friuli-Venezia Giulia, Italy",
+   "type": "white",
+   "glass": "16",
+   "bottle": "65",
+   "grapes": "100% Sauvignon Blanc",
+   "pour": "An intense, aromatic Collio Sauvignon off the ponca hills of Cormons — passion fruit and melon over sage, cut grass, and white pepper, with a savory, saline mineral edge. Stainless steel, aged on the fine lees; crisp and persistent on the finish.",
+   "producer": "Vigna del Lauro is a family-run Collio project rooted in Cormòns, farming the region's distinctive 'ponca' marl-and-sandstone soils in a savory, Italian counter-style to French Sancerre. Around 13% ABV per importer references — confirm with your lead before quoting.",
+   "winemaking": "100% Sauvignon Blanc, fermented entirely in stainless steel and aged on its fine lees; no oak.",
    "has_notes": true,
    "specs": [
     {
@@ -1331,7 +1174,7 @@ window.SF = {
     },
     {
      "label": "Dryness",
-     "rating": 5,
+     "rating": 4,
      "low": "sweet",
      "high": "bone dry"
     },
@@ -1350,22 +1193,23 @@ window.SF = {
    ],
    "pronguide": [
     {
-     "term": "Le Vigne di Faraone",
-     "pron": "leh VEEN-yeh dee fah-rah-OH-neh"
+     "term": "Vigna del Lauro",
+     "pron": "VEEN-yah del LOW-roh"
     },
     {
-     "term": "Cerasuolo",
-     "pron": "cheh-rah-ZWOH-loh"
+     "term": "Collio",
+     "pron": "KOH-lyoh"
     },
     {
-     "term": "Montepulciano",
-     "pron": "mon-teh-pool-CHAH-noh"
+     "term": "Cormòns",
+     "pron": "KOR-mohns"
     },
     {
-     "term": "saignée",
-     "pron": "seh-NYAY"
+     "term": "ponca",
+     "pron": "POHN-kah"
     }
-   ]
+   ],
+   "added": "2026-08-15"
   },
   {
    "section": "White/Rosé/Orange",
@@ -1427,279 +1271,164 @@ window.SF = {
   },
   {
    "section": "White/Rosé/Orange",
-   "name": "Valle Dell'Acate Vermentino IGT",
-   "vintage": "2023",
-   "region": "Sicily, Italy",
+   "name": "Rocca del Principe Fiano di Avellino DOCG",
+   "vintage": "2025",
+   "region": "Campania (Lapio, Irpinia), Italy",
+   "type": "white",
+   "glass": "17",
+   "bottle": "70",
+   "grapes": "100% Fiano",
+   "pour": "White peach, lemon, lime, and crushed stone on the nose, lifted by flowers and aromatic herbs. Pure, fresh, and juicy on the palate, finishing with outstanding length and great acidity — a textbook, mineral-driven Fiano di Avellino.",
+   "producer": "Rocca del Principe is a small family estate in Lapio, one of the most respected crus for Fiano di Avellino. Vines (10-25 years) sit at 500-600 meters on the Arianiello hillside, split between complex volcanic soils and calcareous clay. Around 13.5% ABV per the importer, Indigenous Selections — confirm with your lead before quoting.",
+   "winemaking": "100% Fiano, hand-harvested. Fermented in stainless steel with partial malolactic, then aged on the fine lees in stainless for 10 months, plus a minimum 3-4 months in bottle before release.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 3,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 4,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 5,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Fiano di Avellino",
+     "pron": "fee-AH-noh dee ah-vel-LEE-noh"
+    },
+    {
+     "term": "Rocca del Principe",
+     "pron": "ROH-kah del PREEN-chee-peh"
+    },
+    {
+     "term": "Lapio",
+     "pron": "LAH-pyoh"
+    },
+    {
+     "term": "Irpinia",
+     "pron": "eer-PEE-nyah"
+    }
+   ],
+   "added": "2026-07-18"
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "La Spinetta Vermentino IGT",
+   "vintage": "2025",
+   "region": "Tuscany, Italy",
    "type": "white",
    "glass": "18",
    "bottle": "75",
-   "grapes": "100% Vermentino",
-   "pour": "Bright straw-yellow with complex aromas of peach and citrus — soft on the palate with great structure, pleasant vanilla on the finish, and very persistent fruity hints. Pairs beautifully with seafood.",
-   "producer": "Valle dell'Acate's \"7 soils for 7 wines\" project ties each wine to its most characteristic soil. The Vermentino (\"Thymbra\") comes from Contrada Biddine Soprana in Acate, eastern Sicily, farmed organically on white earth soils.",
-   "winemaking": "Aged in steel for 4 months and in bottle for 3 months.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 3,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
+   "grapes": "Vermentino",
+   "pour": "",
+   "producer": "",
+   "winemaking": "",
+   "has_notes": false,
+   "specs": [],
    "pronguide": [
     {
-     "term": "Valle Dell'Acate",
-     "pron": "VAHL-leh del-AH-kah-teh"
+     "term": "La Spinetta",
+     "pron": "lah spee-NET-tah"
     },
     {
      "term": "Vermentino",
-     "pron": "ver-men-TEE-noh"
-    },
-    {
-     "term": "Contrada Biddine",
-     "pron": "kon-TRAH-dah bee-DEE-neh"
+     "pron": "vehr-men-TEE-noh"
     }
    ]
   },
   {
    "section": "White/Rosé/Orange",
-   "name": "Ruth Lewandowski \"Tatto\" Orange",
-   "vintage": "2022",
-   "region": "Geyserville, CA",
-   "type": "orange",
-   "glass": "",
-   "bottle": "70",
-   "grapes": "Friulano, Riesling, Sauvignon Blanc, Muscat, Kerner, Malvasia Bianca, Grüner Veltliner, Trebbiano Toscano",
-   "pour": "Explosive floral aromas with spice, orange zest, and musk — layers of citrus and stone fruit on the palate with a gentle tannic structure and refreshing acidity. Complex and lingering.",
-   "producer": "Ruth Lewandowski sources from select vineyards in Mendocino County, California. The name \"Tatto\" (Italian for \"touch\") reflects a delicate, minimal-intervention approach to skin-contact winemaking.",
-   "winemaking": "Gentle skin fermentation. Minimal intervention, no additives.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 3,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Friulano",
-     "pron": "free-oo-LAH-noh"
-    },
-    {
-     "term": "Grüner Veltliner",
-     "pron": "GROO-ner FELT-lee-ner"
-    },
-    {
-     "term": "Malvasia Bianca",
-     "pron": "mal-VAH-zyah BYAHN-kah"
-    },
-    {
-     "term": "Kerner",
-     "pron": "KEHR-ner"
-    }
-   ]
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "I Pentri \"Flora\" Falanghina IGP",
-   "vintage": "2021",
-   "region": "Campania, Italy",
+   "name": "Terre Nere Etna Bianco DOC",
+   "vintage": "2024",
+   "region": "Etna, Sicily, Italy",
    "type": "white",
    "glass": "",
-   "bottle": "80",
-   "grapes": "100% Falanghina",
-   "pour": "Candied lemon and ginger, vanilla custard, baked apple, and sweet smoke — almost glycerol in texture yet guided by brilliant acidity, becoming salty through the finale with admirable structure and pleasant inner sweetness mingling with minerals and ripe green melon.",
-   "producer": "I Pentri — named for the ancient Samnite tribe of the region — farms ten hectares of vineyards in the hills of Sannio Benevento, founded in 2002. Family-run, land cultivated naturally with copper and sulfur only, no pesticides or herbicides. Grapes hand-harvested; white fermentations use indigenous yeast couvées.",
-   "winemaking": "",
+   "bottle": "85",
+   "grapes": "Carricante, Catarratto, Inzolia, Grecanico, and Minnella",
+   "pour": "Fresh and floral with a streak of white pepper and an assertive, smoky minerality. Light-bodied, silky-textured, with zesty but integrated acidity. Organically grown on the volcanic northern slope of Etna. Drink now or hold.",
+   "producer": "Tenuta delle Terre Nere sits on the northern slope of Etna between 600 and 900 meters, with roughly 43 hectares of vineyards and 150 olive trees. Its crus tell the story of the mountain: the Calderara Cru (11 to 12 hectares, some of it pre-phylloxera, the rest 40 to 50 years old), the Guardiola Cru (2.1 hectares, almost entirely pre-phylloxera and the highest-altitude red-grape vineyards in Europe), and Feudo di Mezzo. 500,000 years of eruptions have left endlessly varied soils, mostly volcanic ash flecked with black pumice and rock. The high elevation drives dramatic day-to-night temperature swings, giving Etna's wines their elegance and lift, free of the heat and overripeness of typical southern bottlings.",
    "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
    "pronguide": [
     {
-     "term": "I Pentri",
-     "pron": "ee PEN-tree"
+     "term": "Terre Nere",
+     "pron": "TEH-reh NEH-reh"
     },
     {
-     "term": "Falanghina",
-     "pron": "fah-lan-GHEE-nah"
+     "term": "Carricante",
+     "pron": "kar-ree-KAHN-teh"
     },
     {
-     "term": "Sannio Benevento",
-     "pron": "SAHN-nyoh beh-neh-VEN-toh"
+     "term": "Catarratto",
+     "pron": "kah-tah-RAH-toh"
+    },
+    {
+     "term": "Inzolia",
+     "pron": "een-ZOH-lee-ah"
+    },
+    {
+     "term": "Grecanico",
+     "pron": "greh-KAH-nee-koh"
+    },
+    {
+     "term": "Minnella",
+     "pron": "mee-NEL-lah"
     }
    ]
   },
   {
    "section": "White/Rosé/Orange",
-   "name": "Scarpa Monferrato Bianco DOC (Timorasso)",
-   "vintage": "2020",
-   "region": "Monferrato, Italy",
+   "name": "Viberti \"Derthona\" Timorasso, Colli Tortonesi DOC",
+   "vintage": "2023",
+   "region": "Monleale, Colli Tortonesi, Piedmont, Italy",
    "type": "white",
    "glass": "",
-   "bottle": "100",
+   "bottle": "95",
    "grapes": "100% Timorasso",
-   "pour": "Floral hints of white flowers, citrus, saffron, and flint — medium body with marked acidity balanced by subtle minerality, hints of lemon, chamomile, and apple over a long, lingering finish.",
-   "producer": "Scarpa is based in Monferrato, Piedmont.",
-   "winemaking": "Maceration on skins for 20 hours below 10°C, then 24-hour cold static clarification. Fermentation in steel tanks with subsequent bâtonnage aging in steel for 9 months. After bottling, rests 24 months before release.",
+   "pour": "Straw yellow in youth, turning golden with age. Peach, acacia flower and hawthorn up front, with the hydrocarbon and mineral notes Timorasso is famous for emerging after a few years in bottle. High acidity and low pH keep it taut and long-lived, with no malolactic. Serve around 14°C, and don't be afraid to cellar it 15 years or more.",
+   "producer": "Viberti Giovanni farms 9.5 hectares in the upper part of Monleale, a medieval hill town central to the Timorasso revival of the 1980s led by Walter Massa. The vineyards sit at around 400 meters with east to southeast exposure on light, clay-limestone soils ideal for the grape. \"Derthona\" is the ancient Latin name for nearby Tortona, heart of the four valleys that have always grown this rare Piedmontese white, one of the oldest and among the few capable of great long-aging wines.",
+   "winemaking": "Grapes are harvested in mid-September from the upper part of Monleale at 350 meters and trucked refrigerated to the Barolo winery. Pneumatic pressing, cold settling, and fermentation at 12°C for 10 to 14 days, then storage on fine lees. Malolactic does not occur, blocked by the cold and the grape's naturally high acidity and low pH. The wine then matures on its lees for 10 to 12 months with weekly batonnage.",
    "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 5,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
    "pronguide": [
     {
-     "term": "Scarpa",
-     "pron": "SKAR-pah"
+     "term": "Viberti",
+     "pron": "vee-BEHR-tee"
     },
     {
-     "term": "Monferrato",
-     "pron": "mon-feh-RAH-toh"
+     "term": "Derthona",
+     "pron": "der-TOH-nah"
     },
     {
      "term": "Timorasso",
-     "pron": "tee-moh-RAHS-soh"
+     "pron": "tee-moh-RAH-soh"
     },
     {
-     "term": "bâtonnage",
-     "pron": "bah-toh-NAHJ"
-    }
-   ]
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Fontodi \"Meriggio\" Bianco IGT",
-   "vintage": "2022",
-   "region": "Tuscany, Italy",
-   "type": "white",
-   "glass": "",
-   "bottle": "110",
-   "grapes": "90% Sauvignon Blanc, 10% Trebbiano",
-   "pour": "Beautiful aromas of light berries, mint, chamomile, and wild flowers — round, harmonious, and fresh on the palate, vibrant and aromatic. Only 8,000 bottles produced annually.",
-   "producer": "Fontodi's Meriggio comes from the La Rota vineyard in the Colli Toscana Centrale appellation.",
-   "winemaking": "Fermented and macerated in stainless steel tanks, terracotta amphoras, and tonneaux with indigenous yeasts for 6 months.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
+     "term": "Colli Tortonesi",
+     "pron": "KOH-lee tor-toh-NEH-zee"
     },
     {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
+     "term": "Monleale",
+     "pron": "mohn-leh-AH-leh"
     },
     {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Fontodi",
-     "pron": "fon-TOH-dee"
-    },
-    {
-     "term": "Meriggio",
-     "pron": "meh-REED-joh"
-    },
-    {
-     "term": "Colli Toscana Centrale",
-     "pron": "KOHL-lee toh-SKAH-nah chen-TRAH-leh"
+     "term": "batonnage",
+     "pron": "bah-toh-NAHZH"
     }
    ]
   },
@@ -1763,8 +1492,37 @@ window.SF = {
   },
   {
    "section": "Red",
-   "name": "Copertino Reserva, Negroamaro",
-   "vintage": "2016",
+   "name": "House Red: Podere Ruggeri Corsini \"Matot\" Langhe Rosso DOC",
+   "vintage": "",
+   "region": "Monforte d'Alba, Piedmont, Italy",
+   "type": "red",
+   "glass": "13",
+   "bottle": "50",
+   "grapes": "Dolcetto, Nebbiolo, Barbera",
+   "pour": "Deep ruby with violet hues. Black cherry, blackberry and currant on the nose with earth, tobacco and leather; well-structured, with lively acidity, moderate tannins, juicy dark fruit and a peppery, dry finish.",
+   "producer": "Podere Ruggeri Corsini is a family-run estate in Monforte d'Alba, inside the larger Barolo DOCG.",
+   "winemaking": "",
+   "has_notes": true,
+   "specs": [],
+   "pronguide": [
+    {
+     "term": "Ruggeri Corsini",
+     "pron": "roo-JEH-ree kor-SEE-nee"
+    },
+    {
+     "term": "Matot",
+     "pron": "mah-TOHT"
+    },
+    {
+     "term": "Langhe",
+     "pron": "LAHN-geh"
+    }
+   ]
+  },
+  {
+   "section": "Red",
+   "name": "Copertino Riserva, Negroamaro",
+   "vintage": "2017",
    "region": "Puglia, Italy",
    "type": "red",
    "glass": "14",
@@ -1821,59 +1579,34 @@ window.SF = {
   },
   {
    "section": "Red",
-   "name": "Corte Scaletta Valpolicella DOC",
-   "vintage": "2022",
-   "region": "Marcellise, Veneto, Italy",
+   "name": "Brigaldara Valpolicella DOC",
+   "vintage": "2024",
+   "region": "Veneto, Italy",
    "type": "red",
    "glass": "15",
    "bottle": "60",
-   "grapes": "40% Corvina, 30% Corvinone, 30% Rondinella",
-   "pour": "Light and pretty, with notes of tart cherry, green peppercorn, and raspberry preserves — a clean, fresh Valpolicella from a family estate near Verona powered entirely by solar energy.",
-   "producer": "Corte Scaletta was formed in 2011 by the Cavedini family, who have produced wine for generations. The farm sits in the Valley of Marcellise a few kilometers from Verona, where mountains and hills protect the vines and moderate climate. Wild grasses are left long between rows; chemical herbicides are never used. 100% renewable energy from solar.",
-   "winemaking": "Grapes hand-harvested. Stainless-steel vats with cold maceration phase, followed by slow spontaneous temperature-controlled fermentation.",
+   "grapes": "55% Corvina, 25% Corvinone, 20% Rondinella",
+   "pour": "A classic Valpolicella: fresh raspberry and dried cranberry with thyme, sage and forest floor, leading to a lively palate driven by sour cherry. Generous, and it picks up spice and floral notes as it opens.",
+   "producer": "The Cesari family sold all their grapes until the 1980s; the first commercial bottling came in 1988 with Valpolicella legend Roberto Ferrarini. Stefano Cesari, once president of the Valpolicella producers' consortium, pushed for a cleaner, fresher, terroir-driven style. The estate farms sustainably across all three Valpolicella zones; this wine blends the Marcellise and Brigaldara vineyards.",
+   "winemaking": "Three weeks in stainless steel with délestage (a heavy pump-over that pulls fresh fruit rather than tannin), then 6 months in stainless steel.",
    "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 2,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
+   "specs": [],
    "pronguide": [
     {
-     "term": "Corte Scaletta",
-     "pron": "KOR-teh skah-LET-tah"
+     "term": "Brigaldara",
+     "pron": "bree-gahl-DAH-rah"
     },
     {
      "term": "Valpolicella",
-     "pron": "val-poh-lee-CHEL-lah"
+     "pron": "vahl-poh-lee-CHEL-lah"
     },
     {
-     "term": "Corvina",
-     "pron": "kor-VEE-nah"
+     "term": "Corvinone",
+     "pron": "kor-vee-NOH-neh"
     },
     {
-     "term": "Rondinella",
-     "pron": "ron-dee-NEL-lah"
+     "term": "délestage",
+     "pron": "day-less-TAHZH"
     }
    ]
   },
@@ -1933,6 +1666,65 @@ window.SF = {
   },
   {
    "section": "Red",
+   "name": "G.D. Vajra Langhe Nebbiolo DOC",
+   "vintage": "2024",
+   "region": "Piedmont, Italy",
+   "type": "red",
+   "glass": "18",
+   "bottle": "75",
+   "grapes": "100% Nebbiolo",
+   "pour": "Lively garnet in the glass — wild strawberry, red cherry, and raspberry with a hint of goji berry, lifted by floral and gentle spice. Crunchy and vibrant on the palate, juicy red fruit woven through a well-defined tannic frame, finishing perfumed, floral, and gourmand.",
+   "producer": "G.D. Vajra, founded in 1972 by Aldo Vaira and named for his father Giuseppe Domenico Vajra, is one of Barolo's pioneering organic estates, based in Vergne — the highest village in the Barolo commune. This Langhe Nebbiolo is the estate's fresher, earlier-drinking expression of the grape, raised in steel rather than the long cask aging of their Barolo. Note: the fresh sheet header lists the 2024 vintage while the accompanying tasting and harvest notes describe the 2025 — confirm the vintage on the bottle with your lead before quoting. ABV runs about 13.5% per the producer; confirm before quoting.",
+   "winemaking": "100% Nebbiolo from organically farmed vineyards on calcareous soils between 280–550m, worked with permanent grass cover; the estate is certified organic and Equalitas sustainable. Hand-harvested over a late, extended pick (Sept 12–Oct 2 in the described vintage). Fermentation ran 20–25 days followed by spontaneous malolactic fermentation, then roughly 4 months in stainless steel before bottling. No oak — the freshness and lift come from steel-only aging.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 3,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 3,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "G.D. Vajra",
+     "pron": "VY-rah"
+    },
+    {
+     "term": "Langhe",
+     "pron": "LAHN-gheh"
+    },
+    {
+     "term": "Nebbiolo",
+     "pron": "neb-BYOH-loh"
+    },
+    {
+     "term": "Piemonte",
+     "pron": "pyeh-MON-teh"
+    }
+   ],
+   "added": "2026-08-01"
+  },
+  {
+   "section": "Red",
    "name": "Corte Pavone Rosso di Montalcino DOC",
    "vintage": "2023",
    "region": "Montalcino, Italy",
@@ -1982,64 +1774,6 @@ window.SF = {
     {
      "term": "Sangiovese",
      "pron": "san-joh-VEH-zeh"
-    }
-   ]
-  },
-  {
-   "section": "Red",
-   "name": "Boffalora \"Umo\" Chiavennasca IGT",
-   "vintage": "2021",
-   "region": "Valtellina, Italy",
-   "type": "red",
-   "glass": "20",
-   "bottle": "85",
-   "grapes": "100% Nebbiolo (called Chiavennasca locally)",
-   "pour": "Delightful and crunchy, light on its feet — wonderful aromas of red wild berries, graphite, and wild herbs. A declassified Valtellina Superiore, unfined and unfiltered.",
-   "producer": "Since 2002, Guglielmo \"Beppe\" Giuseppe has worked steep Nebbiolo terraces in Castione Andevenno ranging from 1,400 to 4,000 feet in elevation. Boffalora is named for the vineyard buffeted by Breva winds from the Alps and Tirano winds off Lake Como. Beppe also tends bees in his vineyards and farms organically under conversion. Producing in Valtellina requires over 1,200 labor hours per hectare — versus ~330 in Barolo.",
-   "winemaking": "Very short maceration. Aged six months in large old French oak barrels. Bottled unfined and unfiltered.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 3,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Boffalora",
-     "pron": "bof-fah-LOH-rah"
-    },
-    {
-     "term": "Chiavennasca",
-     "pron": "kyah-ven-NAHS-kah"
-    },
-    {
-     "term": "Valtellina",
-     "pron": "val-tel-LEE-nah"
-    },
-    {
-     "term": "Castione Andevenno",
-     "pron": "kah-STYOH-neh ahn-deh-VEN-noh"
     }
    ]
   },
@@ -2103,60 +1837,6 @@ window.SF = {
   },
   {
    "section": "Red",
-   "name": "I Pentri \"Kerres\" Piedirosso IGP",
-   "vintage": "2016",
-   "region": "Campania, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "85",
-   "grapes": "100% Piedirosso",
-   "pour": "Dark, bold, and aromatic — dark cherry, blackberry, and tobacco. This wine announces its presence the moment it hits the glass.",
-   "producer": "I Pentri — named for the ancient Samnite tribe — farms ten hectares in the hills of Sannio Benevento between Monte Taburno and the southeastern Matese, founded in 2002 with 20 years of prior vineyard experience. Family-run, natural farming with copper and sulfur only, hand-harvested grapes, spontaneous fermentations for reds.",
-   "winemaking": "Macerated in stainless steel, finished in French oak for 1 year. Zero fining or filtration.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 4,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 3,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 3,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "I Pentri",
-     "pron": "ee PEN-tree"
-    },
-    {
-     "term": "Piedirosso",
-     "pron": "pyeh-dee-ROHS-soh"
-    },
-    {
-     "term": "Sannio Benevento",
-     "pron": "SAHN-nyoh beh-neh-VEN-toh"
-    }
-   ]
-  },
-  {
-   "section": "Red",
    "name": "Felsina \"Berardenga\" Chianti Classico DOCG",
    "vintage": "2022",
    "region": "Tuscany, Italy",
@@ -2210,60 +1890,6 @@ window.SF = {
     {
      "term": "Castelnuovo Berardenga",
      "pron": "kah-stel-NWOH-voh beh-rar-DEN-gah"
-    }
-   ]
-  },
-  {
-   "section": "Red",
-   "name": "La Miraja Ruche Di Castagnole Monferrato DOCG",
-   "vintage": "2023",
-   "region": "Piedmont, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "90",
-   "grapes": "100% Ruché",
-   "pour": "A wild nose of violet, rose, iris, jasmine, cardamom, white pepper, and lychee — fresh wild berries, red cherry, and pomegranate on the palate with robust acidity and moderate tannins. Beguiling and singular.",
-   "producer": "From the birthplace of Ruché, Castagnole Monferrato, where only seven villages hold the DOCG distinction. Estate fruit from two high-density vineyards: Majole (planted 1975, southwest exposure) and Santa Eufemia (1992, eastern exposure) at 250m elevation on calcareous-red clay soils. 5,000 vines/ha in guyot style.",
-   "winemaking": "Hand-harvested fruit destemmed and basket-pressed into stainless steel; 10-day native skin fermentation. Spontaneous malolactic fermentation. Rested in cement vessels for 3 months, then 4 months in bottle before release.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 2,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "La Miraja",
-     "pron": "lah mee-RAH-yah"
-    },
-    {
-     "term": "Ruché",
-     "pron": "roo-KEH"
-    },
-    {
-     "term": "Castagnole Monferrato",
-     "pron": "kah-stahn-YOH-leh mon-feh-RAH-toh"
     }
    ]
   },
@@ -2327,16 +1953,16 @@ window.SF = {
   },
   {
    "section": "Red",
-   "name": "Uccelliera \"Rapace\" IGT",
-   "vintage": "2019",
-   "region": "Tuscany, Italy",
+   "name": "Piaggia \"Il Sasso\" Carmignano",
+   "vintage": "2022",
+   "region": "Carmignano DOCG, Tuscany, Italy",
    "type": "red",
    "glass": "",
-   "bottle": "95",
-   "grapes": "70% Sangiovese, 20% Merlot, 10% Cabernet Sauvignon",
-   "pour": "Deep violet — black cherry, black plum, menthol, herbs, and tobacco on the nose; black fruits, dark chocolate, sweet tobacco, and fennel on the palate. Complex, powerful, and powdery-tannic already.",
-   "producer": "Uccelliera is based in Castelnuovo dell'Abate in the southeast area of Montalcino. Sangiovese comes from reclassified Brunello-designated vineyards; Merlot and Cabernet Sauvignon from estate plantings between 1975 and 2000 at 150–350m on calcareous clay sandy soils.",
-   "winemaking": "Grapes destemmed with dry ice to prevent oxidation and cool temperatures, developing indigenous yeasts over 7–8 days. Spontaneous alcoholic fermentation at 12–25°C for 25–30 days with frequent pump-overs. Malolactic in stainless steel. Aged in French oak for at least 12 months, then minimum 6 months bottle refinement. 10,365 bottles and 484 magnums produced.",
+   "bottle": "100",
+   "grapes": "70% Sangiovese, 15% Cabernet Sauvignon, 10% Merlot, 5% Cabernet Franc",
+   "pour": "Deep, intense ruby red. Cherry and marasca cherry lifted by balsamic and spice, then full and enveloping on the palate with the polish of thoroughbred Sangiovese — fine-grained tannins framing bright, well-balanced acidity, the Cabernet and Merlot rounding the edges. A structured Carmignano for the richer plates on the menu.",
+   "producer": "Piaggia is a small family estate (the Vannucci family) in Carmignano, one of Tuscany's oldest and smallest DOCG zones, where Sangiovese has long been blended with a meaningful share of Cabernet. \"Il Sasso\" is the estate's Sangiovese-led blend, farmed practicing-organic, with roughly 3,300 cases produced and about 1,000 imported. The fresh sheet doesn't list a vintage — confirm the pour vintage with your lead before quoting.",
+   "winemaking": "Fermented with ambient (indigenous) yeasts, with maceration of at least 18–20 days. Aged at least 15 months in French-oak barriques, then at least 6 months in bottle before release.",
    "has_notes": true,
    "specs": [
     {
@@ -2353,7 +1979,7 @@ window.SF = {
     },
     {
      "label": "Acidity",
-     "rating": 3,
+     "rating": 4,
      "low": "soft",
      "high": "bright"
     },
@@ -2366,18 +1992,23 @@ window.SF = {
    ],
    "pronguide": [
     {
-     "term": "Uccelliera",
-     "pron": "oo-chel-LYEH-rah"
+     "term": "Piaggia",
+     "pron": "PYAH-jah"
     },
     {
-     "term": "Rapace",
-     "pron": "rah-PAH-cheh"
+     "term": "Il Sasso",
+     "pron": "eel SAH-soh"
     },
     {
-     "term": "Castelnuovo dell'Abate",
-     "pron": "kah-stel-NWOH-voh del-AH-bah-teh"
+     "term": "Carmignano",
+     "pron": "kar-mee-NYAH-noh"
+    },
+    {
+     "term": "marasca",
+     "pron": "mah-RAH-skah"
     }
-   ]
+   ],
+   "added": "2026-07-04"
   },
   {
    "section": "Red",
@@ -2439,56 +2070,6 @@ window.SF = {
   },
   {
    "section": "Red",
-   "name": "Scarpa Verduno Pelaverga DOC",
-   "vintage": "2022",
-   "region": "Monferrato, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "110",
-   "grapes": "Pelaverga",
-   "pour": "Small red berries, floral hints of rose, and slight white pepper on the nose — fine-bodied with pleasant freshness, light tannin, and a spicy finish. A rare grape from the village of Verduno.",
-   "producer": "Scarpa. Vineyard planted 1970 (with grafting-on in 2019) in loose, light-colored soils rich in limestone and sand in Verduno.",
-   "winemaking": "Maceration on skins for 10 days in steel with 2 manual pump-overs per day. Racked in steel after alcoholic fermentation. Malolactic fermentation, then 6 months aging in steel before bottling.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 2,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Verduno",
-     "pron": "vehr-DOO-noh"
-    },
-    {
-     "term": "Pelaverga",
-     "pron": "peh-lah-VEHR-gah"
-    }
-   ]
-  },
-  {
-   "section": "Red",
    "name": "Voliero Brunello di Montalcino DOCG",
    "vintage": "2017",
    "region": "Tuscany, Italy",
@@ -2544,7 +2125,7 @@ window.SF = {
   {
    "section": "Red",
    "name": "Castello di Neive Barbaresco Santo Stefano",
-   "vintage": "2022",
+   "vintage": "2023",
    "region": "Piedmont, Italy",
    "type": "red",
    "glass": "",
@@ -2601,21 +2182,21 @@ window.SF = {
   },
   {
    "section": "Red",
-   "name": "Zenato \"Cresasso\" Corvina Veronese IGT",
-   "vintage": "2015",
-   "region": "Veneto, Italy",
+   "name": "Cocito \"Baluchin\" Barbaresco Riserva DOCG",
+   "vintage": "2017",
+   "region": "Piedmont, Italy",
    "type": "red",
    "glass": "",
-   "bottle": "150",
-   "grapes": "100% Corvina",
-   "pour": "Wild strawberries, plums, raspberries, leather, sweet spice, and chocolate — brooding, powerful, and tannic, with tart black cherries, plums, and tobacco characteristic of Corvina.",
-   "producer": "Zenato is a major Veneto producer with estates in both Lugana and Valpolicella, particularly known for Amarone. The Cresasso is a single-vineyard varietal Corvina made at the Costalunga estate at Sant'Ambrogio di Valpolicella.",
-   "winemaking": "Grapes harvested in two phases: first portion dried for two months, second over-ripened on the vine. Both fermented in stainless steel, then blended and aged in French oak casks for 24 months.",
+   "bottle": "165",
+   "grapes": "100% Nebbiolo",
+   "pour": "Crushed flowers, sweet red cherry, cinnamon, white pepper, cedar, and a touch of French oak, with violets, flint, and dark cassis and plum underneath. Translucent, high-altitude Barbaresco — super-expressive and impeccably done. 94 points, Vinous.",
+   "producer": "Ezio Cocito (pronounced Co-CHEE-toh) farms a tiny 1.2-hectare, high-elevation vineyard in Neive, one of the highest sites in the Barbaresco appellation at ~380 meters with a steep 45-55% south/southwest slope and 30+ year-old vines. Made in collaboration with, and aged at, Giorgio Rivetti's La Spinetta; only 300-400 six-pack cases a year, and Riserva only in exceptional vintages. Around 14.5% ABV per the importer, Indigenous Selections — confirm with your lead before quoting.",
+   "winemaking": "100% Nebbiolo, aged roughly 20 months in 30% new French oak. Unfined and unfiltered.",
    "has_notes": true,
    "specs": [
     {
      "label": "Body",
-     "rating": 5,
+     "rating": 4,
      "low": "light",
      "high": "full"
     },
@@ -2627,7 +2208,7 @@ window.SF = {
     },
     {
      "label": "Acidity",
-     "rating": 3,
+     "rating": 4,
      "low": "soft",
      "high": "bright"
     },
@@ -2640,22 +2221,27 @@ window.SF = {
    ],
    "pronguide": [
     {
-     "term": "Zenato",
-     "pron": "zeh-NAH-toh"
+     "term": "Cocito",
+     "pron": "co-CHEE-toh"
     },
     {
-     "term": "Cresasso",
-     "pron": "kreh-SAHS-soh"
+     "term": "Baluchin",
+     "pron": "bah-loo-KEEN"
     },
     {
-     "term": "Corvina Veronese",
-     "pron": "kor-VEE-nah veh-roh-NEH-zeh"
+     "term": "Barbaresco",
+     "pron": "bar-bah-RES-koh"
     },
     {
-     "term": "Sant'Ambrogio di Valpolicella",
-     "pron": "sant am-BROH-joh dee val-poh-lee-CHEL-lah"
+     "term": "Nebbiolo",
+     "pron": "neb-BYOH-loh"
+    },
+    {
+     "term": "Neive",
+     "pron": "NAY-veh"
     }
-   ]
+   ],
+   "added": "2026-07-18"
   },
   {
    "section": "Red",
@@ -2708,64 +2294,6 @@ window.SF = {
     {
      "term": "Lagrein",
      "pron": "lah-GRYNE"
-    }
-   ]
-  },
-  {
-   "section": "Red",
-   "name": "Arpepe \"Sassella Rocce Rosse\" Valtellina Superiore Riserva DOCG",
-   "vintage": "",
-   "region": "Valtellina, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "200",
-   "grapes": "100% Chiavennasca (Nebbiolo)",
-   "pour": "Initially understated with blood orange and apricot, pretty cinnamon, nutmeg, and tanned leather spice — given time, it sings with greater intensity and balance. An iron-willed, granite-challenging Nebbiolo from the heart of Sassella.",
-   "producer": "Ar. Pe. Pe. (Arturo Pelizzatti Perego) planted the renewed Sassella vineyard at 400m in 1984, naming the wine Rocce Rosse — the color of the red rocks and the passion behind it. Founded on Arturo's ambition to make a pure Nebbiolo that captured the iron-like flavor of his ancestors' land. The Sassella cru sits above Lake Como.",
-   "winemaking": "South/East exposure, 400–500m altitude. Harvest October 22nd, yield 40 hl/ha. 97-day maceration in 50hl wooden vats. 34 months aging in 50hl large barrels, concrete, then bottle. 25,302 bottles of 750ml produced.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 5,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 4,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Ar.Pe.Pe.",
-     "pron": "ar-PEH-peh"
-    },
-    {
-     "term": "Sassella",
-     "pron": "sahs-SEL-lah"
-    },
-    {
-     "term": "Rocce Rosse",
-     "pron": "ROHCH-cheh ROHS-seh"
-    },
-    {
-     "term": "Valtellina Superiore",
-     "pron": "val-tel-LEE-nah soo-peh-RYOH-reh"
     }
    ]
   },
@@ -2825,70 +2353,12 @@ window.SF = {
   },
   {
    "section": "Red",
-   "name": "Canalicchio di Sopra Brunello di Montalcino DOCG",
-   "vintage": "2006",
-   "region": "Tuscany, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "225",
-   "grapes": "100% Sangiovese",
-   "pour": "Plums offset by spicy citrus and dusty dried florals — silky richness on the palate with saturating spices and tannins, balsamic and rich through the close, with spice cookie and minerals lingering. Still adolescent and on the verge of its peak.",
-   "producer": "Canalicchio di Sopra has been producing since 1966. Grapes come from two estate crus: Canalicchio (clay-rich soils high in Magnesium, Iron, and Manganese) and Montosoli (galestro/mineral-rich, high-silt loam). This blend of soils yields wines of great minerality, sapidity, and acidity ideal for long aging.",
-   "winemaking": "Steel tank fermentation with temperature control and daily soft pump-overs. 25-day skin maceration. 36 months in Slavonian oak casks (2,500 and 5,000 liters).",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 4,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 4,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Canalicchio di Sopra",
-     "pron": "kah-nah-LEE-kyoh dee SOH-prah"
-    },
-    {
-     "term": "Brunello di Montalcino",
-     "pron": "broo-NEL-loh dee mon-tahl-CHEE-noh"
-    },
-    {
-     "term": "Montosoli",
-     "pron": "mon-toh-ZOH-lee"
-    },
-    {
-     "term": "galestro",
-     "pron": "gah-LES-troh"
-    }
-   ]
-  },
-  {
-   "section": "Red",
    "name": "Viberti Giovanni \"San Pietro\" Barolo Riserva DOCG",
    "vintage": "2018",
    "region": "Piedmont, Italy",
    "type": "red",
    "glass": "",
-   "bottle": "250",
+   "bottle": "240",
    "grapes": "Nebbiolo",
    "pour": "Balsam and dry tobacco on the nose with pressed roses — iron and raw meat with fine mineral quality on the palate, juicy and bright with chalky tannins, cranberry and red cherry, layered and pure with classic Barolo austerity.",
    "producer": "Viberti Giovanni is based in the village of Barolo, Piedmont.",
@@ -2934,1229 +2404,85 @@ window.SF = {
      "pron": "neb-BYOH-loh"
     }
    ]
-  },
-  {
-   "section": "Red",
-   "name": "Vietti Barolo \"Ravera\" DOCG",
-   "vintage": "2020",
-   "region": "Piedmont, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "275",
-   "grapes": "100% Nebbiolo",
-   "pour": "Rose petal, licorice, wild cherry, and a flash of frozen raspberry — precise and mineral, with chalky tannins and brilliant acidity. The Ravera cru brings clay-rich structure and serious aging potential in a polished, refined frame.",
-   "producer": "Vietti is one of Piedmont's benchmark estates, based in Castiglione Falletto. Their single-vineyard Barolo series draws from some of the appellation's most celebrated crus. Ravera is located in the municipality of Novello, renowned for its clay-rich soils and excellent sun exposure, which give the wine its structured backbone and remarkable longevity.",
-   "winemaking": "100% Nebbiolo from the Ravera cru in Novello. Fermentation in temperature-controlled stainless steel tanks with extended maceration of 3–4 weeks. Aged approximately 30 months in oak before release.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 4,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 4,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Vietti",
-     "pron": "VYET-tee"
-    },
-    {
-     "term": "Ravera",
-     "pron": "rah-VEH-rah"
-    },
-    {
-     "term": "Castiglione Falletto",
-     "pron": "kah-steel-YOH-neh fahl-LET-toh"
-    },
-    {
-     "term": "Novello",
-     "pron": "noh-VEL-loh"
-    }
-   ]
-  },
-  {
-   "section": "Red",
-   "name": "Marchesi Antinori \"Tignanello\" Super Tuscan IGT",
-   "vintage": "2021",
-   "region": "Tuscany, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "300",
-   "grapes": "79% Sangiovese, 13% Cabernet Sauvignon, 8% Cabernet Franc",
-   "pour": "The wine that defined Super Tuscan — blackcurrant, dark cherry, cedar, and tobacco with an elegant undercurrent of spice. The 2021 is Renzo Cotarella's declared finest vintage in his career: structured, seamless, and built to age.",
-   "producer": "The Antinori family has made wine continuously since 1385 — 26 generations. Tignanello was first produced in 1971 and pioneered the Super Tuscan category by blending Sangiovese with Cabernet on Chianti Classico estate land, aging in small French oak barriques rather than traditional large Slavonian casks. The Tignanello vineyard covers 47 hectares in the heart of Chianti Classico.",
-   "winemaking": "Grapes vinified separately in conical oak fermenters. Malolactic fermentation in barriques. Aged approximately 15 months in mostly new French oak plus a small percentage of Hungarian oak. Blended earlier in the process than previous vintages — a refinement Cotarella credits to the 2021 vintage's exceptional quality.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 4,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 4,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Marchesi Antinori",
-     "pron": "mar-KEH-zee ahn-tee-NOH-ree"
-    },
-    {
-     "term": "Tignanello",
-     "pron": "teen-yah-NEL-loh"
-    },
-    {
-     "term": "Cabernet Franc",
-     "pron": "kah-behr-NAY FRAHNK"
-    },
-    {
-     "term": "Super Tuscan",
-     "pron": "SOO-pehr TOOS-kahn"
-    }
-   ]
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Terre Nere Etna Bianco DOC",
-   "vintage": "",
-   "region": "Etna, Sicily, Italy",
-   "type": "white",
-   "glass": "",
-   "bottle": "",
-   "grapes": "Carricante, Catarratto, Inzolia, Grecanico, and Minnella",
-   "pour": "Fresh and floral with a streak of white pepper and an assertive, smoky minerality. Light-bodied, silky-textured, with zesty but integrated acidity. Organically grown on the volcanic northern slope of Etna. Drink now or hold.",
-   "producer": "Tenuta delle Terre Nere sits on the northern slope of Etna between 600 and 900 meters, with roughly 43 hectares of vineyards and 150 olive trees. Its crus tell the story of the mountain: the Calderara Cru (11 to 12 hectares, some of it pre-phylloxera, the rest 40 to 50 years old), the Guardiola Cru (2.1 hectares, almost entirely pre-phylloxera and the highest-altitude red-grape vineyards in Europe), and Feudo di Mezzo. 500,000 years of eruptions have left endlessly varied soils, mostly volcanic ash flecked with black pumice and rock. The high elevation drives dramatic day-to-night temperature swings, giving Etna's wines their elegance and lift, free of the heat and overripeness of typical southern bottlings.",
-   "has_notes": true,
-   "pronguide": [
-    {
-     "term": "Terre Nere",
-     "pron": "TEH-reh NEH-reh"
-    },
-    {
-     "term": "Carricante",
-     "pron": "kar-ree-KAHN-teh"
-    },
-    {
-     "term": "Catarratto",
-     "pron": "kah-tah-RAH-toh"
-    },
-    {
-     "term": "Inzolia",
-     "pron": "een-ZOH-lee-ah"
-    },
-    {
-     "term": "Grecanico",
-     "pron": "greh-KAH-nee-koh"
-    },
-    {
-     "term": "Minnella",
-     "pron": "mee-NEL-lah"
-    }
-   ]
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Viberti \"Derthona\" Timorasso, Colli Tortonesi DOC",
-   "vintage": "2023",
-   "region": "Monleale, Colli Tortonesi, Piedmont, Italy",
-   "type": "white",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Timorasso",
-   "pour": "Straw yellow in youth, turning golden with age. Peach, acacia flower and hawthorn up front, with the hydrocarbon and mineral notes Timorasso is famous for emerging after a few years in bottle. High acidity and low pH keep it taut and long-lived, with no malolactic. Serve around 14°C, and don't be afraid to cellar it 15 years or more.",
-   "producer": "Viberti Giovanni farms 9.5 hectares in the upper part of Monleale, a medieval hill town central to the Timorasso revival of the 1980s led by Walter Massa. The vineyards sit at around 400 meters with east to southeast exposure on light, clay-limestone soils ideal for the grape. \"Derthona\" is the ancient Latin name for nearby Tortona, heart of the four valleys that have always grown this rare Piedmontese white, one of the oldest and among the few capable of great long-aging wines.",
-   "winemaking": "Grapes are harvested in mid-September from the upper part of Monleale at 350 meters and trucked refrigerated to the Barolo winery. Pneumatic pressing, cold settling, and fermentation at 12°C for 10 to 14 days, then storage on fine lees. Malolactic does not occur, blocked by the cold and the grape's naturally high acidity and low pH. The wine then matures on its lees for 10 to 12 months with weekly batonnage.",
-   "has_notes": true,
-   "pronguide": [
-    {
-     "term": "Viberti",
-     "pron": "vee-BEHR-tee"
-    },
-    {
-     "term": "Derthona",
-     "pron": "der-TOH-nah"
-    },
-    {
-     "term": "Timorasso",
-     "pron": "tee-moh-RAH-soh"
-    },
-    {
-     "term": "Colli Tortonesi",
-     "pron": "KOH-lee tor-toh-NEH-zee"
-    },
-    {
-     "term": "Monleale",
-     "pron": "mohn-leh-AH-leh"
-    },
-    {
-     "term": "batonnage",
-     "pron": "bah-toh-NAHZH"
-    }
-   ]
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Pietramore Passerina Abruzzo Superiore DOP",
-   "vintage": "",
-   "region": "Abruzzo, Italy",
-   "type": "white",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Passerina",
-   "pour": "Straw yellow with greenish glints, crystalline and lively. White flowers and tropical fruit on the nose, fresh on the palate with good body. A dry, biodynamic Abruzzese white built for crudo, antipasti and grilled fish.",
-   "producer": "Antica Tenuta Pietramore farms biodynamically in Abruzzo, founded in 2011 and Demeter-certified since 2014, with old vines (many around 40 years) and a fully vegan cellar. The fresh sheet lists the production zone as the Province of Chieti, on medium-textured, chalky-leaning soils with a southeast exposure — confirm the exact zone and vintage with your lead before quoting, since the estate itself is documented near Teramo. ABV runs roughly 13–13.5% depending on vintage; confirm against the bottle in hand.",
-   "winemaking": "Hand-picked, pressed with the aid of dry ice and soft-pressed, with decantation of the free-run juice. Anaerobic fermentation at low temperature, around 14–15°C, then aging on the fine lees in steel vats.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Pietramore",
-     "pron": "pyeh-trah-MOH-reh"
-    },
-    {
-     "term": "Passerina",
-     "pron": "pah-seh-REE-nah"
-    }
-   ],
-   "added": "2026-06-20"
-  },
-  {
-   "section": "Red",
-   "name": "Piaggia \"Il Sasso\" Carmignano",
-   "vintage": "",
-   "region": "Carmignano DOCG, Tuscany, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "",
-   "grapes": "70% Sangiovese, 15% Cabernet Sauvignon, 10% Merlot, 5% Cabernet Franc",
-   "pour": "Deep, intense ruby red. Cherry and marasca cherry lifted by balsamic and spice, then full and enveloping on the palate with the polish of thoroughbred Sangiovese — fine-grained tannins framing bright, well-balanced acidity, the Cabernet and Merlot rounding the edges. A structured Carmignano for the richer plates on the menu.",
-   "producer": "Piaggia is a small family estate (the Vannucci family) in Carmignano, one of Tuscany's oldest and smallest DOCG zones, where Sangiovese has long been blended with a meaningful share of Cabernet. \"Il Sasso\" is the estate's Sangiovese-led blend, farmed practicing-organic, with roughly 3,300 cases produced and about 1,000 imported. The fresh sheet doesn't list a vintage — confirm the pour vintage with your lead before quoting.",
-   "winemaking": "Fermented with ambient (indigenous) yeasts, with maceration of at least 18–20 days. Aged at least 15 months in French-oak barriques, then at least 6 months in bottle before release.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 4,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 4,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Piaggia",
-     "pron": "PYAH-jah"
-    },
-    {
-     "term": "Il Sasso",
-     "pron": "eel SAH-soh"
-    },
-    {
-     "term": "Carmignano",
-     "pron": "kar-mee-NYAH-noh"
-    },
-    {
-     "term": "marasca",
-     "pron": "mah-RAH-skah"
-    }
-   ],
-   "added": "2026-07-04"
-  },
-  {
-   "section": "Bubbles",
-   "name": "Claudio Plessi \"Muntanera\" Rosato",
-   "vintage": "",
-   "region": "Emilia-Romagna, Italy",
-   "type": "sparkling",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Uva Tosca",
-   "pour": "An earthy, funky, cloudy pink fizz with real tannic grip — cherry, wild berries, dusty roses, sage and a hint of pine. Ancestral method with no added sulfur; serve cold but not icy and let it open with air.",
-   "producer": "Claudio Plessi farms near Modena in Emilia-Romagna, where his parents planted vines in 1958. A professor of agriculture, he took over the estate in 1986 and founded Il Salto, a consortium of biodynamic growers and natural winemakers. Uva Tosca is a rare, hyper-local variety — reputedly the only grape able to ripen at these elevations — grown on super-calcareous silty clay-loam that was a riverbed a thousand years ago. 12% ABV.",
-   "winemaking": "Metodo ancestrale (pét-nat): a few hours of skin contact, then bottle-fermented and capped off without disgorging (sboccatura), per local tradition. Biodynamic farming, no added SO2, unfiltered and cloudy.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 3,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Claudio Plessi",
-     "pron": "KLOW-dyoh PLESS-ee"
-    },
-    {
-     "term": "Muntanera",
-     "pron": "moon-tah-NEH-rah"
-    },
-    {
-     "term": "Uva Tosca",
-     "pron": "OO-vah TOS-kah"
-    },
-    {
-     "term": "metodo ancestrale",
-     "pron": "MEH-toh-doh ahn-chess-TRAH-leh"
-    }
-   ],
-   "added": "2026-07-11"
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Schiopetto Sauvignon Blanc, Collio DOC",
-   "vintage": "",
-   "region": "Collio, Friuli-Venezia Giulia, Italy",
-   "type": "white",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Sauvignon",
-   "pour": "Bright straw-yellow with green flecks; a fresh, flowery nose of exotic blossom leading to an elegant palate with long, refreshing acidity. Five months on the fine lees in stainless steel.",
-   "producer": "Schiopetto is one of the oldest estates in Collio, the terraced hill zone between Gorizia and Cividale. Founder Mario Schiopetto is regarded as a pioneer of modern Friulian white wine. The estate on the hills of Capriva del Friuli is now owned by Emilio Rotolo, with son Alessandro managing and Giorgio Schiopetto in the cellar. Around 13% ABV per importer and critic references — confirm with your lead before quoting.",
-   "winemaking": "100% Sauvignon fermented in stainless steel, five months on the fine lees; filtered, natural cork.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Schiopetto",
-     "pron": "skyoh-PET-toh"
-    },
-    {
-     "term": "Collio",
-     "pron": "KOH-lyoh"
-    },
-    {
-     "term": "Capriva del Friuli",
-     "pron": "kah-PREE-vah del free-OO-lee"
-    }
-   ],
-   "added": "2026-07-11"
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Rocca del Principe Fiano di Avellino DOCG",
-   "vintage": "",
-   "region": "Campania (Lapio, Irpinia), Italy",
-   "type": "white",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Fiano",
-   "pour": "White peach, lemon, lime, and crushed stone on the nose, lifted by flowers and aromatic herbs. Pure, fresh, and juicy on the palate, finishing with outstanding length and great acidity — a textbook, mineral-driven Fiano di Avellino.",
-   "producer": "Rocca del Principe is a small family estate in Lapio, one of the most respected crus for Fiano di Avellino. Vines (10-25 years) sit at 500-600 meters on the Arianiello hillside, split between complex volcanic soils and calcareous clay. Around 13.5% ABV per the importer, Indigenous Selections — confirm with your lead before quoting.",
-   "winemaking": "100% Fiano, hand-harvested. Fermented in stainless steel with partial malolactic, then aged on the fine lees in stainless for 10 months, plus a minimum 3-4 months in bottle before release.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 5,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Fiano di Avellino",
-     "pron": "fee-AH-noh dee ah-vel-LEE-noh"
-    },
-    {
-     "term": "Rocca del Principe",
-     "pron": "ROH-kah del PREEN-chee-peh"
-    },
-    {
-     "term": "Lapio",
-     "pron": "LAH-pyoh"
-    },
-    {
-     "term": "Irpinia",
-     "pron": "eer-PEE-nyah"
-    }
-   ],
-   "added": "2026-07-18"
-  },
-  {
-   "section": "Red",
-   "name": "Cocito \"Baluchin\" Barbaresco Riserva DOCG",
-   "vintage": "2017",
-   "region": "Piedmont, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Nebbiolo",
-   "pour": "Crushed flowers, sweet red cherry, cinnamon, white pepper, cedar, and a touch of French oak, with violets, flint, and dark cassis and plum underneath. Translucent, high-altitude Barbaresco — super-expressive and impeccably done. 94 points, Vinous.",
-   "producer": "Ezio Cocito (pronounced Co-CHEE-toh) farms a tiny 1.2-hectare, high-elevation vineyard in Neive, one of the highest sites in the Barbaresco appellation at ~380 meters with a steep 45-55% south/southwest slope and 30+ year-old vines. Made in collaboration with, and aged at, Giorgio Rivetti's La Spinetta; only 300-400 six-pack cases a year, and Riserva only in exceptional vintages. Around 14.5% ABV per the importer, Indigenous Selections — confirm with your lead before quoting.",
-   "winemaking": "100% Nebbiolo, aged roughly 20 months in 30% new French oak. Unfined and unfiltered.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 4,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 4,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Cocito",
-     "pron": "co-CHEE-toh"
-    },
-    {
-     "term": "Baluchin",
-     "pron": "bah-loo-KEEN"
-    },
-    {
-     "term": "Barbaresco",
-     "pron": "bar-bah-RES-koh"
-    },
-    {
-     "term": "Nebbiolo",
-     "pron": "neb-BYOH-loh"
-    },
-    {
-     "term": "Neive",
-     "pron": "NAY-veh"
-    }
-   ],
-   "added": "2026-07-18"
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "L'Archetipo Greco Bianco IGP Salento 2024",
-   "vintage": "2024",
-   "region": "Salento, Puglia, Italy",
-   "type": "white",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Greco Bianco",
-   "pour": "Green apple, pineapple, honey and white flowers, with a mineral, savory finish — a straw-gold, medium-bodied Greco from a Puglian estate at the forefront of synergistic farming.",
-   "producer": "L'Archetipo was founded by Francesco, a grape farmer's son turned agronomist who converted to organic farming in the '80s, then biodynamics in 2000, and ultimately pioneered 'Synergistic Agriculture' — a no-plow approach linking every organism in the ecosystem. He is now a leading voice for sustainable farming in Italy. (Research puts this bottling at ~12.5% ABV with a few days of skin contact before a slow, cool ferment and two years on lees in steel; the fresh-sheet note doesn't specify either — confirm with your lead before quoting.)",
-   "winemaking": "Spontaneous fermentation with indigenous yeasts following a short period of skin contact, then a slow, low-temperature ferment. Aged on the lees for roughly two years in stainless steel, stirred every 15 days.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 3,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "L'Archetipo",
-     "pron": "lar-KEH-tee-poh"
-    },
-    {
-     "term": "Greco Bianco",
-     "pron": "GREH-koh bee-AHN-koh"
-    },
-    {
-     "term": "Salento",
-     "pron": "sah-LEN-toh"
-    }
-   ],
-   "added": "2026-07-30"
-  },
-  {
-   "section": "Bubbles",
-   "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara",
-   "vintage": "",
-   "region": "Sorbara, Modena, Emilia-Romagna, Italy",
-   "type": "sparkling",
-   "grapes": "Lambrusco di Sorbara",
-   "glass": "",
-   "bottle": "",
-   "pour": "Vibrant pink with fine, persistent bubbles — fresh raspberry and strawberry, a lift of violet, dry and refreshing with bright acidity. The most delicate style of Lambrusco.",
-   "producer": "Founded in 1920, Paltrinieri farms 17 hectares between the Secchia and Panaro rivers in Modena; 15 of them are the sandy-loam 'Cristo' vineyard where these grapes grow. The wine is named for St. Agatha, patron saint of Sorbara. Alberto Paltrinieri, who took over in 1998, was among the first to gamble on a mono-varietal Sorbara. (Research puts it at ~11% ABV and notes some bottlings blend in Salomino rather than being 100% Sorbara — confirm the vintage and blend with your lead before quoting.)",
-   "winemaking": "Grapes are gently pressed and vatted for a first fermentation, then a second fermentation by the Martinotti (Charmat) method in pressurized autoclaves, using native yeasts. Bottled at low pressure to preserve the fruit and varietal aromatics.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Paltrinieri",
-     "pron": "pal-tree-nee-EH-ree"
-    },
-    {
-     "term": "Sant'Agata",
-     "pron": "sahnt-AH-gah-tah"
-    },
-    {
-     "term": "Lambrusco di Sorbara",
-     "pron": "lahm-BROOS-koh dee sor-BAH-rah"
-    }
-   ],
-   "added": "2026-07-30"
-  },
-  {
-   "section": "Red",
-   "name": "G.D. Vajra Langhe Nebbiolo DOC",
-   "vintage": "2024",
-   "region": "Piedmont, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Nebbiolo",
-   "pour": "Lively garnet in the glass — wild strawberry, red cherry, and raspberry with a hint of goji berry, lifted by floral and gentle spice. Crunchy and vibrant on the palate, juicy red fruit woven through a well-defined tannic frame, finishing perfumed, floral, and gourmand.",
-   "producer": "G.D. Vajra, founded in 1972 by Aldo Vaira and named for his father Giuseppe Domenico Vajra, is one of Barolo's pioneering organic estates, based in Vergne — the highest village in the Barolo commune. This Langhe Nebbiolo is the estate's fresher, earlier-drinking expression of the grape, raised in steel rather than the long cask aging of their Barolo. Note: the fresh sheet header lists the 2024 vintage while the accompanying tasting and harvest notes describe the 2025 — confirm the vintage on the bottle with your lead before quoting. ABV runs about 13.5% per the producer; confirm before quoting.",
-   "winemaking": "100% Nebbiolo from organically farmed vineyards on calcareous soils between 280–550m, worked with permanent grass cover; the estate is certified organic and Equalitas sustainable. Hand-harvested over a late, extended pick (Sept 12–Oct 2 in the described vintage). Fermentation ran 20–25 days followed by spontaneous malolactic fermentation, then roughly 4 months in stainless steel before bottling. No oak — the freshness and lift come from steel-only aging.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 3,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "G.D. Vajra",
-     "pron": "VY-rah"
-    },
-    {
-     "term": "Langhe",
-     "pron": "LAHN-gheh"
-    },
-    {
-     "term": "Nebbiolo",
-     "pron": "neb-BYOH-loh"
-    },
-    {
-     "term": "Piemonte",
-     "pron": "pyeh-MON-teh"
-    }
-   ],
-   "added": "2026-08-01"
-  },
-  {
-   "section": "Bubbles",
-   "name": "Folicello “Il Rosso” Lambrusco dell’Emilia",
-   "vintage": "",
-   "region": "Emilia-Romagna, Italy",
-   "type": "sparkling",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Lambrusco Grasparossa",
-   "pour": "Deep ruby with a velvety mauve foam — aromatic blackberry, dried thyme and sage, and crushed red carnation over musky earth and a whisper of leather. Juicy black cherry and tart blueberry on the palate with salted licorice and a hint of olive brine; bright acidity balances grippy tannins. Dry, old-school, thirst-quenching Lambrusco — pour it with charcuterie, hot-sausage lasagna, or pizza.",
-   "producer": "Folicello is an organic family farm in Emilia-Romagna run by Marco and Antonella Folicello, working traditional methods with native yeasts and no chemical additions. ABV was not on the fresh sheet — the estate’s ancestral Lambruscos generally run about 11–12%; confirm the number on the bottle with your lead before quoting.",
-   "winemaking": "Red sparkling made by the ancestral method (Metodo Ancestrale, a.k.a. pét-nat) — spontaneous fermentation with indigenous yeasts and a secondary fermentation finished in the bottle, then lees-aged. Organically farmed Lambrusco Grasparossa; bottled with no added chemicals.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 3,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Folicello",
-     "pron": "foh-lee-CHEL-loh"
-    },
-    {
-     "term": "Lambrusco",
-     "pron": "lam-BROO-skoh"
-    },
-    {
-     "term": "Grasparossa",
-     "pron": "grahs-pah-ROH-sah"
-    },
-    {
-     "term": "Emilia",
-     "pron": "eh-MEE-lyah"
-    }
-   ],
-   "added": "2026-08-12"
-  },
-  {
-   "section": "Red",
-   "name": "Ciacci Piccolomini d’Aragona Brunello di Montalcino DOCG",
-   "vintage": "2019",
-   "region": "Montalcino, Tuscany, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Sangiovese",
-   "pour": "Ruby red verging on garnet — an intense, fruit-forward nose of red berries lifted by floral and delicate spice notes. Warm, soft, and very well balanced on the palate; well structured with soft tannins and a long finish. A classic Montalcino match for roasted or stewed game, mature cheeses, and hand-made pasta with a red-meat or game ragù.",
-   "producer": "Ciacci Piccolomini d’Aragona is a historic estate in Castelnuovo dell’Abate, in the warm southern reaches of Montalcino near the abbey of Sant’Antimo. Note: this is the estate (annata) Brunello — the 15% ABV and 36-month Slavonian-oak aging that turn up in research belong to the single-vineyard “Pianrosso” bottling, so confirm the ABV and aging for this wine with your lead before quoting.",
-   "winemaking": "100% Sangiovese, fermented in stainless steel and glass-lined concrete vats with temperature control, then aged a long period in oak barrels followed by bottle refinement before release.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 4,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 4,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Ciacci Piccolomini d’Aragona",
-     "pron": "CHAH-chee pee-koh-LOH-mee-nee dah-rah-GOH-nah"
-    },
-    {
-     "term": "Brunello di Montalcino",
-     "pron": "broo-NEL-loh dee mon-tahl-CHEE-noh"
-    },
-    {
-     "term": "Sangiovese",
-     "pron": "san-joh-VEH-zeh"
-    }
-   ],
-   "added": "2026-08-12"
-  },
-  {
-   "section": "Red",
-   "name": "La Gerla Brunello di Montalcino DOCG",
-   "vintage": "2018",
-   "region": "Montalcino, Tuscany, Italy",
-   "type": "red",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Sangiovese Grosso",
-   "pour": "Intense ruby verging on garnet — soft, warm, and velvety, harmonic and persistent, rich in fruit. Ethereal aromatics of sweet violet and iris melt into tobacco, cinnamon, and leather. Built for red meats and, best of all, wild game.",
-   "producer": "La Gerla sits in Montalcino on a site that once belonged to the Biondi Santi family (the old “Colombaio”). Sergio Rossi, a former advertising executive, bought the land in 1976 and launched the La Gerla label in 1978; the estate has kept his emphasis on quality and detail since his passing in 2011. Note: importer materials list roughly 14.5% ABV and about three years in Slavonian-oak botti plus bottle aging — confirm on the bottle with your lead before quoting.",
-   "winemaking": "100% Sangiovese Grosso, fermented and aged in large Slavonian-oak botti in the traditional Montalcino manner so the grape shows its full range, with a period of bottle rest before release.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 4,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 4,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "La Gerla",
-     "pron": "lah JEHR-lah"
-    },
-    {
-     "term": "Brunello di Montalcino",
-     "pron": "broo-NEL-loh dee mon-tahl-CHEE-noh"
-    },
-    {
-     "term": "Sangiovese Grosso",
-     "pron": "san-joh-VEH-zeh GROH-soh"
-    }
-   ],
-   "added": "2026-08-12"
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Vigna del Lauro Sauvignon Blanc, Collio DOC",
-   "vintage": "2024",
-   "region": "Collio, Friuli-Venezia Giulia, Italy",
-   "type": "white",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Sauvignon Blanc",
-   "pour": "An intense, aromatic Collio Sauvignon off the ponca hills of Cormons — passion fruit and melon over sage, cut grass, and white pepper, with a savory, saline mineral edge. Stainless steel, aged on the fine lees; crisp and persistent on the finish.",
-   "producer": "Vigna del Lauro is a family-run Collio project rooted in Cormòns, farming the region's distinctive 'ponca' marl-and-sandstone soils in a savory, Italian counter-style to French Sancerre. Around 13% ABV per importer references — confirm with your lead before quoting.",
-   "winemaking": "100% Sauvignon Blanc, fermented entirely in stainless steel and aged on its fine lees; no oak.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Vigna del Lauro",
-     "pron": "VEEN-yah del LOW-roh"
-    },
-    {
-     "term": "Collio",
-     "pron": "KOH-lyoh"
-    },
-    {
-     "term": "Cormòns",
-     "pron": "KOR-mohns"
-    },
-    {
-     "term": "ponca",
-     "pron": "POHN-kah"
-    }
-   ],
-   "added": "2026-08-15"
-  },
-  {
-   "section": "Bubbles",
-   "name": "Apres Sol Brut Rosé NV",
-   "vintage": "",
-   "region": "Ravenna IGT, Emilia-Romagna, Italy",
-   "type": "sparkling",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Longanesi",
-   "pour": "Vibrant salmon-pink with fresh red berries, white flowers, and brioche — fine, creamy bubbles carrying wild strawberry, raspberry, and pink grapefruit to a dry finish. A Charmat-method sparkling from the indigenous Longanesi grape.",
-   "producer": "Randi is a fifth-generation Ravenna estate run by the mother-and-son team of Giovanna and Massimo Randi, specializing in indigenous grapes and organic-in-practice farming.",
-   "winemaking": "Charmat method with native yeast; cool fermentation to preserve freshness, four months on the fine lees for body and toast. Fined with bentonite (volcanic-ash derived) for vegan-friendly clarity. Certified sustainable, organic in practice.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 4,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Apres Sol",
-     "pron": "ah-PREH SOL"
-    },
-    {
-     "term": "Longanesi",
-     "pron": "lohn-gah-NEH-zee"
-    },
-    {
-     "term": "Randi",
-     "pron": "RAHN-dee"
-    },
-    {
-     "term": "Charmat",
-     "pron": "shar-MAH"
-    }
-   ],
-   "added": "2026-08-15"
   }
  ],
  "bar": {
   "cocktails": [
    {
-    "name": "Wuthering Heights",
-    "build": "dill infused vodka, swan house farm damask rose simple, lime, dry vermouth, cucumber, soda",
+    "name": "Minivan Mega-Fun",
+    "build": "vodka, blistered shishito pepper simple, veso tomato vermouth, lime, gran classico, soda",
     "price": "15",
-    "highlight": "Swan House rose",
-    "tagline": "Swan House damask rose with a savory dill edge",
     "ingredients": [
      {
-      "name": "Dill-infused vodka",
-      "description": "Vodka steeped with fresh dill. It keeps the neutral base but adds a green, savory herbaceousness that carries the drink and keeps the florals from reading sweet."
+      "name": "Vodka",
+      "description": "Neutral base spirit."
      },
      {
-      "name": "Swan House Farm damask rose simple",
-      "description": "Made from damask roses grown at Sam's family farm in Skagit Valley. The petals are steeped into a simple syrup, giving a delicate sweetness and real rose perfume. This is the soul of the drink and the reason to order it.",
-      "highlight": "Swan House Farm"
+      "name": "Blistered shishito pepper simple",
+      "description": "The composition of this blistered shishito pepper simple has not been specified for this prep. Confirm with your bar lead before clearing it for any allergy."
      },
      {
-      "name": "Lime juice",
-      "description": "Fresh-squeezed. Sharpens the rose and keeps the drink bright."
+      "name": "Veso tomato vermouth",
+      "description": "A tomato vermouth from Veso."
      },
      {
-      "name": "Dry vermouth",
-      "description": "A fortified white wine aromatized with herbs. Adds crisp botanical structure and a faint wormwood bitterness without weight."
+      "name": "Lime",
+      "description": "Fresh lime."
      },
      {
-      "name": "Cucumber",
-      "description": "Cool and clean, echoing the dill and keeping the whole drink crisp."
+      "name": "Gran Classico",
+      "description": "A Swiss-made bitter aperitivo in the Campari family: bittersweet, with orange peel and herbs."
      },
      {
-      "name": "Soda water",
-      "description": "Lengthens the drink and lifts it. Finishes refreshing and slightly bitter."
+      "name": "Soda",
+      "description": "Soda water top for lift and length."
      }
     ],
     "pronguide": [
+     {
+      "term": "shishito",
+      "pron": "shee-SHEE-toh"
+     },
+     {
+      "term": "Gran Classico",
+      "pron": "grahn KLAH-see-koh"
+     },
      {
       "term": "vermouth",
       "pron": "vehr-MOOTH"
-     },
-     {
-      "term": "damask",
-      "pron": "DAM-usk"
-     }
-    ],
-    "added": "2026-07-25"
-   },
-   {
-    "name": "Material Girl",
-    "build": "st. germain, bianco vermouth, cucumber, lemon, soda, prosecco, lavender bitters",
-    "price": "16",
-    "highlight": "",
-    "tagline": "Sparkling, floral, and effortless",
-    "ingredients": [
-     {
-      "name": "St-Germain elderflower liqueur",
-      "amount": "1 oz",
-      "description": "Made from hand-harvested elderflowers collected each spring from the foothills of the French Alps in Haute-Savoie. Only a three-to-four-week window each year. The flavor is famously hard to pin down: lychee, pear, white peach, and a soft honeyed floral note. One of the most important liqueurs of the last twenty years.",
-      "highlight": "French Alps"
-     },
-     {
-      "name": "Bianco vermouth",
-      "amount": "1 oz",
-      "description": "A sweet white vermouth — floral, vanilla-forward, and lightly herbal. Sweeter than dry vermouth but more delicate than red. It rounds out the elderflower without adding weight."
-     },
-     {
-      "name": "Cucumber",
-      "amount": "3 slices, muddled",
-      "description": "Fresh cucumber muddled into the base adds a cool, green, almost watery freshness that pairs perfectly with elderflower."
-     },
-     {
-      "name": "Lemon juice",
-      "amount": "0.5 oz",
-      "description": "Fresh-squeezed. Keeps the sweetness honest and adds a clean bright edge."
-     },
-     {
-      "name": "Soda water",
-      "amount": "splash",
-      "description": "A short top before the prosecco, adding lift and dilution."
-     },
-     {
-      "name": "Prosecco",
-      "amount": "2 oz",
-      "description": "Italian sparkling wine from Veneto. Dry, light, and effervescent — it turns the whole thing into a spritz and gives the drink its celebratory character."
-     },
-     {
-      "name": "Lavender bitters",
-      "amount": "2 dashes",
-      "description": "Aromatic bitters infused with dried lavender. A few dashes tie the elderflower to the floral top notes and add a soft herbal finish."
-     }
-    ],
-    "pronguide": [
-     {
-      "term": "St-Germain",
-      "pron": "san zhehr-MAN"
-     },
-     {
-      "term": "Haute-Savoie",
-      "pron": "oht sah-VWAH"
-     },
-     {
-      "term": "bianco vermouth",
-      "pron": "BYAHN-koh vehr-MOOTH"
-     },
-     {
-      "term": "Prosecco",
-      "pron": "proh-SEK-koh"
      }
     ]
    },
    {
-    "name": "Pink Pony Club",
-    "build": "uncle val's botanical gin, strawberry and rhubarb maceration, white balsamic, bianco vermouth, lemon, bergamot bitters",
-    "price": "17",
-    "highlight": "",
-    "tagline": "Bright, fruity, and floral — a strawberry-rhubarb gin sour",
+    "name": "Oh My Word!",
+    "build": "gin, aperol, peach and nectarine maceration, lemon, grapefruit bitters",
+    "price": "16",
     "ingredients": [
      {
-      "name": "Uncle Val's Botanical Gin",
-      "amount": "1.5 oz",
-      "description": "Made with five botanicals: juniper, lemon, sage, lavender, and cucumber. The result is a gin that leans floral and citrus-forward rather than piney — exceptionally smooth, with a cucumber coolness and herbal sage note that make it the right canvas for a fruit-forward cocktail.",
-      "highlight": "floral gin"
+      "name": "Gin",
+      "description": "Juniper-forward base spirit."
      },
      {
-      "name": "Strawberry and rhubarb maceration",
-      "amount": "0.75 oz",
-      "description": "A house-made infusion: ripe strawberries and rhubarb steeped together until the flavor turns jammy, tart, and bright. Strawberry brings the sweetness, rhubarb brings the sour, green edge that keeps it from going candy-sweet.",
-      "highlight": "house-made"
+      "name": "Aperol",
+      "description": "Italian bitter-orange aperitivo: lighter, sweeter and lower in alcohol than Campari, with orange and rhubarb."
      },
      {
-      "name": "White balsamic",
-      "amount": "0.25 oz",
-      "description": "A pale, mild balsamic vinegar — sweet and gently tart without the dark color or heavy molasses notes of aged balsamic. A small amount adds rounded acidity and a savory depth behind the fruit."
+      "name": "Peach and nectarine maceration",
+      "description": "The composition of this peach and nectarine maceration has not been specified for this prep. Confirm with your bar lead before clearing it for any allergy."
      },
      {
-      "name": "Bianco vermouth",
-      "amount": "0.5 oz",
-      "description": "A sweet white vermouth — floral, vanilla-forward, and lightly herbal. Sweeter than dry vermouth but more delicate than red. It rounds out the fruit and adds body."
-     },
-     {
-      "name": "Lemon juice",
-      "amount": "0.5 oz",
-      "description": "Fresh-squeezed. Keeps the sweetness honest and gives the drink its sour backbone."
-     },
-     {
-      "name": "Bergamot bitters",
-      "amount": "2 dashes",
-      "description": "Aromatic bitters built on bergamot — the floral, slightly bitter citrus that gives Earl Grey its character. A few dashes tie the strawberry and the gin's botanicals together on the nose."
-     }
-    ],
-    "pronguide": [
-     {
-      "term": "bianco vermouth",
-      "pron": "BYAHN-koh vehr-MOOTH"
-     },
-     {
-      "term": "bergamot",
-      "pron": "BEHR-gah-mot"
-     }
-    ],
-    "added": "2026-06-19"
-   },
-   {
-    "name": "Cool Cat",
-    "build": "mezcal, sunflower seed orgeat, brucato kumquat and chili liqueur, lime, dry vermouth, saline, grapefruit bitters",
-    "price": "17",
-    "highlight": "",
-    "tagline": "Smoky, nutty, bright, and alive",
-    "ingredients": [
-     {
-      "name": "Mezcal",
-      "amount": "1.5 oz",
-      "description": "A Mexican spirit distilled from roasted agave. Unlike tequila, the agave piñas are pit-roasted over hot rocks before fermentation, giving mezcal its signature smokiness. Earthy, complex, and layered — vegetal sweetness under the smoke, with a long finish. The base of the whole cocktail.",
-      "highlight": "smoky agave"
-     },
-     {
-      "name": "Sunflower seed orgeat",
-      "amount": "0.5 oz",
-      "description": "A riff on the classic almond-based tiki syrup. Orgeat is a French-origin sweetener made from nuts, sugar, and a touch of flower water — nutty, rich, and slightly floral. This version uses sunflower seeds instead of almonds: nuttier, more savory, and a little earthier. It softens the mezcal and provides body.",
-      "highlight": "house-made"
-     },
-     {
-      "name": "Brucato Oro y Fierro Kumquat & Chili Liqueur",
-      "amount": "0.5 oz",
-      "description": "Made in San Francisco by Brucato Spirits (named for SF's city motto, Oro en Paz, Fierro en Guerra). Peak-season Nagami kumquats from California farms, dried and macerated with orange peel in unaged grape brandy, then finished with chile de árbol and Calabrian chili. Bright citrus, pithy bitterness, and a slow-building heat that lingers.",
-      "highlight": "S.F. craft"
-     },
-     {
-      "name": "Lime juice",
-      "amount": "0.75 oz",
-      "description": "Fresh-squeezed. Cuts through the smoke and richness, provides the sour backbone."
-     },
-     {
-      "name": "Dry vermouth",
-      "amount": "0.25 oz",
-      "description": "Herbaceous, bone-dry fortified wine. A small amount adds structure and a subtle herbal note that connects the mezcal to the other ingredients."
-     },
-     {
-      "name": "Saline solution",
-      "amount": "2 dashes",
-      "description": "A few drops of salt water — a bartender's tool, not a flavor. Salt suppresses bitterness and makes every other flavor in the glass read more clearly. You won't taste it; you'll taste everything else better."
+      "name": "Lemon",
+      "description": "Fresh lemon."
      },
      {
       "name": "Grapefruit bitters",
-      "amount": "2 dashes",
-      "description": "Aromatic bitters with grapefruit peel at the center. Adds a bright citrus note on the nose and ties the kumquat liqueur to the lime."
+      "description": "Aromatic bitters flavored with grapefruit peel."
      }
     ],
     "pronguide": [
      {
-      "term": "mezcal",
-      "pron": "mess-KAHL"
-     },
-     {
-      "term": "orgeat",
-      "pron": "or-ZHAT"
-     },
-     {
-      "term": "Brucato",
-      "pron": "broo-KAH-toh"
-     },
-     {
-      "term": "chile de árbol",
-      "pron": "CHEE-leh deh AR-bohl"
+      "term": "Aperol",
+      "pron": "AH-peh-rohl"
      }
     ]
    },
@@ -4220,56 +2546,92 @@ window.SF = {
     ]
    },
    {
-    "name": "Giraffes Eat Bones",
-    "build": "duck fat rinsed bourbon, sazerac rye, yzaguirre barrel aged sweet vermouth, dom benedictine, angostura",
-    "price": "19",
-    "highlight": "",
-    "tagline": "a richer, rounder Manhattan",
+    "name": "Imaginary Friend",
+    "build": "mezcal, spiced red wine and balsamic agrodolce, amaro lucano, lime, veso fig leaf vermouth, black lemon bitters",
+    "price": "18",
     "ingredients": [
      {
-      "name": "Duck-fat-rinsed bourbon",
-      "amount": "1.5 oz",
-      "description": "Bourbon fat-washed with duck fat: the spirit is infused with rendered fat, then chilled so the fat is removed, leaving a silky, savory richness behind.",
-      "highlight": "fat-washed"
+      "name": "Mezcal",
+      "description": "A Mexican spirit distilled from roasted agave. Unlike tequila, the agave piñas are pit-roasted over hot rocks before fermentation, giving mezcal its signature smokiness. Earthy, complex, and layered — vegetal sweetness under the smoke, with a long finish. The base of the whole cocktail."
      },
      {
-      "name": "Sazerac rye",
-      "amount": "0.5 oz",
-      "description": "A spicy, high-rye whiskey from New Orleans; adds backbone and pepper against the round bourbon."
+      "name": "Spiced red wine and balsamic agrodolce",
+      "description": "The composition of this spiced red wine and balsamic agrodolce has not been specified for this prep. Confirm with your bar lead before clearing it for any allergy."
      },
      {
-      "name": "Yzaguirre barrel-aged sweet vermouth",
-      "amount": "1 oz",
-      "description": "Barrel-rested Catalan sweet vermouth — dark fruit, baking spice, and length."
+      "name": "Amaro Lucano",
+      "description": "A bittersweet amaro from Basilicata in southern Italy, made since 1894 from a blend of herbs."
      },
      {
-      "name": "Dom Bénédictine",
-      "amount": "barspoon",
-      "description": "A honeyed French herbal liqueur (27 botanicals) from Normandy; adds sweetness and a complex herbal note.",
-      "highlight": "herbal"
+      "name": "Lime",
+      "description": "Fresh lime."
      },
      {
-      "name": "Angostura bitters",
-      "amount": "2 dashes",
-      "description": "Classic aromatic bitters — clove, cinnamon, and gentian that tie the spirits together."
+      "name": "Veso fig leaf vermouth",
+      "description": "A fig-leaf vermouth from Veso."
+     },
+     {
+      "name": "Black lemon bitters",
+      "description": "Bitters built on black lemon, the dried, darkened citrus of Middle Eastern cooking: smoky, sour and earthy."
      }
     ],
     "pronguide": [
      {
-      "term": "Sazerac",
-      "pron": "SAZ-uh-rak"
+      "term": "mezcal",
+      "pron": "mez-KAHL"
+     },
+     {
+      "term": "agrodolce",
+      "pron": "ah-groh-DOHL-cheh"
+     },
+     {
+      "term": "Lucano",
+      "pron": "loo-KAH-noh"
+     }
+    ]
+   },
+   {
+    "name": "Grandma's Ash Tray",
+    "build": "bourbon, martell cognac, yzaguirre rose vermouth, amaro rucolino, mr. black, lavender bitters",
+    "price": "19",
+    "ingredients": [
+     {
+      "name": "Bourbon",
+      "description": "American whiskey, corn-led: the base of the drink."
+     },
+     {
+      "name": "Martell cognac",
+      "description": "French grape brandy from the house of Martell, founded in 1715."
+     },
+     {
+      "name": "Yzaguirre rose vermouth",
+      "description": "A Spanish rosado vermouth from Yzaguirre in Catalonia."
+     },
+     {
+      "name": "Amaro Rucolino",
+      "description": "An Italian amaro made from arugula (rucola): peppery, green and bittersweet."
+     },
+     {
+      "name": "Mr. Black",
+      "description": "An Australian cold-brew coffee liqueur, drier and more coffee-forward than most."
+     },
+     {
+      "name": "Lavender bitters",
+      "description": "Aromatic bitters flavored with lavender."
+     }
+    ],
+    "pronguide": [
+     {
+      "term": "Martell",
+      "pron": "mar-TELL"
      },
      {
       "term": "Yzaguirre",
       "pron": "ee-thah-GHEE-reh"
      },
      {
-      "term": "Bénédictine",
-      "pron": "beh-neh-deek-TEEN"
-     },
-     {
-      "term": "Angostura",
-      "pron": "ang-oh-STOO-rah"
+      "term": "Rucolino",
+      "pron": "roo-koh-LEE-noh"
      }
     ]
    }
@@ -4286,7 +2648,7 @@ window.SF = {
     "note": "Seattle-born zero-proof spirit: fermented hemp, distilled in copper pots, layered with wormwood, angelica, sage, ginger, and Douglas fir. Reads like an amaro — earthy, bittersweet, crisp — stirred here into a Negroni-style build. No cannabinoids, nothing psychoactive. First poured at Life on Mars in 2021."
    },
    {
-    "name": "Aplos Red Shiso Ginger \"Sour\"",
+    "name": "Aplos Ginger and Red Shiso \"Sour\"",
     "price": "13",
     "note": "Zero-proof sour built on Aplos, a hemp-infused alcohol-free spirit, shaken with a red shiso ginger syrup (made from Katie's own red shiso) over lemon. Tart and herbaceous, with a gingery bite and a garden edge from the shiso."
    },
@@ -4298,14 +2660,19 @@ window.SF = {
   ],
   "beer": [
    {
-    "name": "Manabrea Lager",
-    "price": "6",
-    "note": "Birra Manabrea 1846 — a family-run lager from Biella in the Piedmont Alps, brewed with pure mountain water since 1846. Crisp and clean with a gentle floral aroma and a delicate bitter finish. An award-winning Italian classic."
+    "name": "Menabrea Lager",
+    "price": "8",
+    "note": "Birra Menabrea 1846 — a family-run lager from Biella in the Piedmont Alps, brewed with pure mountain water since 1846. Crisp and clean with a gentle floral aroma and a delicate bitter finish. An award-winning Italian classic."
    },
    {
     "name": "Fremont Brewing Lush IPA",
     "price": "7",
     "note": "From Fremont Brewing, a few neighborhoods over — family-owned since 2009. Their year-round juicy IPA: Citra and Mosaic hops, tropical and citrus up front, smooth finish. 7%, drinks easier than it is."
+   },
+   {
+    "name": "Athletic Brewing \"Upside Dawn\" Non-Alcoholic",
+    "price": "7",
+    "note": "Athletic Brewing's non-alcoholic golden ale, under 0.5% ABV."
    }
   ],
   "amaroFlights": [
@@ -15849,5 +14216,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1790801535"
+ "build": "1790812393"
 };
