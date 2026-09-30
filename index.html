@@ -756,6 +756,14 @@ body.tour-on{padding-bottom:230px;}
 .cg-card figcaption{font-size:11.5px; color:var(--card-soft); padding-top:4px; letter-spacing:.02em;}
 .cg-missing{display:inline-block; margin:2px 6px 6px 0; padding:4px 9px; border-radius:6px; font-size:12px; font-weight:700; background:#f2d2c7; color:#a8311e;}
 .cg-sum{font-size:13px; margin:0 0 12px;}
+.off-box{display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; background:radial-gradient(130% 130% at 28% 12%, var(--moon-hi), var(--moon) 64%, var(--moon-lo)); border-radius:12px; padding:11px 15px; margin:0 0 14px; box-shadow:0 5px 13px rgba(0,0,0,.24);}
+.off-txt{flex:1 1 260px; font-size:12px; line-height:1.45; color:var(--card-soft);}
+.off-txt b{display:block; font-size:13.5px; color:var(--wood); margin-bottom:2px;}
+.off-act{display:flex; flex-wrap:wrap; align-items:center; gap:8px;}
+.off-btn{font:inherit; font-size:13px; font-weight:700; padding:9px 14px; border-radius:9px; border:0; background:var(--wood); color:#fff; cursor:pointer;}
+.off-btn.off-quiet{background:transparent; color:var(--wood); border:1px solid var(--wood);}
+.off-msg{font-size:12px; color:var(--card-soft); flex-basis:100%;}
+.off-msg.off-err{color:#a8311e; font-weight:700;}
 .comp-upload-note{font-size:11.5px; color:var(--card-soft); line-height:1.45; margin:0 0 12px;}
 /* per-employee cert badge (Standards card/chip/subtab) */
 .cert-badge{display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px; padding:0 4px; border-radius:999px; font-size:10px; font-weight:800; line-height:1; color:#fff; margin-left:6px; vertical-align:middle;}
@@ -1986,7 +1994,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790798120';   // stamped by build-data.py at every deploy
+const BUILD='1790800525';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -6037,6 +6045,7 @@ function compGalleryHTML(mode){
     list.forEach(function(x){ const r=ix[x.name.toLowerCase()]; people.push({name:x.name, side:(r?r.side:x.side), p:(r?r.p:null)}); });
   } else {
     h+='<p class="view-sub" style="margin-bottom:10px;">Every card on file, Back of House then Front of House. Tap a card to enlarge.</p>';
+    h+=offBtnHTML();   // managers: PDF copy for the iPad (2026-09-30)
     const R=compWithExtras(); ['boh','foh'].forEach(function(s){ (R[s]||[]).forEach(function(p){ people.push({name:p.name, side:s, p:p}); }); });
   }
   let gapN=0; const blocks={boh:'',foh:''};
@@ -6057,6 +6066,116 @@ function compFillImages(){
       .catch(function(){ put(null,'Could not load, check Wi-Fi'); });
   });
 }
+/* ===== OFFLINE CARD COPY (2026-09-30) ==================================
+   Managers build one PDF of every card on the roster and save it to the work
+   iPad, so the cards can be shown during a Wi-Fi outage. Built in the browser
+   from `complianceImg` (jsPDF loaded on demand from cdnjs, only on tap).
+   Two taps on purpose: Build (needs Wi-Fi), then Save. iOS only opens the
+   share sheet straight from a tap, and building takes longer than that allows.
+   A card that fails to load is listed on the PDF's first page, never dropped. */
+let OFF={busy:false,file:null,url:null,msg:'',err:false};
+function offBtnHTML(){ if(!isMgr())return '';
+  return '<div class="off-box"><div class="off-txt"><b>Offline copy for the iPad</b><span>One PDF of every card below, for when the Wi-Fi is down. Build it, then save it to Files or Books. Rebuild after new cards are verified.</span></div><div class="off-act" id="offAct">'+offActHTML()+'</div></div>'; }
+function offActHTML(){
+  if(OFF.busy) return '<span class="off-msg">'+esc(OFF.msg)+'</span>';
+  let h='';
+  if(OFF.file) h+='<button class="off-btn" onclick="offSave()">Save to iPad</button>';
+  h+='<button class="off-btn'+(OFF.file?' off-quiet':'')+'" onclick="offBuild()">'+(OFF.file?'Rebuild':'Build offline copy')+'</button>';
+  if(OFF.msg) h+='<span class="off-msg'+(OFF.err?' off-err':'')+'">'+esc(OFF.msg)+'</span>';
+  return h; }
+function offPaint(){ const el=document.getElementById('offAct'); if(el) el.innerHTML=offActHTML(); }
+function offSet(msg,err){ OFF.msg=msg||''; OFF.err=!!err; offPaint(); }
+function offLoadLib(){
+  if(window.jspdf&&window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
+  return new Promise(function(res,rej){ const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload=function(){ (window.jspdf&&window.jspdf.jsPDF)?res(window.jspdf.jsPDF):rej(new Error('PDF tool did not load')); };
+    s.onerror=function(){ rej(new Error('Could not load the PDF tool. Check the Wi-Fi and try again.')); };
+    document.head.appendChild(s); }); }
+function offGetImg(key){
+  if(COMP_IMG[key]) return Promise.resolve(COMP_IMG[key]);
+  if(!fbReady||!fbDb){ const u=COMP_UP[key]; return Promise.resolve((u&&u.img)||null); }
+  return fbDb.collection('complianceImg').doc(key).get().then(function(snap){
+    const d=snap.exists?((snap.data()||{}).data||null):null; if(d)COMP_IMG[key]=d; return d; }); }
+/* Re-encode every card as a JPEG, longest side 1600px: keeps the file small and
+   turns whatever format the phone uploaded into one jsPDF can place. */
+function offShrink(src){ return new Promise(function(res){ const im=new Image();
+  im.onload=function(){ const M=1600, k=Math.min(1,M/Math.max(im.naturalWidth,im.naturalHeight));
+    const w=Math.max(1,Math.round(im.naturalWidth*k)), h=Math.max(1,Math.round(im.naturalHeight*k));
+    const c=document.createElement('canvas'); c.width=w; c.height=h; const x=c.getContext('2d');
+    x.fillStyle='#fff'; x.fillRect(0,0,w,h); x.drawImage(im,0,0,w,h);
+    res({d:c.toDataURL('image/jpeg',0.82),w:w,h:h}); };
+  im.onerror=function(){ res(null); }; im.src=src; }); }
+function offStamp(){ return new Date().toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}); }
+async function offBuild(){
+  if(OFF.busy)return; OFF.busy=true; OFF.file=null; offSet('Loading the PDF tool…');
+  try{
+    const JsPDF=await offLoadLib();
+    const R=compWithExtras(), people=[];
+    [['boh','Back of House'],['foh','Front of House']].forEach(function(a){ (R[a[0]]||[]).forEach(function(p){
+      const cards=compCardsFor(p.name); people.push({p:p,side:a[1],cards:cards,gaps:compGaps(p,cards,true)}); }); });
+    const jobs=[]; people.forEach(function(x){ x.cards.forEach(function(c){ jobs.push({x:x,c:c}); }); });
+    let done=0; const failed=[];
+    for(let i=0;i<jobs.length;i+=6){
+      await Promise.all(jobs.slice(i,i+6).map(function(j){
+        return offGetImg(j.c.key).then(function(d){ return d?offShrink(d):null; }).catch(function(){ return null; })
+          .then(function(img){ j.c.img=img; if(!img)failed.push(j.x.p.name+' ('+j.c.label+')'); done++; offSet('Getting cards: '+done+' of '+jobs.length); }); }));
+    }
+    offSet('Putting the PDF together…');
+    const doc=new JsPDF({unit:'pt',format:'letter'}), W=612, H=792, M=40, stamp=offStamp();
+    const who=(me&&me.name)?me.name:'a manager';
+    const gapLines=[]; people.forEach(function(x){ x.gaps.forEach(function(g){ gapLines.push(x.p.name+': '+g); }); });
+    failed.forEach(function(f){ gapLines.push(f+': image could not be loaded when this copy was made'); });
+    // Cover: what this is, what's missing, who is on which page. Drawn twice: a dry
+    // run counts its pages so the index can print the right page numbers.
+    const colW=(W-2*M)/2, rows=Math.ceil(people.length/2);
+    function cover(dry,base){ let pages=1, y;
+      const nl=function(h){ if(y+h>H-M-14){ pages++; if(!dry)doc.addPage(); y=M+14; } else y+=h; };
+      const T=function(t,x,opt){ if(!dry)doc.text(t,x,y,opt); };
+      const F=function(st,sz,r,g,b){ if(!dry){ doc.setFont('helvetica',st); doc.setFontSize(sz); doc.setTextColor(r,g===undefined?r:g,b===undefined?r:b); } };
+      y=M+22; F('bold',22,0); T('San Fermo',M); y=M+44; F('bold',15,0); T('Food Worker and MAST Cards',M);
+      y=M+54; F('normal',10.5,70);
+      doc.setFontSize(10.5); doc.splitTextToSize('Copy made '+stamp+' by '+who+' from the staff portal. The portal is the live record. This copy is for showing cards when the Wi-Fi is down, and it does not update itself: rebuild it from Compliance, All Cards after new cards are verified.',W-2*M).forEach(function(l){ nl(14); T(l,M); });
+      nl(22); F('bold',11,0); T(people.length+' people on the roster, '+(jobs.length-failed.length)+' card images in this copy.',M);
+      if(gapLines.length){ nl(22); F('bold',10.5,168,49,30); T('Missing from this copy',M); F('normal',10.5,168,49,30);
+        gapLines.forEach(function(g){ nl(13); T(g,M+8); }); }
+      nl(24); F('bold',11,0); T('Who is on which page',M); F('normal',10,0);
+      for(let r=0;r<rows;r++){ nl(13); [0,1].forEach(function(col){ const i=col*rows+r; if(i>=people.length)return; const xx=M+col*colW;
+        T(people[i].p.name,xx); T(String(base+i+1),xx+colW-24,{align:'right'}); }); }
+      return pages; }
+    const coverPages=cover(true,0); cover(false,coverPages);
+    // One page per person.
+    people.forEach(function(x){ doc.addPage();
+      doc.setFont('helvetica','bold'); doc.setFontSize(20); doc.setTextColor(0); doc.text(x.p.name,M,M+20);
+      doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(90); doc.text((x.p.role||'')+'  ·  '+x.side,M,M+38);
+      let top=M+58; doc.setFontSize(10.5);
+      if(x.gaps.length){ doc.setTextColor(168,49,30); doc.setFont('helvetica','bold'); x.gaps.forEach(function(g){ doc.text(g,M,top+4); top+=15; }); doc.setFont('helvetica','normal'); top+=4; }
+      const shown=x.cards; if(!shown.length)return;
+      const slot=(H-M-24-top)/shown.length;
+      shown.forEach(function(c,i){ const y0=top+i*slot; doc.setTextColor(0); doc.setFont('helvetica','bold'); doc.setFontSize(11.5);
+        doc.text(c.label+(c.up.expires?'   expires '+compNiceDate(c.up.expires):''),M,y0+12); doc.setFont('helvetica','normal');
+        const bw=W-2*M, bh=slot-30;
+        if(c.img){ const k=Math.min(bw/c.img.w,bh/c.img.h), iw=c.img.w*k, ih=c.img.h*k;
+          doc.addImage(c.img.d,'JPEG',M,y0+20,iw,ih,undefined,'FAST'); doc.setDrawColor(200); doc.rect(M,y0+20,iw,ih); }
+        else { doc.setTextColor(168,49,30); doc.text('Image could not be loaded when this copy was made.',M,y0+34); } }); });
+    const N=doc.getNumberOfPages();
+    for(let p=1;p<=N;p++){ doc.setPage(p); doc.setFontSize(8.5); doc.setTextColor(120);
+      doc.text('San Fermo cards · copy made '+stamp+' · page '+p+' of '+N,W/2,H-20,{align:'center'}); }
+    const iso=todayISO();
+    OFF.file=new File([doc.output('blob')],'San Fermo cards '+iso+'.pdf',{type:'application/pdf'});
+    OFF.busy=false;
+    offSet(failed.length?('Ready, but '+failed.length+' card'+(failed.length>1?'s':'')+' would not load. They are listed on page 1. Tap Save to iPad.'):('Ready: '+people.length+' people, '+(jobs.length)+' cards. Tap Save to iPad.'),!!failed.length);
+  }catch(e){ OFF.busy=false; OFF.file=null; offSet((e&&e.message)||'Could not build the copy.',true); }
+}
+function offSave(){ const f=OFF.file; if(!f)return;
+  if(navigator.canShare&&navigator.share&&navigator.canShare({files:[f]})){
+    navigator.share({files:[f],title:f.name}).then(function(){ offSet('Saved. Keep it in Files or Books on this iPad.'); })
+      .catch(function(e){ if(e&&e.name==='AbortError')return; offDownload(f); });
+    return; }
+  offDownload(f); }
+function offDownload(f){ if(OFF.url)URL.revokeObjectURL(OFF.url); OFF.url=URL.createObjectURL(f);
+  const a=document.createElement('a'); a.href=OFF.url; a.download=f.name; document.body.appendChild(a); a.click(); a.remove();
+  offSet('Downloaded. On an iPad it is in the Files app, under Downloads.'); }
 function renderCompliance(){const C=SF.compliance, R=compWithExtras();
   $('compSub').textContent=`Roster as of ${fmtShort(C.updated)} · ${R.foh.length+R.boh.length} active · FWC & MAST`;
   if(compTab==='due'){
