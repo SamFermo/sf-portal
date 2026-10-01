@@ -6634,7 +6634,7 @@ window.SF = {
        "3:30 Bar",
        "Sup Server",
        "MD",
-       "Float"
+       "Sup Server"
       ]
      },
      {
@@ -6682,7 +6682,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "3:30 serve"
+       ""
       ]
      },
      {
@@ -6718,7 +6718,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 serve",
-       "Sup Server"
+       "3:30 serve"
       ]
      },
      {
@@ -14291,5 +14291,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1790874015"
+ "build": "1790888198"
 };
