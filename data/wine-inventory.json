@@ -1,11 +1,11 @@
 {
- "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29).",
- "updated": "2026-09-29",
+ "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage.",
+ "updated": "2026-09-30",
  "glassesPerBottle": 4,
  "wines": [
   {
    "key": "san-fermo-prosecco-house",
-   "name": "San Fermo Prosecco (house)",
+   "name": "House Prosecco: Bellenda \"San Fermo\"",
    "type": "Sparkling",
    "status": "core-glass",
    "vendor": "Specialty Cellars"
@@ -14,12 +14,12 @@
    "key": "le-origini-passanello-lambrusco-grasparossa-2024",
    "name": "Le Origini \"Passanello\" Lambrusco Grasparossa 2024",
    "type": "Sparkling",
-   "status": "core-glass",
+   "status": "cellar",
    "vendor": "Elliot Bay"
   },
   {
    "key": "le-vaglie-verdicchio-house-white",
-   "name": "Le Vaglie Verdicchio (house white)",
+   "name": "House White: Le Vaglie Verdicchio",
    "type": "White",
    "status": "core-glass",
    "vendor": "Elliot Bay"
@@ -32,15 +32,22 @@
    "vendor": "Elliot Bay"
   },
   {
+   "key": "la-spinetta-vermentino-2025",
+   "name": "La Spinetta Vermentino 2025",
+   "type": "White",
+   "status": "core-glass",
+   "vendor": ""
+  },
+  {
    "key": "valle-dell-acate-thymbra-vermentino-2023",
    "name": "Valle dell'Acate \"Thymbra\" Vermentino 2023",
    "type": "White",
-   "status": "core-glass",
+   "status": "cellar",
    "vendor": "Elliot Bay"
   },
   {
    "key": "borgo-savaian-skins-are-kings",
-   "name": "Borgo Savaian \"Skins are Kings\"",
+   "name": "Borgo Savaian Masaret \"Skins are Kings\" Orange NV",
    "type": "Orange",
    "status": "core-glass",
    "vendor": "Vinea"
@@ -53,15 +60,22 @@
    "vendor": "Elliot Bay"
   },
   {
+   "key": "brigaldara-valpolicella-2024",
+   "name": "Brigaldara Valpolicella 2024",
+   "type": "Red",
+   "status": "core-glass",
+   "vendor": ""
+  },
+  {
    "key": "corte-scaletta-valpolicella-2022",
    "name": "Corte Scaletta Valpolicella 2022",
    "type": "Red",
-   "status": "core-glass",
+   "status": "cellar",
    "vendor": "Vinea"
   },
   {
    "key": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
-   "name": "Podere Ruggeri Corsini \"Matot\" Langhe Rosso (house red)",
+   "name": "House Red: Corsini \"Matot\" Langhe Rosso",
    "type": "Red",
    "status": "core-glass",
    "vendor": "Casa Bruno"
@@ -91,7 +105,7 @@
    "key": "louis-armand-premier-cru-champagne",
    "name": "Louis Armand Premier Cru Champagne",
    "type": "Sparkling",
-   "status": "core-bottle",
+   "status": "core-glass",
    "vendor": "Vinea"
   },
   {
@@ -105,28 +119,28 @@
    "key": "angelo-negro-unfiltered-arneis-2024",
    "name": "Angelo Negro Unfiltered Arneis 2024",
    "type": "White",
-   "status": "core-bottle",
+   "status": "core-glass",
    "vendor": "Vehrs"
   },
   {
    "key": "rocca-del-principe-fiano-di-avellino",
-   "name": "Rocca del Principe Fiano di Avellino",
+   "name": "Rocca del Principe Fiano di Avellino 2025",
    "type": "White",
-   "status": "core-bottle",
+   "status": "core-glass",
    "vendor": "Elliot Bay"
   },
   {
    "key": "terre-nere-etna-bianco",
-   "name": "Terre Nere Etna Bianco",
+   "name": "Terre Nere Etna Bianco 2024",
    "type": "White",
    "status": "core-bottle",
    "vendor": ""
   },
   {
    "key": "copertino-riserva-negroamaro-2016",
-   "name": "Copertino Riserva Negroamaro 2016",
+   "name": "Copertino Riserva Negroamaro 2017",
    "type": "Red",
-   "status": "core-bottle",
+   "status": "core-glass",
    "vendor": "Vehrs"
   },
   {
@@ -152,7 +166,7 @@
   },
   {
    "key": "piaggia-il-sasso-carmignano",
-   "name": "Piaggia \"Il Sasso\" Carmignano",
+   "name": "Piaggia \"Il Sasso\" Carmignano 2022",
    "type": "Red",
    "status": "core-bottle",
    "vendor": ""
@@ -166,7 +180,7 @@
   },
   {
    "key": "castello-di-neive-barbaresco-santo-stefano-2022",
-   "name": "Castello di Neive Barbaresco Santo Stefano 2022",
+   "name": "Castello di Neive Barbaresco 2023",
    "type": "Red",
    "status": "core-bottle",
    "vendor": "Winebow"
@@ -201,16 +215,17 @@
   },
   {
    "key": "claudio-plessi-muntanera-rosato",
-   "name": "Claudio Plessi \"Muntanera\" Rosato",
+   "name": "Claudio Plessi \"Muntanera\" Rosato 2024",
    "type": "Sparkling",
-   "status": "cellar",
-   "vendor": "Petit Monde"
+   "status": "core-bottle",
+   "vendor": "Petit Monde",
+   "phaseOut": true
   },
   {
    "key": "paltrinieri-sant-agata-lambrusco-di-sorbara",
-   "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara",
+   "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara 2024",
    "type": "Sparkling",
-   "status": "cellar",
+   "status": "core-glass",
    "vendor": "Petit Monde"
   },
   {
@@ -266,8 +281,9 @@
    "key": "viberti-derthona-timorasso-2023",
    "name": "Viberti \"Derthona\" Timorasso 2023",
    "type": "White",
-   "status": "cellar",
-   "vendor": ""
+   "status": "core-bottle",
+   "vendor": "",
+   "phaseOut": true
   },
   {
    "key": "scarpa-monferrato-bianco-timorasso-2020",
@@ -287,8 +303,9 @@
    "key": "terlan-terlaner-i-primo-grande-cuvee-2021",
    "name": "Terlan \"Terlaner I\" Primo Grande Cuvée 2021",
    "type": "White",
-   "status": "cellar",
-   "vendor": ""
+   "status": "core-bottle",
+   "vendor": "",
+   "phaseOut": true
   },
   {
    "key": "gilbert-cellars-orange-2024",
@@ -357,15 +374,17 @@
    "key": "cocito-baluchin-barbaresco-riserva-2017",
    "name": "Cocito \"Baluchin\" Barbaresco Riserva 2017",
    "type": "Red",
-   "status": "cellar",
-   "vendor": "Elliot Bay"
+   "status": "core-bottle",
+   "vendor": "Elliot Bay",
+   "phaseOut": true
   },
   {
    "key": "cantina-terlano-porphyr-lagrein-riserva-2021",
    "name": "Cantina Terlano \"Porphyr\" Lagrein Riserva 2021",
    "type": "Red",
-   "status": "cellar",
-   "vendor": ""
+   "status": "core-bottle",
+   "vendor": "",
+   "phaseOut": true
   },
   {
    "key": "arpepe-sassella-rocce-rosse-riserva",
@@ -378,8 +397,9 @@
    "key": "tenuta-santa-maria-amarone-classico-riserva-2018",
    "name": "Tenuta Santa Maria Amarone Classico Riserva 2018",
    "type": "Red",
-   "status": "cellar",
-   "vendor": "Elliot Bay"
+   "status": "core-bottle",
+   "vendor": "Elliot Bay",
+   "phaseOut": true
   },
   {
    "key": "canalicchio-di-sopra-brunello-di-montalcino-2006",
@@ -406,8 +426,9 @@
    "key": "viberti-san-pietro-barolo-riserva-2018",
    "name": "Viberti \"San Pietro\" Barolo Riserva 2018",
    "type": "Red",
-   "status": "cellar",
-   "vendor": "Elliot Bay"
+   "status": "core-bottle",
+   "vendor": "Elliot Bay",
+   "phaseOut": true
   },
   {
    "key": "vietti-barolo-ravera-2020",
@@ -429,20 +450,20 @@
   "House Prosecco Btl.": "san-fermo-prosecco-house",
   "House Prosecco Btl": "san-fermo-prosecco-house",
   "House Prosecco": "san-fermo-prosecco-house",
-  "GL Lambrusco": "le-origini-passanello-lambrusco-grasparossa-2024",
-  "Lambrusco Btl.": "le-origini-passanello-lambrusco-grasparossa-2024",
-  "Lambrusco Btl": "le-origini-passanello-lambrusco-grasparossa-2024",
-  "Lambrusco": "le-origini-passanello-lambrusco-grasparossa-2024",
+  "GL Lambrusco": "paltrinieri-sant-agata-lambrusco-di-sorbara",
+  "Lambrusco Btl.": "paltrinieri-sant-agata-lambrusco-di-sorbara",
+  "Lambrusco Btl": "paltrinieri-sant-agata-lambrusco-di-sorbara",
+  "Lambrusco": "paltrinieri-sant-agata-lambrusco-di-sorbara",
   "GL House White": "le-vaglie-verdicchio-house-white",
   "House White Btl.": "le-vaglie-verdicchio-house-white",
   "House White Btl": "le-vaglie-verdicchio-house-white",
   "House White": "le-vaglie-verdicchio-house-white",
   "GL Sauvignon Blanc": "vigna-del-lauro-sauvignon-blanc-collio-2024",
   "Sauvignon Blanc Btl.": "vigna-del-lauro-sauvignon-blanc-collio-2024",
-  "GL Vermentino": "valle-dell-acate-thymbra-vermentino-2023",
-  "Vermentino Btl.": "valle-dell-acate-thymbra-vermentino-2023",
-  "Vermentino Btl": "valle-dell-acate-thymbra-vermentino-2023",
-  "Vermentino": "valle-dell-acate-thymbra-vermentino-2023",
+  "GL Vermentino": "la-spinetta-vermentino-2025",
+  "Vermentino Btl.": "la-spinetta-vermentino-2025",
+  "Vermentino Btl": "la-spinetta-vermentino-2025",
+  "Vermentino": "la-spinetta-vermentino-2025",
   "GL Orange": "borgo-savaian-skins-are-kings",
   "Orange Btl": "borgo-savaian-skins-are-kings",
   "Orange": "borgo-savaian-skins-are-kings",
@@ -450,8 +471,8 @@
   "Rose Btl.": "la-spinetta-il-rose-di-casanova-2025",
   "Rose Btl": "la-spinetta-il-rose-di-casanova-2025",
   "Rose": "la-spinetta-il-rose-di-casanova-2025",
-  "Gl Valpolicella": "corte-scaletta-valpolicella-2022",
-  "GL Valpolicella": "corte-scaletta-valpolicella-2022",
+  "Gl Valpolicella": "brigaldara-valpolicella-2024",
+  "GL Valpolicella": "brigaldara-valpolicella-2024",
   "Corte Scaletto Valpolicella Btl.": "corte-scaletta-valpolicella-2022",
   "Corte Scaletto Valpolicella": "corte-scaletta-valpolicella-2022",
   "GL House Red": "podere-ruggeri-corsini-matot-langhe-rosso-house-",

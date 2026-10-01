@@ -1,18 +1,43 @@
 [
  {
   "section": "Bubbles",
-  "name": "House Prosecco: Bellenda \"San Fermo\" Prosecco",
+  "name": "House Prosecco: Bellenda \"San Fermo\" Prosecco Superiore Brut",
   "vintage": "",
-  "region": "Conegliano, Veneto, Italy",
+  "region": "Conegliano Valdobbiadene DOCG, Veneto, Italy",
   "type": "sparkling",
   "glass": "13",
   "bottle": "50",
   "grapes": "Glera",
   "pour": "Luminous, with a dense, continuous bead of pin-point bubbles. Delicate and fragrant on the nose; savory on the palate with a fine vein of minerality, finishing on a crisp walnut-husk tang.",
   "producer": "Bellenda's San Fermo is named for the country church next to the vineyard where the grapes grow, in the Carpesica area of the Conegliano hills. The glera vines sit around 180 m on limestone-clay soils rich in morainic deposits left by the ancient Piave glacier.",
-  "winemaking": "Grapes de-stemmed and gently pressed; must gravity-settled and fermented at 18-20°C, then 1-3 months on the lees. Second fermentation by the Italian (tank) method in 100 hl steel pressure fermenters for about 2 months.",
+  "winemaking": "Grapes de-stemmed and gently pressed; must gravity-settled and fermented at 18-20°C, then 1-3 months on the lees. Second fermentation by the Italian (tank) method in 100 hl steel pressure fermenters for about 2 months. Brut; 11.5% ABV. Serve at about 43°F.",
   "has_notes": true,
-  "specs": [],
+  "specs": [
+   {
+    "label": "Body",
+    "rating": 2,
+    "low": "light",
+    "high": "full"
+   },
+   {
+    "label": "Dryness",
+    "rating": 4,
+    "low": "sweet",
+    "high": "bone dry"
+   },
+   {
+    "label": "Acidity",
+    "rating": 3,
+    "low": "soft",
+    "high": "bright"
+   },
+   {
+    "label": "Tannins",
+    "rating": 1,
+    "low": "none",
+    "high": "grippy"
+   }
+  ],
   "pronguide": [
    {
     "term": "Bellenda",
@@ -26,7 +51,8 @@
     "term": "Conegliano",
     "pron": "koh-neh-LYAH-noh"
    }
-  ]
+  ],
+  "added": "2026-10-01"
  },
  {
   "section": "Bubbles",
@@ -579,16 +605,41 @@
   "section": "White/Rosé/Orange",
   "name": "La Spinetta Vermentino IGT",
   "vintage": "2025",
-  "region": "Tuscany, Italy",
+  "region": "Casanova, Terricciola, Tuscany, Italy",
   "type": "white",
   "glass": "18",
   "bottle": "75",
-  "grapes": "Vermentino",
-  "pour": "",
-  "producer": "",
-  "winemaking": "",
-  "has_notes": false,
-  "specs": [],
+  "grapes": "100% Vermentino",
+  "pour": "Savory, floral and aromatic: Mediterranean scrub, white flowers and bright citrus over a mineral core, with real energy and a fresh, salty finish.",
+  "producer": "La Spinetta (the Rivetti family) farms its Tuscan estate at Casanova, in Terricciola, on sandy soils of marine origin rich in oceanic sediments: the same site as our rosé. First vintage 2009; about 50,000 bottles a year. This is the Vermentino we pour at the farm dinners.",
+  "winemaking": "Hand-harvested in early to mid September from southeast-facing vines about 15 years old. Fermented with natural yeasts, then about 3 months on the lees in stainless steel. Around 13% ABV per the importer.",
+  "has_notes": true,
+  "specs": [
+   {
+    "label": "Body",
+    "rating": 2,
+    "low": "light",
+    "high": "full"
+   },
+   {
+    "label": "Dryness",
+    "rating": 4,
+    "low": "sweet",
+    "high": "bone dry"
+   },
+   {
+    "label": "Acidity",
+    "rating": 4,
+    "low": "soft",
+    "high": "bright"
+   },
+   {
+    "label": "Tannins",
+    "rating": 1,
+    "low": "none",
+    "high": "grippy"
+   }
+  ],
   "pronguide": [
    {
     "term": "La Spinetta",
@@ -597,8 +648,13 @@
    {
     "term": "Vermentino",
     "pron": "vehr-men-TEE-noh"
+   },
+   {
+    "term": "Terricciola",
+    "pron": "teh-ree-CHOH-lah"
    }
-  ]
+  ],
+  "added": "2026-10-01"
  },
  {
   "section": "White/Rosé/Orange",
@@ -1371,7 +1427,7 @@
  },
  {
   "section": "Red",
-  "name": "Castello di Neive Barbaresco Santo Stefano",
+  "name": "Castello di Neive Barbaresco DOCG",
   "vintage": "2023",
   "region": "Piedmont, Italy",
   "type": "red",
@@ -1425,7 +1481,8 @@
     "term": "Gallina",
     "pron": "gahl-LEE-nah"
    }
-  ]
+  ],
+  "added": "2026-10-01"
  },
  {
   "section": "Red",

@@ -1132,6 +1132,22 @@ body.tour-on{padding-bottom:230px;}
 .zoom-wrap svg{transform-origin:center center; will-change:transform; -webkit-user-select:none; user-select:none;}
 
 .est-note{font-size:11px; color:var(--ink-mute); font-style:italic; text-align:center; margin-top:6px;}
+
+/* Cocktail prep confirm (Katie, 2026-09-30) */
+.ckp-card{max-height:88vh; overflow-y:auto; text-align:left; align-items:stretch;}
+.ckp-card .ann-emoji,.ckp-card .ann-title{text-align:center;}
+.ckp-row{border-top:1px solid rgba(90,58,34,.15); padding:12px 0 4px;}
+.ckp-row.done .ckp-guess{opacity:.75;}
+.ckp-name{font-size:17px; font-weight:700; color:var(--wood);}
+.ckp-drink{font-size:11.5px; color:var(--ink-mute); text-transform:uppercase; letter-spacing:.06em; margin:1px 0 6px;}
+.ckp-guess{font-size:14px; color:var(--card-soft); line-height:1.4;}
+.ckp-ta{width:100%; box-sizing:border-box; font:inherit; font-size:14px; padding:8px; border-radius:10px; border:1px solid rgba(90,58,34,.3); background:#fffdf7; color:var(--wood); -webkit-text-fill-color:var(--wood);}
+.ckp-btns{display:flex; gap:8px; margin-top:8px;}
+.ckp-btns button{flex:1; border:none; border-radius:10px; padding:10px 8px; font:inherit; font-size:14px; font-weight:600; cursor:pointer;}
+.ckp-ok{font-size:13px; color:var(--accent); margin-top:6px; font-weight:600;}
+.ckp-link{background:none; border:none; color:var(--ink-mute); text-decoration:underline dotted; cursor:pointer; font:inherit; font-size:12.5px; margin-left:6px;}
+.ckp-pv{font-size:12px; color:#a0522d; text-align:center; font-weight:600;}
+.ckp-card .to-submit{margin-top:10px;}
 /* Fresh Talk publish bar */
 .editbar{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap;}
 /* Publish-to-website. Quiet outline until the settled menu actually differs from
@@ -1997,7 +2013,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790812393';   // stamped by build-data.py at every deploy
+const BUILD='1790813406';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2818,7 +2834,7 @@ function annAck(){
 }
 function annShouldShow(){ annPick(); if(!(me && me.contactSet && annActive() && !annDismissedNow()))return false;
   return annIsInfo() ? !annAcked() : !annMyRsvp(); }
-function maybeShowAnnounce(){ if(isInvestor())return; if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
+function maybeShowAnnounce(){ setTimeout(ckpMaybeShow,900); if(isInvestor())return; if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
 /* Full roster behind the tally: staff (from PROFILES.announceRsvp) plus the
    hand-added external entries in ANNOUNCE_GUESTS. Single source both the compact
    tally and the full list (annOpenFullList) read from, so they can't drift. */
@@ -3970,11 +3986,97 @@ function ckCardHTML(c){
   if(rich)h+=`<div class="expand-hint">Tap for the build &amp; ingredients ›</div>`;
   h+=`</div>`;
   if(rich){h+=`<div class="card-details">`;
-    c.ingredients.forEach(g=>h+=`<div class="ck-ing ${g.highlight?'has-hl':''}"><div class="ck-ing-head"><span class="ck-ing-name serif">${esc(g.name)}${g.highlight?`<span class="hl-badge">${esc(g.highlight)}</span>`:''}</span><span class="ck-ing-amt">${esc(g.amount||'')}</span></div><div class="ck-ing-desc">${esc(g.description)}</div></div>`);
+    c.ingredients.forEach(g=>h+=`<div class="ck-ing ${g.highlight?'has-hl':''}"><div class="ck-ing-head"><span class="ck-ing-name serif">${esc(g.name)}${g.highlight?`<span class="hl-badge">${esc(g.highlight)}</span>`:''}</span><span class="ck-ing-amt">${esc(g.amount||'')}</span></div><div class="ck-ing-desc">${esc(ckpDesc(g))}</div></div>`);
     h+=pronHTML(c.pronguide);
     h+=`</div>`;}
   
   return h+`</div>`;
+}
+/* COCKTAIL PREP CONFIRM (2026-09-30). One-time ask for Katie (bar lead): each house-made
+   component on the 9/30 cocktail menu, with the plainest likely prep written out. She taps
+   "That's right" or rewrites it. Answers: board/cocktailPrep {items:{id:{status,text,by,at}}}.
+   Until an item is answered, the cocktail card keeps its name-the-gap text (§8 rule 3);
+   once answered, the card shows her version. Admin preview: ?ckprep (nothing saves). */
+const CKP_WHO='Katie Kuntz';
+const CKP_ITEMS=[
+ {id:'shishito',drink:'Minivan Mega-Fun',name:'Blistered shishito pepper simple',ings:['Blistered shishito pepper simple'],
+  guess:'Shishito peppers blistered in a hot, dry pan, then steeped in 1:1 simple syrup (sugar and water) and strained.'},
+ {id:'peach',drink:'Oh My Word!',name:'Peach and nectarine maceration',ings:['Peach and nectarine maceration'],
+  guess:'Sliced peaches and nectarines tossed with sugar and left to macerate, then strained. The syrup goes in the drink.'},
+ {id:'agrodolce',drink:'Imaginary Friend',name:'Spiced red wine and balsamic agrodolce',ings:['Spiced red wine and balsamic agrodolce'],
+  guess:'Red wine and balsamic vinegar simmered with sugar and whole warm spices (cinnamon, clove, star anise), reduced to a syrup and strained.'},
+ {id:'rose',drink:'San Fermo Negroni',name:'Rose tincture',ings:['Rose tincture'],
+  guess:'Dried rose petals steeped in high-proof neutral spirit, then strained.'},
+ {id:'bitters',drink:"Oh My Word! · Imaginary Friend · Grandma's Ash Tray",name:'Grapefruit, black lemon and lavender bitters',ings:['Grapefruit bitters','Black lemon bitters','Lavender bitters'],append:true,
+  guess:'All three are bought bottles, not made in-house.'}
+];
+let CKP={items:{},loaded:false,shown:false,open:{},tries:0,unsub:null,local:{}};
+function ckpRef(){ return fbDb.collection('board').doc('cocktailPrep'); }
+function ckpPreview(){ try{ return /[?&]ckprep\b/.test(location.search)&&isAdmin(); }catch(e){ return false; } }
+function ckpForMe(){ return !!me&&!DEMO&&me.name===CKP_WHO; }
+function ckpAns(id){ return CKP.local[id]||CKP.items[id]||null; }
+function ckpPending(){ return CKP_ITEMS.filter(function(it){ return !ckpAns(it.id); }); }
+function ckpRefreshBar(){ try{ if($('ftBar')&&typeof renderBar==='function')renderBar(); }catch(e){} }
+function startCkPrepSync(){
+  if(!(fbReady&&fbDb))return; if(CKP.unsub)CKP.unsub();
+  CKP.unsub=ckpRef().onSnapshot(function(d){
+    CKP.items=(d.exists&&(d.data()||{}).items)||{}; CKP.loaded=true; ckpRefreshBar(); ckpMaybeShow();
+  },function(){});
+}
+/* What the floor sees on the cocktail card for this ingredient. */
+function ckpDesc(g){
+  const it=CKP_ITEMS.find(function(x){ return x.ings.indexOf(g.name)>=0; }); const a=it&&CKP.items[it.id];
+  if(!a)return g.description;
+  if(it.append)return a.status==='confirmed'?g.description:(g.description+' Bar note: '+a.text);
+  return a.text;
+}
+function ckpMaybeShow(){
+  if(CKP.shown||!CKP.loaded)return;
+  const pv=ckpPreview(); if(!(ckpForMe()||pv))return;
+  if(!pv&&!ckpPending().length)return;
+  const busy=document.body.classList.contains('locked')||['announceModal','alertModal'].some(function(id){ const m=$(id); return m&&m.style.display==='flex'; });
+  if(busy){ if(CKP.tries++<90)setTimeout(ckpMaybeShow,2000); return; }
+  CKP.shown=true; ckpOpen();
+}
+function ckpOpen(){
+  let m=$('ckpModal');
+  if(!m){ m=document.createElement('div'); m.id='ckpModal'; m.className='comp-modal'; document.body.appendChild(m); }
+  ckpRender(); m.style.display='flex';
+}
+function ckpClose(){ const m=$('ckpModal'); if(m)m.style.display='none'; }
+function ckpEdit(id,on){ CKP.open[id]=!!on; ckpRender(); const t=$('ckp-t-'+id); if(t)t.focus(); }
+function ckpRender(){
+  const m=$('ckpModal'); if(!m)return;
+  const pv=!ckpForMe(), left=ckpPending().length;
+  let h='<div class="ann-card ckp-card"><div class="ann-emoji">🍸</div><div class="ann-title serif">Quick check on the bar preps</div>'
+   +'<div class="ann-line">The new cocktails are in the portal. For each house-made prep below, I wrote down the simplest version. Tap “That’s right” or fix it, and the cocktail cards update for the floor.</div>'
+   +(pv?'<div class="ckp-pv">Preview: nothing you tap here saves.</div>':'');
+  CKP_ITEMS.forEach(function(it){
+    const a=ckpAns(it.id), ed=CKP.open[it.id], txt=a?a.text:it.guess;
+    h+='<div class="ckp-row'+(a?' done':'')+'"><div class="ckp-name serif">'+esc(it.name)+'</div><div class="ckp-drink">'+esc(it.drink)+'</div>';
+    if(ed){
+      h+='<textarea id="ckp-t-'+it.id+'" class="ckp-ta" rows="3">'+esc(txt)+'</textarea>'
+        +'<div class="ckp-btns"><button class="to-go" onclick="ckpSave(\''+it.id+'\',true)">Save</button><button class="to-cancel" onclick="ckpEdit(\''+it.id+'\',false)">Cancel</button></div>';
+    } else {
+      h+='<div class="ckp-guess">'+esc(txt)+'</div>';
+      h+=a?'<div class="ckp-ok">✓ '+(a.status==='confirmed'?'Confirmed':'Updated')+'<button class="ckp-link" onclick="ckpEdit(\''+it.id+'\',true)">change</button></div>'
+          :'<div class="ckp-btns"><button class="to-go" onclick="ckpSave(\''+it.id+'\',false)">That’s right</button><button class="to-cancel" onclick="ckpEdit(\''+it.id+'\',true)">Change it</button></div>';
+    }
+    h+='</div>';
+  });
+  h+=left?'<button class="ann-dismiss" onclick="ckpClose()">Finish later ('+left+' left)</button>'
+         :'<div class="to-submit"><button class="to-go" onclick="ckpClose()">All done, thank you</button></div>';
+  m.innerHTML=h+'</div>';
+}
+function ckpSave(id,edited){
+  const it=CKP_ITEMS.find(function(x){ return x.id===id; }); if(!it)return;
+  let text=it.guess;
+  if(edited){ const t=$('ckp-t-'+id); text=t?String(t.value||'').trim():''; if(!text){ if(t)t.focus(); return; } }
+  const rec={status:(text===it.guess?'confirmed':'replaced'),text:text,by:me?me.name:'',at:Date.now()};
+  CKP.open[id]=false;
+  if(!ckpForMe()){ CKP.local[id]=rec; ckpRender(); return; }   // preview: local only
+  CKP.items[id]=rec; ckpRender(); ckpRefreshBar();
+  if(fbReady&&fbDb){ const o={}; o[id]=rec; ckpRef().set({items:o},{merge:true}).catch(function(){}); }
 }
 function renderBar(){
   const newCk=SF.bar.cocktails.filter(c=>isNew(c));
@@ -8942,8 +9044,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startMenuPubSync(); startSpecialsSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startSpecialsSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startMenuPubSync(); startSpecialsSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startSpecialsSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
