@@ -849,6 +849,13 @@ body.tour-on{padding-bottom:230px;}
 .os-home-ic{font-size:20px;}
 .os-home-txt{font-size:13.5px; font-weight:700; color:#f6e3d6; line-height:1.35;}
 .os-home-txt b{color:var(--gold);}
+.cb-home{background:linear-gradient(90deg, rgba(64,84,140,.28), rgba(214,158,46,.14)); border-color:rgba(150,170,220,.5);}
+.cb-card{max-height:88vh; overflow-y:auto; align-items:stretch; text-align:left;} .cb-card .ann-emoji,.cb-card .ann-title{text-align:center;}
+.cb-night{border-top:1px solid rgba(90,58,34,.15); padding:10px 0 6px; display:flex; flex-direction:column; gap:5px;} .cb-night.done .cb-need{color:var(--accent-dark);}
+.cb-head{display:flex; justify-content:space-between; align-items:baseline; gap:8px;} .cb-day{font-weight:700; color:var(--wood); font-size:15px;} .cb-need{font-size:12px; color:var(--card-soft); text-align:right;}
+.cb-side{font-size:11px; color:var(--card-mute); font-weight:400;}
+.cb-btn{margin-left:auto; flex-shrink:0; border:none; border-radius:8px; padding:6px 10px; font:inherit; font-size:12.5px; font-weight:700; background:var(--accent-dark); color:#fff; cursor:pointer;} .cb-btn.on{background:transparent; color:var(--accent-dark); border:1px solid var(--accent-dark);} .cb-btn:disabled{opacity:.45; cursor:default;}
+.cb-go{align-self:flex-start; background:none; border:none; color:var(--gold-deep); font:inherit; font-size:12.5px; font-weight:700; text-decoration:underline; cursor:pointer; padding:2px 0;}
 .os-home.ok{background:rgba(74,106,58,.16); border-color:rgba(130,180,110,.4);}
 .os-home.ok .os-home-txt{color:#cfe3c2; font-weight:600;}
 .os-home.ok .os-home-txt b{color:#e3efd9;}
@@ -2024,7 +2031,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790815034';   // stamped by build-data.py at every deploy
+const BUILD='1790874015';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2265,7 +2272,7 @@ function renderHome(){
   const annChip = annChipShow?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${annChipTxt}</span></button>`:'';
   let html = isInvestor()
     ? rcCardHTML() + freshCardHTML()
-    : annChip + osHomeChipHTML() + glanceCardHTML()
+    : annChip + osHomeChipHTML() + cbHomeChipHTML() + glanceCardHTML()
       + (numViews().length>=2 ? numbersCardHTML()
          : (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():'')) + (typeof scwsCanTab==='function'&&scwsCanTab()?scwsCardHTML():''))
       + freshCardHTML();
@@ -6518,13 +6525,13 @@ function dsRosterPatch(iso,patch){ const c=dsRosterOv(iso);
 function dsApprEntry(iso,name){ const k=String(name||'').toLowerCase(); if(!k)return null; return dsRosterOv(iso).offApprovedList.find(function(a){return String(a.name||'').toLowerCase()===k;})||null; }
 /* Manager approves a flex volunteer for the night off: records the pick + auto-marks
    them called off (drops from tonight's counts, contact list, coverage). Undo reverses both. */
-function dsApproveCallOff(name){ const iso=dsDate();
+function dsApproveCallOff(name,iso){ iso=iso||dsDate();
   if(!isAdmin()){alert('Only a manager can approve a call-off.');return;}
   const c=dsRosterOv(iso), co=c.calledOff.slice();
   if(co.map(function(x){return x.toLowerCase();}).indexOf(String(name).toLowerCase())<0)co.push(name);
   const ent={name:name,at:Date.now(),by:currentUserName()||'Sam'}, lst=c.offApprovedList.filter(function(a){return String(a.name||'').toLowerCase()!==String(name).toLowerCase();}).concat([ent]);
   dsRosterPatch(iso,{offApproved:ent, offApprovedList:lst, calledOff:co}); }
-function dsUndoApproveCallOff(name){ const iso=dsDate(), c=dsRosterOv(iso);
+function dsUndoApproveCallOff(name,iso){ iso=iso||dsDate(); const c=dsRosterOv(iso);
   const lst=c.offApprovedList.filter(function(a){return String(a.name||'').toLowerCase()!==String(name).toLowerCase();});
   dsRosterPatch(iso,{offApproved:lst.length?lst[lst.length-1]:null, offApprovedList:lst, calledOff:c.calledOff.filter(function(x){return x.toLowerCase()!==String(name).toLowerCase();})}); }
 function dsCallOff(name){ const iso=dsDate(),co=dsRosterOv(iso).calledOff.slice();
@@ -6552,7 +6559,7 @@ let coCache={}, coUnsubs={}, coState=null;
 function coRef(iso){ return fbDb.collection('board').doc('calloff-'+iso); }
 function coWatch(iso){ if(!iso||coUnsubs[iso]||!(fbReady&&fbDb))return;
   coUnsubs[iso]=coRef(iso).onSnapshot(function(snap){ const d=snap.exists?(snap.data()||{}):{}; coCache[iso]=Array.isArray(d.entries)?d.entries:[]; coRefresh(iso); },function(){}); }
-function coRefresh(iso){ if(coState&&coState.iso===iso)coRender(); try{ annCoRefresh(); }catch(e){}
+function coRefresh(iso){ if(coState&&coState.iso===iso)coRender(); try{ annCoRefresh(); }catch(e){} try{ cbRefresh(); }catch(e){}
   try{ if(dsDate()===iso&&$('today')&&$('today').classList.contains('active'))renderToday(); }catch(e){} }
 function coHeads(note){ const m=String(note||'').match(/(\d+)/); const n=m?parseInt(m[1],10):1; return n>0?n:1; }
 function coWho(n){ return n===1?'One person':((['','One','Two','Three','Four','Five'][n]||String(n))+' people'); }
@@ -6578,6 +6585,77 @@ function coLeave(iso){ if(!me)return; const name=me.name;
   coTx(iso,function(cur){ return cur.filter(function(v){return v.name!==name;}); }); }
 function coOpen(side,iso){ if(!me){openLogin();return;} coState={side:side,iso:iso}; coWatch(iso); try{ dsEnsureRoster(iso); }catch(e){} coRender(); }
 function coClose(){ coState=null; const m=$('coModal'); if(m)m.style.display='none'; }
+/* ===== CALL-OFF BOARD (2026-10-01) ===========================================
+   Manager-only home chip + modal: every night in the next CB_DAYS with a call-off note on the
+   sheet (week.covNotes) or anyone on that night's list, each with its queue in order and
+   Approve / Undo right there (Sam's pick). Reads the same lists staff sign up on
+   (board/calloff-{iso} merged with Day at a Glance volunteers via coMerged) and writes approvals
+   through dsApproveCallOff(name, iso), the Day Sheet's own path.
+   SAFETY: approving a future night saves board/{iso}.roster with set(merge). Arrays in it are
+   replaced, so a write before that doc has loaded would blank calledOff/added. The buttons stay
+   disabled until this night's roster snapshot (or, for tonight, the live board) has arrived. */
+const CB_DAYS=14;
+let cbRosterUnsubs={}, cbRosterLoaded={}, cbOpenState=false;
+function cbRosterWatch(iso){
+  if(iso===todayISO()||cbRosterUnsubs[iso]||!(fbReady&&fbDb))return;
+  cbRosterUnsubs[iso]=fbDb.collection('board').doc(iso).onSnapshot(function(snap){
+    const d=snap.exists?(snap.data()||{}):{}; dsRosterCache[iso]=d.roster||{}; cbRosterLoaded[iso]=true; cbRefresh();
+  },function(){});
+}
+function cbReady(iso){ if(DEMO)return true; if(!(fbReady&&fbDb))return false; return iso===todayISO()?!!boardState:!!cbRosterLoaded[iso]; }
+function cbNoteFor(side,iso){ const w=dsWeekFor(side,iso); return w?String((w.covNotes||[])[w.dates.indexOf(iso)]||'').trim():''; }
+/* nights worth showing: a sheet note on either side, or anyone already on the list */
+function cbNights(){ const t=todayISO(), out=[];
+  for(let i=0;i<=CB_DAYS;i++){ const iso=osIsoAdd(t,i); coWatch(iso);
+    const notes={foh:cbNoteFor('foh',iso), boh:cbNoteFor('boh',iso)};
+    const list=coMerged(iso).filter(function(v){return v.type!=='oncall';});
+    if(!notes.foh&&!notes.boh&&!list.length)continue;
+    cbRosterWatch(iso);
+    const appr=list.filter(function(v){return !!dsApprEntry(iso,v.name);}).length;
+    const heads=(notes.foh?coHeads(notes.foh):0)+(notes.boh?coHeads(notes.boh):0);
+    out.push({iso:iso, notes:notes, list:list, heads:heads, appr:appr}); }
+  return out; }
+function cbDayLabel(iso){ return fmtLong(iso).split(',')[0].slice(0,3)+' '+(+iso.slice(5,7))+'/'+(+iso.slice(8,10)); }
+function cbHomeChipHTML(){
+  if(!isMgr()||isInvestor())return '';
+  const ns=cbNights(); if(!ns.length)return '';
+  const bits=ns.slice(0,3).map(function(n){
+    const s=n.heads&&n.appr>=n.heads?'set ✓':(n.list.length+' asked'+(n.appr?', '+n.appr+' approved':''));
+    return cbDayLabel(n.iso)+': '+s; });
+  const more=ns.length>3?' · +'+(ns.length-3)+' more':'';
+  return '<button class="os-home cb-home" onclick="cbOpen()"><span class="os-home-ic">🌙</span><span class="os-home-txt"><b>Call-offs</b> · '+esc(bits.join(' · ')+more)+'</span></button>';
+}
+function cbOpen(){ cbOpenState=true; cbRender(); }
+function cbClose(){ cbOpenState=false; const m=$('cbModal'); if(m)m.style.display='none'; }
+function cbRefresh(){
+  if(cbOpenState)cbRender();
+  try{ if($('home')&&$('home').classList.contains('active'))renderHome(); }catch(e){}
+}
+function cbApprove(iso,name){ if(!cbReady(iso)){alert('Still loading that night. Try again in a second.');return;} dsApproveCallOff(name,iso); cbRefresh(); }
+function cbUndo(iso,name){ if(!cbReady(iso)){alert('Still loading that night. Try again in a second.');return;} dsUndoApproveCallOff(name,iso); cbRefresh(); }
+function cbGoDay(iso){ cbClose(); go('today'); dsSetDate(iso===todayISO()?null:iso); }
+function cbRender(){
+  let m=$('cbModal');
+  if(!m){ m=document.createElement('div'); m.id='cbModal'; m.className='comp-modal'; m.onclick=function(e){if(e.target===m)cbClose();}; document.body.appendChild(m); }
+  const ns=cbNights(), adm=isAdmin(), t=todayISO();
+  let h='<div class="ann-card co-card cb-card"><div class="ann-emoji">🌙</div><div class="ann-title serif">Call-offs</div>';
+  if(!ns.length)h+='<div class="co-hint">No call-offs on the schedule in the next two weeks.</div>';
+  ns.forEach(function(n){ const ready=cbReady(n.iso);
+    const need=[n.notes.foh?('Floor: '+coWho(coHeads(n.notes.foh)).toLowerCase()):'', n.notes.boh?('Kitchen: '+coWho(coHeads(n.notes.boh)).toLowerCase()):''].filter(Boolean).join(' · ')||'No call-off on the sheet';
+    const done=n.heads&&n.appr>=n.heads;
+    h+='<div class="cb-night'+(done?' done':'')+'"><div class="cb-head"><span class="cb-day">'+esc(fmtLong(n.iso))+(n.iso===t?' · tonight':'')+'</span><span class="cb-need">'+(done?'Set ✓':esc(need))+'</span></div>';
+    if(!n.list.length)h+='<div class="co-row co-empty">Nobody yet.</div>';
+    n.list.forEach(function(v,i){ const ap=!!dsApprEntry(n.iso,v.name);
+      h+='<div class="co-row'+(ap?' appr':'')+'"><span class="co-n">'+(i+1)+'</span><span class="co-name">'+esc(v.name)+(v.side?' <span class="cb-side">'+(v.side==='boh'?'kitchen':'floor')+'</span>':'')+'</span>';
+      if(adm)h+=ap?'<button class="cb-btn on" onclick="cbUndo(\''+n.iso+'\',\''+jq(v.name)+'\')"'+(ready?'':' disabled')+'>✓ Off · undo</button>'
+                  :'<button class="cb-btn" onclick="cbApprove(\''+n.iso+'\',\''+jq(v.name)+'\')"'+(ready?'':' disabled')+'>Approve</button>';
+      else h+='<span class="co-at">'+(ap?'✓ off':esc(reqStamp(v.at)))+'</span>';
+      h+='</div>'; });
+    h+='<button class="cb-go" onclick="cbGoDay(\''+n.iso+'\')">Open this night on the Day Sheet →</button></div>'; });
+  h+='<button class="ann-dismiss" onclick="cbClose()">Close</button></div>';
+  m.innerHTML=h; m.style.display='flex';
+}
+
 function coRender(){ const s=coState; if(!s)return; let m=$('coModal');
   if(!m){ m=document.createElement('div'); m.id='coModal'; m.className='comp-modal'; m.onclick=function(e){if(e.target===m)coClose();}; document.body.appendChild(m); }
   const iso=s.iso, side=s.side, w=dsWeekFor(side,iso), note=w?String((w.covNotes||[])[w.dates.indexOf(iso)]||'').trim():'';
