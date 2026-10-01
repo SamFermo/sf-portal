@@ -804,8 +804,7 @@ window.SF = {
      "term": "Conegliano",
      "pron": "koh-neh-LYAH-noh"
     }
-   ],
-   "added": "2026-10-01"
+   ]
   },
   {
    "section": "Bubbles",
@@ -1406,8 +1405,7 @@ window.SF = {
      "term": "Terricciola",
      "pron": "teh-ree-CHOH-lah"
     }
-   ],
-   "added": "2026-10-01"
+   ]
   },
   {
    "section": "White/Rosé/Orange",
@@ -2234,8 +2232,7 @@ window.SF = {
      "term": "Gallina",
      "pron": "gahl-LEE-nah"
     }
-   ],
-   "added": "2026-10-01"
+   ]
   },
   {
    "section": "Red",
@@ -14294,5 +14291,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1790813406"
+ "build": "1790814404"
 };

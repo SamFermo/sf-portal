@@ -1148,6 +1148,18 @@ body.tour-on{padding-bottom:230px;}
 .ckp-link{background:none; border:none; color:var(--ink-mute); text-decoration:underline dotted; cursor:pointer; font:inherit; font-size:12.5px; margin-left:6px;}
 .ckp-pv{font-size:12px; color:#a0522d; text-align:center; font-weight:600;}
 .ckp-card .to-submit{margin-top:10px;}
+
+/* Fresh Talk home trio (2026-09-30) */
+.ft-trio{cursor:default; padding:14px 12px 12px;}
+.ft-trio:hover,.ft-trio:active{transform:none;}
+.ft-trio-head{margin:0 4px 10px;}
+.ft-trio-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+.ft-mini{display:flex; flex-direction:column; align-items:flex-start; gap:3px; text-align:left; border:none; cursor:pointer; border-radius:13px; padding:12px 10px 11px; background:rgba(90,58,34,.08); box-shadow:inset 0 0 0 1px rgba(90,58,34,.12); font:inherit; transition:transform .12s ease, background .12s ease;}
+.ft-mini:active{transform:scale(.97); background:rgba(90,58,34,.14);}
+.ft-mini-t{font-family:'Cormorant Garamond','Caladea',serif; font-size:19px; font-weight:600; color:var(--wood); line-height:1.1;}
+.ft-mini-s{font-size:11px; color:var(--card-mute); line-height:1.3;}
+.ft-mini-s b{color:var(--gold-deep); font-weight:700;}
+#ftAllergens .alg-box{margin-bottom:14px;}
 /* Fresh Talk publish bar */
 .editbar{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap;}
 /* Publish-to-website. Quiet outline until the settled menu actually differs from
@@ -1844,13 +1856,12 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
       <button class="subtab active" data-ft="food">Food</button>
       <button class="subtab" data-ft="wine">Wine</button>
       <button class="subtab" data-ft="bar">Cocktails</button>
-      <button class="subtab" data-ft="allergens">Allergens</button>
     </div>
   </div>
+  <div id="ftAllergens"></div>
   <div id="ftFood"></div>
   <div id="ftWine" style="display:none;"></div>
   <div id="ftBar" style="display:none;"></div>
-  <div id="ftAllergens" style="display:none;"></div>
 </section>
 
 <section class="view" id="schedule">
@@ -2013,7 +2024,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790813406';   // stamped by build-data.py at every deploy
+const BUILD='1790814404';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2148,22 +2159,28 @@ function wideCardHTML(id,ic,title,detail){
     <div class="glance-card-top"><div class="glance-card-head"><span class="hc-icon">${ic}</span><span class="hc-title">${title}</span></div></div>
     <div class="hc-sub hc-sub-wide">${detail}</div></button>`;
 }
+/* Fresh Talk home card (2026-09-30): three mini cards, each a straight door into its sub-tab.
+   data-card="fresh" stays on the wrapper so the unseen-glow (updateAttn) still lands. */
 function freshCardHTML(){
-  const nw=freshNewList();
+  const nw=freshNewList(), unseen=freshUnseen().length>0;
   const c={dish:0,wine:0,cocktail:0};
   nw.forEach(o=>{ if(c[o.type]!=null)c[o.type]++; else c.dish++; });
-  let detail;
-  if(!nw.length){
-    detail='Food, wine &amp; cocktails — all current';
-  } else {
-    const parts=[];
-    if(c.dish)parts.push(c.dish+' food');
-    if(c.wine)parts.push(c.wine+' wine');
-    if(c.cocktail)parts.push(c.cocktail+(c.cocktail>1?' cocktails':' cocktail'));
-    const txt=parts.join(' · ')+' this week';
-    detail = freshUnseen().length ? `<b>${txt}</b>` : txt;
-  }
-  return wideCardHTML('fresh','✦','Fresh Talk',detail);
+  let dishes=0; ((SF.menu&&SF.menu.food)||[]).forEach(s=>dishes+=(s.items||[]).length);
+  const wines=(SF.wines||[]).length, cks=((SF.bar&&SF.bar.cocktails)||[]).length;
+  const sub=(n,dflt)=>n?(unseen?`<b>${n} new</b>`:`${n} new`):dflt;
+  const mini=(ft,title,line)=>`<button class="ft-mini" onclick="goFresh('${ft}')"><span class="ft-mini-t">${title}</span><span class="ft-mini-s">${line}</span></button>`;
+  return `<div class="home-card home-card-wide ft-trio" data-card="fresh">
+    <div class="glance-card-head ft-trio-head"><span class="hc-icon">✦</span><span class="hc-title">Fresh Talk</span></div>
+    <div class="ft-trio-row">`
+    + mini('food','Food',sub(c.dish,dishes+' dishes'))
+    + mini('wine','Wine',sub(c.wine,wines+' wines'))
+    + mini('bar','Liquor',sub(c.cocktail,cks+' cocktails'))
+    + `</div></div>`;
+}
+function goFresh(ft){
+  go('fresh');
+  const b=document.querySelector('#freshTabs .subtab[data-ft="'+ft+'"]'); if(b)b.click();
+  window.scrollTo(0,0);
 }
 /* RemyWeek (2026-09-24): the ONE definition of San Fermo's weekly Swan House order window.
    Cutoff Sunday 10pm Pacific; delivery = cutoff Sunday + DELIV_OFFSET days (Tuesday, Sully).
@@ -2570,7 +2587,7 @@ function saveConsent(){
 const TOUR_COPY={
   home:{t:'Home',b:'Everything starts here. The cards below jump to whatever you need, and the row of buttons along the top gets you anywhere in one tap.'},
   today:{t:'Day at a Glance',b:'Tonight in one screen: how busy we expect to be, who is on with you, and anything the managers flagged for the shift. Check it when you clock in.'},
-  fresh:{t:'Fresh Talk',b:'Tonight\'s menu in full, with separate tabs for wine, cocktails and allergens. Every dish lists its components, and every wine carries tasting notes and a pronunciation guide. Search the wine list by name, grape, or what a guest tells you they like.',
+  fresh:{t:'Fresh Talk',b:'Tonight\'s menu in full: Food (with the allergy check on top), Wine and the bar. Every dish lists its components, and every wine carries tasting notes and a pronunciation guide. Search the wine list by name, grape, or what a guest tells you they like.',
     boh:'Tonight\'s menu in full. The BOH tab is the one you want: every dish with its components, exactly as it should go out. Allergens live here too, so this is the fastest way to answer a question from the floor mid-service.'},
   board:{t:'The Attic',b:'Tonight\'s tables upstairs. Tap a table to open it: the MD seats it with a turn time and any occasion, the server acknowledges and flags anything that needs the MD. Chat is the same room, in words. Other sections are one tap behind the section button.'},
   schedule:{t:'Schedule',b:'This week and the month ahead, front and back of house. Time off requests go in here too, under the Time Off tab, and you can see where they stand.'},
@@ -10452,7 +10469,7 @@ function init(){
   buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
   renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderAccess();
   initPill($('atticTabs'),$('atticPill'),'at',v=>{atSubGo(v);});
-  initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';$('ftAllergens').style.display=v==='allergens'?'block':'none';});
+  initPill($('freshTabs'),$('freshPill'),'ft',v=>{$('ftFood').style.display=v==='food'?'block':'none';$('ftWine').style.display=v==='wine'?'block':'none';$('ftBar').style.display=v==='bar'?'block':'none';$('ftAllergens').style.display=v==='food'?'block':'none';});
   initPill($('schedSideTabs'),$('schedSidePill'),'side',v=>{setSchedSide(v);renderSchedule();});
   initPill($('dutyTabs'),$('dutyPill'),'duty',v=>{dutyTab=v;renderDuties();});
   initPill($('compTabs'),$('compPill'),'comp',v=>{compTab=v;renderCompliance();});
