@@ -1855,7 +1855,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
     <div class="subtabs" id="freshTabs"><span class="subpill" id="freshPill"></span>
       <button class="subtab active" data-ft="food">Food</button>
       <button class="subtab" data-ft="wine">Wine</button>
-      <button class="subtab" data-ft="bar">Cocktails</button>
+      <button class="subtab" data-ft="bar">Liquor</button>
     </div>
   </div>
   <div id="ftAllergens"></div>
@@ -2024,7 +2024,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790814404';   // stamped by build-data.py at every deploy
+const BUILD='1790815034';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2161,6 +2161,10 @@ function wideCardHTML(id,ic,title,detail){
 }
 /* Fresh Talk home card (2026-09-30): three mini cards, each a straight door into its sub-tab.
    data-card="fresh" stays on the wrapper so the unseen-glow (updateAttn) still lands. */
+function wiCardHTML(){
+  const ws=((window.SF&&SF.wineInv&&SF.wineInv.wines)||[]), on=ws.filter(w=>w.status!=='cellar').length, gl=ws.filter(w=>w.status==='core-glass').length, ce=ws.length-on;
+  return wideCardHTML('wineinv','❦','Wine Inventory','Bottles on hand, counts &amp; deliveries · '+on+' on the list ('+gl+' by the glass), '+ce+' in the cellar');
+}
 function freshCardHTML(){
   const nw=freshNewList(), unseen=freshUnseen().length>0;
   const c={dish:0,wine:0,cocktail:0};
@@ -2271,10 +2275,10 @@ function renderHome(){
     ['standards','▦','Standards','Room, duties & steps of service'],
     ['directory','✉','Directory','The team & contacts']];
   if(mgr) std.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);   // sits beside Directory
-  if(typeof wiCanTab==='function'&&wiCanTab()) std.push(['wineinv','❦','Wine Inventory','Bottles on hand, counts & deliveries']);
   // Investors get Recap + Fresh Talk only. The standard card block and Farm Order are staff surfaces.
   // An odd card count leaves one card alone on its row: center it, same look as the orphan rule.
   if(!isInvestor()){ const sc=std.map(stdCardHTML); if(sc.length%2) sc[sc.length-1]=sc[sc.length-1].replace('class="home-card"','class="home-card home-card-solo"'); html += sc.join(''); }
+  if(!isInvestor() && typeof wiCanTab==='function' && wiCanTab()) html += wiCardHTML();   // full width (Sam 9/30)
   if(mgr && !isInvestor()) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
   $('homeGrid').innerHTML=html;
   glanceCardWeather();
@@ -2587,7 +2591,7 @@ function saveConsent(){
 const TOUR_COPY={
   home:{t:'Home',b:'Everything starts here. The cards below jump to whatever you need, and the row of buttons along the top gets you anywhere in one tap.'},
   today:{t:'Day at a Glance',b:'Tonight in one screen: how busy we expect to be, who is on with you, and anything the managers flagged for the shift. Check it when you clock in.'},
-  fresh:{t:'Fresh Talk',b:'Tonight\'s menu in full: Food (with the allergy check on top), Wine and the bar. Every dish lists its components, and every wine carries tasting notes and a pronunciation guide. Search the wine list by name, grape, or what a guest tells you they like.',
+  fresh:{t:'Fresh Talk',b:'Tonight\'s menu in full: Food (with the allergy check on top), Wine and Liquor. Every dish lists its components, and every wine carries tasting notes and a pronunciation guide. Search the wine list by name, grape, or what a guest tells you they like.',
     boh:'Tonight\'s menu in full. The BOH tab is the one you want: every dish with its components, exactly as it should go out. Allergens live here too, so this is the fastest way to answer a question from the floor mid-service.'},
   board:{t:'The Attic',b:'Tonight\'s tables upstairs. Tap a table to open it: the MD seats it with a turn time and any occasion, the server acknowledges and flags anything that needs the MD. Chat is the same room, in words. Other sections are one tap behind the section button.'},
   schedule:{t:'Schedule',b:'This week and the month ahead, front and back of house. Time off requests go in here too, under the Time Off tab, and you can see where they stand.'},
@@ -3637,7 +3641,7 @@ const WCRIT=[
   {id:'sweet',     kind:'spec', group:'Sweetness',label:'Off-dry',       spec:'Dryness', test:r=>r<=3, hidden:true}
 ];
 const WCRIT_BY_ID={}; WCRIT.forEach(c=>WCRIT_BY_ID[c.id]=c);
-const WGROUPS=['Type','Body','Tannin','Acidity'];
+const WGROUPS=['Type'];   // 2026-09-30: Body/Tannin/Acidity chips hidden (search still reads those words)
 
 /* Guest phrasing -> criterion. Order matters: earlier patterns consume text. */
 const WPHRASE=[
@@ -3803,7 +3807,7 @@ function wBarHTML(cr){
     if(g==='Type')bar+='<button class="fchip '+(cr.glass?'want':'')+'" data-glass="1">By the glass</button>';
     bar+='</div>';
   });
-  return bar+'<p class="est-note">Tap once for what they want, twice for what to avoid. Scorecards are house tasting estimates, not lab values.</p>';
+  return bar+'<p class="est-note">Tap once for what they want, twice for what to avoid. Or type it: \u201clight red\u201d, \u201ccrisp white\u201d, \u201cnothing tannic\u201d.</p>';
 }
 
 function wNotesHTML(cr,m){
