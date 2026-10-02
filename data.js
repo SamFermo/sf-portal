@@ -362,18 +362,18 @@ window.SF = {
       "ingredients": [
        {
         "term": "Farfalle",
-        "pronunciation": "far-FAH-leh",
-        "note": "Bow-tie shaped pasta; here made in-house from egg dough and stuffed with basil, ricotta, and mozzarella. A fresh egg dough, so it carries egg and wheat."
-       },
-       {
-        "term": "Vodka sauce",
-        "pronunciation": null,
-        "note": "A tomato-and-cream sauce built on onion and garlic. This version is spicy."
+        "note": "Bow-tie shaped pasta; here made in-house from egg dough and stuffed with basil, ricotta, and mozzarella. A fresh egg dough, so it carries egg and wheat.",
+        "pronunciation": "far-FAH-leh"
        },
        {
         "term": "Chiffonade",
         "pronunciation": "shif-oh-NAHD",
         "note": "Herbs sliced into thin ribbons — here fresh basil, scattered over the top."
+       },
+       {
+        "note": "A tomato-and-cream sauce with some heat: vodka, crushed tomato, heavy cream, onion, garlic, chili flake, parmesan, butter and salt.",
+        "pronunciation": null,
+        "term": "Spicy vodka sauce"
        }
       ],
       "allergens": [
@@ -384,17 +384,7 @@ window.SF = {
       ],
       "canModify": [],
       "allergenNote": "Egg and gluten are both in the fresh egg pasta — built in. Dairy runs through the filling (ricotta, mozzarella) and the cream in the sauce, so it can't come off this dish. Allium: onion and garlic are cooked into the vodka sauce.",
-      "flags": [
-       {
-        "component": "spicy vodka sauce",
-        "riskAllergens": [
-         "dairy",
-         "allium"
-        ],
-        "proposedStandard": "vodka, crushed tomato, heavy cream, onion, garlic, chili flake, parmesan, butter, salt",
-        "label": "spicy vodka sauce — composition not specified"
-       }
-      ],
+      "flags": [],
       "added": "2026-08-01"
      },
      {
@@ -480,47 +470,39 @@ window.SF = {
       "story": "Seven ounces of troll-caught Washington king salmon, grilled to medium rare. Served with Bibb lettuce dressed in roasted tomato vinaigrette, bright sun gold tomatoes, and charred zucchini. Finished with marigold petals.",
       "ingredients": [
        {
-        "term": "Troll-caught king salmon",
+        "note": "Caught one fish at a time on hook and line rather than by net, which keeps the fillet intact and the flesh firm. King (chinook) is the richest of the Pacific salmon, high in fat with a deep colour. Seven ounce fillet, grilled to medium rare.",
         "pronunciation": null,
-        "note": "Caught one fish at a time on hook and line rather than by net, which keeps the fillet intact and the flesh firm. King (chinook) is the richest of the Pacific salmon, high in fat with a deep colour. Seven ounce fillet, grilled to medium rare."
+        "term": "Troll-caught king salmon"
        },
        {
-        "term": "Bibb lettuce",
+        "note": "A soft butterhead lettuce with loose, tender leaves and a mild sweetness. Dressed and served cool against the warm fish.",
         "pronunciation": null,
-        "note": "A soft butterhead lettuce with loose, tender leaves and a mild sweetness. Dressed and served cool against the warm fish."
+        "term": "Bibb lettuce"
        },
        {
+        "pronunciation": null,
         "term": "Sun gold tomatoes",
-        "pronunciation": null,
         "note": "A small orange cherry tomato, noticeably sweeter and lower in acid than a red cherry tomato. Served raw."
        },
        {
         "term": "Roasted tomato vinaigrette",
         "pronunciation": null,
-        "note": "The composition of this vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
+        "note": "Our roasted tomato vinaigrette starts with tomatoes, quartered and roasted low and slow at 200° until they lose about 60% of their moisture, which concentrates their flavor and natural sweetness. We finish the roasted tomatoes with red wine vinegar, shallot, and extra-virgin olive oil to make the vinaigrette, seasoned with oregano and black pepper. Guests should know this is a cooked vinaigrette, not raw, so it has deep roasted tomato flavor rather than bright acidity."
        },
        {
         "term": "Marigold petals",
-        "pronunciation": null,
-        "note": "Edible flower petals, faintly citrus and peppery. A garnish, and they come off on request."
+        "note": "Edible flower petals, faintly citrus and peppery. A garnish, and they come off on request.",
+        "pronunciation": null
        }
       ],
       "allergens": [
-       "fish"
+       "fish",
+       "allium"
       ],
       "canModify": [],
-      "allergenNote": "Fish: king salmon, central to the dish, cannot come off. The composition of the roasted tomato vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
+      "allergenNote": "Fish: king salmon, central to the dish, cannot come off. Allium: shallot is in the roasted tomato vinaigrette. Served medium rare.",
       "added": "2026-07-24",
-      "flags": [
-       {
-        "component": "roasted tomato vinaigrette",
-        "riskAllergens": [
-         "allium"
-        ],
-        "proposedStandard": "",
-        "label": "roasted tomato vinaigrette — composition not specified"
-       }
-      ]
+      "flags": []
      },
      {
       "name": "Roasted Duck Breast",
@@ -531,8 +513,8 @@ window.SF = {
       "ingredients": [
        {
         "term": "Muscovy duck",
-        "pronunciation": "MUSS-koh-vee",
-        "note": "A leaner breed than Pekin, with a deeper, less fatty flavour closer to red meat than poultry. The breast is rendered skin-side down so the fat runs off and the skin crisps, then cooked to medium rare."
+        "note": "A leaner breed than Pekin, with a deeper, less fatty flavour closer to red meat than poultry. The breast is rendered skin-side down so the fat runs off and the skin crisps, then cooked to medium rare.",
+        "pronunciation": "MUSS-koh-vee"
        },
        {
         "term": "Chanterelles",
@@ -541,18 +523,18 @@ window.SF = {
        },
        {
         "term": "Polenta",
-        "pronunciation": "poh-LEN-tah",
-        "note": "Ground cornmeal cooked until thick and creamy, the bed for the duck. The house polenta is built with cream, stock and butter, so treat it as dairy unless the kitchen says this prep differs."
+        "note": "Ground cornmeal cooked until thick and creamy, the bed for the duck. The house polenta is built with cream, stock and butter, so treat it as dairy unless the kitchen says this prep differs.",
+        "pronunciation": "poh-LEN-tah"
        },
        {
-        "term": "Marjoram",
+        "note": "A soft herb in the oregano family, sweeter and more floral than oregano. Used fresh to lift the plate.",
         "pronunciation": "MAR-jer-um",
-        "note": "A soft herb in the oregano family, sweeter and more floral than oregano. Used fresh to lift the plate."
+        "term": "Marjoram"
        },
        {
         "term": "Huckleberry demi-glace",
         "pronunciation": "DEH-mee glahss",
-        "note": "The composition of this demi-glace has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
+        "note": "The huckleberry demi-glace is chicken stock reduced until glossy and thick, then finished with cooked huckleberries. Guests get a rich, slightly sweet sauce with the tartness of the berries. It's not overly sweet, just balanced fruit with deep savory stock."
        }
       ],
       "allergens": [
@@ -562,18 +544,9 @@ window.SF = {
       "canModify": [
        "dairy"
       ],
-      "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. The composition of the huckleberry demi-glace has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
+      "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. Served medium rare.",
       "added": "2026-08-02",
-      "flags": [
-       {
-        "component": "huckleberry demi-glace",
-        "riskAllergens": [
-         "allium"
-        ],
-        "proposedStandard": "",
-        "label": "huckleberry demi-glace — composition not specified"
-       }
-      ]
+      "flags": []
      }
     ],
     "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
@@ -628,14 +601,14 @@ window.SF = {
     "story": "A crisp-outside, soft-inside meringue, named for the Russian ballerina Anna Pavlova. This one's built on marigold sugar — petals from Rain Dog Farm in Redmond, dried and ground with sugar — flavoring the meringue base. Topped with vanilla bean pastry cream and gently cooked local Washington peaches. Floral, bright, and delicate.",
     "ingredients": [
      {
-      "term": "Pavlova",
+      "note": "a meringue-based dessert with a crisp crust and soft center, named for ballerina Anna Pavlova.",
       "pronunciation": "pav-LOH-vah",
-      "note": "a meringue-based dessert with a crisp crust and soft center, named for ballerina Anna Pavlova."
+      "term": "Pavlova"
      },
      {
+      "note": "whipped egg whites and sugar, baked low and slow until crisp.",
       "term": "Meringue",
-      "pronunciation": "meh-RANG",
-      "note": "whipped egg whites and sugar, baked low and slow until crisp."
+      "pronunciation": "meh-RANG"
      },
      {
       "term": "Marigold sugar",
@@ -643,9 +616,9 @@ window.SF = {
       "note": "marigold petals from Rain Dog Farm in Redmond, dried and ground with sugar to flavor the meringue."
      },
      {
-      "term": "Vanilla bean pastry cream",
+      "note": "Pastry cream is a cooked custard thickened with cornstarch, giving it a stable, spoonable texture that holds its shape on the plate. Ours is made from whole milk, cream, egg yolk, sugar, vanilla bean, and cornstarch. The vanilla bean is visible as small specks throughout. It's cool and rich, and sits underneath the meringue and peaches.",
       "pronunciation": null,
-      "note": "The composition of this pastry cream has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, dairy and egg especially."
+      "term": "Vanilla bean pastry cream"
      }
     ],
     "allergens": [
@@ -655,18 +628,9 @@ window.SF = {
     "canModify": [
      "dairy"
     ],
-    "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate. The composition of the vanilla bean pastry cream has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
-    "flags": [
-     {
-      "component": "vanilla bean pastry cream",
-      "riskAllergens": [
-       "dairy",
-       "egg"
-      ],
-      "proposedStandard": "whole milk, cream, egg yolk, sugar, vanilla bean, cornstarch",
-      "label": "vanilla bean pastry cream — composition not specified"
-     }
-    ]
+    "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate.",
+    "flags": [],
+    "raw": false
    },
    {
     "name": "Seasonal Gelato",
@@ -2801,237 +2765,284 @@ window.SF = {
    {
     "name": "Espresso Martini",
     "price": "16",
-    "note": "Vodka, espresso, coffee liqueur — cold, rich, caffeinated closer."
+    "note": "Vodka, espresso, coffee liqueur — cold, rich, caffeinated closer.",
+    "group": "Digestivi & liqueurs"
    },
    {
     "name": "House Limoncello",
     "price": "12",
-    "note": "House-made lemon liqueur; bright, sweet, clean finish. Made in-house."
+    "note": "House-made lemon liqueur; bright, sweet, clean finish. Made in-house.",
+    "group": "Digestivi & liqueurs"
    },
    {
     "name": "Scuppoz Amaretto",
     "price": "12",
-    "note": "Toasted almond and apricot kernel amaretto from Abruzzo, Italy; marzipan sweetness, nutty depth."
+    "note": "Toasted almond and apricot kernel amaretto from Abruzzo, Italy; marzipan sweetness, nutty depth.",
+    "group": "Digestivi & liqueurs"
    },
    {
     "name": "Sambuca",
     "price": "8",
-    "note": "Italian anise liqueur; sweet, licorice-forward, traditionally served with three coffee beans."
+    "note": "Italian anise liqueur; sweet, licorice-forward, traditionally served with three coffee beans.",
+    "group": "Digestivi & liqueurs"
    },
    {
     "name": "Dow's Tawny Porto 20 yr",
     "price": "15",
-    "note": "Aged 20 years in cask; Douro Valley, Portugal. Nutty, dried fig, candied orange, warm spice."
+    "note": "Aged 20 years in cask; Douro Valley, Portugal. Nutty, dried fig, candied orange, warm spice.",
+    "group": "Port, sherry & vermouth"
    },
    {
     "name": "Dow's Fine White Port",
     "price": "9",
-    "note": "Fresh, golden white port; Douro Valley, Portugal. Crisp pear and citrus, nutty finish, slightly off-dry."
+    "note": "Fresh, golden white port; Douro Valley, Portugal. Crisp pear and citrus, nutty finish, slightly off-dry.",
+    "group": "Port, sherry & vermouth"
    },
    {
     "name": "Mancino Edizione Sakura Vermouth",
     "price": "14",
-    "note": "Limited-edition Torino-style vermouth; Kyoto cherry blossoms and Italian viola flowers, pale pink, delicately floral."
+    "note": "Limited-edition Torino-style vermouth; Kyoto cherry blossoms and Italian viola flowers, pale pink, delicately floral.",
+    "group": "Port, sherry & vermouth"
    },
    {
     "name": "Lustau Oloroso Sherry",
     "price": "10",
-    "note": "Fully oxidized dry sherry from Jerez, Spain. Dark, full-bodied; caramel, walnut, dried fruit, warm spice."
+    "note": "Fully oxidized dry sherry from Jerez, Spain. Dark, full-bodied; caramel, walnut, dried fruit, warm spice.",
+    "group": "Port, sherry & vermouth"
    },
    {
     "name": "Lustau Pedro-Ximenez Sherry",
     "price": "10",
-    "note": "Lusciously sweet sherry from Jerez, Spain. Sun-dried PX grapes; raisins, molasses, dark fig, velvety texture."
+    "note": "Lusciously sweet sherry from Jerez, Spain. Sun-dried PX grapes; raisins, molasses, dark fig, velvety texture.",
+    "group": "Port, sherry & vermouth"
    },
    {
     "name": "Amaricano Bianco",
     "price": "11",
-    "note": "Seattle-made (Fast Penny Spirits); citrus-forward American bitter aperitivo. Candied lemon, saffron, apricot, chamomile."
+    "note": "Seattle-made (Fast Penny Spirits); citrus-forward American bitter aperitivo. Candied lemon, saffron, apricot, chamomile.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Rucolino",
     "price": "9",
-    "note": "Arugula-based amaro from Ischia, Italy. Peppery, herbal bitterness; citrus and cedar, pleasantly bitter finish."
+    "note": "Arugula-based amaro from Ischia, Italy. Peppery, herbal bitterness; citrus and cedar, pleasantly bitter finish.",
+    "group": "Amari"
    },
    {
     "name": "Scarlet Orange Amaro",
     "price": "16",
-    "note": "Japanese craft amaro by Iseya Distillery, Kanagawa. Blood orange-forward; bright citrus, lemon balm, gentle ginger heat."
+    "note": "Japanese craft amaro by Iseya Distillery, Kanagawa. Blood orange-forward; bright citrus, lemon balm, gentle ginger heat.",
+    "group": "Amari"
    },
    {
     "name": "Scarlet Fernet Amaro",
     "price": "14",
-    "note": "Japanese craft fernet by Iseya Distillery; 30+ botanicals including mint, galangal, and palo santo. Botanical and layered, surprisingly smooth."
+    "note": "Japanese craft fernet by Iseya Distillery; 30+ botanicals including mint, galangal, and palo santo. Botanical and layered, surprisingly smooth.",
+    "group": "Fernet"
    },
    {
     "name": "Amaro Foro Originale",
     "price": "12",
-    "note": "Piedmontese amaro; 25 botanicals including gentian and angelica. Bittersweet citrus, dried herbs, clean bitter finish."
+    "note": "Piedmontese amaro; 25 botanicals including gentian and angelica. Bittersweet citrus, dried herbs, clean bitter finish.",
+    "group": "Amari"
    },
    {
     "name": "Faccia Brutto Fernet Pianta",
     "price": "14",
-    "note": "Brooklyn-made (Faccia Brutto Spirits); 27 botanicals, mint-forward with citrus peel and licorice. More approachable than traditional fernet."
+    "note": "Brooklyn-made (Faccia Brutto Spirits); 27 botanicals, mint-forward with citrus peel and licorice. More approachable than traditional fernet.",
+    "group": "Fernet"
    },
    {
     "name": "Faccia Brutto Amaro Gorini",
     "price": "14",
-    "note": "Brooklyn-made (Faccia Brutto Spirits); barrel-aged in Solera style. Orange peel, chestnut honey, warm cinnamon and star anise."
+    "note": "Brooklyn-made (Faccia Brutto Spirits); barrel-aged in Solera style. Orange peel, chestnut honey, warm cinnamon and star anise.",
+    "group": "Amari"
    },
    {
     "name": "Fernet Dogma",
     "price": "9",
-    "note": "Chicago-made (CH Distillery); fernet with Dark Matter coffee and chamomile, finished in bourbon barrels. Coffee, spearmint, slight bitterness."
+    "note": "Chicago-made (CH Distillery); fernet with Dark Matter coffee and chamomile, finished in bourbon barrels. Coffee, spearmint, slight bitterness.",
+    "group": "Fernet"
    },
    {
     "name": "Fernet Francisco Rye Cask",
     "price": "14",
-    "note": "San Francisco-made; 12 Bay Area botanicals finished in Willett rye casks. Herbal bitterness softened by vanilla, oak, and toasted rye spice."
+    "note": "San Francisco-made; 12 Bay Area botanicals finished in Willett rye casks. Herbal bitterness softened by vanilla, oak, and toasted rye spice.",
+    "group": "Fernet"
    },
    {
     "name": "Geijer California Fernet",
     "price": "12",
-    "note": "San Francisco-made (Geijer Spirits); 21 botanicals, corn-base. Minty, bitter, grassier and drier than traditional fernet."
+    "note": "San Francisco-made (Geijer Spirits); 21 botanicals, corn-base. Minty, bitter, grassier and drier than traditional fernet.",
+    "group": "Fernet"
    },
    {
     "name": "Amaro \"Vino\" Pasubio",
     "price": "8",
-    "note": "Wine-based alpine amaro from Trentino by Cappelletti; mugo pine, blueberry, and smoky alpine herbs on a red wine base. Rare style."
+    "note": "Wine-based alpine amaro from Trentino by Cappelletti; mugo pine, blueberry, and smoky alpine herbs on a red wine base. Rare style.",
+    "group": "Amari"
    },
    {
     "name": "Maraska Pelinkovac",
     "price": "10",
-    "note": "Croatian wormwood liqueur; Dalmatia. Intensely bitter and herbal, dark fruit and dried spice, medicinal and unapologetic."
+    "note": "Croatian wormwood liqueur; Dalmatia. Intensely bitter and herbal, dark fruit and dried spice, medicinal and unapologetic.",
+    "group": "Amari"
    },
    {
     "name": "Highside Fernet Lario",
     "price": "10",
-    "note": "Bainbridge Island, WA-made (Highside Distilling); apple cider gin base, Washington mint honey. Minty, intensely bitter, slight smoke."
+    "note": "Bainbridge Island, WA-made (Highside Distilling); apple cider gin base, Washington mint honey. Minty, intensely bitter, slight smoke.",
+    "group": "Fernet"
    },
    {
     "name": "Amaro Chiaro",
     "price": "10",
-    "note": "Vancouver, BC-made (The Woods Spirit Co.); 14 botanicals, vacuum-distilled. Citrus-floral, gentle bitterness, lighter and more accessible style."
+    "note": "Vancouver, BC-made (The Woods Spirit Co.); 14 botanicals, vacuum-distilled. Citrus-floral, gentle bitterness, lighter and more accessible style.",
+    "group": "Amari"
    },
    {
     "name": "Meletti Fernet",
     "price": "8",
-    "note": "Marche, Italy (since 1870); gentian-bitter finish over orange zest, cardamom, and balsamic herbs. Clean, long, classic Italian fernet."
+    "note": "Marche, Italy (since 1870); gentian-bitter finish over orange zest, cardamom, and balsamic herbs. Clean, long, classic Italian fernet.",
+    "group": "Fernet"
    },
    {
     "name": "Amaro Ciociaro",
     "price": "8",
-    "note": "Lazio, Italy (Paolucci, since 1873); bitter orange backbone with chamomile, anise, and cinnamon. Bittersweet, approachable, lingers with chocolate and spice."
+    "note": "Lazio, Italy (Paolucci, since 1873); bitter orange backbone with chamomile, anise, and cinnamon. Bittersweet, approachable, lingers with chocolate and spice.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Sfumato",
     "price": "10",
-    "note": "Trentino, Italy (Cappelletti); smoked Chinese rhubarb — the smoke is real. Deep, dark, earthy, bittersweet with an alpine herbal finish."
+    "note": "Trentino, Italy (Cappelletti); smoked Chinese rhubarb — the smoke is real. Deep, dark, earthy, bittersweet with an alpine herbal finish.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Montenegro",
     "price": "10",
-    "note": "Bologna, Italy; 40 botanicals. Medium bitter, notably aromatic — orange peel, vanilla, coriander, rose petal. The gateway amaro for newcomers."
+    "note": "Bologna, Italy; 40 botanicals. Medium bitter, notably aromatic — orange peel, vanilla, coriander, rose petal. The gateway amaro for newcomers.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Meletti",
     "price": "8",
-    "note": "Marche, Italy (since 1870); saffron, violet flower, anise, and orange peel. Caramelized orange and cola sweetness, floral, warm spice."
+    "note": "Marche, Italy (since 1870); saffron, violet flower, anise, and orange peel. Caramelized orange and cola sweetness, floral, warm spice.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Del Etna",
     "price": "9",
-    "note": "Sicily, Italy; 26+ herbs from the slopes of Mount Etna. Bitter citrus, licorice, cinnamon, and a distinct volcanic mineral character."
+    "note": "Sicily, Italy; 26+ herbs from the slopes of Mount Etna. Bitter citrus, licorice, cinnamon, and a distinct volcanic mineral character.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Amorino",
     "price": "12",
-    "note": "Seattle-made (Letterpress Distilling); named for the founder's Italian grandfather. Seville orange peel, baking spice, vanilla, and floral notes. Light-to-medium bitter."
+    "note": "Seattle-made (Letterpress Distilling); named for the founder's Italian grandfather. Seville orange peel, baking spice, vanilla, and floral notes. Light-to-medium bitter.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Amorino Reserva",
     "price": "14",
-    "note": "Seattle-made (Letterpress Distilling); the reserve expression of Amorino. Same orange-spice-floral DNA, deeper and more layered from extended aging."
+    "note": "Seattle-made (Letterpress Distilling); the reserve expression of Amorino. Same orange-spice-floral DNA, deeper and more layered from extended aging.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Nonino",
     "price": "14",
-    "note": "Friuli, Italy (Nonino Distillery); grappa-based amaro aged in small oak barrels. Fruity and elegant — apricot, caramel, orange, gentian. One of the great Italian amari."
+    "note": "Friuli, Italy (Nonino Distillery); grappa-based amaro aged in small oak barrels. Fruity and elegant — apricot, caramel, orange, gentian. One of the great Italian amari.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Cansiglio",
     "price": "8",
-    "note": "Veneto, Italy; 18 herbs and berries from the ancient Cansiglio forest in the Dolomite foothills. Mint, pine, bitter orange, eucalyptus — fresh and invigorating."
+    "note": "Veneto, Italy; 18 herbs and berries from the ancient Cansiglio forest in the Dolomite foothills. Mint, pine, bitter orange, eucalyptus — fresh and invigorating.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Sibilla",
     "price": "14",
-    "note": "Marche, Italy (Varnelli); cold-extracted herbs from Monti Sibillini, sweetened with local honey. Coffee, cocoa, dried fruit, earthy and deeply bitter."
+    "note": "Marche, Italy (Varnelli); cold-extracted herbs from Monti Sibillini, sweetened with local honey. Coffee, cocoa, dried fruit, earthy and deeply bitter.",
+    "group": "Amari"
    },
    {
     "name": "Cynar",
     "price": "9",
-    "note": "Italy (Campari Group, since 1952); artichoke-led, 13 herbs. Vegetal, bittersweet — dark chocolate, walnut, caramel with a cola-like sweetness. Surprisingly approachable."
+    "note": "Italy (Campari Group, since 1952); artichoke-led, 13 herbs. Vegetal, bittersweet — dark chocolate, walnut, caramel with a cola-like sweetness. Surprisingly approachable.",
+    "group": "Amari"
    },
    {
     "name": "Braulio",
     "price": "10",
-    "note": "Valtellina, Italy (since 1875 in Bormio, 4,000 ft altitude); juniper, wormwood, gentian, yarrow. Cooling piney character, mountain violet, mint, bittersweet alpine finish."
+    "note": "Valtellina, Italy (since 1875 in Bormio, 4,000 ft altitude); juniper, wormwood, gentian, yarrow. Cooling piney character, mountain violet, mint, bittersweet alpine finish.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Brucato \"Orchard\"",
     "price": "12",
-    "note": "San Francisco-made (Brucato Spirits); apricot, walnut, Meyer lemon, and cinnamon. Juicy, fruit-forward, warm baking spice. Think of it as a fruity California Campari."
+    "note": "San Francisco-made (Brucato Spirits); apricot, walnut, Meyer lemon, and cinnamon. Juicy, fruit-forward, warm baking spice. Think of it as a fruity California Campari.",
+    "group": "Amari"
    },
    {
     "name": "Amaro Brucato \"Chaparral\"",
     "price": "12",
-    "note": "San Francisco-made (Brucato Spirits); yerba santa, spearmint, cardamom. Herbal, minty, Chartreuse-like character. Coastal California hillsides in a glass."
+    "note": "San Francisco-made (Brucato Spirits); yerba santa, spearmint, cardamom. Herbal, minty, Chartreuse-like character. Coastal California hillsides in a glass.",
+    "group": "Amari"
    },
    {
     "name": "Nonino Grappa di Merlot",
     "price": "18",
-    "note": "Friuli, Italy (Nonino Distillery); single-varietal pomace grappa from Merlot. Rose petal, ripe cherry, soft and velvety texture, delicate almond finish."
+    "note": "Friuli, Italy (Nonino Distillery); single-varietal pomace grappa from Merlot. Rose petal, ripe cherry, soft and velvety texture, delicate almond finish.",
+    "group": "Grappa & brandy"
    },
    {
     "name": "Nonino Grappa di Moscato",
     "price": "18",
-    "note": "Friuli, Italy (Nonino Distillery); single-varietal pomace grappa from Moscato. Highly aromatic — rose, sage, vanilla, orange blossom. The most perfumed of the grappas."
+    "note": "Friuli, Italy (Nonino Distillery); single-varietal pomace grappa from Moscato. Highly aromatic — rose, sage, vanilla, orange blossom. The most perfumed of the grappas.",
+    "group": "Grappa & brandy"
    },
    {
     "name": "Martel \"Blue Swift\" Cognac",
     "price": "12",
-    "note": "Martell VSOP eaux-de-vie finished in Kentucky bourbon casks. Cognac fruit (fig, plum, pear) layered with vanilla, coconut, and toasted oak from the bourbon barrels."
+    "note": "Martell VSOP eaux-de-vie finished in Kentucky bourbon casks. Cognac fruit (fig, plum, pear) layered with vanilla, coconut, and toasted oak from the bourbon barrels.",
+    "group": "Grappa & brandy"
    },
    {
     "name": "Menorvall Calvados",
     "price": "12",
-    "note": "Normandy, France; apple brandy, 40% ABV. Ripe pear aroma, baking spice, chamomile, sandalwood. Apple brandy that drinks closer to Armagnac than cider."
+    "note": "Normandy, France; apple brandy, 40% ABV. Ripe pear aroma, baking spice, chamomile, sandalwood. Apple brandy that drinks closer to Armagnac than cider.",
+    "group": "Grappa & brandy"
    },
    {
     "name": "Compass Box Artist's Blend Scotch",
     "price": "14",
-    "note": "Blended Scotch by Compass Box (UK); light and approachable. Butterscotch, toffee apple, vanilla, light fruit, creamy mouthfeel. Un-chill filtered, 43% ABV."
+    "note": "Blended Scotch by Compass Box (UK); light and approachable. Butterscotch, toffee apple, vanilla, light fruit, creamy mouthfeel. Un-chill filtered, 43% ABV.",
+    "group": "Whiskey"
    },
    {
     "name": "Glenlivet 12yr",
     "price": "15",
-    "note": "Speyside single malt Scotch, Scotland. Fruit-forward and gentle — apple, pear, vanilla, light honey. No peat. The definitive entry-level Speyside."
+    "note": "Speyside single malt Scotch, Scotland. Fruit-forward and gentle — apple, pear, vanilla, light honey. No peat. The definitive entry-level Speyside.",
+    "group": "Whiskey"
    },
    {
     "name": "Laphroaig 10yr",
     "price": "14",
-    "note": "Islay single malt Scotch, Scotland. The most polarizing whisky on the list. Intense peat smoke, seaweed, iodine, and medicinal herbs over a surprising sweetness. Malted barley dried over Islay peat fires."
+    "note": "Islay single malt Scotch, Scotland. The most polarizing whisky on the list. Intense peat smoke, seaweed, iodine, and medicinal herbs over a surprising sweetness. Malted barley dried over Islay peat fires.",
+    "group": "Whiskey"
    },
    {
     "name": "Lagavulin 16yr",
     "price": "25",
-    "note": "Islay single malt Scotch, Scotland. Peat smoke with far more depth than Laphroaig — sherry richness, dark fruit, black tea, maritime brine, and a long smoky finish. The benchmark peated Scotch."
+    "note": "Islay single malt Scotch, Scotland. Peat smoke with far more depth than Laphroaig — sherry richness, dark fruit, black tea, maritime brine, and a long smoky finish. The benchmark peated Scotch.",
+    "group": "Whiskey"
    },
    {
     "name": "Weller 12yr",
     "price": "25",
-    "note": "Kentucky straight bourbon, Buffalo Trace; wheated mash bill (wheat replaces rye). Exceptionally smooth — butterscotch, baked apple, cinnamon, vanilla, long oaky finish. Same wheat recipe as Pappy Van Winkle."
+    "note": "Kentucky straight bourbon, Buffalo Trace; wheated mash bill (wheat replaces rye). Exceptionally smooth — butterscotch, baked apple, cinnamon, vanilla, long oaky finish. Same wheat recipe as Pappy Van Winkle.",
+    "group": "Whiskey"
    }
   ]
  },
@@ -14291,5 +14302,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1790888198"
+ "build": "1790974333"
 };

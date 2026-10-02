@@ -339,237 +339,284 @@
   {
    "name": "Espresso Martini",
    "price": "16",
-   "note": "Vodka, espresso, coffee liqueur — cold, rich, caffeinated closer."
+   "note": "Vodka, espresso, coffee liqueur — cold, rich, caffeinated closer.",
+   "group": "Digestivi & liqueurs"
   },
   {
    "name": "House Limoncello",
    "price": "12",
-   "note": "House-made lemon liqueur; bright, sweet, clean finish. Made in-house."
+   "note": "House-made lemon liqueur; bright, sweet, clean finish. Made in-house.",
+   "group": "Digestivi & liqueurs"
   },
   {
    "name": "Scuppoz Amaretto",
    "price": "12",
-   "note": "Toasted almond and apricot kernel amaretto from Abruzzo, Italy; marzipan sweetness, nutty depth."
+   "note": "Toasted almond and apricot kernel amaretto from Abruzzo, Italy; marzipan sweetness, nutty depth.",
+   "group": "Digestivi & liqueurs"
   },
   {
    "name": "Sambuca",
    "price": "8",
-   "note": "Italian anise liqueur; sweet, licorice-forward, traditionally served with three coffee beans."
+   "note": "Italian anise liqueur; sweet, licorice-forward, traditionally served with three coffee beans.",
+   "group": "Digestivi & liqueurs"
   },
   {
    "name": "Dow's Tawny Porto 20 yr",
    "price": "15",
-   "note": "Aged 20 years in cask; Douro Valley, Portugal. Nutty, dried fig, candied orange, warm spice."
+   "note": "Aged 20 years in cask; Douro Valley, Portugal. Nutty, dried fig, candied orange, warm spice.",
+   "group": "Port, sherry & vermouth"
   },
   {
    "name": "Dow's Fine White Port",
    "price": "9",
-   "note": "Fresh, golden white port; Douro Valley, Portugal. Crisp pear and citrus, nutty finish, slightly off-dry."
+   "note": "Fresh, golden white port; Douro Valley, Portugal. Crisp pear and citrus, nutty finish, slightly off-dry.",
+   "group": "Port, sherry & vermouth"
   },
   {
    "name": "Mancino Edizione Sakura Vermouth",
    "price": "14",
-   "note": "Limited-edition Torino-style vermouth; Kyoto cherry blossoms and Italian viola flowers, pale pink, delicately floral."
+   "note": "Limited-edition Torino-style vermouth; Kyoto cherry blossoms and Italian viola flowers, pale pink, delicately floral.",
+   "group": "Port, sherry & vermouth"
   },
   {
    "name": "Lustau Oloroso Sherry",
    "price": "10",
-   "note": "Fully oxidized dry sherry from Jerez, Spain. Dark, full-bodied; caramel, walnut, dried fruit, warm spice."
+   "note": "Fully oxidized dry sherry from Jerez, Spain. Dark, full-bodied; caramel, walnut, dried fruit, warm spice.",
+   "group": "Port, sherry & vermouth"
   },
   {
    "name": "Lustau Pedro-Ximenez Sherry",
    "price": "10",
-   "note": "Lusciously sweet sherry from Jerez, Spain. Sun-dried PX grapes; raisins, molasses, dark fig, velvety texture."
+   "note": "Lusciously sweet sherry from Jerez, Spain. Sun-dried PX grapes; raisins, molasses, dark fig, velvety texture.",
+   "group": "Port, sherry & vermouth"
   },
   {
    "name": "Amaricano Bianco",
    "price": "11",
-   "note": "Seattle-made (Fast Penny Spirits); citrus-forward American bitter aperitivo. Candied lemon, saffron, apricot, chamomile."
+   "note": "Seattle-made (Fast Penny Spirits); citrus-forward American bitter aperitivo. Candied lemon, saffron, apricot, chamomile.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Rucolino",
    "price": "9",
-   "note": "Arugula-based amaro from Ischia, Italy. Peppery, herbal bitterness; citrus and cedar, pleasantly bitter finish."
+   "note": "Arugula-based amaro from Ischia, Italy. Peppery, herbal bitterness; citrus and cedar, pleasantly bitter finish.",
+   "group": "Amari"
   },
   {
    "name": "Scarlet Orange Amaro",
    "price": "16",
-   "note": "Japanese craft amaro by Iseya Distillery, Kanagawa. Blood orange-forward; bright citrus, lemon balm, gentle ginger heat."
+   "note": "Japanese craft amaro by Iseya Distillery, Kanagawa. Blood orange-forward; bright citrus, lemon balm, gentle ginger heat.",
+   "group": "Amari"
   },
   {
    "name": "Scarlet Fernet Amaro",
    "price": "14",
-   "note": "Japanese craft fernet by Iseya Distillery; 30+ botanicals including mint, galangal, and palo santo. Botanical and layered, surprisingly smooth."
+   "note": "Japanese craft fernet by Iseya Distillery; 30+ botanicals including mint, galangal, and palo santo. Botanical and layered, surprisingly smooth.",
+   "group": "Fernet"
   },
   {
    "name": "Amaro Foro Originale",
    "price": "12",
-   "note": "Piedmontese amaro; 25 botanicals including gentian and angelica. Bittersweet citrus, dried herbs, clean bitter finish."
+   "note": "Piedmontese amaro; 25 botanicals including gentian and angelica. Bittersweet citrus, dried herbs, clean bitter finish.",
+   "group": "Amari"
   },
   {
    "name": "Faccia Brutto Fernet Pianta",
    "price": "14",
-   "note": "Brooklyn-made (Faccia Brutto Spirits); 27 botanicals, mint-forward with citrus peel and licorice. More approachable than traditional fernet."
+   "note": "Brooklyn-made (Faccia Brutto Spirits); 27 botanicals, mint-forward with citrus peel and licorice. More approachable than traditional fernet.",
+   "group": "Fernet"
   },
   {
    "name": "Faccia Brutto Amaro Gorini",
    "price": "14",
-   "note": "Brooklyn-made (Faccia Brutto Spirits); barrel-aged in Solera style. Orange peel, chestnut honey, warm cinnamon and star anise."
+   "note": "Brooklyn-made (Faccia Brutto Spirits); barrel-aged in Solera style. Orange peel, chestnut honey, warm cinnamon and star anise.",
+   "group": "Amari"
   },
   {
    "name": "Fernet Dogma",
    "price": "9",
-   "note": "Chicago-made (CH Distillery); fernet with Dark Matter coffee and chamomile, finished in bourbon barrels. Coffee, spearmint, slight bitterness."
+   "note": "Chicago-made (CH Distillery); fernet with Dark Matter coffee and chamomile, finished in bourbon barrels. Coffee, spearmint, slight bitterness.",
+   "group": "Fernet"
   },
   {
    "name": "Fernet Francisco Rye Cask",
    "price": "14",
-   "note": "San Francisco-made; 12 Bay Area botanicals finished in Willett rye casks. Herbal bitterness softened by vanilla, oak, and toasted rye spice."
+   "note": "San Francisco-made; 12 Bay Area botanicals finished in Willett rye casks. Herbal bitterness softened by vanilla, oak, and toasted rye spice.",
+   "group": "Fernet"
   },
   {
    "name": "Geijer California Fernet",
    "price": "12",
-   "note": "San Francisco-made (Geijer Spirits); 21 botanicals, corn-base. Minty, bitter, grassier and drier than traditional fernet."
+   "note": "San Francisco-made (Geijer Spirits); 21 botanicals, corn-base. Minty, bitter, grassier and drier than traditional fernet.",
+   "group": "Fernet"
   },
   {
    "name": "Amaro \"Vino\" Pasubio",
    "price": "8",
-   "note": "Wine-based alpine amaro from Trentino by Cappelletti; mugo pine, blueberry, and smoky alpine herbs on a red wine base. Rare style."
+   "note": "Wine-based alpine amaro from Trentino by Cappelletti; mugo pine, blueberry, and smoky alpine herbs on a red wine base. Rare style.",
+   "group": "Amari"
   },
   {
    "name": "Maraska Pelinkovac",
    "price": "10",
-   "note": "Croatian wormwood liqueur; Dalmatia. Intensely bitter and herbal, dark fruit and dried spice, medicinal and unapologetic."
+   "note": "Croatian wormwood liqueur; Dalmatia. Intensely bitter and herbal, dark fruit and dried spice, medicinal and unapologetic.",
+   "group": "Amari"
   },
   {
    "name": "Highside Fernet Lario",
    "price": "10",
-   "note": "Bainbridge Island, WA-made (Highside Distilling); apple cider gin base, Washington mint honey. Minty, intensely bitter, slight smoke."
+   "note": "Bainbridge Island, WA-made (Highside Distilling); apple cider gin base, Washington mint honey. Minty, intensely bitter, slight smoke.",
+   "group": "Fernet"
   },
   {
    "name": "Amaro Chiaro",
    "price": "10",
-   "note": "Vancouver, BC-made (The Woods Spirit Co.); 14 botanicals, vacuum-distilled. Citrus-floral, gentle bitterness, lighter and more accessible style."
+   "note": "Vancouver, BC-made (The Woods Spirit Co.); 14 botanicals, vacuum-distilled. Citrus-floral, gentle bitterness, lighter and more accessible style.",
+   "group": "Amari"
   },
   {
    "name": "Meletti Fernet",
    "price": "8",
-   "note": "Marche, Italy (since 1870); gentian-bitter finish over orange zest, cardamom, and balsamic herbs. Clean, long, classic Italian fernet."
+   "note": "Marche, Italy (since 1870); gentian-bitter finish over orange zest, cardamom, and balsamic herbs. Clean, long, classic Italian fernet.",
+   "group": "Fernet"
   },
   {
    "name": "Amaro Ciociaro",
    "price": "8",
-   "note": "Lazio, Italy (Paolucci, since 1873); bitter orange backbone with chamomile, anise, and cinnamon. Bittersweet, approachable, lingers with chocolate and spice."
+   "note": "Lazio, Italy (Paolucci, since 1873); bitter orange backbone with chamomile, anise, and cinnamon. Bittersweet, approachable, lingers with chocolate and spice.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Sfumato",
    "price": "10",
-   "note": "Trentino, Italy (Cappelletti); smoked Chinese rhubarb — the smoke is real. Deep, dark, earthy, bittersweet with an alpine herbal finish."
+   "note": "Trentino, Italy (Cappelletti); smoked Chinese rhubarb — the smoke is real. Deep, dark, earthy, bittersweet with an alpine herbal finish.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Montenegro",
    "price": "10",
-   "note": "Bologna, Italy; 40 botanicals. Medium bitter, notably aromatic — orange peel, vanilla, coriander, rose petal. The gateway amaro for newcomers."
+   "note": "Bologna, Italy; 40 botanicals. Medium bitter, notably aromatic — orange peel, vanilla, coriander, rose petal. The gateway amaro for newcomers.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Meletti",
    "price": "8",
-   "note": "Marche, Italy (since 1870); saffron, violet flower, anise, and orange peel. Caramelized orange and cola sweetness, floral, warm spice."
+   "note": "Marche, Italy (since 1870); saffron, violet flower, anise, and orange peel. Caramelized orange and cola sweetness, floral, warm spice.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Del Etna",
    "price": "9",
-   "note": "Sicily, Italy; 26+ herbs from the slopes of Mount Etna. Bitter citrus, licorice, cinnamon, and a distinct volcanic mineral character."
+   "note": "Sicily, Italy; 26+ herbs from the slopes of Mount Etna. Bitter citrus, licorice, cinnamon, and a distinct volcanic mineral character.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Amorino",
    "price": "12",
-   "note": "Seattle-made (Letterpress Distilling); named for the founder's Italian grandfather. Seville orange peel, baking spice, vanilla, and floral notes. Light-to-medium bitter."
+   "note": "Seattle-made (Letterpress Distilling); named for the founder's Italian grandfather. Seville orange peel, baking spice, vanilla, and floral notes. Light-to-medium bitter.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Amorino Reserva",
    "price": "14",
-   "note": "Seattle-made (Letterpress Distilling); the reserve expression of Amorino. Same orange-spice-floral DNA, deeper and more layered from extended aging."
+   "note": "Seattle-made (Letterpress Distilling); the reserve expression of Amorino. Same orange-spice-floral DNA, deeper and more layered from extended aging.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Nonino",
    "price": "14",
-   "note": "Friuli, Italy (Nonino Distillery); grappa-based amaro aged in small oak barrels. Fruity and elegant — apricot, caramel, orange, gentian. One of the great Italian amari."
+   "note": "Friuli, Italy (Nonino Distillery); grappa-based amaro aged in small oak barrels. Fruity and elegant — apricot, caramel, orange, gentian. One of the great Italian amari.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Cansiglio",
    "price": "8",
-   "note": "Veneto, Italy; 18 herbs and berries from the ancient Cansiglio forest in the Dolomite foothills. Mint, pine, bitter orange, eucalyptus — fresh and invigorating."
+   "note": "Veneto, Italy; 18 herbs and berries from the ancient Cansiglio forest in the Dolomite foothills. Mint, pine, bitter orange, eucalyptus — fresh and invigorating.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Sibilla",
    "price": "14",
-   "note": "Marche, Italy (Varnelli); cold-extracted herbs from Monti Sibillini, sweetened with local honey. Coffee, cocoa, dried fruit, earthy and deeply bitter."
+   "note": "Marche, Italy (Varnelli); cold-extracted herbs from Monti Sibillini, sweetened with local honey. Coffee, cocoa, dried fruit, earthy and deeply bitter.",
+   "group": "Amari"
   },
   {
    "name": "Cynar",
    "price": "9",
-   "note": "Italy (Campari Group, since 1952); artichoke-led, 13 herbs. Vegetal, bittersweet — dark chocolate, walnut, caramel with a cola-like sweetness. Surprisingly approachable."
+   "note": "Italy (Campari Group, since 1952); artichoke-led, 13 herbs. Vegetal, bittersweet — dark chocolate, walnut, caramel with a cola-like sweetness. Surprisingly approachable.",
+   "group": "Amari"
   },
   {
    "name": "Braulio",
    "price": "10",
-   "note": "Valtellina, Italy (since 1875 in Bormio, 4,000 ft altitude); juniper, wormwood, gentian, yarrow. Cooling piney character, mountain violet, mint, bittersweet alpine finish."
+   "note": "Valtellina, Italy (since 1875 in Bormio, 4,000 ft altitude); juniper, wormwood, gentian, yarrow. Cooling piney character, mountain violet, mint, bittersweet alpine finish.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Brucato \"Orchard\"",
    "price": "12",
-   "note": "San Francisco-made (Brucato Spirits); apricot, walnut, Meyer lemon, and cinnamon. Juicy, fruit-forward, warm baking spice. Think of it as a fruity California Campari."
+   "note": "San Francisco-made (Brucato Spirits); apricot, walnut, Meyer lemon, and cinnamon. Juicy, fruit-forward, warm baking spice. Think of it as a fruity California Campari.",
+   "group": "Amari"
   },
   {
    "name": "Amaro Brucato \"Chaparral\"",
    "price": "12",
-   "note": "San Francisco-made (Brucato Spirits); yerba santa, spearmint, cardamom. Herbal, minty, Chartreuse-like character. Coastal California hillsides in a glass."
+   "note": "San Francisco-made (Brucato Spirits); yerba santa, spearmint, cardamom. Herbal, minty, Chartreuse-like character. Coastal California hillsides in a glass.",
+   "group": "Amari"
   },
   {
    "name": "Nonino Grappa di Merlot",
    "price": "18",
-   "note": "Friuli, Italy (Nonino Distillery); single-varietal pomace grappa from Merlot. Rose petal, ripe cherry, soft and velvety texture, delicate almond finish."
+   "note": "Friuli, Italy (Nonino Distillery); single-varietal pomace grappa from Merlot. Rose petal, ripe cherry, soft and velvety texture, delicate almond finish.",
+   "group": "Grappa & brandy"
   },
   {
    "name": "Nonino Grappa di Moscato",
    "price": "18",
-   "note": "Friuli, Italy (Nonino Distillery); single-varietal pomace grappa from Moscato. Highly aromatic — rose, sage, vanilla, orange blossom. The most perfumed of the grappas."
+   "note": "Friuli, Italy (Nonino Distillery); single-varietal pomace grappa from Moscato. Highly aromatic — rose, sage, vanilla, orange blossom. The most perfumed of the grappas.",
+   "group": "Grappa & brandy"
   },
   {
    "name": "Martel \"Blue Swift\" Cognac",
    "price": "12",
-   "note": "Martell VSOP eaux-de-vie finished in Kentucky bourbon casks. Cognac fruit (fig, plum, pear) layered with vanilla, coconut, and toasted oak from the bourbon barrels."
+   "note": "Martell VSOP eaux-de-vie finished in Kentucky bourbon casks. Cognac fruit (fig, plum, pear) layered with vanilla, coconut, and toasted oak from the bourbon barrels.",
+   "group": "Grappa & brandy"
   },
   {
    "name": "Menorvall Calvados",
    "price": "12",
-   "note": "Normandy, France; apple brandy, 40% ABV. Ripe pear aroma, baking spice, chamomile, sandalwood. Apple brandy that drinks closer to Armagnac than cider."
+   "note": "Normandy, France; apple brandy, 40% ABV. Ripe pear aroma, baking spice, chamomile, sandalwood. Apple brandy that drinks closer to Armagnac than cider.",
+   "group": "Grappa & brandy"
   },
   {
    "name": "Compass Box Artist's Blend Scotch",
    "price": "14",
-   "note": "Blended Scotch by Compass Box (UK); light and approachable. Butterscotch, toffee apple, vanilla, light fruit, creamy mouthfeel. Un-chill filtered, 43% ABV."
+   "note": "Blended Scotch by Compass Box (UK); light and approachable. Butterscotch, toffee apple, vanilla, light fruit, creamy mouthfeel. Un-chill filtered, 43% ABV.",
+   "group": "Whiskey"
   },
   {
    "name": "Glenlivet 12yr",
    "price": "15",
-   "note": "Speyside single malt Scotch, Scotland. Fruit-forward and gentle — apple, pear, vanilla, light honey. No peat. The definitive entry-level Speyside."
+   "note": "Speyside single malt Scotch, Scotland. Fruit-forward and gentle — apple, pear, vanilla, light honey. No peat. The definitive entry-level Speyside.",
+   "group": "Whiskey"
   },
   {
    "name": "Laphroaig 10yr",
    "price": "14",
-   "note": "Islay single malt Scotch, Scotland. The most polarizing whisky on the list. Intense peat smoke, seaweed, iodine, and medicinal herbs over a surprising sweetness. Malted barley dried over Islay peat fires."
+   "note": "Islay single malt Scotch, Scotland. The most polarizing whisky on the list. Intense peat smoke, seaweed, iodine, and medicinal herbs over a surprising sweetness. Malted barley dried over Islay peat fires.",
+   "group": "Whiskey"
   },
   {
    "name": "Lagavulin 16yr",
    "price": "25",
-   "note": "Islay single malt Scotch, Scotland. Peat smoke with far more depth than Laphroaig — sherry richness, dark fruit, black tea, maritime brine, and a long smoky finish. The benchmark peated Scotch."
+   "note": "Islay single malt Scotch, Scotland. Peat smoke with far more depth than Laphroaig — sherry richness, dark fruit, black tea, maritime brine, and a long smoky finish. The benchmark peated Scotch.",
+   "group": "Whiskey"
   },
   {
    "name": "Weller 12yr",
    "price": "25",
-   "note": "Kentucky straight bourbon, Buffalo Trace; wheated mash bill (wheat replaces rye). Exceptionally smooth — butterscotch, baked apple, cinnamon, vanilla, long oaky finish. Same wheat recipe as Pappy Van Winkle."
+   "note": "Kentucky straight bourbon, Buffalo Trace; wheated mash bill (wheat replaces rye). Exceptionally smooth — butterscotch, baked apple, cinnamon, vanilla, long oaky finish. Same wheat recipe as Pappy Van Winkle.",
+   "group": "Whiskey"
   }
  ]
 }

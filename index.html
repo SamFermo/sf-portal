@@ -1169,6 +1169,16 @@ body.tour-on{padding-bottom:230px;}
 .ft-mini-s{font-size:11px; color:var(--card-mute); line-height:1.3;}
 .ft-mini-s b{color:var(--gold-deep); font-weight:700;}
 #ftAllergens .alg-box{margin-bottom:14px;}
+
+/* Fresh Talk review (2026-10-02) */
+#ftWine .card.expandable ~ .card.expandable .expand-hint{display:none;}
+.alg-closed{display:flex; width:100%; justify-content:space-between; align-items:center; background:none; cursor:pointer; font:inherit; color:inherit; text-align:left;}
+.alg-open-hint{font-size:12.5px; color:var(--gold); font-weight:600;}
+.alg-title-row{display:flex; justify-content:space-between; align-items:center;}
+.alg-hide{background:none; border:none; color:var(--ink-mute,#999); font:inherit; font-size:11.5px; text-transform:none; letter-spacing:0; text-decoration:underline dotted; cursor:pointer;}
+.alg-legend-in{text-align:left; margin:0 0 8px; line-height:1.9;}
+.ad-group{font-size:10.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--gold); margin:18px 0 4px; padding-bottom:4px; border-bottom:1px solid rgba(205,216,244,.14);}
+.ad-group:first-child{margin-top:6px;}
 /* Fresh Talk publish bar */
 .editbar{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap;}
 /* Publish-to-website. Quiet outline until the settled menu actually differs from
@@ -2033,7 +2043,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790888198';   // stamped by build-data.py at every deploy
+const BUILD='1790974333';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3383,7 +3393,7 @@ function dishCardHTML(baseIt){
   const mgrFlags=(it._flags!==undefined)?it._flags:(it.flags||[]);
   const flagBadge=(isMgr()&&mgrFlags&&mgrFlags.length)?`<span class="flag-badge" title="${mgrFlags.length} component${mgrFlags.length>1?'s':''} to confirm">${mgrFlags.length}</span>`:'';
   const editBtn=isMgr()?`<button class="edit-btn" onclick="event.stopPropagation();openEditModal('${esc(origName).replace(/'/g,"\\'")}')">&#9998;</button>`:'';
-  const editedChip=it._edited?'<span class="edited-chip">edited</span>':'';
+  const editedChip=(it._edited&&isMgr())?'<span class="edited-chip">edited</span>':'';   // managers only (Sam 10/2)
   let h=`<div class="card ${rich?'expandable':''}" id="dcard-${fcSlug(origName)}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
       <span class="dish-name serif">${isNew(it)?newBadge():''}${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}${editedChip}${flagBadge}${editBtn}</span>
@@ -3411,8 +3421,10 @@ function dishCardHTML(baseIt){
   
   return h+`</div>`;
 }
+function allergenKeyHTML(){ return `<div class="alg-legend alg-legend-in"><span class="alg">G</span> contains · <span class="alg alg-mod">G</span> kitchen can modify &nbsp;—&nbsp; <b>D</b> dairy · <b>G</b> gluten · <b>E</b> egg · <b>F</b> fish · <b>N</b> tree nuts · <b>SF</b> shellfish · <b>SE</b> sesame · <b>SO</b> soy · <b>P</b> peanut · <b>AL</b> allium</div>`; }
 function allergenLegendHTML(){
-  let h=`<div class="alg-legend"><span class="alg">G</span> contains · <span class="alg alg-mod">G</span> kitchen can modify &nbsp;—&nbsp; `;
+  if(SF.menu.allergenStatus!=='draft')return '';   // the key now lives inside the allergy check (10/2); only the draft warning stays on the list
+  let h=`<div class="alg-legend" style="display:none"><span class="alg">G</span> contains · <span class="alg alg-mod">G</span> kitchen can modify &nbsp;—&nbsp; `;
   h+=`<b>D</b> dairy · <b>G</b> gluten · <b>E</b> egg · <b>F</b> fish · <b>N</b> tree nuts · <b>SF</b> shellfish · <b>SE</b> sesame · <b>SO</b> soy · <b>P</b> peanut · <b>AL</b> allium</div>`;
   if(SF.menu.allergenStatus==='draft')h+=`<div class="alg-draft">Allergen flags are in chef review — confirm with the kitchen before promising a table.</div>`;
   return h;
@@ -3433,6 +3445,7 @@ const ALLERGEN_SYN={
 const ALLERGEN_ORDER=['allium','dairy','egg','fish','gluten','nuts','shellfish'];
 const ALLERGEN_OPT={allium:'Allium (onion / garlic)',dairy:'Dairy',egg:'Egg',fish:'Fish',gluten:'Gluten',nuts:'Tree nuts',shellfish:'Shellfish'};
 const ALLERGEN_LBL={allium:'allium (onion/garlic)',dairy:'dairy',egg:'egg',fish:'fish',gluten:'gluten',nuts:'tree nuts',shellfish:'shellfish'};
+let algOpen=false; function algToggle(){ algOpen=!algOpen; var a=$('ftAllergens'); if(a)a.innerHTML=allergenAskHTML(); }
 let algTags=[];   // multiple allergens can be checked at once (one guest, several allergies)
 function algFoodItems(){var out=[];(SF.menu.food||[]).forEach(function(s){(s.items||[]).forEach(function(it){out.push(it);});});(SF.menu.desserts||[]).forEach(function(it){out.push(it);});if(typeof activeSpecials==='function')activeSpecials().forEach(function(it){out.push(it);});return out;}
 var ALG_UNCERTAIN=/(confirm|unconfirmed|pending|verify|checking|\bcheck\b|status|tbd)/;
@@ -3493,7 +3506,8 @@ function clearAlgTags(){algTags=[];var a=$('ftAllergens');if(a)a.innerHTML=aller
 function allergenAskHTML(){
   var chips=ALLERGEN_ORDER.map(function(t){return '<button type="button" class="alg-chip'+(algTags.indexOf(t)>=0?' on':'')+'" onclick="toggleAlgTag(\''+t+'\')">'+esc(ALLERGEN_OPT[t])+'</button>';}).join('');
   var none='<div class="alg-none">Tap one or more allergies to see what’s safe, what can be modified, and what’s off limits.</div>';
-  return '<div class="alg-box"><div class="alg-title">Allergy check · food menu</div>'+
+  if(!algOpen&&!algTags.length)return '<button type="button" class="alg-box alg-closed" onclick="algToggle()"><span class="alg-title" style="margin:0">Guest has an allergy?</span><span class="alg-open-hint">Check the menu \u203a</span></button>';
+  return '<div class="alg-box"><div class="alg-title alg-title-row"><span>Allergy check · food menu</span><button type="button" class="alg-hide" onclick="algTags=[];algToggle()">Close</button></div>'+allergenKeyHTML()+
     '<div class="alg-chip-row">'+chips+'</div>'+
     (algTags.length>=1?'<button type="button" class="alg-clear-btn" onclick="clearAlgTags()">Clear'+(algTags.length>1?' ('+algTags.length+')':'')+'</button>':'')+
     '<div id="alg-result">'+(algTags.length?allergenResultHTML(algTags):none)+'</div></div>';
@@ -3611,17 +3625,17 @@ function wineCardHTML(w,matchHTML){
   const idx=SF.wines.indexOf(w), price=(w.glass?w.glass+' / ':'')+w.bottle;
   const wrpl=replacedByLive(w.name);
   if(wrpl){return `<div class="card replaced" id="wcard-${idx}" data-wine="${idx}"><div class="card-head"><span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span><div class="row-between"><span class="wine-name serif">${esc(w.name)}</span><span class="wine-price serif">${esc(price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(wrpl)}</div></div></div>`;}
-  const can=(w.has_notes&&(w.producer||w.winemaking))||(w.pronguide&&w.pronguide.length);
+  const can=!!(w.pour||(w.specs&&w.specs.length)||(w.has_notes&&(w.producer||w.winemaking))||(w.pronguide&&w.pronguide.length));   // compact cards (10/2): notes live behind the tap
   return `<div class="card ${can?'expandable':''}" id="wcard-${idx}" data-wine="${idx}">
       <div class="card-head" ${can?`onclick="toggleWine(${idx})"`:''}>
         <span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span>
         <div class="row-between"><span class="wine-name serif">${isNew(w)?newBadge():''}${esc(w.name)} ${w.vintage?`<span class="wine-vintage">${esc(w.vintage)}</span>`:''}</span><span class="wine-price serif">${esc(price)}</span></div>
         ${w.region?`<div class="wine-origin">${esc(w.region)}${w.grapes?' · '+esc(w.grapes):''}</div>`:''}
-        ${w.pour?`<div class="wine-pour serif">${esc(w.pour)}</div>`:''}
-        ${specRow(w.specs)}
-        ${can?`<div class="expand-hint">Tap for producer &amp; winemaking ›</div>`:''}
+        ${can?`<div class="expand-hint">Tap for tasting notes &amp; producer ›</div>`:''}
       </div>
       ${can?`<div class="card-details">
+        ${w.pour?`<div class="wine-pour serif">${esc(w.pour)}</div>`:''}
+        ${specRow(w.specs)}
         ${w.producer?`<div class="wine-sec-label">Producer</div><div class="wine-sec-body serif">${esc(w.producer)}</div>`:''}
         ${w.winemaking?`<div class="wine-sec-label">Winemaking</div><div class="wine-sec-body serif">${esc(w.winemaking)}</div>`:''}
         ${pronHTML(w.pronguide)}
@@ -4109,6 +4123,15 @@ function ckpSave(id,edited){
   CKP.items[id]=rec; ckpRender(); ckpRefreshBar();
   if(fbReady&&fbDb){ const o={}; o[id]=rec; ckpRef().set({items:o},{merge:true}).catch(function(){}); }
 }
+const AD_GROUPS=['Digestivi & liqueurs','Amari','Fernet','Port, sherry & vermouth','Grappa & brandy','Whiskey'];
+function adGroupedHTML(list){
+  const by={}; (list||[]).forEach(n=>{ const g=AD_GROUPS.indexOf(n.group)>=0?n.group:'More'; (by[g]=by[g]||[]).push(n); });
+  let h='';
+  AD_GROUPS.concat(['More']).forEach(g=>{ if(!by[g])return;
+    h+=`<div class="ad-group">${esc(g)}</div>`;
+    by[g].forEach(n=>h+=`<div class="ad-item"><div class="ad-row"><span class="ad-name">${esc(n.name)}</span><span class="ad-price">${esc(n.price)}</span></div>${n.note?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`); });
+  return h;
+}
 function renderBar(){
   const newCk=SF.bar.cocktails.filter(c=>isNew(c));
   const pinned=newCk.filter(isShuffled), pinnedSet=new Set(pinned);
@@ -4128,7 +4151,7 @@ function renderBar(){
       if(p.note)h+=`<div class="fpour-note">${esc(p.note)}</div>`;});
     h+=`</div>`;});
   h+=`<div class="section-label">After-Dinner Libations</div>`;
-  SF.bar.afterDinner.forEach(n=>h+=`<div class="ad-item"><div class="ad-row"><span class="ad-name">${esc(n.name)}</span><span class="ad-price">${esc(n.price)}</span></div>${n.note?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`);
+  h+=adGroupedHTML(SF.bar.afterDinner);
   $('ftBar').innerHTML=liveBlockHTML('cocktail')+(h);
 }
 

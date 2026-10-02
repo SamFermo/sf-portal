@@ -360,18 +360,18 @@
      "ingredients": [
       {
        "term": "Farfalle",
-       "pronunciation": "far-FAH-leh",
-       "note": "Bow-tie shaped pasta; here made in-house from egg dough and stuffed with basil, ricotta, and mozzarella. A fresh egg dough, so it carries egg and wheat."
-      },
-      {
-       "term": "Vodka sauce",
-       "pronunciation": null,
-       "note": "A tomato-and-cream sauce built on onion and garlic. This version is spicy."
+       "note": "Bow-tie shaped pasta; here made in-house from egg dough and stuffed with basil, ricotta, and mozzarella. A fresh egg dough, so it carries egg and wheat.",
+       "pronunciation": "far-FAH-leh"
       },
       {
        "term": "Chiffonade",
        "pronunciation": "shif-oh-NAHD",
        "note": "Herbs sliced into thin ribbons — here fresh basil, scattered over the top."
+      },
+      {
+       "note": "A tomato-and-cream sauce with some heat: vodka, crushed tomato, heavy cream, onion, garlic, chili flake, parmesan, butter and salt.",
+       "pronunciation": null,
+       "term": "Spicy vodka sauce"
       }
      ],
      "allergens": [
@@ -382,17 +382,7 @@
      ],
      "canModify": [],
      "allergenNote": "Egg and gluten are both in the fresh egg pasta — built in. Dairy runs through the filling (ricotta, mozzarella) and the cream in the sauce, so it can't come off this dish. Allium: onion and garlic are cooked into the vodka sauce.",
-     "flags": [
-      {
-       "component": "spicy vodka sauce",
-       "riskAllergens": [
-        "dairy",
-        "allium"
-       ],
-       "proposedStandard": "vodka, crushed tomato, heavy cream, onion, garlic, chili flake, parmesan, butter, salt",
-       "label": "spicy vodka sauce — composition not specified"
-      }
-     ],
+     "flags": [],
      "added": "2026-08-01"
     },
     {
@@ -478,47 +468,39 @@
      "story": "Seven ounces of troll-caught Washington king salmon, grilled to medium rare. Served with Bibb lettuce dressed in roasted tomato vinaigrette, bright sun gold tomatoes, and charred zucchini. Finished with marigold petals.",
      "ingredients": [
       {
-       "term": "Troll-caught king salmon",
+       "note": "Caught one fish at a time on hook and line rather than by net, which keeps the fillet intact and the flesh firm. King (chinook) is the richest of the Pacific salmon, high in fat with a deep colour. Seven ounce fillet, grilled to medium rare.",
        "pronunciation": null,
-       "note": "Caught one fish at a time on hook and line rather than by net, which keeps the fillet intact and the flesh firm. King (chinook) is the richest of the Pacific salmon, high in fat with a deep colour. Seven ounce fillet, grilled to medium rare."
+       "term": "Troll-caught king salmon"
       },
       {
-       "term": "Bibb lettuce",
+       "note": "A soft butterhead lettuce with loose, tender leaves and a mild sweetness. Dressed and served cool against the warm fish.",
        "pronunciation": null,
-       "note": "A soft butterhead lettuce with loose, tender leaves and a mild sweetness. Dressed and served cool against the warm fish."
+       "term": "Bibb lettuce"
       },
       {
+       "pronunciation": null,
        "term": "Sun gold tomatoes",
-       "pronunciation": null,
        "note": "A small orange cherry tomato, noticeably sweeter and lower in acid than a red cherry tomato. Served raw."
       },
       {
        "term": "Roasted tomato vinaigrette",
        "pronunciation": null,
-       "note": "The composition of this vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
+       "note": "Our roasted tomato vinaigrette starts with tomatoes, quartered and roasted low and slow at 200° until they lose about 60% of their moisture, which concentrates their flavor and natural sweetness. We finish the roasted tomatoes with red wine vinegar, shallot, and extra-virgin olive oil to make the vinaigrette, seasoned with oregano and black pepper. Guests should know this is a cooked vinaigrette, not raw, so it has deep roasted tomato flavor rather than bright acidity."
       },
       {
        "term": "Marigold petals",
-       "pronunciation": null,
-       "note": "Edible flower petals, faintly citrus and peppery. A garnish, and they come off on request."
+       "note": "Edible flower petals, faintly citrus and peppery. A garnish, and they come off on request.",
+       "pronunciation": null
       }
      ],
      "allergens": [
-      "fish"
+      "fish",
+      "allium"
      ],
      "canModify": [],
-     "allergenNote": "Fish: king salmon, central to the dish, cannot come off. The composition of the roasted tomato vinaigrette has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
+     "allergenNote": "Fish: king salmon, central to the dish, cannot come off. Allium: shallot is in the roasted tomato vinaigrette. Served medium rare.",
      "added": "2026-07-24",
-     "flags": [
-      {
-       "component": "roasted tomato vinaigrette",
-       "riskAllergens": [
-        "allium"
-       ],
-       "proposedStandard": "",
-       "label": "roasted tomato vinaigrette — composition not specified"
-      }
-     ]
+     "flags": []
     },
     {
      "name": "Roasted Duck Breast",
@@ -529,8 +511,8 @@
      "ingredients": [
       {
        "term": "Muscovy duck",
-       "pronunciation": "MUSS-koh-vee",
-       "note": "A leaner breed than Pekin, with a deeper, less fatty flavour closer to red meat than poultry. The breast is rendered skin-side down so the fat runs off and the skin crisps, then cooked to medium rare."
+       "note": "A leaner breed than Pekin, with a deeper, less fatty flavour closer to red meat than poultry. The breast is rendered skin-side down so the fat runs off and the skin crisps, then cooked to medium rare.",
+       "pronunciation": "MUSS-koh-vee"
       },
       {
        "term": "Chanterelles",
@@ -539,18 +521,18 @@
       },
       {
        "term": "Polenta",
-       "pronunciation": "poh-LEN-tah",
-       "note": "Ground cornmeal cooked until thick and creamy, the bed for the duck. The house polenta is built with cream, stock and butter, so treat it as dairy unless the kitchen says this prep differs."
+       "note": "Ground cornmeal cooked until thick and creamy, the bed for the duck. The house polenta is built with cream, stock and butter, so treat it as dairy unless the kitchen says this prep differs.",
+       "pronunciation": "poh-LEN-tah"
       },
       {
-       "term": "Marjoram",
+       "note": "A soft herb in the oregano family, sweeter and more floral than oregano. Used fresh to lift the plate.",
        "pronunciation": "MAR-jer-um",
-       "note": "A soft herb in the oregano family, sweeter and more floral than oregano. Used fresh to lift the plate."
+       "term": "Marjoram"
       },
       {
        "term": "Huckleberry demi-glace",
        "pronunciation": "DEH-mee glahss",
-       "note": "The composition of this demi-glace has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, allium especially."
+       "note": "The huckleberry demi-glace is chicken stock reduced until glossy and thick, then finished with cooked huckleberries. Guests get a rich, slightly sweet sauce with the tartness of the berries. It's not overly sweet, just balanced fruit with deep savory stock."
       }
      ],
      "allergens": [
@@ -560,18 +542,9 @@
      "canModify": [
       "dairy"
      ],
-     "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. The composition of the huckleberry demi-glace has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, allium especially. Served medium rare.",
+     "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. Served medium rare.",
      "added": "2026-08-02",
-     "flags": [
-      {
-       "component": "huckleberry demi-glace",
-       "riskAllergens": [
-        "allium"
-       ],
-       "proposedStandard": "",
-       "label": "huckleberry demi-glace — composition not specified"
-      }
-     ]
+     "flags": []
     }
    ],
    "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
@@ -626,14 +599,14 @@
    "story": "A crisp-outside, soft-inside meringue, named for the Russian ballerina Anna Pavlova. This one's built on marigold sugar — petals from Rain Dog Farm in Redmond, dried and ground with sugar — flavoring the meringue base. Topped with vanilla bean pastry cream and gently cooked local Washington peaches. Floral, bright, and delicate.",
    "ingredients": [
     {
-     "term": "Pavlova",
+     "note": "a meringue-based dessert with a crisp crust and soft center, named for ballerina Anna Pavlova.",
      "pronunciation": "pav-LOH-vah",
-     "note": "a meringue-based dessert with a crisp crust and soft center, named for ballerina Anna Pavlova."
+     "term": "Pavlova"
     },
     {
+     "note": "whipped egg whites and sugar, baked low and slow until crisp.",
      "term": "Meringue",
-     "pronunciation": "meh-RANG",
-     "note": "whipped egg whites and sugar, baked low and slow until crisp."
+     "pronunciation": "meh-RANG"
     },
     {
      "term": "Marigold sugar",
@@ -641,9 +614,9 @@
      "note": "marigold petals from Rain Dog Farm in Redmond, dried and ground with sugar to flavor the meringue."
     },
     {
-     "term": "Vanilla bean pastry cream",
+     "note": "Pastry cream is a cooked custard thickened with cornstarch, giving it a stable, spoonable texture that holds its shape on the plate. Ours is made from whole milk, cream, egg yolk, sugar, vanilla bean, and cornstarch. The vanilla bean is visible as small specks throughout. It's cool and rich, and sits underneath the meringue and peaches.",
      "pronunciation": null,
-     "note": "The composition of this pastry cream has not been specified for this prep. Confirm with the kitchen before clearing it for any allergy, dairy and egg especially."
+     "term": "Vanilla bean pastry cream"
     }
    ],
    "allergens": [
@@ -653,18 +626,9 @@
    "canModify": [
     "dairy"
    ],
-   "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate. The composition of the vanilla bean pastry cream has not been specified for this prep. Confirm with the kitchen before clearing this dish for any allergy, dairy and egg especially.",
-   "flags": [
-    {
-     "component": "vanilla bean pastry cream",
-     "riskAllergens": [
-      "dairy",
-      "egg"
-     ],
-     "proposedStandard": "whole milk, cream, egg yolk, sugar, vanilla bean, cornstarch",
-     "label": "vanilla bean pastry cream — composition not specified"
-    }
-   ]
+   "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate.",
+   "flags": [],
+   "raw": false
   },
   {
    "name": "Seasonal Gelato",
