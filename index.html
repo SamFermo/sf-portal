@@ -1179,6 +1179,15 @@ body.tour-on{padding-bottom:230px;}
 .alg-legend-in{text-align:left; margin:0 0 8px; line-height:1.9;}
 .ad-group{font-size:10.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--gold); margin:18px 0 4px; padding-bottom:4px; border-bottom:1px solid rgba(205,216,244,.14);}
 .ad-group:first-child{margin-top:6px;}
+
+/* Bar overlay (2026-10-02) */
+.bo-out{opacity:.6;} .bo-out .bo-nm{text-decoration:line-through;}
+.bo-tag{display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.06em; color:#fff; background:#b0432f; border-radius:6px; padding:1px 6px; margin-left:6px; vertical-align:1px;}
+.bo-tag.bo-sw{background:#6b7f4a;}
+.bo-act{margin-left:6px; white-space:nowrap;}
+.bo-btn{font:inherit; font-size:11.5px; font-weight:600; border-radius:8px; border:1px solid var(--moon-edge); background:transparent; color:var(--ink-mute); padding:2px 9px; margin-left:4px; cursor:pointer;}
+.bo-in{width:100%; box-sizing:border-box; font:inherit; font-size:14px; padding:9px; margin-top:8px; border-radius:10px; border:1px solid rgba(90,58,34,.3); background:#fffdf7; color:var(--wood); -webkit-text-fill-color:var(--wood);}
+.bo-hint{font-size:12px; color:var(--ink-mute); margin:4px 2px 10px; line-height:1.4;} .bo-err{color:#e0735a; font-weight:600;}
 /* Fresh Talk publish bar */
 .editbar{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap;}
 /* Publish-to-website. Quiet outline until the settled menu actually differs from
@@ -2043,7 +2052,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1790988809';   // stamped by build-data.py at every deploy
+const BUILD='1790989928';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4123,19 +4132,85 @@ function ckpSave(id,edited){
   CKP.items[id]=rec; ckpRender(); ckpRefreshBar();
   if(fbReady&&fbDb){ const o={}; o[id]=rec; ckpRef().set({items:o},{merge:true}).catch(function(){}); }
 }
+/* BAR OVERLAY (2026-10-02). Quick Liquor-tab edits for managers and Katie, live for everyone, no deploy.
+   board/barOverlay {pours:{"fi_pi":{name,origin,note,by,at}}, out:{"ad:slug"|"fp:fi_pi":{by,at}}}.
+   Swap replaces one flight pour (the flight blurb hides while any pour is swapped). 86 strikes an after-dinner
+   item or a flight slot for the whole floor. Restore / Reset put the printed-menu data back. */
+let BO={pours:{},out:{},loaded:false,sel:null,err:false,unsub:null};
+function boRef(){ return fbDb.collection('board').doc('barOverlay'); }
+function boCan(){ return !!me&&!DEMO&&(isMgr()||me.name===CKP_WHO); }
+function boSlug(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
+function boRefresh(){ try{ if($('ftBar')&&typeof renderBar==='function')renderBar(); }catch(e){} }
+function startBarOverlaySync(){
+  if(!(fbReady&&fbDb))return; if(BO.unsub)BO.unsub();
+  BO.unsub=boRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; BO.pours=v.pours||{}; BO.out=v.out||{}; BO.loaded=true; boRefresh(); },function(){});
+}
+function boWrite(patch){
+  ['pours','out'].forEach(function(f){ Object.keys(patch[f]||{}).forEach(function(k){ if(patch[f][k]===null)delete BO[f][k]; else BO[f][k]=patch[f][k]; }); });
+  BO.err=false; boRefresh();
+  if(!(fbReady&&fbDb)){ BO.err=true; boRefresh(); return; }
+  const w={}; ['pours','out'].forEach(function(f){ if(!patch[f])return; w[f]={}; Object.keys(patch[f]).forEach(function(k){ w[f][k]=patch[f][k]===null?firebase.firestore.FieldValue.delete():patch[f][k]; }); });
+  boRef().set(w,{merge:true}).catch(function(){ BO.err=true; boRefresh(); });
+}
+function boStamp(extra){ return Object.assign({by:me?me.name:'',at:Date.now()},extra||{}); }
+function boToggleAd(slug){
+  const k='ad:'+slug, it=SF.bar.afterDinner.find(function(x){ return boSlug(x.name)===slug; }); if(!it||!boCan())return;
+  const o={}; o[k]=BO.out[k]?null:boStamp({name:it.name}); boWrite({out:o});
+}
+function boToggleFp(fi,pi){
+  if(!boCan())return; const k='fp:'+fi+'_'+pi, o={}; o[k]=BO.out[k]?null:boStamp(); boWrite({out:o});
+}
+function boSwapOpen(fi,pi){ if(!boCan())return; BO.sel={fi:fi,pi:pi}; boSwapRender(); $('boModal').style.display='flex'; }
+function boClose(){ const m=$('boModal'); if(m)m.style.display='none'; BO.sel=null; }
+function boSwapRender(){
+  const s=BO.sel; if(!s)return;
+  let m=$('boModal'); if(!m){ m=document.createElement('div'); m.id='boModal'; m.className='comp-modal'; document.body.appendChild(m); }
+  const fl=SF.bar.amaroFlights[s.fi], k=s.fi+'_'+s.pi, cur=BO.pours[k]||fl.pours[s.pi];
+  let opts='<option value="">Pick from the after-dinner list…</option>';
+  SF.bar.afterDinner.forEach(function(x,i){ if(!BO.out['ad:'+boSlug(x.name)])opts+='<option value="'+i+'">'+esc(x.name)+'</option>'; });
+  m.innerHTML='<div class="ann-card ckp-card"><div class="ann-title serif">Swap a pour</div>'
+   +'<div class="ann-line">'+esc(fl.name)+', pour '+(s.pi+1)+'. Now: '+esc(cur.name)+'.</div>'
+   +'<select id="bo-pick" class="bo-in" onchange="boPick()">'+opts+'</select>'
+   +'<input id="bo-name" class="bo-in" placeholder="Name" autocomplete="off">'
+   +'<input id="bo-origin" class="bo-in" placeholder="Where it is from (e.g. Puglia, IT)" autocomplete="off">'
+   +'<textarea id="bo-note" class="bo-in" rows="4" placeholder="One or two lines the floor can say about it"></textarea>'
+   +'<div class="bo-hint">The flight blurb hides while a pour is swapped. Everyone sees this right away.</div>'
+   +'<div class="ckp-btns"><button class="to-go" onclick="boSave()">Save</button><button class="to-cancel" onclick="boClose()">Cancel</button></div>'
+   +(BO.pours[k]?'<div class="ckp-btns"><button class="to-cancel" onclick="boReset()">Reset to the original pour</button></div>':'')
+   +'</div>';
+}
+function boPick(){
+  const v=$('bo-pick').value; if(v==='')return; const x=SF.bar.afterDinner[+v]; if(!x)return;
+  $('bo-name').value=x.name; $('bo-note').value=x.note||''; $('bo-origin').focus();
+}
+function boSave(){
+  const s=BO.sel; if(!s||!boCan())return; const name=String($('bo-name').value||'').trim();
+  if(!name){ $('bo-name').focus(); return; }
+  const k=s.fi+'_'+s.pi, p={}, o={}; p[k]=boStamp({name:name,origin:String($('bo-origin').value||'').trim(),note:String($('bo-note').value||'').trim()}); o['fp:'+k]=null;
+  boWrite({pours:p,out:o}); boClose();
+}
+function boReset(){
+  const s=BO.sel; if(!s||!boCan())return; const k=s.fi+'_'+s.pi, p={}, o={}; p[k]=null; o['fp:'+k]=null; boWrite({pours:p,out:o}); boClose();
+}
+function boHintHTML(){
+  if(!boCan())return '';
+  return '<div class="bo-hint">Bar edits: tap <b>Swap</b> or <b>86</b> beside a flight pour, or <b>86</b> beside any after-dinner item. Everyone sees it right away.'
+    +(BO.err?' <span class="bo-err">Could not save. Check the connection and try again.</span>':'')+'</div>';
+}
 const AD_GROUPS=['Digestivi & liqueurs','Amari','Fernet','Port, sherry & vermouth','Grappa & brandy','Whiskey'];
 function adGroupedHTML(list){
   const by={}; (list||[]).forEach(n=>{ const g=AD_GROUPS.indexOf(n.group)>=0?n.group:'More'; (by[g]=by[g]||[]).push(n); });
   let h='';
   AD_GROUPS.concat(['More']).forEach(g=>{ if(!by[g])return;
     h+=`<div class="ad-group">${esc(g)}</div>`;
-    by[g].forEach(n=>h+=`<div class="ad-item"><div class="ad-row"><span class="ad-name">${esc(n.name)}</span><span class="ad-price">${esc(n.price)}</span></div>${n.note?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`); });
+    by[g].forEach(n=>{ const sl=boSlug(n.name), o=BO.out['ad:'+sl];
+      h+=`<div class="ad-item${o?' bo-out':''}"><div class="ad-row"><span class="ad-name"><span class="bo-nm">${esc(n.name)}</span>${o?'<span class="bo-tag">86</span>':''}${boCan()?`<span class="bo-act"><button class="bo-btn" onclick="boToggleAd('${sl}')">${o?'Restore':'86'}</button></span>`:''}</span><span class="ad-price">${esc(n.price)}</span></div>${(n.note&&!o)?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`; }); });
   return h;
 }
 function renderBar(){
   const newCk=SF.bar.cocktails.filter(c=>isNew(c));
   const pinned=newCk.filter(isShuffled), pinnedSet=new Set(pinned);
-  let h=editBarHTML();
+  let h=editBarHTML()+boHintHTML();
   if(pinned.length){h+=`<div class="pinned-block"><div class="section-label pinned-label">Just added to the menu</div>`;pinned.forEach(c=>h+=ckCardHTML(c));h+=`</div>`;}
   h+=`<div class="section-label">Cocktails</div>`;
   SF.bar.cocktails.forEach(c=>{if(!pinnedSet.has(c))h+=ckCardHTML(c);});
@@ -4145,10 +4220,12 @@ function renderBar(){
   h+=`<div class="section-label">Non-Alcoholic</div>`+listSec(SF.bar.nonAlcoholic);
   h+=`<div class="section-label">Beer</div>`+listSec(SF.bar.beer);
   h+=`<div class="section-label">Amaro Flights · $18</div>`;
-  SF.bar.amaroFlights.forEach(fl=>{h+=`<div class="flist"><div class="flname serif">${esc(fl.name)}<span class="fprice">$${esc(fl.price)}</span></div>`;
-    if(fl.desc)h+=`<div class="fl-desc serif">${esc(fl.desc)}</div>`;
-    fl.pours.forEach(p=>{h+=`<div class="fpour">${esc(p.name)} <span class="forigin">— ${esc(p.origin)}</span></div>`;
-      if(p.note)h+=`<div class="fpour-note">${esc(p.note)}</div>`;});
+  SF.bar.amaroFlights.forEach((fl,fi)=>{h+=`<div class="flist"><div class="flname serif">${esc(fl.name)}<span class="fprice">$${esc(fl.price)}</span></div>`;
+    const anySwap=fl.pours.some((p,pi)=>BO.pours[fi+'_'+pi]);
+    if(fl.desc&&!anySwap)h+=`<div class="fl-desc serif">${esc(fl.desc)}</div>`;
+    fl.pours.forEach((p0,pi)=>{ const k=fi+'_'+pi, sw=BO.pours[k], p=sw||p0, o=BO.out['fp:'+k];
+      h+=`<div class="fpour${o?' bo-out':''}"><span class="bo-nm">${esc(p.name)}</span>${p.origin?` <span class="forigin">— ${esc(p.origin)}</span>`:''}${o?'<span class="bo-tag">86</span>':''}${sw?'<span class="bo-tag bo-sw">swapped</span>':''}${boCan()?`<span class="bo-act"><button class="bo-btn" onclick="boSwapOpen(${fi},${pi})">Swap</button><button class="bo-btn" onclick="boToggleFp(${fi},${pi})">${o?'Restore':'86'}</button></span>`:''}</div>`;
+      if(p.note&&!o)h+=`<div class="fpour-note">${esc(p.note)}</div>`;});
     h+=`</div>`;});
   h+=`<div class="section-label">After-Dinner Libations</div>`;
   h+=adGroupedHTML(SF.bar.afterDinner);
@@ -9169,8 +9246,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startMenuPubSync(); startSpecialsSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startSpecialsSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startBarOverlaySync(); startMenuPubSync(); startSpecialsSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startBarOverlaySync(); startSpecialsSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
