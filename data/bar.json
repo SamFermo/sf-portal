@@ -273,14 +273,14 @@
    "price": "18",
    "pours": [
     {
-     "name": "Amaro Chiaro",
-     "origin": "Vancouver, CAN",
-     "note": "The Woods Spirit Co., North Vancouver. Vacuum-distilled to stay water-clear — thirteen botanicals, lemon and star anise up front, gentian for the bite. Delicate for an amaro; chiaro means 'clear.'"
+     "name": "Amaro Brucato \"Fields\"",
+     "origin": "S.F., CA",
+     "note": "Brucato's fourth amaro, built from farm-field ingredients: artichoke leaf, beet root, rhubarb root and toasted dandelion, with fenugreek, dill and coriander. Macerated in California grape brandy and rested on toasted oak. Savory and herbal over caramel, softly bitter."
     },
     {
-     "name": "Amaro Rucolino",
-     "origin": "Tuscany, IT",
-     "note": "An amaro built on rucola — arugula, the salad green. Peppery, green, gently bitter; far stranger on paper than in the glass."
+     "name": "Borsci San Marzano",
+     "origin": "Puglia, IT",
+     "note": "Elisir Borsci San Marzano, a recipe dating to 1840 and Giuseppe Borsci, now made by Distilleria Caffo. Melissa, wormwood, clove and saffron. Sweet and dark up front, then coffee, chocolate and orange, with a velvety bitter finish. Traditionally poured over ice cream or into coffee."
     },
     {
      "name": "Faccia Brutto Fernet",
@@ -288,7 +288,7 @@
      "note": "Brooklyn-made fernet in the old Italian style — bracing, minty, properly bitter. The producer's name means 'ugly face,' which is roughly what the first sip makes."
     }
    ],
-   "desc": "Three amari that wrong-foot you — one pours crystal clear, one is built on arugula, and the fernet is from Brooklyn, not Milan. For the guest who's sure they know amaro."
+   "desc": "Three amari that wrong-foot you. A California amaro built on artichoke and beet, a Puglian elixir from 1840 that tastes like coffee and chocolate, and a fernet from Brooklyn, not Milan. For the guest who's sure they know amaro."
   },
   {
    "name": "Out of the Woods",
@@ -355,6 +355,12 @@
    "group": "Digestivi & liqueurs"
   },
   {
+   "name": "Scuppoz Amaro",
+   "price": "12",
+   "group": "Amari",
+   "note": "Abruzzo, Italy (Scuppoz); artisanal mountain-herb amaro, made without added colorants."
+  },
+  {
    "name": "Sambuca",
    "price": "8",
    "note": "Italian anise liqueur; sweet, licorice-forward, traditionally served with three coffee beans.",
@@ -397,10 +403,10 @@
    "group": "Amari"
   },
   {
-   "name": "Amaro Rucolino",
+   "name": "Averna",
    "price": "9",
-   "note": "Arugula-based amaro from Ischia, Italy. Peppery, herbal bitterness; citrus and cedar, pleasantly bitter finish.",
-   "group": "Amari"
+   "group": "Amari",
+   "note": "Sicily, Italy (since 1868); bittersweet and caramel-rich, with orange peel and licorice. Smooth, approachable, a good first amaro."
   },
   {
    "name": "Scarlet Orange Amaro",
@@ -457,30 +463,6 @@
    "group": "Amari"
   },
   {
-   "name": "Maraska Pelinkovac",
-   "price": "10",
-   "note": "Croatian wormwood liqueur; Dalmatia. Intensely bitter and herbal, dark fruit and dried spice, medicinal and unapologetic.",
-   "group": "Amari"
-  },
-  {
-   "name": "Highside Fernet Lario",
-   "price": "10",
-   "note": "Bainbridge Island, WA-made (Highside Distilling); apple cider gin base, Washington mint honey. Minty, intensely bitter, slight smoke.",
-   "group": "Fernet"
-  },
-  {
-   "name": "Amaro Chiaro",
-   "price": "10",
-   "note": "Vancouver, BC-made (The Woods Spirit Co.); 14 botanicals, vacuum-distilled. Citrus-floral, gentle bitterness, lighter and more accessible style.",
-   "group": "Amari"
-  },
-  {
-   "name": "Meletti Fernet",
-   "price": "8",
-   "note": "Marche, Italy (since 1870); gentian-bitter finish over orange zest, cardamom, and balsamic herbs. Clean, long, classic Italian fernet.",
-   "group": "Fernet"
-  },
-  {
    "name": "Amaro Ciociaro",
    "price": "8",
    "note": "Lazio, Italy (Paolucci, since 1873); bitter orange backbone with chamomile, anise, and cinnamon. Bittersweet, approachable, lingers with chocolate and spice.",
@@ -535,9 +517,9 @@
    "group": "Amari"
   },
   {
-   "name": "Amaro Sibilla",
-   "price": "14",
-   "note": "Marche, Italy (Varnelli); cold-extracted herbs from Monti Sibillini, sweetened with local honey. Coffee, cocoa, dried fruit, earthy and deeply bitter.",
+   "name": "Maraska Pelinkovac",
+   "price": "10",
+   "note": "Croatian wormwood liqueur; Dalmatia. Intensely bitter and herbal, dark fruit and dried spice, medicinal and unapologetic.",
    "group": "Amari"
   },
   {
@@ -563,6 +545,12 @@
    "price": "12",
    "note": "San Francisco-made (Brucato Spirits); yerba santa, spearmint, cardamom. Herbal, minty, Chartreuse-like character. Coastal California hillsides in a glass.",
    "group": "Amari"
+  },
+  {
+   "name": "Amaro Brucato \"Fields\"",
+   "price": "12",
+   "group": "Amari",
+   "note": "San Francisco-made (Brucato Spirits); artichoke leaf, beet root, rhubarb root, fenugreek, dill. Savory and herbal over caramel, soft bitterness."
   },
   {
    "name": "Nonino Grappa di Merlot",
