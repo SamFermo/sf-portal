@@ -2428,12 +2428,12 @@ window.SF = {
   "cocktails": [
    {
     "name": "Minivan Mega-Fun",
-    "build": "vodka, blistered shishito pepper simple, veso tomato vermouth, lime, gran classico, soda",
+    "build": "tequila blanco, blistered shishito pepper simple, veso tomato vermouth, lime, gran classico, soda",
     "price": "15",
     "ingredients": [
      {
-      "name": "Vodka",
-      "description": "Neutral base spirit."
+      "name": "Tequila blanco",
+      "description": "Unaged agave spirit from Mexico: bright, peppery and vegetal. The base of the drink."
      },
      {
       "name": "Blistered shishito pepper simple",
@@ -14290,5 +14290,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1791129445"
+ "build": "1791158164"
 };
