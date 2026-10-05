@@ -1188,6 +1188,10 @@ body.tour-on{padding-bottom:230px;}
 .bo-btn{font:inherit; font-size:11.5px; font-weight:600; border-radius:8px; border:1px solid var(--moon-edge); background:transparent; color:var(--ink-mute); padding:2px 9px; margin-left:4px; cursor:pointer;}
 .bo-in{width:100%; box-sizing:border-box; font:inherit; font-size:14px; padding:9px; margin-top:8px; border-radius:10px; border:1px solid rgba(90,58,34,.3); background:#fffdf7; color:var(--wood); -webkit-text-fill-color:var(--wood);}
 .bo-hint{font-size:12px; color:var(--ink-mute); margin:4px 2px 10px; line-height:1.4;} .bo-err{color:#e0735a; font-weight:600;}
+/* Cocktail edit (2026-10-04) */
+.cke-act{margin-top:8px;} .cke-row{border-top:1px solid rgba(90,58,34,.18); margin-top:10px; padding-top:4px;}
+.cke-lbl{font-size:11.5px; font-weight:700; letter-spacing:.05em; color:var(--ink-mute); margin-top:10px; text-transform:uppercase;}
+.cke-rm{margin-top:6px;}
 /* Fresh Talk publish bar */
 .editbar{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap;}
 /* Publish-to-website. Quiet outline until the settled menu actually differs from
@@ -2052,7 +2056,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791158164';   // stamped by build-data.py at every deploy
+const BUILD='1791158965';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4013,16 +4017,17 @@ function renderWine(){
 function toggleWine(i){const el=$('ftWine').querySelector(`[data-wine="${i}"]`);if(el)el.classList.toggle('expanded');}
 
 /* FRESH — BAR */
-function ckCardHTML(c){
+function ckCardHTML(c0){
+  const c=ckEff(c0);
   const crpl=replacedByLive(c.name);
   if(crpl)return `<div class="card replaced"><div class="card-head"><div class="row-between"><span class="ck-name serif">${esc(c.name)}</span><span class="ck-price serif">${esc(c.price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(crpl)}</div></div></div>`;
   const rich=c.ingredients&&c.ingredients.length;
   let h=`<div class="card ${rich?'expandable':''}" id="ckcard-${fcSlug(c.name)}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
-      <span class="ck-name serif">${isNew(c)?newBadge():''}${esc(c.name)}${c.highlight?`<span class="hl-badge">${esc(c.highlight)}</span>`:''}</span>
+      <span class="ck-name serif">${isNew(c)?newBadge():''}${esc(c.name)}${c.highlight?`<span class="hl-badge">${esc(c.highlight)}</span>`:''}${(c.__ov&&boCan())?'<span class="bo-tag bo-sw">edited live</span>':''}</span>
       <span class="ck-price serif">${esc(c.price)}</span></div>
       ${c.tagline?`<div class="ck-tag serif">${esc(c.tagline)}</div>`:''}
-      <div class="ck-build serif">${esc(c.build)}</div>`;
+      <div class="ck-build serif">${esc(c.build)}</div>${boCan()?`<div class="cke-act"><button class="bo-btn" style="margin-left:0" onclick="event.stopPropagation();ckeOpen('${boSlug(c.name)}')">Edit</button></div>`:''}`;
   if(rich)h+=`<div class="expand-hint">Tap for the build &amp; ingredients ›</div>`;
   h+=`</div>`;
   if(rich){h+=`<div class="card-details">`;
@@ -4065,6 +4070,7 @@ function startCkPrepSync(){
 }
 /* What the floor sees on the cocktail card for this ingredient. */
 function ckpDesc(g){
+  if(g.ov)return g.description;
   const it=CKP_ITEMS.find(function(x){ return x.ings.indexOf(g.name)>=0; }); const a=it&&CKP.items[it.id];
   if(!a)return g.description;
   if(it.append)return a.status==='confirmed'?g.description:(g.description+' Bar note: '+a.text);
@@ -4122,20 +4128,20 @@ function ckpSave(id,edited){
    board/barOverlay {pours:{"fi_pi":{name,origin,note,by,at}}, out:{"ad:slug"|"fp:fi_pi":{by,at}}}.
    Swap replaces one flight pour (the flight blurb hides while any pour is swapped). 86 strikes an after-dinner
    item or a flight slot for the whole floor. Restore / Reset put the printed-menu data back. */
-let BO={pours:{},out:{},loaded:false,sel:null,err:false,unsub:null};
+let BO={pours:{},out:{},cocktails:{},loaded:false,sel:null,err:false,unsub:null};
 function boRef(){ return fbDb.collection('board').doc('barOverlay'); }
 function boCan(){ return !!me&&!DEMO&&(isMgr()||me.name===CKP_WHO); }
 function boSlug(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
 function boRefresh(){ try{ if($('ftBar')&&typeof renderBar==='function')renderBar(); }catch(e){} }
 function startBarOverlaySync(){
   if(!(fbReady&&fbDb))return; if(BO.unsub)BO.unsub();
-  BO.unsub=boRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; BO.pours=v.pours||{}; BO.out=v.out||{}; BO.loaded=true; boRefresh(); },function(){});
+  BO.unsub=boRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; BO.pours=v.pours||{}; BO.out=v.out||{}; BO.cocktails=v.cocktails||{}; BO.loaded=true; boRefresh(); },function(){});
 }
 function boWrite(patch){
-  ['pours','out'].forEach(function(f){ Object.keys(patch[f]||{}).forEach(function(k){ if(patch[f][k]===null)delete BO[f][k]; else BO[f][k]=patch[f][k]; }); });
+  ['pours','out','cocktails'].forEach(function(f){ Object.keys(patch[f]||{}).forEach(function(k){ if(patch[f][k]===null)delete BO[f][k]; else BO[f][k]=patch[f][k]; }); });
   BO.err=false; boRefresh();
   if(!(fbReady&&fbDb)){ BO.err=true; boRefresh(); return; }
-  const w={}; ['pours','out'].forEach(function(f){ if(!patch[f])return; w[f]={}; Object.keys(patch[f]).forEach(function(k){ w[f][k]=patch[f][k]===null?firebase.firestore.FieldValue.delete():patch[f][k]; }); });
+  const w={}; ['pours','out','cocktails'].forEach(function(f){ if(!patch[f])return; w[f]={}; Object.keys(patch[f]).forEach(function(k){ w[f][k]=patch[f][k]===null?firebase.firestore.FieldValue.delete():patch[f][k]; }); });
   boRef().set(w,{merge:true}).catch(function(){ BO.err=true; boRefresh(); });
 }
 function boStamp(extra){ return Object.assign({by:me?me.name:'',at:Date.now()},extra||{}); }
@@ -4177,6 +4183,58 @@ function boSave(){
 }
 function boReset(){
   const s=BO.sel; if(!s||!boCan())return; const k=s.fi+'_'+s.pi, p={}, o={}; p[k]=null; o['fp:'+k]=null; boWrite({pours:p,out:o}); boClose();
+}
+/* COCKTAIL EDIT (2026-10-04). Managers and Katie can change a printed cocktail's build, price and ingredient list
+   from its card, live for everyone, no deploy. board/barOverlay.cocktails {slug:{build,price,ingredients:[{name,description,amount?,highlight?}],by,at}}.
+   The overlay wins over bar.json until Restore deletes it. Name and pronunciation guide stay as printed. */
+function ckEff(c){
+  const o=BO.cocktails&&BO.cocktails[boSlug(c.name)]; if(!o)return c;
+  const ing=Array.isArray(o.ingredients)&&o.ingredients.length?o.ingredients.map(function(i){ return Object.assign({},i,{ov:true}); }):c.ingredients;
+  return Object.assign({},c,{build:o.build||c.build,price:o.price||c.price,ingredients:ing,__ov:true});
+}
+let CKE=null;
+function ckeOpen(slug){
+  if(!boCan())return;
+  const c=SF.bar.cocktails.find(function(x){ return boSlug(x.name)===slug; }); if(!c)return;
+  const e=ckEff(c);
+  CKE={slug:slug,name:c.name,build:e.build||'',price:e.price||'',
+    rows:(e.ingredients||[]).map(function(g){ return {name:g.name,description:g.ov?g.description:ckpDesc(g),amount:g.amount||'',highlight:g.highlight||''}; })};
+  ckeRender(); $('ckeModal').style.display='flex';
+}
+function ckeClose(){ const m=$('ckeModal'); if(m)m.style.display='none'; CKE=null; }
+function ckeRender(){
+  if(!CKE)return;
+  let m=$('ckeModal'); if(!m){ m=document.createElement('div'); m.id='ckeModal'; m.className='comp-modal'; document.body.appendChild(m); }
+  let h='<div class="ann-card ckp-card"><div class="ann-title serif">Edit '+esc(CKE.name)+'</div>'
+   +'<div class="ann-line">Everyone sees the change right away. Change the build line and the ingredient list together.</div>'
+   +'<div class="cke-lbl">Price</div><input class="bo-in" style="margin-top:4px" value="'+esc(CKE.price)+'" oninput="CKE.price=this.value" autocomplete="off">'
+   +'<div class="cke-lbl">Build line</div><textarea class="bo-in" style="margin-top:4px" rows="3" oninput="CKE.build=this.value">'+esc(CKE.build)+'</textarea>'
+   +'<div class="cke-lbl">Ingredients</div>';
+  CKE.rows.forEach(function(r,i){
+    h+='<div class="cke-row"><input class="bo-in" style="margin-top:4px" placeholder="Ingredient" value="'+esc(r.name)+'" oninput="CKE.rows['+i+'].name=this.value" autocomplete="off">'
+      +'<textarea class="bo-in" rows="2" placeholder="What it is, one line the floor can say" oninput="CKE.rows['+i+'].description=this.value">'+esc(r.description)+'</textarea>'
+      +'<button class="bo-btn cke-rm" style="margin-left:0" onclick="ckeRm('+i+')">Remove</button></div>';
+  });
+  h+='<div class="ckp-btns"><button class="to-cancel" onclick="ckeAdd()">+ Add ingredient</button></div>'
+   +'<div class="bo-hint">Leave a description blank if you are not sure what is in it. The card will tell the floor to ask the bar lead.</div>'
+   +'<div class="ckp-btns"><button class="to-go" onclick="ckeSave()">Save</button><button class="to-cancel" onclick="ckeClose()">Cancel</button></div>'
+   +((BO.cocktails&&BO.cocktails[CKE.slug])?'<div class="ckp-btns"><button class="to-cancel" onclick="ckeRestore()">Restore the printed card</button></div>':'')
+   +'</div>';
+  m.innerHTML=h;
+}
+function ckeRm(i){ if(!CKE)return; CKE.rows.splice(i,1); ckeRender(); }
+function ckeAdd(){ if(!CKE)return; CKE.rows.push({name:'',description:'',amount:'',highlight:''}); ckeRender(); }
+function ckeSave(){
+  if(!CKE||!boCan())return;
+  const build=String(CKE.build||'').trim(), price=String(CKE.price||'').trim();
+  const ing=[]; CKE.rows.forEach(function(r){ const n=String(r.name||'').trim(); if(!n)return;
+    const o={name:n,description:String(r.description||'').trim()||'Not described yet. Ask your bar lead what is in this one.'};
+    if(r.amount)o.amount=r.amount; if(r.highlight)o.highlight=r.highlight; ing.push(o); });
+  if(!build||!price||!ing.length)return;
+  const o={}; o[CKE.slug]=boStamp({build:build,price:price,ingredients:ing}); boWrite({cocktails:o}); ckeClose();
+}
+function ckeRestore(){
+  if(!CKE||!boCan())return; const o={}; o[CKE.slug]=null; boWrite({cocktails:o}); ckeClose();
 }
 function boHintHTML(){
   if(!boCan())return '';

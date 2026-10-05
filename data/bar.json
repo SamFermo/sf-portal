@@ -226,6 +226,56 @@
      "pron": "roo-koh-LEE-noh"
     }
    ]
+  },
+  {
+   "name": "Ya sure you betcha",
+   "build": "white port, mancino cherry blossom vermouth, veso alpine vermouth, blueberry and lavender maceration, lemon, soda, prosecco",
+   "price": "16",
+   "added": "2026-10-04",
+   "ingredients": [
+    {
+     "name": "White port",
+     "description": "Portuguese fortified wine made from white grapes."
+    },
+    {
+     "name": "Mancino cherry blossom vermouth",
+     "description": "A cherry blossom vermouth from Mancino, an Italian vermouth house."
+    },
+    {
+     "name": "Veso alpine vermouth",
+     "description": "An alpine vermouth from Veso."
+    },
+    {
+     "name": "Blueberry and lavender maceration",
+     "description": "The composition of this blueberry and lavender maceration has not been specified for this prep. Confirm with your bar lead before clearing it for any allergy."
+    },
+    {
+     "name": "Lemon",
+     "description": "Fresh lemon."
+    },
+    {
+     "name": "Soda",
+     "description": "Soda water top for lift and length."
+    },
+    {
+     "name": "Prosecco",
+     "description": "Italian sparkling wine, topped over the drink for fizz."
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Mancino",
+     "pron": "mahn-CHEE-noh"
+    },
+    {
+     "term": "vermouth",
+     "pron": "vehr-MOOTH"
+    },
+    {
+     "term": "Prosecco",
+     "pron": "proh-SEK-oh"
+    }
+   ]
   }
  ],
  "nonAlcoholic": [
