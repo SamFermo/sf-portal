@@ -76,11 +76,15 @@
     after-dinner list and service standards, with short lessons from the Boothby wine course
     between the cards. It is for getting sharper, not for assessment —
     nothing here is scored against anyone and there is no comparison between people. Your
-    answers stay on your own device, under your own name. <a href="./">Back to the portal</a>
+    record is kept under your own name and follows you between your phone and the iPad. <a href="./">Back to the portal</a>
   </footer>
 </div>
 
-<script src="study-data.js?v=6f84d947"></script>
+<script>window.FIREBASE_CONFIG={apiKey:"AIzaSyByAhPS7C86jXG-8y9EQGNbMwncmBPl9oc",authDomain:"sf-staff-portal.firebaseapp.com",projectId:"sf-staff-portal",storageBucket:"sf-staff-portal.firebasestorage.app",messagingSenderId:"395019590035",appId:"1:395019590035:web:d7fcccb093b09b9cb67066"};</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="study-data.js?v=24e5902e"></script>
 <script src="study-engine.js?v=c1a66c28"></script>
 <script>
 (function () {
@@ -149,12 +153,66 @@
     var saved = JSON.parse(localStorage.getItem(KEY) || "null");
     if (saved) { state = saved.state || {}; recent = saved.recent || []; idk = saved.idk || {}; lessons = saved.lessons || {}; }
   } catch (e) {}
+  function record() {
+    var keys = Object.keys(idk);
+    if (keys.length > IDK_MAX) keys.slice(0, keys.length - IDK_MAX).forEach(function (k) { delete idk[k]; });
+    return { state: state, recent: recent.slice(-RECENT), idk: idk, lessons: lessons };
+  }
   function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(record())); } catch (e) {}
+    pushSoon();
+  }
+
+  /* ===== THE RECORD TRAVELS (Sam, 2026-10-06) =====================================
+     The person's record lives in the portal's Firestore at board/study-<firstname>,
+     same project and anonymous sign-in as the portal, so it follows them from phone to
+     iPad. localStorage is the cache: the deck works offline and on a slow first load,
+     then merges with the cloud copy when it arrives. Merge rules: per concept the entry
+     answered most recently wins; the "I don't know" and lessons-read sets are unions;
+     the cooldown list is a de-duplicated union. Each person's doc is their own; nothing
+     here reads anyone else's. */
+  var fbDb = null, pushTimer = null, pulled = false;
+  function studyRef() { return fbDb.collection("board").doc("study-" + firstName(me)); }
+  function merge(local, remote) {
+    var out = { state: {}, recent: [], idk: {}, lessons: {} }, seen = {};
+    var ls = local.state || {}, rs = remote.state || {};
+    Object.keys(ls).concat(Object.keys(rs)).forEach(function (k) {
+      var x = ls[k], y = rs[k];
+      out.state[k] = !x ? y : !y ? x : ((y.last || 0) > (x.last || 0) ? y : x);
+    });
+    out.recent = (remote.recent || []).concat(local.recent || [])
+      .filter(function (k) { return seen[k] ? false : (seen[k] = true); }).slice(-RECENT);
+    out.idk = Object.assign({}, remote.idk || {}, local.idk || {});
+    out.lessons = Object.assign({}, remote.lessons || {}, local.lessons || {});
+    return out;
+  }
+  function adopt(r) { state = r.state || {}; recent = r.recent || []; idk = r.idk || {}; lessons = r.lessons || {}; }
+  function pushSoon() {
+    if (!fbDb || !pulled) return;             // never overwrite the cloud copy before reading it
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(function () {
+      var r = record(); r.name = firstName(me); r.updatedAt = Date.now();
+      studyRef().set(r).catch(function () {});
+    }, 1500);
+  }
+  function pullRemote() {
+    studyRef().get().then(function (d) {
+      var remote = d.exists ? (d.data() || {}) : {};
+      adopt(merge(record(), remote));
+      pulled = true;
+      try { localStorage.setItem(KEY, JSON.stringify(record())); } catch (e) {}
+      tally();
+      pushSoon();                            // write the merged record back so both copies agree
+    }).catch(function () { pulled = true; }); // offline or denied: keep working locally
+  }
+  function initSync() {
+    if (!window.firebase || !window.FIREBASE_CONFIG) return;
     try {
-      var keys = Object.keys(idk);
-      if (keys.length > IDK_MAX) keys.slice(0, keys.length - IDK_MAX).forEach(function (k) { delete idk[k]; });
-      localStorage.setItem(KEY, JSON.stringify({ state: state, recent: recent.slice(-RECENT), idk: idk, lessons: lessons }));
-    } catch (e) {}
+      firebase.initializeApp(window.FIREBASE_CONFIG);
+      fbDb = firebase.firestore();
+      firebase.auth().onAuthStateChanged(function (u) { if (u) pullRemote(); });
+      firebase.auth().signInAnonymously().catch(function () {});
+    } catch (e) { fbDb = null; }
   }
 
   var DOMAINS = [["wine", "Wine"], ["somm", "Craft"], ["amaro", "After dinner"],
@@ -352,6 +410,7 @@
     return;
   }
   pool = allConcepts(C, 40);
+  initSync();
   filters(); tally(); next();
 })();
 </script>
