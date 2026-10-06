@@ -488,7 +488,10 @@ const GENERATORS = [
       const all = [...new Set(dishes.flatMap((x) => x.allergens))];
       const a = pick(all, rng);
       const withA = dishes.filter((x) => x.allergens.includes(a) && !obvious(x, a));
-      const without = dishes.filter((x) => !x.allergens.includes(a));
+      // the safe dish must carry OTHER allergens, so its being free of this one is a real
+      // fact and not "olives have nothing in them"; no dessert as the allium-free answer
+      const without = dishes.filter((x) => !x.allergens.includes(a) && x.allergens.length >= 2 &&
+        !(a === "allium" && x.section === "Dessert"));
       const right = pick(without, rng);
       if (!right || withA.length < 3) return null;
       const ch = choices(right.name, withA.map((x) => x.name), rng);
@@ -571,16 +574,16 @@ const GENERATORS = [
     // Reverse of wine.grape: tests the SET rather than one bottle. Producer names.
     id: "wine.grape.set", weight: 2,
     make(c, rng) {
-      const pool = keepers(c).filter((w) => label(w, c));
-      const byGrape = {};
-      for (const w of pool) for (const g of w.grapes) (byGrape[g] ||= []).push(w);
-      const g = pick(Object.keys(byGrape), rng);
-      const right = pick(byGrape[g], rng);
+      // wine first, then one of its grapes — picking the grape first let the five-grape
+      // Etna Bianco answer a third of these cards (2026-10-06 sample)
+      const pool = keepers(c).filter((w) => label(w, c) && w.grapes.length);
+      const right = pick(pool, rng);
+      const g = pick(right.grapes, rng);
       const wrong = pool.filter((w) => !w.grapes.includes(g)).map((w) => label(w, c));
       const ch = choices(label(right, c), wrong, rng);
       if (!ch) return null;
       return {
-        key: `wine.grape.set|${slug(g)}|${right.id}`, ref: { type: "wine", name: right.name }, concept: `wine.grape.${slug(g)}`,
+        key: `wine.grape.set|${right.id}|${slug(g)}`, ref: { type: "wine", name: right.name }, concept: `wine.grape.${slug(g)}`,
         form: "choice", stem: `Which of these is made from ${g}?`, ...ch,
         why: `${right.name} — ${right.grapes.join(", ")}, ${right.region}.`,
       };
