@@ -399,7 +399,12 @@ const GENERATORS = [
       const set = pick(sets, rng);
       const item = pick(set.items, rng);
       const pool = set.choices_from || set.items.map((i) => i.v);
-      const ch = choices(item.v, pool, rng, Math.min(3, pool.length - 1));
+      // A set with choices_from carries a short answer per item (item.a) drawn from that
+      // list; item.v is the explanation. Using item.v as the answer put the explanation
+      // on the face of the card and marked the matching short option wrong (2026-10-06).
+      const answer = set.choices_from ? item.a : item.v;
+      if (!answer) return null;
+      const ch = choices(answer, pool, rng, Math.min(3, pool.length - 1));
       if (!ch) return null;
       return {
         key: `somm.fact|${set.id}|${slug(item.k).slice(0, 40)}`,
