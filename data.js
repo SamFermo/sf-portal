@@ -203,13 +203,18 @@ window.SF = {
       "flags": []
      },
      {
-      "name": "Burrata",
-      "desc": "Swan House Farm heirloom tomatoes, basil, tomato leaf oil, aged balsamic, crostini",
+      "name": "Bruschetta",
+      "desc": "Swan House Farm peppernata, burrata, tomato leaf oil, micro basil",
       "price": "20",
       "raw": false,
-      "pron": "boo-RAH-tah",
-      "story": "Creamy burrata with heirloom tomatoes from Swan House Farm and fresh basil, drizzled with tomato leaf oil and aged balsamic. Crostini on the side for texture.",
+      "pron": "broo-SKET-tah",
+      "story": "Sweet Italian peppernata from Swan House Farm: slow-cooked peppers, bright and soft. Burrata melts into it. Tomato leaf oil and micro basil finish it.",
       "ingredients": [
+       {
+        "term": "Peppernata",
+        "pronunciation": "pep-per-NAH-tah",
+        "note": "A slow-cooked sweet-pepper preparation from Swan House Farm peppers, cooked down soft and bright. The exact makeup beyond the peppers is set by the kitchen; check the manager flag before clearing it for an allergy."
+       },
        {
         "term": "Burrata",
         "pronunciation": "boo-RAH-tah",
@@ -218,62 +223,58 @@ window.SF = {
        {
         "term": "Tomato leaf oil",
         "pronunciation": null,
-        "note": "Made in-house by blending tomato leaves into neutral canola oil and straining it clear, capturing the grassy, green flavor of the plant itself rather than the fruit. Just leaves and oil — no allergens of its own."
-       },
-       {
-        "term": "Aged balsamic",
-        "pronunciation": null,
-        "note": "Balsamic vinegar aged until thick and sweet — cooked grape must and time, nothing else. No allergens of its own."
+        "note": "Made in-house by blending tomato leaves into neutral canola oil and straining it clear, capturing the grassy, green flavor of the plant itself rather than the fruit. Just leaves and oil, no allergens of its own."
        }
       ],
       "allergens": [
        "dairy",
        "gluten"
       ],
-      "canModify": [
-       "gluten"
+      "canModify": [],
+      "allergenNote": "Dairy: the burrata melts into the dish, central and not removable. Gluten: the grilled bread is the base of the bruschetta, not removable. The tomato leaf oil is just tomato leaves and canola oil. UNCONFIRMED: the Swan House peppernata's full composition has not been specified, and a bruschetta base is often rubbed with raw garlic. Do not clear this dish for an allium allergy until the kitchen confirms the peppernata and the bread prep.",
+      "flags": [
+       "Peppernata: composition not specified beyond slow-cooked Swan House sweet peppers; confirm ingredients (onion, garlic, vinegar?) with kitchen before clearing for allium.",
+       "Bruschetta bread: confirm whether the base is rubbed with garlic (allium)."
       ],
-      "allergenNote": "Dairy: the burrata is the dish, not removable. Gluten: crostini come on the side and come off cleanly. The tomato leaf oil is just tomato leaves and canola oil — no allium anywhere on the plate.",
-      "added": "2026-08-22"
+      "added": "2026-10-06"
      },
      {
-      "name": "Grilled Corn Gazpacho",
-      "desc": "grilled corn, tomato, bell pepper, cucumber, onion, champagne vinegar, crème fraîche, red onion agro dolce, micro basil",
-      "price": "15",
+      "name": "Ribollita",
+      "desc": "Corona beans, cabbage, zucchini, torn croutons, pistachio, chili flake",
+      "price": "16",
       "raw": false,
-      "pron": "gahz-PAH-choh",
-      "story": "Grilled corn sweetness anchors this cold soup. Tomato, bell pepper, cucumber, and onion are puréed with champagne vinegar and corn cob stock, finished with olive oil and white pepper. Crème fraîche cools the top, red onion agro dolce adds sharp pickle and bite, and micro basil finishes it.",
+      "pron": "ree-boh-LEE-tah",
+      "story": "Tuscan vegetable soup built on corona beans and cabbage with zucchini. Topped with torn croutons and toasted pistachio. Lightly spicy from chili flake. Fully vegan.",
       "ingredients": [
        {
-        "term": "Gazpacho",
-        "pronunciation": "gahz-PAH-choh",
-        "note": "A cold, blended Spanish soup of vegetables and acid, served chilled. This version leans on grilled corn for sweetness and smoke against the tomato and vinegar."
+        "term": "Ribollita",
+        "pronunciation": "ree-boh-LEE-tah",
+        "note": "A classic Tuscan 'reboiled' soup, traditionally a hearty bean-and-vegetable soup thickened with bread. This version is built on corona beans and cabbage and topped with torn croutons."
        },
        {
-        "term": "Corn cob stock",
+        "term": "Corona beans",
         "pronunciation": null,
-        "note": "A light stock simmered from the stripped corn cobs, deepening the corn flavor without dairy or meat. No allergens of its own."
+        "note": "Large, creamy white Italian heirloom beans, mild and starchy. They give the soup its body."
        },
        {
-        "term": "Crème fraîche",
-        "pronunciation": "krem FRESH",
-        "note": "French cultured cream — thicker and tangier than sour cream, milder than Greek yogurt. Spooned on top for richness and a cool counterpoint to the acid."
-       },
-       {
-        "term": "Agro dolce",
-        "pronunciation": "AH-groh DOHL-cheh",
-        "note": "Italian for sour-sweet: red onion cooked down in butter with vinegar and sugar into a sharp, bright pickle-like garnish. Carries allium and dairy from the butter."
+        "term": "Pistachio",
+        "pronunciation": null,
+        "note": "Toasted pistachio is worked through the dish for richness and crunch. It is a tree nut and, per the kitchen, cannot be removed."
        }
       ],
       "allergens": [
-       "dairy",
-       "allium"
+       "gluten",
+       "nuts"
       ],
       "canModify": [
-       "dairy"
+       "gluten"
       ],
-      "allergenNote": "Naturally gluten-free. Dairy: two places — the crème fraîche and the butter in the red onion agro dolce. Both are garnishes and come off cleanly together for a dairy allergy. Allium: onion is puréed into the base and the agro dolce sits on top — the garnish can come off, the base cannot.",
-      "added": "2026-08-22"
+      "allergenNote": "Tree nuts: the toasted pistachio is integral and, per the kitchen, cannot be removed. Gluten: the torn croutons are a topping and come off cleanly. The manager marked the dish fully vegan, so no dairy or egg. UNCONFIRMED: the soup base has not been spelled out, and a traditional ribollita carries allium in its soffritto (onion and garlic). Do not clear this dish for an allium allergy until the kitchen confirms the base.",
+      "flags": [
+       "Ribollita base: soffritto and stock composition not specified; a traditional base carries allium (onion, garlic). Confirm with kitchen before clearing for allium.",
+       "'Fully vegan' claim: confirm croutons and stock are vegan (no butter, no meat stock) with kitchen."
+      ],
+      "added": "2026-10-06"
      }
     ]
    },
@@ -14340,5 +14341,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1791272862"
+ "build": "1791292783"
 };
