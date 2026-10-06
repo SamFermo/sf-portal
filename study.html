@@ -33,6 +33,8 @@
   button.opt.right{border-color:var(--ok);background:#eef6f1}
   button.opt.wrong{border-color:var(--no);background:#fbefed}
   button.opt.reveal{border-color:var(--ok)}
+  button.opt.idk{color:var(--muted,#6b6257);background:transparent;border-style:dashed;font-size:15px}
+  .verdict.new{color:var(--muted,#6b6257)}
   .verdict{font:600 14px/1.4 ui-sans-serif,system-ui}
   .verdict.y{color:var(--ok)} .verdict.n{color:var(--no)}
   .why{font-size:16px;line-height:1.5;color:#3d3328;border-top:1px solid var(--line);padding-top:13px;margin:0}
@@ -68,7 +70,7 @@
     <b>What this is.</b> A practice deck built from San Fermo's own wine list, menus,
     after-dinner list and service standards. It is for getting sharper, not for assessment —
     nothing here is scored against anyone and there is no comparison between people. Your
-    answers stay on your own device. <a href="./">Back to the portal</a>
+    answers stay on your own device, under your own name. <a href="./">Back to the portal</a>
   </footer>
 </div>
 
@@ -113,26 +115,39 @@
     return;
   }
 
-  var KEY = "sf-study.v1", RECENT = 300;
-  var C = window.SF_STUDY, state = {}, recent = [], pool = [];
-  var session_n = 0, session_right = 0, domain = null, card = null, answered = false;
+  /* Mastery is kept PER PERSON, keyed by the portal sign-in name, so two people on one
+     iPad never share a record. The pre-2026-10-06 single key belonged to Sam (the only
+     user until then) and moves to his name on first load. Still per device: following a
+     person across phones is the Firestore work that comes with the review queue. */
+  var RECENT = 300, IDK_MAX = 2000;
+  var KEY = "sf-study.v1:" + firstName(me);
+  try {
+    if (firstName(me) === "sam" && !localStorage.getItem(KEY) && localStorage.getItem("sf-study.v1")) {
+      localStorage.setItem(KEY, localStorage.getItem("sf-study.v1"));
+      localStorage.removeItem("sf-study.v1");
+    }
+  } catch (e) {}
+  var C = window.SF_STUDY, state = {}, recent = [], pool = [], idk = {};
+  var session_n = 0, session_right = 0, session_new = 0, domain = null, card = null, answered = false;
   // Today's tally lives in sessionStorage so following a link into the portal and
   // pressing Back does not reset it. Mastery itself is in localStorage regardless.
   try {
     var t0 = JSON.parse(sessionStorage.getItem("sf-study.today") || "null");
-    if (t0) { session_n = t0.n || 0; session_right = t0.r || 0; }
+    if (t0) { session_n = t0.n || 0; session_right = t0.r || 0; session_new = t0.w || 0; }
   } catch (e) {}
   function saveToday() {
-    try { sessionStorage.setItem("sf-study.today", JSON.stringify({ n: session_n, r: session_right })); } catch (e) {}
+    try { sessionStorage.setItem("sf-study.today", JSON.stringify({ n: session_n, r: session_right, w: session_new })); } catch (e) {}
   }
 
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || "null");
-    if (saved) { state = saved.state || {}; recent = saved.recent || []; }
+    if (saved) { state = saved.state || {}; recent = saved.recent || []; idk = saved.idk || {}; }
   } catch (e) {}
   function save() {
     try {
-      localStorage.setItem(KEY, JSON.stringify({ state: state, recent: recent.slice(-RECENT) }));
+      var keys = Object.keys(idk);
+      if (keys.length > IDK_MAX) keys.slice(0, keys.length - IDK_MAX).forEach(function (k) { delete idk[k]; });
+      localStorage.setItem(KEY, JSON.stringify({ state: state, recent: recent.slice(-RECENT), idk: idk }));
     } catch (e) {}
   }
 
@@ -141,8 +156,8 @@
 
   function tally() {
     var s = summary(state);
-    el("tally").textContent = session_n
-      ? session_right + "/" + session_n + " today · " + s.seen + " topics"
+    el("tally").textContent = session_n || session_new
+      ? session_right + "/" + session_n + " today" + (session_new ? " · " + session_new + " new" : "") + " · " + s.seen + " topics"
       : s.seen + " topics seen";
   }
 
@@ -174,10 +189,33 @@
       '<div class="opts">' +
       c.choices.map(function (t, i) {
         return '<button class="opt" data-i="' + i + '">' + esc(t) + "</button>";
-      }).join("") + "</div></div>";
+      }).join("") +
+      // "I don't know" is card-specific (Sam 2026-10-06): once you have passed on THIS
+      // question it is review, and the next time it comes round you answer it.
+      (idk[c.key] ? "" : '<button class="opt idk" data-i="idk">I don\u2019t know yet \u2014 show me</button>') +
+      "</div></div>";
     Array.prototype.forEach.call(el("main").querySelectorAll("button.opt"), function (b) {
-      b.addEventListener("click", function () { answer(Number(b.dataset.i)); });
+      b.addEventListener("click", function () {
+        if (b.dataset.i === "idk") dontKnow(); else answer(Number(b.dataset.i));
+      });
     });
+  }
+
+  // Nothing is marked: the concept's record is untouched (an honest "new" must never
+  // read as a miss on the mastery table the exam later weights from), the card goes into
+  // the cooldown like any other, and the hatch is gone for this card from now on.
+  function dontKnow() {
+    if (answered) return;
+    answered = true;
+    var c = card;
+    idk[c.key] = Date.now();
+    recent.push(c.key); recent = recent.slice(-RECENT); save();
+    session_new++; saveToday();
+    Array.prototype.forEach.call(el("main").querySelectorAll("button.opt"), function (b, j) {
+      b.disabled = true;
+      if (j === c.answer) b.classList.add("reveal");
+    });
+    finish(c, '<div class="verdict new">New \u2014 not marked. Next time this one counts.</div>');
   }
 
   function answer(i) {
@@ -192,10 +230,13 @@
       if (j === c.answer) b.classList.add(right ? "right" : "reveal");
       if (j === i && !right) b.classList.add("wrong");
     });
+    finish(c, '<div class="verdict ' + (right ? "y" : "n") + '">' + (right ? "Right" : "Not this time") + "</div>");
+  }
+
+  function finish(c, verdictHTML) {
     var box = el("main").querySelector(".card");
     box.insertAdjacentHTML("beforeend",
-      '<div class="verdict ' + (right ? "y" : "n") + '">' +
-      (right ? "Right" : "Not this time") + "</div>" +
+      verdictHTML +
       '<p class="why">' + esc(c.why) + "</p>" +
       (c.source ? '<p class="src">' + esc(c.source) +
         (c.tier ? " · " + esc(c.tier.toLowerCase()) : "") + "</p>" : "") +
@@ -238,7 +279,7 @@
     if ((e.key === " " || e.key === "Enter") && answered) { e.preventDefault(); next(); }
     var n = Number(e.key);
     if (!answered && n >= 1 && n <= 9) {
-      var b = el("main").querySelectorAll("button.opt")[n - 1];
+      var b = el("main").querySelectorAll("button.opt:not(.idk)")[n - 1];
       if (b) b.click();
     }
   });

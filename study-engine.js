@@ -72,6 +72,15 @@ function summary(state, now = Date.now()) {
 //
 // Every generator returns null rather than inventing anything when the corpus
 // lacks the data. The deck never asks a question the house cannot answer.
+//
+// 2026-10-06 review of 100 drawn cards found three faults this file now guards:
+//   1. The name answered the question ("Where is the Voliero BRUNELLO DI MONTALCINO
+//      from?"). Place, grape and odd-one-out cards now name the PRODUCER only, and
+//      drawCard rejects any card whose right answer shares a word with its stem.
+//   2. Distractors from the wrong shape ("How full do you pour?" / "Checking the
+//      guest likes it"). Somm items carry their own shape-matched wrong answers.
+//   3. The same shape or subject too often. drawCard caps a shape at 2 per 12 cards
+//      and will not reuse a subject within 12 cards.
 
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const pick = (arr, rng) => arr[Math.floor(rng() * arr.length)];
@@ -87,46 +96,128 @@ function shuffle(arr, rng) {
 
 // Build a 4-choice card from one right answer and a pool of wrong ones.
 function choices(right, pool, rng, n = 3) {
-  const wrong = shuffle(pool.filter((x) => x !== right), rng).slice(0, n);
+  const wrong = shuffle([...new Set(pool.filter((x) => x && x !== right))], rng).slice(0, n);
   if (wrong.length < n) return null;
   const all = shuffle([right, ...wrong], rng);
   return { choices: all, answer: all.indexOf(right) };
 }
 
 const keepers = (c) => c.wines.filter((w) => w.status.startsWith("core"));
-const region = (w) => w.region.split(",").pop().trim();
+// "Friuli" and "Friuli-Venezia Giulia" are one place; the data spells it both ways.
+const region = (w) => { const r = w.region.split(",").pop().trim(); return r === "Friuli" ? "Friuli-Venezia Giulia" : r; };
+const clip = (s, n) => (s && s.length > n ? s.slice(0, n).replace(/\s+\S*$/, "") + "…" : s);
+
+// ---- words -------------------------------------------------------------------
+// Tokens that carry no information about the answer. Everything else in a stem
+// or an answer counts when checking for a giveaway.
+const STOP = new Set(("di de del della delle dell the house white red rosé rose orange vino bianco rosso " +
+  "docg doc igt igp dop nv unfiltered " +
+  "which these this that from what where when with does into onto your their guest guests table " +
+  "wine wines glass bottle list pour pours sits sit after dinner flight flights step steps service " +
+  "standard standards made make makes more most less than about half yes only none ever never " +
+  "right wrong three four first next last some have has had been being were they them then " +
+  "would could should will shall must just like look looks want wants spend spends pour pours").split(/\s+/));
+function words(s) {
+  return String(s || "").toLowerCase().replace(/[’']/g, "").split(/[^a-z0-9àèéìòùäöü]+/)
+    .filter((t) => t.length > 3 && !STOP.has(t) && !/^\d+$/.test(t));
+}
+// short words compare on four letters ("amaro"/"amari", "porto"/"port"), longer ones on
+// five, so "months" does not collide with "Montalcino" or "Nere" with "Nerello"
+const stem4 = (t) => t.slice(0, t.length <= 5 ? 4 : 5);
+// A word in the answer that also appears in the stem (or shares a 5-letter stem:
+// "porto"/"port", "amaretto"/"amaro") gives the card away.
+function leaks(stem, answer) {
+  const s = new Set(words(stem).map(stem4));
+  return words(answer).some((t) => s.has(stem4(t)));
+}
+// Blank every distinctive word of `names` out of `text`, so a note can describe a
+// wine without naming it, its grape or its region.
+function redact(text, names) {
+  let out = String(text || "");
+  const toks = new Set(names.flatMap((n) => words(n)));
+  // tokens come apostrophe-free ("dalba"), the text may not ("d'Alba"): allow one between letters
+  for (const t of toks) out = out.replace(new RegExp("\\b" + t.split("").map((ch) => ch.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("[\u2019']?") + "\\w*", "gi"), "—");
+  // "— del —", "— di —": the little words between two blanks say nothing, drop them too
+  out = out.replace(/—(\s+(di|del|della|delle|dei|de|d|la|le|il|lo|dal|dalla|degli|the|of)\s+—)+/gi, "—");
+  return out.replace(/(—\s*){2,}/g, "— ").replace(/—\s*:/g, "—").replace(/—\s*[\u2019']s\b/g, "—");
+}
+
+// ---- producer names ------------------------------------------------------------
+// Italian labels spell out the appellation and often the grape, so a question that
+// prints the whole name is answered by reading it. Strip to the house: everything
+// before the first quoted fantasy name or the first appellation/grape word.
+const APPELLATION = new Set(("langhe barolo barbaresco chianti brunello rosso montalcino soave valpolicella " +
+  "prosecco champagne etna collio fiano avellino amarone lagrein carmignano lambrusco sorbara " +
+  "montepulciano abruzzo vermentino orange vino bianco arneis sauvignon blanc premier cru riserva " +
+  "classico nebbiolo barbera superiore alba brut rosato negroamaro copertino sassella timorasso " +
+  "derthona colli tortonesi terlaner primo grande cuvée rosé casanova doc docg igt nv unfiltered " +
+  "roero dolcetto chardonnay pinot bianco nero grigio franciacorta valtellina alto adige").split(/\s+/));
+function producer(w, c) {
+  const extra = new Set([...(c ? c.wines.flatMap((x) => [...x.grapes, region(x)]) : []).flatMap((s) => words(s))]);
+  let name = w.name.replace(/^house (white|red|prosecco|rosé|rose|sparkling):\s*/i, "");
+  const out = [];
+  for (const tok of name.split(/\s+/)) {
+    if (/^["“‘']/.test(tok)) break;
+    const low = tok.toLowerCase().replace(/[^a-zà-ü.]/g, "");
+    if (APPELLATION.has(low) || extra.has(low)) break;
+    out.push(tok.replace(/,$/, ""));
+    if (/,$/.test(tok)) break;
+  }
+  const p = out.join(" ").trim();
+  // a producer that IS the whole name tells nothing extra; a one-letter stub is junk
+  if (!p || p.length < 4 || p.length >= name.trim().length) return null;
+  return p;
+}
+// Several wines from one house -> say which. "Brigaldara, the white".
+function label(w, c) {
+  const p = producer(w, c);
+  if (!p) return null;
+  const siblings = c.wines.filter((x) => x.id !== w.id && producer(x, c) === p);
+  if (!siblings.length) return p;
+  const sameType = siblings.some((x) => x.type === w.type);
+  return sameType ? `${p} (${w.name.match(/"([^"]+)"/)?.[1] || w.type})` : `${p}, the ${w.type}`;
+}
+
+// Obvious allergens: the name says it. Never ask those.
+const OBVIOUS = { almond: "nuts", burrata: "dairy", cheese: "dairy", baguette: "gluten", bread: "gluten",
+  pasta: "gluten", farfalle: "gluten", mafaldine: "gluten", carbonara: "egg", salmon: "fish", egg: "egg",
+  gelato: "dairy", tiramisu: "dairy" };
+function obvious(dish, allergen) {
+  return words(dish.name).some((t) => Object.keys(OBVIOUS).some((k) => t.startsWith(k) && OBVIOUS[k] === allergen));
+}
 
 // WEIGHT governs how often a generator is drawn. The thin list-facts — is it on
 // the list, by the glass, which costs more — are worth knowing and cheap to answer,
-// which is exactly why they must not dominate. Measured 2026-10-06: they were 42%
-// of the deck. Weight 1 is the baseline; the shallow ones sit below it.
+// which is exactly why they must not dominate. Weight 1 is the baseline; the
+// shallow ones sit at it, the floor scenarios and the house's own notes sit above.
 const GENERATORS = [
   {
-    id: "wine.place", weight: 3,
+    id: "wine.place", weight: 2,
     make(c, rng) {
-      const w = pick(keepers(c), rng);
+      const w = pick(keepers(c).filter((x) => label(x, c)), rng);
+      if (!w) return null;
       const regions = [...new Set(c.wines.map(region))];
       const ch = choices(region(w), regions, rng);
       if (!ch) return null;
       return {
         key: `wine.place|${w.id}`, ref: { type: "wine", name: w.name }, concept: `wine.place.${slug(region(w))}`,
-        form: "choice", stem: `Where is the ${w.name} from?`, ...ch,
+        form: "choice", stem: `${label(w, c)} — where is it from?`, ...ch,
         why: `${w.name} — ${w.region}, ${w.country}.`,
       };
     },
   },
   {
-    id: "wine.grape", weight: 3,
+    id: "wine.grape", weight: 2,
     make(c, rng) {
-      const w = pick(keepers(c).filter((x) => x.grapes.length === 1), rng);
+      const w = pick(keepers(c).filter((x) => x.grapes.length === 1 && label(x, c)), rng);
       if (!w) return null;
       const grapes = [...new Set(c.wines.flatMap((x) => x.grapes))];
       const ch = choices(w.grapes[0], grapes, rng);
       if (!ch) return null;
       return {
         key: `wine.grape|${w.id}`, ref: { type: "wine", name: w.name }, concept: `wine.grape.${slug(w.grapes[0])}`,
-        form: "choice", stem: `What grape is the ${w.name}?`, ...ch,
-        why: `100% ${w.grapes[0]}.`,
+        form: "choice", stem: `What grape is ${label(w, c)} made from?`, ...ch,
+        why: `${w.name} — 100% ${w.grapes[0]}.`,
       };
     },
   },
@@ -166,13 +257,13 @@ const GENERATORS = [
     make(c, rng) {
       const pool = keepers(c).filter((w) => w.bottle);
       const a = pick(pool, rng);
-      const b = pick(pool.filter((w) => w.bottle !== a.bottle), rng);
+      const b = pick(pool.filter((w) => w.bottle !== a.bottle && w.type === a.type), rng);
       if (!b) return null;
       const dearer = a.bottle > b.bottle ? a : b;
       const all = shuffle([a, b], rng);
       return {
         key: `wine.price|${[a.id, b.id].sort().join("|")}`, concept: "wine.econ.price",
-        form: "choice", stem: "Which of these is the more expensive bottle?",
+        form: "choice", stem: `Two ${a.type}s. Which is the more expensive bottle?`,
         choices: all.map((w) => w.name), answer: all.indexOf(dearer),
         why: `${a.name} $${a.bottle}; ${b.name} $${b.bottle}.`,
       };
@@ -188,7 +279,8 @@ const GENERATORS = [
       const same = pool.filter((w) => w.type === target.type && w.bottle <= cap && w.id !== target.id);
       if (!same.length) return null;
       const right = same.reduce((x, y) => (x.bottle > y.bottle ? x : y));
-      const wrong = pool.filter((w) => w.bottle > cap && w.id !== right.id).map((w) => w.name);
+      // wrong answers are over the cap AND never the wine the guest was looking at
+      const wrong = pool.filter((w) => w.bottle > cap && w.id !== right.id && w.id !== target.id).map((w) => w.name);
       const ch = choices(right.name, wrong, rng);
       if (!ch) return null;
       return {
@@ -201,7 +293,7 @@ const GENERATORS = [
     },
   },
   {
-    id: "wine.cost", weight: 2,
+    id: "wine.cost", weight: 1,
     make(c, rng) {
       // Only wines whose cost is markable. The 9 with no cost and the 2 with a
       // cost belonging to a different bottling are taught, never marked.
@@ -233,6 +325,96 @@ const GENERATORS = [
     },
   },
   {
+    // The house's own pour note, producer story or winemaking — the words the
+    // floor sells from — with the wine, its grape and its place blanked out.
+    id: "wine.note", weight: 4,
+    make(c, rng) {
+      const pool = keepers(c).filter((w) => w.pour || w.producer_note || w.winemaking);
+      const w = pick(pool, rng);
+      if (!w) return null;
+      const fields = [["pour", "Which wine is this pour note for?"], ["producer_note", "Whose story is this?"],
+                      ["winemaking", "Which wine is made this way?"]].filter(([f]) => w[f] && w[f].length > 60);
+      const [field, stem] = pick(fields, rng);
+      const hide = [w.name, ...w.grapes, w.region, producer(w, c) || ""];
+      const text = clip(redact(w[field], hide), 230);
+      // same colour as the subject, so the colour words in the note do not decide it
+      const wrong = keepers(c).filter((x) => x.type === w.type && x.id !== w.id).map((x) => x.name);
+      const ch = choices(w.name, wrong.length >= 3 ? wrong : keepers(c).filter((x) => x.id !== w.id).map((x) => x.name), rng);
+      if (!ch) return null;
+      return {
+        key: `wine.note|${w.id}|${field}`, ref: { type: "wine", name: w.name }, concept: `wine.note.${w.id.replace(/^wine:/, "")}`,
+        form: "choice", stem: `${stem} "${text}"`, ...ch,
+        why: `${w.name}. ${clip(w[field], 260)}`,
+      };
+    },
+  },
+  {
+    // The other direction: given the wine, pick its own pour note from among
+    // three other wines' notes of the same colour.
+    id: "wine.note.rev", weight: 2,
+    make(c, rng) {
+      const pool = keepers(c).filter((w) => w.pour && w.pour.length > 60);
+      const w = pick(pool, rng);
+      if (!w) return null;
+      const peers = pool.filter((x) => x.type === w.type && x.id !== w.id);
+      const src = peers.length >= 3 ? peers : pool.filter((x) => x.id !== w.id);
+      const line = (x) => clip(redact(x.pour, [x.name, ...x.grapes, x.region, producer(x, c) || ""]), 150);
+      const ch = choices(line(w), src.map(line), rng);
+      if (!ch) return null;
+      return {
+        key: `wine.note.rev|${w.id}`, ref: { type: "wine", name: w.name }, concept: `wine.note.${w.id.replace(/^wine:/, "")}`,
+        form: "choice", stem: `A guest asks what the ${w.name} is like. Which is our pour note?`, ...ch,
+        why: `${w.name}: ${clip(w.pour, 260)}`,
+      };
+    },
+  },
+  {
+    id: "wine.pron", weight: 2,
+    make(c, rng) {
+      const pool = keepers(c).filter((w) => w.pron && w.pron.length);
+      const w = pick(pool, rng);
+      if (!w) return null;
+      const p = pick(w.pron, rng);
+      const others = pool.filter((x) => x.id !== w.id).flatMap((x) => x.pron).filter((q) => q.term !== p.term).map((q) => q.pron);
+      const ch = choices(p.pron, others, rng);
+      if (!ch) return null;
+      return {
+        key: `wine.pron|${w.id}|${slug(p.term)}`, ref: { type: "wine", name: w.name }, concept: "wine.pronunciation",
+        form: "choice", stem: `How do you say "${p.term}"?`, ...ch,
+        why: `${p.term}: ${p.pron} (${w.name}).`,
+      };
+    },
+  },
+  {
+    // Floor question that ties the list, the price and the pour together.
+    id: "wine.pairing", weight: 3,
+    make(c, rng) {
+      const btg = keepers(c).filter((w) => w.status === "core-glass" && w.glass);
+      const types = [...new Set(btg.map((w) => w.type))].filter((t) => btg.filter((w) => w.type === t).length >= 2);
+      const t = pick(types, rng);
+      if (!t) return null;
+      const ofType = btg.filter((w) => w.type === t).sort((a, b) => a.glass - b.glass);
+      const right = pick(ofType, rng);
+      const cap = right.glass + (rng() < 0.5 ? 0 : 1);
+      // wrong: same colour but over the cap or bottle-only, then other colours by the glass
+      const over = ofType.filter((w) => w.glass > cap).map((w) => w.name);
+      const bottleOnly = keepers(c).filter((w) => w.type === t && w.status === "core-bottle").map((w) => w.name);
+      const other = btg.filter((w) => w.type !== t).map((w) => w.name);
+      const wrongPool = [...over, ...shuffle(bottleOnly, rng).slice(0, 2), ...shuffle(other, rng).slice(0, 1)];
+      // every under-cap pour of this colour would also be right, so keep them out
+      const under = new Set(ofType.filter((w) => w.glass <= cap && w.id !== right.id).map((w) => w.name));
+      const ch = choices(right.name, wrongPool.filter((n) => !under.has(n)), rng);
+      if (!ch) return null;
+      const d = pick(c.dishes.filter((x) => x.section !== "Dessert"), rng);
+      return {
+        key: `wine.pairing|${right.id}|${cap}`, ref: { type: "wine", name: right.name }, concept: "wine.floor.btg",
+        form: "choice",
+        stem: `Table has the ${d ? d.name : "pasta"} and wants a ${t} by the glass, $${cap} or under. What do you pour?`, ...ch,
+        why: `${right.name} is $${right.glass} a glass.${over.length ? ` Over the line: ${ofType.filter((w) => w.glass > cap).map((w) => `${w.name} $${w.glass}`).join(", ")}.` : ""}`,
+      };
+    },
+  },
+  {
     id: "amaro.group", weight: 2,
     make(c, rng) {
       const x = pick(c.after_dinner.filter((a) => a.group), rng);
@@ -247,7 +429,7 @@ const GENERATORS = [
     },
   },
   {
-    id: "amaro.flight", weight: 2,
+    id: "amaro.flight", weight: 1,
     make(c, rng) {
       const f = pick(c.flights, rng);
       const p = pick(f.pours, rng);
@@ -261,23 +443,83 @@ const GENERATORS = [
     },
   },
   {
-    id: "dish.allergen", weight: 3,
+    id: "dish.allergen", weight: 1,
     make(c, rng) {
       const d = pick(c.dishes.filter((x) => x.allergens && x.allergens.length), rng);
       if (!d) return null;
       const all = [...new Set(c.dishes.flatMap((x) => x.allergens || []))];
-      const right = pick(d.allergens, rng);
+      const askable = d.allergens.filter((a) => !obvious(d, a));
+      if (!askable.length) return null;
+      const right = pick(askable, rng);
       const ch = choices(right, all.filter((a) => !d.allergens.includes(a)), rng);
       if (!ch) return null;
       return {
         key: `dish.allergen|${d.id}|${slug(right)}`, ref: { type: "dish", name: d.name }, concept: `food.allergen.${slug(right)}`,
         form: "choice", stem: `Which of these is in the ${d.name}?`, ...ch,
-        why: `${d.name} contains: ${d.allergens.join(", ")}. When the card is silent, ask the chef — never guess.`,
+        why: `${d.name} contains: ${d.allergens.join(", ")}. ${d.allergen_note || "When the card is silent, ask the chef — never guess."}`,
       };
     },
   },
   {
-    id: "service.step", weight: 3,
+    // The question the floor actually gets: can this dish work for this guest?
+    id: "dish.mod", weight: 4,
+    make(c, rng) {
+      const all = [...new Set(c.dishes.flatMap((x) => x.allergens || []))];
+      const d = pick(c.dishes.filter((x) => x.allergens && x.allergen_note), rng);
+      if (!d) return null;
+      const a = pick(all, rng);
+      const inDish = d.allergens.includes(a), mod = (d.can_modify || []).includes(a);
+      if (inDish && obvious(d, a) && !mod) return null;
+      const opts = ["Yes, as is — it isn't in the dish", "Yes — it comes off cleanly", "No — it's the dish"];
+      const answer = !inDish ? 0 : mod ? 1 : 2;
+      return {
+        key: `dish.mod|${d.id}|${slug(a)}`, ref: { type: "dish", name: d.name }, concept: `food.mod.${slug(a)}`,
+        form: "choice", stem: `A guest can't have ${a} and wants the ${d.name}. Can it work?`,
+        choices: opts, answer,
+        why: `${d.name}: ${d.allergens.join(", ")}${d.can_modify && d.can_modify.length ? ` (can drop: ${d.can_modify.join(", ")})` : ""}. ${d.allergen_note}`,
+      };
+    },
+  },
+  {
+    // Which of these can a guest with X have as-is: three that contain it, one that does not.
+    id: "dish.free", weight: 3,
+    make(c, rng) {
+      const dishes = c.dishes.filter((x) => x.allergens);
+      const all = [...new Set(dishes.flatMap((x) => x.allergens))];
+      const a = pick(all, rng);
+      const withA = dishes.filter((x) => x.allergens.includes(a) && !obvious(x, a));
+      const without = dishes.filter((x) => !x.allergens.includes(a));
+      const right = pick(without, rng);
+      if (!right || withA.length < 3) return null;
+      const ch = choices(right.name, withA.map((x) => x.name), rng);
+      if (!ch) return null;
+      return {
+        key: `dish.free|${right.id}|${slug(a)}`, ref: { type: "dish", name: right.name }, concept: `food.allergen.${slug(a)}`,
+        form: "choice", stem: `A guest can't have ${a}. Which of these can they order as it comes?`, ...ch,
+        why: `${right.name} has no ${a}. The others: ${ch.choices.filter((n) => n !== right.name).map((n) => { const x = dishes.find((y) => y.name === n); return `${n} (${x.allergens.join(", ")})`; }).join("; ")}.`,
+      };
+    },
+  },
+  {
+    // The ingredient notes: what a thing on the plate actually is.
+    id: "dish.ingredient", weight: 3,
+    make(c, rng) {
+      const items = c.dishes.flatMap((d) => (d.ingredients || []).filter((i) => i.term && i.note && i.note.length > 40).map((i) => ({ d, i })));
+      const x = pick(items, rng);
+      if (!x) return null;
+      const line = (y) => clip(redact(y.i.note, [y.i.term]), 150);
+      const wrong = items.filter((y) => y.i.term !== x.i.term).map(line);
+      const ch = choices(line(x), wrong, rng);
+      if (!ch) return null;
+      return {
+        key: `dish.ingredient|${x.d.id}|${slug(x.i.term)}`, ref: { type: "dish", name: x.d.name }, concept: "food.ingredients",
+        form: "choice", stem: `On the ${x.d.name} — what is the ${x.i.term}?`, ...ch,
+        why: `${x.i.term}${x.i.pronunciation ? ` (${x.i.pronunciation})` : ""}: ${clip(x.i.note, 260)}`,
+      };
+    },
+  },
+  {
+    id: "service.step", weight: 1,
     make(c, rng) {
       const steps = c.service.steps;
       if (!steps || steps.length < 4) return null;
@@ -292,16 +534,50 @@ const GENERATORS = [
     },
   },
   {
-    // Reverse of wine.grape: tests the SET rather than one bottle.
-    id: "wine.grape.set", weight: 3,
+    // Sequence as it happens on the floor, not as a numbered list.
+    id: "service.next", weight: 3,
     make(c, rng) {
+      const steps = (c.service.steps || []).slice().sort((a, b) => a.n - b.n);
+      if (steps.length < 4) return null;
+      const i = Math.floor(rng() * (steps.length - 1));
+      const s = steps[i], next = steps[i + 1];
+      const ch = choices(next.title, steps.filter((x) => x.n !== s.n).map((x) => x.title), rng);
+      if (!ch) return null;
+      return {
+        key: `service.next|${s.n}`, ref: { type: "standards", name: "service" }, concept: "service.steps",
+        form: "choice", stem: `"${s.title}" is done. What comes next?`, ...ch,
+        why: `Step ${next.n}, ${next.title}: ${next.detail}`,
+      };
+    },
+  },
+  {
+    // The step's own detail, which is where the standard actually lives.
+    id: "service.detail", weight: 2,
+    make(c, rng) {
+      const steps = (c.service.steps || []).filter((s) => s.detail && s.detail.length > 60);
+      if (steps.length < 4) return null;
+      const s = pick(steps, rng);
+      const ch = choices(s.title, steps.map((x) => x.title), rng);
+      if (!ch) return null;
+      const text = clip(redact(s.detail, [s.title]), 220);
+      return {
+        key: `service.detail|${s.n}`, ref: { type: "standards", name: "service" }, concept: "service.steps",
+        form: "choice", stem: `Which step is this? "${text}"`, ...ch,
+        why: `${s.title}: ${s.detail}`,
+      };
+    },
+  },
+  {
+    // Reverse of wine.grape: tests the SET rather than one bottle. Producer names.
+    id: "wine.grape.set", weight: 2,
+    make(c, rng) {
+      const pool = keepers(c).filter((w) => label(w, c));
       const byGrape = {};
-      for (const w of keepers(c)) for (const g of w.grapes) (byGrape[g] ||= []).push(w);
-      const multi = Object.keys(byGrape).filter((g) => byGrape[g].length >= 1);
-      const g = pick(multi, rng);
+      for (const w of pool) for (const g of w.grapes) (byGrape[g] ||= []).push(w);
+      const g = pick(Object.keys(byGrape), rng);
       const right = pick(byGrape[g], rng);
-      const wrong = keepers(c).filter((w) => !w.grapes.includes(g)).map((w) => w.name);
-      const ch = choices(right.name, wrong, rng);
+      const wrong = pool.filter((w) => !w.grapes.includes(g)).map((w) => label(w, c));
+      const ch = choices(label(right, c), wrong, rng);
       if (!ch) return null;
       return {
         key: `wine.grape.set|${slug(g)}|${right.id}`, ref: { type: "wine", name: right.name }, concept: `wine.grape.${slug(g)}`,
@@ -313,7 +589,7 @@ const GENERATORS = [
   {
     // One producer, more than one wine on the list. Brigaldara (Soave + Valpolicella),
     // Ruggeri Corsini (Matot + Armujan), La Spinetta, Terre Nere.
-    id: "wine.producer", weight: 2,
+    id: "wine.producer", weight: 1,
     make(c, rng) {
       const houses = ["Brigaldara","Ruggeri Corsini","La Spinetta","Terre Nere","Viberti"];
       const h = pick(houses, rng);
@@ -341,7 +617,8 @@ const GENERATORS = [
       if (!x) return null;
       const ch = choices(x.name, c.after_dinner.map((a) => a.name), rng);
       if (!ch) return null;
-      const note = x.note.replace(new RegExp(x.name.split(" ")[0], "gi"), "—");
+      // blank the name, the category word and the style word ("amaretto", "fernet", "Islay")
+      const note = clip(redact(x.note, [x.name, x.group || "", "amaretto fernet grappa calvados scotch islay bourbon rye port sherry vermouth"]), 230);
       return {
         key: `amaro.note|${x.id}`, ref: { type: "amaro", name: x.name }, concept: `amaro.note.${slug(x.group || "other")}`,
         form: "choice", stem: `Which one is this? "${note}"`, ...ch,
@@ -350,23 +627,25 @@ const GENERATORS = [
     },
   },
   {
-    // The odd one out. Forces the whole set into view rather than one fact.
-    id: "wine.region.odd", weight: 3,
+    // The odd one out, by producer. Forces the whole set into view rather than one fact.
+    id: "wine.region.odd", weight: 2,
     make(c, rng) {
+      const pool = keepers(c).filter((w) => label(w, c));
       const byRegion = {};
-      for (const w of keepers(c)) (byRegion[region(w)] ||= []).push(w);
+      for (const w of pool) (byRegion[region(w)] ||= []).push(w);
       const big = Object.keys(byRegion).filter((r) => byRegion[r].length >= 3);
       if (!big.length) return null;
       const r = pick(big, rng);
-      const odd = pick(keepers(c).filter((w) => region(w) !== r), rng);
-      const three = shuffle(byRegion[r], rng).slice(0, 3).map((w) => w.name);
+      const three = shuffle(byRegion[r], rng).slice(0, 3);
+      // the odd one shares the country: a French house among three Italian ones is too easy
+      const odd = pick(pool.filter((w) => region(w) !== r && w.country === three[0]?.country), rng);
       if (three.length < 3 || !odd) return null;
-      const all = shuffle([...three, odd.name], rng);
+      const all = shuffle([...three, odd].map((w) => label(w, c)), rng);
       return {
         key: `wine.region.odd|${slug(r)}|${odd.id}`, ref: { type: "wine", name: odd.name }, concept: `wine.place.${slug(r)}`,
-        form: "choice", stem: `Three of these are from ${r}. Which is not?`,
-        choices: all, answer: all.indexOf(odd.name),
-        why: `${odd.name} is ${odd.region}. The others are ${r}.`,
+        form: "choice", stem: `Three of these houses are in ${r}. Which is not?`,
+        choices: all, answer: all.indexOf(label(odd, c)),
+        why: `${odd.name} is ${odd.region}. The others: ${three.map((w) => w.name).join("; ")}.`,
       };
     },
   },
@@ -379,7 +658,7 @@ const GENERATORS = [
       const s = pick(st, rng);
       const ch = choices(s.title, st.map((x) => x.title), rng, Math.min(2, st.length - 1));
       if (!ch) return null;
-      const body = s.body.length > 180 ? s.body.slice(0, 180) + "…" : s.body;
+      const body = clip(redact(s.body, [s.title]), 180);
       return {
         key: `service.standard|${slug(s.title)}`, ref: { type: "standards", name: "service" }, concept: "service.standards",
         form: "choice", stem: `Which standard is this? "${body}"`, ...ch,
@@ -389,22 +668,19 @@ const GENERATORS = [
   },
   {
     // The researched craft layer: faults, temperature, decanting, bottle mechanics,
-    // the luxury standards, Washington law, floor sales. Distractors come from
-    // sibling facts in the same set, so a wrong answer is always a real fact about
-    // the same subject rather than a throwaway.
-    id: "somm.fact", weight: 6,
+    // the luxury standards, Washington law, floor sales. An item that carries its own
+    // `wrong` list uses it (shape-matched: numbers against numbers, yes/no against
+    // yes/no); otherwise the distractors are sibling facts from the same set.
+    id: "somm.fact", weight: 5,
     make(c, rng) {
       const sets = c.somm?.sets || [];
       if (!sets.length) return null;
       const set = pick(sets, rng);
       const item = pick(set.items, rng);
-      const pool = set.choices_from || set.items.map((i) => i.v);
-      // A set with choices_from carries a short answer per item (item.a) drawn from that
-      // list; item.v is the explanation. Using item.v as the answer put the explanation
-      // on the face of the card and marked the matching short option wrong (2026-10-06).
       const answer = set.choices_from ? item.a : item.v;
       if (!answer) return null;
-      const ch = choices(answer, pool, rng, Math.min(3, pool.length - 1));
+      const pool = item.wrong || set.choices_from || set.items.map((i) => i.v);
+      const ch = choices(answer, pool, rng, Math.min(3, pool.length - (pool.includes(answer) ? 1 : 0)));
       if (!ch) return null;
       return {
         key: `somm.fact|${set.id}|${slug(item.k).slice(0, 40)}`,
@@ -418,7 +694,7 @@ const GENERATORS = [
     },
   },
   {
-    id: "somm.econ", weight: 2,
+    id: "somm.econ", weight: 1,
     make(c, rng) {
       const pool = c.somm?.economics || [];
       if (!pool.length) return null;
@@ -433,26 +709,38 @@ const GENERATORS = [
   },
 ];
 
-// Draw a card for a concept if we can, otherwise any card. Honours a cooldown
-// on card identity so the concept returns while the question does not.
 const BAG = GENERATORS.flatMap((g) => Array(g.weight ?? 1).fill(g));
+
+// Variety guards, read off the recent card keys so the portal needs no new state:
+// key = "<shape>|<subject>|…". A shape may appear at most SHAPE_CAP times in the
+// last WINDOW cards, and a subject not at all.
+const WINDOW = 12, SHAPE_CAP = 2;
+const shapeOf = (k) => String(k).split("|")[0];
+const subjectOf = (k) => String(k).split("|").slice(0, 2).join("|");
+function tooSoon(card, recent) {
+  const win = recent.slice(-WINDOW);
+  if (win.filter((k) => shapeOf(k) === shapeOf(card.key)).length >= SHAPE_CAP) return true;
+  return win.some((k) => subjectOf(k) === subjectOf(card.key));
+}
 
 // Generate, then select. Draw a weighted batch of candidates and keep the one whose
 // concept is wanted. The previous version filtered generators BEFORE drawing, by
 // probing each with a random card and comparing concepts — which almost never matched
 // for a generator whose concept depends on the wine it happened to pick, so targeting
 // quietly collapsed to uniform random and the single-concept generators won.
-function drawCard(corpus, { concept = null, recent = [], rng = Math.random, tries = 40 } = {}) {
-  let fallback = null;
+function drawCard(corpus, { concept = null, recent = [], rng = Math.random, tries = 60 } = {}) {
+  let fallback = null, loose = null;
   for (let i = 0; i < tries; i++) {
     const g = BAG[Math.floor(rng() * BAG.length)];
     const card = g.make(corpus, rng);
     if (!card || recent.includes(card.key)) continue;
+    if (leaks(card.stem, card.choices[card.answer])) continue;   // the stem answers it
     const out = { ...card, gen: g.id };
+    if (tooSoon(card, recent)) { loose ||= out; continue; }      // variety, unless nothing else
     if (!concept || card.concept === concept) return out;
     fallback ||= out;
   }
-  return fallback;
+  return fallback || loose;
 }
 
 function allConcepts(corpus, samples = 600, rng = Math.random) {
