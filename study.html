@@ -84,7 +84,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-<script src="study-data.js?v=24e5902e"></script>
+<script src="study-data.js?v=b62a7bd8"></script>
 <script src="study-engine.js?v=c1a66c28"></script>
 <script>
 (function () {
@@ -153,13 +153,15 @@
     var saved = JSON.parse(localStorage.getItem(KEY) || "null");
     if (saved) { state = saved.state || {}; recent = saved.recent || []; idk = saved.idk || {}; lessons = saved.lessons || {}; }
   } catch (e) {}
-  function record() {
+  // Named snapshot(), not record(): the engine exports record(concept, right) and a
+  // same-named helper here shadowed it and made the saved blob circular (2026-10-06).
+  function snapshot() {
     var keys = Object.keys(idk);
     if (keys.length > IDK_MAX) keys.slice(0, keys.length - IDK_MAX).forEach(function (k) { delete idk[k]; });
     return { state: state, recent: recent.slice(-RECENT), idk: idk, lessons: lessons };
   }
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(record())); } catch (e) {}
+    try { localStorage.setItem(KEY, JSON.stringify(snapshot())); } catch (e) {}
     pushSoon();
   }
 
@@ -191,16 +193,16 @@
     if (!fbDb || !pulled) return;             // never overwrite the cloud copy before reading it
     clearTimeout(pushTimer);
     pushTimer = setTimeout(function () {
-      var r = record(); r.name = firstName(me); r.updatedAt = Date.now();
+      var r = snapshot(); r.name = firstName(me); r.updatedAt = Date.now();
       studyRef().set(r).catch(function () {});
     }, 1500);
   }
   function pullRemote() {
     studyRef().get().then(function (d) {
       var remote = d.exists ? (d.data() || {}) : {};
-      adopt(merge(record(), remote));
+      adopt(merge(snapshot(), remote));
       pulled = true;
-      try { localStorage.setItem(KEY, JSON.stringify(record())); } catch (e) {}
+      try { localStorage.setItem(KEY, JSON.stringify(snapshot())); } catch (e) {}
       tally();
       pushSoon();                            // write the merged record back so both copies agree
     }).catch(function () { pulled = true; }); // offline or denied: keep working locally
