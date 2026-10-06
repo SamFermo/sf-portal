@@ -2056,7 +2056,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791312356';   // stamped by build-data.py at every deploy
+const BUILD='1791315821';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3440,12 +3440,12 @@ function dishCardHTML(baseIt){
   const mgrFlags=(it._flags!==undefined)?it._flags:(it.flags||[]);
   const flagBadge=(isMgr()&&mgrFlags&&mgrFlags.length)?`<span class="flag-badge" title="${mgrFlags.length} component${mgrFlags.length>1?'s':''} to confirm">${mgrFlags.length}</span>`:'';
   const editBtn=isMgr()?`<button class="edit-btn" onclick="event.stopPropagation();openEditModal('${esc(origName).replace(/'/g,"\\'")}')">&#9998;</button>`:'';
-  const editedChip=(it._edited&&isMgr())?'<span class="edited-chip">edited</span>':'';   // managers only (Sam 10/2)
+  const editedChip=((it._edited&&isMgr())?'<span class="edited-chip">edited</span>':'')+((it._qov&&foCan())?'<span class="bo-tag bo-sw">edited live</span>':'');   // managers only (Sam 10/2); live tag editors only
   let h=`<div class="card ${rich?'expandable':''}" id="dcard-${fcSlug(origName)}" ${rich?'onclick="this.classList.toggle(\'expanded\')"':''}>
     <div class="card-head"><div class="row-between">
       <span class="dish-name serif">${isNew(it)?newBadge():''}${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}${editedChip}${flagBadge}${editBtn}</span>
       <span class="dish-price serif">${esc(it.price)}</span></div>
-      <div class="dish-desc serif">${esc(it.desc)}</div>`;
+      <div class="dish-desc serif">${esc(it.desc)}</div>${(foCan()&&!specialsAll().some(s=>s.name===origName))?`<div class="cke-act"><button class="bo-btn" style="margin-left:0" onclick="event.stopPropagation();foeOpen('${boSlug(origName)}')">Edit</button></div>`:''}`;
   h+=allergenChips(it);
   if(!rich&&it.allergenNote)h+=`<div class="alg-note serif">${esc(it.allergenNote)}</div>`;
   if(rich) h+=`<div class="expand-hint">Tap for the story &amp; ingredients ›</div>`;
@@ -3668,17 +3668,18 @@ function specRow(specs){
     return `<div class="spec"><div class="spec-label">${esc(s.label)}</div><div class="dots">${dots}</div><div class="spec-range">${esc(specWord(s))}</div></div>`;
   }).join('')+`</div>`;
 }
-function wineCardHTML(w,matchHTML){
-  const idx=SF.wines.indexOf(w), price=(w.glass?w.glass+' / ':'')+w.bottle;
+function wineCardHTML(w0,matchHTML){
+  const w=wEff(w0);
+  const idx=SF.wines.indexOf(w0), price=(w.glass?w.glass+' / ':'')+w.bottle;
   const wrpl=replacedByLive(w.name);
   if(wrpl){return `<div class="card replaced" id="wcard-${idx}" data-wine="${idx}"><div class="card-head"><span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span><div class="row-between"><span class="wine-name serif">${esc(w.name)}</span><span class="wine-price serif">${esc(price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(wrpl)}</div></div></div>`;}
   const can=!!(w.pour||(w.specs&&w.specs.length)||(w.has_notes&&(w.producer||w.winemaking))||(w.pronguide&&w.pronguide.length));   // compact cards (10/2): notes live behind the tap
   return `<div class="card ${can?'expandable':''}" id="wcard-${idx}" data-wine="${idx}">
       <div class="card-head" ${can?`onclick="toggleWine(${idx})"`:''}>
         <span class="wine-type ${WTYPE[w.type]||'wt-white'}">${esc(w.type)}</span>
-        <div class="row-between"><span class="wine-name serif">${isNew(w)?newBadge():''}${esc(w.name)} ${w.vintage?`<span class="wine-vintage">${esc(w.vintage)}</span>`:''}</span><span class="wine-price serif">${esc(price)}</span></div>
+        <div class="row-between"><span class="wine-name serif">${isNew(w)?newBadge():''}${esc(w.name)} ${w.vintage?`<span class="wine-vintage">${esc(w.vintage)}</span>`:''}${(w.__ov&&weCan())?'<span class="bo-tag bo-sw">edited live</span>':''}</span><span class="wine-price serif">${esc(price)}</span></div>
         ${w.region?`<div class="wine-origin">${esc(w.region)}${w.grapes?' · '+esc(w.grapes):''}</div>`:''}
-        ${can?`<div class="expand-hint">Tap for tasting notes &amp; producer ›</div>`:''}
+        ${can?`<div class="expand-hint">Tap for tasting notes &amp; producer ›</div>`:''}${weCan()?`<div class="cke-act"><button class="bo-btn" style="margin-left:0" onclick="event.stopPropagation();weOpen('${boSlug(w.name)}')">Edit</button></div>`:''}
       </div>
       ${can?`<div class="card-details">
         ${w.pour?`<div class="wine-pour serif">${esc(w.pour)}</div>`:''}
@@ -3832,7 +3833,7 @@ function wMatch(cr){
     for(var j=0;j<avoidS.length;j++){ if(wCritOn(avoidS[j],w)===true){dropped++;return;} }
     for(var k=0;k<cr.text.avoid.length;k++){ if(hay.indexOf(cr.text.avoid[k])>=0){dropped++;return;} }
     if(wantT.length&&!wantT.some(function(c){return wCritOn(c,w)===true;})){dropped++;return;}
-    if(cr.glass&&!w.glass){dropped++;return;}
+    if(cr.glass&&!wEff(w).glass){dropped++;return;}
     if(live.length&&!live.every(function(t){return hay.indexOf(t)>=0;})){dropped++;return;}
 
     var hits=[],misses=[],blind=false;
@@ -4176,20 +4177,20 @@ function ckpSave(id,edited){
    board/barOverlay {pours:{"fi_pi":{name,origin,note,by,at}}, out:{"ad:slug"|"fp:fi_pi":{by,at}}}.
    Swap replaces one flight pour (the flight blurb hides while any pour is swapped). 86 strikes an after-dinner
    item or a flight slot for the whole floor. Restore / Reset put the printed-menu data back. */
-let BO={pours:{},out:{},cocktails:{},loaded:false,sel:null,err:false,unsub:null};
+let BO={pours:{},out:{},cocktails:{},wines:{},loaded:false,sel:null,err:false,unsub:null};
 function boRef(){ return fbDb.collection('board').doc('barOverlay'); }
 function boCan(){ return !!me&&!DEMO&&(isMgr()||me.name===CKP_WHO); }
 function boSlug(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
-function boRefresh(){ try{ if($('ftBar')&&typeof renderBar==='function')renderBar(); }catch(e){} }
+function boRefresh(){ try{ if($('ftBar')&&typeof renderBar==='function')renderBar(); }catch(e){} try{ if($('ftWine')&&typeof renderWine==='function')renderWine(); }catch(e){} }
 function startBarOverlaySync(){
   if(!(fbReady&&fbDb))return; if(BO.unsub)BO.unsub();
-  BO.unsub=boRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; BO.pours=v.pours||{}; BO.out=v.out||{}; BO.cocktails=v.cocktails||{}; BO.loaded=true; boRefresh(); },function(){});
+  BO.unsub=boRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; BO.pours=v.pours||{}; BO.out=v.out||{}; BO.cocktails=v.cocktails||{}; BO.wines=v.wines||{}; BO.loaded=true; boRefresh(); },function(){});
 }
 function boWrite(patch){
-  ['pours','out','cocktails'].forEach(function(f){ Object.keys(patch[f]||{}).forEach(function(k){ if(patch[f][k]===null)delete BO[f][k]; else BO[f][k]=patch[f][k]; }); });
+  ['pours','out','cocktails','wines'].forEach(function(f){ Object.keys(patch[f]||{}).forEach(function(k){ if(patch[f][k]===null)delete BO[f][k]; else BO[f][k]=patch[f][k]; }); });
   BO.err=false; boRefresh();
   if(!(fbReady&&fbDb)){ BO.err=true; boRefresh(); return; }
-  const w={}; ['pours','out','cocktails'].forEach(function(f){ if(!patch[f])return; w[f]={}; Object.keys(patch[f]).forEach(function(k){ w[f][k]=patch[f][k]===null?firebase.firestore.FieldValue.delete():patch[f][k]; }); });
+  const w={}; ['pours','out','cocktails','wines'].forEach(function(f){ if(!patch[f])return; w[f]={}; Object.keys(patch[f]).forEach(function(k){ w[f][k]=patch[f][k]===null?firebase.firestore.FieldValue.delete():patch[f][k]; }); });
   boRef().set(w,{merge:true}).catch(function(){ BO.err=true; boRefresh(); });
 }
 function boStamp(extra){ return Object.assign({by:me?me.name:'',at:Date.now()},extra||{}); }
@@ -4240,6 +4241,44 @@ function ckEff(c){
   const ing=Array.isArray(o.ingredients)&&o.ingredients.length?o.ingredients.map(function(i){ return Object.assign({},i,{ov:true}); }):c.ingredients;
   return Object.assign({},c,{build:o.build||c.build,price:o.price||c.price,ingredients:ing,__ov:true});
 }
+/* WINE quick edit (2026-10-06, Sam). Name-gated, not manager-gated: Sam, Adrian, Sully.
+   board/barOverlay.wines {slug:{glass,bottle,vintage,by,at}}. Name, region, notes stay as printed. */
+const WINE_QE=['Sam West','Adrian Bravo','Sully Baker'];
+function weCan(){ return !!me&&!DEMO&&WINE_QE.indexOf(String(me.name||'').trim())>=0; }
+function wEff(w){
+  const o=BO.wines&&BO.wines[boSlug(w.name)]; if(!o)return w;
+  const r=Object.assign({},w,{__ov:true});
+  ['glass','bottle','vintage'].forEach(function(k){ if(o[k]!==undefined&&o[k]!==null)r[k]=o[k]; });
+  return r;
+}
+let WE=null;
+function weOpen(slug){
+  if(!weCan())return;
+  const w=(SF.wines||[]).find(function(x){ return boSlug(x.name)===slug; }); if(!w)return;
+  const e=wEff(w);
+  WE={slug:slug,name:w.name,glass:e.glass||'',bottle:e.bottle||'',vintage:e.vintage||''};
+  weRender(); $('weModal').style.display='flex';
+}
+function weClose(){ const m=$('weModal'); if(m)m.style.display='none'; WE=null; }
+function weRender(){
+  if(!WE)return;
+  let m=$('weModal'); if(!m){ m=document.createElement('div'); m.id='weModal'; m.className='comp-modal'; document.body.appendChild(m); }
+  m.innerHTML='<div class="ann-card ckp-card"><div class="ann-title serif">Edit '+esc(WE.name)+'</div>'
+   +'<div class="ann-line">Everyone sees the change right away. Name, region and notes stay as printed.</div>'
+   +'<div class="cke-lbl">Glass price</div><input class="bo-in" style="margin-top:4px" inputmode="decimal" placeholder="Blank = bottle only" value="'+esc(WE.glass)+'" oninput="WE.glass=this.value" autocomplete="off">'
+   +'<div class="cke-lbl">Bottle price</div><input class="bo-in" style="margin-top:4px" inputmode="decimal" value="'+esc(WE.bottle)+'" oninput="WE.bottle=this.value" autocomplete="off">'
+   +'<div class="cke-lbl">Vintage</div><input class="bo-in" style="margin-top:4px" inputmode="numeric" placeholder="Blank = NV" value="'+esc(WE.vintage)+'" oninput="WE.vintage=this.value" autocomplete="off">'
+   +'<div class="ckp-btns"><button class="to-go" onclick="weSave()">Save</button><button class="to-cancel" onclick="weClose()">Cancel</button></div>'
+   +((BO.wines&&BO.wines[WE.slug])?'<div class="ckp-btns"><button class="to-cancel" onclick="weRestore()">Restore the printed card</button></div>':'')
+   +'</div>';
+}
+function weSave(){
+  if(!WE||!weCan())return;
+  const glass=String(WE.glass||'').trim().replace(/^\$/,''), bottle=String(WE.bottle||'').trim().replace(/^\$/,''), vintage=String(WE.vintage||'').trim();
+  if(!bottle)return;
+  const o={}; o[WE.slug]=boStamp({glass:glass,bottle:bottle,vintage:vintage}); boWrite({wines:o}); weClose();
+}
+function weRestore(){ if(!WE||!weCan())return; const o={}; o[WE.slug]=null; boWrite({wines:o}); weClose(); }
 let CKE=null;
 function ckeOpen(slug){
   if(!boCan())return;
@@ -9355,8 +9394,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startBarOverlaySync(); startMenuPubSync(); startSpecialsSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startBarOverlaySync(); startSpecialsSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startBarOverlaySync(); startMenuOverlaySync(); startMenuPubSync(); startSpecialsSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startBarOverlaySync(); startMenuOverlaySync(); startSpecialsSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -10289,6 +10328,80 @@ function getEditedDish(it){
   return merged;
 }
 function dishHasEdit(name){return !!MEDITS[editDocId(name)];}
+/* FOOD quick edit (2026-10-06, Sam). Name-gated: Sam, Jose, Chris. No Remy step, no allergen
+   fields (use the manager pencil for those). board/menuOverlay {dishes:{slug:{desc,price,
+   ingredients:[{term,pronunciation,note}],by,at}}}, applied AFTER the menu-edits merge so it
+   wins at render; a pencil save (commitEditRec) clears the dish's quick overlay so the two
+   paths never fight. Restore deletes the overlay and the card falls back to pencil/base. */
+const FOOD_QE=['Sam West','Jose Agundez','Chris Hoey'];
+function foCan(){ return !!me&&!DEMO&&FOOD_QE.indexOf(String(me.name||'').trim())>=0; }
+let FO={dishes:{},loaded:false,err:false,unsub:null};
+function foRef(){ return fbDb.collection('board').doc('menuOverlay'); }
+function foRefresh(){ try{ renderFresh(); }catch(e){} }
+function startMenuOverlaySync(){
+  if(!(fbReady&&fbDb))return; if(FO.unsub)FO.unsub();
+  FO.unsub=foRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; FO.dishes=v.dishes||{}; FO.loaded=true; foRefresh(); },function(){});
+}
+function foWrite(patch){
+  Object.keys(patch||{}).forEach(function(k){ if(patch[k]===null)delete FO.dishes[k]; else FO.dishes[k]=patch[k]; });
+  FO.err=false; foRefresh();
+  if(!(fbReady&&fbDb)){ FO.err=true; foRefresh(); return; }
+  const w={dishes:{}}; Object.keys(patch||{}).forEach(function(k){ w.dishes[k]=patch[k]===null?firebase.firestore.FieldValue.delete():patch[k]; });
+  foRef().set(w,{merge:true}).catch(function(){ FO.err=true; foRefresh(); });
+}
+function foEff(it){
+  const o=FO.dishes&&FO.dishes[boSlug(it._originalName||it.name)]; if(!o)return it;
+  const r=Object.assign({},it,{_qov:true});
+  if(o.desc!=null)r.desc=o.desc; if(o.price!=null)r.price=o.price;
+  if(Array.isArray(o.ingredients))r.ingredients=o.ingredients;
+  return r;
+}
+const getEditedDish0=getEditedDish;
+getEditedDish=function(it){ return foEff(getEditedDish0(it)); };
+const FOE_ASK='Not described yet. Ask the kitchen what this is.';
+let FOE=null;
+function foeOpen(slug){
+  if(!foCan())return;
+  let d=null; SF.menu.food.forEach(function(sec){ sec.items.forEach(function(it){ if(boSlug(it.name)===slug)d=it; }); });
+  if(!d)SF.menu.desserts.forEach(function(it){ if(boSlug(it.name)===slug)d=it; });
+  if(!d)return;
+  const e=getEditedDish(d);
+  FOE={slug:slug,name:d.name,price:e.price||'',desc:e.desc||'',
+    rows:(e.ingredients||[]).map(function(g){ return {term:g.term||'',pronunciation:g.pronunciation||'',note:(g.note===FOE_ASK?'':(g.note||''))}; })};
+  foeRender(); $('foeModal').style.display='flex';
+}
+function foeClose(){ const m=$('foeModal'); if(m)m.style.display='none'; FOE=null; }
+function foeRender(){
+  if(!FOE)return;
+  let m=$('foeModal'); if(!m){ m=document.createElement('div'); m.id='foeModal'; m.className='comp-modal'; document.body.appendChild(m); }
+  let h='<div class="ann-card ckp-card"><div class="ann-title serif">Edit '+esc(FOE.name)+'</div>'
+   +'<div class="ann-line">Everyone sees the change right away. Allergens do not change here; use the pencil for those.</div>'
+   +'<div class="cke-lbl">Price</div><input class="bo-in" style="margin-top:4px" inputmode="decimal" value="'+esc(FOE.price)+'" oninput="FOE.price=this.value" autocomplete="off">'
+   +'<div class="cke-lbl">Description</div><textarea class="bo-in" style="margin-top:4px" rows="2" oninput="FOE.desc=this.value">'+esc(FOE.desc)+'</textarea>'
+   +'<div class="cke-lbl">Ingredients to know</div>';
+  FOE.rows.forEach(function(r,i){
+    h+='<div class="cke-row"><input class="bo-in" style="margin-top:4px" placeholder="Ingredient" value="'+esc(r.term)+'" oninput="FOE.rows['+i+'].term=this.value" autocomplete="off">'
+      +'<textarea class="bo-in" rows="2" placeholder="What it is, one line the floor can say" oninput="FOE.rows['+i+'].note=this.value">'+esc(r.note)+'</textarea>'
+      +'<button class="bo-btn cke-rm" style="margin-left:0" onclick="foeRm('+i+')">Remove</button></div>';
+  });
+  h+='<div class="ckp-btns"><button class="to-cancel" onclick="foeAdd()">+ Add ingredient</button></div>'
+   +'<div class="bo-hint">Leave a note blank if you are not sure what it is. The card will tell the floor to ask the kitchen.</div>'
+   +'<div class="ckp-btns"><button class="to-go" onclick="foeSave()">Save</button><button class="to-cancel" onclick="foeClose()">Cancel</button></div>'
+   +((FO.dishes&&FO.dishes[FOE.slug])?'<div class="ckp-btns"><button class="to-cancel" onclick="foeRestore()">Restore the printed card</button></div>':'')
+   +'</div>';
+  m.innerHTML=h;
+}
+function foeRm(i){ if(!FOE)return; FOE.rows.splice(i,1); foeRender(); }
+function foeAdd(){ if(!FOE)return; FOE.rows.push({term:'',pronunciation:'',note:''}); foeRender(); }
+function foeSave(){
+  if(!FOE||!foCan())return;
+  const price=String(FOE.price||'').trim().replace(/^\$/,''), desc=String(FOE.desc||'').trim();
+  if(!price||!desc)return;
+  const ing=[]; FOE.rows.forEach(function(r){ const t=String(r.term||'').trim(); if(!t)return;
+    const o={term:t,note:String(r.note||'').trim()||FOE_ASK}; if(r.pronunciation)o.pronunciation=r.pronunciation; ing.push(o); });
+  const p={}; p[FOE.slug]=boStamp({desc:desc,price:price,ingredients:ing}); foWrite(p); foeClose();
+}
+function foeRestore(){ if(!FOE||!foCan())return; const p={}; p[FOE.slug]=null; foWrite(p); foeClose(); }
 
 /* ── PUBLISH MENU TO WEBSITE ─────────────────────────────────────────────────
    Snapshots the SETTLED menu — the data.js base with menu-edits overlays applied
@@ -10482,6 +10595,7 @@ async function saveEdit(){
 function publishEdit(){if(editPolished){var r=editPolished;editPolished=null;commitEditRec(r);}}
 function commitEditRec(rec){
   var id=editDocId(rec.originalName);
+  try{ var _qs=boSlug(rec.originalName); if(FO.dishes&&FO.dishes[_qs]){ var _qp={}; _qp[_qs]=null; foWrite(_qp); } }catch(e){}
   MEDITS[id]=rec;renderFresh();
   if(fbReady&&fbDb){fbDb.collection('menu-edits').doc(id).set(rec).catch(function(){meditsLsSet();});}else{meditsLsSet();}
   var btn=$('em-save-btn');if(btn){btn.disabled=false;btn.textContent='Save & Polish';btn.onclick=saveEdit;}
