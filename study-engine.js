@@ -107,6 +107,17 @@ const keepers = (c) => c.wines.filter((w) => w.status.startsWith("core"));
 const region = (w) => { const r = w.region.split(",").pop().trim(); return r === "Friuli" ? "Friuli-Venezia Giulia" : r; };
 const clip = (s, n) => (s && s.length > n ? s.slice(0, n).replace(/\s+\S*$/, "") + "…" : s);
 
+// ---- teaching notes ------------------------------------------------------------
+// corpus.teach carries a one-line note per grape and per place (sources/teach.json).
+// A card's "why" ends with the note for its subject, so the answer connects to the
+// grape's structure or the place's logic rather than restating the label. Sam,
+// 2026-10-06: "understand wine from the ground up, with our bottles as examples."
+function teach(c, kind, name) {
+  const n = c.teach && c.teach[kind] && c.teach[kind][name];
+  return n && n.note ? " " + n.note : "";
+}
+const spec = (w, label) => { const s = (w.specs || []).find((x) => x.label === label); return s ? s.rating : null; };
+
 // ---- words -------------------------------------------------------------------
 // Tokens that carry no information about the answer. Everything else in a stem
 // or an answer counts when checking for a giveaway.
@@ -152,8 +163,16 @@ const APPELLATION = new Set(("langhe barolo barbaresco chianti brunello rosso mo
   "classico nebbiolo barbera superiore alba brut rosato negroamaro copertino sassella timorasso " +
   "derthona colli tortonesi terlaner primo grande cuvée rosé casanova doc docg igt nv unfiltered " +
   "roero dolcetto chardonnay pinot bianco nero grigio franciacorta valtellina alto adige").split(/\s+/));
+// Memoised per corpus: label() asks for every wine's producer for every card, and the
+// grape/region word set is the same every time (the test suite went to 90 s without this).
+const PROD_CACHE = new WeakMap();
 function producer(w, c) {
-  const extra = new Set([...(c ? c.wines.flatMap((x) => [...x.grapes, region(x)]) : []).flatMap((s) => words(s))]);
+  let cache = c && PROD_CACHE.get(c);
+  if (c && !cache) { cache = { extra: null, by: new Map() }; PROD_CACHE.set(c, cache); }
+  if (cache && cache.by.has(w.id)) return cache.by.get(w.id);
+  const extra = cache
+    ? (cache.extra ||= new Set(c.wines.flatMap((x) => [...x.grapes, region(x)]).flatMap((s) => words(s))))
+    : new Set();
   let name = w.name.replace(/^house (white|red|prosecco|rosé|rose|sparkling):\s*/i, "");
   const out = [];
   for (const tok of name.split(/\s+/)) {
@@ -165,8 +184,9 @@ function producer(w, c) {
   }
   const p = out.join(" ").trim();
   // a producer that IS the whole name tells nothing extra; a one-letter stub is junk
-  if (!p || p.length < 4 || p.length >= name.trim().length) return null;
-  return p;
+  const result = (!p || p.length < 4 || p.length >= name.trim().length) ? null : p;
+  if (cache) cache.by.set(w.id, result);
+  return result;
 }
 // Several wines from one house -> say which. "Brigaldara, the white".
 function label(w, c) {
@@ -202,7 +222,7 @@ const GENERATORS = [
       return {
         key: `wine.place|${w.id}`, ref: { type: "wine", name: w.name }, concept: `wine.place.${slug(region(w))}`,
         form: "choice", stem: `${label(w, c)} — where is it from?`, ...ch,
-        why: `${w.name} — ${w.region}, ${w.country}.`,
+        why: `${w.name} — ${w.region}, ${w.country}.` + teach(c, "places", region(w)),
       };
     },
   },
@@ -217,7 +237,7 @@ const GENERATORS = [
       return {
         key: `wine.grape|${w.id}`, ref: { type: "wine", name: w.name }, concept: `wine.grape.${slug(w.grapes[0])}`,
         form: "choice", stem: `What grape is ${label(w, c)} made from?`, ...ch,
-        why: `${w.name} — 100% ${w.grapes[0]}.`,
+        why: `${w.name} — 100% ${w.grapes[0]}.` + teach(c, "grapes", w.grapes[0]),
       };
     },
   },
@@ -288,7 +308,7 @@ const GENERATORS = [
         form: "choice",
         stem: `A guest likes the look of the ${target.name} at $${target.bottle} but wants to spend about half that. What do you pour?`,
         ...ch,
-        why: `${right.name} at $${right.bottle} is the closest ${right.type} under $${cap}.`,
+        why: `${right.name} at $${right.bottle} is the closest ${right.type} under $${cap}.` + teach(c, "grapes", right.grapes[0]),
       };
     },
   },
@@ -344,7 +364,7 @@ const GENERATORS = [
       return {
         key: `wine.note|${w.id}|${field}`, ref: { type: "wine", name: w.name }, concept: `wine.note.${w.id.replace(/^wine:/, "")}`,
         form: "choice", stem: `${stem} "${text}"`, ...ch,
-        why: `${w.name}. ${clip(w[field], 260)}`,
+        why: `${w.name}. ${clip(w[field], 220)}` + teach(c, "grapes", w.grapes[0]),
       };
     },
   },
@@ -411,6 +431,52 @@ const GENERATORS = [
         form: "choice",
         stem: `Table has the ${d ? d.name : "pasta"} and wants a ${t} by the glass, $${cap} or under. What do you pour?`, ...ch,
         why: `${right.name} is $${right.glass} a glass.${over.length ? ` Over the line: ${ofType.filter((w) => w.glass > cap).map((w) => `${w.name} $${w.glass}`).join(", ")}.` : ""}`,
+      };
+    },
+  },
+  {
+    // Reasoning from structure: the portal's scorecards (body, acidity, tannin). A card
+    // you can get right by thinking about the grape rather than remembering the bottle.
+    id: "wine.structure", weight: 3,
+    make(c, rng) {
+      const axis = pick(["Acidity", "Tannins", "Body"], rng);
+      const pool = keepers(c).filter((w) => spec(w, axis) !== null);
+      const a = pick(pool, rng);
+      if (!a) return null;
+      const b = pick(pool.filter((w) => w.type === a.type && w.id !== a.id && Math.abs(spec(w, axis) - spec(a, axis)) >= 1), rng);
+      if (!b) return null;
+      const right = spec(a, axis) > spec(b, axis) ? a : b, other = right === a ? b : a;
+      const all = shuffle([a, b], rng);
+      const word = axis === "Tannins" ? "more tannic" : axis === "Acidity" ? "higher in acid" : "fuller-bodied";
+      return {
+        key: `wine.structure|${right.id}|${slug(axis)}|${other.id}`, ref: { type: "wine", name: right.name },
+        concept: `wine.structure.${slug(axis)}`, form: "choice",
+        stem: `Two ${a.type}s. Which is ${word}, and what in the grape tells you?`,
+        choices: all.map((w) => w.name), answer: all.indexOf(right),
+        why: `${right.name} (${right.grapes[0]}) scores ${spec(right, axis)}/5 on ${axis.toLowerCase()}; ${other.name} (${other.grapes[0]}) ${spec(other, axis)}/5.` + teach(c, "grapes", right.grapes[0]),
+      };
+    },
+  },
+  {
+    // "Same family, lighter": the substitution a sommelier actually makes.
+    id: "wine.lighter", weight: 2,
+    make(c, rng) {
+      const pool = keepers(c).filter((w) => spec(w, "Body") !== null);
+      const target = pick(pool.filter((w) => spec(w, "Body") >= 4), rng);
+      if (!target) return null;
+      const shares = (w) => w.grapes.some((g) => target.grapes.includes(g));
+      const lighter = pool.filter((w) => w.id !== target.id && w.type === target.type && shares(w) && spec(w, "Body") < spec(target, "Body"));
+      const right = pick(lighter, rng);
+      if (!right) return null;
+      const g = right.grapes.find((x) => target.grapes.includes(x));
+      const wrong = pool.filter((w) => w.id !== target.id && w.id !== right.id && !shares(w)).map((w) => w.name);
+      const ch = choices(right.name, wrong, rng);
+      if (!ch) return null;
+      return {
+        key: `wine.lighter|${target.id}|${right.id}`, ref: { type: "wine", name: right.name }, concept: `wine.grape.${slug(g)}`,
+        form: "choice",
+        stem: `A guest loved the ${target.name} and wants the same family, but lighter. What do you pour?`, ...ch,
+        why: `Same grape — ${g}. ${right.name} is body ${spec(right, "Body")}/5 against ${spec(target, "Body")}/5, and $${right.bottle} against $${target.bottle}.` + teach(c, "grapes", g),
       };
     },
   },
@@ -585,7 +651,7 @@ const GENERATORS = [
       return {
         key: `wine.grape.set|${right.id}|${slug(g)}`, ref: { type: "wine", name: right.name }, concept: `wine.grape.${slug(g)}`,
         form: "choice", stem: `Which of these is made from ${g}?`, ...ch,
-        why: `${right.name} — ${right.grapes.join(", ")}, ${right.region}.`,
+        why: `${right.name} — ${right.grapes.join(", ")}, ${right.region}.` + teach(c, "grapes", g),
       };
     },
   },
@@ -648,7 +714,7 @@ const GENERATORS = [
         key: `wine.region.odd|${slug(r)}|${odd.id}`, ref: { type: "wine", name: odd.name }, concept: `wine.place.${slug(r)}`,
         form: "choice", stem: `Three of these houses are in ${r}. Which is not?`,
         choices: all, answer: all.indexOf(label(odd, c)),
-        why: `${odd.name} is ${odd.region}. The others: ${three.map((w) => w.name).join("; ")}.`,
+        why: `${odd.name} is ${odd.region}. The others: ${three.map((w) => w.name).join("; ")}.` + teach(c, "places", region(odd)),
       };
     },
   },
@@ -714,6 +780,41 @@ const GENERATORS = [
 
 const BAG = GENERATORS.flatMap((g) => Array(g.weight ?? 1).fill(g));
 
+// ---- lessons -------------------------------------------------------------------
+// A lesson is a card that asks nothing: one principle in a few lines, from the course
+// units (corpus.lessons, built from Courses/<course>/units/*.md), followed by cards that
+// apply it. Lessons are not drawn at random: the page calls pickLesson when it is time
+// for one, and it returns the earliest unseen lesson that touches the concepts in play.
+const prefixOf = (concept, prefix) => concept === prefix || concept.startsWith(prefix + ".") || concept.startsWith(prefix);
+// The lesson whose FIRST concern is this concept wins over one that merely mentions it
+// (an "I don't know" on Nebbiolo wants the Nebbiolo lesson, not the decanting one).
+function lessonFor(corpus, concept, seen = {}) {
+  let best = null, rank = Infinity;
+  for (const l of corpus.lessons || []) {
+    if (seen[l.id]) continue;
+    const i = l.applies.findIndex((p) => prefixOf(concept, p));
+    if (i >= 0 && i < rank) { rank = i; best = l; }
+  }
+  return best;
+}
+function pickLesson(corpus, { seen = {}, concepts = null } = {}) {
+  const ls = (corpus.lessons || []).filter((l) => !seen[l.id]);
+  if (!ls.length) return null;
+  const fits = concepts ? ls.filter((l) => concepts.some((k) => l.applies.some((p) => prefixOf(k, p)))) : ls;
+  return (fits.length ? fits : ls)[0];
+}
+function lessonCard(l) {
+  return {
+    key: `lesson|${l.id}`, concept: `lesson.${l.id}`, form: "lesson", gen: "lesson",
+    stem: l.title, body: l.body, applies: l.applies, refs: l.refs || [], unit: l.unit,
+    tier: l.tier, source: l.source,
+  };
+}
+// Concepts a lesson's follow-up cards should target, out of the live pool.
+function appliesTo(lesson, concepts) {
+  return concepts.filter((k) => lesson.applies.some((p) => prefixOf(k, p)));
+}
+
 // Variety guards, read off the recent card keys so the portal needs no new state:
 // key = "<shape>|<subject>|…". A shape may appear at most SHAPE_CAP times in the
 // last WINDOW cards, and a subject not at all.
@@ -731,10 +832,40 @@ function tooSoon(card, recent) {
 // probing each with a random card and comparing concepts — which almost never matched
 // for a generator whose concept depends on the wine it happened to pick, so targeting
 // quietly collapsed to uniform random and the single-concept generators won.
-function drawCard(corpus, { concept = null, recent = [], rng = Math.random, tries = 60 } = {}) {
+// Which generators can produce a concept family. With a concept named, the first
+// two-thirds of the tries draw from these only — a specific wine's note concept is a
+// 1-in-23 draw from one generator, hopeless from the whole bag.
+const FAMILY = [
+  ["wine.note.", ["wine.note", "wine.note.rev"]],
+  ["wine.place.", ["wine.place", "wine.region.odd"]],
+  ["wine.grape.", ["wine.grape", "wine.grape.set", "wine.lighter"]],
+  ["wine.structure.", ["wine.structure"]],
+  ["wine.list.", ["wine.onlist", "wine.btg", "wine.phaseout"]],
+  ["wine.econ.", ["wine.price", "wine.cost", "somm.econ"]],
+  ["wine.floor.", ["wine.substitute", "wine.pairing"]],
+  ["wine.producer.", ["wine.producer"]],
+  ["wine.pronunciation", ["wine.pron"]],
+  ["amaro.", ["amaro.group", "amaro.flight", "amaro.note"]],
+  ["food.", ["dish.allergen", "dish.mod", "dish.free", "dish.ingredient"]],
+  ["service.steps", ["service.step", "service.next", "service.detail"]],
+  ["service.standards", ["service.standard"]],
+  ["service.", ["somm.fact"]],
+  ["somm.", ["somm.fact"]],
+];
+const byId = Object.fromEntries(GENERATORS.map((g) => [g.id, g]));
+function familyBag(concept) {
+  const f = FAMILY.find(([p]) => concept.startsWith(p));
+  if (!f) return null;
+  return f[1].map((id) => byId[id]).filter(Boolean).flatMap((g) => Array(g.weight ?? 1).fill(g));
+}
+
+function drawCard(corpus, { concept = null, recent = [], rng = Math.random, tries = null } = {}) {
+  tries = tries || (concept ? 160 : 60);   // a named concept is worth looking harder for
+  const fam = concept ? familyBag(concept) : null;
   let fallback = null, loose = null;
   for (let i = 0; i < tries; i++) {
-    const g = BAG[Math.floor(rng() * BAG.length)];
+    const bag = fam && fam.length && i < tries * 2 / 3 ? fam : BAG;
+    const g = bag[Math.floor(rng() * bag.length)];
     const card = g.make(corpus, rng);
     if (!card || recent.includes(card.key)) continue;
     if (leaks(card.stem, card.choices[card.answer])) continue;   // the stem answers it

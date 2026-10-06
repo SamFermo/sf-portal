@@ -35,6 +35,11 @@
   button.opt.reveal{border-color:var(--ok)}
   button.opt.idk{color:var(--muted,#6b6257);background:transparent;border-style:dashed;font-size:15px}
   .verdict.new{color:var(--muted,#6b6257)}
+  .card.lesson .tag{color:var(--ok)}
+  .lesson-body{font-size:17px;line-height:1.55;margin:0;color:var(--ink)}
+  .lesson-refs{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0}
+  .lesson-refs a{font:500 14px/1.3 ui-sans-serif,system-ui;color:var(--gold);text-decoration:none}
+  .lesson-refs a:hover{text-decoration:underline}
   .verdict{font:600 14px/1.4 ui-sans-serif,system-ui}
   .verdict.y{color:var(--ok)} .verdict.n{color:var(--no)}
   .why{font-size:16px;line-height:1.5;color:#3d3328;border-top:1px solid var(--line);padding-top:13px;margin:0}
@@ -68,7 +73,8 @@
   <div class="hint" id="hint" hidden>Tap an answer. Swipe up or press space for the next card.</div>
   <footer>
     <b>What this is.</b> A practice deck built from San Fermo's own wine list, menus,
-    after-dinner list and service standards. It is for getting sharper, not for assessment —
+    after-dinner list and service standards, with short lessons from the Boothby wine course
+    between the cards. It is for getting sharper, not for assessment —
     nothing here is scored against anyone and there is no comparison between people. Your
     answers stay on your own device, under your own name. <a href="./">Back to the portal</a>
   </footer>
@@ -127,7 +133,11 @@
       localStorage.removeItem("sf-study.v1");
     }
   } catch (e) {}
-  var C = window.SF_STUDY, state = {}, recent = [], pool = [], idk = {};
+  var C = window.SF_STUDY, state = {}, recent = [], pool = [], idk = {}, lessons = {};
+  // Lessons: one every LESSON_EVERY cards while unseen ones remain; the FOLLOW cards
+  // after a lesson target the concepts it teaches. A lesson "I don't know" points at
+  // comes next. Sam, 2026-10-06: teach, then exercise — the Boothby shape at card scale.
+  var LESSON_EVERY = 8, FOLLOW = 3, sinceLesson = LESSON_EVERY, follow = [], queued = null;
   var session_n = 0, session_right = 0, session_new = 0, domain = null, card = null, answered = false;
   // Today's tally lives in sessionStorage so following a link into the portal and
   // pressing Back does not reset it. Mastery itself is in localStorage regardless.
@@ -141,13 +151,13 @@
 
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || "null");
-    if (saved) { state = saved.state || {}; recent = saved.recent || []; idk = saved.idk || {}; }
+    if (saved) { state = saved.state || {}; recent = saved.recent || []; idk = saved.idk || {}; lessons = saved.lessons || {}; }
   } catch (e) {}
   function save() {
     try {
       var keys = Object.keys(idk);
       if (keys.length > IDK_MAX) keys.slice(0, keys.length - IDK_MAX).forEach(function (k) { delete idk[k]; });
-      localStorage.setItem(KEY, JSON.stringify({ state: state, recent: recent.slice(-RECENT), idk: idk }));
+      localStorage.setItem(KEY, JSON.stringify({ state: state, recent: recent.slice(-RECENT), idk: idk, lessons: lessons }));
     } catch (e) {}
   }
 
@@ -156,22 +166,60 @@
 
   function tally() {
     var s = summary(state);
-    el("tally").textContent = session_n || session_new
+    var nl = Object.keys(lessons).length, total = (C.lessons || []).length;
+    el("tally").textContent = (session_n || session_new
       ? session_right + "/" + session_n + " today" + (session_new ? " · " + session_new + " new" : "") + " · " + s.seen + " topics"
-      : s.seen + " topics seen";
+      : s.seen + " topics seen") + (total ? " · " + nl + "/" + total + " lessons" : "");
   }
 
+  function inDomain(k) { return !domain || k.indexOf(domain) === 0; }
+  function lessonInDomain(l) {
+    return !domain || l.applies.some(function (p) { return p.indexOf(domain) === 0; });
+  }
   function next() {
     answered = false;
-    var c = null;
+    var c = null, p = pool.filter(inDomain);
+    // 1. a lesson "I don't know" asked for, or the next unseen lesson when it is time
+    var l = queued;
+    queued = null;
+    if (!l && sinceLesson >= LESSON_EVERY) {
+      l = pickLesson(C, { seen: lessons, concepts: p });
+      if (l && !lessonInDomain(l)) l = null;
+    }
+    if (l) { card = lessonCard(l); renderLesson(); return; }
+    // 2. after a lesson, draw from the concepts it taught
+    var targets = follow.length ? p.filter(function (k) { return follow.indexOf(k) >= 0; }) : [];
     for (var i = 0; i < 25; i++) {
-      var p = domain ? pool.filter(function (k) { return k.indexOf(domain) === 0; }) : pool;
-      c = drawCard(C, { concept: pickConcept(p, state), recent: recent });
-      if (c && (!domain || c.concept.indexOf(domain) === 0)) break;
+      var from = targets.length ? targets : p;
+      c = drawCard(C, { concept: pickConcept(from, state), recent: recent });
+      if (c && inDomain(c.concept)) break;
       c = null;
     }
     if (!c) c = drawCard(C, { recent: recent });
+    if (follow.length) { if (--followLeft <= 0) follow = []; }
+    sinceLesson++;
     card = c; render();
+  }
+  var followLeft = 0;
+
+  function renderLesson() {
+    var l = card;
+    el("main").innerHTML =
+      '<div class="card lesson"><div class="tag">Lesson ' + esc(l.key.split("|")[1].slice(1)) + ' · read</div>' +
+      '<p class="stem">' + esc(l.stem) + "</p>" +
+      '<p class="lesson-body">' + esc(l.body) + "</p>" +
+      (l.refs.length ? '<p class="lesson-refs">' + l.refs.map(function (r) {
+        return '<a href="./#wine/' + encodeURIComponent(r.name) + '">' + esc(r.name) + " \u2192</a>";
+      }).join("") + "</p>" : "") +
+      (l.source ? '<p class="src">' + esc(l.source) + (l.tier ? " \u00b7 " + esc(String(l.tier).toLowerCase()) : "") + "</p>" : "") +
+      '<button class="next" id="nextbtn">Got it \u2014 try it</button></div>';
+    el("nextbtn").addEventListener("click", function () {
+      lessons[l.key.split("|")[1]] = Date.now();
+      follow = appliesTo({ applies: l.applies }, pool); followLeft = FOLLOW;
+      sinceLesson = 0; save(); answered = true; next();
+    });
+    answered = false;
+    tally();
   }
 
   function esc(t) {
@@ -215,7 +263,10 @@
       b.disabled = true;
       if (j === c.answer) b.classList.add("reveal");
     });
-    finish(c, '<div class="verdict new">New \u2014 not marked. Next time this one counts.</div>');
+    var l = lessonFor(C, c.concept, lessons);
+    if (l) queued = l;
+    finish(c, '<div class="verdict new">New \u2014 not marked. ' +
+      (l ? 'The lesson behind it is next.' : 'Next time this one counts.') + '</div>');
   }
 
   function answer(i) {
