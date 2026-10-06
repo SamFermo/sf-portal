@@ -80,8 +80,8 @@
   </footer>
 </div>
 
-<script src="study-data.js"></script>
-<script src="study-engine.js"></script>
+<script src="study-data.js?v=b0cbfbbe"></script>
+<script src="study-engine.js?v=c1a66c28"></script>
 <script>
 (function () {
   "use strict";
@@ -207,7 +207,7 @@
     el("main").innerHTML =
       '<div class="card lesson"><div class="tag">Lesson ' + esc(l.key.split("|")[1].slice(1)) + ' · read</div>' +
       '<p class="stem">' + esc(l.stem) + "</p>" +
-      '<p class="lesson-body">' + esc(l.body) + "</p>" +
+      '<p class="lesson-body">' + esc(l.body).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>") + "</p>" +
       (l.refs.length ? '<p class="lesson-refs">' + l.refs.map(function (r) {
         return '<a href="./#wine/' + encodeURIComponent(r.name) + '">' + esc(r.name) + " \u2192</a>";
       }).join("") + "</p>" : "") +
