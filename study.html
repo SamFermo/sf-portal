@@ -80,7 +80,7 @@
   </footer>
 </div>
 
-<script src="study-data.js?v=b0cbfbbe"></script>
+<script src="study-data.js?v=6f84d947"></script>
 <script src="study-engine.js?v=c1a66c28"></script>
 <script>
 (function () {
@@ -126,13 +126,9 @@
      user until then) and moves to his name on first load. Still per device: following a
      person across phones is the Firestore work that comes with the review queue. */
   var RECENT = 300, IDK_MAX = 2000;
-  var KEY = "sf-study.v1:" + firstName(me);
-  try {
-    if (firstName(me) === "sam" && !localStorage.getItem(KEY) && localStorage.getItem("sf-study.v1")) {
-      localStorage.setItem(KEY, localStorage.getItem("sf-study.v1"));
-      localStorage.removeItem("sf-study.v1");
-    }
-  } catch (e) {}
+  // v2 (2026-10-06): Sam asked for a clean start for both of them once the lessons
+  // shipped, so the record key moved and the v1 records are left behind untouched.
+  var KEY = "sf-study.v2:" + firstName(me);
   var C = window.SF_STUDY, state = {}, recent = [], pool = [], idk = {}, lessons = {};
   // Lessons: one every LESSON_EVERY cards while unseen ones remain; the FOLLOW cards
   // after a lesson target the concepts it teaches. A lesson "I don't know" points at
