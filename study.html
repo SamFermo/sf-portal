@@ -283,12 +283,20 @@
       if (b) b.click();
     }
   });
-  var touchY = null;
-  document.addEventListener("touchstart", function (e) { touchY = e.touches[0].clientY; }, { passive: true });
+  // Swipe up = next card, but only when the swipe did not scroll the page. Reading a
+  // long explanation on a phone IS an upward swipe, and it was advancing the deck
+  // (Sam, 2026-10-06). If the page moved, it was a scroll; swipe again at the bottom,
+  // or tap Next.
+  var touchY = null, touchScroll = 0;
+  document.addEventListener("touchstart", function (e) {
+    touchY = e.touches[0].clientY; touchScroll = window.scrollY;
+  }, { passive: true });
   document.addEventListener("touchend", function (e) {
     if (touchY === null || !answered) return;
-    if (touchY - e.changedTouches[0].clientY > 60) next();
+    var swiped = touchY - e.changedTouches[0].clientY > 60;
+    var scrolled = Math.abs(window.scrollY - touchScroll) > 4;
     touchY = null;
+    if (swiped && !scrolled) next();
   }, { passive: true });
 
   if (!C) {
