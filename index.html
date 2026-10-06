@@ -2056,7 +2056,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791158965';   // stamped by build-data.py at every deploy
+const BUILD='1791253517';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2311,6 +2311,7 @@ function renderHome(){
   // An odd card count leaves one card alone on its row: center it, same look as the orphan rule.
   if(!isInvestor()){ const sc=std.map(stdCardHTML); if(sc.length%2) sc[sc.length-1]=sc[sc.length-1].replace('class="home-card"','class="home-card home-card-solo"'); html += sc.join(''); }
   if(!isInvestor() && typeof wiCanTab==='function' && wiCanTab()) html += wiCardHTML();   // full width (Sam 9/30)
+  if(!isInvestor() && typeof studyCanSee==='function' && studyCanSee()) html += studyCardHTML();   // Study deck (Sam 10/6)
   if(mgr && !isInvestor()) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
   $('homeGrid').innerHTML=html;
   glanceCardWeather();
@@ -4315,6 +4316,17 @@ let WI={doc:null,loaded:false,unsub:null,revel:null,revelAt:0,revelErr:false,fil
 /* Who sees Wine Inventory (tab, home card, edits): every manager, plus the wine team by first
    name, same convention as SRV_VIEWERS. Sam 2026-09-29: Adrian, Katie, Tim and Sully. */
 const WI_VIEWERS=['sam','adrian','katie','tim','sully'];
+/* Who sees the Study deck. Sam 2026-10-06: him and Sully only while it settles.
+   Unlike WI_VIEWERS this does NOT grant every manager — that is deliberate, not an
+   oversight. study.html enforces the same list on its own; this is only the door. */
+const STUDY_VIEWERS=['sam','sully'];
+function studyCanSee(){ if(!me)return false; if(typeof isInvestor==='function'&&isInvestor())return false;
+  return STUDY_VIEWERS.indexOf(String(me.name||'').trim().split(/\s+/)[0].toLowerCase())>=0; }
+function studyCardHTML(){
+  return `<a class="home-card home-card-wide" href="study.html" style="text-decoration:none">
+    <div class="glance-card-top"><div class="glance-card-head"><span class="hc-icon">◉</span><span class="hc-title">Study</span></div></div>
+    <div class="hc-sub hc-sub-wide">Practice cards on the list, the menu and the standards</div></a>`;
+}
 function wiCanTab(){ if(!me)return false; if(typeof isInvestor==='function'&&isInvestor())return false;
   if(me.admin||me.mgr)return true;
   return WI_VIEWERS.indexOf(String(me.name||'').trim().split(/\s+/)[0].toLowerCase())>=0; }

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Study — San Fermo</title>
+<style>
+  :root{
+    color-scheme:dark;
+    --bg:#15120f; --card:#faf6ee; --ink:#241d16; --line:#e4dac7;
+    --gold:#9a7b43; --ok:#2f6f4f; --no:#9c3b2f; --dim:#8d7f6d;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--card);
+       font:16px/1.5 ui-serif,Georgia,"Iowan Old Style",serif;overscroll-behavior:none}
+  .wrap{max-width:620px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;
+        padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px))}
+  header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:4px 2px 14px}
+  h1{font-size:20px;margin:0;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .tally{font:500 13px/1 ui-sans-serif,system-ui;color:var(--dim);font-variant-numeric:tabular-nums}
+  .card{background:var(--card);color:var(--ink);border-radius:18px;padding:22px 20px 18px;
+        box-shadow:0 10px 36px rgba(0,0,0,.42);display:flex;flex-direction:column;gap:16px}
+  .tag{font:600 11px/1 ui-sans-serif,system-ui;letter-spacing:.13em;text-transform:uppercase;color:var(--gold)}
+  .stem{font-size:21px;line-height:1.35;margin:0}
+  .opts{display:flex;flex-direction:column;gap:9px}
+  button.opt{font:17px/1.35 ui-serif,Georgia,serif;text-align:left;color:var(--ink);background:#fff;
+             border:1.5px solid var(--line);border-radius:12px;padding:13px 15px;cursor:pointer;
+             transition:border-color .12s,background .12s}
+  button.opt:hover:not(:disabled){border-color:var(--gold)}
+  button.opt:disabled{cursor:default}
+  button.opt.right{border-color:var(--ok);background:#eef6f1}
+  button.opt.wrong{border-color:var(--no);background:#fbefed}
+  button.opt.reveal{border-color:var(--ok)}
+  .verdict{font:600 14px/1.4 ui-sans-serif,system-ui}
+  .verdict.y{color:var(--ok)} .verdict.n{color:var(--no)}
+  .why{font-size:16px;line-height:1.5;color:#3d3328;border-top:1px solid var(--line);padding-top:13px;margin:0}
+  .src{font:500 12px/1.4 ui-sans-serif,system-ui;color:#7a6b58;margin:0}
+  .next{font:600 15px/1 ui-sans-serif,system-ui;background:var(--ink);color:var(--card);
+        border:0;border-radius:12px;padding:15px;cursor:pointer;width:100%}
+  .filters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 2px 0}
+  .filters button{font:600 11px/1 ui-sans-serif,system-ui;letter-spacing:.09em;text-transform:uppercase;
+                  background:transparent;color:var(--dim);border:1px solid #3a3129;border-radius:999px;
+                  padding:7px 11px;cursor:pointer}
+  .filters button[aria-pressed="true"]{color:var(--bg);background:var(--gold);border-color:var(--gold)}
+  .hint{font:12px/1 ui-sans-serif,system-ui;color:#6b5f50;text-align:center;padding-top:10px}
+  footer{margin-top:auto;padding:22px 4px 10px;font:13px/1.55 ui-sans-serif,system-ui;color:#7c6e5d}
+  footer b{color:#9d8d78;font-weight:600}
+  footer a{color:var(--gold)}
+  .gate{background:var(--card);color:var(--ink);border-radius:18px;padding:24px 20px;
+        display:flex;flex-direction:column;gap:12px}
+  .gate h2{margin:0;font-size:20px}
+  .gate p{margin:0;font-size:16px;line-height:1.5}
+  .gate a{color:#7a5f2e;font-weight:600}
+  @media (max-width:420px){ .stem{font-size:19px} .card{padding:18px 16px 15px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>Study</h1><div class="tally" id="tally"></div></header>
+  <div id="main"><div class="card"><p class="stem">Loading…</p></div></div>
+  <div class="filters" id="filters" hidden></div>
+  <div class="hint" id="hint" hidden>Tap an answer. Swipe up or press space for the next card.</div>
+  <footer>
+    <b>What this is.</b> A practice deck built from San Fermo's own wine list, menus,
+    after-dinner list and service standards. It is for getting sharper, not for assessment —
+    nothing here is scored against anyone and there is no comparison between people. Your
+    answers stay on your own device. <a href="./">Back to the portal</a>
+  </footer>
+</div>
+
+<script src="study-data.js"></script>
+<script src="study-engine.js"></script>
+<script>
+(function () {
+  "use strict";
+  /* Who sees Study. Same first-name convention as WI_VIEWERS, but deliberately NOT
+     "every manager plus these" — Sam 2026-10-06: him and Sully only, for now. */
+  var STUDY_VIEWERS = ["sam", "sully"];
+
+  function session() {
+    try {
+      var s = JSON.parse(localStorage.getItem("sf-session") || "null");
+      if (!s || !s.name) return null;
+      if (s.exp && Date.now() > s.exp) return null;
+      return s;
+    } catch (e) { return null; }
+  }
+  function firstName(s) {
+    return String((s && s.name) || "").trim().split(/\s+/)[0].toLowerCase();
+  }
+  function allowed(s) { return STUDY_VIEWERS.indexOf(firstName(s)) >= 0; }
+
+  var el = function (id) { return document.getElementById(id); };
+  var me = session();
+
+  if (!me) {
+    el("main").innerHTML =
+      '<div class="gate"><h2>Sign in first</h2>' +
+      '<p>Open the portal, pick your name, then come back here.</p>' +
+      '<p><a href="./">Go to the portal</a></p></div>';
+    return;
+  }
+  if (!allowed(me)) {
+    el("main").innerHTML =
+      '<div class="gate"><h2>Not open yet</h2>' +
+      '<p>The study deck is still being built and is limited to a couple of people while ' +
+      'it settles. Nothing is wrong with your account.</p>' +
+      '<p><a href="./">Back to the portal</a></p></div>';
+    return;
+  }
+
+  var KEY = "sf-study.v1", RECENT = 300;
+  var C = window.SF_STUDY, state = {}, recent = [], pool = [];
+  var session_n = 0, session_right = 0, domain = null, card = null, answered = false;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (saved) { state = saved.state || {}; recent = saved.recent || []; }
+  } catch (e) {}
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ state: state, recent: recent.slice(-RECENT) }));
+    } catch (e) {}
+  }
+
+  var DOMAINS = [["wine", "Wine"], ["somm", "Craft"], ["amaro", "After dinner"],
+                 ["food", "Food"], ["service", "Service"]];
+
+  function tally() {
+    var s = summary(state);
+    el("tally").textContent = session_n
+      ? session_right + "/" + session_n + " today · " + s.seen + " topics"
+      : s.seen + " topics seen";
+  }
+
+  function next() {
+    answered = false;
+    var c = null;
+    for (var i = 0; i < 25; i++) {
+      var p = domain ? pool.filter(function (k) { return k.indexOf(domain) === 0; }) : pool;
+      c = drawCard(C, { concept: pickConcept(p, state), recent: recent });
+      if (c && (!domain || c.concept.indexOf(domain) === 0)) break;
+      c = null;
+    }
+    if (!c) c = drawCard(C, { recent: recent });
+    card = c; render();
+  }
+
+  function esc(t) {
+    return String(t).replace(/[&<>"]/g, function (m) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m];
+    });
+  }
+
+  function render() {
+    var c = card;
+    el("main").innerHTML =
+      '<div class="card"><div class="tag">' +
+      esc(c.concept.split(".").slice(0, 2).join(" · ").replace(/-/g, " ")) +
+      '</div><p class="stem">' + esc(c.stem) + "</p>" +
+      '<div class="opts">' +
+      c.choices.map(function (t, i) {
+        return '<button class="opt" data-i="' + i + '">' + esc(t) + "</button>";
+      }).join("") + "</div></div>";
+    Array.prototype.forEach.call(el("main").querySelectorAll("button.opt"), function (b) {
+      b.addEventListener("click", function () { answer(Number(b.dataset.i)); });
+    });
+  }
+
+  function answer(i) {
+    if (answered) return;
+    answered = true;
+    var c = card, right = i === c.answer;
+    state[c.concept] = record(state[c.concept] || blankConcept(), right);
+    recent.push(c.key); recent = recent.slice(-RECENT); save();
+    session_n++; if (right) session_right++;
+    Array.prototype.forEach.call(el("main").querySelectorAll("button.opt"), function (b, j) {
+      b.disabled = true;
+      if (j === c.answer) b.classList.add(right ? "right" : "reveal");
+      if (j === i && !right) b.classList.add("wrong");
+    });
+    var box = el("main").querySelector(".card");
+    box.insertAdjacentHTML("beforeend",
+      '<div class="verdict ' + (right ? "y" : "n") + '">' +
+      (right ? "Right" : "Not this time") + "</div>" +
+      '<p class="why">' + esc(c.why) + "</p>" +
+      (c.source ? '<p class="src">' + esc(c.source) +
+        (c.tier ? " · " + esc(c.tier.toLowerCase()) : "") + "</p>" : "") +
+      '<button class="next" id="nextbtn">Next card</button>');
+    el("nextbtn").addEventListener("click", next);
+    el("nextbtn").focus();
+    tally();
+  }
+
+  function filters() {
+    var f = el("filters");
+    f.hidden = false; el("hint").hidden = false;
+    f.innerHTML = DOMAINS.map(function (d) {
+      return '<button data-d="' + d[0] + '" aria-pressed="false">' + d[1] + "</button>";
+    }).join("") + '<button data-d="" aria-pressed="true">Everything</button>';
+    Array.prototype.forEach.call(f.querySelectorAll("button"), function (b) {
+      b.addEventListener("click", function () {
+        domain = b.dataset.d || null;
+        Array.prototype.forEach.call(f.querySelectorAll("button"), function (x) {
+          x.setAttribute("aria-pressed", String((x.dataset.d || null) === domain));
+        });
+        next();
+      });
+    });
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if ((e.key === " " || e.key === "Enter") && answered) { e.preventDefault(); next(); }
+    var n = Number(e.key);
+    if (!answered && n >= 1 && n <= 9) {
+      var b = el("main").querySelectorAll("button.opt")[n - 1];
+      if (b) b.click();
+    }
+  });
+  var touchY = null;
+  document.addEventListener("touchstart", function (e) { touchY = e.touches[0].clientY; }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    if (touchY === null || !answered) return;
+    if (touchY - e.changedTouches[0].clientY > 60) next();
+    touchY = null;
+  }, { passive: true });
+
+  if (!C) {
+    el("main").innerHTML = '<div class="gate"><h2>No deck data</h2>' +
+      "<p>study-data.js did not load. Run build-study.py and redeploy.</p></div>";
+    return;
+  }
+  pool = allConcepts(C, 40);
+  filters(); tally(); next();
+})();
+</script>
+</body>
+</html>
