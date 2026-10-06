@@ -2056,7 +2056,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791253517';   // stamped by build-data.py at every deploy
+const BUILD='1791264068';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2745,8 +2745,50 @@ function stampLastSeen(){
     fbDb.collection('staff').doc(me.id).update({lastSeen:now}).catch(function(){});
   }catch(e){}
 }
+/* ===== DEEP LINKS (2026-10-06) =========================================
+   #wine/<name> #dish/<name> #cocktail/<name> #amaro/<name> #standards/<pane>
+   Resolve by name, never by list position. Acts once per hash. ===== */
+const DL_STOP=new Set(['the','house','white','red','vino','bianco','docg','doc','igt','igp','dop',
+  'riserva','superiore','classico','brut','amaro','della','dell','delle']);
+function dlToks(s){return fcSlug(s).split('-').filter(t=>t.length>3&&!DL_STOP.has(t)&&!/^[0-9]+$/.test(t));}
+function dlBest(list,key,nameOf){
+  // 1. exact name wins outright
+  const ks=fcSlug(key), exact=(list||[]).find(it=>fcSlug(nameOf(it))===ks); if(exact)return exact;
+  const want=new Set(dlToks(key)); if(!want.size)return null;
+  // 2. most shared distinctive words; ties go to the candidate with FEWER extra words,
+  //    so "Scuppoz Amaro" lands on Scuppoz Amaro and not Scuppoz Amaretto
+  let best=null,bs=0,bx=1e9;
+  (list||[]).forEach(it=>{const t=dlToks(nameOf(it)), n=t.filter(x=>want.has(x)).length, x=t.length-n;
+    if(n>bs||(n===bs&&n>0&&x<bx)){bs=n;bx=x;best=it;}});
+  return bs>=Math.min(2,want.size)?best:null;
+}
+function dlFresh(sub){ go('fresh'); const b=$('freshTabs')&&$('freshTabs').querySelector('[data-ft="'+sub+'"]'); if(b)b.click(); }
+let dlDone=null;
+function dlApply(force){
+  if(!me)return;
+  let h=''; try{h=decodeURIComponent((location.hash||'').slice(1));}catch(e){h=(location.hash||'').slice(1);}
+  if(!h){dlDone=null;return;}
+  if(!force&&h===dlDone)return;
+  dlDone=h;
+  const i=h.indexOf('/'), kind=(i<0?h:h.slice(0,i)).toLowerCase(), key=i<0?'':h.slice(i+1);
+  let id=null;
+  if(kind==='wine'){ dlFresh('wine'); const w=dlBest(SF.wines,key,x=>x.name); if(w)id='wcard-'+SF.wines.indexOf(w); }
+  else if(kind==='dish'){ dlFresh('food');
+    const all=[]; ((SF.menu&&SF.menu.food)||[]).forEach(s=>(s.items||[]).forEach(x=>all.push(x)));
+    ((SF.menu&&SF.menu.desserts)||[]).forEach(x=>all.push(x));
+    const d=dlBest(all,key,x=>x._originalName||x.name); if(d)id='dcard-'+fcSlug(d._originalName||d.name); }
+  else if(kind==='cocktail'){ dlFresh('bar'); const c=dlBest((SF.bar&&SF.bar.cocktails)||[],key,x=>x.name); if(c)id='ckcard-'+fcSlug(c.name); }
+  else if(kind==='amaro'){ dlFresh('bar'); const a=dlBest((SF.bar&&SF.bar.afterDinner)||[],key,x=>x.name); if(a)id='adcard-'+boSlug(a.name); }
+  else if(kind==='standards'){ const p=['seating','duties','service'].indexOf(key)>=0?key:'service';
+    go('standards'); const b=$('stdTabs')&&$('stdTabs').querySelector('[data-std="'+p+'"]'); if(b)b.click(); return; }
+  else return;
+  if(id)setTimeout(()=>jumpToCard(id),180);
+}
+window.addEventListener('hashchange',()=>dlApply(true));
+
 function afterLogin(){
   if(!me)return;
+  setTimeout(dlApply,400);   // deep link, once per hash (2026-10-06)
   stampLastSeen();
   if(!me.contactSet){openConsent();return;}
   if(tourPending()){setTimeout(welcomeOpen,400);return;}
@@ -4249,7 +4291,7 @@ function adGroupedHTML(list){
   AD_GROUPS.concat(['More']).forEach(g=>{ if(!by[g])return;
     h+=`<div class="ad-group">${esc(g)}</div>`;
     by[g].forEach(n=>{ const sl=boSlug(n.name), o=BO.out['ad:'+sl];
-      h+=`<div class="ad-item${o?' bo-out':''}"><div class="ad-row"><span class="ad-name"><span class="bo-nm">${esc(n.name)}</span>${o?'<span class="bo-tag">86</span>':''}${boCan()?`<span class="bo-act"><button class="bo-btn" onclick="boToggleAd('${sl}')">${o?'Restore':'86'}</button></span>`:''}</span><span class="ad-price">${esc(n.price)}</span></div>${(n.note&&!o)?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`; }); });
+      h+=`<div class="ad-item${o?' bo-out':''}" id="adcard-${sl}"><div class="ad-row"><span class="ad-name"><span class="bo-nm">${esc(n.name)}</span>${o?'<span class="bo-tag">86</span>':''}${boCan()?`<span class="bo-act"><button class="bo-btn" onclick="boToggleAd('${sl}')">${o?'Restore':'86'}</button></span>`:''}</span><span class="ad-price">${esc(n.price)}</span></div>${(n.note&&!o)?`<div class="ad-note">${esc(n.note)}</div>`:''}</div>`; }); });
   return h;
 }
 function renderBar(){

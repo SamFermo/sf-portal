@@ -37,6 +37,8 @@
   .verdict.y{color:var(--ok)} .verdict.n{color:var(--no)}
   .why{font-size:16px;line-height:1.5;color:#3d3328;border-top:1px solid var(--line);padding-top:13px;margin:0}
   .src{font:500 12px/1.4 ui-sans-serif,system-ui;color:#7a6b58;margin:0}
+  .deeplink{align-self:flex-start;font:600 14px/1.3 ui-sans-serif,system-ui;color:#7a5f2e;
+            text-decoration:underline;text-underline-offset:3px;padding:6px 0}
   .next{font:600 15px/1 ui-sans-serif,system-ui;background:var(--ink);color:var(--card);
         border:0;border-radius:12px;padding:15px;cursor:pointer;width:100%}
   .filters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 2px 0}
@@ -114,6 +116,15 @@
   var KEY = "sf-study.v1", RECENT = 300;
   var C = window.SF_STUDY, state = {}, recent = [], pool = [];
   var session_n = 0, session_right = 0, domain = null, card = null, answered = false;
+  // Today's tally lives in sessionStorage so following a link into the portal and
+  // pressing Back does not reset it. Mastery itself is in localStorage regardless.
+  try {
+    var t0 = JSON.parse(sessionStorage.getItem("sf-study.today") || "null");
+    if (t0) { session_n = t0.n || 0; session_right = t0.r || 0; }
+  } catch (e) {}
+  function saveToday() {
+    try { sessionStorage.setItem("sf-study.today", JSON.stringify({ n: session_n, r: session_right })); } catch (e) {}
+  }
 
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || "null");
@@ -175,7 +186,7 @@
     var c = card, right = i === c.answer;
     state[c.concept] = record(state[c.concept] || blankConcept(), right);
     recent.push(c.key); recent = recent.slice(-RECENT); save();
-    session_n++; if (right) session_right++;
+    session_n++; if (right) session_right++; saveToday();
     Array.prototype.forEach.call(el("main").querySelectorAll("button.opt"), function (b, j) {
       b.disabled = true;
       if (j === c.answer) b.classList.add(right ? "right" : "reveal");
@@ -188,10 +199,22 @@
       '<p class="why">' + esc(c.why) + "</p>" +
       (c.source ? '<p class="src">' + esc(c.source) +
         (c.tier ? " · " + esc(c.tier.toLowerCase()) : "") + "</p>" : "") +
+      refLink(c) +
       '<button class="next" id="nextbtn">Next card</button>');
     el("nextbtn").addEventListener("click", next);
     el("nextbtn").focus();
     tally();
+  }
+
+  // Deep link into the portal. Opens the item's own card there; Back returns here.
+  // index.html resolves the name (not a list position), so a link built from the
+  // printed menu still lands on the portal's spelling. See tests/deep-links.test.js.
+  var REF_LABEL = { wine: "See the full card", amaro: "See it on the after-dinner list",
+                    dish: "See the dish", standards: "Read the standard" };
+  function refLink(c) {
+    if (!c.ref || !REF_LABEL[c.ref.type]) return "";
+    return '<a class="deeplink" href="./#' + c.ref.type + "/" + encodeURIComponent(c.ref.name) + '">' +
+           REF_LABEL[c.ref.type] + " \u2192</a>";
   }
 
   function filters() {

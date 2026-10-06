@@ -109,7 +109,7 @@ const GENERATORS = [
       const ch = choices(region(w), regions, rng);
       if (!ch) return null;
       return {
-        key: `wine.place|${w.id}`, concept: `wine.place.${slug(region(w))}`,
+        key: `wine.place|${w.id}`, ref: { type: "wine", name: w.name }, concept: `wine.place.${slug(region(w))}`,
         form: "choice", stem: `Where is the ${w.name} from?`, ...ch,
         why: `${w.name} — ${w.region}, ${w.country}.`,
       };
@@ -124,7 +124,7 @@ const GENERATORS = [
       const ch = choices(w.grapes[0], grapes, rng);
       if (!ch) return null;
       return {
-        key: `wine.grape|${w.id}`, concept: `wine.grape.${slug(w.grapes[0])}`,
+        key: `wine.grape|${w.id}`, ref: { type: "wine", name: w.name }, concept: `wine.grape.${slug(w.grapes[0])}`,
         form: "choice", stem: `What grape is the ${w.name}?`, ...ch,
         why: `100% ${w.grapes[0]}.`,
       };
@@ -139,7 +139,7 @@ const GENERATORS = [
       const w = onList ? pick(keepers(c), rng) : pick(c.distractors, rng);
       if (!w) return null;
       return {
-        key: `wine.onlist|${slug(w.name)}`, concept: "wine.list.recognition",
+        key: `wine.onlist|${slug(w.name)}`, ref: onList ? { type: "wine", name: w.name } : null, concept: "wine.list.recognition",
         form: "choice", stem: `Is the ${w.name} on our list right now?`,
         choices: ["Yes", "No"], answer: onList ? 0 : 1,
         why: onList
@@ -154,7 +154,7 @@ const GENERATORS = [
       const w = pick(keepers(c), rng);
       const byGlass = w.status === "core-glass";
       return {
-        key: `wine.btg|${w.id}`, concept: "wine.list.btg",
+        key: `wine.btg|${w.id}`, ref: { type: "wine", name: w.name }, concept: "wine.list.btg",
         form: "choice", stem: `Can a guest get the ${w.name} by the glass?`,
         choices: ["Yes", "No — bottle only"], answer: byGlass ? 0 : 1,
         why: byGlass ? `Yes — $${w.glass} a glass, $${w.bottle} a bottle.` : `Bottle only, $${w.bottle}.`,
@@ -192,7 +192,7 @@ const GENERATORS = [
       const ch = choices(right.name, wrong, rng);
       if (!ch) return null;
       return {
-        key: `wine.substitute|${target.id}`, concept: "wine.floor.substitution",
+        key: `wine.substitute|${target.id}`, ref: { type: "wine", name: right.name }, concept: "wine.floor.substitution",
         form: "choice",
         stem: `A guest likes the look of the ${target.name} at $${target.bottle} but wants to spend about half that. What do you pour?`,
         ...ch,
@@ -225,7 +225,7 @@ const GENERATORS = [
       const w = pick(c.wines, rng);
       const going = w.status === "phase-out";
       return {
-        key: `wine.phaseout|${w.id}`, concept: "wine.list.phaseout",
+        key: `wine.phaseout|${w.id}`, ref: { type: "wine", name: w.name }, concept: "wine.list.phaseout",
         form: "choice", stem: `Are we reordering the ${w.name}?`,
         choices: ["Yes — it stays", "No — selling through"], answer: going ? 1 : 0,
         why: going ? `Phasing out. Sell it, do not promise it.` : `Staying on the list.`,
@@ -240,7 +240,7 @@ const GENERATORS = [
       const ch = choices(x.group, groups, rng);
       if (!ch) return null;
       return {
-        key: `amaro.group|${x.id}`, concept: `amaro.group.${slug(x.group)}`,
+        key: `amaro.group|${x.id}`, ref: { type: "amaro", name: x.name }, concept: `amaro.group.${slug(x.group)}`,
         form: "choice", stem: `Where does ${x.name} sit on the after-dinner list?`, ...ch,
         why: `${x.group}. ${x.note || ""}`.trim(),
       };
@@ -254,7 +254,7 @@ const GENERATORS = [
       const ch = choices(f.name, c.flights.map((x) => x.name), rng, 2);
       if (!ch) return null;
       return {
-        key: `amaro.flight|${slug(p.name)}`, concept: "amaro.flights",
+        key: `amaro.flight|${slug(p.name)}`, ref: { type: "amaro", name: p.name }, concept: "amaro.flights",
         form: "choice", stem: `Which flight is ${p.name} in?`, ...ch,
         why: `"${f.name}" — ${p.origin || ""}. ${p.note || ""}`.trim(),
       };
@@ -270,7 +270,7 @@ const GENERATORS = [
       const ch = choices(right, all.filter((a) => !d.allergens.includes(a)), rng);
       if (!ch) return null;
       return {
-        key: `dish.allergen|${d.id}|${slug(right)}`, concept: `food.allergen.${slug(right)}`,
+        key: `dish.allergen|${d.id}|${slug(right)}`, ref: { type: "dish", name: d.name }, concept: `food.allergen.${slug(right)}`,
         form: "choice", stem: `Which of these is in the ${d.name}?`, ...ch,
         why: `${d.name} contains: ${d.allergens.join(", ")}. When the card is silent, ask the chef — never guess.`,
       };
@@ -285,7 +285,7 @@ const GENERATORS = [
       const ch = choices(s.title, steps.map((x) => x.title), rng);
       if (!ch) return null;
       return {
-        key: `service.step|${s.n}`, concept: "service.steps",
+        key: `service.step|${s.n}`, ref: { type: "standards", name: "service" }, concept: "service.steps",
         form: "choice", stem: `What is step ${s.n} of service?`, ...ch,
         why: s.detail,
       };
@@ -304,7 +304,7 @@ const GENERATORS = [
       const ch = choices(right.name, wrong, rng);
       if (!ch) return null;
       return {
-        key: `wine.grape.set|${slug(g)}|${right.id}`, concept: `wine.grape.${slug(g)}`,
+        key: `wine.grape.set|${slug(g)}|${right.id}`, ref: { type: "wine", name: right.name }, concept: `wine.grape.${slug(g)}`,
         form: "choice", stem: `Which of these is made from ${g}?`, ...ch,
         why: `${right.name} — ${right.grapes.join(", ")}, ${right.region}.`,
       };
@@ -326,7 +326,7 @@ const GENERATORS = [
       const ch = choices(b.name, wrong, rng);
       if (!ch) return null;
       return {
-        key: `wine.producer|${slug(h)}|${a.id}`, concept: `wine.producer.${slug(h)}`,
+        key: `wine.producer|${slug(h)}|${a.id}`, ref: { type: "wine", name: b.name }, concept: `wine.producer.${slug(h)}`,
         form: "choice",
         stem: `Which of these comes from the same producer as the ${a.name}?`, ...ch,
         why: `${h} makes both — ${mine.map((w) => w.name).join(" and ")}.`,
@@ -343,7 +343,7 @@ const GENERATORS = [
       if (!ch) return null;
       const note = x.note.replace(new RegExp(x.name.split(" ")[0], "gi"), "—");
       return {
-        key: `amaro.note|${x.id}`, concept: `amaro.note.${slug(x.group || "other")}`,
+        key: `amaro.note|${x.id}`, ref: { type: "amaro", name: x.name }, concept: `amaro.note.${slug(x.group || "other")}`,
         form: "choice", stem: `Which one is this? "${note}"`, ...ch,
         why: `${x.name}${x.price ? ` — $${x.price}` : ""}. ${x.group || ""}`.trim(),
       };
@@ -363,7 +363,7 @@ const GENERATORS = [
       if (three.length < 3 || !odd) return null;
       const all = shuffle([...three, odd.name], rng);
       return {
-        key: `wine.region.odd|${slug(r)}|${odd.id}`, concept: `wine.place.${slug(r)}`,
+        key: `wine.region.odd|${slug(r)}|${odd.id}`, ref: { type: "wine", name: odd.name }, concept: `wine.place.${slug(r)}`,
         form: "choice", stem: `Three of these are from ${r}. Which is not?`,
         choices: all, answer: all.indexOf(odd.name),
         why: `${odd.name} is ${odd.region}. The others are ${r}.`,
@@ -381,7 +381,7 @@ const GENERATORS = [
       if (!ch) return null;
       const body = s.body.length > 180 ? s.body.slice(0, 180) + "…" : s.body;
       return {
-        key: `service.standard|${slug(s.title)}`, concept: "service.standards",
+        key: `service.standard|${slug(s.title)}`, ref: { type: "standards", name: "service" }, concept: "service.standards",
         form: "choice", stem: `Which standard is this? "${body}"`, ...ch,
         why: `${s.title}. ${s.body}`,
       };
