@@ -2056,7 +2056,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791292783';   // stamped by build-data.py at every deploy
+const BUILD='1791312356';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2442,7 +2442,11 @@ function startProfilesSync(){
   if(fbReady&&fbDb){
     if(profUnsub)profUnsub();
     profUnsub=fbDb.collection('staff').onSnapshot(function(snap){
-      profRetry=0; profilesLoaded=true;
+      profRetry=0;
+      // A fresh device with nothing cached can get an empty fromCache snapshot first;
+      // keep waiting for the server rather than showing 'not set up yet'.
+      if(snap.metadata&&snap.metadata.fromCache&&snap.empty)return;
+      profilesLoaded=true;
       PROFILES={}; snap.docs.forEach(function(d){var o=d.data()||{}; if(o.name)PROFILES[o.name]=o;});
       onProfiles();
     },function(){
@@ -2554,8 +2558,9 @@ function renderLoginNames(q){q=(q||'').toLowerCase();
   $('loginList').innerHTML = list.length
     ? list.map(p=>`<div class="who-item" onclick="pickLogin('${esc(p.name).replace(/'/g,"\\'")}')"><div><div class="who-name serif">${esc(p.name)}</div><div class="who-role">${esc(p.role||'')}</div></div></div>`).join('')
     : (profilesArr().length?'<p class="req-empty">No names match.</p>'
-      : profilesLoaded==='failed'?'<p class="req-empty">Can\'t reach the server. Check your connection, then close and reopen the app.</p>'
-      : profilesLoaded?'<p class="req-empty">Staff list isn\'t set up yet.</p>'
+      : profilesLoaded==='failed'?'<p class="req-empty">Can\'t reach the server. Check your connection; this screen updates on its own once it connects.</p>'
+      : profilesLoaded==='slow'?'<p class="req-empty">Still connecting\u2026 first open on a phone can take a moment.</p>'
+      : profilesLoaded===true?'<p class="req-empty">Staff list isn\'t set up yet.</p>'
       :'<p class="req-empty">Loading the staff list…</p>');
 }
 function pickLogin(n){loginName=n;renderLogin();}
@@ -9339,6 +9344,12 @@ function initFirebase(){
   try{
     firebase.initializeApp(window.FIREBASE_CONFIG);
     fbDb=firebase.firestore();
+    // Offline persistence (2026-10-06): returning devices get every listener's first
+    // snapshot from IndexedDB at once instead of waiting on the network handshake,
+    // which on a cold phone open regularly ran past the login screen's timer. The
+    // server snapshot follows and overwrites. Must be called before any other
+    // Firestore call; a failure (old browser, private mode) just means no cache.
+    try{ fbDb.enablePersistence({synchronizeTabs:true}).catch(function(){}); }catch(e){}
     fbReady=true;
     // Attach listeners only once we're actually signed in. On a first launch
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
@@ -10747,7 +10758,8 @@ function init(){
   initFirebase();
   if(!fbReady){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startSpecialsSync(); }
   document.body.classList.add('locked'); openLogin();   // start gated; unlocks once the session checks out
-  setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='failed'; onProfiles(); } },9000);
+  setTimeout(function(){ if(profilesLoaded===false){ profilesLoaded='slow'; onProfiles(); } },9000);
+  setTimeout(function(){ if(profilesLoaded===false||profilesLoaded==='slow'){ profilesLoaded='failed'; onProfiles(); } },30000);
   $('appDate').textContent=fmtShort(todayISO());
   buildNav(); renderHome(); renderFresh(); renderRangeChips(); renderSchedule(); renderSeating();
   renderDuties(); renderCompliance(); renderDirectory(); renderService(); renderBoard(); renderAccess();
