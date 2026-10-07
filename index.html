@@ -2056,7 +2056,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791315821';   // stamped by build-data.py at every deploy
+const BUILD='1791331398';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3378,7 +3378,9 @@ function flagNorm(f){
     const risk=Array.isArray(f.riskAllergens)?f.riskAllergens.filter(a=>typeof a==='string'&&a.trim()).map(a=>a.trim().toLowerCase()):[];
     return {component:comp||label, std:(f.proposedStandard||f.standard||'').trim()||null, label:label, risk:risk};
   }
-  const s=String(f||''); const comp=s.split(/\s[—–-]\s/)[0].trim();
+  // Component is the text before a spaced dash OR a colon ("Peppernata: composition not…"),
+  // so chips and glossary terms carry the short name, not the whole sentence (2026-10-06).
+  const s=String(f||''); const comp=s.split(/\s[—–-]\s|:\s/)[0].trim();
   return {component:comp||s, std:null, label:s, risk:[]};
 }
 /* Component-name matching for the Ingredients-to-know upsert. Exact match first,
@@ -10574,7 +10576,7 @@ async function saveEdit(){
   // Carry forward every component a manager already confirmed, so a re-polish
   // doesn't quietly re-raise resolved flags (or, worse, lose the confirmations).
   var _f=findDishByName(editTarget.originalName);
-  var _prevRes=_f?flagResolved(getEditedDish(_f.dish),_f.dish):[];
+  var _prevRes=_f?flagResolved(MEDITS[editDocId(editTarget.originalName)]||null,_f.dish):[];   // raw overlay, not the merged card (2026-10-06)
   var rec={originalName:editTarget.originalName,name:name,desc:desc,
     price:payload.price,pron:pron,story:story,ingredients:ingredients,
     allergens:allergens,canModify:canModify,allergenNote:payload.allergenNote,
@@ -10737,7 +10739,9 @@ function cfCommit(){
     if(cfAlgAns[a]&&i<0)algs.push(a);
     if(!cfAlgAns[a]&&i>=0)algs.splice(i,1);
   });
-  var resolved=flagResolved(ed,found.dish).slice();
+  // Carry forward from the RAW overlay: the merged card never carries resolvedComponents,
+  // so reading it here returned [] and every confirm wiped the one before (found 2026-10-06).
+  var resolved=flagResolved(MEDITS[editDocId(cfTarget.originalName)]||null,found.dish).slice();
   if(!resolved.some(function(r){return termMatches(r.component,comp);}))
     resolved.push({component:comp,desc:found.dish.desc,at:Date.now()});
   var rec={originalName:cfTarget.originalName, name:ed.name, desc:ed.desc, price:ed.price,
