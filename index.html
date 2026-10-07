@@ -2034,7 +2034,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 <div class="modal" id="editModal">
   <div class="modal-card">
     <h3 id="editHead">Edit Dish</h3>
-    <p>Change what you need. Remy will regenerate the story and ingredients glossary on save.</p>
+    <p>Change what you need. Remy will regenerate the story and ingredients glossary on save. Anything the kitchen confirmed from a chip is kept.</p>
     <div id="editBody"></div>
   </div>
 </div>
@@ -2042,7 +2042,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 <div class="modal" id="confirmModal">
   <div class="modal-card">
     <h3 id="cfHead">Confirm component</h3>
-    <p id="cfIntro">Just this one question. Servers won't see anything until you confirm it.</p>
+    <p id="cfIntro">Servers won&#39;t see anything until you save it.</p>
     <div id="cfBody"></div>
   </div>
 </div>
@@ -2056,7 +2056,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791331398';   // stamped by build-data.py at every deploy
+const BUILD='1791333113';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -10541,7 +10541,7 @@ function openEditModal(origName){
       (dishHasEdit(origName)?'<button class="em-revert" onclick="revertEdit()">Revert</button>':'')+
       '<button class="em-cancel" onclick="$(\'editModal\').classList.remove(\'open\')">Cancel</button>'+
     '</div>'+
-    '<div class="em-status" id="em-status">Remy will regenerate the story, pronunciation, and ingredient glossary on save.</div>';
+    '<div class="em-status" id="em-status">Remy will regenerate the story, pronunciation, and ingredient glossary on save. Kitchen-confirmed notes are kept.</div>';
   $('editModal').classList.add('open');
 }
 function emToggleAlg(el){el.classList.toggle('on');}
@@ -10577,6 +10577,15 @@ async function saveEdit(){
   // doesn't quietly re-raise resolved flags (or, worse, lose the confirmations).
   var _f=findDishByName(editTarget.originalName);
   var _prevRes=_f?flagResolved(MEDITS[editDocId(editTarget.originalName)]||null,_f.dish):[];   // raw overlay, not the merged card (2026-10-06)
+  // Keep what the kitchen confirmed (2026-10-06): a regen must never overwrite a glossary
+  // entry a manager confirmed from a chip. If the polish failed, keep the whole old glossary.
+  var _old=_f?(getEditedDish(_f.dish).ingredients||[]):[];
+  if(!ingredients.length)ingredients=_old.slice();
+  _prevRes.forEach(function(r){
+    var keep=_old.find(function(g){return g&&termMatches(g.term,r.component);}); if(!keep)return;
+    var i=ingredients.findIndex(function(g){return g&&termMatches(g.term,r.component);});
+    if(i>=0)ingredients[i]=Object.assign({},ingredients[i],{note:keep.note,term:keep.term}); else ingredients.push(keep);
+  });
   var rec={originalName:editTarget.originalName,name:name,desc:desc,
     price:payload.price,pron:pron,story:story,ingredients:ingredients,
     allergens:allergens,canModify:canModify,allergenNote:payload.allergenNote,
@@ -10618,7 +10627,7 @@ function revertEdit(){
    Save upserts the confirmed composition as an "Ingredients to know" entry and
    removes that one flag from the dish's edit overlay. No worker call, deterministic;
    the confirmed detail becomes server-visible, the story stays clean. */
-let cfTarget=null, cfComposition='', cfAlgAns={};
+let cfTarget=null, cfComposition='', cfAlgAns={}, cfAlgSet=null;   // cfAlgSet: the full checklist (2026-10-06)
 function findDishByName(origName){
   var dish=null, section='';
   SF.menu.food.forEach(function(sec){sec.items.forEach(function(it){if(it.name===origName){dish=it;section=sec.section;}});});
@@ -10633,9 +10642,10 @@ function openConfirmModal(origName,idx){
   var flags=(ed._flags!==undefined)?ed._flags:(ed.flags||[]);
   if(!flags||!flags[idx])return;
   var n=flagNorm(flags[idx]);
-  cfTarget={originalName:origName,section:found.section,idx:idx,component:n.component,std:n.std,risk:n.risk||[]};
-  cfComposition=''; cfAlgAns={};
+  cfTarget={originalName:origName,section:found.section,idx:idx,component:n.component,std:n.std,risk:n.risk||[],nOpen:flags.length};
+  cfComposition=''; cfAlgAns={}; cfAlgSet=new Set(ed.allergens||[]);
   $('cfHead').textContent='Confirm: '+n.component;
+  var _ci=$('cfIntro'); if(_ci)_ci.textContent=(flags.length>1?('Question '+(idx+1)+' of '+flags.length+' on this dish. '):'')+'Servers won\'t see anything until you save it.';
   var h='';
   if(n.std){
     h+='<div class="cf-q">Does the <b>'+esc(n.component)+'</b> follow the standard preparation below?</div>';
@@ -10653,7 +10663,7 @@ function openConfirmModal(origName,idx){
   $('confirmModal').classList.add('open');
 }
 function cfRevealNo(){ var w=$('cf-nowrap'); if(w)w.style.display='block'; }
-function cfClose(){ cfTarget=null; cfComposition=''; cfAlgAns={}; $('confirmModal').classList.remove('open'); }
+function cfClose(){ cfTarget=null; cfComposition=''; cfAlgAns={}; cfAlgSet=null; $('confirmModal').classList.remove('open'); }
 
 /* Stage 2: Remy turns the confirmed composition into card-voice prose, and the
    manager reads it before it reaches the floor. The polish may add background
@@ -10686,22 +10696,21 @@ function cfRenderPreview(note,failed){
   h+='<div class="cf-preview"><span class="cf-pl">Servers will read this — edit anything that is off</span>'+
      '<textarea id="cf-note">'+esc(note)+'</textarea></div>';
   h+='<div class="em-actions" style="margin-bottom:2px"><button class="em-cancel" onclick="cfUseRaw()">Use my plain text instead</button></div>';
-  if(cfTarget.risk&&cfTarget.risk.length){
-    h+='<div class="cf-alg"><div class="cf-alg-head">Allergens — answer before saving</div>';
-    cfTarget.risk.forEach(function(a){
-      h+='<div class="cf-alg-row"><span class="cf-alg-name">Does it contain '+esc(a)+'?</span>'+
-         '<span class="cf-alg-btns"><button id="cfa-y-'+esc(a)+'" onclick="cfSetAlg(\''+esc(a)+'\',true)">Yes</button>'+
-         '<button id="cfa-n-'+esc(a)+'" onclick="cfSetAlg(\''+esc(a)+'\',false)">No</button></span></div>';
-    });
-    h+='</div>';
-  }
+  // Full allergen checklist on every confirm (Sam 2026-10-06): pre-set from the card, tap to
+  // toggle, saved as the dish's allergen list. The flag's own risk words are called out.
+  h+='<div class="cf-alg"><div class="cf-alg-head">Allergens in this dish — tap to toggle'+((cfTarget.risk&&cfTarget.risk.length)?' (the flag asked about '+esc(cfTarget.risk.join(', '))+')':'')+'</div>';
+  h+='<div class="em-alg-grid" id="cf-alg">'+ALL_ALLERGENS.map(function(a){
+    var on=cfAlgSet&&cfAlgSet.has(a);
+    return '<div class="em-alg-item'+(on?' on':'')+'" data-alg="'+a+'" onclick="cfToggleAlg(this)"><span>'+(ALG[a]||a)+'</span> <span style="font-size:10px">'+a+'</span></div>';
+  }).join('')+'</div></div>';
   h+='<div class="em-actions" style="margin-top:8px"><button class="em-save" id="cf-save-btn" onclick="cfCommit()">Save to the card</button>'+
      '<button class="em-cancel" onclick="cfClose()">Cancel</button></div>';
-  h+='<div class="cf-hint">Saving clears the provisional-allergen warning on this dish. Only do that if the answer above came from the kitchen.</div>';
+  h+='<div class="cf-hint">The box above is yours to edit; what you save is what the floor reads. Saving clears the provisional-allergen warning for this component and sets the allergen chips to what is ticked above.</div>';
   $('cfBody').innerHTML=h;
   cfSyncSave();
 }
 function cfUseRaw(){ var t=$('cf-note'); if(t)t.value=cfComposition; }
+function cfToggleAlg(el){ var a=el.getAttribute('data-alg'); if(!cfAlgSet)cfAlgSet=new Set(); if(cfAlgSet.has(a))cfAlgSet.delete(a); else cfAlgSet.add(a); el.classList.toggle('on',cfAlgSet.has(a)); }
 function cfSetAlg(a,yes){
   cfAlgAns[a]=yes;
   var y=$('cfa-y-'+a), n=$('cfa-n-'+a);
@@ -10711,16 +10720,10 @@ function cfSetAlg(a,yes){
 }
 function cfSyncSave(){
   var b=$('cf-save-btn'); if(!b)return;
-  var need=(cfTarget&&cfTarget.risk)||[];
-  var missing=need.filter(function(a){return cfAlgAns[a]===undefined;});
-  b.disabled=missing.length>0;
-  b.style.opacity=missing.length?'.45':'1';
-  b.textContent=missing.length?('Answer '+missing.length+' allergen question'+(missing.length>1?'s':'')):'Save to the card';
+  b.disabled=false; b.style.opacity='1'; b.textContent='Save to the card';
 }
 function cfCommit(){
   if(!isMgr()||!cfTarget)return;
-  var need=(cfTarget.risk)||[];
-  if(need.some(function(a){return cfAlgAns[a]===undefined;}))return;
   var text=(($('cf-note')&&$('cf-note').value)||'').trim()||cfComposition;
   var found=findDishByName(cfTarget.originalName); if(!found){cfClose();return;}
   var ed=getEditedDish(found.dish);
@@ -10733,12 +10736,7 @@ function cfCommit(){
   // Allergen answers from the kitchen, applied to the dish's allergen list.
   // canModify is deliberately untouched: whether the kitchen CAN pull an
   // ingredient is a different question from whether it is in there.
-  var algs=(ed.allergens||[]).slice();
-  Object.keys(cfAlgAns).forEach(function(a){
-    var i=algs.indexOf(a);
-    if(cfAlgAns[a]&&i<0)algs.push(a);
-    if(!cfAlgAns[a]&&i>=0)algs.splice(i,1);
-  });
+  var algs=cfAlgSet?ALL_ALLERGENS.filter(function(a){return cfAlgSet.has(a);}):(ed.allergens||[]).slice();
   // Carry forward from the RAW overlay: the merged card never carries resolvedComponents,
   // so reading it here returned [] and every confirm wiped the one before (found 2026-10-06).
   var resolved=flagResolved(MEDITS[editDocId(cfTarget.originalName)]||null,found.dish).slice();
