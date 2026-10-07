@@ -446,7 +446,10 @@ body.tour-on{padding-bottom:230px;}
 .live-card{position:relative; background:rgba(230,200,120,.07); border:1.5px dashed var(--gold); border-radius:14px; padding:12px 14px; margin-bottom:10px;}
 .live-chip{display:inline-block; font-size:9px; font-weight:800; letter-spacing:.08em; background:var(--gold); color:#241f15; border-radius:999px; padding:2px 7px; margin-right:7px; vertical-align:2px;}
 .live-name{font-family:'Cormorant Garamond','Caladea',serif; font-size:18px; font-weight:600; color:var(--ink); display:inline;}
-.live-price{float:right; font-size:13px; color:var(--gold); font-weight:700;}
+.live-price{float:right; font-size:13px; color:var(--gold); font-weight:700; margin-right:24px;}
+.live-alg{margin-top:6px;} .live-alg .alg{margin-right:4px;} .live-alg-unk{font-size:11.5px; color:#b7791f; font-weight:600; margin-top:6px;}
+.lm-keep{display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;} .lm-keep .em-alg-item{padding:6px 10px;}
+.out-banner{background:rgba(160,48,48,.12); border:1px dashed #a03030; border-radius:10px; padding:8px 12px; margin-bottom:8px; font-size:12px; color:#a03030; font-weight:600; text-align:center;}
 .live-sub{font-size:12px; color:var(--ink-soft); margin-top:3px; font-style:italic;}
 .live-body{font-size:13px; color:var(--ink-soft); margin-top:6px; line-height:1.5;}
 .live-pron{font-size:11.5px; color:var(--ink-mute); margin-top:5px;}
@@ -2056,7 +2059,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791333113';   // stamped by build-data.py at every deploy
+const BUILD='1791335293';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3439,6 +3442,8 @@ function dishCardHTML(baseIt){
   const origName=it._originalName||it.name;
   const rpl=replacedByLive(origName);
   if(rpl)return `<div class="card replaced"><div class="card-head"><div class="row-between"><span class="dish-name serif">${esc(it.name)}</span><span class="dish-price serif">${esc(it.price)}</span></div><div class="replaced-banner">Replaced tonight by ${esc(rpl)}</div></div></div>`;
+  const out86=foOutToday(origName);
+  if(out86)return `<div class="card replaced" style="pointer-events:auto"><div class="card-head"><div class="row-between"><span class="dish-name serif">${esc(it.name)}</span><span class="dish-price serif">${esc(it.price)}</span></div><div class="out-banner">86'd tonight${out86.by?' by '+esc(String(out86.by).split(' ')[0]):''}</div>${foOutCan()?`<div class="cke-act"><button class="bo-btn" style="margin-left:0" onclick="event.stopPropagation();foToggleOut('${esc(origName).replace(/'/g,"\\'")}')">Back on</button></div>`:''}</div></div>`;
   const mgrFlags=(it._flags!==undefined)?it._flags:(it.flags||[]);
   const flagBadge=(isMgr()&&mgrFlags&&mgrFlags.length)?`<span class="flag-badge" title="${mgrFlags.length} component${mgrFlags.length>1?'s':''} to confirm">${mgrFlags.length}</span>`:'';
   const editBtn=isMgr()?`<button class="edit-btn" onclick="event.stopPropagation();openEditModal('${esc(origName).replace(/'/g,"\\'")}')">&#9998;</button>`:'';
@@ -3447,7 +3452,7 @@ function dishCardHTML(baseIt){
     <div class="card-head"><div class="row-between">
       <span class="dish-name serif">${isNew(it)?newBadge():''}${esc(it.name)}${it.pron?`<span class="dish-pron">${esc(it.pron)}</span>`:''}${it.raw?'<span class="raw-badge">raw*</span>':''}${editedChip}${flagBadge}${editBtn}</span>
       <span class="dish-price serif">${esc(it.price)}</span></div>
-      <div class="dish-desc serif">${esc(it.desc)}</div>${(foCan()&&!specialsAll().some(s=>s.name===origName))?`<div class="cke-act"><button class="bo-btn" style="margin-left:0" onclick="event.stopPropagation();foeOpen('${boSlug(origName)}')">Edit</button></div>`:''}`;
+      <div class="dish-desc serif">${esc(it.desc)}</div>${(foCan()||foOutCan())?`<div class="cke-act">${(foCan()&&!specialsAll().some(s=>s.name===origName))?`<button class="bo-btn" style="margin-left:0" onclick="event.stopPropagation();foeOpen('${boSlug(origName)}')">Edit</button>`:''}${foOutCan()?`<button class="bo-btn" style="margin-left:${foCan()?'6px':'0'}" onclick="event.stopPropagation();foToggleOut('${esc(origName).replace(/'/g,"\\'")}')">86 tonight</button>`:''}</div>`:''}`;
   h+=allergenChips(it);
   if(!rich&&it.allergenNote)h+=`<div class="alg-note serif">${esc(it.allergenNote)}</div>`;
   if(rich) h+=`<div class="expand-hint">Tap for the story &amp; ingredients ›</div>`;
@@ -3496,7 +3501,11 @@ const ALLERGEN_OPT={allium:'Allium (onion / garlic)',dairy:'Dairy',egg:'Egg',fis
 const ALLERGEN_LBL={allium:'allium (onion/garlic)',dairy:'dairy',egg:'egg',fish:'fish',gluten:'gluten',nuts:'tree nuts',shellfish:'shellfish'};
 let algOpen=false; function algToggle(){ algOpen=!algOpen; var a=$('ftAllergens'); if(a)a.innerHTML=allergenAskHTML(); }
 let algTags=[];   // multiple allergens can be checked at once (one guest, several allergies)
-function algFoodItems(){var out=[];(SF.menu.food||[]).forEach(function(s){(s.items||[]).forEach(function(it){out.push(it);});});(SF.menu.desserts||[]).forEach(function(it){out.push(it);});if(typeof activeSpecials==='function')activeSpecials().forEach(function(it){out.push(it);});return out;}
+function algFoodItems(){var out=[];(SF.menu.food||[]).forEach(function(s){(s.items||[]).forEach(function(it){out.push(it);});});(SF.menu.desserts||[]).forEach(function(it){out.push(it);});if(typeof activeSpecials==='function')activeSpecials().forEach(function(it){out.push(it);});
+  // Tonight's menu, not the printed one (2026-10-06): drop what's replaced or 86'd, add live dishes.
+  out=out.filter(function(it){ return !replacedByLive(it.name)&&!foOutToday(it.name); });
+  if(typeof liveItems==='function')liveItems('dish').forEach(function(p){ out.push({name:p.name+' (live)',allergens:p.allergens||[],canModify:[],allergenNote:p.algConfirmed?'':'Allergens were not entered for this live dish. Ask the kitchen.',_algUnknown:!p.algConfirmed}); });
+  return out;}
 var ALG_UNCERTAIN=/(confirm|unconfirmed|pending|verify|checking|\bcheck\b|status|tbd)/;
 /* Classify one dish against one allergen: 'off' (contains, can't remove) >
    'check' (note hints at it, unconfirmed) > 'mod' (contains, kitchen can remove) >
@@ -3504,6 +3513,7 @@ var ALG_UNCERTAIN=/(confirm|unconfirmed|pending|verify|checking|\bcheck\b|status
 function algClassifyOne(it,tag){
   var al=it.allergens||[],cm=it.canModify||[],note=(it.allergenNote||'').toLowerCase();
   if(al.indexOf(tag)>=0)return cm.indexOf(tag)>=0?'mod':'off';
+  if(it._algUnknown)return 'check';
   if(ALLERGEN_SYN[tag]&&ALLERGEN_SYN[tag].some(function(w){return note.indexOf(w)>=0;})&&ALG_UNCERTAIN.test(note))return 'check';
   return 'clear';
 }
@@ -10095,7 +10105,12 @@ function liveBlockHTML(type){
     if(p.sub)h+=`<div class="live-sub">${esc(p.sub)}</div>`;
     if(p.body)h+=`<div class="live-body">${esc(p.body)}</div>`;
     if(p.pron)h+=`<div class="live-pron">Say it right: ${esc(p.pron)}</div>`;
-    h+=`<div class="live-by">added live by ${esc(p.by||'a manager')} · ${crewWhen(p.at)} — in the books tomorrow</div></div>`;});
+    if(p.type==='dish'){
+      if(p.algConfirmed)h+=`<div class="live-alg">${(p.allergens&&p.allergens.length)?p.allergens.map(a=>`<span class="alg" title="${esc(a)}">${ALG[a]||esc(a)}</span>`).join(''):'<span class="alg" style="opacity:.7">no listed allergens</span>'}</div>`;
+      else h+=`<div class="live-alg-unk">Allergens not entered. Ask the kitchen before clearing this dish.</div>`;
+    }
+    const keepTxt=p.keep==='until'?'stays until a manager takes it down':p.keep==='permanent'?(p.replaces?'in the books tomorrow, replacing '+esc(p.replaces)+' for good':'in the books tomorrow for good'):'in the books tomorrow';
+    h+=`<div class="live-by">added live by ${esc(p.by||'a manager')} · ${crewWhen(p.at)} — ${keepTxt}</div></div>`;});
   return h;
 }
 let liveType='wine', lmFlags=[];
@@ -10109,6 +10124,8 @@ function openLiveModal(type){
     <div class="lm-field"><label>Name</label><input id="lm-name" placeholder="Producer + wine, or dish name"></div>
     <div class="lm-field"><label>Price / pour</label><input id="lm-price" placeholder="e.g. 16 / 64 or 14"></div>
     <div class="lm-field"><label>Notes (rough is fine)</label><textarea id="lm-notes" placeholder="Grapes, region, what it tastes like, what's in it — whatever you've got"></textarea></div>
+    <div class="lm-field" id="lm-alg-wrap"><label>Allergens (tap everything that applies, or None)</label><div class="em-alg-grid" id="lm-alg">${ALL_ALLERGENS.map(a=>`<div class="em-alg-item" data-alg="${a}" onclick="lmToggleAlg(this)"><span>${ALG[a]||a}</span> <span style="font-size:10px">${a}</span></div>`).join('')}<div class="em-alg-item" data-alg="__none" onclick="lmToggleAlg(this)"><span>None of these</span></div></div><div class="lm-note" id="lm-alg-note">Until one of these is tapped, the card tells the floor to ask the kitchen.</div></div>
+    <div class="lm-field" id="lm-keep-wrap"><label>How long?</label><div class="lm-keep">${[['tonight','Tonight only'],['until','Until I take it down'],['permanent','Permanent']].map(k=>`<div class="em-alg-item${k[0]==='tonight'?' on':''}" data-keep="${k[0]}" onclick="lmSetKeep(this)"><span>${k[1]}</span></div>`).join('')}</div><div class="lm-note" id="lm-keep-note">${lmKeepNote('tonight')}</div></div>
     <div class="lm-field" id="lm-styled-wrap" style="display:none">
       <label>Styled card — read it before you post</label>
       <input id="lm-sub" placeholder="One-line sub (grapes · region / build)" style="margin-bottom:6px">
@@ -10122,9 +10139,18 @@ function openLiveModal(type){
       <button class="lm-cancel" onclick="$('liveModal').classList.remove('open')">Cancel</button>
     </div>
     <div class="lm-note" id="lm-status">Post as-is for speed, or let Remy style it first. Styled copy is a draft — you read it, you post it.</div>`;
-  const ts=$('lm-type');ts.onchange=function(){liveType=ts.value;$('lm-replaces').innerHTML=replaceOptsHTML(liveType);};
+  const ts=$('lm-type');ts.onchange=function(){liveType=ts.value;$('lm-replaces').innerHTML=replaceOptsHTML(liveType);lmTypeUI();};
+  lmTypeUI();
   $('liveModal').classList.add('open');
 }
+function lmTypeUI(){ var w=$('lm-alg-wrap'); if(w)w.style.display=($('lm-type').value==='dish')?'block':'none'; }
+function lmToggleAlg(el){ var a=el.getAttribute('data-alg'), g=$('lm-alg'); if(a==='__none'){ g.querySelectorAll('.em-alg-item').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); } else { g.querySelector('[data-alg="__none"]').classList.remove('on'); el.classList.toggle('on'); } var n=$('lm-alg-note'); if(n)n.textContent=lmAlgState().confirmed?'Saved with the card. Servers see these chips tonight.':'Until one of these is tapped, the card tells the floor to ask the kitchen.'; }
+function lmAlgState(){ var g=$('lm-alg'); if(!g)return {allergens:[],confirmed:false}; var none=g.querySelector('[data-alg="__none"].on'); var al=[]; g.querySelectorAll('.em-alg-item.on').forEach(function(x){ var a=x.getAttribute('data-alg'); if(a!=='__none')al.push(a); }); return {allergens:al,confirmed:!!(none||al.length)}; }
+function lmKeepNote(k){ return k==='tonight'?'Tonight it shows in the live block; the 6am run bakes it into the menu. The dish it replaces comes back tomorrow unless you make it permanent.'
+  : k==='until'?'Stays in the live block, and keeps the replaced dish greyed out, until a manager taps the ✕. The 6am run leaves it alone.'
+  : 'The 6am run bakes it into the menu and retires the dish it replaces.'; }
+function lmSetKeep(el){ var g=el.parentNode; g.querySelectorAll('.em-alg-item').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); var n=$('lm-keep-note'); if(n)n.textContent=lmKeepNote(el.getAttribute('data-keep')); }
+function lmKeep(){ var on=document.querySelector('#lm-keep-wrap .em-alg-item.on'); return on?on.getAttribute('data-keep'):'tonight'; }
 async function styleLive(){
   const name=($('lm-name').value||'').trim(), notes=($('lm-notes').value||'').trim();
   if(!name){$('lm-status').textContent='Needs a name before Remy can style it.';return;}
@@ -10164,6 +10190,8 @@ function postLive(){
     rawNotes:($('lm-notes').value||'').trim(),
     replaces:replaces,
     flags:(styled&&Array.isArray(lmFlags))?lmFlags:[],
+    allergens:($('lm-type').value==='dish')?lmAlgState().allergens:[], algConfirmed:($('lm-type').value==='dish')?lmAlgState().confirmed:false,
+    keep:lmKeep(),
     by:currentUserName(),at:at,day:todayISO(),styled:styled};
   MLIVE[id]=rec;renderFresh();
   if(fbReady&&fbDb){ fbDb.collection('menu-live').doc(id).set(rec).catch(function(){mliveLsSet();}); } else mliveLsSet();
@@ -10337,12 +10365,12 @@ function dishHasEdit(name){return !!MEDITS[editDocId(name)];}
    paths never fight. Restore deletes the overlay and the card falls back to pencil/base. */
 const FOOD_QE=['Sam West','Jose Agundez','Chris Hoey'];
 function foCan(){ return !!me&&!DEMO&&FOOD_QE.indexOf(String(me.name||'').trim())>=0; }
-let FO={dishes:{},loaded:false,err:false,unsub:null};
+let FO={dishes:{},out:{},loaded:false,err:false,unsub:null};
 function foRef(){ return fbDb.collection('board').doc('menuOverlay'); }
 function foRefresh(){ try{ renderFresh(); }catch(e){} }
 function startMenuOverlaySync(){
   if(!(fbReady&&fbDb))return; if(FO.unsub)FO.unsub();
-  FO.unsub=foRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; FO.dishes=v.dishes||{}; FO.loaded=true; foRefresh(); },function(){});
+  FO.unsub=foRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; FO.dishes=v.dishes||{}; FO.out=v.out||{}; FO.loaded=true; foRefresh(); },function(){});
 }
 function foWrite(patch){
   Object.keys(patch||{}).forEach(function(k){ if(patch[k]===null)delete FO.dishes[k]; else FO.dishes[k]=patch[k]; });
@@ -10350,6 +10378,24 @@ function foWrite(patch){
   if(!(fbReady&&fbDb)){ FO.err=true; foRefresh(); return; }
   const w={dishes:{}}; Object.keys(patch||{}).forEach(function(k){ w.dishes[k]=patch[k]===null?firebase.firestore.FieldValue.delete():patch[k]; });
   foRef().set(w,{merge:true}).catch(function(){ FO.err=true; foRefresh(); });
+}
+/* 86 tonight (2026-10-06): board/menuOverlay.out {slug:{by,at,day}}. Only today's entries
+   count, so a dish comes back on its own at the next calendar day. Managers + quick editors. */
+function foOutCan(){ return !!me&&!DEMO&&(isMgr()||foCan()); }
+function foOutToday(name){ const o=FO.out&&FO.out[boSlug(name)]; return (o&&o.day===todayISO())?o:null; }
+function foWriteOut(slug,val){
+  if(val===null)delete FO.out[slug]; else FO.out[slug]=val;
+  FO.err=false; foRefresh();
+  if(!(fbReady&&fbDb)){ FO.err=true; foRefresh(); return; }
+  const w={out:{}}; w.out[slug]=val===null?firebase.firestore.FieldValue.delete():val;
+  foRef().set(w,{merge:true}).catch(function(){ FO.err=true; foRefresh(); });
+}
+function foToggleOut(name){
+  if(!foOutCan())return;
+  const slug=boSlug(name);
+  if(foOutToday(name)){ foWriteOut(slug,null); return; }
+  if(!confirm('86 "'+name+'" for tonight? Servers see it greyed out at once. It comes back on its own tomorrow, or tap Back on.'))return;
+  foWriteOut(slug,{by:me.name,at:Date.now(),day:todayISO()});
 }
 function foEff(it){
   const o=FO.dishes&&FO.dishes[boSlug(it._originalName||it.name)]; if(!o)return it;
