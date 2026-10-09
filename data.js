@@ -283,8 +283,8 @@ window.SF = {
     "items": [
      {
       "name": "Swan House Bolognese",
-      "desc": "saffron spaghetti, swan house beef & pork, tomato, fennel, rosemary, parmigiano reggiano",
-      "price": "32",
+      "desc": "saffron spaghetti, pork, beef, rosemary, fennel, tomato, parmigiano reggiano",
+      "price": "34",
       "raw": false,
       "pron": "boh-loh-NYEH-zeh",
       "story": "The family recipe — on the menu since day one, and it never leaves. This run is built on ground beef and pork raised at Swan House Farm; when it's gone, the dish returns to the classic pork-and-veal build. Either way: seasoned with our own spice blend, cooked down slowly with red wine, tomato, fennel, and rosemary, then finished with cream, butter, sherry, and salt. The saffron spaghetti is extruded with a strained, highly concentrated saffron tea in place of water — that's where the gold color and the subtle earthy aroma come from, no egg involved.",
@@ -313,14 +313,15 @@ window.SF = {
       "canModify": [
        "dairy"
       ],
-      "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
+      "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper.",
+      "added": "2026-10-09"
      },
      {
-      "name": "Eggplant Parm",
-      "desc": "breaded fried eggplant, mozzarella, rigatoni, eggplant pomodoro, parmesan, basil",
-      "price": "31",
+      "name": "Rigatoni",
+      "desc": "Swan House Farm eggplant pomodoro, baked eggplant, mozzarella, basil",
+      "price": "29",
       "raw": false,
-      "story": "Eggplant cut thick and salted overnight to draw out bitterness, then breaded and fried. It goes into the oven under mozzarella to melt, and lands on a bed of rigatoni tossed in an eggplant pomodoro sauce. Finished with Parmesan and basil.",
+      "story": "Same dish as our eggplant parm, now printed as Rigatoni. Eggplant cut thick and salted overnight to draw out bitterness, then breaded and fried. It goes into the oven under mozzarella to melt, and lands on a bed of rigatoni tossed in an eggplant pomodoro sauce. Finished with Parmesan and basil.",
       "ingredients": [
        {
         "term": "Rigatoni",
@@ -351,7 +352,8 @@ window.SF = {
       ],
       "canModify": [],
       "allergenNote": "Gluten: the breading and the rigatoni, both built in. Dairy: mozzarella and Parmesan, built in. Egg: the egg wash in the breading, built in. Allium: garlic and onion in the pomodoro base, not removable.",
-      "added": "2026-08-22"
+      "added": "2026-08-22",
+      "pron": "ree-gah-TOH-nee"
      },
      {
       "name": "Stuffed Farfalle",
@@ -428,126 +430,6 @@ window.SF = {
       ],
       "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen subs in whatever vegetable is running seasonally on the menu. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish.",
       "added": "2026-06-10"
-     },
-     {
-      "name": "Risotto alle Zucchine",
-      "desc": "roasted zucchini, parmesan, crème fraîche-basil puree, lemon",
-      "price": "28",
-      "raw": false,
-      "pron": "ree-ZOH-toh AHL-leh zoo-kee-NEH",
-      "story": "Creamy risotto built on roasted zucchini, garlic, and shallot. Finished with butter, Parmesan, and a basil puree blended from basil, zucchini, crème fraîche, and lemon oil. Bright, clean, and seasonal.",
-      "ingredients": [
-       {
-        "term": "Risotto alle Zucchine",
-        "pronunciation": "ree-ZOH-toh AHL-leh zoo-kee-NEH",
-        "note": "Italian for 'risotto with zucchini.' A summer take on the dish — roasted zucchini folded through the rice, finished bright with lemon and basil."
-       },
-       {
-        "term": "Basil puree",
-        "pronunciation": null,
-        "note": "Basil, zucchini, crème fraîche, and lemon oil blended smooth into a vivid green puree. Herbaceous and bright with a little richness from the crème fraîche — swirled in at the finish, with micro basil on top for aroma. Note the crème fraîche: this puree carries dairy."
-       },
-       {
-        "term": "Arborio",
-        "pronunciation": "ar-BOR-ee-oh",
-        "note": "Short-grain Italian rice that releases starch as it cooks, creating risotto's signature creamy texture. Par-cooked in batches at the restaurant, finished per plate to order."
-       }
-      ],
-      "allergens": [
-       "dairy",
-       "allium"
-      ],
-      "canModify": [
-       "dairy"
-      ],
-      "allergenNote": "Naturally gluten-free. Dairy lives in three spots: Parmesan, butter, and the crème fraîche in the basil puree — a true dairy-free plate means dropping all three, including the puree, so flag it to the kitchen. Allium and the cooked wine can't come out — our risotto base is always par-cooked with onion and white wine in the stock, and this build adds garlic and shallot.",
-      "added": "2026-06-23"
-     },
-     {
-      "name": "Grilled King Salmon",
-      "desc": "Troll-caught Washington king salmon, Bibb lettuce, roasted tomato vinaigrette, sun gold tomatoes, charred zucchini",
-      "price": "38",
-      "raw": true,
-      "story": "Seven ounces of troll-caught Washington king salmon, grilled to medium rare. Served with Bibb lettuce dressed in roasted tomato vinaigrette, bright sun gold tomatoes, and charred zucchini. Finished with marigold petals.",
-      "ingredients": [
-       {
-        "note": "Caught one fish at a time on hook and line rather than by net, which keeps the fillet intact and the flesh firm. King (chinook) is the richest of the Pacific salmon, high in fat with a deep colour. Seven ounce fillet, grilled to medium rare.",
-        "pronunciation": null,
-        "term": "Troll-caught king salmon"
-       },
-       {
-        "note": "A soft butterhead lettuce with loose, tender leaves and a mild sweetness. Dressed and served cool against the warm fish.",
-        "pronunciation": null,
-        "term": "Bibb lettuce"
-       },
-       {
-        "pronunciation": null,
-        "term": "Sun gold tomatoes",
-        "note": "A small orange cherry tomato, noticeably sweeter and lower in acid than a red cherry tomato. Served raw."
-       },
-       {
-        "term": "Roasted tomato vinaigrette",
-        "pronunciation": null,
-        "note": "Our roasted tomato vinaigrette starts with tomatoes, quartered and roasted low and slow at 200° until they lose about 60% of their moisture, which concentrates their flavor and natural sweetness. We finish the roasted tomatoes with red wine vinegar, shallot, and extra-virgin olive oil to make the vinaigrette, seasoned with oregano and black pepper. Guests should know this is a cooked vinaigrette, not raw, so it has deep roasted tomato flavor rather than bright acidity."
-       },
-       {
-        "term": "Marigold petals",
-        "note": "Edible flower petals, faintly citrus and peppery. A garnish, and they come off on request.",
-        "pronunciation": null
-       }
-      ],
-      "allergens": [
-       "fish",
-       "allium"
-      ],
-      "canModify": [],
-      "allergenNote": "Fish: king salmon, central to the dish, cannot come off. Allium: shallot is in the roasted tomato vinaigrette. Served medium rare.",
-      "added": "2026-07-24",
-      "flags": []
-     },
-     {
-      "name": "Roasted Duck Breast",
-      "desc": "Muscovy duck breast, polenta, chanterelles, corn, huckleberry demi-glace",
-      "price": "42",
-      "raw": true,
-      "story": "Muscovy duck breast rendered skin-side down to medium rare. It sits on creamy polenta with sautéed chanterelles, corn, and shallot. Marjoram and sherry vinegar brighten the plate. A huckleberry demi-glace finishes it, adding dark fruit and depth.",
-      "ingredients": [
-       {
-        "term": "Muscovy duck",
-        "note": "A leaner breed than Pekin, with a deeper, less fatty flavour closer to red meat than poultry. The breast is rendered skin-side down so the fat runs off and the skin crisps, then cooked to medium rare.",
-        "pronunciation": "MUSS-koh-vee"
-       },
-       {
-        "term": "Chanterelles",
-        "pronunciation": "shan-tuh-RELS",
-        "note": "A wild golden mushroom, firm with a mild apricot-and-pepper note. Sautéed here."
-       },
-       {
-        "term": "Polenta",
-        "note": "Ground cornmeal cooked until thick and creamy, the bed for the duck. The house polenta is built with cream, stock and butter, so treat it as dairy unless the kitchen says this prep differs.",
-        "pronunciation": "poh-LEN-tah"
-       },
-       {
-        "note": "A soft herb in the oregano family, sweeter and more floral than oregano. Used fresh to lift the plate.",
-        "pronunciation": "MAR-jer-um",
-        "term": "Marjoram"
-       },
-       {
-        "term": "Huckleberry demi-glace",
-        "pronunciation": "DEH-mee glahss",
-        "note": "The huckleberry demi-glace is chicken stock reduced until glossy and thick, then finished with cooked huckleberries. Guests get a rich, slightly sweet sauce with the tartness of the berries. It's not overly sweet, just balanced fruit with deep savory stock."
-       }
-      ],
-      "allergens": [
-       "dairy",
-       "allium"
-      ],
-      "canModify": [
-       "dairy"
-      ],
-      "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. Served medium rare.",
-      "added": "2026-08-02",
-      "flags": []
      },
      {
       "name": "Risotto",
@@ -14471,5 +14353,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1791589210"
+ "build": "1791590064"
 };
