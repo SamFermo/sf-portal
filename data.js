@@ -548,6 +548,136 @@ window.SF = {
       "allergenNote": "Dairy: the polenta is built with cream and butter and can be swapped for a dairy-free starch. Allium: shallot is cooked into the mushroom and corn garnish. Served medium rare.",
       "added": "2026-08-02",
       "flags": []
+     },
+     {
+      "name": "Risotto",
+      "desc": "Swan House georgia candy roaster, garlic, shallot, sherry, parmesan, fried sage, pepita",
+      "price": "28",
+      "raw": false,
+      "pron": "ree-ZOH-toh",
+      "story": "Fall risotto built on Georgia Candy Roaster squash from Swan House Farm, with garlic and shallot, a splash of sherry, and Parmesan. Finished with fried sage leaves and toasted pepitas for crunch. Sweet, nutty, and savory.",
+      "ingredients": [
+       {
+        "term": "Georgia Candy Roaster",
+        "pronunciation": null,
+        "note": "An heirloom winter squash, long and banana-shaped with pink-orange skin, grown at Swan House Farm. Sweet, smooth, and less watery than butternut, which is why it roasts and purees so well. It's the base flavor of this risotto."
+       },
+       {
+        "term": "Arborio",
+        "pronunciation": "ar-BOR-ee-oh",
+        "note": "Short-grain Italian rice that releases starch as it cooks, creating risotto's signature creamy texture. Par-cooked in batches at the restaurant, finished per plate to order."
+       },
+       {
+        "term": "Sherry",
+        "pronunciation": null,
+        "note": "A fortified Spanish wine used here to deglaze and brighten the squash. Cooked in, so the alcohol is gone, but it is wine and should be mentioned to guests who avoid it entirely."
+       },
+       {
+        "term": "Fried sage",
+        "pronunciation": null,
+        "note": "Whole sage leaves fried crisp in oil. They shatter on the plate and give the dish its savory, slightly piney aroma. A classic pairing with winter squash."
+       },
+       {
+        "term": "Pepita",
+        "pronunciation": "peh-PEE-tah",
+        "note": "Hulled pumpkin seed, toasted. Adds crunch and a nutty finish. It is a seed, not a tree nut or peanut, but a guest with a seed allergy should know it's on the plate."
+       }
+      ],
+      "allergens": [
+       "dairy",
+       "allium"
+      ],
+      "canModify": [],
+      "allergenNote": "Naturally gluten-free. Dairy: Parmesan, and our risotto is finished with butter. Allium: garlic and shallot are cooked into this build, and the house risotto base is par-cooked with onion and white wine in the stock, so allium cannot come out. The pepitas are seeds, not nuts. UNCONFIRMED: ask the kitchen whether a dairy-free version is possible for this build, and whether the risotto stock is vegetable or chicken before calling it vegetarian.",
+      "flags": [
+       "Risotto stock: confirm vegetable vs chicken before clearing the dish as vegetarian.",
+       "Dairy-free: confirm with the kitchen whether Parmesan and butter can be dropped on this build (the squash version may rely on them more than the zucchini one did)."
+      ],
+      "added": "2026-10-09"
+     },
+     {
+      "name": "Pesce al Cartoccio",
+      "desc": "black cod, potato, onion, matsutake mushroom, garlic herb butter, lemon",
+      "price": "38",
+      "raw": false,
+      "pron": "PEH-sheh ahl car-TOH-cho",
+      "story": "Black cod baked in a parchment parcel with potato, onion, and matsutake mushroom, with garlic herb butter and lemon. The parcel traps the steam, so the fish cooks gently in its own juices and the mushroom perfume fills the packet. Opened at the table or in the kitchen, it releases a burst of aroma.",
+      "ingredients": [
+       {
+        "term": "Pesce al Cartoccio",
+        "pronunciation": "PEH-sheh ahl car-TOH-cho",
+        "note": "Italian for 'fish in a parcel.' Cartoccio is the parchment (or foil) packet the fish is sealed in and baked. The steam that builds inside cooks everything gently and keeps the fish moist."
+       },
+       {
+        "term": "Black cod",
+        "pronunciation": null,
+        "note": "Also called sablefish. Not a true cod: a deep-water Pacific fish with a rich, buttery, high-oil flesh that flakes into large soft pieces. Local to our coast and very forgiving to cook, which is why it suits the parcel."
+       },
+       {
+        "term": "Matsutake",
+        "pronunciation": "mat-soo-TAH-keh",
+        "note": "A prized wild mushroom that grows in Pacific Northwest conifer forests in the fall. Firm, meaty, with a distinctive spicy-pine aroma (some say cinnamon). Highly sought after in Japan, foraged locally in season. The aroma is the point: it perfumes the whole parcel."
+       }
+      ],
+      "allergens": [
+       "fish",
+       "dairy",
+       "allium"
+      ],
+      "canModify": [],
+      "allergenNote": "Fish: black cod, the center of the dish, cannot come off. Dairy: the garlic herb butter is baked into the parcel. Allium: onion and garlic are both in the parcel. UNCONFIRMED: the garlic herb butter's full makeup and whether it can be swapped for olive oil for a dairy-free parcel have not been confirmed with the kitchen.",
+      "flags": [
+       "Garlic herb butter: composition not specified beyond garlic, herbs and butter; confirm nothing else is in it (wine, anchovy, citrus zest) and whether an olive-oil swap is possible for dairy-free.",
+       "Confirm the parcel is parchment only (no gluten in the build) before clearing for gluten."
+      ],
+      "added": "2026-10-09"
+     },
+     {
+      "name": "Braised Short Rib",
+      "desc": "sour cream polenta, chanterelle, herbs, horseradish vinaigrette, demi glace",
+      "price": "48",
+      "raw": false,
+      "pron": null,
+      "story": "Beef short rib braised low and slow until it pulls apart with a fork, served over sour cream polenta with sautéed chanterelles and fresh herbs. A sharp horseradish vinaigrette cuts the richness, and a demi-glace ties it together. The heaviest plate on the menu and the one for a cold night.",
+      "ingredients": [
+       {
+        "term": "Short rib",
+        "pronunciation": null,
+        "note": "A cut from the beef chuck and plate, heavily marbled with lots of connective tissue. Braising (searing, then cooking slowly in liquid for hours) melts that tissue into gelatin, which is what makes the meat rich and spoon-tender."
+       },
+       {
+        "term": "Sour cream polenta",
+        "pronunciation": "poh-LEN-tah",
+        "note": "Ground cornmeal cooked until thick and creamy, finished with sour cream for tang. The house polenta is built with cream, stock and butter, so treat it as dairy."
+       },
+       {
+        "term": "Chanterelles",
+        "pronunciation": "shan-tuh-RELS",
+        "note": "A wild golden mushroom, firm with a mild apricot-and-pepper note. Fall is peak season in the Northwest. Sautéed here."
+       },
+       {
+        "term": "Horseradish vinaigrette",
+        "pronunciation": null,
+        "note": "A sharp dressing built on fresh horseradish, the root that gives the sinus-clearing heat. It does the same job here that horseradish does with prime rib: cuts through the fat. Full composition to be confirmed with the kitchen."
+       },
+       {
+        "term": "Demi-glace",
+        "pronunciation": "DEH-mee glahss",
+        "note": "Stock reduced until glossy, thick and deeply savory. Coats the meat as a sauce. Full composition to be confirmed with the kitchen."
+       }
+      ],
+      "allergens": [
+       "dairy"
+      ],
+      "canModify": [],
+      "allergenNote": "Dairy: the sour cream polenta is built with sour cream, cream and butter; ask the kitchen whether a dairy-free starch swap works here as it does with the duck. UNCONFIRMED: the braise aromatics, the horseradish vinaigrette and the demi-glace have not been spelled out, and a braise and demi-glace almost always carry onion and garlic, so treat this as allium until the kitchen clears it. Also confirm whether the braise or demi-glace uses wine or any gluten (flour dredge, soy).",
+      "flags": [
+       "Allium: braise aromatics, horseradish vinaigrette and demi-glace composition not specified; a braise normally carries onion and garlic. Confirm with kitchen before clearing for allium.",
+       "Gluten: confirm no flour dredge on the short rib and no soy or wheat in the demi-glace before clearing for gluten.",
+       "Horseradish vinaigrette: confirm base (oil, vinegar, mustard?, shallot?) with kitchen.",
+       "Dairy-free: confirm a polenta swap is available on this dish."
+      ],
+      "added": "2026-10-09"
      }
     ],
     "intro": "The egg rule for our pastas, before you get asked: every pasta is made in-house, and the dough tells you everything. Extruded shapes — pushed through a die — are semolina and water, no egg. Hand-made shapes — rolled ribbons like tagliatelle, filled agnolotti, gnocchi — are egg doughs. Rule of thumb: if the shape doesn't seem possible to roll by hand (creste di gallo, bucatini, spaghetti), it's probably extruded. But some shapes that are usually hand-rolled, like linguine or chitarra, can be extruded too — confirm with the chef before assuming. Color helps: egg pasta runs golden and silky, extruded runs pale straw. One trap, though — the bolognese's saffron spaghetti is golden from saffron tea, not egg."
@@ -14341,5 +14471,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1791335293"
+ "build": "1791589210"
 };
