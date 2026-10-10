@@ -1698,14 +1698,14 @@ window.SF = {
   {
    "section": "Red",
    "name": "Albino Rocca Langhe Nebbiolo DOC",
-   "vintage": "",
+   "vintage": "2025",
    "region": "Barbaresco, Piedmont, Italy",
    "type": "red",
-   "glass": "18",
-   "bottle": "75",
+   "glass": "17",
+   "bottle": "70",
    "grapes": "Nebbiolo",
-   "pour": "Tasting notes not yet confirmed for this bottling. As a Langhe Nebbiolo from a Barbaresco house, expect the grape's signature: red cherry and wild strawberry, rose and dried herbs, bright acidity and a firm but lighter tannic frame than the estate's Barbaresco. Check the vintage on the bottle with your lead before quoting.",
-   "producer": "Albino Rocca is a family estate in the village of Barbaresco itself, bottling since 1960 and now run by Angelo Rocca's daughters Daniela, Monica and Paola with Paola's husband Carlo Castellengo. About 18 hectares, 10 of them Nebbiolo, in the Ovello (Vigna Loreto), Ronchi and Montersino vineyards; farmed sustainably (SQNPI and Green Experience certified). This replaced the G.D. Vajra Langhe Nebbiolo in October 2026. Glass and bottle price carried over from the Vajra slot; confirm before quoting.",
+   "pour": "Tasting notes not yet confirmed for this bottling. As a Langhe Nebbiolo from a Barbaresco house, expect the grape's signature: red cherry and wild strawberry, rose and dried herbs, bright acidity and a firm but lighter tannic frame than the estate's Barbaresco.",
+   "producer": "Albino Rocca is a family estate in the village of Barbaresco itself, bottling since 1960 and now run by Angelo Rocca's daughters Daniela, Monica and Paola with Paola's husband Carlo Castellengo. About 18 hectares, 10 of them Nebbiolo, in the Ovello (Vigna Loreto), Ronchi and Montersino vineyards; farmed sustainably (SQNPI and Green Experience certified). This replaced the G.D. Vajra Langhe Nebbiolo in October 2026, at $17 a glass and $70 a bottle.",
    "winemaking": "Not confirmed with the importer yet. Albino Rocca's Langhe Nebbiolo is the estate's earlier-drinking Nebbiolo, raised to show fruit rather than the long cask aging of their Barbaresco. Ask your lead for the tech sheet.",
    "has_notes": false,
    "specs": [],
@@ -14352,5 +14352,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1791590547"
+ "build": "1791590795"
 };
