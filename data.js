@@ -1697,47 +1697,22 @@ window.SF = {
   },
   {
    "section": "Red",
-   "name": "G.D. Vajra Langhe Nebbiolo DOC",
-   "vintage": "2024",
-   "region": "Piedmont, Italy",
+   "name": "Albino Rocca Langhe Nebbiolo DOC",
+   "vintage": "",
+   "region": "Barbaresco, Piedmont, Italy",
    "type": "red",
    "glass": "18",
    "bottle": "75",
-   "grapes": "100% Nebbiolo",
-   "pour": "Lively garnet in the glass — wild strawberry, red cherry, and raspberry with a hint of goji berry, lifted by floral and gentle spice. Crunchy and vibrant on the palate, juicy red fruit woven through a well-defined tannic frame, finishing perfumed, floral, and gourmand.",
-   "producer": "G.D. Vajra, founded in 1972 by Aldo Vaira and named for his father Giuseppe Domenico Vajra, is one of Barolo's pioneering organic estates, based in Vergne — the highest village in the Barolo commune. This Langhe Nebbiolo is the estate's fresher, earlier-drinking expression of the grape, raised in steel rather than the long cask aging of their Barolo. Note: the fresh sheet header lists the 2024 vintage while the accompanying tasting and harvest notes describe the 2025 — confirm the vintage on the bottle with your lead before quoting. ABV runs about 13.5% per the producer; confirm before quoting.",
-   "winemaking": "100% Nebbiolo from organically farmed vineyards on calcareous soils between 280–550m, worked with permanent grass cover; the estate is certified organic and Equalitas sustainable. Hand-harvested over a late, extended pick (Sept 12–Oct 2 in the described vintage). Fermentation ran 20–25 days followed by spontaneous malolactic fermentation, then roughly 4 months in stainless steel before bottling. No oak — the freshness and lift come from steel-only aging.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 3,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
+   "grapes": "Nebbiolo",
+   "pour": "Tasting notes not yet confirmed for this bottling. As a Langhe Nebbiolo from a Barbaresco house, expect the grape's signature: red cherry and wild strawberry, rose and dried herbs, bright acidity and a firm but lighter tannic frame than the estate's Barbaresco. Check the vintage on the bottle with your lead before quoting.",
+   "producer": "Albino Rocca is a family estate in the village of Barbaresco itself, bottling since 1960 and now run by Angelo Rocca's daughters Daniela, Monica and Paola with Paola's husband Carlo Castellengo. About 18 hectares, 10 of them Nebbiolo, in the Ovello (Vigna Loreto), Ronchi and Montersino vineyards; farmed sustainably (SQNPI and Green Experience certified). This replaced the G.D. Vajra Langhe Nebbiolo in October 2026. Glass and bottle price carried over from the Vajra slot; confirm before quoting.",
+   "winemaking": "Not confirmed with the importer yet. Albino Rocca's Langhe Nebbiolo is the estate's earlier-drinking Nebbiolo, raised to show fruit rather than the long cask aging of their Barbaresco. Ask your lead for the tech sheet.",
+   "has_notes": false,
+   "specs": [],
    "pronguide": [
     {
-     "term": "G.D. Vajra",
-     "pron": "VY-rah"
+     "term": "Albino Rocca",
+     "pron": "al-BEE-noh ROK-kah"
     },
     {
      "term": "Langhe",
@@ -1748,11 +1723,11 @@ window.SF = {
      "pron": "neb-BYOH-loh"
     },
     {
-     "term": "Piemonte",
-     "pron": "pyeh-MON-teh"
+     "term": "Barbaresco",
+     "pron": "bar-bah-RES-koh"
     }
    ],
-   "added": "2026-08-01"
+   "added": "2026-10-09"
   },
   {
    "section": "Red",
@@ -13773,7 +13748,7 @@ window.SF = {
  },
  "wineInv": {
   "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage.",
-  "updated": "2026-09-30",
+  "updated": "2026-10-09",
   "glassesPerBottle": 4,
   "wines": [
    {
@@ -13870,6 +13845,14 @@ window.SF = {
    {
     "key": "g-d-vajra-langhe-nebbiolo-2024",
     "name": "G.D. Vajra Langhe Nebbiolo 2024",
+    "type": "Red",
+    "status": "cellar",
+    "vendor": "",
+    "phaseOut": true
+   },
+   {
+    "key": "albino-rocca-langhe-nebbiolo",
+    "name": "Albino Rocca Langhe Nebbiolo",
     "type": "Red",
     "status": "core-glass",
     "vendor": ""
@@ -14216,6 +14199,22 @@ window.SF = {
     "type": "Red",
     "status": "cellar",
     "vendor": "Southern Glazer's"
+   },
+   {
+    "key": "vandori-bubbles",
+    "name": "Vandori (comp bubbles for anniversaries)",
+    "type": "Sparkling",
+    "status": "cellar",
+    "vendor": "",
+    "note": "Not on the list. Poured as a gift for anniversaries, so it leaves without a Revel button."
+   },
+   {
+    "key": "sabbia-orange",
+    "name": "Sabbia Orange (glass special)",
+    "type": "Orange",
+    "status": "cellar",
+    "vendor": "",
+    "note": "Glass-pour special being run out 2026-10-09. Rings in as Special Glass Pour, which inventory ignores."
    }
   ],
   "buttons": {
@@ -14260,10 +14259,10 @@ window.SF = {
    "Corte Pavone Btl.": "corte-pavone-rosso-di-montalcino-2023",
    "Corte Pavone Btl": "corte-pavone-rosso-di-montalcino-2023",
    "Corte Pavone": "corte-pavone-rosso-di-montalcino-2023",
-   "GL Nebbiolo": "g-d-vajra-langhe-nebbiolo-2024",
-   "Nebbiolo Btl.": "g-d-vajra-langhe-nebbiolo-2024",
-   "Nebbiolo Btl": "g-d-vajra-langhe-nebbiolo-2024",
-   "Nebbiolo": "g-d-vajra-langhe-nebbiolo-2024",
+   "GL Nebbiolo": "albino-rocca-langhe-nebbiolo",
+   "Nebbiolo Btl.": "albino-rocca-langhe-nebbiolo",
+   "Nebbiolo Btl": "albino-rocca-langhe-nebbiolo",
+   "Nebbiolo": "albino-rocca-langhe-nebbiolo",
    "GL Champagne": "louis-armand-premier-cru-champagne",
    "Louis Armand Btl.": "louis-armand-premier-cru-champagne",
    "Louis Armand Btl": "louis-armand-premier-cru-champagne",
@@ -14353,5 +14352,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1791590064"
+ "build": "1791590547"
 };

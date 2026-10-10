@@ -1,582 +1,606 @@
 {
- "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage.",
- "updated": "2026-09-30",
- "glassesPerBottle": 4,
- "wines": [
-  {
-   "key": "san-fermo-prosecco-house",
-   "name": "House Prosecco: Bellenda \"San Fermo\"",
-   "type": "Sparkling",
-   "status": "core-glass",
-   "vendor": "Specialty Cellars"
+  "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage.",
+  "updated": "2026-10-09",
+  "glassesPerBottle": 4,
+  "wines": [
+    {
+      "key": "san-fermo-prosecco-house",
+      "name": "House Prosecco: Bellenda \"San Fermo\"",
+      "type": "Sparkling",
+      "status": "core-glass",
+      "vendor": "Specialty Cellars"
+    },
+    {
+      "key": "le-origini-passanello-lambrusco-grasparossa-2024",
+      "name": "Le Origini \"Passanello\" Lambrusco Grasparossa 2024",
+      "type": "Sparkling",
+      "status": "cellar",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "le-vaglie-verdicchio-house-white",
+      "name": "House White: Le Vaglie Verdicchio",
+      "type": "White",
+      "status": "core-glass",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "vigna-del-lauro-sauvignon-blanc-collio-2024",
+      "name": "Vigna del Lauro Sauvignon Blanc, Collio 2024",
+      "type": "White",
+      "status": "core-glass",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "la-spinetta-vermentino-2025",
+      "name": "La Spinetta Vermentino 2025",
+      "type": "White",
+      "status": "core-glass",
+      "vendor": ""
+    },
+    {
+      "key": "valle-dell-acate-thymbra-vermentino-2023",
+      "name": "Valle dell'Acate \"Thymbra\" Vermentino 2023",
+      "type": "White",
+      "status": "cellar",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "borgo-savaian-skins-are-kings",
+      "name": "Borgo Savaian Masaret \"Skins are Kings\" Orange NV",
+      "type": "Orange",
+      "status": "core-glass",
+      "vendor": "Vinea"
+    },
+    {
+      "key": "la-spinetta-il-rose-di-casanova-2025",
+      "name": "La Spinetta \"Il Rosé di Casanova\" 2025",
+      "type": "Rosé",
+      "status": "core-glass",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "brigaldara-valpolicella-2024",
+      "name": "Brigaldara Valpolicella 2024",
+      "type": "Red",
+      "status": "core-glass",
+      "vendor": ""
+    },
+    {
+      "key": "corte-scaletta-valpolicella-2022",
+      "name": "Corte Scaletta Valpolicella 2022",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "Vinea"
+    },
+    {
+      "key": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
+      "name": "House Red: Corsini \"Matot\" Langhe Rosso",
+      "type": "Red",
+      "status": "core-glass",
+      "vendor": "Casa Bruno"
+    },
+    {
+      "key": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
+      "name": "La Valentina \"Spelt\" Montepulciano d'Abruzzo Riserva 2021",
+      "type": "Red",
+      "status": "core-glass",
+      "vendor": "Winebow"
+    },
+    {
+      "key": "corte-pavone-rosso-di-montalcino-2023",
+      "name": "Corte Pavone Rosso di Montalcino 2023",
+      "type": "Red",
+      "status": "core-glass",
+      "vendor": "Specialty Cellars"
+    },
+    {
+      "key": "g-d-vajra-langhe-nebbiolo-2024",
+      "name": "G.D. Vajra Langhe Nebbiolo 2024",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "",
+      "phaseOut": true
+    },
+    {
+      "key": "albino-rocca-langhe-nebbiolo",
+      "name": "Albino Rocca Langhe Nebbiolo",
+      "type": "Red",
+      "status": "core-glass",
+      "vendor": ""
+    },
+    {
+      "key": "louis-armand-premier-cru-champagne",
+      "name": "Louis Armand Premier Cru Champagne",
+      "type": "Sparkling",
+      "status": "core-glass",
+      "vendor": "Vinea"
+    },
+    {
+      "key": "laurent-perrier-champagne",
+      "name": "Laurent Perrier Champagne",
+      "type": "Sparkling",
+      "status": "core-bottle",
+      "vendor": "Winebow"
+    },
+    {
+      "key": "angelo-negro-unfiltered-arneis-2024",
+      "name": "Angelo Negro Unfiltered Arneis 2024",
+      "type": "White",
+      "status": "core-glass",
+      "vendor": "Vehrs"
+    },
+    {
+      "key": "rocca-del-principe-fiano-di-avellino",
+      "name": "Rocca del Principe Fiano di Avellino 2025",
+      "type": "White",
+      "status": "core-glass",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "terre-nere-etna-bianco",
+      "name": "Terre Nere Etna Bianco 2024",
+      "type": "White",
+      "status": "core-bottle",
+      "vendor": ""
+    },
+    {
+      "key": "copertino-riserva-negroamaro-2016",
+      "name": "Copertino Riserva Negroamaro 2017",
+      "type": "Red",
+      "status": "core-glass",
+      "vendor": "Vehrs"
+    },
+    {
+      "key": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
+      "name": "Podere Ruggeri Corsini \"Armujan\" Barbera d'Alba Superiore 2022",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": "Casa Bruno"
+    },
+    {
+      "key": "felsina-berardenga-chianti-classico-2022",
+      "name": "Felsina \"Berardenga\" Chianti Classico 2022",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "terre-nere-bellacolonna-etna-rosso-2022",
+      "name": "Terre Nere \"Bellacolonna\" Etna Rosso 2022",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": ""
+    },
+    {
+      "key": "piaggia-il-sasso-carmignano",
+      "name": "Piaggia \"Il Sasso\" Carmignano 2022",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": ""
+    },
+    {
+      "key": "franco-molino-cascina-rocca-barolo-2019",
+      "name": "Franco Molino \"Cascina Rocca\" Barolo 2019",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": ""
+    },
+    {
+      "key": "castello-di-neive-barbaresco-santo-stefano-2022",
+      "name": "Castello di Neive Barbaresco 2023",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": "Winebow"
+    },
+    {
+      "key": "voliero-brunello-di-montalcino-2017",
+      "name": "Voliero Brunello di Montalcino 2017",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "domaine-lingot-martin-pet-nat-rose",
+      "name": "Domaine Lingot-Martin Pet Nat Rosé",
+      "type": "Sparkling",
+      "status": "cellar",
+      "vendor": ""
+    },
+    {
+      "key": "il-ceo-vespri-pet-nat",
+      "name": "Il Ceo \"Vespri\" Pet Nat",
+      "type": "Sparkling",
+      "status": "cellar",
+      "vendor": "Walden Selections"
+    },
+    {
+      "key": "pojer-e-sandri-zero-infinito-pet-nat",
+      "name": "Pojer e Sandri \"Zero Infinito\" Pet Nat",
+      "type": "Sparkling",
+      "status": "cellar",
+      "vendor": ""
+    },
+    {
+      "key": "claudio-plessi-muntanera-rosato",
+      "name": "Claudio Plessi \"Muntanera\" Rosato 2024",
+      "type": "Sparkling",
+      "status": "core-bottle",
+      "vendor": "Petit Monde",
+      "phaseOut": true
+    },
+    {
+      "key": "paltrinieri-sant-agata-lambrusco-di-sorbara",
+      "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara 2024",
+      "type": "Sparkling",
+      "status": "core-glass",
+      "vendor": "Petit Monde"
+    },
+    {
+      "key": "folicello-il-rosso-lambrusco-dell-emilia",
+      "name": "Folicello \"Il Rosso\" Lambrusco dell'Emilia",
+      "type": "Sparkling",
+      "status": "cellar",
+      "vendor": "Walden Selections"
+    },
+    {
+      "key": "apres-sol-brut-rose",
+      "name": "Apres Sol Brut Rosé",
+      "type": "Sparkling",
+      "status": "cellar",
+      "vendor": "Odom"
+    },
+    {
+      "key": "pietramore-trebbiano-d-abruzzo-superiore-2021",
+      "name": "Pietramore Trebbiano d'Abruzzo Superiore 2021",
+      "type": "White",
+      "status": "cellar",
+      "vendor": "Vinea"
+    },
+    {
+      "key": "pietramore-passerina-abruzzo-superiore",
+      "name": "Pietramore Passerina Abruzzo Superiore",
+      "type": "White",
+      "status": "cellar",
+      "vendor": ""
+    },
+    {
+      "key": "i-pentri-flora-falanghina-2021",
+      "name": "I Pentri \"Flora\" Falanghina 2021",
+      "type": "White",
+      "status": "cellar",
+      "vendor": "Vinifera"
+    },
+    {
+      "key": "l-archetipo-greco-bianco-2024",
+      "name": "L'Archetipo Greco Bianco 2024",
+      "type": "White",
+      "status": "cellar",
+      "vendor": ""
+    },
+    {
+      "key": "schiopetto-sauvignon-blanc-collio",
+      "name": "Schiopetto Sauvignon Blanc, Collio",
+      "type": "White",
+      "status": "cellar",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "viberti-derthona-timorasso-2023",
+      "name": "Viberti \"Derthona\" Timorasso 2023",
+      "type": "White",
+      "status": "core-bottle",
+      "vendor": "",
+      "phaseOut": true
+    },
+    {
+      "key": "scarpa-monferrato-bianco-timorasso-2020",
+      "name": "Scarpa Monferrato Bianco (Timorasso) 2020",
+      "type": "White",
+      "status": "cellar",
+      "vendor": "Cru Selections"
+    },
+    {
+      "key": "fontodi-meriggio-bianco-2022",
+      "name": "Fontodi \"Meriggio\" Bianco 2022",
+      "type": "White",
+      "status": "cellar",
+      "vendor": "Vinifera"
+    },
+    {
+      "key": "terlan-terlaner-i-primo-grande-cuvee-2021",
+      "name": "Terlan \"Terlaner I\" Primo Grande Cuvée 2021",
+      "type": "White",
+      "status": "core-bottle",
+      "vendor": "",
+      "phaseOut": true
+    },
+    {
+      "key": "gilbert-cellars-orange-2024",
+      "name": "Gilbert Cellars Orange 2024",
+      "type": "Orange",
+      "status": "cellar",
+      "vendor": ""
+    },
+    {
+      "key": "ruth-lewandowski-tatto-orange-2022",
+      "name": "Ruth Lewandowski \"Tatto\" Orange 2022",
+      "type": "Orange",
+      "status": "cellar",
+      "vendor": "Walden Selections"
+    },
+    {
+      "key": "le-vigne-di-faraone-cerasuolo-d-abruzzo-2024",
+      "name": "Le Vigne di Faraone Cerasuolo d'Abruzzo 2024",
+      "type": "Rosé",
+      "status": "cellar",
+      "vendor": "Vinea"
+    },
+    {
+      "key": "boffalora-umo-chiavennasca-2021",
+      "name": "Boffalora \"Umo\" Chiavennasca 2021",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "Petit Monde"
+    },
+    {
+      "key": "i-pentri-kerres-piedirosso-2016",
+      "name": "I Pentri \"Kerres\" Piedirosso 2016",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "Vinifera"
+    },
+    {
+      "key": "la-miraja-ruche-di-castagnole-monferrato-2023",
+      "name": "La Miraja Ruché di Castagnole Monferrato 2023",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": ""
+    },
+    {
+      "key": "uccelliera-rapace-2019",
+      "name": "Uccelliera \"Rapace\" 2019",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "scarpa-verduno-pelaverga-2022",
+      "name": "Scarpa Verduno Pelaverga 2022",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "Cru Selections"
+    },
+    {
+      "key": "zenato-cresasso-corvina-2015",
+      "name": "Zenato \"Cresasso\" Corvina 2015",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": ""
+    },
+    {
+      "key": "cocito-baluchin-barbaresco-riserva-2017",
+      "name": "Cocito \"Baluchin\" Barbaresco Riserva 2017",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": "Elliot Bay",
+      "phaseOut": true
+    },
+    {
+      "key": "cantina-terlano-porphyr-lagrein-riserva-2021",
+      "name": "Cantina Terlano \"Porphyr\" Lagrein Riserva 2021",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": "",
+      "phaseOut": true
+    },
+    {
+      "key": "arpepe-sassella-rocce-rosse-riserva",
+      "name": "Arpepe \"Sassella Rocce Rosse\" Riserva",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "Walden Selections"
+    },
+    {
+      "key": "tenuta-santa-maria-amarone-classico-riserva-2018",
+      "name": "Tenuta Santa Maria Amarone Classico Riserva 2018",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": "Elliot Bay",
+      "phaseOut": true
+    },
+    {
+      "key": "canalicchio-di-sopra-brunello-di-montalcino-2006",
+      "name": "Canalicchio di Sopra Brunello di Montalcino 2006",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": ""
+    },
+    {
+      "key": "ciacci-piccolomini-brunello-di-montalcino-2019",
+      "name": "Ciacci Piccolomini Brunello di Montalcino 2019",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "Elliot Bay"
+    },
+    {
+      "key": "la-gerla-brunello-di-montalcino-2018",
+      "name": "La Gerla Brunello di Montalcino 2018",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "Cru Selections"
+    },
+    {
+      "key": "viberti-san-pietro-barolo-riserva-2018",
+      "name": "Viberti \"San Pietro\" Barolo Riserva 2018",
+      "type": "Red",
+      "status": "core-bottle",
+      "vendor": "Elliot Bay",
+      "phaseOut": true
+    },
+    {
+      "key": "vietti-barolo-ravera-2020",
+      "name": "Vietti Barolo \"Ravera\" 2020",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "Winebow"
+    },
+    {
+      "key": "antinori-tignanello-2021",
+      "name": "Antinori \"Tignanello\" 2021",
+      "type": "Red",
+      "status": "cellar",
+      "vendor": "Southern Glazer's"
+    },
+    {
+      "key": "vandori-bubbles",
+      "name": "Vandori (comp bubbles for anniversaries)",
+      "type": "Sparkling",
+      "status": "cellar",
+      "vendor": "",
+      "note": "Not on the list. Poured as a gift for anniversaries, so it leaves without a Revel button."
+    },
+    {
+      "key": "sabbia-orange",
+      "name": "Sabbia Orange (glass special)",
+      "type": "Orange",
+      "status": "cellar",
+      "vendor": "",
+      "note": "Glass-pour special being run out 2026-10-09. Rings in as Special Glass Pour, which inventory ignores."
+    }
+  ],
+  "buttons": {
+    "GL House Prosecco": "san-fermo-prosecco-house",
+    "House Prosecco Btl.": "san-fermo-prosecco-house",
+    "House Prosecco Btl": "san-fermo-prosecco-house",
+    "House Prosecco": "san-fermo-prosecco-house",
+    "GL Lambrusco": "paltrinieri-sant-agata-lambrusco-di-sorbara",
+    "Lambrusco Btl.": "paltrinieri-sant-agata-lambrusco-di-sorbara",
+    "Lambrusco Btl": "paltrinieri-sant-agata-lambrusco-di-sorbara",
+    "Lambrusco": "paltrinieri-sant-agata-lambrusco-di-sorbara",
+    "GL House White": "le-vaglie-verdicchio-house-white",
+    "House White Btl.": "le-vaglie-verdicchio-house-white",
+    "House White Btl": "le-vaglie-verdicchio-house-white",
+    "House White": "le-vaglie-verdicchio-house-white",
+    "GL Sauvignon Blanc": "vigna-del-lauro-sauvignon-blanc-collio-2024",
+    "Sauvignon Blanc Btl.": "vigna-del-lauro-sauvignon-blanc-collio-2024",
+    "GL Vermentino": "la-spinetta-vermentino-2025",
+    "Vermentino Btl.": "la-spinetta-vermentino-2025",
+    "Vermentino Btl": "la-spinetta-vermentino-2025",
+    "Vermentino": "la-spinetta-vermentino-2025",
+    "GL Orange": "borgo-savaian-skins-are-kings",
+    "Orange Btl": "borgo-savaian-skins-are-kings",
+    "Orange": "borgo-savaian-skins-are-kings",
+    "GL Rose": "la-spinetta-il-rose-di-casanova-2025",
+    "Rose Btl.": "la-spinetta-il-rose-di-casanova-2025",
+    "Rose Btl": "la-spinetta-il-rose-di-casanova-2025",
+    "Rose": "la-spinetta-il-rose-di-casanova-2025",
+    "Gl Valpolicella": "brigaldara-valpolicella-2024",
+    "GL Valpolicella": "brigaldara-valpolicella-2024",
+    "Corte Scaletto Valpolicella Btl.": "corte-scaletta-valpolicella-2022",
+    "Corte Scaletto Valpolicella": "corte-scaletta-valpolicella-2022",
+    "GL House Red": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
+    "House Red Btl.": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
+    "House Red Btl": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
+    "House Red": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
+    "GL Spelt": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
+    "Spelt Btl.": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
+    "Spelt Btl": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
+    "Spelt": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
+    "GL Corte Pavone": "corte-pavone-rosso-di-montalcino-2023",
+    "Corte Pavone Btl.": "corte-pavone-rosso-di-montalcino-2023",
+    "Corte Pavone Btl": "corte-pavone-rosso-di-montalcino-2023",
+    "Corte Pavone": "corte-pavone-rosso-di-montalcino-2023",
+    "GL Nebbiolo": "albino-rocca-langhe-nebbiolo",
+    "Nebbiolo Btl.": "albino-rocca-langhe-nebbiolo",
+    "Nebbiolo Btl": "albino-rocca-langhe-nebbiolo",
+    "Nebbiolo": "albino-rocca-langhe-nebbiolo",
+    "GL Champagne": "louis-armand-premier-cru-champagne",
+    "Louis Armand Btl.": "louis-armand-premier-cru-champagne",
+    "Louis Armand Btl": "louis-armand-premier-cru-champagne",
+    "Louis Armand": "louis-armand-premier-cru-champagne",
+    "Laurent Perrier Btl.": "laurent-perrier-champagne",
+    "GL Angelo Negro": "angelo-negro-unfiltered-arneis-2024",
+    "Angelo Negro Btl.": "angelo-negro-unfiltered-arneis-2024",
+    "Angelo Negro Btl": "angelo-negro-unfiltered-arneis-2024",
+    "Angelo Negro": "angelo-negro-unfiltered-arneis-2024",
+    "GL Fiano": "rocca-del-principe-fiano-di-avellino",
+    "Fiano Btl.": "rocca-del-principe-fiano-di-avellino",
+    "Fiano Btl": "rocca-del-principe-fiano-di-avellino",
+    "Terre Nere Etna Bianco Btl.": "terre-nere-etna-bianco",
+    "Terre Nere Etna Bianco Btl": "terre-nere-etna-bianco",
+    "Terre Nere Etna Bianco": "terre-nere-etna-bianco",
+    "GL Copertino": "copertino-riserva-negroamaro-2016",
+    "Copertino Btl.": "copertino-riserva-negroamaro-2016",
+    "Copertino Btl": "copertino-riserva-negroamaro-2016",
+    "Copertino": "copertino-riserva-negroamaro-2016",
+    "Corsini Armujan Barbera Btl.": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
+    "Corsini Armujan Barbera Btl": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
+    "Corsini Armujan Barbera": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
+    "Felsina Chianti btl": "felsina-berardenga-chianti-classico-2022",
+    "Felsina Chianti": "felsina-berardenga-chianti-classico-2022",
+    "Terre Nere Bellacolona Etna Rosso Btl.": "terre-nere-bellacolonna-etna-rosso-2022",
+    "Terre Nere Bellacolona Etna Rosso Btl": "terre-nere-bellacolonna-etna-rosso-2022",
+    "Terre Nere Bellacolona Etna Rosso": "terre-nere-bellacolonna-etna-rosso-2022",
+    "Terre Nere Etna Rosso Btl": "terre-nere-bellacolonna-etna-rosso-2022",
+    "Il Sasso Carmignano Btl.": "piaggia-il-sasso-carmignano",
+    "Il Sasso Carmignano Btl": "piaggia-il-sasso-carmignano",
+    "Il Sasso Carmignano": "piaggia-il-sasso-carmignano",
+    "Franco Molino Barolo Btl.": "franco-molino-cascina-rocca-barolo-2019",
+    "Franco Molino Barolo Btl": "franco-molino-cascina-rocca-barolo-2019",
+    "Franco Molino Barolo": "franco-molino-cascina-rocca-barolo-2019",
+    "Castello Di Neive Barbaresco Btl.": "castello-di-neive-barbaresco-santo-stefano-2022",
+    "Castello Di Neive Barbaresco Btl": "castello-di-neive-barbaresco-santo-stefano-2022",
+    "Castello Di Neive Barbaresco": "castello-di-neive-barbaresco-santo-stefano-2022",
+    "Voliero Brunello Btl.": "voliero-brunello-di-montalcino-2017",
+    "GL Pet Nat Rose": "domaine-lingot-martin-pet-nat-rose",
+    "Pet Nat Rose Btl.": "domaine-lingot-martin-pet-nat-rose",
+    "Vespri Petnat Btl.": "il-ceo-vespri-pet-nat",
+    "Pojere E Sandro Zero Infinito Btl.": "pojer-e-sandri-zero-infinito-pet-nat",
+    "Muntanera Plessi Rosato Btl.": "claudio-plessi-muntanera-rosato",
+    "Muntanera Rosato Btl.": "claudio-plessi-muntanera-rosato",
+    "GL Apres Sol Rose": "apres-sol-brut-rose",
+    "Apres Sol Btl.": "apres-sol-brut-rose",
+    "GL Trebbiano": "pietramore-trebbiano-d-abruzzo-superiore-2021",
+    "Pietramore Trebbiano Btl.": "pietramore-trebbiano-d-abruzzo-superiore-2021",
+    "PietrAmore Trebbiano Btl.": "pietramore-trebbiano-d-abruzzo-superiore-2021",
+    "Pietramore Trebbiano": "pietramore-trebbiano-d-abruzzo-superiore-2021",
+    "Flora Falanghina Btl.": "i-pentri-flora-falanghina-2021",
+    "Flora Falanghina": "i-pentri-flora-falanghina-2021",
+    "Larchetipo Greco Bianco Btl.": "l-archetipo-greco-bianco-2024",
+    "Schiopetto Sauvignon Blanc Btl.": "schiopetto-sauvignon-blanc-collio",
+    "Schiopetto Sauvignon Blanc Btl": "schiopetto-sauvignon-blanc-collio",
+    "Schiopetto Sauv Blanc Btl": "schiopetto-sauvignon-blanc-collio",
+    "Schiopetto Sauvignon Blanc": "schiopetto-sauvignon-blanc-collio",
+    "Viberti Timorasso Btl.": "viberti-derthona-timorasso-2023",
+    "Viberti Timorassoi Btl.": "viberti-derthona-timorasso-2023",
+    "Meriggio Btl.": "fontodi-meriggio-bianco-2022",
+    "Terlano I Primo Grand Cuvee Btl.": "terlan-terlaner-i-primo-grande-cuvee-2021",
+    "GL Cerasoulo": "le-vigne-di-faraone-cerasuolo-d-abruzzo-2024",
+    "Cerasoulo Btl.": "le-vigne-di-faraone-cerasuolo-d-abruzzo-2024",
+    "Cerasoulo": "le-vigne-di-faraone-cerasuolo-d-abruzzo-2024",
+    "I Pentri Piedirosso Btl.": "i-pentri-kerres-piedirosso-2016",
+    "I Pentri Piedirosso Btl": "i-pentri-kerres-piedirosso-2016",
+    "I Pentri Piedirosso": "i-pentri-kerres-piedirosso-2016",
+    "La Miraja Ruche btl": "la-miraja-ruche-di-castagnole-monferrato-2023",
+    "Uccelliera Rapace Btl.": "uccelliera-rapace-2019",
+    "Scarpa Pelaverga Btl.": "scarpa-verduno-pelaverga-2022",
+    "Zenato Cresasso 2015 Btl.": "zenato-cresasso-corvina-2015",
+    "Cocito Barbaresco 2017": "cocito-baluchin-barbaresco-riserva-2017",
+    "Terlano Porphyr Lagrein Btl.": "cantina-terlano-porphyr-lagrein-riserva-2021",
+    "Terlano Porphyr Lagrein Btl": "cantina-terlano-porphyr-lagrein-riserva-2021",
+    "Arpepe Sassella Rocce Rosse Btl.": "arpepe-sassella-rocce-rosse-riserva",
+    "Arpepe Sassella Rocce Rosse": "arpepe-sassella-rocce-rosse-riserva",
+    "Tenuta Santa Maria Amarone Btl.": "tenuta-santa-maria-amarone-classico-riserva-2018",
+    "Canalicchio Brunello Btl.": "canalicchio-di-sopra-brunello-di-montalcino-2006",
+    "Viberti Barolo Btl.": "viberti-san-pietro-barolo-riserva-2018",
+    "Vietti Barolo Btl.": "vietti-barolo-ravera-2020"
   },
-  {
-   "key": "le-origini-passanello-lambrusco-grasparossa-2024",
-   "name": "Le Origini \"Passanello\" Lambrusco Grasparossa 2024",
-   "type": "Sparkling",
-   "status": "cellar",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "le-vaglie-verdicchio-house-white",
-   "name": "House White: Le Vaglie Verdicchio",
-   "type": "White",
-   "status": "core-glass",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "vigna-del-lauro-sauvignon-blanc-collio-2024",
-   "name": "Vigna del Lauro Sauvignon Blanc, Collio 2024",
-   "type": "White",
-   "status": "core-glass",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "la-spinetta-vermentino-2025",
-   "name": "La Spinetta Vermentino 2025",
-   "type": "White",
-   "status": "core-glass",
-   "vendor": ""
-  },
-  {
-   "key": "valle-dell-acate-thymbra-vermentino-2023",
-   "name": "Valle dell'Acate \"Thymbra\" Vermentino 2023",
-   "type": "White",
-   "status": "cellar",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "borgo-savaian-skins-are-kings",
-   "name": "Borgo Savaian Masaret \"Skins are Kings\" Orange NV",
-   "type": "Orange",
-   "status": "core-glass",
-   "vendor": "Vinea"
-  },
-  {
-   "key": "la-spinetta-il-rose-di-casanova-2025",
-   "name": "La Spinetta \"Il Rosé di Casanova\" 2025",
-   "type": "Rosé",
-   "status": "core-glass",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "brigaldara-valpolicella-2024",
-   "name": "Brigaldara Valpolicella 2024",
-   "type": "Red",
-   "status": "core-glass",
-   "vendor": ""
-  },
-  {
-   "key": "corte-scaletta-valpolicella-2022",
-   "name": "Corte Scaletta Valpolicella 2022",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": "Vinea"
-  },
-  {
-   "key": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
-   "name": "House Red: Corsini \"Matot\" Langhe Rosso",
-   "type": "Red",
-   "status": "core-glass",
-   "vendor": "Casa Bruno"
-  },
-  {
-   "key": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
-   "name": "La Valentina \"Spelt\" Montepulciano d'Abruzzo Riserva 2021",
-   "type": "Red",
-   "status": "core-glass",
-   "vendor": "Winebow"
-  },
-  {
-   "key": "corte-pavone-rosso-di-montalcino-2023",
-   "name": "Corte Pavone Rosso di Montalcino 2023",
-   "type": "Red",
-   "status": "core-glass",
-   "vendor": "Specialty Cellars"
-  },
-  {
-   "key": "g-d-vajra-langhe-nebbiolo-2024",
-   "name": "G.D. Vajra Langhe Nebbiolo 2024",
-   "type": "Red",
-   "status": "core-glass",
-   "vendor": ""
-  },
-  {
-   "key": "louis-armand-premier-cru-champagne",
-   "name": "Louis Armand Premier Cru Champagne",
-   "type": "Sparkling",
-   "status": "core-glass",
-   "vendor": "Vinea"
-  },
-  {
-   "key": "laurent-perrier-champagne",
-   "name": "Laurent Perrier Champagne",
-   "type": "Sparkling",
-   "status": "core-bottle",
-   "vendor": "Winebow"
-  },
-  {
-   "key": "angelo-negro-unfiltered-arneis-2024",
-   "name": "Angelo Negro Unfiltered Arneis 2024",
-   "type": "White",
-   "status": "core-glass",
-   "vendor": "Vehrs"
-  },
-  {
-   "key": "rocca-del-principe-fiano-di-avellino",
-   "name": "Rocca del Principe Fiano di Avellino 2025",
-   "type": "White",
-   "status": "core-glass",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "terre-nere-etna-bianco",
-   "name": "Terre Nere Etna Bianco 2024",
-   "type": "White",
-   "status": "core-bottle",
-   "vendor": ""
-  },
-  {
-   "key": "copertino-riserva-negroamaro-2016",
-   "name": "Copertino Riserva Negroamaro 2017",
-   "type": "Red",
-   "status": "core-glass",
-   "vendor": "Vehrs"
-  },
-  {
-   "key": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
-   "name": "Podere Ruggeri Corsini \"Armujan\" Barbera d'Alba Superiore 2022",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": "Casa Bruno"
-  },
-  {
-   "key": "felsina-berardenga-chianti-classico-2022",
-   "name": "Felsina \"Berardenga\" Chianti Classico 2022",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "terre-nere-bellacolonna-etna-rosso-2022",
-   "name": "Terre Nere \"Bellacolonna\" Etna Rosso 2022",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": ""
-  },
-  {
-   "key": "piaggia-il-sasso-carmignano",
-   "name": "Piaggia \"Il Sasso\" Carmignano 2022",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": ""
-  },
-  {
-   "key": "franco-molino-cascina-rocca-barolo-2019",
-   "name": "Franco Molino \"Cascina Rocca\" Barolo 2019",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": ""
-  },
-  {
-   "key": "castello-di-neive-barbaresco-santo-stefano-2022",
-   "name": "Castello di Neive Barbaresco 2023",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": "Winebow"
-  },
-  {
-   "key": "voliero-brunello-di-montalcino-2017",
-   "name": "Voliero Brunello di Montalcino 2017",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "domaine-lingot-martin-pet-nat-rose",
-   "name": "Domaine Lingot-Martin Pet Nat Rosé",
-   "type": "Sparkling",
-   "status": "cellar",
-   "vendor": ""
-  },
-  {
-   "key": "il-ceo-vespri-pet-nat",
-   "name": "Il Ceo \"Vespri\" Pet Nat",
-   "type": "Sparkling",
-   "status": "cellar",
-   "vendor": "Walden Selections"
-  },
-  {
-   "key": "pojer-e-sandri-zero-infinito-pet-nat",
-   "name": "Pojer e Sandri \"Zero Infinito\" Pet Nat",
-   "type": "Sparkling",
-   "status": "cellar",
-   "vendor": ""
-  },
-  {
-   "key": "claudio-plessi-muntanera-rosato",
-   "name": "Claudio Plessi \"Muntanera\" Rosato 2024",
-   "type": "Sparkling",
-   "status": "core-bottle",
-   "vendor": "Petit Monde",
-   "phaseOut": true
-  },
-  {
-   "key": "paltrinieri-sant-agata-lambrusco-di-sorbara",
-   "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara 2024",
-   "type": "Sparkling",
-   "status": "core-glass",
-   "vendor": "Petit Monde"
-  },
-  {
-   "key": "folicello-il-rosso-lambrusco-dell-emilia",
-   "name": "Folicello \"Il Rosso\" Lambrusco dell'Emilia",
-   "type": "Sparkling",
-   "status": "cellar",
-   "vendor": "Walden Selections"
-  },
-  {
-   "key": "apres-sol-brut-rose",
-   "name": "Apres Sol Brut Rosé",
-   "type": "Sparkling",
-   "status": "cellar",
-   "vendor": "Odom"
-  },
-  {
-   "key": "pietramore-trebbiano-d-abruzzo-superiore-2021",
-   "name": "Pietramore Trebbiano d'Abruzzo Superiore 2021",
-   "type": "White",
-   "status": "cellar",
-   "vendor": "Vinea"
-  },
-  {
-   "key": "pietramore-passerina-abruzzo-superiore",
-   "name": "Pietramore Passerina Abruzzo Superiore",
-   "type": "White",
-   "status": "cellar",
-   "vendor": ""
-  },
-  {
-   "key": "i-pentri-flora-falanghina-2021",
-   "name": "I Pentri \"Flora\" Falanghina 2021",
-   "type": "White",
-   "status": "cellar",
-   "vendor": "Vinifera"
-  },
-  {
-   "key": "l-archetipo-greco-bianco-2024",
-   "name": "L'Archetipo Greco Bianco 2024",
-   "type": "White",
-   "status": "cellar",
-   "vendor": ""
-  },
-  {
-   "key": "schiopetto-sauvignon-blanc-collio",
-   "name": "Schiopetto Sauvignon Blanc, Collio",
-   "type": "White",
-   "status": "cellar",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "viberti-derthona-timorasso-2023",
-   "name": "Viberti \"Derthona\" Timorasso 2023",
-   "type": "White",
-   "status": "core-bottle",
-   "vendor": "",
-   "phaseOut": true
-  },
-  {
-   "key": "scarpa-monferrato-bianco-timorasso-2020",
-   "name": "Scarpa Monferrato Bianco (Timorasso) 2020",
-   "type": "White",
-   "status": "cellar",
-   "vendor": "Cru Selections"
-  },
-  {
-   "key": "fontodi-meriggio-bianco-2022",
-   "name": "Fontodi \"Meriggio\" Bianco 2022",
-   "type": "White",
-   "status": "cellar",
-   "vendor": "Vinifera"
-  },
-  {
-   "key": "terlan-terlaner-i-primo-grande-cuvee-2021",
-   "name": "Terlan \"Terlaner I\" Primo Grande Cuvée 2021",
-   "type": "White",
-   "status": "core-bottle",
-   "vendor": "",
-   "phaseOut": true
-  },
-  {
-   "key": "gilbert-cellars-orange-2024",
-   "name": "Gilbert Cellars Orange 2024",
-   "type": "Orange",
-   "status": "cellar",
-   "vendor": ""
-  },
-  {
-   "key": "ruth-lewandowski-tatto-orange-2022",
-   "name": "Ruth Lewandowski \"Tatto\" Orange 2022",
-   "type": "Orange",
-   "status": "cellar",
-   "vendor": "Walden Selections"
-  },
-  {
-   "key": "le-vigne-di-faraone-cerasuolo-d-abruzzo-2024",
-   "name": "Le Vigne di Faraone Cerasuolo d'Abruzzo 2024",
-   "type": "Rosé",
-   "status": "cellar",
-   "vendor": "Vinea"
-  },
-  {
-   "key": "boffalora-umo-chiavennasca-2021",
-   "name": "Boffalora \"Umo\" Chiavennasca 2021",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": "Petit Monde"
-  },
-  {
-   "key": "i-pentri-kerres-piedirosso-2016",
-   "name": "I Pentri \"Kerres\" Piedirosso 2016",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": "Vinifera"
-  },
-  {
-   "key": "la-miraja-ruche-di-castagnole-monferrato-2023",
-   "name": "La Miraja Ruché di Castagnole Monferrato 2023",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": ""
-  },
-  {
-   "key": "uccelliera-rapace-2019",
-   "name": "Uccelliera \"Rapace\" 2019",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "scarpa-verduno-pelaverga-2022",
-   "name": "Scarpa Verduno Pelaverga 2022",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": "Cru Selections"
-  },
-  {
-   "key": "zenato-cresasso-corvina-2015",
-   "name": "Zenato \"Cresasso\" Corvina 2015",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": ""
-  },
-  {
-   "key": "cocito-baluchin-barbaresco-riserva-2017",
-   "name": "Cocito \"Baluchin\" Barbaresco Riserva 2017",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": "Elliot Bay",
-   "phaseOut": true
-  },
-  {
-   "key": "cantina-terlano-porphyr-lagrein-riserva-2021",
-   "name": "Cantina Terlano \"Porphyr\" Lagrein Riserva 2021",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": "",
-   "phaseOut": true
-  },
-  {
-   "key": "arpepe-sassella-rocce-rosse-riserva",
-   "name": "Arpepe \"Sassella Rocce Rosse\" Riserva",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": "Walden Selections"
-  },
-  {
-   "key": "tenuta-santa-maria-amarone-classico-riserva-2018",
-   "name": "Tenuta Santa Maria Amarone Classico Riserva 2018",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": "Elliot Bay",
-   "phaseOut": true
-  },
-  {
-   "key": "canalicchio-di-sopra-brunello-di-montalcino-2006",
-   "name": "Canalicchio di Sopra Brunello di Montalcino 2006",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": ""
-  },
-  {
-   "key": "ciacci-piccolomini-brunello-di-montalcino-2019",
-   "name": "Ciacci Piccolomini Brunello di Montalcino 2019",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": "Elliot Bay"
-  },
-  {
-   "key": "la-gerla-brunello-di-montalcino-2018",
-   "name": "La Gerla Brunello di Montalcino 2018",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": "Cru Selections"
-  },
-  {
-   "key": "viberti-san-pietro-barolo-riserva-2018",
-   "name": "Viberti \"San Pietro\" Barolo Riserva 2018",
-   "type": "Red",
-   "status": "core-bottle",
-   "vendor": "Elliot Bay",
-   "phaseOut": true
-  },
-  {
-   "key": "vietti-barolo-ravera-2020",
-   "name": "Vietti Barolo \"Ravera\" 2020",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": "Winebow"
-  },
-  {
-   "key": "antinori-tignanello-2021",
-   "name": "Antinori \"Tignanello\" 2021",
-   "type": "Red",
-   "status": "cellar",
-   "vendor": "Southern Glazer's"
-  }
- ],
- "buttons": {
-  "GL House Prosecco": "san-fermo-prosecco-house",
-  "House Prosecco Btl.": "san-fermo-prosecco-house",
-  "House Prosecco Btl": "san-fermo-prosecco-house",
-  "House Prosecco": "san-fermo-prosecco-house",
-  "GL Lambrusco": "paltrinieri-sant-agata-lambrusco-di-sorbara",
-  "Lambrusco Btl.": "paltrinieri-sant-agata-lambrusco-di-sorbara",
-  "Lambrusco Btl": "paltrinieri-sant-agata-lambrusco-di-sorbara",
-  "Lambrusco": "paltrinieri-sant-agata-lambrusco-di-sorbara",
-  "GL House White": "le-vaglie-verdicchio-house-white",
-  "House White Btl.": "le-vaglie-verdicchio-house-white",
-  "House White Btl": "le-vaglie-verdicchio-house-white",
-  "House White": "le-vaglie-verdicchio-house-white",
-  "GL Sauvignon Blanc": "vigna-del-lauro-sauvignon-blanc-collio-2024",
-  "Sauvignon Blanc Btl.": "vigna-del-lauro-sauvignon-blanc-collio-2024",
-  "GL Vermentino": "la-spinetta-vermentino-2025",
-  "Vermentino Btl.": "la-spinetta-vermentino-2025",
-  "Vermentino Btl": "la-spinetta-vermentino-2025",
-  "Vermentino": "la-spinetta-vermentino-2025",
-  "GL Orange": "borgo-savaian-skins-are-kings",
-  "Orange Btl": "borgo-savaian-skins-are-kings",
-  "Orange": "borgo-savaian-skins-are-kings",
-  "GL Rose": "la-spinetta-il-rose-di-casanova-2025",
-  "Rose Btl.": "la-spinetta-il-rose-di-casanova-2025",
-  "Rose Btl": "la-spinetta-il-rose-di-casanova-2025",
-  "Rose": "la-spinetta-il-rose-di-casanova-2025",
-  "Gl Valpolicella": "brigaldara-valpolicella-2024",
-  "GL Valpolicella": "brigaldara-valpolicella-2024",
-  "Corte Scaletto Valpolicella Btl.": "corte-scaletta-valpolicella-2022",
-  "Corte Scaletto Valpolicella": "corte-scaletta-valpolicella-2022",
-  "GL House Red": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
-  "House Red Btl.": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
-  "House Red Btl": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
-  "House Red": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
-  "GL Spelt": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
-  "Spelt Btl.": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
-  "Spelt Btl": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
-  "Spelt": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
-  "GL Corte Pavone": "corte-pavone-rosso-di-montalcino-2023",
-  "Corte Pavone Btl.": "corte-pavone-rosso-di-montalcino-2023",
-  "Corte Pavone Btl": "corte-pavone-rosso-di-montalcino-2023",
-  "Corte Pavone": "corte-pavone-rosso-di-montalcino-2023",
-  "GL Nebbiolo": "g-d-vajra-langhe-nebbiolo-2024",
-  "Nebbiolo Btl.": "g-d-vajra-langhe-nebbiolo-2024",
-  "Nebbiolo Btl": "g-d-vajra-langhe-nebbiolo-2024",
-  "Nebbiolo": "g-d-vajra-langhe-nebbiolo-2024",
-  "GL Champagne": "louis-armand-premier-cru-champagne",
-  "Louis Armand Btl.": "louis-armand-premier-cru-champagne",
-  "Louis Armand Btl": "louis-armand-premier-cru-champagne",
-  "Louis Armand": "louis-armand-premier-cru-champagne",
-  "Laurent Perrier Btl.": "laurent-perrier-champagne",
-  "GL Angelo Negro": "angelo-negro-unfiltered-arneis-2024",
-  "Angelo Negro Btl.": "angelo-negro-unfiltered-arneis-2024",
-  "Angelo Negro Btl": "angelo-negro-unfiltered-arneis-2024",
-  "Angelo Negro": "angelo-negro-unfiltered-arneis-2024",
-  "GL Fiano": "rocca-del-principe-fiano-di-avellino",
-  "Fiano Btl.": "rocca-del-principe-fiano-di-avellino",
-  "Fiano Btl": "rocca-del-principe-fiano-di-avellino",
-  "Terre Nere Etna Bianco Btl.": "terre-nere-etna-bianco",
-  "Terre Nere Etna Bianco Btl": "terre-nere-etna-bianco",
-  "Terre Nere Etna Bianco": "terre-nere-etna-bianco",
-  "GL Copertino": "copertino-riserva-negroamaro-2016",
-  "Copertino Btl.": "copertino-riserva-negroamaro-2016",
-  "Copertino Btl": "copertino-riserva-negroamaro-2016",
-  "Copertino": "copertino-riserva-negroamaro-2016",
-  "Corsini Armujan Barbera Btl.": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
-  "Corsini Armujan Barbera Btl": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
-  "Corsini Armujan Barbera": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
-  "Felsina Chianti btl": "felsina-berardenga-chianti-classico-2022",
-  "Felsina Chianti": "felsina-berardenga-chianti-classico-2022",
-  "Terre Nere Bellacolona Etna Rosso Btl.": "terre-nere-bellacolonna-etna-rosso-2022",
-  "Terre Nere Bellacolona Etna Rosso Btl": "terre-nere-bellacolonna-etna-rosso-2022",
-  "Terre Nere Bellacolona Etna Rosso": "terre-nere-bellacolonna-etna-rosso-2022",
-  "Terre Nere Etna Rosso Btl": "terre-nere-bellacolonna-etna-rosso-2022",
-  "Il Sasso Carmignano Btl.": "piaggia-il-sasso-carmignano",
-  "Il Sasso Carmignano Btl": "piaggia-il-sasso-carmignano",
-  "Il Sasso Carmignano": "piaggia-il-sasso-carmignano",
-  "Franco Molino Barolo Btl.": "franco-molino-cascina-rocca-barolo-2019",
-  "Franco Molino Barolo Btl": "franco-molino-cascina-rocca-barolo-2019",
-  "Franco Molino Barolo": "franco-molino-cascina-rocca-barolo-2019",
-  "Castello Di Neive Barbaresco Btl.": "castello-di-neive-barbaresco-santo-stefano-2022",
-  "Castello Di Neive Barbaresco Btl": "castello-di-neive-barbaresco-santo-stefano-2022",
-  "Castello Di Neive Barbaresco": "castello-di-neive-barbaresco-santo-stefano-2022",
-  "Voliero Brunello Btl.": "voliero-brunello-di-montalcino-2017",
-  "GL Pet Nat Rose": "domaine-lingot-martin-pet-nat-rose",
-  "Pet Nat Rose Btl.": "domaine-lingot-martin-pet-nat-rose",
-  "Vespri Petnat Btl.": "il-ceo-vespri-pet-nat",
-  "Pojere E Sandro Zero Infinito Btl.": "pojer-e-sandri-zero-infinito-pet-nat",
-  "Muntanera Plessi Rosato Btl.": "claudio-plessi-muntanera-rosato",
-  "Muntanera Rosato Btl.": "claudio-plessi-muntanera-rosato",
-  "GL Apres Sol Rose": "apres-sol-brut-rose",
-  "Apres Sol Btl.": "apres-sol-brut-rose",
-  "GL Trebbiano": "pietramore-trebbiano-d-abruzzo-superiore-2021",
-  "Pietramore Trebbiano Btl.": "pietramore-trebbiano-d-abruzzo-superiore-2021",
-  "PietrAmore Trebbiano Btl.": "pietramore-trebbiano-d-abruzzo-superiore-2021",
-  "Pietramore Trebbiano": "pietramore-trebbiano-d-abruzzo-superiore-2021",
-  "Flora Falanghina Btl.": "i-pentri-flora-falanghina-2021",
-  "Flora Falanghina": "i-pentri-flora-falanghina-2021",
-  "Larchetipo Greco Bianco Btl.": "l-archetipo-greco-bianco-2024",
-  "Schiopetto Sauvignon Blanc Btl.": "schiopetto-sauvignon-blanc-collio",
-  "Schiopetto Sauvignon Blanc Btl": "schiopetto-sauvignon-blanc-collio",
-  "Schiopetto Sauv Blanc Btl": "schiopetto-sauvignon-blanc-collio",
-  "Schiopetto Sauvignon Blanc": "schiopetto-sauvignon-blanc-collio",
-  "Viberti Timorasso Btl.": "viberti-derthona-timorasso-2023",
-  "Viberti Timorassoi Btl.": "viberti-derthona-timorasso-2023",
-  "Meriggio Btl.": "fontodi-meriggio-bianco-2022",
-  "Terlano I Primo Grand Cuvee Btl.": "terlan-terlaner-i-primo-grande-cuvee-2021",
-  "GL Cerasoulo": "le-vigne-di-faraone-cerasuolo-d-abruzzo-2024",
-  "Cerasoulo Btl.": "le-vigne-di-faraone-cerasuolo-d-abruzzo-2024",
-  "Cerasoulo": "le-vigne-di-faraone-cerasuolo-d-abruzzo-2024",
-  "I Pentri Piedirosso Btl.": "i-pentri-kerres-piedirosso-2016",
-  "I Pentri Piedirosso Btl": "i-pentri-kerres-piedirosso-2016",
-  "I Pentri Piedirosso": "i-pentri-kerres-piedirosso-2016",
-  "La Miraja Ruche btl": "la-miraja-ruche-di-castagnole-monferrato-2023",
-  "Uccelliera Rapace Btl.": "uccelliera-rapace-2019",
-  "Scarpa Pelaverga Btl.": "scarpa-verduno-pelaverga-2022",
-  "Zenato Cresasso 2015 Btl.": "zenato-cresasso-corvina-2015",
-  "Cocito Barbaresco 2017": "cocito-baluchin-barbaresco-riserva-2017",
-  "Terlano Porphyr Lagrein Btl.": "cantina-terlano-porphyr-lagrein-riserva-2021",
-  "Terlano Porphyr Lagrein Btl": "cantina-terlano-porphyr-lagrein-riserva-2021",
-  "Arpepe Sassella Rocce Rosse Btl.": "arpepe-sassella-rocce-rosse-riserva",
-  "Arpepe Sassella Rocce Rosse": "arpepe-sassella-rocce-rosse-riserva",
-  "Tenuta Santa Maria Amarone Btl.": "tenuta-santa-maria-amarone-classico-riserva-2018",
-  "Canalicchio Brunello Btl.": "canalicchio-di-sopra-brunello-di-montalcino-2006",
-  "Viberti Barolo Btl.": "viberti-san-pietro-barolo-riserva-2018",
-  "Vietti Barolo Btl.": "vietti-barolo-ravera-2020"
- },
- "ignore": [
-  "Corkage",
-  "Open Wine",
-  "Special Btl.",
-  "Special Bottle",
-  "Special Glass Pour"
- ]
+  "ignore": [
+    "Corkage",
+    "Open Wine",
+    "Special Btl.",
+    "Special Bottle",
+    "Special Glass Pour"
+  ]
 }
