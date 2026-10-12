@@ -2059,7 +2059,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791590795';   // stamped by build-data.py at every deploy
+const BUILD='1791764359';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5573,7 +5573,7 @@ function parseRequest(req,ctx){
     var cueT=dates.filter(function(x){return x.cue==='takes';})[0], cueG=dates.filter(function(x){return x.cue==='gives';})[0];
     if(cueT&&cueT.iso===G){ T=G; G=cueG&&cueG.iso!==T?cueG.iso:(outside[0]?outside[0].iso:null); }
     else if(cueG&&cueG.iso!==G&&!cueT){ T=G; G=cueG.iso; soft.push('date'); notes.push('the note calls '+G+' "my" shift but the request is dated '+T+', check which is whose'); }
-    else if(cueT){ T=cueT.iso; }
+    else if(cueT){ T=cueT.iso; if(cueG&&cueG.iso!==T)G=cueG.iso; }   /* "my 11/1 ... his 10/29": both cues named, so the "my" date wins over the first day of the request */
     if(G&&T&&partner&&ctx.sched&&!ctx.scheduleAlreadyEdited){ var a=(rpCell(ctx,me,G).state==='working')+(rpCell(ctx,partner,T).state==='working'), b=(rpCell(ctx,me,T).state==='working')+(rpCell(ctx,partner,G).state==='working');
       if(b===2&&a===0){ var x=G;G=T;T=x; notes.push('flipped to match the schedule: each person is giving the shift they actually hold'); } }
     if(G)leg(me,partner,G); else{ blanks.push('requesterDate'); legs.push({from:me.name,to:partner?partner.name:null,date:null,shift:'',check:'unknown'}); }
@@ -5647,10 +5647,11 @@ function acSetType(t){ const s=acState; if(!s||s.type===t)return; const r=s.r, m
   else if(t==='cover')s.legs=acDays(r).map(function(d){return {from:me0,to:partner,date:d,post:false};});
   else s.legs=[{from:me0,to:partner,date:r.start,post:false},{from:partner,to:me0,date:otherDate,post:false}];
   s.type=t; acRender(); }
-function acSet(i,field,val){ const s=acState; if(!s||!s.legs[i])return; s.legs[i][field]=(field==='post')?!!val:val;
+function acSet(i,field,val,quiet){ const s=acState; if(!s||!s.legs[i])return; s.legs[i][field]=(field==='post')?!!val:val;
   /* in a swap the two rows mirror each other: my taker is their giver */
   if(s.type==='swap'&&s.legs.length===2&&(field==='from'||field==='to')){ const o=s.legs[1-i]; if(field==='to')o.from=val; else o.to=val; }
-  acRender(); }
+  /* quiet: the date box fires change on every keystroke / picker tick; rebuilding the card mid-edit throws the field away. It re-renders on blur. */
+  if(!quiet)acRender(); }
 function acAddLeg(){ const s=acState; if(!s)return; const last=s.legs[s.legs.length-1]||{from:s.r.name,to:'',date:s.r.start};
   s.legs.push({from:last.from,to:last.to,date:last.date?rpAdd(last.date,1):'',post:s.type==='timeoff'}); acRender(); }
 function acRmLeg(i){ const s=acState; if(!s||s.legs.length<2)return; s.legs.splice(i,1); acRender(); }
@@ -5724,7 +5725,7 @@ function acRender(){
     h+='<div class="ac-leg'+(info.block?' blocked':'')+'">';
     h+='<div class="ac-row"><label>'+(off?'Off':'Gives')+'</label><select id="ac-from-'+i+'" class="acc-in'+(!l.from?' ac-blank':'')+'" onchange="acSet('+i+',\'from\',this.value)">'+acPeopleOptions(l.from,'',side)+'</select></div>';
     if(!off)h+='<div class="ac-row"><label>Takes</label><select id="ac-to-'+i+'" class="acc-in'+(!l.to?' ac-blank':(softPartner?' ac-soft':''))+'" onchange="acSet('+i+',\'to\',this.value)">'+acPeopleOptions(l.to,'',side)+'</select></div>';
-    h+='<div class="ac-row"><label>Date</label><input type="date" id="ac-date-'+i+'" class="acc-in'+(!l.date?' ac-blank':(softDate?' ac-soft':''))+'" value="'+esc(l.date||'')+'" onchange="acSet('+i+',\'date\',this.value)">'+(l.date?'<span class="ac-dow">'+esc(fmtLong(l.date))+'</span>':'')+'</div>';
+    h+='<div class="ac-row"><label>Date</label><input type="date" id="ac-date-'+i+'" class="acc-in'+(!l.date?' ac-blank':(softDate?' ac-soft':''))+'" value="'+esc(l.date||'')+'" onchange="acSet('+i+',\'date\',this.value,true)" onblur="acRender()">'+(l.date?'<span class="ac-dow">'+esc(fmtLong(l.date))+'</span>':'')+'</div>';
     h+='<div class="ac-row"><label>Shift</label><span class="ac-shift">'+(info.shift?esc(info.shift):'<span class="ac-mute">none on the schedule</span>')+'</span></div>';
     if(info.block)h+='<div class="ac-block">'+esc(info.block)+'</div>'; else if(info.check)h+='<div class="ac-check">'+esc(info.check)+'</div>';
     info.warns.forEach(function(w){ h+='<div class="ac-warn">'+esc(w)+'</div>'; });
