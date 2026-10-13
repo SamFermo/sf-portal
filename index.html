@@ -2062,7 +2062,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791857681';   // stamped by build-data.py at every deploy
+const BUILD='1791931268';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2848,6 +2848,20 @@ const ANNOUNCES=[
     "Sundays show \"1 call off\" in the Open row. We're calling one person off every Sunday this month, so plan for it. If you want to be first to go, ask on Day at a Glance that day, same as always.",
     "We're going to keep running 4 sections Sunday through Thursday as often as we can. Nobody can predict the real drop-off. If we need to scale back further, you'll hear it from us as early as possible.",
     "The portal is the schedule from here on. I'm not sending the Google Sheet around anymore."
+  ],
+  note:""
+  },
+  {
+  kind:'info',
+  aud:'foh',
+  id:'foh-winter-2026-27',
+  showUntil:'2026-11-15',
+  emoji:'\u2744\uFE0F',
+  title:'Winter floor schedule is up',
+  lines:[
+    "Winter is live in the Schedule tab, 11/2 through 2/28, all four months. Check your weeks and your R/Os.",
+    "We're closed Thanksgiving, Christmas Day and New Year's Day. New Year's Eve and Valentine's Day are big nights.",
+    "If something's wrong or you need a day, put in a request under Time Off."
   ],
   note:""
   },
@@ -4757,7 +4771,13 @@ function unclaimByKey(k){
 // whole week with no date suffix (prior behavior).
 const SCHED_EVENT_SCOPE = {
   'farm dinners': {days:[5,6],     span:'Sat–Sun', tone:'gold'},
-  'seafood fest': {days:[4,5,6],   span:'Fri–Sun', tone:'event'}
+  'seafood fest': {days:[4,5,6],   span:'Fri–Sun', tone:'event'},
+  /* Winter 2026-27 holiday rows (FOH winter sheet). One day each, so the Day Sheet tags only that night. */
+  'thanksgiving, closed':   {days:[3], span:'Thu', tone:'event'},
+  'christmas, closed':      {days:[4], span:'Fri', tone:'event'},
+  "new year's eve":         {days:[3], span:'Thu', tone:'event'},
+  "new year's day, closed": {days:[4], span:'Fri', tone:'event'},
+  "valentine's day":        {days:[6], span:'Sun', tone:'event'}
 };
 function schedEventScope(name){
   const k=String(name||'').trim().toLowerCase();
