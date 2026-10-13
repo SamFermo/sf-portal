@@ -2598,7 +2598,7 @@ window.SF = {
    },
    {
     "name": "Grandma's Ash Tray",
-    "build": "bourbon, martell cognac, yzaguirre rose vermouth, amaro rucolino, mr. black, lavender bitters",
+    "build": "bourbon, brandy, yzaguirre rose vermouth, amaro ciociaro, mr. black, lavender bitters",
     "price": "19",
     "ingredients": [
      {
@@ -2606,16 +2606,16 @@ window.SF = {
       "description": "American whiskey, corn-led: the base of the drink."
      },
      {
-      "name": "Martell cognac",
-      "description": "French grape brandy from the house of Martell, founded in 1715."
+      "name": "Brandy",
+      "description": "Grape brandy, standing in for the cognac: adds dried-fruit depth and warmth under the bourbon."
      },
      {
       "name": "Yzaguirre rose vermouth",
       "description": "A Spanish rosado vermouth from Yzaguirre in Catalonia."
      },
      {
-      "name": "Amaro Rucolino",
-      "description": "An Italian amaro made from arugula (rucola): peppery, green and bittersweet."
+      "name": "Amaro Ciociaro",
+      "description": "Lazio amaro (Paolucci, since 1873): bitter orange backbone with chamomile, anise and cinnamon; bittersweet and approachable."
      },
      {
       "name": "Mr. Black",
@@ -2628,18 +2628,15 @@ window.SF = {
     ],
     "pronguide": [
      {
-      "term": "Martell",
-      "pron": "mar-TELL"
-     },
-     {
       "term": "Yzaguirre",
       "pron": "ee-thah-GHEE-reh"
      },
      {
-      "term": "Rucolino",
-      "pron": "roo-koh-LEE-noh"
+      "term": "Ciociaro",
+      "pron": "choh-CHAH-roh"
      }
-    ]
+    ],
+    "added": "2026-10-12"
    },
    {
     "name": "Ya sure you betcha",
@@ -14352,5 +14349,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1791764792"
+ "build": "1791857681"
 };
