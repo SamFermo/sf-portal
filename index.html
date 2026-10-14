@@ -1157,6 +1157,9 @@ body.tour-on{padding-bottom:230px;}
 .ckp-btns{display:flex; gap:8px; margin-top:8px;}
 .ckp-btns button{flex:1; border:none; border-radius:10px; padding:10px 8px; font:inherit; font-size:14px; font-weight:600; cursor:pointer;}
 .ckp-ok{font-size:13px; color:var(--accent); margin-top:6px; font-weight:600;}
+.kq-dish{font-size:17px; font-weight:700; color:var(--wood); margin-top:4px;}
+.kq-q{font-size:14px; color:var(--card-soft); line-height:1.4; margin:4px 0 6px;}
+.kq-alg{margin:6px 0 2px;} .kq-alg .cf-alg-head{font-size:11.5px; color:var(--ink-mute); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;}
 .ckp-link{background:none; border:none; color:var(--ink-mute); text-decoration:underline dotted; cursor:pointer; font:inherit; font-size:12.5px; margin-left:6px;}
 .ckp-pv{font-size:12px; color:#a0522d; text-align:center; font-weight:600;}
 .ckp-card .to-submit{margin-top:10px;}
@@ -2062,7 +2065,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1791931667';   // stamped by build-data.py at every deploy
+const BUILD='1792007643';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2941,7 +2944,7 @@ function annAck(){
 }
 function annShouldShow(){ annPick(); if(!(me && me.contactSet && annActive() && !annDismissedNow()))return false;
   return annIsInfo() ? !annAcked() : !annMyRsvp(); }
-function maybeShowAnnounce(){ setTimeout(ckpMaybeShow,900); if(isInvestor())return; if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
+function maybeShowAnnounce(){ setTimeout(ckpMaybeShow,900); setTimeout(kqMaybeShow,1200); if(isInvestor())return; if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
 /* Full roster behind the tally: staff (from PROFILES.announceRsvp) plus the
    hand-added external entries in ANNOUNCE_GUESTS. Single source both the compact
    tally and the full list (annOpenFullList) read from, so they can't drift. */
@@ -4201,6 +4204,130 @@ function ckpSave(id,edited){
   if(!ckpForMe()){ CKP.local[id]=rec; ckpRender(); return; }   // preview: local only
   CKP.items[id]=rec; ckpRender(); ckpRefreshBar();
   if(fbReady&&fbDb){ const o={}; o[id]=rec; ckpRef().set({items:o},{merge:true}).catch(function(){}); }
+}
+/* KITCHEN QUESTIONS (2026-10-14, Sam). The review queue never moved because the questions sat
+   in a manager filter nobody opens, while the answers live with Chris. This asks him directly:
+   first login with anything open gets ONE screen listing every open flag on tonight's menu
+   plus any ad-hoc ask (board/kitchenQs {asks:{id:{dish,component,q,by,at}},answers:{id:{text,by,at}}}).
+   Answers save to the dish's menu-edits overlay exactly as typed (no Remy polish). A flag whose
+   component is an allergen question (Gluten, Dairy-free, "Confirm ...") lands in the allergen note;
+   an ingredient component upserts its "Ingredients to know" entry, same as the manager confirm.
+   Allergen chips per dish save with any answer on that dish. "Finish later" re-asks next login.
+   Admin preview: ?kq (nothing saves). Chris only, by name. */
+const KQ_WHO='Chris Hoey';
+let KQ={asks:{},answers:{},loaded:false,medits:false,shown:false,tries:0,unsub:null,local:{},alg:{}};
+function kqRef(){ return fbDb.collection('board').doc('kitchenQs'); }
+function kqPreview(){ try{ return /[?&]kq\b/.test(location.search)&&isAdmin(); }catch(e){ return false; } }
+function kqForMe(){ return !!me&&!DEMO&&me.name===KQ_WHO; }
+function startKitchenQsSync(){
+  if(!(fbReady&&fbDb))return; if(KQ.unsub)KQ.unsub();
+  KQ.unsub=kqRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; KQ.asks=v.asks||{}; KQ.answers=v.answers||{}; KQ.loaded=true; kqMaybeShow(); },function(){ KQ.loaded=true; kqMaybeShow(); });
+}
+/* Is this flag an allergen yes/no rather than a composed component? Then the answer belongs in
+   the allergen note, not the ingredient glossary (Sam 2026-10-14). */
+function kqIsAllergenQ(component){
+  const c=termKey(component);
+  return ALL_ALLERGENS.indexOf(c)>=0||/-free$/.test(c)||/^confirm\b/.test(c)||/\bclaim\b/.test(c)||c.split(' ').length>5;
+}
+function kqStripUnconfirmed(note){ return String(note||'').replace(/\s*UNCONFIRMED:[\s\S]*$/,'').trim(); }
+/* Every open question on tonight's menu, grouped by dish. */
+function kqItems(){
+  const out=[], seen={};
+  const dishes=[]; (SF.menu.food||[]).forEach(function(s){ s.items.forEach(function(it){ dishes.push(it); }); });
+  (SF.menu.desserts||[]).forEach(function(it){ dishes.push(it); });
+  if(typeof activeSpecials==='function')activeSpecials().forEach(function(it){ dishes.push(it); });
+  dishes.forEach(function(it){
+    const ed=getEditedDish(it), fl=(ed._flags!==undefined)?ed._flags:(ed.flags||[]);
+    (fl||[]).forEach(function(f,i){ const n=flagNorm(f); const id='f:'+editDocId(it.name)+':'+termKey(n.component);
+      if(seen[id])return; seen[id]=1; out.push({id:id,kind:'flag',dish:it.name,dishName:ed.name||it.name,component:n.component,q:n.label,risk:n.risk||[]}); });
+  });
+  Object.keys(KQ.asks).forEach(function(id){ const a=KQ.asks[id]; if(!a||KQ.answers[id]||KQ.local[id])return;
+    if(!findDishByName(a.dish))return;
+    out.push({id:id,kind:'ask',dish:a.dish,dishName:a.dish,component:a.component||'',q:a.q||''}); });
+  return out;
+}
+function kqPending(){ return kqItems().filter(function(it){ return !KQ.local[it.id]; }); }
+function kqMaybeShow(){
+  if(KQ.shown||!KQ.loaded||!KQ.medits)return;
+  const pv=kqPreview(); if(!(kqForMe()||pv))return;
+  if(!kqPending().length)return;
+  const busy=document.body.classList.contains('locked')||['announceModal','alertModal','ckpModal'].some(function(id){ const m=$(id); return m&&m.style.display==='flex'; });
+  if(busy){ if(KQ.tries++<90)setTimeout(kqMaybeShow,2000); return; }
+  KQ.shown=true; kqOpen();
+}
+function kqOpen(){
+  let m=$('kqModal');
+  if(!m){ m=document.createElement('div'); m.id='kqModal'; m.className='comp-modal'; document.body.appendChild(m); }
+  kqRender(); m.style.display='flex';
+}
+function kqClose(){ const m=$('kqModal'); if(m)m.style.display='none'; }
+function kqAlgSet(dish){
+  if(!KQ.alg[dish]){ const f=findDishByName(dish); const ed=f?getEditedDish(f.dish):null; KQ.alg[dish]=new Set((ed&&ed.allergens)||[]); }
+  return KQ.alg[dish];
+}
+function kqToggleAlg(el){ const d=el.getAttribute('data-dish'), a=el.getAttribute('data-alg'); const s=kqAlgSet(d); if(s.has(a))s.delete(a); else s.add(a); el.classList.toggle('on',s.has(a)); }
+function kqRender(){
+  const m=$('kqModal'); if(!m)return;
+  const items=kqItems(), left=kqPending().length, pv=!kqForMe();
+  let h='<div class="ann-card ckp-card"><div class="ann-emoji">🍳</div><div class="ann-title serif">The floor has questions for the kitchen</div>'
+   +'<div class="ann-line">Answer in plain words, the way you would tell a server. What you type goes straight onto the dish card. Tick the allergen chips if they are wrong.</div>'
+   +(pv?'<div class="ckp-pv">Preview: nothing you tap here saves.</div>':'');
+  const byDish={}, order=[];
+  items.forEach(function(it){ if(!byDish[it.dish]){ byDish[it.dish]=[]; order.push(it.dish); } byDish[it.dish].push(it); });
+  order.forEach(function(dish){
+    const qs=byDish[dish]; h+='<div class="ckp-row"><div class="kq-dish serif">'+esc(qs[0].dishName)+'</div>';
+    qs.forEach(function(it){
+      const a=KQ.local[it.id];
+      h+='<div class="kq-q">'+esc(it.q)+'</div>';
+      if(a){ h+='<div class="ckp-guess">'+esc(a.text)+'</div><div class="ckp-ok">✓ Saved to the card</div>'; }
+      else { h+='<textarea id="kq-t-'+it.id+'" class="ckp-ta" rows="2" placeholder="e.g. onion, garlic, red wine. Yes, it can go dairy-free."></textarea>'
+             +'<div class="ckp-btns"><button class="to-go" onclick="kqSave(\''+it.id+'\')">Save</button></div>'; }
+    });
+    const s=kqAlgSet(dish);
+    h+='<div class="kq-alg"><div class="cf-alg-head">Allergens on this dish</div><div class="em-alg-grid">'+ALL_ALLERGENS.map(function(a){
+      return '<div class="em-alg-item'+(s.has(a)?' on':'')+'" data-dish="'+esc(dish)+'" data-alg="'+a+'" onclick="kqToggleAlg(this)"><span>'+(ALG[a]||a)+'</span> <span style="font-size:10px">'+a+'</span></div>'; }).join('')+'</div></div>';
+    h+='</div>';
+  });
+  if(!order.length)h+='<div class="ckp-row"><div class="ckp-guess">Nothing open. Every question on tonight\'s menu has an answer.</div></div>';
+  h+=left?'<button class="ann-dismiss" onclick="kqClose()">Finish later ('+left+' left)</button>'
+         :'<div class="to-submit"><button class="to-go" onclick="kqClose()">All done, thank you</button></div>';
+  m.innerHTML=h+'</div>';
+}
+/* Build the overlay record for one answer and commit it. Mirrors cfCommit, minus the polish. */
+function kqApply(it,text){
+  const found=findDishByName(it.dish); if(!found)return false;
+  const ed=getEditedDish(found.dish), raw=MEDITS[editDocId(it.dish)]||null;
+  const ings=(ed.ingredients||[]).slice(); let note=ed.allergenNote||'';
+  const comp=it.component||'';
+  const fi=comp?ings.findIndex(function(g){ return g&&termMatches(g.term,comp); }):-1;
+  if(it.kind==='flag'&&!kqIsAllergenQ(comp)){
+    if(fi>=0)ings[fi]=Object.assign({},ings[fi],{note:text}); else ings.push({term:comp,pronunciation:null,note:text});
+  } else if(it.kind==='ask'&&fi>=0){
+    ings[fi]=Object.assign({},ings[fi],{note:(ings[fi].note||'').replace(/\s+$/,'')+' '+text});
+  } else {
+    note=(note?note.replace(/\s+$/,'')+' ':'')+(comp?comp.replace(/\.$/,'')+': ':'')+text;
+  }
+  const resolved=flagResolved(raw,found.dish).slice();
+  if(it.kind==='flag'&&!resolved.some(function(r){ return termMatches(r.component,comp); }))
+    resolved.push({component:comp,desc:found.dish.desc,at:Date.now()});
+  // Nothing left open on this dish: the baked "UNCONFIRMED: ..." sentence is stale, drop it.
+  const stillOpen=((ed._flags!==undefined)?ed._flags:(ed.flags||[])).filter(function(f){ return !resolved.some(function(r){ return termMatches(r.component,flagNorm(f).component); }); });
+  if(!stillOpen.length)note=kqStripUnconfirmed(note);
+  const algs=ALL_ALLERGENS.filter(function(a){ return kqAlgSet(it.dish).has(a); });
+  const rec={originalName:it.dish, name:ed.name, desc:ed.desc, price:ed.price, pron:ed.pron||'', story:ed.story||'',
+    ingredients:ings, allergens:algs, canModify:ed.canModify||[], allergenNote:note, raw:!!ed.raw, section:found.section,
+    resolvedComponents:resolved, menuDate:(SF.menu&&SF.menu.menuDate)||'', editedBy:currentUserName()||'kitchen', editedAt:Date.now()};
+  commitEditRec(rec); return true;
+}
+function kqSave(id){
+  const it=kqItems().find(function(x){ return x.id===id; }); if(!it)return;
+  const t=$('kq-t-'+id); const text=t?String(t.value||'').trim():''; if(!text){ if(t)t.focus(); return; }
+  const rec={text:text,by:me?me.name:'',at:Date.now()};
+  KQ.local[id]=rec;
+  if(!kqForMe()){ kqRender(); return; }   // preview: local only
+  kqApply(it,text);
+  if(it.kind==='ask'){ KQ.answers[id]=rec; if(fbReady&&fbDb){ const o={}; o[id]=rec; kqRef().set({answers:o},{merge:true}).catch(function(){}); } }
+  kqRender();
 }
 /* BAR OVERLAY (2026-10-02). Quick Liquor-tab edits for managers and Katie, live for everyone, no deploy.
    board/barOverlay {pours:{"fi_pi":{name,origin,note,by,at}}, out:{"ad:slug"|"fp:fi_pi":{by,at}}}.
@@ -9433,8 +9560,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startBarOverlaySync(); startMenuOverlaySync(); startMenuPubSync(); startSpecialsSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startBarOverlaySync(); startMenuOverlaySync(); startSpecialsSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startKitchenQsSync(); startBarOverlaySync(); startMenuOverlaySync(); startMenuPubSync(); startSpecialsSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startKitchenQsSync(); startBarOverlaySync(); startMenuOverlaySync(); startSpecialsSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -10349,7 +10476,7 @@ function startMenuEditSync(){
   if(fbReady&&fbDb){
     if(meditsUnsub)meditsUnsub();
     meditsUnsub=fbDb.collection('menu-edits').onSnapshot(function(snap){
-      MEDITS={};snap.docs.forEach(function(d){MEDITS[d.id]=d.data();});renderFresh();
+      MEDITS={};snap.docs.forEach(function(d){MEDITS[d.id]=d.data();});renderFresh(); if(typeof KQ==='object'){KQ.medits=true; kqMaybeShow();}
     },function(){ MEDITS=meditsLsGet();renderFresh(); });
   }else{ MEDITS=meditsLsGet(); }
 }
@@ -10815,9 +10942,11 @@ function cfCommit(){
   var resolved=flagResolved(MEDITS[editDocId(cfTarget.originalName)]||null,found.dish).slice();
   if(!resolved.some(function(r){return termMatches(r.component,comp);}))
     resolved.push({component:comp,desc:found.dish.desc,at:Date.now()});
+  var _open=((ed._flags!==undefined)?ed._flags:(ed.flags||[])).filter(function(f){ return !resolved.some(function(r){ return termMatches(r.component,flagNorm(f).component); }); });
+  var _note=_open.length?(ed.allergenNote||''):kqStripUnconfirmed(ed.allergenNote||'');
   var rec={originalName:cfTarget.originalName, name:ed.name, desc:ed.desc, price:ed.price,
     pron:ed.pron||'', story:ed.story||'', ingredients:ings,
-    allergens:algs, canModify:ed.canModify||[], allergenNote:ed.allergenNote||'',
+    allergens:algs, canModify:ed.canModify||[], allergenNote:_note,
     raw:!!ed.raw, section:cfTarget.section, resolvedComponents:resolved,
     menuDate:(SF.menu&&SF.menu.menuDate)||'',
     editedBy:(typeof currentUserName==='function'&&currentUserName())||'manager', editedAt:Date.now()};

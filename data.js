@@ -313,8 +313,7 @@ window.SF = {
       "canModify": [
        "dairy"
       ],
-      "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper.",
-      "added": "2026-10-09"
+      "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
      },
      {
       "name": "Rigatoni",
@@ -567,11 +566,11 @@ window.SF = {
   ],
   "desserts": [
    {
-    "name": "Earl Grey Tiramisu",
-    "desc": "mascarpone, ladyfingers, miro tea, planteray dark rum, bergamot agrumato",
+    "name": "Classic Tiramisu",
+    "desc": "mascarpone, ladyfingers, planteray rum, caffè umbria decaf coffee, cocoa powder",
     "price": "15",
     "pron": "tee-rah-mee-SOO",
-    "story": "A San Fermo riff on the Italian classic. Instead of espresso, the ladyfingers are soaked in Earl Grey from Miro Tea — Ballard's 200-variety loose leaf tea shop — which swaps coffee's bitterness for bergamot's floral citrus. Planteray dark rum in the mascarpone cream; bergamot agrumato oil at the finish.",
+    "story": "The classic, built the way it is meant to be: ladyfingers soaked in Caffè Umbria decaf, layered with mascarpone cream spiked with Planteray rum, finished with cocoa. Decaf on purpose, so a late table can order it without a sleepless night.",
     "ingredients": [
      {
       "term": "Tiramisu",
@@ -579,24 +578,19 @@ window.SF = {
       "note": "Classic Northern Italian dessert — ladyfinger biscuits soaked in liquid, layered with sweetened mascarpone cream, finished with cocoa. The name means \"pick me up\" in Italian."
      },
      {
-      "term": "Miro Tea",
-      "pronunciation": null,
-      "note": "Ballard neighborhood tea shop, Seattle, founded 2005. Carries over 200 varieties of loose leaf tea. We use their Earl Grey for the ladyfinger soak — clean, bergamot-forward, and bright."
+      "term": "Mascarpone",
+      "pronunciation": "mas-car-POH-neh",
+      "note": "Italian triple-cream fresh cheese from Lombardy — thick, rich, mildly sweet. The base of the tiramisu cream layer."
      },
      {
-      "term": "Bergamot agrumato",
-      "pronunciation": "BEHR-gah-mot ag-roo-MAH-toh",
-      "note": "Extra virgin olive oil co-milled with whole bergamot fruit at the press — the citrus oils are captured inside the olive oil rather than infused afterward. Bergamot is the citrus that gives Earl Grey its distinctive floral-bitter aroma. Used as a finishing drizzle here."
-     },
-     {
-      "term": "Planteray dark rum",
+      "term": "Planteray rum",
       "pronunciation": "PLAN-teh-ray",
       "note": "Formerly Plantation Rum — rebranded to Planteray in 2024. French-Caribbean aged rum from Maison Ferrand, known for its dual aging: first in the tropics, then finished in cognac barrels in France. Rich, smooth, and molasses-forward."
      },
      {
-      "term": "Mascarpone",
-      "pronunciation": "mas-car-POH-neh",
-      "note": "Italian triple-cream fresh cheese from Lombardy — thick, rich, mildly sweet. The base of the tiramisu cream layer."
+      "term": "Caffè Umbria",
+      "pronunciation": "kah-FEH OOM-bree-ah",
+      "note": "Seattle roaster with Italian roots, Pioneer Square. We use their decaf for the soak, so the dessert tastes fully of coffee without the caffeine. Decaf is not caffeine-free; a trace remains."
      }
     ],
     "allergens": [
@@ -604,46 +598,44 @@ window.SF = {
      "gluten",
      "egg"
     ],
-    "canModify": []
+    "canModify": [],
+    "allergenNote": "Dairy: the mascarpone cream. Gluten: the ladyfingers. Egg: in the ladyfingers, and in the cream if the kitchen builds it on yolks, so treat it as egg either way. The rum goes into the cream uncooked, so there is alcohol in it.",
+    "added": "2026-10-14"
    },
    {
-    "name": "Pavlova",
-    "desc": "marigold meringue, vanilla pastry cream, gently cooked Washington peaches",
+    "name": "Lemon Olive Oil Cake",
+    "desc": "olio verde, apple mascarpone, lemon syrup, brown butter powdered sugar",
     "price": "13",
-    "pron": "pav-LOH-vah",
-    "story": "A crisp-outside, soft-inside meringue, named for the Russian ballerina Anna Pavlova. This one's built on marigold sugar — petals from Rain Dog Farm in Redmond, dried and ground with sugar — flavoring the meringue base. Topped with vanilla bean pastry cream and gently cooked local Washington peaches. Floral, bright, and delicate.",
+    "pron": null,
+    "story": "A Ligurian-style cake where the fat is olive oil instead of butter, which keeps the crumb moist and a little savory. Early-harvest olio verde gives it a green, peppery edge against the lemon syrup. Served with apple mascarpone and dusted with brown butter powdered sugar.",
     "ingredients": [
      {
-      "note": "a meringue-based dessert with a crisp crust and soft center, named for ballerina Anna Pavlova.",
-      "pronunciation": "pav-LOH-vah",
-      "term": "Pavlova"
+      "term": "Olio verde",
+      "pronunciation": "OH-lee-oh VEHR-deh",
+      "note": "Early-harvest extra virgin olive oil, pressed while the olives are still green. Grassy, peppery, bright. It is the fat in the cake, in place of butter."
      },
      {
-      "note": "whipped egg whites and sugar, baked low and slow until crisp.",
-      "term": "Meringue",
-      "pronunciation": "meh-RANG"
+      "term": "Apple mascarpone",
+      "pronunciation": "mas-car-POH-neh",
+      "note": "Mascarpone, the Lombard triple-cream fresh cheese, folded with apple. Served alongside the cake."
      },
      {
-      "term": "Marigold sugar",
+      "term": "Brown butter powdered sugar",
       "pronunciation": null,
-      "note": "marigold petals from Rain Dog Farm in Redmond, dried and ground with sugar to flavor the meringue."
-     },
-     {
-      "note": "Pastry cream is a cooked custard thickened with cornstarch, giving it a stable, spoonable texture that holds its shape on the plate. Ours is made from whole milk, cream, egg yolk, sugar, vanilla bean, and cornstarch. The vanilla bean is visible as small specks throughout. It's cool and rich, and sits underneath the meringue and peaches.",
-      "pronunciation": null,
-      "term": "Vanilla bean pastry cream"
+      "note": "Butter cooked until the milk solids toast and go nutty, then worked into powdered sugar and dusted over the top. It carries dairy even though the cake itself is made with olive oil."
      }
     ],
     "allergens": [
-     "egg",
-     "dairy"
+     "dairy",
+     "gluten",
+     "egg"
     ],
-    "canModify": [
-     "dairy"
+    "canModify": [],
+    "allergenNote": "Dairy: the apple mascarpone and the brown butter sugar on top; the cake itself is olive oil, not butter. Gluten: wheat flour. Egg: in the batter. No nuts anywhere on the plate.",
+    "flags": [
+     "Dairy-free: confirm whether the cake can go out without the apple mascarpone and the brown butter sugar for a dairy-free guest."
     ],
-    "allergenNote": "No flour in the meringue — gluten-free as built. Egg is in the meringue itself. The vanilla bean pastry cream carries the dairy and can ride on the side for a dairy-lighter plate.",
-    "flags": [],
-    "raw": false
+    "added": "2026-10-14"
    },
    {
     "name": "Seasonal Gelato",
@@ -17588,5 +17580,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1791931667"
+ "build": "1792007643"
 };
