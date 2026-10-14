@@ -209,31 +209,33 @@
      "story": "Sweet Italian peppernata from Swan House Farm: slow-cooked peppers, bright and soft. Burrata melts into it. Tomato leaf oil and micro basil finish it.",
      "ingredients": [
       {
-       "term": "Peppernata",
-       "pronunciation": "pep-per-NAH-tah",
-       "note": "A slow-cooked sweet-pepper preparation from Swan House Farm peppers, cooked down soft and bright. The exact makeup beyond the peppers is set by the kitchen; check the manager flag before clearing it for an allergy."
+       "term": "Peperonata",
+       "note": "Peperonata is a slow-cooked Italian pepper preparation that concentrates the peppers' natural sweetness. Ours is made from Swan House sweet peppers cooked down with onions and garlic in extra-virgin olive oil, along with tomato purée, salt, sugar, vinegar, and black pepper until tender and reduced. It contains onion and garlic.",
+       "pronunciation": "pep-per-NAH-tah"
       },
       {
-       "term": "Burrata",
+       "note": "a fresh cow's-milk cheese from Puglia: a mozzarella shell holding a center of stracciatella (cheese curds) and cream. Cut into it and the middle should flow.",
        "pronunciation": "boo-RAH-tah",
-       "note": "a fresh cow's-milk cheese from Puglia: a mozzarella shell holding a center of stracciatella (cheese curds) and cream. Cut into it and the middle should flow."
+       "term": "Burrata"
       },
       {
        "term": "Tomato leaf oil",
-       "pronunciation": null,
        "note": "Made in-house by blending tomato leaves into neutral canola oil and straining it clear, capturing the grassy, green flavor of the plant itself rather than the fruit. Just leaves and oil, no allergens of its own."
+      },
+      {
+       "note": "The bread is a baguette cut on a bias, lightly oiled, seasoned with salt and pepper, and grilled. There is no garlic rubbed on the bread itself. The dish gets its savory foundation from the peperonata and burrata.",
+       "term": "Bruschetta bread",
+       "pronunciation": null
       }
      ],
      "allergens": [
       "dairy",
-      "gluten"
+      "gluten",
+      "allium"
      ],
      "canModify": [],
-     "allergenNote": "Dairy: the burrata melts into the dish, central and not removable. Gluten: the grilled bread is the base of the bruschetta, not removable. The tomato leaf oil is just tomato leaves and canola oil. UNCONFIRMED: the Swan House peppernata's full composition has not been specified, and a bruschetta base is often rubbed with raw garlic. Do not clear this dish for an allium allergy until the kitchen confirms the peppernata and the bread prep.",
-     "flags": [
-      "Peppernata: composition not specified beyond slow-cooked Swan House sweet peppers; confirm ingredients (onion, garlic, vinegar?) with kitchen before clearing for allium.",
-      "Bruschetta bread: confirm whether the base is rubbed with garlic (allium)."
-     ],
+     "allergenNote": "Dairy: the burrata melts into the dish, central and not removable. Gluten: the grilled bread is the base of the bruschetta, not removable. Allium: the peperonata is cooked with onion and garlic and cannot be pulled, so this dish cannot be cleared for an allium allergy. The bread itself is not rubbed with garlic. The tomato leaf oil is just tomato leaves and canola oil.",
+     "flags": [],
      "added": "2026-10-06"
     },
     {
@@ -251,27 +253,35 @@
       },
       {
        "term": "Corona beans",
-       "pronunciation": null,
-       "note": "Large, creamy white Italian heirloom beans, mild and starchy. They give the soup its body."
+       "note": "Large, creamy white Italian heirloom beans, mild and starchy. They give the soup its body.",
+       "pronunciation": null
       },
       {
        "term": "Pistachio",
        "pronunciation": null,
        "note": "Toasted pistachio is worked through the dish for richness and crunch. It is a tree nut and, per the kitchen, cannot be removed."
+      },
+      {
+       "note": "Ribollita's base is built by sweating garlic, bay leaf, red chili flake, and black pepper slowly in extra virgin olive oil, then adding tomato purée and vegetable stock. Once the beans cook, we add sautéed zucchini, carrots, onion, and celery, finishing with diced cabbage and kale. Contains garlic and allium (onion and celery).",
+       "pronunciation": null,
+       "term": "Ribollita base"
+      },
+      {
+       "term": "Fully vegan",
+       "pronunciation": null,
+       "note": "This ribollita is fully vegan throughout. The croutons are made without butter and the stock contains no meat, so a guest avoiding animal products can eat the whole bowl with confidence."
       }
      ],
      "allergens": [
       "gluten",
-      "nuts"
+      "nuts",
+      "allium"
      ],
      "canModify": [
       "gluten"
      ],
-     "allergenNote": "Tree nuts: the toasted pistachio is integral and, per the kitchen, cannot be removed. Gluten: the torn croutons are a topping and come off cleanly. The manager marked the dish fully vegan, so no dairy or egg. UNCONFIRMED: the soup base has not been spelled out, and a traditional ribollita carries allium in its soffritto (onion and garlic). Do not clear this dish for an allium allergy until the kitchen confirms the base.",
-     "flags": [
-      "Ribollita base: soffritto and stock composition not specified; a traditional base carries allium (onion, garlic). Confirm with kitchen before clearing for allium.",
-      "'Fully vegan' claim: confirm croutons and stock are vegan (no butter, no meat stock) with kitchen."
-     ],
+     "allergenNote": "Tree nuts: the toasted pistachio is integral and, per the kitchen, cannot be removed. Gluten: the torn croutons are a topping and come off cleanly. Allium: the base is built on garlic, with onion and celery in the vegetables, so this dish cannot be cleared for an allium allergy. Fully vegan: the croutons are made without butter and the stock is vegetable, so no dairy or egg.",
+     "flags": [],
      "added": "2026-10-06"
     }
    ]
