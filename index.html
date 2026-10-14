@@ -2065,7 +2065,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792019440';   // stamped by build-data.py at every deploy
+const BUILD='1792019657';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3450,9 +3450,9 @@ function reviewBannerHTML(flags){
 function mgrFlagLineHTML(flags,origName){
   if(!flags||!flags.length)return '';
   const en=esc(origName||'').replace(/'/g,"\\'");
-  let h=`<div class="mgr-flag-line"><span class="mfl-head">Manager only — tap to confirm</span>`;
+  let h=`<div class="mgr-flag-line"><span class="mfl-head">Manager only — open questions for the kitchen</span>`;
   flags.forEach((f,i)=>{const n=flagNorm(f);
-    h+=`<div class="mfl-chip${n.std?' has-std':''}" onclick="event.stopPropagation();openConfirmModal('${en}',${i})"><span class="mfl-comp">${esc(n.component)}</span><span class="mfl-cta">Tap to confirm ›</span></div>`;});
+    h+=`<div class="mfl-chip${n.std?' has-std':''}" onclick="event.stopPropagation();openConfirmModal('${en}',${i})"><span class="mfl-comp">${esc(n.component)}</span><span class="mfl-cta">Tap to answer ›</span></div>`;});
   return h+'</div>';
 }
 
@@ -10835,7 +10835,37 @@ function findDishByName(origName){
   if(!dish)specialsAll().forEach(function(it){if(it.name===origName){dish=it;section=(spPromoted(it)||{}).section||'Specials';}});
   return dish?{dish:dish,section:section}:null;
 }
+/* Plain answer screen (2026-10-14, Sam). Replaces the "list ingredients & process" + Remy flow below,
+   which is kept only as dead code for reference. */
 function openConfirmModal(origName,idx){
+  if(!isMgr())return;
+  var found=findDishByName(origName); if(!found)return;
+  var ed=getEditedDish(found.dish);
+  var flags=(ed._flags!==undefined)?ed._flags:(ed.flags||[]);
+  if(!flags||!flags[idx])return;
+  var n=flagNorm(flags[idx]);
+  cfTarget={originalName:origName,section:found.section,idx:idx,component:n.component,std:n.std,risk:n.risk||[],nOpen:flags.length};
+  if(KQ&&KQ.alg)delete KQ.alg[origName];
+  var s=kqAlgSet(origName);
+  $('cfHead').textContent=ed.name||origName;
+  var _ci=$('cfIntro'); if(_ci)_ci.textContent=(flags.length>1?('Question '+(idx+1)+' of '+flags.length+'. '):'')+'What you type goes on the card exactly as written.';
+  var h='<div class="cf-q">'+esc(n.label)+'</div>';
+  h+='<div class="em-field"><label for="cf-text">Answer</label><textarea id="cf-text" style="min-height:80px" placeholder="Answer the way you would tell a server.">'+esc(n.std||'')+'</textarea></div>';
+  h+='<div class="cf-alg"><div class="cf-alg-head">Allergens on this dish — tap to change</div><div class="em-alg-grid">'+ALL_ALLERGENS.map(function(a){
+    return '<div class="em-alg-item'+(s.has(a)?' on':'')+'" data-dish="'+esc(origName)+'" data-alg="'+a+'" onclick="kqToggleAlg(this)"><span>'+(ALG[a]||a)+'</span> <span style="font-size:10px">'+a+'</span></div>'; }).join('')+'</div></div>';
+  h+='<div class="em-actions" style="margin-top:8px"><button class="em-save" onclick="cfPlainSave()">Save to the card</button><button class="em-cancel" onclick="cfClose()">Cancel</button></div>';
+  $('cfBody').innerHTML=h;
+  $('confirmModal').classList.add('open');
+  setTimeout(function(){ var t=$('cf-text'); if(t)t.focus(); },50);
+}
+function cfPlainSave(){
+  if(!isMgr()||!cfTarget)return;
+  var t=$('cf-text'), text=t?String(t.value||'').trim():'';
+  if(!text){ if(t)t.focus(); return; }
+  kqApply({kind:'flag',dish:cfTarget.originalName,component:cfTarget.component},text);
+  cfClose();
+}
+function openConfirmModalOld(origName,idx){
   if(!isMgr())return;
   var found=findDishByName(origName); if(!found)return;
   var ed=getEditedDish(found.dish);
