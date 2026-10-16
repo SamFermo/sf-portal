@@ -91,7 +91,7 @@
      "price": "13",
      "raw": false,
      "pron": "fah-ree-NAH-tah",
-     "story": "A Ligurian chickpea flatbread with roots in 13th-century Genoa — thin, crisp at the edges, soft and nutty in the center. Made in-house from chickpea flour, rosemary olive oil, and water, finished with fresh thyme and sea salt. The housemade cagliatta and a seasonal preserve sit alongside on the plate. Current preserve: rhubarb caramelized onion jam.",
+     "story": "A Ligurian chickpea flatbread with roots in 13th-century Genoa — thin, crisp at the edges, soft and nutty in the center. Made in-house from chickpea flour, rosemary olive oil, and water, finished with fresh thyme and sea salt. The housemade cagliatta and a seasonal preserve sit alongside on the plate. Current preserve: spiced apple butter from Swan House Farm apples.",
      "ingredients": [
       {
        "term": "Farinata",
@@ -104,9 +104,9 @@
        "note": "Our housemade fresh cheese — whole milk curdled with lemon juice, then dressed with rosemary-infused olive oil and salt. A fresh, mild, milky curd; closer to a soft ricotta than a mozzarella. Made in-house."
       },
       {
-       "term": "Rhubarb caramelized onion jam",
+       "term": "Spiced apple butter",
        "pronunciation": null,
-       "note": "Seasonal preserve made in-house: rhubarb cooked down with caramelized onions, vinegar, and sugar. Tart, sweet, savory — made to work against the richness of the cagliatta."
+       "note": "The seasonal preserve this fall: Swan House Farm apples cooked down slowly with warm spices until thick and dark. Sweet against the salty cagliatta. Spice mix not confirmed with the kitchen; no nuts or dairy in it."
       }
      ],
      "allergens": [
@@ -202,11 +202,11 @@
     },
     {
      "name": "Bruschetta",
-     "desc": "Swan House Farm peppernata, burrata, tomato leaf oil, micro basil",
+     "desc": "Swan House Farm peperonata, burrata, micro basil, saba",
      "price": "20",
      "raw": false,
      "pron": "broo-SKET-tah",
-     "story": "Sweet Italian peppernata from Swan House Farm: slow-cooked peppers, bright and soft. Burrata melts into it. Tomato leaf oil and micro basil finish it.",
+     "story": "Sweet Italian peperonata from Swan House Farm: slow-cooked peppers, bright and soft. Burrata melts into it. Micro basil and a drizzle of saba finish it.",
      "ingredients": [
       {
        "term": "Peperonata",
@@ -219,8 +219,9 @@
        "term": "Burrata"
       },
       {
-       "term": "Tomato leaf oil",
-       "note": "Made in-house by blending tomato leaves into neutral canola oil and straining it clear, capturing the grassy, green flavor of the plant itself rather than the fruit. Just leaves and oil, no allergens of its own."
+       "term": "Saba",
+       "pronunciation": "SAH-bah",
+       "note": "Cooked-down grape must from Emilia-Romagna, the unaged cousin of balsamic: thick, sweet, a little tart. Just grapes, no allergens of its own. It replaced the tomato leaf oil on this plate on the 10/16 menu."
       },
       {
        "note": "The bread is a baguette cut on a bias, lightly oiled, seasoned with salt and pepper, and grilled. There is no garlic rubbed on the bread itself. The dish gets its savory foundation from the peperonata and burrata.",
@@ -234,9 +235,9 @@
       "allium"
      ],
      "canModify": [],
-     "allergenNote": "Dairy: the burrata melts into the dish, central and not removable. Gluten: the grilled bread is the base of the bruschetta, not removable. Allium: the peperonata is cooked with onion and garlic and cannot be pulled, so this dish cannot be cleared for an allium allergy. The bread itself is not rubbed with garlic. The tomato leaf oil is just tomato leaves and canola oil.",
+     "allergenNote": "Dairy: the burrata melts into the dish, central and not removable. Gluten: the grilled bread is the base of the bruschetta, not removable. Allium: the peperonata is cooked with onion and garlic and cannot be pulled, so this dish cannot be cleared for an allium allergy. The bread itself is not rubbed with garlic. The saba is just cooked grape must.",
      "flags": [],
-     "added": "2026-10-06"
+     "added": "2026-10-16"
     },
     {
      "name": "Ribollita",
@@ -325,118 +326,132 @@
     },
     {
      "name": "Rigatoni",
-     "desc": "Swan House Farm eggplant pomodoro, baked eggplant, mozzarella, basil",
-     "price": "29",
+     "desc": "italian sausage, crimini mushroom, kale, garlic, cream, pecorino romano, aleppo oil",
+     "price": "30",
      "raw": false,
-     "story": "Same dish as our eggplant parm, now printed as Rigatoni. Eggplant cut thick and salted overnight to draw out bitterness, then breaded and fried. It goes into the oven under mozzarella to melt, and lands on a bed of rigatoni tossed in an eggplant pomodoro sauce. Finished with Parmesan and basil.",
+     "pron": "ree-gah-TOH-nee",
+     "story": "New build, same name. Extruded rigatoni in a cream sauce built on chicken stock, with coins of Italian sausage, crimini mushroom and kale all cooked down until the sauce is thick and glossy. Finished with a little butter and sherry vinegar, pecorino Romano on top and a drizzle of Aleppo chili oil. Spicy, rich, very savory, with a hit of vinegar cutting through the cream.",
      "ingredients": [
       {
        "term": "Rigatoni",
        "pronunciation": "ree-gah-TOH-nee",
-       "note": "Ridged tube pasta — the ridges and hollow centers grab and hold the sauce. Standard durum-wheat pasta, so it carries gluten."
+       "note": "Wide, ridged tube pasta, extruded in-house from semolina and water. No egg in the dough. The ridges and the hollow hold this thick sauce."
       },
       {
-       "term": "Eggplant pomodoro sauce",
-       "pronunciation": "poh-moh-DOH-roh",
-       "note": "Our house pomodoro base — garlic, onion, and tomato — with eggplant cooked down into it. No cream, no meat. Carries allium from the garlic and onion."
-      },
-      {
-       "term": "Breading",
+       "term": "Italian sausage",
        "pronunciation": null,
-       "note": "Flour, egg wash, and breadcrumb on the fried eggplant. Carries gluten and egg, both built in."
+       "note": "Pork sausage sliced into coins and browned before the sauce comes together. It carries a little heat of its own, so the dish keeps some kick even without the chili oil."
       },
       {
-       "term": "Mozzarella",
-       "pronunciation": "moht-sah-REH-lah",
-       "note": "Melted over the fried eggplant in the oven. Carries dairy, as does the Parmesan finish."
-      }
-     ],
-     "allergens": [
-      "gluten",
-      "dairy",
-      "egg",
-      "allium"
-     ],
-     "canModify": [],
-     "allergenNote": "Gluten: the breading and the rigatoni, both built in. Dairy: mozzarella and Parmesan, built in. Egg: the egg wash in the breading, built in. Allium: garlic and onion in the pomodoro base, not removable.",
-     "added": "2026-08-22",
-     "pron": "ree-gah-TOH-nee"
-    },
-    {
-     "name": "Stuffed Farfalle",
-     "desc": "egg pasta stuffed with basil, ricotta & mozzarella, spicy vodka sauce, heirloom cherry tomatoes, basil",
-     "price": "30",
-     "raw": false,
-     "pron": "far-FAH-leh",
-     "story": "Bow-tie pasta made from egg dough, filled with basil, ricotta, and fresh mozzarella. Finished in a spicy vodka sauce built on onion and garlic, topped with halved heirloom cherry tomatoes and fresh basil chiffonade. Warm, creamy, and a little sharp from the heat.",
-     "ingredients": [
-      {
-       "term": "Farfalle",
-       "note": "Bow-tie shaped pasta; here made in-house from egg dough and stuffed with basil, ricotta, and mozzarella. A fresh egg dough, so it carries egg and wheat.",
-       "pronunciation": "far-FAH-leh"
-      },
-      {
-       "term": "Chiffonade",
-       "pronunciation": "shif-oh-NAHD",
-       "note": "Herbs sliced into thin ribbons — here fresh basil, scattered over the top."
-      },
-      {
-       "note": "A tomato-and-cream sauce with some heat: vodka, crushed tomato, heavy cream, onion, garlic, chili flake, parmesan, butter and salt.",
+       "term": "Cream sauce",
        "pronunciation": null,
-       "term": "Spicy vodka sauce"
-      }
-     ],
-     "allergens": [
-      "gluten",
-      "egg",
-      "dairy",
-      "allium"
-     ],
-     "canModify": [],
-     "allergenNote": "Egg and gluten are both in the fresh egg pasta — built in. Dairy runs through the filling (ricotta, mozzarella) and the cream in the sauce, so it can't come off this dish. Allium: onion and garlic are cooked into the vodka sauce.",
-     "flags": [],
-     "added": "2026-08-01"
-    },
-    {
-     "name": "Mafaldine alla Carbonara",
-     "desc": "guanciale, black pepper, swan house farm egg yolk, pecorino romano",
-     "price": "28",
-     "raw": true,
-     "pron": "mah-fal-DEE-neh",
-     "story": "The Roman classic on mafaldine — wide, ruffled ribbon pasta named after Princess Mafalda of Savoy — whose wavy edges catch and hold the glossy sauce. Rendered guanciale, lots of cracked black pepper, Pecorino Romano, and a Swan House Farm egg yolk emulsified into a peppery, silky coating. No cream — the silk comes from the egg and cheese. Served with a raw yolk, hence the asterisk.",
-     "ingredients": [
-      {
-       "term": "Mafaldine",
-       "pronunciation": "mah-fal-DEE-neh",
-       "note": "Wide, flat pasta with ruffled edges on both sides, from Naples. Named in honor of Princess Mafalda of Savoy — also called reginette (little queens). The wavy edges grip the carbonara sauce exceptionally well."
+       "note": "Chicken stock and cream reduced with the sausage, crimini mushroom and kale until thick and glossy, then finished with butter and a splash of sherry vinegar for brightness. Garlic is in the base."
       },
       {
-       "term": "Carbonara",
-       "pronunciation": "kar-boh-NAH-rah",
-       "note": "a Roman sauce of egg, hard cheese, cured pork, and black pepper — emulsified, never creamed."
-      },
-      {
-       "term": "Guanciale",
-       "pronunciation": "gwahn-CHAH-leh",
-       "note": "cured pork jowl, fattier and more delicate than pancetta; renders down into the sauce."
+       "term": "Aleppo chili oil",
+       "pronunciation": "ah-LEP-oh",
+       "note": "House chili oil made with Aleppo pepper, a fruity, moderate-heat Syrian chili. Drizzled on at the end; it can be left off on request."
       },
       {
        "term": "Pecorino Romano",
        "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
-       "note": "a hard, salty sheep's-milk cheese from Lazio — sharper than Parmigiano."
+       "note": "Hard, salty sheep's-milk cheese grated over the top. Dairy."
       }
      ],
      "allergens": [
       "gluten",
-      "egg",
-      "dairy"
-     ],
-     "canModify": [
       "dairy",
-      "egg"
+      "allium"
      ],
-     "allergenNote": "All the mods exist, none are recommended. Guanciale can come off for vegetarian — the kitchen subs in whatever vegetable is running seasonally on the menu. Dairy or even the egg can technically be left out, at which point it's pasta and pepper; we get the no-egg request more than we'd like, so set expectations honestly. No allium in the dish.",
-     "added": "2026-06-10"
+     "canModify": [],
+     "allergenNote": "Gluten: the rigatoni, built in. Dairy: cream, butter and pecorino are the sauce, so this cannot go dairy-free. Allium: garlic in the base. No egg in the pasta. Vegetarian: yes, per Chris, made without the chicken stock and the sausage, with extra mushroom in their place; ring it in as a modification. The chili oil can come off, but the sausage still carries a little heat on the regular build.",
+     "flags": [],
+     "added": "2026-10-16"
+    },
+    {
+     "name": "Girella",
+     "desc": "ricotta and pumpkin seed filling, sage, aleppo pepper, pumpkin puree, marinated kale",
+     "price": "30",
+     "raw": false,
+     "pron": "jee-REL-lah",
+     "story": "Back on the menu, now as three small spirals instead of one large one. Egg dough is spread with a filling of ricotta, pumpkin seed, sage and Aleppo chili, rolled into a spiral and sliced. The spirals sit on a pumpkin purée and are finished with massaged, marinated kale, pepitas and pumpkin seed oil. Warm, nutty, a little sweet, with heat from the chili. Chris says this one sits close to the squash risotto in flavor; he plans to change the risotto when he has time next week.",
+     "ingredients": [
+      {
+       "term": "Girella",
+       "pronunciation": "jee-REL-lah",
+       "note": "Italian for a spiral or pinwheel. Hand-made egg pasta rolled around a filling, sliced into rounds and baked or sauced. Golden from the egg dough."
+      },
+      {
+       "term": "Ricotta and pumpkin seed filling",
+       "pronunciation": null,
+       "note": "Ricotta mixed with ground pumpkin seed, sage and Aleppo chili. Dairy from the ricotta; the pumpkin seed is a seed, not a tree nut."
+      },
+      {
+       "term": "Pumpkin purée",
+       "pronunciation": null,
+       "note": "Per Chris: pumpkin cooked with mirepoix (onion, carrot, celery) and vegetable stock, seasoned with salt, sugar and vinegar, then puréed. Vegetable stock, not chicken. Carries allium from the mirepoix."
+      },
+      {
+       "term": "Marinated kale",
+       "pronunciation": null,
+       "note": "Kale massaged by hand, then marinated in vinegar, maple syrup, olive oil and salt. Garnished over the top with pepitas and pumpkin seed oil."
+      },
+      {
+       "term": "Aleppo pepper",
+       "pronunciation": "ah-LEP-oh",
+       "note": "A fruity, moderate-heat Syrian chili flake. It is in the filling, so the heat cannot be left off this dish."
+      }
+     ],
+     "allergens": [
+      "gluten",
+      "dairy",
+      "egg",
+      "allium"
+     ],
+     "canModify": [],
+     "allergenNote": "Egg and gluten: the egg dough, built in. Dairy: the ricotta filling, built in. Allium: the mirepoix in the pumpkin purée, so the dish cannot be cleared for an allium allergy. Vegetarian as built (vegetable stock in the purée). Pumpkin seeds and pumpkin seed oil are seeds, not nuts, but mention them to a guest with a seed allergy.",
+     "flags": [],
+     "added": "2026-10-16"
+    },
+    {
+     "name": "Cavatelli al Granchio",
+     "desc": "dungeness crab meat, lemon, butter, garlic, chive",
+     "price": "38",
+     "raw": false,
+     "pron": "kah-vah-TEL-lee ahl GRAHN-kyoh",
+     "story": "Granchio means crab. Semolina cavatelli finished in a tart lemon butter sauce with garlic, shallot and a little white wine, with three ounces of Dungeness crab meat folded through. Chive batons on top. Bright, briny and rich. Chris wants this one sold hard: the crab price is working in our favor right now, so it makes the house money.",
+     "ingredients": [
+      {
+       "term": "Cavatelli",
+       "pronunciation": "kah-vah-TEL-lee",
+       "note": "Small, shell-like pasta with a hollow that catches sauce. Made in-house from semolina and water, no egg."
+      },
+      {
+       "term": "Dungeness crab",
+       "pronunciation": "DUN-jeh-ness",
+       "note": "Pacific Northwest crab, sweet and delicate. Three ounces of picked meat per plate, warmed in the sauce rather than cooked hard. Shellfish."
+      },
+      {
+       "term": "Lemon butter sauce",
+       "pronunciation": null,
+       "note": "Butter, lemon juice, garlic and shallot, with a splash of white wine. Tart and rich. The wine is cooked in, but mention it to guests who avoid alcohol entirely."
+      },
+      {
+       "term": "Chive batons",
+       "pronunciation": null,
+       "note": "Chives cut into short lengths and scattered on top. A member of the allium family."
+      }
+     ],
+     "allergens": [
+      "gluten",
+      "dairy",
+      "shellfish",
+      "allium"
+     ],
+     "canModify": [],
+     "allergenNote": "Shellfish: Dungeness crab is the dish and cannot come off. Gluten: the cavatelli, built in. Dairy: the butter sauce, built in. Allium: garlic and shallot in the sauce and chives on top, so this cannot be cleared for an allium allergy. No egg in the pasta.",
+     "flags": [],
+     "added": "2026-10-16"
     },
     {
      "name": "Risotto",

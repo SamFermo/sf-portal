@@ -1824,6 +1824,9 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 .wi-sub{font-size:11.5px; color:var(--ink-mute); margin-top:2px;}
 .wi-tag{display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#241f15; background:var(--silver); border-radius:4px; padding:0 5px; margin-right:6px; vertical-align:1px;}
 .wi-tag-c{background:var(--wood-soft); color:#fdfaf1;}
+.wi-tag-f{background:#2f5d7c; color:#eef6fb;}
+.wi-row.wi-fridge{box-shadow:inset 3px 0 0 #2f5d7c;}
+.wi-fnote{display:block; margin-top:2px; font-weight:700; color:#2f5d7c;}
 .wi-oh{display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; min-width:64px;}
 .wi-oh-n{font-size:22px; font-weight:800; color:var(--ink); line-height:1;}
 .wi-oh-n.wi-none{color:var(--ink-mute);}
@@ -2065,7 +2068,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792179479';   // stamped by build-data.py at every deploy
+const BUILD='1792194788';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4651,7 +4654,7 @@ function wiRender(){
     const rows=D.wines.filter(function(w){return w.type===t&&wiInFilter(w);}); if(!rows.length)return;
     h+='<div class="fd-cat">'+esc(t)+'</div>';
     rows.forEach(function(w){ const s=S.byKey[w.key];
-      let cls='wi-row', oh='<span class="wi-oh-n wi-none">–</span><span class="wi-oh-l">not counted</span>';
+      let cls='wi-row'+(w.fridge?' wi-fridge':''), oh='<span class="wi-oh-n wi-none">–</span><span class="wi-oh-l">not counted</span>';
       if(s.onHand!=null){ const low=w.status!=='cellar'&&s.weeks!=null&&s.weeks<1, neg=s.onHand<0;
         if(neg)cls+=' wi-neg'; else if(low)cls+=' wi-low';
         oh='<span class="wi-oh-n">'+wiNum(s.onHand)+'</span><span class="wi-oh-l">'+(neg?'check count':'on hand')+'</span>'; }
@@ -4662,7 +4665,7 @@ function wiRender(){
       if(s.count!=null)sub.push('−'+wiNum(s.sold)+' sold');
       if(s.wk>0)sub.push(wiNum(s.wk)+'/wk'+(s.weeks!=null&&s.onHand>0?' · ~'+(s.weeks>=10?'10+':wiNum(Math.round(s.weeks*10)/10))+' wks left':''));
       const open=WI.adj&&WI.adj.key===w.key; if(open)cls+=' wi-open';
-      h+='<div class="'+cls+'" onclick="wiAdjOpen(\''+w.key+'\')"><div class="wi-main"><div class="wi-name">'+esc(w.name)+'</div><div class="wi-sub">'+(w.status==='core-glass'?'<span class="wi-tag">glass</span>':'')+(w.status==='cellar'?'<span class="wi-tag wi-tag-c">cellar</span>':'')+(sub.join(' · ')||(w.vendor?esc(w.vendor):'vendor not on file'))+'</div></div><div class="wi-oh">'+oh+'</div></div>';
+      h+='<div class="'+cls+'" onclick="wiAdjOpen(\''+w.key+'\')"><div class="wi-main"><div class="wi-name">'+esc(w.name)+'</div><div class="wi-sub">'+(w.status==='core-glass'?'<span class="wi-tag">glass</span>':'')+(w.status==='cellar'?'<span class="wi-tag wi-tag-c">cellar</span>':'')+(w.fridge?'<span class="wi-tag wi-tag-f">fridge</span>':'')+(sub.join(' · ')||(w.vendor?esc(w.vendor):'vendor not on file'))+(w.fridgeNote?'<span class="wi-fnote">'+esc(w.fridgeNote)+'</span>':'')+'</div></div><div class="wi-oh">'+oh+'</div></div>';
       if(open){ const base=s.onHand==null?0:s.onHand, d=WI.adj.d;
         h+='<div class="wi-adj"><div class="wi-adj-btns"><button onclick="wiAdjBy(-1)"'+(d<=wiAdjFloor(base)?' disabled':'')+'>−1</button><button onclick="wiAdjBy(1)">+1</button><button onclick="wiAdjBy(6)">+6</button></div>'
           +'<div class="wi-adj-v">'+(s.onHand==null?'Starting count':wiNum(base))+' → <b>'+wiNum(base+d)+'</b></div>'
