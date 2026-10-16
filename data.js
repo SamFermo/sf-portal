@@ -15688,6 +15688,1078 @@ window.SF = {
       ]
      }
     ]
+   },
+   {
+    "weekStart": "2026-11-02",
+    "dates": [
+     "2026-11-02",
+     "2026-11-03",
+     "2026-11-04",
+     "2026-11-05",
+     "2026-11-06",
+     "2026-11-07",
+     "2026-11-08"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "MD",
+       "",
+       "",
+       "MD",
+       "MD",
+       "MD"
+      ]
+     },
+     {
+      "name": "Chris",
+      "shifts": [
+       "",
+       "Expo",
+       "Expo",
+       "Admin",
+       "Expo",
+       "Expo",
+       ""
+      ]
+     },
+     {
+      "name": "Jose",
+      "shifts": [
+       "Expo",
+       "",
+       "1-close",
+       "Expo",
+       "",
+       "",
+       "Expo"
+      ]
+     },
+     {
+      "name": "Joe",
+      "shifts": [
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7",
+       ""
+      ]
+     },
+     {
+      "name": "Cat",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Darren",
+      "shifts": [
+       "",
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Gopala",
+      "shifts": [
+       "",
+       "1-close",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Ignacio",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Jackson",
+      "shifts": [
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Josh",
+      "shifts": [
+       "10-8",
+       "10-8",
+       "",
+       "",
+       "1-close",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Kenji",
+      "shifts": [
+       "9-7",
+       "9-7",
+       "9-7",
+       "",
+       "",
+       "",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Manny",
+      "shifts": [
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "12-10",
+       "12-10",
+       ""
+      ]
+     },
+     {
+      "name": "Sophie",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "10-8"
+      ]
+     },
+     {
+      "name": "Tony",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Anna",
+      "shifts": [
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       ""
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-11-09",
+    "dates": [
+     "2026-11-09",
+     "2026-11-10",
+     "2026-11-11",
+     "2026-11-12",
+     "2026-11-13",
+     "2026-11-14",
+     "2026-11-15"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "MD",
+       "",
+       "",
+       "MD",
+       "MD",
+       "MD"
+      ]
+     },
+     {
+      "name": "Chris",
+      "shifts": [
+       "",
+       "Expo",
+       "Expo",
+       "Admin",
+       "Expo",
+       "Expo",
+       ""
+      ]
+     },
+     {
+      "name": "Jose",
+      "shifts": [
+       "Expo",
+       "",
+       "1-close",
+       "Expo",
+       "",
+       "",
+       "Expo"
+      ]
+     },
+     {
+      "name": "Joe",
+      "shifts": [
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7",
+       ""
+      ]
+     },
+     {
+      "name": "Cat",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Darren",
+      "shifts": [
+       "",
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Gopala",
+      "shifts": [
+       "",
+       "1-close",
+       "",
+       "R/O",
+       "R/O",
+       "R/O",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Ignacio",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Jackson",
+      "shifts": [
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Josh",
+      "shifts": [
+       "10-8",
+       "10-8",
+       "",
+       "",
+       "1-close",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Kenji",
+      "shifts": [
+       "9-7",
+       "9-7",
+       "9-7",
+       "",
+       "",
+       "",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Manny",
+      "shifts": [
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       ""
+      ]
+     },
+     {
+      "name": "Sophie",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "10-8"
+      ]
+     },
+     {
+      "name": "Tony",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Anna",
+      "shifts": [
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       ""
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-11-16",
+    "dates": [
+     "2026-11-16",
+     "2026-11-17",
+     "2026-11-18",
+     "2026-11-19",
+     "2026-11-20",
+     "2026-11-21",
+     "2026-11-22"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "MD",
+       "MD",
+       "",
+       "",
+       "MD",
+       "MD",
+       "MD"
+      ]
+     },
+     {
+      "name": "Chris",
+      "shifts": [
+       "",
+       "Expo",
+       "Expo",
+       "Admin",
+       "Expo",
+       "Expo",
+       ""
+      ]
+     },
+     {
+      "name": "Jose",
+      "shifts": [
+       "Expo",
+       "",
+       "1-close",
+       "Expo",
+       "",
+       "",
+       "Expo"
+      ]
+     },
+     {
+      "name": "Joe",
+      "shifts": [
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7",
+       ""
+      ]
+     },
+     {
+      "name": "Cat",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Darren",
+      "shifts": [
+       "",
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Gopala",
+      "shifts": [
+       "",
+       "1-close",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Ignacio",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Jackson",
+      "shifts": [
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Josh",
+      "shifts": [
+       "10-8",
+       "10-8",
+       "",
+       "",
+       "1-close",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Kenji",
+      "shifts": [
+       "9-7",
+       "9-7",
+       "9-7",
+       "",
+       "",
+       "",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Manny",
+      "shifts": [
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "12-10",
+       "12-10",
+       ""
+      ]
+     },
+     {
+      "name": "Sophie",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "10-8"
+      ]
+     },
+     {
+      "name": "Tony",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Anna",
+      "shifts": [
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       ""
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-11-23",
+    "dates": [
+     "2026-11-23",
+     "2026-11-24",
+     "2026-11-25",
+     "2026-11-26",
+     "2026-11-27",
+     "2026-11-28",
+     "2026-11-29"
+    ],
+    "label": "",
+    "notes": [
+     "CLOSED - Thanksgiving"
+    ],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O"
+      ]
+     },
+     {
+      "name": "Chris",
+      "shifts": [
+       "",
+       "Expo",
+       "Expo",
+       "",
+       "Expo",
+       "Expo",
+       ""
+      ]
+     },
+     {
+      "name": "Jose",
+      "shifts": [
+       "Expo",
+       "",
+       "1-close",
+       "",
+       "",
+       "",
+       "Expo"
+      ]
+     },
+     {
+      "name": "Joe",
+      "shifts": [
+       "",
+       "",
+       "9-7",
+       "",
+       "9-7",
+       "9-7",
+       ""
+      ]
+     },
+     {
+      "name": "Cat",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "R/O",
+       "",
+       "R/O",
+       "R/O",
+       "R/O"
+      ]
+     },
+     {
+      "name": "Darren",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Gopala",
+      "shifts": [
+       "",
+       "1-close",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Ignacio",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Jackson",
+      "shifts": [
+       "",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Josh",
+      "shifts": [
+       "10-8",
+       "10-8",
+       "",
+       "",
+       "1-close",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Kenji",
+      "shifts": [
+       "9-7",
+       "9-7",
+       "9-7",
+       "",
+       "",
+       "",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Manny",
+      "shifts": [
+       "",
+       "",
+       "1-close",
+       "",
+       "12-10",
+       "1-close",
+       ""
+      ]
+     },
+     {
+      "name": "Sophie",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Tony",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Anna",
+      "shifts": [
+       "",
+       "1-close",
+       "1-close",
+       "",
+       "1-close",
+       "",
+       ""
+      ]
+     }
+    ]
+   },
+   {
+    "weekStart": "2026-11-30",
+    "dates": [
+     "2026-11-30",
+     "2026-12-01",
+     "2026-12-02",
+     "2026-12-03",
+     "2026-12-04",
+     "2026-12-05",
+     "2026-12-06"
+    ],
+    "label": "",
+    "notes": [],
+    "coverage": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "covNotes": [
+     "",
+     "",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ],
+    "rows": [
+     {
+      "name": "Sam",
+      "shifts": [
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "MD",
+       "MD",
+       "MD"
+      ]
+     },
+     {
+      "name": "Chris",
+      "shifts": [
+       "",
+       "Expo",
+       "Expo",
+       "Admin",
+       "Expo",
+       "Expo",
+       ""
+      ]
+     },
+     {
+      "name": "Jose",
+      "shifts": [
+       "Expo",
+       "",
+       "1-close",
+       "Expo",
+       "",
+       "",
+       "Expo"
+      ]
+     },
+     {
+      "name": "Joe",
+      "shifts": [
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7",
+       ""
+      ]
+     },
+     {
+      "name": "Cat",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Darren",
+      "shifts": [
+       "",
+       "",
+       "",
+       "9-7",
+       "9-7",
+       "9-7",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Gopala",
+      "shifts": [
+       "",
+       "1-close",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Ignacio",
+      "shifts": [
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Jackson",
+      "shifts": [
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Josh",
+      "shifts": [
+       "10-8",
+       "10-8",
+       "",
+       "",
+       "1-close",
+       "",
+       ""
+      ]
+     },
+     {
+      "name": "Kenji",
+      "shifts": [
+       "9-7",
+       "9-7",
+       "9-7",
+       "",
+       "",
+       "",
+       "9-7"
+      ]
+     },
+     {
+      "name": "Manny",
+      "shifts": [
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "12-10",
+       "12-10",
+       ""
+      ]
+     },
+     {
+      "name": "Sophie",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "10-8"
+      ]
+     },
+     {
+      "name": "Tony",
+      "shifts": [
+       "1-close",
+       "",
+       "",
+       "",
+       "1-close",
+       "1-close",
+       "1-close"
+      ]
+     },
+     {
+      "name": "Anna",
+      "shifts": [
+       "",
+       "1-close",
+       "1-close",
+       "1-close",
+       "1-close",
+       "",
+       ""
+      ]
+     }
+    ]
    }
   ]
  },
@@ -18012,5 +19084,5 @@ window.SF = {
    }
   ]
  },
- "build": "1792178000"
+ "build": "1792179479"
 };

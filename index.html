@@ -2065,7 +2065,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792178000';   // stamped by build-data.py at every deploy
+const BUILD='1792179479';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2838,6 +2838,20 @@ const ANNOUNCES=[
     "Thank you for everything you've done here Adrian, and for being such a wonderful person to work alongside for so long. We love you dearly and will miss you terribly. Please send postcards that we can fill the bar with."
   ],
   note:"Love, Sam, Sully, Kelly, Tim, Amy, Ava, Lucy, and Johnny."
+  },
+  {
+  kind:'info',
+  aud:'boh',
+  id:'boh-november-2026',
+  showUntil:'2026-11-15',
+  emoji:'\uD83D\uDCC5',
+  title:'November schedule is up',
+  lines:[
+    "November is live in the Schedule tab, 11/2 through 12/6. Check your weeks and your R/Os.",
+    "December, January and February will follow over the next few weeks.",
+    "We're closed Thanksgiving. If something's wrong or you need a day, put the request in here and tell Chris or me."
+  ],
+  note:""
   },
   {
   kind:'info',
@@ -4950,7 +4964,10 @@ function schedRanges(){
   const[y,m]=todayISO().split('-').map(Number);
   const cur=`${y}-${String(m).padStart(2,'0')}`;
   const out=[{key:'week',label:'This Week'},{key:'m:'+cur,label:'This Month'}];
-  for(let i=1;i<=3;i++){let mm=m+i,yy=y;if(mm>12){mm-=12;yy++;}out.push({key:`m:${yy}-${String(mm).padStart(2,'0')}`,label:MON[mm-1]});}
+  /* 2026-10-16: one chip per month that is actually in the published schedule (either side),
+     from next month on. The old fixed three-month window hid February of the FOH winter sheet. */
+  const have={};['foh','boh'].forEach(function(s){((SF.schedule&&SF.schedule[s])||[]).forEach(function(w){(w.dates||[w.weekStart]).forEach(function(d){if(d)have[String(d).slice(0,7)]=1;});});});
+  Object.keys(have).sort().forEach(function(ym){if(ym>cur){const mm=Number(ym.slice(5,7));out.push({key:'m:'+ym,label:MON[mm-1]});}});
   return out;}
 function renderRangeChips(){
   $('schedRanges').innerHTML=schedRanges().map(o=>`<button class="fchip${schedState.range===o.key?' active':''}" data-r="${o.key}">${o.label}</button>`).join('');
