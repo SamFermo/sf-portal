@@ -1,0 +1,27 @@
+{
+ "generated": "2026-10-16",
+ "basis": "Best-attempt plate cost from current (Oct 2026) invoices. Portions are standard-plate estimates except Braised Short Rib (1 lb raw) and Black Cod (7.5 oz), set by Sam 2026-10-16. 'allowance' lines bundle minor seasonings/oils/house preps. Confidence and gaps: see the dish-costing worksheet in Codename: Neelix.",
+ "target_pct": 0.25,
+ "items": [
+  { "name": "Sea Wolf Bakery Baguette", "plate_cost": 2.98, "menu_price": 8, "aliases": ["Baguette"], "special": false },
+  { "name": "Castelvetrano Olives", "plate_cost": 2.75, "menu_price": 6, "aliases": ["Olives"], "special": false },
+  { "name": "Marcona Almonds", "plate_cost": 3.5, "menu_price": 6, "aliases": ["Almonds"], "special": false },
+  { "name": "Farinata", "plate_cost": 2.41, "menu_price": 13, "aliases": [], "special": false },
+  { "name": "House Caesar", "plate_cost": 3.48, "menu_price": 14, "aliases": ["Caesar Salad", "Caesar"], "special": false },
+  { "name": "Farm House Salad", "plate_cost": 2.59, "menu_price": 18, "aliases": [], "special": false },
+  { "name": "Bruschetta", "plate_cost": 5.1, "menu_price": 20, "aliases": [], "special": false },
+  { "name": "Ribollita", "plate_cost": 2.76, "menu_price": 16, "aliases": [], "special": false },
+  { "name": "Swan House Bolognese", "plate_cost": 5.82, "menu_price": 34, "aliases": ["Bolognese"], "special": false },
+  { "name": "Rigatoni", "plate_cost": 3.7, "menu_price": 29, "aliases": ["Eggplant Rigatoni"], "special": false },
+  { "name": "Stuffed Farfalle", "plate_cost": 3.1, "menu_price": 30, "aliases": ["Farfalle"], "special": false },
+  { "name": "Mafaldine alla Carbonara", "plate_cost": 4.1, "menu_price": 28, "aliases": ["Carbonara"], "special": false },
+  { "name": "Risotto", "plate_cost": 2.76, "menu_price": 28, "aliases": [], "special": false },
+  { "name": "Pesce al Cartoccio", "plate_cost": 9.31, "menu_price": 38, "aliases": ["Black Cod"], "special": false },
+  { "name": "Braised Short Rib", "plate_cost": 17.12, "menu_price": 48, "aliases": ["Short Rib"], "special": false },
+  { "name": "Classic Tiramisu", "plate_cost": 2.85, "menu_price": 15, "aliases": ["Tiramisu"], "special": false },
+  { "name": "Lemon Olive Oil Cake", "plate_cost": 2.1, "menu_price": 13, "aliases": ["Olive Oil Cake"], "special": false },
+  { "name": "Seasonal Gelato", "plate_cost": 1.25, "menu_price": 8, "aliases": ["Gelato"], "special": false },
+  { "name": "Farmhouse Primavera", "plate_cost": 3.85, "menu_price": 29, "aliases": ["Farmhouse Primavera", "Primavera"], "special": true },
+  { "name": "Salmon Collar", "plate_cost": 5.37, "menu_price": 25, "aliases": ["Salmon Collar"], "special": true }
+ ]
+}

@@ -2065,7 +2065,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792157151';   // stamped by build-data.py at every deploy
+const BUILD='1792178000';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -8099,9 +8099,43 @@ function lnFreshBlock(latest){
   h+='<div class="ln-fresh">As of '+lnFmtAsOf(latest.written_at)+' · service '+lnDateLabel(latest)+'</div>';
   return h;
 }
+/* ---- Dish food-cost estimate overlay (2026-10-16, Sam) ----
+   Joins the nightly product mix to data/dish-costs.json (SF.dishCosts: plate-cost estimates)
+   so the recap tracks an estimated food cost per night. ESTIMATE ONLY: portions are standard
+   plate guesses except short rib (1 lb) and black cod (7.5 oz). Unmatched items are skipped and
+   coverage is shown, so the percentage is never quietly understated. */
+var DC_INDEX=null;
+function dcNorm(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); }
+function dcIndex(){
+  if(DC_INDEX)return DC_INDEX;
+  DC_INDEX={};
+  try{
+    var dc=(window.SF&&SF.dishCosts&&SF.dishCosts.items)||[];
+    dc.forEach(function(it){
+      if(it.plate_cost==null)return;
+      DC_INDEX[dcNorm(it.name)]=it.plate_cost;
+      (it.aliases||[]).forEach(function(a){ DC_INDEX[dcNorm(a)]=it.plate_cost; });
+    });
+  }catch(e){}
+  return DC_INDEX;
+}
+function dcLookup(name){ var i=dcIndex(); var k=dcNorm(name); return (k in i)?i[k]:null; }
+function dcFoodCost(top){
+  var cost=0, rev=0, matched=0, total=0;
+  (top||[]).forEach(function(t){ total++; var c=dcLookup(t.name); if(c!=null){ cost+=c*(t.qty||0); if(t.rev!=null)rev+=t.rev; matched++; } });
+  return {cost:cost, rev:rev, matched:matched, total:total};
+}
+function dcFootHTML(top, foodSales){
+  var s=dcFoodCost(top); if(!s.matched)return '';
+  var denom=(foodSales&&foodSales>0)?foodSales:s.rev;
+  var pct=(denom>0)?(' \u00b7 ~'+(s.cost/denom*100).toFixed(1)+'% of food sales'):'';
+  var cov=(s.matched<s.total)?(' \u00b7 '+s.matched+' of '+s.total+' items priced'):'';
+  return '<div class="ln-note">Est. food cost ~'+lnMoney0(s.cost)+pct+cov+' <span style="opacity:.55">(estimate)</span></div>';
+}
 function lnFoodBlock(food){
   if(!food)return ''; let h='<div class="ln-sec">Food</div><div class="ln-card">';
   h+=lnList(food.top,'food',8,'No item detail posted.');
+  h+=dcFootHTML(food.top,null);
   if(food.not_moving&&food.not_moving.length)h+='<div class="ln-note"><b>Slow:</b> '+food.not_moving.map(function(x){return esc(x.name||'')+' ('+lnNum(x.qty)+')';}).join(', ')+'</div>';
   if(food.anomalies&&food.anomalies.length)h+='<div class="ln-note"><b>Notable:</b> '+food.anomalies.map(function(x){return esc(x.name||'')+(x.note?' — '+esc(x.note):'');}).join('; ')+'</div>';
   return h+'</div>';
@@ -9125,7 +9159,8 @@ function rcNightHTML(){
   if(top.length){
     const tmax=top[0].rev||1;
     h+='<div class="ln-sec">What sold</div><div class="ln-card">';
-    top.forEach(function(t){ h+=rcMagRow(t.name,'<em>'+lnNum(t.qty)+' sold</em>'+lnMoney0(t.rev),(t.rev||0)/tmax); });
+    top.forEach(function(t){ var _c=dcLookup(t.name); var _ce=(_c!=null)?' \u00b7 <span style="opacity:.6">~'+lnMoney0(_c*(t.qty||0))+' cost</span>':''; h+=rcMagRow(t.name,'<em>'+lnNum(t.qty)+' sold</em>'+lnMoney0(t.rev)+_ce,(t.rev||0)/tmax); });
+    h+=dcFootHTML(d.food&&d.food.top, c&&c.food);
     h+='</div>';
   }
   const dt=(d.drinks&&d.drinks.top||[]).slice(0,6);
