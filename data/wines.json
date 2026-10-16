@@ -280,6 +280,64 @@
   ]
  },
  {
+  "section": "Bubbles",
+  "name": "Paltrinieri \"Solco\" Lambrusco Salamino dell'Emilia",
+  "vintage": "NV",
+  "region": "Emilia, Italy",
+  "type": "sparkling",
+  "glass": "",
+  "bottle": "",
+  "grapes": "100% Lambrusco Salamino",
+  "pour": "Deep purple-red with a fine, persistent perlage. Ripe cherry and black cherry over dark berries — currant, blackberry — with a floral lift; delicate and juicy, good acidity, a touch of tannin, and an easygoing semi-sweet finish.",
+  "producer": "Cantina Paltrinieri farms in Bomporto, in the heart of Lambrusco country in Emilia, best known for its Lambrusco di Sorbara. \"Solco\" is its easy, everyday frizzante. The fresh sheet lists this as Lambrusco Salamino; some importer listings show the Solco as Lambrusco di Sorbara, so confirm the grape with your lead before quoting.",
+  "winemaking": "100% Lambrusco Salamino, about 11% ABV. Semi-sweet, slightly tannic. Serve at 12–14°C.",
+  "has_notes": true,
+  "specs": [
+   {
+    "label": "Body",
+    "rating": 2,
+    "low": "light",
+    "high": "full"
+   },
+   {
+    "label": "Dryness",
+    "rating": 2,
+    "low": "sweet",
+    "high": "bone dry"
+   },
+   {
+    "label": "Acidity",
+    "rating": 4,
+    "low": "soft",
+    "high": "bright"
+   },
+   {
+    "label": "Tannins",
+    "rating": 2,
+    "low": "none",
+    "high": "grippy"
+   }
+  ],
+  "pronguide": [
+   {
+    "term": "Paltrinieri",
+    "pron": "pahl-tree-NYEH-ree"
+   },
+   {
+    "term": "Lambrusco Salamino",
+    "pron": "lahm-BROO-skoh sah-lah-MEE-noh"
+   },
+   {
+    "term": "Solco",
+    "pron": "SOHL-koh"
+   },
+   {
+    "term": "dell'Emilia",
+    "pron": "del-eh-MEE-lyah"
+   }
+  ]
+ },
+ {
   "section": "White/Rosé/Orange",
   "name": "House White: Santa Barbara \"Le Vaglie\" Verdicchio dei Castelli di Jesi Classico",
   "vintage": "",
@@ -788,6 +846,122 @@
    {
     "term": "Kellerei Cantina",
     "pron": "keh-leh-RYE kahn-TEE-nah"
+   }
+  ]
+ },
+ {
+  "section": "White/Rosé/Orange",
+  "name": "Borgo Savaian Pinot Grigio, Collio DOC",
+  "vintage": "",
+  "region": "Collio DOC, Friuli-Venezia Giulia, Italy",
+  "type": "white",
+  "glass": "",
+  "bottle": "",
+  "grapes": "100% Pinot Grigio",
+  "pour": "Deep straw yellow, with acacia flower and white orchard fruit — banana and pear — leading to a notably intense palate. A richer, Collio style of Pinot Grigio.",
+  "producer": "From the Savaian family's estate at Cormons in the Collio, the same growers behind the Masaret orange wine. The Pinot Grigio comes off ponca, the stratified marl-and-sandstone soil of the Collio hills, from vines averaging around 15 years, in a temperate Upper Adriatic climate moderated by the nearby sea. Current release vintage and ABV were not on the fresh sheet; confirm with your lead before quoting.",
+  "winemaking": "100% Pinot Grigio off ponca (marl and sandstone) in the Collio; vines about 15 years old. Vinified and matured in stainless steel for 5–6 months.",
+  "has_notes": true,
+  "specs": [
+   {
+    "label": "Body",
+    "rating": 3,
+    "low": "light",
+    "high": "full"
+   },
+   {
+    "label": "Dryness",
+    "rating": 5,
+    "low": "sweet",
+    "high": "bone dry"
+   },
+   {
+    "label": "Acidity",
+    "rating": 4,
+    "low": "soft",
+    "high": "bright"
+   },
+   {
+    "label": "Tannins",
+    "rating": 1,
+    "low": "none",
+    "high": "grippy"
+   }
+  ],
+  "pronguide": [
+   {
+    "term": "Borgo Savaian",
+    "pron": "BOR-goh sah-vah-YAHN"
+   },
+   {
+    "term": "Pinot Grigio",
+    "pron": "PEE-noh GREE-joh"
+   },
+   {
+    "term": "Collio",
+    "pron": "KOHL-lyoh"
+   },
+   {
+    "term": "Cormons",
+    "pron": "KOR-mohns"
+   },
+   {
+    "term": "ponca",
+    "pron": "POHN-kah"
+   }
+  ]
+ },
+ {
+  "section": "White/Rosé/Orange",
+  "name": "Brigaldara Soave DOC",
+  "vintage": "",
+  "region": "Soave DOC, Veneto, Italy",
+  "type": "white",
+  "glass": "",
+  "bottle": "",
+  "grapes": "100% Garganega",
+  "pour": "Yellow apple and citrus with delicate floral notes and hints of mint and chamomile. Smooth and fluid on the palate, lifted by vibrant freshness and a subtle mineral touch, finishing clean.",
+  "producer": "Brigaldara is a Cesari-family estate in the Marano valley near San Floriano, north of Verona, far better known for its Amarone and Valpolicella. The founding date (1929) and current vintage (2024) come from research rather than the fresh sheet; confirm with your lead before quoting.",
+  "winemaking": "100% Garganega from vines planted in 1980, hand-harvested in the second half of September. Temperature-controlled vinification, 6 months in stainless steel.",
+  "has_notes": true,
+  "specs": [
+   {
+    "label": "Body",
+    "rating": 2,
+    "low": "light",
+    "high": "full"
+   },
+   {
+    "label": "Dryness",
+    "rating": 5,
+    "low": "sweet",
+    "high": "bone dry"
+   },
+   {
+    "label": "Acidity",
+    "rating": 4,
+    "low": "soft",
+    "high": "bright"
+   },
+   {
+    "label": "Tannins",
+    "rating": 1,
+    "low": "none",
+    "high": "grippy"
+   }
+  ],
+  "pronguide": [
+   {
+    "term": "Brigaldara",
+    "pron": "bree-gahl-DAH-rah"
+   },
+   {
+    "term": "Soave",
+    "pron": "soh-AH-veh"
+   },
+   {
+    "term": "Garganega",
+    "pron": "gar-GAH-neh-gah"
    }
   ]
  },
@@ -1678,6 +1852,60 @@
    {
     "term": "Nebbiolo",
     "pron": "neb-BYOH-loh"
+   }
+  ]
+ },
+ {
+  "section": "Red",
+  "name": "Ferrante Chianti Colli Senesi DOCG",
+  "vintage": "2024",
+  "region": "Tuscany, Italy",
+  "type": "red",
+  "glass": "",
+  "bottle": "",
+  "grapes": "100% Sangiovese",
+  "pour": "Young and elegant — ruby red with black-cherry and plum fruit over bramble, dry and balanced with a fresh, velvety finish. An easy, food-friendly Sangiovese.",
+  "producer": "Chianti Colli Senesi is the Chianti subzone in the hills south of Siena, one of the largest in the DOCG and known for brighter, earlier-drinking Sangiovese. Estate details for the Ferrante bottling could not be confirmed in research; confirm the producer background with your lead before quoting.",
+  "winemaking": "100% Sangiovese, 2024 vintage.",
+  "has_notes": true,
+  "specs": [
+   {
+    "label": "Body",
+    "rating": 2,
+    "low": "light",
+    "high": "full"
+   },
+   {
+    "label": "Dryness",
+    "rating": 5,
+    "low": "sweet",
+    "high": "bone dry"
+   },
+   {
+    "label": "Acidity",
+    "rating": 4,
+    "low": "soft",
+    "high": "bright"
+   },
+   {
+    "label": "Tannins",
+    "rating": 2,
+    "low": "none",
+    "high": "grippy"
+   }
+  ],
+  "pronguide": [
+   {
+    "term": "Ferrante",
+    "pron": "feh-RAHN-teh"
+   },
+   {
+    "term": "Chianti Colli Senesi",
+    "pron": "KYAHN-tee KOHL-lee seh-NEH-zee"
+   },
+   {
+    "term": "Sangiovese",
+    "pron": "san-joh-VEH-zeh"
    }
   ]
  }

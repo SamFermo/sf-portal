@@ -495,9 +495,9 @@ window.SF = {
       "story": "Black cod baked in a parchment parcel with potato, onion, and matsutake mushroom, with garlic herb butter and lemon. The parcel traps the steam, so the fish cooks gently in its own juices and the mushroom perfume fills the packet. Opened at the table or in the kitchen, it releases a burst of aroma.",
       "ingredients": [
        {
+        "note": "Italian for 'fish in a parcel.' Cartoccio is the parchment (or foil) packet the fish is sealed in and baked. The steam that builds inside cooks everything gently and keeps the fish moist.",
         "term": "Pesce al Cartoccio",
-        "pronunciation": "PEH-sheh ahl car-TOH-cho",
-        "note": "Italian for 'fish in a parcel.' Cartoccio is the parchment (or foil) packet the fish is sealed in and baked. The steam that builds inside cooks everything gently and keeps the fish moist."
+        "pronunciation": "PEH-sheh ahl car-TOH-cho"
        },
        {
         "term": "Black cod",
@@ -506,21 +506,28 @@ window.SF = {
        },
        {
         "term": "Matsutake",
-        "pronunciation": "mat-soo-TAH-keh",
-        "note": "A prized wild mushroom that grows in Pacific Northwest conifer forests in the fall. Firm, meaty, with a distinctive spicy-pine aroma (some say cinnamon). Highly sought after in Japan, foraged locally in season. The aroma is the point: it perfumes the whole parcel."
+        "note": "A prized wild mushroom that grows in Pacific Northwest conifer forests in the fall. Firm, meaty, with a distinctive spicy-pine aroma (some say cinnamon). Highly sought after in Japan, foraged locally in season. The aroma is the point: it perfumes the whole parcel.",
+        "pronunciation": "mat-soo-TAH-keh"
+       },
+       {
+        "term": "Garlic herb butter",
+        "pronunciation": null,
+        "note": "Our garlic herb butter is butter combined with garlic and herbs, prepared ahead and baked in the parchment parcel with the fish. It's just those three components: butter, garlic, and herbs. No anchovy or citrus zest. The parcels are fully assembled and wrapped before service, so we cannot accommodate dairy-free requests on this dish. Just parsley"
+       },
+       {
+        "note": "The fish cooks in a parchment-only parcel. There is no gluten anywhere in the build, so the dish is gluten-free as served.",
+        "term": "Confirm the parcel is parchment only (no gluten in the build) before clearing for gluten.",
+        "pronunciation": null
        }
       ],
       "allergens": [
-       "fish",
        "dairy",
+       "fish",
        "allium"
       ],
       "canModify": [],
-      "allergenNote": "Fish: black cod, the center of the dish, cannot come off. Dairy: the garlic herb butter is baked into the parcel. Allium: onion and garlic are both in the parcel. UNCONFIRMED: the garlic herb butter's full makeup and whether it can be swapped for olive oil for a dairy-free parcel have not been confirmed with the kitchen.",
-      "flags": [
-       "Garlic herb butter: composition not specified beyond garlic, herbs and butter; confirm nothing else is in it (wine, anchovy, citrus zest) and whether an olive-oil swap is possible for dairy-free.",
-       "Confirm the parcel is parchment only (no gluten in the build) before clearing for gluten."
-      ],
+      "allergenNote": "Fish: black cod, the center of the dish, cannot come off. Dairy: the garlic herb butter is baked into the parcel. Allium: onion and garlic are both in the parcel.",
+      "flags": [],
       "added": "2026-10-09"
      },
      {
@@ -532,42 +539,52 @@ window.SF = {
       "story": "Beef short rib braised low and slow until it pulls apart with a fork, served over sour cream polenta with sautéed chanterelles and fresh herbs. A sharp horseradish vinaigrette cuts the richness, and a demi-glace ties it together. The heaviest plate on the menu and the one for a cold night.",
       "ingredients": [
        {
-        "term": "Short rib",
+        "note": "A cut from the beef chuck and plate, heavily marbled with lots of connective tissue. Braising (searing, then cooking slowly in liquid for hours) melts that tissue into gelatin, which is what makes the meat rich and spoon-tender.",
         "pronunciation": null,
-        "note": "A cut from the beef chuck and plate, heavily marbled with lots of connective tissue. Braising (searing, then cooking slowly in liquid for hours) melts that tissue into gelatin, which is what makes the meat rich and spoon-tender."
+        "term": "Short rib"
        },
        {
+        "note": "Ground cornmeal cooked until thick and creamy, finished with sour cream for tang. The house polenta is built with cream, stock and butter, so treat it as dairy.",
         "term": "Sour cream polenta",
-        "pronunciation": "poh-LEN-tah",
-        "note": "Ground cornmeal cooked until thick and creamy, finished with sour cream for tang. The house polenta is built with cream, stock and butter, so treat it as dairy."
+        "pronunciation": "poh-LEN-tah"
        },
        {
+        "note": "A wild golden mushroom, firm with a mild apricot-and-pepper note. Fall is peak season in the Northwest. Sautéed here.",
         "term": "Chanterelles",
-        "pronunciation": "shan-tuh-RELS",
-        "note": "A wild golden mushroom, firm with a mild apricot-and-pepper note. Fall is peak season in the Northwest. Sautéed here."
+        "pronunciation": "shan-tuh-RELS"
        },
        {
         "term": "Horseradish vinaigrette",
         "pronunciation": null,
-        "note": "A sharp dressing built on fresh horseradish, the root that gives the sinus-clearing heat. It does the same job here that horseradish does with prime rib: cuts through the fat. Full composition to be confirmed with the kitchen."
+        "note": "White wine vinegar, garlic, shallot, mustard, horseradish, salt, pepper, canola oil"
        },
        {
-        "term": "Demi-glace",
         "pronunciation": "DEH-mee glahss",
+        "term": "Demi-glace",
         "note": "Stock reduced until glossy, thick and deeply savory. Coats the meat as a sauce. Full composition to be confirmed with the kitchen."
+       },
+       {
+        "note": "Onion and garlic are cooked into the braise with red wine reduced down, so allium runs through the short rib and its sauce. It cannot come out of this dish.",
+        "pronunciation": null,
+        "term": "Allium"
+       },
+       {
+        "note": "The braised short rib itself contains no gluten. We don't dredge the rib in flour, and our demi-glace is made without soy or wheat. The entire dish is gluten-free, including the polenta, chanterelles, horseradish vinaigrette, and herbs.",
+        "pronunciation": null,
+        "term": "Gluten"
+       },
+       {
+        "term": "Dairy-free",
+        "pronunciation": null,
+        "note": "Dairy-free works here. The kitchen swaps the sour cream polenta for a dairy-free risotto or builds the plate on a bigger warm chanterelle salad (parsley, chives, shaved shallot). Flag it on the ticket so they build the right base."
        }
       ],
       "allergens": [
        "dairy"
       ],
       "canModify": [],
-      "allergenNote": "Dairy: the sour cream polenta is built with sour cream, cream and butter; ask the kitchen whether a dairy-free starch swap works here as it does with the duck. UNCONFIRMED: the braise aromatics, the horseradish vinaigrette and the demi-glace have not been spelled out, and a braise and demi-glace almost always carry onion and garlic, so treat this as allium until the kitchen clears it. Also confirm whether the braise or demi-glace uses wine or any gluten (flour dredge, soy).",
-      "flags": [
-       "Allium: braise aromatics, horseradish vinaigrette and demi-glace composition not specified; a braise normally carries onion and garlic. Confirm with kitchen before clearing for allium.",
-       "Gluten: confirm no flour dredge on the short rib and no soy or wheat in the demi-glace before clearing for gluten.",
-       "Horseradish vinaigrette: confirm base (oil, vinegar, mustard?, shallot?) with kitchen.",
-       "Dairy-free: confirm a polenta swap is available on this dish."
-      ],
+      "allergenNote": "Dairy: the sour cream polenta is built with sour cream, cream and butter; ask the kitchen whether a dairy-free starch swap works here as it does with the duck.",
+      "flags": [],
       "added": "2026-10-09"
      }
     ],
@@ -641,10 +658,8 @@ window.SF = {
      "egg"
     ],
     "canModify": [],
-    "allergenNote": "Dairy: the apple mascarpone and the brown butter sugar on top; the cake itself is olive oil, not butter. Gluten: wheat flour. Egg: in the batter. No nuts anywhere on the plate.",
-    "flags": [
-     "Dairy-free: confirm whether the cake can go out without the apple mascarpone and the brown butter sugar for a dairy-free guest."
-    ],
+    "allergenNote": "Dairy: the apple mascarpone and the brown butter sugar on top; the cake itself is olive oil, not butter. Gluten: wheat flour. Egg: in the batter. No nuts anywhere on the plate. Dairy-free: The dish cannot be done dairy free",
+    "flags": [],
     "added": "2026-10-14"
    },
    {
@@ -1008,6 +1023,64 @@ window.SF = {
     {
      "term": "La Cuvée",
      "pron": "lah koo-VAY"
+    }
+   ]
+  },
+  {
+   "section": "Bubbles",
+   "name": "Paltrinieri \"Solco\" Lambrusco Salamino dell'Emilia",
+   "vintage": "NV",
+   "region": "Emilia, Italy",
+   "type": "sparkling",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Lambrusco Salamino",
+   "pour": "Deep purple-red with a fine, persistent perlage. Ripe cherry and black cherry over dark berries — currant, blackberry — with a floral lift; delicate and juicy, good acidity, a touch of tannin, and an easygoing semi-sweet finish.",
+   "producer": "Cantina Paltrinieri farms in Bomporto, in the heart of Lambrusco country in Emilia, best known for its Lambrusco di Sorbara. \"Solco\" is its easy, everyday frizzante. The fresh sheet lists this as Lambrusco Salamino; some importer listings show the Solco as Lambrusco di Sorbara, so confirm the grape with your lead before quoting.",
+   "winemaking": "100% Lambrusco Salamino, about 11% ABV. Semi-sweet, slightly tannic. Serve at 12–14°C.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 2,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 2,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 2,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Paltrinieri",
+     "pron": "pahl-tree-NYEH-ree"
+    },
+    {
+     "term": "Lambrusco Salamino",
+     "pron": "lahm-BROO-skoh sah-lah-MEE-noh"
+    },
+    {
+     "term": "Solco",
+     "pron": "SOHL-koh"
+    },
+    {
+     "term": "dell'Emilia",
+     "pron": "del-eh-MEE-lyah"
     }
    ]
   },
@@ -1520,6 +1593,122 @@ window.SF = {
     {
      "term": "Kellerei Cantina",
      "pron": "keh-leh-RYE kahn-TEE-nah"
+    }
+   ]
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "Borgo Savaian Pinot Grigio, Collio DOC",
+   "vintage": "",
+   "region": "Collio DOC, Friuli-Venezia Giulia, Italy",
+   "type": "white",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Pinot Grigio",
+   "pour": "Deep straw yellow, with acacia flower and white orchard fruit — banana and pear — leading to a notably intense palate. A richer, Collio style of Pinot Grigio.",
+   "producer": "From the Savaian family's estate at Cormons in the Collio, the same growers behind the Masaret orange wine. The Pinot Grigio comes off ponca, the stratified marl-and-sandstone soil of the Collio hills, from vines averaging around 15 years, in a temperate Upper Adriatic climate moderated by the nearby sea. Current release vintage and ABV were not on the fresh sheet; confirm with your lead before quoting.",
+   "winemaking": "100% Pinot Grigio off ponca (marl and sandstone) in the Collio; vines about 15 years old. Vinified and matured in stainless steel for 5–6 months.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 3,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Borgo Savaian",
+     "pron": "BOR-goh sah-vah-YAHN"
+    },
+    {
+     "term": "Pinot Grigio",
+     "pron": "PEE-noh GREE-joh"
+    },
+    {
+     "term": "Collio",
+     "pron": "KOHL-lyoh"
+    },
+    {
+     "term": "Cormons",
+     "pron": "KOR-mohns"
+    },
+    {
+     "term": "ponca",
+     "pron": "POHN-kah"
+    }
+   ]
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "Brigaldara Soave DOC",
+   "vintage": "",
+   "region": "Soave DOC, Veneto, Italy",
+   "type": "white",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Garganega",
+   "pour": "Yellow apple and citrus with delicate floral notes and hints of mint and chamomile. Smooth and fluid on the palate, lifted by vibrant freshness and a subtle mineral touch, finishing clean.",
+   "producer": "Brigaldara is a Cesari-family estate in the Marano valley near San Floriano, north of Verona, far better known for its Amarone and Valpolicella. The founding date (1929) and current vintage (2024) come from research rather than the fresh sheet; confirm with your lead before quoting.",
+   "winemaking": "100% Garganega from vines planted in 1980, hand-harvested in the second half of September. Temperature-controlled vinification, 6 months in stainless steel.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 2,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Brigaldara",
+     "pron": "bree-gahl-DAH-rah"
+    },
+    {
+     "term": "Soave",
+     "pron": "soh-AH-veh"
+    },
+    {
+     "term": "Garganega",
+     "pron": "gar-GAH-neh-gah"
     }
    ]
   },
@@ -2410,6 +2599,60 @@ window.SF = {
     {
      "term": "Nebbiolo",
      "pron": "neb-BYOH-loh"
+    }
+   ]
+  },
+  {
+   "section": "Red",
+   "name": "Ferrante Chianti Colli Senesi DOCG",
+   "vintage": "2024",
+   "region": "Tuscany, Italy",
+   "type": "red",
+   "glass": "",
+   "bottle": "",
+   "grapes": "100% Sangiovese",
+   "pour": "Young and elegant — ruby red with black-cherry and plum fruit over bramble, dry and balanced with a fresh, velvety finish. An easy, food-friendly Sangiovese.",
+   "producer": "Chianti Colli Senesi is the Chianti subzone in the hills south of Siena, one of the largest in the DOCG and known for brighter, earlier-drinking Sangiovese. Estate details for the Ferrante bottling could not be confirmed in research; confirm the producer background with your lead before quoting.",
+   "winemaking": "100% Sangiovese, 2024 vintage.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 2,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 2,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Ferrante",
+     "pron": "feh-RAHN-teh"
+    },
+    {
+     "term": "Chianti Colli Senesi",
+     "pron": "KYAHN-tee KOHL-lee seh-NEH-zee"
+    },
+    {
+     "term": "Sangiovese",
+     "pron": "san-joh-VEH-zeh"
     }
    ]
   }
@@ -7061,7 +7304,7 @@ window.SF = {
        "3:30 serve",
        "Sup Server",
        "3:30 serve",
-       "",
+       "3:30 serve",
        ""
       ]
      },
@@ -7121,8 +7364,8 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "3:30 serve"
+       "R/O",
+       "R/O"
       ]
      },
      {
@@ -7194,7 +7437,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "",
-       ""
+       "3:30 serve"
       ]
      },
      {
@@ -17590,5 +17833,5 @@ window.SF = {
    "Special Glass Pour"
   ]
  },
- "build": "1792019657"
+ "build": "1792157151"
 };
