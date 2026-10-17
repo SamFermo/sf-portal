@@ -2069,7 +2069,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792278593';   // stamped by build-data.py at every deploy
+const BUILD='1792278772';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2506,6 +2506,7 @@ function onProfiles(){
   applyAuthGate();
   /* Sign-offs subtab reads policyAcks off PROFILES; repaint when a signature lands (2026-10-17) */
   try{ if(typeof compTab!=='undefined'&&compTab==='policy'&&$('compBody')&&$('compBody').innerHTML)renderCompliance(); }catch(e){}
+  try{ annPolicyRefresh(); }catch(e){}
 }
 function applyAuthGate(){
   const gate=$('loginGate');
@@ -2844,6 +2845,7 @@ const ANNOUNCES=[
     "Read the full protocols and sign at the bottom of the page. We'll go over them at pre-shift every night this week. Printed copies are coming too."
   ],
   link:{href:'alcohol-service-protocols.html',label:'Read and sign the protocols'},
+  requiresPolicy:'alcohol-2026-10',   /* Got it stays locked until the signature is on the staff doc (2026-10-17) */
   note:"Make sure your MAST permit is current and uploaded under Compliance."
   },
   {
@@ -2966,7 +2968,14 @@ function annActive(){ return todayISO()<=ANNOUNCE.showUntil && annForMe(ANNOUNCE
 function annMyRsvp(){ const r=me&&me.announceRsvp; return (r&&r.id===ANNOUNCE.id)?r:null; }
 function annIsInfo(){ return ANNOUNCE.kind==='info'||ANNOUNCE.kind==='calloff'; }
 function annAcked(){ return !!(me && annDoneFor(ANNOUNCE)); }
+/* A card can require a signed policy before Got it works. The signature is written by the policy
+   page onto the staff doc (policyAcks.<id>), arrives here through the staff snapshot, and
+   annPolicyRefresh repaints the open card so the button unlocks without a reload. */
+function annPolicyLocked(A){ if(!A||!A.requiresPolicy)return false; if(!me)return true; if(DEMO)return false; const p=PROFILES[me.name]||me; return !(p.policyAcks&&p.policyAcks[A.requiresPolicy]&&p.policyAcks[A.requiresPolicy].at); }
+function annPolicyRefresh(){ const m=$('announceModal'); if(!m||m.style.display!=='flex'||!ANNOUNCE||!ANNOUNCE.requiresPolicy)return;
+  const c0=m.querySelector('.ann-card'), y=c0?c0.scrollTop:0; m.innerHTML=annCardHTML(null); const c1=m.querySelector('.ann-card'); if(c1&&y)c1.scrollTop=y; }
 function annAck(){
+  if(annPolicyLocked(ANNOUNCE))return;
   if(me){ const _id=ANNOUNCE.id; me.noticeAck=_id;
     if(!Array.isArray(me.noticeAcks))me.noticeAcks=[]; if(me.noticeAcks.indexOf(_id)<0)me.noticeAcks.push(_id);
     if(fbReady&&fbDb&&me.id&&!DEMO)fbDb.collection('staff').doc(me.id).update({noticeAck:_id,noticeAcks:firebase.firestore.FieldValue.arrayUnion(_id)}).catch(function(){}); }
@@ -3075,7 +3084,9 @@ function annCardHTML(existing){
       <div class="ann-lines">${A.lines.map(l=>`<div class="ann-line">${esc(l)}</div>`).join('')}</div>
       ${A.link?`<div class="ann-linkwrap"><a class="ann-link" href="${esc(A.link.href)}" target="_blank" rel="noopener">${esc(A.link.label||'Open')} →</a></div>`:''}
       ${A.note?`<div class="ann-note">${esc(A.note)}</div>`:''}
-      <div class="to-submit"><button class="to-go" onclick="annAck()">${annPendingCount()>1?'Got it, next':'Got it'}</button></div>
+      ${annPolicyLocked(A)
+        ?`<div class="to-submit"><button class="to-go" disabled style="opacity:.45;cursor:not-allowed">Sign the protocols first</button></div><div class="ann-more">Got it unlocks once your signature is on file.</div>`
+        :`<div class="to-submit"><button class="to-go" onclick="annAck()">${annPendingCount()>1?'Got it, next':'Got it'}</button></div>`}
       ${annPendingCount()>1?`<div class="ann-more">${annPendingCount()-1} more after this</div>`:''}
     </div>`;
   }
