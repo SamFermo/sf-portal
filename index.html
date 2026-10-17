@@ -826,6 +826,7 @@ body.tour-on{padding-bottom:230px;}
 .ann-line{font-size:13px; color:var(--card-soft); line-height:1.4;}
 .ann-more{font-size:11.5px; color:var(--card-mute); font-style:italic;}
 .ann-note{font-size:12.5px; font-weight:700; color:var(--gold-deep);}
+.ann-linkwrap{margin:10px 0 2px;} .ann-link{display:inline-block; padding:9px 16px; border-radius:10px; background:var(--accent); color:#eef6e6; font-weight:700; font-size:14px; text-decoration:none;}
 .ann-current{font-size:12px; color:var(--ink-mute); background:rgba(214,158,46,.1); border-radius:8px; padding:7px 10px;}
 .ann-guests{display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; margin-top:6px; padding:8px 12px; background:rgba(205,216,244,.05); border-radius:10px;}
 .ann-glab{font-size:13px; color:var(--ink); font-weight:600;}
@@ -1923,7 +1924,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
   <div class="view-head"><p class="view-eyebrow">Cards</p><h2 class="view-title">Compliance</h2>
     <p class="view-sub" id="compSub"></p>
     <div class="subtabs-wrap"><div class="subtabs" id="compTabs"><span class="subpill" id="compPill"></span>
-      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button><button class="subtab" data-comp="all">All Cards</button><button class="subtab" data-comp="tonight">Tonight's Staff</button></div></div>
+      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button><button class="subtab" data-comp="all">All Cards</button><button class="subtab" data-comp="tonight">Tonight's Staff</button><button class="subtab" data-comp="policy">Sign-offs</button></div></div>
   </div>
   <div id="compBody"></div>
 </section>
@@ -2068,7 +2069,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792243010';   // stamped by build-data.py at every deploy
+const BUILD='1792278593';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2503,6 +2504,8 @@ function onProfiles(){
   if(DEMO)return;   // a profile snapshot must not clobber the guest session
   if(sessionValid()){ me=PROFILES[getSession().name]; touchSession(); } else { me=null; }
   applyAuthGate();
+  /* Sign-offs subtab reads policyAcks off PROFILES; repaint when a signature lands (2026-10-17) */
+  try{ if(typeof compTab!=='undefined'&&compTab==='policy'&&$('compBody')&&$('compBody').innerHTML)renderCompliance(); }catch(e){}
 }
 function applyAuthGate(){
   const gate=$('loginGate');
@@ -2829,6 +2832,21 @@ function afterLogin(){
    (arrayUnion); the legacy single noticeAck field is still honored. */
 const ANNOUNCES=[
   {
+  kind:'info',
+  aud:'all',
+  id:'alcohol-protocols-2026-10',
+  showUntil:'2026-11-30',
+  emoji:'\uD83C\uDD94',
+  title:'Alcohol service protocols, effective now',
+  lines:[
+    "The Liquor Board has been very active on our block and we're tightening up how we serve alcohol, starting tonight. This applies to everyone, kitchen included.",
+    "Card anyone who looks under 50, regulars too. Any sign of intoxication means no more alcohol. Card every seat at a table that orders a bottle, and don't push bottles for now. Drinking or using on shift means immediate termination; shift drinks only after you've clocked out.",
+    "Read the full protocols and sign at the bottom of the page. We'll go over them at pre-shift every night this week. Printed copies are coming too."
+  ],
+  link:{href:'alcohol-service-protocols.html',label:'Read and sign the protocols'},
+  note:"Make sure your MAST permit is current and uploaded under Compliance."
+  },
+  {
   /* Sam's own words, verbatim (2026-09-19). Do not edit, tidy or regenerate this copy. */
   kind:'info',
   aud:'all',
@@ -3055,6 +3073,7 @@ function annCardHTML(existing){
       <div class="ann-emoji">${A.emoji}</div>
       <div class="ann-title serif">${esc(A.title)}</div>
       <div class="ann-lines">${A.lines.map(l=>`<div class="ann-line">${esc(l)}</div>`).join('')}</div>
+      ${A.link?`<div class="ann-linkwrap"><a class="ann-link" href="${esc(A.link.href)}" target="_blank" rel="noopener">${esc(A.link.label||'Open')} →</a></div>`:''}
       ${A.note?`<div class="ann-note">${esc(A.note)}</div>`:''}
       <div class="to-submit"><button class="to-go" onclick="annAck()">${annPendingCount()>1?'Got it, next':'Got it'}</button></div>
       ${annPendingCount()>1?`<div class="ann-more">${annPendingCount()-1} more after this</div>`:''}
@@ -6752,7 +6771,47 @@ function offSave(){ const f=OFF.file; if(!f)return;
 function offDownload(f){ if(OFF.url)URL.revokeObjectURL(OFF.url); OFF.url=URL.createObjectURL(f);
   const a=document.createElement('a'); a.href=OFF.url; a.download=f.name; document.body.appendChild(a); a.click(); a.remove();
   offSet('Downloaded. On an iPad it is in the Files app, under Downloads.'); }
+/* ===== POLICY SIGN-OFFS (2026-10-17) ================================================
+   Written policies each person signs digitally. The signature lives on the person's staff
+   doc as policyAcks.<policyId> = {at, name, via}, written by the policy page itself
+   (alcohol-service-protocols.html) once it finds a valid portal session. This subtab is
+   the record: who has signed, when, and who hasn't. WAC 314-29-015(4) names a signed
+   acknowledgment of the alcohol policy on file per employee as a mitigating factor. */
+const POLICIES=[
+  {id:'alcohol-2026-10', title:'Alcohol Service Protocols', dated:'2026-10-17', href:'alcohol-service-protocols.html'}
+];
+function policyAckFor(p,pol){ const a=p&&p.policyAcks&&p.policyAcks[pol.id]; return (a&&a.at)?a:null; }
+function policyRows(pol){
+  const R=compWithExtras(), out={boh:[],foh:[]};
+  ['boh','foh'].forEach(function(k){ R[k].forEach(function(p){ const prof=PROFILES[p.name]||{}; out[k].push({name:p.name, role:p.role||prof.role||'', ack:policyAckFor(prof,pol)}); }); });
+  return out;
+}
+function renderPolicySignoffs(){
+  let h='';
+  POLICIES.forEach(function(pol){
+    const rows=policyRows(pol), all=rows.boh.concat(rows.foh), signed=all.filter(function(r){return !!r.ack;}).length;
+    const mine=me?policyAckFor(PROFILES[me.name]||me,pol):null;
+    h+='<div class="comp-card" style="padding:14px 15px;">'
+      +'<div class="comp-name" style="font-size:16px;">'+esc(pol.title)+'</div>'
+      +'<div class="comp-role">Effective '+esc(fmtShort(pol.dated))+' · '+signed+' of '+all.length+' signed</div>'
+      +'<div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">'
+      +'<a class="ann-link" href="'+esc(pol.href)+'" target="_blank" rel="noopener">'+(mine?'Read it again':'Read and sign')+' →</a>'
+      +(mine?'<span class="comp-role">You signed '+esc(new Date(mine.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}))+'</span>':'<span class="comp-role">Sign at the bottom of the page.</span>')
+      +'</div></div>';
+    [['Back of House','boh'],['Front of House','foh']].forEach(function(lk){
+      h+='<div class="section-label">'+lk[0]+'</div><div class="comp-card">';
+      rows[lk[1]].forEach(function(r){
+        const when=r.ack?new Date(r.ack.at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+        h+='<div class="comp-row" style="grid-template-columns:1fr auto;"><div><div class="comp-name">'+esc(r.name)+'</div><div class="comp-role">'+esc(r.role)+'</div></div>'
+          +(r.ack?'<span class="pill st-good">✓ signed '+esc(when)+'</span>':'<span class="pill st-warn">not signed</span>')+'</div>';
+      });
+      h+='</div>';
+    });
+  });
+  $('compBody').innerHTML=h;
+}
 function renderCompliance(){const C=SF.compliance, R=compWithExtras();
+  if(compTab==='policy'){ $('compSub').textContent='Written policies, signed in the portal'; renderPolicySignoffs(); updateStdBadges(); return; }
   $('compSub').textContent=`Roster as of ${fmtShort(C.updated)} · ${R.foh.length+R.boh.length} active · FWC & MAST`;
   if(compTab==='due'){
     const L=compDueList(), past=L.due.filter(function(d){return d.days<0;});

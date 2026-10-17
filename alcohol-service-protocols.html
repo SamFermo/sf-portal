@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Alcohol Service Protocols · San Fermo</title>
+<style>
+  :root{
+    --moon:#f5efe1; --moon-hi:#fdfaf1; --moon-edge:#d9cbab;
+    --ink:#241f15; --soft:#5f5540; --mute:#9a8c6c;
+    --accent:#4a6a3a; --accent-dark:#2e4624; --accent-soft:#cdd9bb;
+    --rust:#b04a1a; --rust-soft:#f3ddc7;
+    --gold-deep:#c9a64e;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#1b2238}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;color:var(--ink);line-height:1.5;-webkit-text-size-adjust:100%}
+  .page{max-width:720px;margin:0 auto;padding:16px}
+  .sheet{background:var(--moon);border:1px solid var(--moon-edge);border-radius:14px;padding:28px 24px 24px}
+  .serif{font-family:'Caladea','Cambria',Georgia,'Times New Roman',serif}
+  .kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:700}
+  h1{font-size:30px;line-height:1.1;margin:6px 0 4px;font-weight:600}
+  .eff{font-size:13px;color:var(--soft);margin:0 0 18px}
+  .lede{font-size:15.5px;margin:0 0 6px}
+  .lede b{color:var(--accent-dark)}
+  .hr{height:1px;background:var(--moon-edge);margin:20px 0}
+  h2{font-size:19px;margin:22px 0 8px;font-weight:600;color:var(--accent-dark)}
+  ol.rules{margin:0;padding:0;list-style:none;counter-reset:r}
+  ol.rules li{position:relative;padding:9px 0 9px 40px;border-top:1px solid rgba(217,203,171,.6);font-size:15px}
+  ol.rules li:first-child{border-top:0}
+  ol.rules li::before{counter-increment:r;content:counter(r);position:absolute;left:0;top:9px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#eef6e6;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+  ol.rules li b{color:var(--ink)}
+  .flag{background:var(--rust-soft);border-left:4px solid var(--rust);padding:12px 14px;border-radius:8px;margin:14px 0;font-size:15px}
+  .flag b{color:var(--rust)}
+  .script{background:var(--moon-hi);border:1px dashed var(--moon-edge);padding:12px 14px;border-radius:8px;margin:12px 0;font-size:15px}
+  .script .q{font-style:italic}
+  .note{font-size:13.5px;color:var(--soft);margin:8px 0 0}
+  a{color:var(--accent-dark);font-weight:600}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px;justify-content:flex-end}
+  .btn{display:inline-block;padding:9px 16px;border-radius:10px;background:var(--accent);color:#eef6e6;font-weight:700;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--moon);border:1px solid rgba(245,239,225,.45)}
+  .ack{margin-top:26px;padding-top:16px;border-top:2px solid var(--moon-edge);font-size:14px;color:var(--soft)}
+  .ack .line{display:flex;gap:24px;margin-top:22px}
+  .ack .line span{flex:1;border-bottom:1px solid var(--ink);padding-bottom:2px;font-size:12px;color:var(--mute)}
+  .foot{text-align:center;font-size:12px;color:#7d8cb4;margin:14px 0 6px}
+  .print-only{display:none}
+  .sign{margin-top:26px;padding:18px 16px;border:2px solid var(--accent-soft);border-radius:12px;background:var(--moon-hi)}
+  .sign-title{font-size:19px;font-weight:600;color:var(--accent-dark);margin:0 0 8px}
+  .sign-text{font-size:15px;margin:0 0 12px}
+  .sign-wait{font-size:14px;color:var(--soft);margin:0 0 10px}
+  .sign-done{font-size:16px;color:var(--accent-dark);margin:0 0 4px}
+  .btn.big{font-size:15px;padding:12px 18px;width:100%;text-align:center}
+  .gate{display:none;position:fixed;inset:0;background:#1b2238;align-items:center;justify-content:center;padding:16px}
+  .gate-card{background:var(--moon);border-radius:14px;padding:26px 22px;max-width:420px;color:var(--ink)}
+  .gate-card p{font-size:15px;color:var(--soft)}
+  @media print{
+    .print-only{display:block} .screen-only,.gate{display:none !important}
+    @page{margin:0.6in}
+    html,body{background:#fff}
+    .page{max-width:none;padding:0}
+    .sheet{border:0;border-radius:0;padding:0;background:#fff}
+    .bar,.foot{display:none}
+    h1{font-size:26px}
+    ol.rules li{font-size:13px;padding:6px 0 6px 36px;break-inside:avoid}
+    ol.rules li::before{width:22px;height:22px;font-size:11px;top:6px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .flag,.script{-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:13px;break-inside:avoid}
+    .lede{font-size:13.5px} .note{font-size:12px} h2{font-size:16px;margin-top:14px}
+    .ack{break-inside:avoid}
+    a{color:var(--ink);text-decoration:none}
+    a[href^="http"]::after{content:" (" attr(href) ")";font-weight:400;font-size:11px;color:var(--soft)}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bar">
+    <a class="btn ghost" href="index.html">← Portal</a>
+    <button class="btn" onclick="window.print()">Print</button>
+  </div>
+  <div class="sheet">
+    <div class="kicker">San Fermo · Whole team · Front and back of house</div>
+    <h1 class="serif">Alcohol Service Protocols</h1>
+    <p class="eff">Effective immediately · October 17, 2026</p>
+
+    <p class="lede">The WSLCB has been very active on our block in Ballard, and we are taking some hard steps to protect our liquor license. <b>These are not suggestions.</b> Every one of them applies on every shift until we tell you otherwise. We will go over this at pre-shift each night this week until everyone has heard it in person.</p>
+
+    <h2 class="serif">Permits</h2>
+    <ol class="rules">
+      <li><b>Your MAST permit has to be current</b> and uploaded to the portal (Compliance tab) so it is available for an agent to review on site. If yours is expired or not in the portal, fix it this week. Renew or take the class through a state-approved provider: <a href="https://lcb.wa.gov/mastrvp/mandatory_alcohol_server_training">WSLCB MAST page</a> · <a href="https://lcb.wa.gov/mastrvp/mast-providers-list">find an approved class</a>. Kitchen staff do not need MAST.</li>
+    </ol>
+
+    <h2 class="serif">Carding</h2>
+    <ol class="rules">
+      <li><b>If they look under 50, card them.</b> That includes regulars and people you know. We need to confirm they actually have ID on them. Someone who looks old enough to have a kid in college can be served without carding, but any doubt at all means you card. Carding your whole section is a perfectly fine way to be safe.</li>
+      <li><b>Bar seats get carded by the manager on duty before the guest sits down</b>, same standard as above.</li>
+      <li><b>If a table orders a bottle of wine, everyone at that table gets carded.</b> No exceptions.</li>
+      <li><b>Parents with kids: use your judgment,</b> but a family with a teenager or a child who looks about 20 is exactly the setup a sting uses. Card the kid.</li>
+    </ol>
+
+    <h2 class="serif">Pacing and intoxication</h2>
+    <ol class="rules">
+      <li><b>Any sign of intoxication means no more alcohol.</b> No exceptions, no negotiating. Get a manager if you need backup.</li>
+      <li><b>Be more conservative with the number of drinks you serve.</b> Slow the round down before you have to cut someone off.</li>
+    </ol>
+
+    <h2 class="serif">Tables, bottles and sharing</h2>
+    <ol class="rules">
+      <li><b>For now, do not go out of your way to sell bottles.</b> Glass pours, beer and cocktails are individually ordered and individually carded, which protects us. A bottle on a table is where we are most exposed.</li>
+      <li><b>A table of young people where anyone looks under 21 is a major red flag.</b> If they order a bottle, the server pours it. The bottle stays off the table, at the station, and is poured on request only. Tell the other staff on the floor about the table so everyone has eyes on it.</li>
+      <li><b>Watch for drink sharing.</b> Any table that passes a drink to someone who was not served it gets asked to leave immediately. Clear every drink, comp whatever you need to, and get them out. Do not argue it.</li>
+    </ol>
+
+    <h2 class="serif">Staff drinking</h2>
+    <div class="flag"><b>This applies to everyone, kitchen included.</b> Any staff member found drinking alcohol or using drugs during their shift will be terminated immediately. A shift drink can only be served after you have clocked out. No exceptions.</div>
+
+    <h2 class="serif">What to say to guests</h2>
+    <div class="script">If a guest pushes back on being carded or asks why we are being careful, apologize and be clear that it is out of our hands: <span class="q">"The Liquor Board has been running a serious sting operation in Ballard and we have to follow specific steps to protect our license. Sorry for the hassle."</span></div>
+    <p class="note">Do not tell any guest that we had a violation or a visit. All anyone needs to hear is that the WSLCB has been very active on the block and we are protecting our license.</p>
+
+    <div class="hr"></div>
+    <p class="lede">The next visit is most likely to be a table with a minor at it. That is the scenario to have in your head every time you approach a new table this month. Questions, grab Sam, Sully or the manager on duty.</p>
+
+    <div class="ack print-only">
+      I have read and understand the San Fermo Alcohol Service Protocols dated October 17, 2026.
+      <div class="line"><span>Name</span><span>Signature</span><span>Date</span></div>
+    </div>
+
+    <div class="sign screen-only" id="sign">
+      <div class="sign-title serif">Sign off</div>
+      <div id="signBody"><div class="sign-wait">Checking your portal login…</div></div>
+    </div>
+  </div>
+  <div class="foot">San Fermo · 5341 Ballard Ave NW · Unlisted page, do not share outside the team.</div>
+</div>
+
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="kicker">San Fermo staff portal</div>
+    <h1 class="serif" style="font-size:24px">Log in to read this</h1>
+    <p>This page is for the San Fermo team. Open the portal, log in with your name and PIN, then come back here from the card on your Home screen or from Compliance, Sign-offs.</p>
+    <a class="btn" href="index.html">Open the portal</a>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>
+/* Same project and anonymous auth as index.html. The portal login lives in localStorage
+   ('sf-session', same origin), so a valid session here means the person logged in to the
+   portal on this device. Signing writes policyAcks.<POLICY_ID> on the person's staff doc;
+   the portal's Compliance → Sign-offs subtab reads it back. */
+const POLICY_ID='alcohol-2026-10';
+const CFG={apiKey:"AIzaSyByAhPS7C86jXG-8y9EQGNbMwncmBPl9oc",authDomain:"sf-staff-portal.firebaseapp.com",projectId:"sf-staff-portal",storageBucket:"sf-staff-portal.firebasestorage.app",messagingSenderId:"395019590035",appId:"1:395019590035:web:d7fcccb093b09b9cb67066"};
+function session(){ try{ const s=JSON.parse(localStorage.getItem('sf-session')||'null'); if(!s||!s.name)return null; if(s.exp!==null&&s.exp!==undefined&&Date.now()>s.exp)return null; return s; }catch(e){ return null; } }
+function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function showGate(){ document.getElementById('gate').style.display='flex'; document.querySelector('.page').style.display='none'; }
+function when(ms){ return new Date(ms).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}); }
+let db=null, staffDoc=null, prof=null;
+function paint(state,extra){
+  const b=document.getElementById('signBody'); const nm=prof?prof.name:'';
+  if(state==='signed'){ b.innerHTML='<div class="sign-done">✓ Signed by <b>'+esc(nm)+'</b> on '+esc(when(extra))+'.</div><div class="note">Your signature is on file under Compliance, Sign-offs in the portal.</div>'; return; }
+  if(state==='error'){ b.innerHTML='<div class="sign-wait">Couldn\'t save your signature ('+esc(extra||'no connection')+'). Try again in a minute, or tell Sam or Sully.</div><button class="btn" onclick="sign()">Try again</button>'; return; }
+  if(state==='saving'){ b.innerHTML='<div class="sign-wait">Saving…</div>'; return; }
+  b.innerHTML='<p class="sign-text">I, <b>'+esc(nm)+'</b>, have read and understand the San Fermo Alcohol Service Protocols dated October 17, 2026, and I will follow them on every shift.</p>'
+    +'<button class="btn big" onclick="sign()">I\'ve read and understand these protocols</button>'
+    +'<div class="note">Signing records your name and today\'s date on your staff record. It stands in for the paper signature.</div>';
+}
+async function sign(){
+  if(!db||!staffDoc||!prof)return paint('error','not logged in');
+  paint('saving');
+  try{
+    const at=Date.now(); const patch={}; patch['policyAcks.'+POLICY_ID]={at:at,name:prof.name,via:'page'};
+    await db.collection('staff').doc(staffDoc).update(patch);
+    paint('signed',at);
+  }catch(e){ paint('error',e&&e.message); }
+}
+(async function(){
+  const s=session(); if(!s){ showGate(); return; }
+  try{
+    firebase.initializeApp(CFG); db=firebase.firestore();
+    await firebase.auth().signInAnonymously();
+    const q=await db.collection('staff').where('name','==',s.name).limit(1).get();
+    if(q.empty){ showGate(); return; }
+    staffDoc=q.docs[0].id; prof=q.docs[0].data()||{};
+    if(prof.active===false){ showGate(); return; }
+    const a=prof.policyAcks&&prof.policyAcks[POLICY_ID];
+    if(a&&a.at)paint('signed',a.at); else paint('ready');
+  }catch(e){
+    document.getElementById('signBody').innerHTML='<div class="sign-wait">Can\'t reach the portal right now ('+esc(e&&e.message)+'). You can still read and print this page; sign when you\'re back online.</div>';
+  }
+})();
+</script>
+</body>
+</html>
