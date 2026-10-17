@@ -18324,7 +18324,7 @@ window.SF = {
     "name": "House Prosecco: Bellenda \"San Fermo\"",
     "type": "Sparkling",
     "status": "core-glass",
-    "vendor": "Specialty Cellars"
+    "vendor": "Grape Expectations"
    },
    {
     "key": "le-origini-passanello-lambrusco-grasparossa-2024",
@@ -18380,7 +18380,7 @@ window.SF = {
     "name": "Brigaldara Valpolicella 2024",
     "type": "Red",
     "status": "core-glass",
-    "vendor": ""
+    "vendor": "Vinifera"
    },
    {
     "key": "corte-scaletta-valpolicella-2022",
@@ -18408,7 +18408,7 @@ window.SF = {
     "name": "Corte Pavone Rosso di Montalcino 2023",
     "type": "Red",
     "status": "core-glass",
-    "vendor": "Specialty Cellars"
+    "vendor": "Grape Expectations"
    },
    {
     "key": "g-d-vajra-langhe-nebbiolo-2024",
@@ -18423,7 +18423,7 @@ window.SF = {
     "name": "Albino Rocca Langhe Nebbiolo",
     "type": "Red",
     "status": "core-glass",
-    "vendor": ""
+    "vendor": "Elliot Bay"
    },
    {
     "key": "louis-armand-premier-cru-champagne",
@@ -18458,7 +18458,7 @@ window.SF = {
     "name": "Terre Nere Etna Bianco 2024",
     "type": "White",
     "status": "core-bottle",
-    "vendor": ""
+    "vendor": "Elliot Bay"
    },
    {
     "key": "copertino-riserva-negroamaro-2016",
@@ -18488,7 +18488,7 @@ window.SF = {
     "name": "Terre Nere \"Bellacolonna\" Etna Rosso 2022",
     "type": "Red",
     "status": "core-bottle",
-    "vendor": "",
+    "vendor": "Elliot Bay",
     "fridge": true
    },
    {
@@ -18496,7 +18496,7 @@ window.SF = {
     "name": "Piaggia \"Il Sasso\" Carmignano 2022",
     "type": "Red",
     "status": "core-bottle",
-    "vendor": "",
+    "vendor": "Elliot Bay",
     "fridge": true
    },
    {
@@ -18504,7 +18504,7 @@ window.SF = {
     "name": "Franco Molino \"Cascina Rocca\" Barolo 2019",
     "type": "Red",
     "status": "core-bottle",
-    "vendor": ""
+    "vendor": "Odom"
    },
    {
     "key": "castello-di-neive-barbaresco-santo-stefano-2022",
@@ -18599,7 +18599,7 @@ window.SF = {
     "name": "L'Archetipo Greco Bianco 2024",
     "type": "White",
     "status": "cellar",
-    "vendor": ""
+    "vendor": "Vinea"
    },
    {
     "key": "schiopetto-sauvignon-blanc-collio",
@@ -18635,7 +18635,7 @@ window.SF = {
     "name": "Terlan \"Terlaner I\" Primo Grande Cuvée 2021",
     "type": "White",
     "status": "core-bottle",
-    "vendor": "",
+    "vendor": "Vehrs",
     "phaseOut": true
    },
    {
@@ -18678,7 +18678,7 @@ window.SF = {
     "name": "La Miraja Ruché di Castagnole Monferrato 2023",
     "type": "Red",
     "status": "cellar",
-    "vendor": ""
+    "vendor": "Vehrs"
    },
    {
     "key": "uccelliera-rapace-2019",
@@ -18715,7 +18715,7 @@ window.SF = {
     "name": "Cantina Terlano \"Porphyr\" Lagrein Riserva 2021",
     "type": "Red",
     "status": "core-bottle",
-    "vendor": "",
+    "vendor": "Vehrs",
     "phaseOut": true,
     "fridge": true
    },
@@ -18784,7 +18784,7 @@ window.SF = {
     "name": "Vandori (comp bubbles for anniversaries)",
     "type": "Sparkling",
     "status": "cellar",
-    "vendor": "",
+    "vendor": "Odom",
     "note": "Not on the list. Poured as a gift for anniversaries, so it leaves without a Revel button."
    },
    {
@@ -19110,5 +19110,5 @@ window.SF = {
    }
   ]
  },
- "build": "1792194788"
+ "build": "1792200114"
 };
