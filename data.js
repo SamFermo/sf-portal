@@ -7808,7 +7808,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 serve",
-       "Sup Server"
+       ""
       ]
      },
      {
@@ -7832,7 +7832,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -7949,7 +7949,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -7996,9 +7996,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -8022,7 +8022,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -8044,7 +8044,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -8139,7 +8139,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -8186,9 +8186,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -8212,7 +8212,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -8234,7 +8234,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -8272,7 +8272,7 @@ window.SF = {
      "3:30 serve (Nam R/O)",
      "",
      "3:30 Bar (Brittany R/O)",
-     "",
+     "Sup Server (Brittany R/O)",
      "3:30 Bar (Brittany R/O), 3:30 serve (Josie R/O)"
     ],
     "covNotes": [
@@ -8329,7 +8329,7 @@ window.SF = {
        "",
        "3:30 serve",
        "R/O",
-       "",
+       "R/O",
        "R/O"
       ]
      },
@@ -8376,9 +8376,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -8402,7 +8402,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -8424,7 +8424,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -8464,7 +8464,7 @@ window.SF = {
      "",
      "",
      "3:30 Bar (Brittany R/O)",
-     "",
+     "Sup Server (Brittany R/O)",
      "3:30 Bar (Brittany R/O)"
     ],
     "covNotes": [
@@ -8568,9 +8568,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -8594,7 +8594,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -8616,7 +8616,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -8711,7 +8711,7 @@ window.SF = {
        "R/O",
        "R/O",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -8758,9 +8758,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -8784,7 +8784,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -8806,7 +8806,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -8901,7 +8901,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -8948,9 +8948,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -8974,7 +8974,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -8996,7 +8996,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -9091,7 +9091,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -9138,9 +9138,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -9164,7 +9164,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -9186,7 +9186,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -9283,7 +9283,7 @@ window.SF = {
        "",
        "3:30 serve",
        "",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -9331,8 +9331,8 @@ window.SF = {
        "",
        "",
        "",
-       "Sup Server",
-       "Sup Server"
+       "",
+       ""
       ]
      },
      {
@@ -9356,7 +9356,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -9476,7 +9476,7 @@ window.SF = {
        "",
        "3:30 serve",
        "",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -9524,8 +9524,8 @@ window.SF = {
        "",
        "",
        "",
-       "Sup Server",
-       "Sup Server"
+       "",
+       ""
       ]
      },
      {
@@ -9549,7 +9549,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -9666,7 +9666,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -9713,9 +9713,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -9739,7 +9739,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -9761,7 +9761,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -9856,7 +9856,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -9903,9 +9903,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -9929,7 +9929,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -9951,7 +9951,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -10046,7 +10046,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -10093,9 +10093,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -10119,7 +10119,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -10141,7 +10141,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -10236,7 +10236,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -10283,9 +10283,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -10309,7 +10309,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -10331,7 +10331,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -10426,7 +10426,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -10473,9 +10473,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -10499,7 +10499,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -10521,7 +10521,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -10618,7 +10618,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -10665,9 +10665,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -10691,7 +10691,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -10713,7 +10713,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -10808,7 +10808,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -10855,9 +10855,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -10881,7 +10881,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -10903,7 +10903,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -10998,7 +10998,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -11045,9 +11045,9 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
-       "Sup Server",
-       "Sup Server"
+       "",
+       "",
+       ""
       ]
      },
      {
@@ -11071,7 +11071,7 @@ window.SF = {
        "",
        "",
        "",
-       ""
+       "Sup Server"
       ]
      },
      {
@@ -11093,7 +11093,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        ""
       ]
@@ -19110,5 +19110,5 @@ window.SF = {
    }
   ]
  },
- "build": "1792286675"
+ "build": "1792367142"
 };
