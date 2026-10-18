@@ -2069,7 +2069,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792278772';   // stamped by build-data.py at every deploy
+const BUILD='1792286675';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2935,13 +2935,38 @@ const ANNOUNCES=[
   }
 ];
 let ANNOUNCE=ANNOUNCES[ANNOUNCES.length-1];
-function annForMe(A){ if(!A||!A.aud||A.aud==='all')return true; if(!me)return false; return me.area===A.aud||!!me.admin; }
+function annForMe(A){ if(!A)return false; if(A.forName)return !!(me&&me.name===A.forName); if(!A.aud||A.aud==='all')return true; if(!me)return false; return me.area===A.aud||!!me.admin; }
+/* CARD ALERTS (2026-10-17): a per-person card built at pick time from the compliance data.
+   Fires for the logged-in person when a required FWC or MAST is past its date on file, is
+   flagged with no date, or is missing entirely. Sits right after the alcohol-protocols card in
+   the queue, so it shows once that one is signed and acked. The id carries the card state, so
+   one Got it clears it until the state changes (a renewal makes it vanish; a new lapse brings
+   it back). Managers see their own only; the roster view is Compliance → Coming Due. */
+function annCardAlerts(){
+  try{
+    if(!me||!me.name||DEMO||(typeof isInvestor==='function'&&isInvestor()))return [];
+    const L=compDueList(), mine=L.due.filter(function(d){return d.name===me.name&&d.days<0;});
+    const und=L.undated.filter(function(d){return d.name===me.name;});
+    const ix=compRosterIndex()[me.name.toLowerCase()];
+    const gaps=(ix&&COMP_UP_LOADED)?compGaps(ix.p,compCardsFor(me.name),true).filter(function(g){return /No (FWC|MAST) card/.test(g);}):[];
+    const lines=[], key=[];
+    mine.forEach(function(d){ lines.push('Your '+(d.cred==='FWC'?'Food Worker Card':'MAST permit')+' on file expired '+d.date+' ('+d.window+').'); key.push(d.cred+':'+d.date); });
+    und.forEach(function(d){ lines.push('Your '+(d.cred==='FWC'?'Food Worker Card':'MAST permit')+' is flagged with no date on file'+(d.text?': '+d.text:'.')); key.push(d.cred+':nodate'); });
+    gaps.forEach(function(g){ lines.push(g.replace('No FWC card on file','We have no copy of your Food Worker Card on file.').replace('No MAST card on file','We have no copy of your MAST permit on file.')); key.push(g.indexOf('FWC')>=0?'FWC:missing':'MAST:missing'); });
+    if(!lines.length)return [];
+    const needM=key.some(function(k){return k.indexOf('MAST')===0;}), needF=key.some(function(k){return k.indexOf('FWC')===0;});
+    lines.push('The Liquor Board checks permits on site and an expired or missing card is a violation on its own. Sort it this week, then snap the new card on your row under Compliance so it\'s on file.');
+    const link=needM&&!needF?{href:'https://lcb.wa.gov/mastrvp/mast-providers-list',label:'Find a MAST class'}:{href:'https://www.foodworkercard.wa.gov/',label:needF&&needM?'Food Worker Card (MAST link is on the protocols page)':'Renew your Food Worker Card'};
+    return [{kind:'info',aud:'all',forName:me.name,id:'cardalert-'+(me.id||me.name)+'-'+key.join('|'),showUntil:'2099-12-31',emoji:'\uD83E\uDEAA',title:(mine.length?'Your card has expired':'Your card needs attention'),lines:lines,link:link,note:'Tell Sam or Sully if you think this is wrong.'}];
+  }catch(e){ return []; }
+}
+function annAll(){ const alerts=annCardAlerts(); return alerts.length?ANNOUNCES.slice(0,1).concat(alerts,ANNOUNCES.slice(1)):ANNOUNCES; }
 function annDoneFor(A){ if(!me)return false;
   if(A.kind==='info'||A.kind==='calloff')return me.noticeAck===A.id||(Array.isArray(me.noticeAcks)&&me.noticeAcks.indexOf(A.id)>=0);
   const r=me.announceRsvp; return !!(r&&r.id===A.id); }
-function annPendingCount(){ const t=todayISO(); return ANNOUNCES.filter(function(A){return t<=A.showUntil&&annForMe(A)&&!annDoneFor(A);}).length; }
+function annPendingCount(){ const t=todayISO(); return annAll().filter(function(A){return t<=A.showUntil&&annForMe(A)&&!annDoneFor(A);}).length; }
 function annPick(){ const t=todayISO();
-  const live=ANNOUNCES.filter(function(A){return t<=A.showUntil&&annForMe(A);});
+  const live=annAll().filter(function(A){return t<=A.showUntil&&annForMe(A);});
   const pend=live.filter(function(A){return !annDoneFor(A);});
   ANNOUNCE=pend[0]||live[0]||ANNOUNCES[ANNOUNCES.length-1]; return ANNOUNCE; }
 let annShownSession=false, annGuests=0;
@@ -6139,7 +6164,7 @@ function ic(st){return st==='good'?'✓':st==='alarm'?'!':'•';}
    the resized image lives in `complianceImg` and is fetched on demand (View).
    Self-vs-manager is enforced client-side (same trust model as crew/timeoff —
    the portal uses one shared anonymous auth, not per-user uids). =========== */
-let COMP_UP={}, compUpUnsub=null;
+let COMP_UP={}, compUpUnsub=null, COMP_UP_LOADED=false;   /* LOADED gates the missing-card alert (2026-10-17): never claim a card is missing off an empty pre-snapshot map */
 function compKey(cred,name){return String(cred).toLowerCase()+'__'+fcSlug(name);}
 function compLsGet(){try{return JSON.parse(localStorage.getItem('sf-compliance')||'{}');}catch(e){return {};}}
 function compLsSet(){try{localStorage.setItem('sf-compliance',JSON.stringify(COMP_UP));}catch(e){}}
@@ -6148,7 +6173,7 @@ function startComplianceSync(){
   if(fbReady&&fbDb){
     if(compUpUnsub)compUpUnsub();
     compUpUnsub=fbDb.collection('compliance').onSnapshot(function(snap){
-      COMP_UP={}; snap.docs.forEach(function(d){COMP_UP[d.id]=d.data();});
+      COMP_UP={}; snap.docs.forEach(function(d){COMP_UP[d.id]=d.data();}); if(!snap.metadata||!snap.metadata.fromCache)COMP_UP_LOADED=true;
       if($('compBody'))renderCompliance();
       if(typeof updateAttn==='function')updateAttn();
     },function(){ COMP_UP=compLsGet(); if($('compBody'))renderCompliance(); });
