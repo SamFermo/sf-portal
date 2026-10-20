@@ -502,48 +502,72 @@ window.SF = {
       "added": "2026-10-09"
      },
      {
-      "name": "Pesce al Cartoccio",
-      "desc": "black cod, potato, onion, matsutake mushroom, garlic herb butter, lemon",
+      "name": "Zuppa di Pesce",
+      "desc": "manila clams, black cod, yukon gold potatoes, matsutake mushrooms, garlic herb butter, clam stock, cream, fennel fronds",
       "price": "38",
       "raw": false,
-      "pron": "PEH-sheh ahl car-TOH-cho",
-      "story": "Black cod baked in a parchment parcel with potato, onion, and matsutake mushroom, with garlic herb butter and lemon. The parcel traps the steam, so the fish cooks gently in its own juices and the mushroom perfume fills the packet. Opened at the table or in the kitchen, it releases a burst of aroma.",
+      "pron": "ZOOP-pah dee PEH-sheh",
+      "story": "Fish soup, and the replacement for the Pesce al Cartoccio: same black cod and matsutake, now a brothy bowl instead of a parchment parcel. A 3.5 oz piece of black cod is pan seared. In the pan go garlic, shallot and chili flakes, deglazed with white wine, then garlic herb butter, cream and clam stock. Manila clams simmer in that until they pop open, and the Yukon gold potatoes and matsutake cook gently in the sauce. Seasoned with salt and lemon, everything plated together in the broth, fennel fronds on top. Rich, briny, a little heat from the chili.",
       "ingredients": [
        {
-        "note": "Italian for 'fish in a parcel.' Cartoccio is the parchment (or foil) packet the fish is sealed in and baked. The steam that builds inside cooks everything gently and keeps the fish moist.",
-        "term": "Pesce al Cartoccio",
-        "pronunciation": "PEH-sheh ahl car-TOH-cho"
+        "term": "Zuppa di Pesce",
+        "pronunciation": "ZOOP-pah dee PEH-sheh",
+        "note": "Italian for fish soup. Every coastal region has its own version built on whatever came off the boat. Ours is black cod and Manila clams in a clam stock and cream broth."
+       },
+       {
+        "term": "Manila clams",
+        "pronunciation": null,
+        "note": "Small, sweet Pacific clams farmed in Puget Sound. They go into the sauce and simmer until the shells pop open, which is how the kitchen knows they are done. Shellfish."
        },
        {
         "term": "Black cod",
         "pronunciation": null,
-        "note": "Also called sablefish. Not a true cod: a deep-water Pacific fish with a rich, buttery, high-oil flesh that flakes into large soft pieces. Local to our coast and very forgiving to cook, which is why it suits the parcel."
+        "note": "Also called sablefish. Not a true cod: a deep-water Pacific fish with a rich, buttery, high-oil flesh that flakes into large soft pieces. Here a 3.5 oz portion, pan seared for a crust, then served in the broth."
+       },
+       {
+        "term": "Yukon gold potatoes",
+        "pronunciation": null,
+        "note": "Waxy, buttery yellow potato. Cooked gently in the sauce so it soaks up the clam and cream flavor and holds its shape."
        },
        {
         "term": "Matsutake",
-        "note": "A prized wild mushroom that grows in Pacific Northwest conifer forests in the fall. Firm, meaty, with a distinctive spicy-pine aroma (some say cinnamon). Highly sought after in Japan, foraged locally in season. The aroma is the point: it perfumes the whole parcel.",
-        "pronunciation": "mat-soo-TAH-keh"
+        "pronunciation": "mat-soo-TAH-keh",
+        "note": "A prized wild mushroom that grows in Pacific Northwest conifer forests in the fall. Firm, meaty, with a distinctive spicy-pine aroma (some say cinnamon). Highly sought after in Japan, foraged locally in season. Cooked gently in the sauce alongside the potatoes."
        },
        {
         "term": "Garlic herb butter",
         "pronunciation": null,
-        "note": "Our garlic herb butter is butter combined with garlic and herbs, prepared ahead and baked in the parchment parcel with the fish. It's just those three components: butter, garlic, and herbs. No anchovy or citrus zest. The parcels are fully assembled and wrapped before service, so we cannot accommodate dairy-free requests on this dish. Just parsley"
+        "note": "Butter, garlic and parsley, made ahead (Chris: just parsley, no anchovy or citrus zest). It melts into the cream and clam stock and is part of the sauce, so this dish cannot go dairy-free."
        },
        {
-        "note": "The fish cooks in a parchment-only parcel. There is no gluten anywhere in the build, so the dish is gluten-free as served.",
-        "term": "Confirm the parcel is parchment only (no gluten in the build) before clearing for gluten.",
-        "pronunciation": null
+        "term": "The sauce",
+        "pronunciation": null,
+        "note": "Garlic, shallot and chili flakes in the pan, deglazed with white wine, then garlic herb butter, cream and clam stock. Finished with salt and lemon. The wine cooks in, but mention it to guests who avoid alcohol entirely."
+       },
+       {
+        "term": "Clam stock",
+        "pronunciation": null,
+        "note": "Stock made from clams; the base of the broth. What else goes into it is not confirmed with the kitchen yet. Shellfish."
+       },
+       {
+        "term": "Fennel fronds",
+        "pronunciation": null,
+        "note": "The feathery green tops of the fennel plant, laid on at the end. Light anise flavor, a fresh note against the cream."
        }
       ],
       "allergens": [
-       "dairy",
        "fish",
+       "shellfish",
+       "dairy",
        "allium"
       ],
       "canModify": [],
-      "allergenNote": "Fish: black cod, the center of the dish, cannot come off. Dairy: the garlic herb butter is baked into the parcel. Allium: onion and garlic are both in the parcel.",
-      "flags": [],
-      "added": "2026-10-09"
+      "allergenNote": "Fish: black cod, the center of the dish. Shellfish: Manila clams and the clam stock, which is the base of the sauce, so this cannot be cleared for a shellfish allergy. Dairy: garlic herb butter and cream are the sauce, so no dairy-free version. Allium: garlic and shallot in the sauce base. Chili flakes in the sauce, so it carries some heat. White wine, cooked in. Gluten: nothing in the build as described, but the clam stock is not confirmed, so check with the kitchen before clearing for gluten.",
+      "flags": [
+       "Clam stock: confirm what goes into it before clearing the dish for gluten or any allergy beyond shellfish.",
+       "Chili flakes: confirm whether the sauce can be made without them for a guest who wants no heat."
+      ],
+      "added": "2026-10-20"
      },
      {
       "name": "Braised Short Rib",
@@ -18841,10 +18865,11 @@ window.SF = {
     "special": false
    },
    {
-    "name": "Pesce al Cartoccio",
+    "name": "Zuppa di Pesce",
     "plate_cost": 9.31,
     "menu_price": 38,
     "aliases": [
+     "Pesce al Cartoccio",
      "Black Cod"
     ],
     "special": false
@@ -18906,5 +18931,5 @@ window.SF = {
    }
   ]
  },
- "build": "1792367730"
+ "build": "1792513704"
 };
