@@ -515,7 +515,7 @@
       {
        "term": "Manila clams",
        "pronunciation": null,
-       "note": "Small, sweet Pacific clams farmed in Puget Sound. They go into the sauce and simmer until the shells pop open, which is how the kitchen knows they are done. Shellfish."
+       "note": "Small, sweet Pacific clams farmed in Puget Sound. They go into the sauce and simmer until the shells pop open, which is how the kitchen knows they are done. Shellfish. For a shellfish allergy the dish is made without clams or clam stock, with a double portion of cod in the cream sauce."
       },
       {
        "term": "Black cod",
@@ -540,12 +540,12 @@
       {
        "term": "The sauce",
        "pronunciation": null,
-       "note": "Garlic, shallot and chili flakes in the pan, deglazed with white wine, then garlic herb butter, cream and clam stock. Finished with salt and lemon. The wine cooks in, but mention it to guests who avoid alcohol entirely."
+       "note": "Garlic, shallot and chili flakes in the pan, deglazed with white wine, then garlic herb butter, cream and clam stock. Finished with salt and lemon. The chili flakes can be left off entirely. The garlic and shallot cannot. The wine cooks in, but mention it to guests who avoid alcohol entirely."
       },
       {
        "term": "Clam stock",
        "pronunciation": null,
-       "note": "Stock made from clams; the base of the broth. What else goes into it is not confirmed with the kitchen yet. Shellfish."
+       "note": "Stock made from clams; the base of the broth on the regular build. What else goes into it is not confirmed with the kitchen yet. Shellfish. Left out entirely on the shellfish-free version."
       },
       {
        "term": "Fennel fronds",
@@ -559,11 +559,12 @@
       "dairy",
       "allium"
      ],
-     "canModify": [],
-     "allergenNote": "Fish: black cod, the center of the dish. Shellfish: Manila clams and the clam stock, which is the base of the sauce, so this cannot be cleared for a shellfish allergy. Dairy: garlic herb butter and cream are the sauce, so no dairy-free version. Allium: garlic and shallot in the sauce base. Chili flakes in the sauce, so it carries some heat. White wine, cooked in. Gluten: nothing in the build as described, but the clam stock is not confirmed, so check with the kitchen before clearing for gluten.",
+     "canModify": [
+      "shellfish"
+     ],
+     "allergenNote": "Fish: black cod, the center of the dish. Shellfish: Manila clams and the clam stock. Shellfish-free version, per Sam: no clams, no clam stock, double portion of cod in the cream sauce only; ring it in as a modification. Dairy: garlic herb butter and cream are the sauce, so no dairy-free version. Allium: garlic and shallot are in the cream sauce and cannot come out, so this cannot be cleared for an allium allergy on either build. Chili flakes can be left off completely for a guest who wants no heat. White wine, cooked in. Gluten: nothing in the build as described, but the clam stock is not confirmed, so check with the kitchen before clearing the regular build for gluten; the shellfish-free build has no stock in it.",
      "flags": [
-      "Clam stock: confirm what goes into it before clearing the dish for gluten or any allergy beyond shellfish.",
-      "Chili flakes: confirm whether the sauce can be made without them for a guest who wants no heat."
+      "Clam stock: confirm what goes into it (beyond clams) before clearing the regular build for gluten."
      ],
      "added": "2026-10-20"
     },
