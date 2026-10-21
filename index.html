@@ -2069,7 +2069,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792552204';   // stamped by build-data.py at every deploy
+const BUILD='1792552785';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -6823,15 +6823,19 @@ function policyRows(pol){
   return out;
 }
 const HOUSE_DOCS=[
-  {title:'Alcohol Service Standards', sub:'House policy · read and sign', href:'alcohol-service-protocols.html'},
-  {title:'Employee Handbook · Front of House', sub:'General policies, with Alcohol Service Standards', href:'docs/employee-handbook-foh.pdf'},
-  {title:'Employee Handbook · Back of House', sub:'General policies, with Alcohol Service Standards', href:'docs/employee-handbook-boh.pdf'},
-  {title:'Broken Glass and Guest Incident Procedure', sub:'What to do when something goes wrong at a table', href:'docs/broken-glass-and-guest-incident-procedure.pdf'}
+  {title:'Alcohol Service Standards', sub:'House policy · read and sign', href:'alcohol-service-protocols.html', es:'docs/alcohol-service-standards-es.pdf'},
+  {title:'Employee Handbook · Front of House', sub:'General policies, with Alcohol Service Standards', href:'docs/employee-handbook-foh.pdf', es:'docs/employee-handbook-foh-es.pdf'},
+  {title:'Employee Handbook · Back of House', sub:'General policies, with Alcohol Service Standards', href:'docs/employee-handbook-boh.pdf', es:'docs/employee-handbook-boh-es.pdf'},
+  {title:'Broken Glass and Guest Incident Procedure', sub:'What to do when something goes wrong at a table', href:'docs/broken-glass-and-guest-incident-procedure.pdf', es:'docs/broken-glass-and-guest-incident-procedure-es.pdf'}
 ];
 function renderHouseDocs(){
   let h='<div class="section-label">House documents</div><div class="comp-card">';
   HOUSE_DOCS.forEach(function(d){
-    h+='<a class="comp-row" style="grid-template-columns:1fr auto;text-decoration:none;color:inherit;" href="'+esc(d.href)+'" target="_blank" rel="noopener"><div><div class="comp-name">'+esc(d.title)+'</div><div class="comp-role">'+esc(d.sub)+'</div></div><span class="comp-role">Open →</span></a>';
+    h+='<div class="comp-row" style="grid-template-columns:1fr auto;"><div><div class="comp-name">'+esc(d.title)+'</div><div class="comp-role">'+esc(d.sub)+'</div></div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">'
+      +'<a class="ann-link" href="'+esc(d.href)+'" target="_blank" rel="noopener">English →</a>'
+      +(d.es?'<a class="ann-link" href="'+esc(d.es)+'" target="_blank" rel="noopener">Español →</a>':'')
+      +'</div></div>';
   });
   return h+'</div>';
 }
