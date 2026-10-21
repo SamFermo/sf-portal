@@ -2069,7 +2069,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792514773';   // stamped by build-data.py at every deploy
+const BUILD='1792552204';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2838,13 +2838,13 @@ const ANNOUNCES=[
   id:'alcohol-protocols-2026-10',
   showUntil:'2026-11-30',
   emoji:'\uD83C\uDD94',
-  title:'Alcohol service protocols, effective now',
+  title:'Alcohol Service Standards: read and sign',
   lines:[
-    "The Liquor Board has been very active on our block and we're tightening up how we serve alcohol, starting tonight. This applies to everyone, kitchen included.",
-    "Card anyone who looks under 50, regulars too. Any sign of intoxication means no more alcohol. Card every seat at a table that orders a bottle, and don't push bottles for now. Drinking or using on shift means immediate termination; shift drinks only after you've clocked out.",
-    "Read the full protocols and sign at the bottom of the page. We'll go over them at pre-shift every night this week. Printed copies are coming too."
+    "Our alcohol service standards are now house policy and are written into the employee handbook. They apply to everyone, kitchen included.",
+    "Card anyone who looks under 50, regulars too. Two ID checks at the bar. A bottle of wine means everyone at the table shows ID. Any sign of intoxication means no more alcohol. Drinking or using on shift means immediate termination; shift drinks only after you've clocked out.",
+    "Read the full standards (revised Oct 20 with the Liquor Board's answers to our questions) and sign at the bottom of the page. The handbooks and the incident procedure are under Compliance, Sign-offs."
   ],
-  link:{href:'alcohol-service-protocols.html',label:'Read and sign the protocols'},
+  link:{href:'alcohol-service-protocols.html',label:'Read and sign the standards'},
   requiresPolicy:'alcohol-2026-10',   /* Got it stays locked until the signature is on the staff doc (2026-10-17) */
   note:"Make sure your MAST permit is current and uploaded under Compliance."
   },
@@ -5581,7 +5581,7 @@ function alertReply(reqId){
   fbDb.collection('timeoff').doc(reqId).update({comments:firebase.firestore.FieldValue.arrayUnion(c)})
     .then(function(){
       const r0=(toState||[]).find(function(x){return x.id===reqId;});
-      if(r0)r0.comments=(r0.comments||[]).concat([c]);
+      if(r0&&!(r0.comments||[]).some(function(x){return x.at===c.at&&x.by===c.by;}))r0.comments=(r0.comments||[]).concat([c]);   // snapshot may already carry it (dup note bug, 2026-10-20)
       inp.value='';
       const rest=alertsForModal();
       if(rest.length)alertsOpen(rest); else alertsClose();
@@ -5653,7 +5653,7 @@ function addToComment(id){
        localStorage store for local-only 'ls' requests — that path is unchanged. */
     fbDb.collection('timeoff').doc(id).update({comments:firebase.firestore.FieldValue.arrayUnion(c)})
       .then(function(){
-        if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0){r0.comments=r0.comments||[];r0.comments.push(c);}}
+        if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0){r0.comments=r0.comments||[];if(!r0.comments.some(function(x){return x.at===c.at&&x.by===c.by;}))r0.comments.push(c);}}   // snapshot may already carry it (dup note bug, 2026-10-20)
         inp.value='';renderTimeoff();
       })
       .catch(function(err){
@@ -6814,13 +6814,26 @@ function offDownload(f){ if(OFF.url)URL.revokeObjectURL(OFF.url); OFF.url=URL.cr
    the record: who has signed, when, and who hasn't. WAC 314-29-015(4) names a signed
    acknowledgment of the alcohol policy on file per employee as a mitigating factor. */
 const POLICIES=[
-  {id:'alcohol-2026-10', title:'Alcohol Service Protocols', dated:'2026-10-17', href:'alcohol-service-protocols.html'}
+  {id:'alcohol-2026-10', title:'Alcohol Service Standards', dated:'2026-10-17', revised:'2026-10-20', href:'alcohol-service-protocols.html'}
 ];
 function policyAckFor(p,pol){ const a=p&&p.policyAcks&&p.policyAcks[pol.id]; return (a&&a.at)?a:null; }
 function policyRows(pol){
   const R=compWithExtras(), out={boh:[],foh:[]};
   ['boh','foh'].forEach(function(k){ R[k].forEach(function(p){ const prof=PROFILES[p.name]||{}; out[k].push({name:p.name, role:p.role||prof.role||'', ack:policyAckFor(prof,pol)}); }); });
   return out;
+}
+const HOUSE_DOCS=[
+  {title:'Alcohol Service Standards', sub:'House policy · read and sign', href:'alcohol-service-protocols.html'},
+  {title:'Employee Handbook · Front of House', sub:'General policies, with Alcohol Service Standards', href:'docs/employee-handbook-foh.pdf'},
+  {title:'Employee Handbook · Back of House', sub:'General policies, with Alcohol Service Standards', href:'docs/employee-handbook-boh.pdf'},
+  {title:'Broken Glass and Guest Incident Procedure', sub:'What to do when something goes wrong at a table', href:'docs/broken-glass-and-guest-incident-procedure.pdf'}
+];
+function renderHouseDocs(){
+  let h='<div class="section-label">House documents</div><div class="comp-card">';
+  HOUSE_DOCS.forEach(function(d){
+    h+='<a class="comp-row" style="grid-template-columns:1fr auto;text-decoration:none;color:inherit;" href="'+esc(d.href)+'" target="_blank" rel="noopener"><div><div class="comp-name">'+esc(d.title)+'</div><div class="comp-role">'+esc(d.sub)+'</div></div><span class="comp-role">Open →</span></a>';
+  });
+  return h+'</div>';
 }
 function renderPolicySignoffs(){
   let h='';
@@ -6829,7 +6842,7 @@ function renderPolicySignoffs(){
     const mine=me?policyAckFor(PROFILES[me.name]||me,pol):null;
     h+='<div class="comp-card" style="padding:14px 15px;">'
       +'<div class="comp-name" style="font-size:16px;">'+esc(pol.title)+'</div>'
-      +'<div class="comp-role">Effective '+esc(fmtShort(pol.dated))+' · '+signed+' of '+all.length+' signed</div>'
+      +'<div class="comp-role">Effective '+esc(fmtShort(pol.dated))+(pol.revised?' · revised '+esc(fmtShort(pol.revised)):'')+' · '+signed+' of '+all.length+' signed</div>'
       +'<div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">'
       +'<a class="ann-link" href="'+esc(pol.href)+'" target="_blank" rel="noopener">'+(mine?'Read it again':'Read and sign')+' →</a>'
       +(mine?'<span class="comp-role">You signed '+esc(new Date(mine.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}))+'</span>':'<span class="comp-role">Sign at the bottom of the page.</span>')
@@ -6844,10 +6857,11 @@ function renderPolicySignoffs(){
       h+='</div>';
     });
   });
+  h+=renderHouseDocs();
   $('compBody').innerHTML=h;
 }
 function renderCompliance(){const C=SF.compliance, R=compWithExtras();
-  if(compTab==='policy'){ $('compSub').textContent='Written policies, signed in the portal'; renderPolicySignoffs(); updateStdBadges(); return; }
+  if(compTab==='policy'){ $('compSub').textContent='Written policies, signed in the portal, and house documents'; renderPolicySignoffs(); updateStdBadges(); return; }
   $('compSub').textContent=`Roster as of ${fmtShort(C.updated)} · ${R.foh.length+R.boh.length} active · FWC & MAST`;
   if(compTab==='due'){
     const L=compDueList(), past=L.due.filter(function(d){return d.days<0;});

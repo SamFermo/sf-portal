@@ -545,7 +545,7 @@
       {
        "term": "Clam stock",
        "pronunciation": null,
-       "note": "Stock made from clams; the base of the broth on the regular build. What else goes into it is not confirmed with the kitchen yet. Shellfish. Left out entirely on the shellfish-free version."
+       "note": "A purchased clam stock, not made in house; the base of the broth on the regular build. The packaging says gluten-free. Sam expects it carries wine and allium, which the sauce already has anyway. Shellfish. Left out entirely on the shellfish-free version."
       },
       {
        "term": "Fennel fronds",
@@ -562,10 +562,8 @@
      "canModify": [
       "shellfish"
      ],
-     "allergenNote": "Fish: black cod, the center of the dish. Shellfish: Manila clams and the clam stock. Shellfish-free version, per Sam: no clams, no clam stock, double portion of cod in the cream sauce only; ring it in as a modification. Dairy: garlic herb butter and cream are the sauce, so no dairy-free version. Allium: garlic and shallot are in the cream sauce and cannot come out, so this cannot be cleared for an allium allergy on either build. Chili flakes can be left off completely for a guest who wants no heat. White wine, cooked in. Gluten: nothing in the build as described, but the clam stock is not confirmed, so check with the kitchen before clearing the regular build for gluten; the shellfish-free build has no stock in it.",
-     "flags": [
-      "Clam stock: confirm what goes into it (beyond clams) before clearing the regular build for gluten."
-     ],
+     "allergenNote": "Fish: black cod, the center of the dish. Shellfish: Manila clams and the clam stock. Shellfish-free version, per Sam: no clams, no clam stock, double portion of cod in the cream sauce only; ring it in as a modification. Dairy: garlic herb butter and cream are the sauce, so no dairy-free version. Allium: garlic and shallot are in the cream sauce and cannot come out, so this cannot be cleared for an allium allergy on either build. Chili flakes can be left off completely for a guest who wants no heat. White wine, cooked in. Gluten: none in the build. The clam stock is a purchased product and its packaging says gluten-free, so the dish is gluten-free as served on either build.",
+     "flags": [],
      "added": "2026-10-20"
     },
     {

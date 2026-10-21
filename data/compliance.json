@@ -116,6 +116,18 @@
         "mast": null
       },
       {
+        "name": "Sam West",
+        "role": "Executive Chef & GM",
+        "fwc": {
+          "status": "good",
+          "text": "Valid through Oct 20, 2028"
+        },
+        "mast": {
+          "status": "good",
+          "text": "Class 12 course passed Oct 20, 2026 (ABC); permit card pending by mail"
+        }
+      },
+      {
         "name": "Sophie Regovic",
         "role": "Line Cook",
         "fwc": {
