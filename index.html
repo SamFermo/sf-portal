@@ -2324,14 +2324,22 @@ function ordersCardHTML(){
   // Shorts/subs on OPEN orders only (2026-10-22). It used to count every order in the last 25, invoiced ones
   // included, so "5 flagged" never cleared and taught managers to ignore it.
   const flags=open.reduce((n,o)=>n+(o.lines||[]).filter(l=>l.farm_status==='short'||l.farm_status==='sub').length,0);
-  let parts=[];
-  if(open.length)parts.push(open.length+' open');
-  if(acked)parts.push(acked+' ✓ farm');
-  if(invoices)parts.push(invoices+' invoice'+(invoices>1?'s':''));
-  if(flags)parts.push(flags+' short/sub');
+  /* What needs you, most urgent first (2026-10-22). An order more than a day past its delivery day drops out:
+     its shorts/subs were dealt with at delivery and should stop nagging. */
+  const _dlv=o=>{ try{ if(o.weekly&&o.week_cutoff){ const d=new Date(o.week_cutoff+'T12:00:00'); d.setDate(d.getDate()+2); return d; }
+    if(o.requested_date)return new Date(o.requested_date+'T12:00:00'); }catch(e){} return null; };
+  const _t0=new Date(); _t0.setHours(0,0,0,0);
+  const recent=open.filter(o=>{ const d=_dlv(o); return !d||d>=new Date(_t0.getTime()-864e5); });
+  const shorts=recent.reduce((n,o)=>n+(o.lines||[]).filter(l=>l.farm_status==='short').length,0);
+  const subs=recent.reduce((n,o)=>n+(o.lines||[]).filter(l=>l.farm_status==='sub').length,0);
+  const need=[];
+  if(shorts||subs)need.push('<b>'+[shorts?shorts+' short'+(shorts>1?'s':''):'',subs?subs+' sub'+(subs>1?'s':''):''].filter(Boolean).join(', ')+' from Kelly</b> · check Sent before service');
   const _due=ordWeekDue();
-  const detail=_due?('<b>This week’s farm order closes Sun 10pm</b> · '+RemyWeek.left(_due.msLeft)+' left · nothing ordered yet')
-    :(parts.length?esc(parts.join(' · ')):'Order from Swan House');
+  if(_due)need.push('<b>This week’s farm order closes Sun 10pm</b> · '+RemyWeek.left(_due.msLeft)+' left · nothing ordered yet');
+  if(!need.length&&window.RemyWeek){ const w=RemyWeek.at(), wk=(remyOrders||[]).find(x=>x.order_id===w.id);
+    if(wk&&(wk.lines||[]).length)need.push('This week’s order · '+wk.lines.length+' item'+(wk.lines.length>1?'s':'')+' · delivers '+RemyWeek.day(w.delivery)); }
+  if(!need.length&&invoices)need.push(invoices+' invoice'+(invoices>1?'s':'')+' from Kelly to look over');
+  const detail=need.length?need.join(' · '):'Order from Swan House';
   // Farm Order opens the #orders view like any other tab (2026-07-01) — go('orders') calls
   // renderOrders()/remyMount(), same single path the nav chip uses. No separate open function.
   return `<button class="home-card home-card-wide" data-card="orders" onclick="go('orders')">
