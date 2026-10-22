@@ -78,6 +78,8 @@ body:not(.not-home) header.app{display:none;}   /* home shows just the hero + bo
 body.not-home .home-btn{display:block;}
 nav.chips{display:flex; gap:7px; overflow-x:auto; padding:8px 14px 10px; scrollbar-width:none; -webkit-overflow-scrolling:touch;}
 nav.chips::-webkit-scrollbar{display:none;}
+.chip.chip-hid{display:none;} .chip-mgr .chip-caret{display:inline-block; transition:transform .15s ease; font-size:10px; margin-left:3px;} .chip-mgr.open .chip-caret{transform:rotate(90deg);}
+.chip.chip-grp{border-style:dashed;}
 .chip{flex:0 0 auto; background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); color:var(--ink-soft); border-radius:999px; padding:6px 15px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all .15s ease;}
 .chip.active{background:var(--gold); color:#241f15; border-color:var(--gold);}
 
@@ -145,6 +147,18 @@ nav.chips::-webkit-scrollbar{display:none;}
 .recent-item:active{opacity:.55;}
 .recent-item .recent-jump{margin-left:auto; font-size:11px; color:#2d6a4f; opacity:.7; white-space:nowrap;}
 .pinned-block{margin-bottom:6px;}
+.ds-covers-old{color:#e8a87c; font-weight:600;}
+.req-line{display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:var(--moon,#f7efdf); color:var(--card-ink,#3a2c1a); border:0; border-radius:12px; padding:10px 14px; margin:0 0 8px; cursor:pointer; font:inherit;}
+.req-line-who{font-weight:600; font-size:15px;} .req-line-d{font-size:13px; opacity:.75; flex:1;} .req-line-n{font-size:12px; opacity:.6;}
+.req-fold{font-size:12px; font-weight:700; color:var(--gold); cursor:pointer; margin:4px 4px 6px; letter-spacing:.06em; text-transform:uppercase;}
+.promo-card{background:linear-gradient(180deg,#fffaf0,#f6ecd6); color:#3a2c1a; border:1px solid rgba(201,166,78,.55); border-radius:16px; padding:14px 16px; margin:4px 0 14px; display:flex; flex-direction:column; gap:6px;}
+.promo-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+.promo-title{font-size:19px; font-weight:600;}
+.promo-tonight{font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 9px; border-radius:999px;}
+.promo-tonight.on{background:#e3ecdf; color:#3f5a3a;} .promo-tonight.off{background:#eee6d6; color:#7a6a52;}
+.promo-when{font-size:13px; color:#6b5a40;}
+.promo-row{display:grid; grid-template-columns:62px 1fr; gap:10px; font-size:14px; align-items:baseline;}
+.promo-k{font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-deep);}
 .pinned-label{color:#2d6a4f !important; border-bottom-color:rgba(45,106,79,.3) !important;}
 @keyframes cardflash{0%{box-shadow:0 0 0 3px rgba(45,106,79,.55);}100%{box-shadow:0 0 0 3px rgba(45,106,79,0);}}
 .card.flash{animation:cardflash 1.5s ease-out;}
@@ -2069,7 +2083,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792588172';   // stamped by build-data.py at every deploy
+const BUILD='1792654963';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2135,8 +2149,31 @@ function navTabs(){
   if(typeof wiCanTab==='function'&&wiCanTab())t=t.concat([['wineinv','Wine Inventory']]);   // managers + wine team
   if(isMgr())t=t.concat([['orders','Farm Order']]);
   return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
-function buildNav(){$('navChips').innerHTML=navTabs().map(([id,l])=>`<button class="chip" data-go="${id}">${l}</button>`).join('');
-  $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>go(c.dataset.go));
+/* Manager chip (2026-10-22): twelve chips ran three screens wide on a phone. Managers get one "Manager"
+   chip; tapping it shows Front Desk / Wine Inventory / Farm Order / Staff Access inline right after it.
+   The grouped chips stay in #navChips (hidden, not removed) so every glow/badge selector still finds
+   them; the Manager chip glows when a hidden one does. Opening a grouped tab keeps the group open. */
+const NAV_MGR_GROUP=['frontdesk','wineinv','orders','access'];
+let navMgrOpen=false;
+function navGrouped(){ const t=navTabs(); if(!isMgr())return null;
+  const g=t.filter(function(x){return NAV_MGR_GROUP.indexOf(x[0])>=0;}); return g.length>=2?g:null; }
+function navMgrApply(){
+  const n=$('navChips'); if(!n)return;
+  n.querySelectorAll('.chip.chip-grp').forEach(function(c){c.classList.toggle('chip-hid',!navMgrOpen);});
+  const m=n.querySelector('.chip[data-go="mgr"]'); if(m){ m.classList.toggle('open',navMgrOpen);
+    const lit=!navMgrOpen&&[].some.call(n.querySelectorAll('.chip.chip-grp'),function(c){return c.classList.contains('attn-chip')||c.classList.contains('attn-chip-red')||!!c.querySelector('.chip-count');});
+    m.classList.toggle('attn-chip',lit); }
+}
+function navMgrReveal(id){ if(NAV_MGR_GROUP.indexOf(id)>=0&&$('navChips')&&$('navChips').querySelector('.chip[data-go="mgr"]')){ navMgrOpen=true; navMgrApply(); } }
+function buildNav(){
+  const grp=navGrouped(), ids=grp?grp.map(function(x){return x[0];}):[];
+  let html='';
+  navTabs().forEach(function(x){ if(ids.indexOf(x[0])<0)html+=`<button class="chip" data-go="${x[0]}">${x[1]}</button>`; });
+  if(grp){ html+=`<button class="chip chip-mgr" data-go="mgr">Manager <span class="chip-caret">▸</span></button>`;
+    grp.forEach(function(x){ html+=`<button class="chip chip-grp" data-go="${x[0]}">${x[1]}</button>`; }); }
+  $('navChips').innerHTML=html;
+  $('navChips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ if(c.dataset.go==='mgr'){ navMgrOpen=!navMgrOpen; navMgrApply(); if(navMgrOpen){ const f=$('navChips').querySelector('.chip.chip-grp'); if(f&&f.scrollIntoView)f.scrollIntoView({inline:'nearest',block:'nearest',behavior:'smooth'}); } } else go(c.dataset.go); });
+  navMgrApply();
   if(typeof updatePendingBadge==='function')updatePendingBadge();}
 /* ===== NUMBERS group (2026-09-29) =========================================
    One nav chip + one home card for the money views. Same gates as before, in the same
@@ -2177,6 +2214,7 @@ function go(id){
   // exactly like Fresh Talk/Schedule/etc. No full-screen overlay, no second header.
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.body.classList.toggle('not-home',id!=='home');
+  navMgrReveal(id);
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id||(c.dataset.go==='numbers'&&isNumView(id))));
   if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='wineinv')wiRender(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender(); if(id==='servers')srvRender();
   if(id==='standards')showStdPane(stdTab);
@@ -2283,12 +2321,14 @@ function ordersCardHTML(){
   const open=(remyOrders||[]).filter(o=>['placed','acked'].includes(o.status||'placed'));
   const acked=open.filter(o=>o.status==='acked').length;
   const invoices=(remyOrders||[]).filter(o=>o.invoice&&['placed','acked'].includes(o.status||'placed')).length;
-  const flags=(remyOrders||[]).reduce((n,o)=>n+(((o.lines||[]).some(l=>l.farm_status==='short'||l.farm_status==='sub'))?1:0),0);
+  // Shorts/subs on OPEN orders only (2026-10-22). It used to count every order in the last 25, invoiced ones
+  // included, so "5 flagged" never cleared and taught managers to ignore it.
+  const flags=open.reduce((n,o)=>n+(o.lines||[]).filter(l=>l.farm_status==='short'||l.farm_status==='sub').length,0);
   let parts=[];
   if(open.length)parts.push(open.length+' open');
   if(acked)parts.push(acked+' ✓ farm');
   if(invoices)parts.push(invoices+' invoice'+(invoices>1?'s':''));
-  if(flags)parts.push(flags+' flagged');
+  if(flags)parts.push(flags+' short/sub');
   const _due=ordWeekDue();
   const detail=_due?('<b>This week’s farm order closes Sun 10pm</b> · '+RemyWeek.left(_due.msLeft)+' left · nothing ordered yet')
     :(parts.length?esc(parts.join(' · ')):'Order from Swan House');
@@ -2339,7 +2379,6 @@ function renderHome(){
 function ordHomePrime(){
   try{ remyInit(); }catch(e){}
   Promise.all([
-    (typeof ordFetchAvail==='function'?ordFetchAvail():Promise.resolve(null)).catch(()=>null),
     (typeof ordFetchFarmAsks==='function'?ordFetchFarmAsks():Promise.resolve(null)).catch(()=>null)
   ]).then(()=>{ if($('home')&&$('home').classList.contains('active')) refreshOrdersCard(); });
 }
@@ -2361,8 +2400,19 @@ function refreshOrdersCard(){
 /* go('orders') calls this. Farm Order = the Remy embed, mounted in place (restored 2026-09-24:
    the 9/23 old-form removal cut it by mistake and the tab went blank). */
 function renderOrders(){ remyMount(); }
+let _remyMountPending=false;
 function remyMount(){
-  if(!isMgr())return;   // managers + admins (matches who sees the Farm Order card/tab)
+  if(!isMgr()){   // managers + admins (matches who sees the Farm Order card/tab)
+    /* Never a silent blank (2026-10-22): before the profile has loaded say so and mount when it arrives
+       (onProfiles retries); a signed-in non-manager gets a plain line. */
+    var b=$('ordBody');
+    if(b&&!document.getElementById('remyFrame')){
+      _remyMountPending=!me;
+      b.innerHTML='<div class="empty" style="padding:40px 16px;text-align:center;opacity:.8">'+(me?'Farm Order is for managers.':'Loading Farm Order…')+'</div>';
+    }
+    return;
+  }
+  _remyMountPending=false;
   // Hand the logged-in user to the embed so orders record who placed them (Kelly's feed shows it).
   try{window.__remyPortalUser=(typeof currentUserName==='function'?currentUserName():'')||'';}catch(e){}
   var body=$('ordBody');
@@ -2507,6 +2557,7 @@ function onProfiles(){
   /* Sign-offs subtab reads policyAcks off PROFILES; repaint when a signature lands (2026-10-17) */
   try{ if(typeof compTab!=='undefined'&&compTab==='policy'&&$('compBody')&&$('compBody').innerHTML)renderCompliance(); }catch(e){}
   try{ annPolicyRefresh(); }catch(e){}
+  try{ if(_remyMountPending&&me&&$('orders')&&$('orders').classList.contains('active'))remyMount(); }catch(e){}
 }
 function applyAuthGate(){
   const gate=$('loginGate');
@@ -2730,6 +2781,7 @@ function tourShow(){
       '<button class="tour-next" onclick="tourNext()">'+(last?'Done':'Next')+'</button>'+
     '</div></div>';
   bar.classList.add('open');
+  if(typeof navMgrReveal==='function')navMgrReveal(s.id);
   var chips=document.querySelectorAll('#navChips .chip');
   Array.prototype.forEach.call(chips,function(c){c.classList.toggle('tour-lit',c.dataset.go===s.id);});
   window.scrollTo(0,0);
@@ -3710,6 +3762,7 @@ function renderFoodTab(){
 
   // Specials keep a pinned home at the top until a manager removes them —
   // deliberately NOT the "Just added" block, whose cards age out on their own.
+  f+=promoBlockHTML();
   f+=specialsBlockHTML();
 
   // Normal view. "Just added" is keyed off the item's own added date and nothing
@@ -3731,6 +3784,27 @@ function renderFoodTab(){
   promotedIn('Dessert').forEach(it=>{f+=dishCardHTML(it);if(isMgr())f+=spMgrRowHTML(it);});
   f+=`<p class="board-note" style="margin-top:14px;">${esc(SF.menu.raw_note)}</p>`;
   $('ftFood').innerHTML=liveBlockHTML('dish')+f;
+}
+/* Promotions (2026-10-22, Sam). A dated card at the top of Food so the floor knows what's running.
+   Shows from `from` to `to` (inclusive) and says whether tonight is a promo night (`days`, 0=Sun).
+   Copy is the printed Restaurant Week menu (Desktop InDesign/2026 Dinner/SRW Dinner Menu 10:18:26).
+   It drops off by itself after `to`. Wine pairing details are pending from Sam. */
+const FT_PROMOS=[
+  {id:'srw-2026', title:'Seattle Restaurant Week', from:'2026-10-18', to:'2026-10-31', days:[0,1,2,3,4],
+   when:'Sunday through Thursday, October 18 – 31', price:'Two courses for 35, choose one from each',
+   courses:[['First','House Caesar*, Farm House Salad, or Farinata, served as half portions'],
+            ['Second','Swan House Bolognese, Rigatoni, or Risotto']]}
+];
+function promoBlockHTML(){
+  const t=todayISO(), dow=new Date(t+'T12:00:00').getDay();
+  return FT_PROMOS.filter(function(p){return t>=p.from&&t<=p.to;}).map(function(p){
+    const on=p.days.indexOf(dow)>=0;
+    return '<div class="promo-card"><div class="promo-head"><span class="promo-title serif">'+esc(p.title)+'</span>'+
+      '<span class="promo-tonight '+(on?'on':'off')+'">'+(on?'On tonight':'Not tonight')+'</span></div>'+
+      '<div class="promo-when">'+esc(p.when)+' · '+esc(p.price)+'</div>'+
+      p.courses.map(function(c){return '<div class="promo-row"><span class="promo-k">'+esc(c[0])+'</span><span class="promo-v serif">'+esc(c[1])+'</span></div>';}).join('')+
+      '</div>';
+  }).join('');
 }
 function renderFresh(){ $('freshSub').textContent=SF.menu.note; renderFoodTab(); renderWine(); renderBar(); var a=$('ftAllergens'); if(a)a.innerHTML=allergenAskHTML(); if(typeof updateFlagBadges==='function')updateFlagBadges(); if(typeof updateAttn==='function')updateAttn(); }
 /* Manager-only unresolved-component badge on the Food sub-tab. Counts food + dessert
@@ -6007,8 +6081,20 @@ function renderTimeoff(){
   var live=fbReady?'Live — shared across every device.':'Saved on this device only (offline).';
   h+=`<p class="req-hint">${esc(live)} Pending requests need Sam's approval.</p>`;
   if(awaiting.length)h+=awaitingHTML(awaiting);
-  h+= list.length? list.map(reqCardHTML).join('') : `<p class="req-empty">No time-off requests right now.</p>`;
+  h+= list.length? list.map(reqCardOrLineHTML).join('') : `<p class="req-empty">No time-off requests right now.</p>`;
   $('schedBody').innerHTML=h;
+}
+/* Decided requests fold to one line (2026-10-22): the list ran ~5,500px because every approved card
+   kept its notes box. Pending stays a full card. Tap a line to open it; tap the name to fold it again. */
+let toOpenIds={};
+function toToggleLine(id){ toOpenIds[id]=!toOpenIds[id]; renderTimeoff(); }
+function reqCardOrLineHTML(r){
+  if(r.status==='pending')return reqCardHTML(r);
+  if(toOpenIds[r.id])return '<div class="req-fold" onclick="toToggleLine(\''+esc(r.id)+'\')">▾ Fold</div>'+reqCardHTML(r);
+  const n=(r.comments||[]).length, sc=r.status==='approved'?'rs-approved':(r.status==='denied'?'rs-denied':'rs-pending');
+  return '<button class="req-line" onclick="toToggleLine(\''+esc(r.id)+'\')"><span class="req-line-who serif">'+esc(r.name)+'</span>'+
+    '<span class="req-line-d">'+esc(reqDates(r))+'</span>'+(n?'<span class="req-line-n">'+n+' note'+(n>1?'s':'')+'</span>':'')+
+    '<span class="req-status '+sc+'">'+esc(r.status)+'</span></button>';
 }
 
 /* SEATING */
@@ -6416,8 +6502,10 @@ function compPendingSig(){ return Object.keys(COMP_UP).filter(function(k){return
    'standards' attn key is simply abandoned, so everyone gets one first-open glow. */
 function markComplianceSeen(){ attnSet('compliance', compPendingSig()); }
 function complianceGlow(){ if(!isMgr())return false; const sig=compPendingSig(); return !!sig && sig!==(attnGet('compliance')||''); }
-function compRowUploadsHTML(p){
-  const canUp=compCanUpload(p.name), creds=['FWC','MAST'], chunks=[];
+/* Kitchen staff don't need MAST: their row shows MAST only when one is on file or tracked (2026-10-22). */
+function compBohMast(p){ return !!(p.mast||COMP_UP[compKey('MAST',p.name)]); }
+function compRowUploadsHTML(p,noMast){
+  const canUp=compCanUpload(p.name), creds=noMast?['FWC']:['FWC','MAST'], chunks=[];
   creds.forEach(function(cred){
     const key=compKey(cred,p.name), up=COMP_UP[key];
     if(!up&&!canUp)return;
@@ -6866,7 +6954,7 @@ function renderPolicySignoffs(){
 }
 function renderCompliance(){const C=SF.compliance, R=compWithExtras();
   if(compTab==='policy'){ $('compSub').textContent='Written policies, signed in the portal, and house documents'; renderPolicySignoffs(); updateStdBadges(); return; }
-  $('compSub').textContent=`Roster as of ${fmtShort(C.updated)} · ${R.foh.length+R.boh.length} active · FWC & MAST`;
+  $('compSub').textContent=`${R.foh.length+R.boh.length} active · FWC & MAST`;
   if(compTab==='due'){
     const L=compDueList(), past=L.due.filter(function(d){return d.days<0;});
     let h=`<p class="view-sub" style="margin-bottom:14px;">Read live off the dates on file, FWC and MAST, out to nine months. Renewal means re-taking the class.</p>`;
@@ -6883,15 +6971,17 @@ function renderCompliance(){const C=SF.compliance, R=compWithExtras();
     $('compBody').innerHTML=h; updateStdBadges(); return;}
   if(compTab==='all'||compTab==='tonight'){ $('compBody').innerHTML=compGalleryHTML(compTab); compFillImages(); updateStdBadges(); return; }
   let h=certBannerHTML();
-  h+=`<p class="board-note">${esc(C.note)}</p>`;
+  // The binder was retired 2026-09-28; the portal is the record. (compliance.json's note still says
+  // "Mirrors the live Compliance Notebook", so it is no longer shown.)
+  h+=`<p class="board-note">The portal is the card record. FWC = Washington Food Worker Card. MAST = Mixology/Alcohol Server permit, front of house only. Neither auto-renews; renewal means taking the class again.</p>`;
   h+=`<p class="comp-upload-note">📷 Snap a photo of your own FWC or MAST card on your row below to put it on file — a manager verifies it.${isMgr()?' Managers can upload on anyone’s row and tap Verify.':''}</p>`;
   [['Back of House','boh'],['Front of House','foh']].forEach(([lab,key])=>{
     h+=`<div class="section-label">${lab}</div><div class="comp-card">`;
     R[key].forEach(p=>h+=`<div class="comp-row"><div><div class="comp-name">${esc(p.name)}</div><div class="comp-role">${esc(p.role)}${p.isNew?' · new':''}</div></div>
       ${compPillHTML('FWC',p.name,p.fwc)}
-      ${compPillHTML('MAST',p.name,p.mast)}
+      ${(key==='boh'&&!compBohMast(p))?'':compPillHTML('MAST',p.name,p.mast)}
       <div class="comp-cred">${[compCredTextHTML('FWC',p.name,p.fwc),compCredTextHTML('MAST',p.name,p.mast)].filter(Boolean).join(' · ')}</div>
-      ${compRowUploadsHTML(p)}</div>`);
+      ${compRowUploadsHTML(p,key==='boh'&&!compBohMast(p))}</div>`);
     h+=`</div>`;});
   $('compBody').innerHTML=h;
   updateStdBadges();
@@ -7018,6 +7108,16 @@ function wxLsGet(iso){ try{ return JSON.parse(localStorage.getItem('sf-wx-'+iso)
 function wxLsSet(iso,res){ try{ localStorage.setItem('sf-wx-'+iso, JSON.stringify(res)); }catch(e){} }
 function wxFetchTO(url,ms){ const ctl=new AbortController(); const to=setTimeout(function(){ctl.abort();},ms||8000); return fetch(url,{signal:ctl.signal}).then(function(r){clearTimeout(to);return r;},function(e){clearTimeout(to);throw e;}); }
 function dsWxStamp(ms){ if(!ms)return ''; const d=new Date(ms); let h=d.getHours(); const m=d.getMinutes(); const ap=h>=12?'pm':'am'; h=h%12||12; return h+':'+(m<10?'0':'')+m+ap; }
+/* "as of" with the day named when it isn't today (2026-10-22): a Wednesday-midday count on Thursday's
+   sheet read like a fresh number. */
+function dsAtStamp(ms){ if(!ms)return ''; const d=new Date(ms), t=dsWxStamp(ms), age=Date.now()-ms;
+  const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  if(iso===todayISO())return t;
+  if(age<6*864e5)return d.toLocaleDateString('en-US',{weekday:'short'})+' '+t;
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+'</span> <span class="ds-covers-old">· may be out of date'; }
+/* A covers count older than 36h is a look-ahead written days or weeks ago (found 2026-10-22: Thursday's
+   "9 booked" was written Sep 24). It is shown with its date and kept out of the call-off banner. */
+function dsCoversFresh(c){ return !!(c&&c.at&&(Date.now()-c.at)<36*36e5); }
 function dsRefreshWeather(){ const iso=dsDate(); delete dsWxCache[iso]; dsRenderWeather(iso); }
 function dsDate(){return dsDateSel||todayISO();}
 function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=new Set();dsCovSel=new Set();dsCovSide=null;dsPickupOpen=false;dsEditStaff=false;renderToday();}
@@ -7856,20 +7956,22 @@ function ordFarmSig(){
   const ords=(remyOrders||[]).slice().sort(function(a,b){return String(a.order_id).localeCompare(String(b.order_id));}).map(o=>[o.order_id,o.status||'',o.confirmed_date||'',o.invoice?1:0,
     (o.lines||[]).map(l=>(l.farm_status||'')+':'+(l.farm_note||'')).join('|')].join('~')).join('||');
   const asks=ordStable((typeof ordFarmAsks!=='undefined'&&ordFarmAsks)||{});
-  const avail=(typeof ordAvail!=='undefined'&&ordAvail)?attnHash(ordStable(ordAvail)):0;
-  return attnHash(ords+'##'+asks+'##'+avail);
+  /* availability-swan-house.json dropped from the signature 2026-10-22: it is rebuilt every morning from the dead
+     June sheet with a fresh `generated` stamp, so it could re-glow the card daily on no real change. Order status +
+     Kelly's live asks are what the glow tracks. Seen-state moved to 'orders2' so every device rebaselines silently. */
+  return attnHash(ords+'##'+asks);
 }
 function ordDataLoaded(){   // true once any farm feed has actually arrived
-  return !!((typeof ordAvail!=='undefined'&&ordAvail) || (typeof remyOrders!=='undefined'&&remyOrders.length) || (typeof ordFarmAsksAt!=='undefined'&&ordFarmAsksAt>0));
+  return !!((typeof remyOrders!=='undefined'&&remyOrders.length) || (typeof ordFarmAsksAt!=='undefined'&&ordFarmAsksAt>0));
 }
 function ordGlow(){
   if(!isMgr())return false;
   if(!ordDataLoaded())return false;   // don't baseline/compare against not-yet-loaded data (was glowing on every login)
-  const sig=ordFarmSig(), seen=attnGet('orders');
-  if(seen==null){ attnSet('orders',sig); return false; }   // baseline silently once data is in
+  const sig=ordFarmSig(), seen=attnGet('orders2');
+  if(seen==null){ attnSet('orders2',sig); return false; }   // baseline silently once data is in
   return seen!==sig;
 }
-function markOrdersSeen(){ attnSet('orders', ordFarmSig()); }
+function markOrdersSeen(){ attnSet('orders2', ordFarmSig()); }
 
 /* Apply every glow to its home card + nav chip. Cheap; safe to call often. */
 function setCardAttn(id,on){
@@ -7896,6 +7998,7 @@ function updateAttn(){
     if(isMgr())setCardAttn('orders', ordGlow()||!!ordWeekDue());
     setCardAttnRed('today', calloffGlow());
     updateStdBadges();
+    if(typeof navMgrApply==='function')navMgrApply();
   }catch(e){}
 }
 
@@ -7919,6 +8022,8 @@ function dsRenderWxRec(iso){
     if(aqi!=null&&aqi>=101)reasons.push('smoke / poor air (AQI '+aqi+')');
     const isT=(iso===todayISO()); const lead=isT?'Tonight could run light':'This day could run light';
     const tail=isT?((typeof isMgr==='function'&&isMgr())?' A call-off is possible: offer the night off from Manager tools below.':' A call-off is possible; if you\'d like the night off, use the offer button up top.'):'';
+    // Put the book beside the weather reason (2026-10-22): the count is the other half of "could run light".
+    try{ const cv=isT?(getBoard()||{}).covers:dsCoversCache[iso]; if(reasons.length&&cv&&cv.booked&&!cv.closed&&dsCoversFresh(cv))reasons.push(cv.booked+' on the book so far'); }catch(e){}
     const offering=dsRosterOv(iso).offerOff;   // night off already on offer → warning is redundant, hide it
     el.innerHTML=(reasons.length&&!offering)?'<div class="ds-wxrec-banner">⚠ '+lead+' — '+esc(reasons.join(' · '))+'.'+tail+'</div>':'';
   });
@@ -7939,7 +8044,7 @@ function dsCoversHTML(iso){
     const pace=r>=1.1?('busier than a usual '+day):(r<=0.9?('lighter than a usual '+day):('about a usual '+day));
     line+=' · '+esc(pace); }
   let h='<div class="ds-covers">'+line;
-  if(c.at)h+=' <span class="ds-covers-at">as of '+dsWxStamp(c.at)+'</span>';
+  if(c.at)h+=' <span class="ds-covers-at">as of '+dsAtStamp(c.at)+'</span>';
   // Manager-only detail: avg, walk-in prediction, busiest stretch, turn split (no source breakdown).
   if(typeof isMgr==='function'&&isMgr()){
     const parts=[];
@@ -8228,7 +8333,14 @@ function lnFailHTML(msg){ return '<div class="ln-fail">'+esc(msg)+'</div>'; }
 function lnEmptyHTML(){ return '<div class="ln-fail">Last night not yet posted. The morning brief writes these around 4am — check back, or verify the push ran.</div>'; }
 function lnFreshBlock(latest){
   const exp=lnYesterdayISO(); let h='';
-  if((latest.id||latest.date)<exp) h+='<div class="ln-stale">Showing '+lnDateLabel(latest)+', not last night ('+lnPrettyDate(exp)+'). The 4am push may not have run — verify before relying on these.</div>';
+  // Before 5am last night hasn't been pushed yet (the push runs ~4am), so the night before is expected,
+  // not stale (2026-10-22: the alarm fired every night from midnight).
+  const lid=(latest.id||latest.date), early=(new Date().getHours()<5);
+  if(lid<exp){
+    const dby=(function(){const x=new Date(exp+'T12:00:00'); x.setDate(x.getDate()-1); return x.toISOString().slice(0,10);})();
+    if(early&&lid>=dby) h+='<div class="ln-fresh">Last night ('+lnPrettyDate(exp)+') posts around 4am. Showing '+lnDateLabel(latest)+'.</div>';
+    else h+='<div class="ln-stale">Showing '+lnDateLabel(latest)+', not last night ('+lnPrettyDate(exp)+'). The 4am push may not have run — verify before relying on these.</div>';
+  }
   h+='<div class="ln-fresh">As of '+lnFmtAsOf(latest.written_at)+' · service '+lnDateLabel(latest)+'</div>';
   return h;
 }
@@ -8746,17 +8858,24 @@ function rcSpan(from,to){ const out=[]; let c=from, guard=0;
 /* --- weekday baseline: mean restaurant net for the same weekday, excluding the night itself.
    Under 3 other samples it returns null and the UI says nothing rather than guessing. --- */
 function rcClosed(d){ return !!(d && (d.closed || (!d.covers && !d.product))); }
-function rcBaseline(iso){
+/* "A usual <weekday>" (one rule since 2026-10-22): the most recent 4 open same-weekday nights BEFORE
+   this one, minimum 3. The home card and the Recap tab used different sets (every Tuesday on record vs
+   the last 62 days, including nights after the one shown) and disagreed on the same night (-4% vs +1%).
+   4 matches the projection's backtested lookback and OpenTable's four-week average. */
+const RC_USUAL_N=4;
+function rcUsualOf(rows,revById,iso){
   const wd=rcWeekday(iso), s=[];
-  RC.rows.forEach(function(r){
-    if(r.id===iso)return;
+  rows.slice().sort(function(a,b){return a.id<b.id?1:(a.id>b.id?-1:0);}).forEach(function(r){
+    if(s.length>=RC_USUAL_N)return;
+    if(!(r.id<iso))return;
     if(rcClosed(r))return;              // a $0 closed Saturday is not a soft Saturday
     if(rcWeekday(r.id)!==wd)return;
-    const v=rcProd(r,RC.rev[r.id]); if(v!=null)s.push(v);
+    const v=rcProd(r,revById[r.id]); if(v!=null)s.push(v);
   });
   if(s.length<3)return null;
   return {mean:s.reduce(function(a,b){return a+b;},0)/s.length, n:s.length};
 }
+function rcBaseline(iso){ return rcUsualOf(RC.rows||[], RC.rev||{}, iso); }
 function rcDeltaPct(actual,base){ return base?((actual/base-1)*100):null; }
 
 /* --- PROJECTION ---------------------------------------------------------------------------
@@ -9657,14 +9776,10 @@ function rcHomePrime(){
     if(r!=null)parts.push(lnMoney0(r)+(f?' restaurant':''));
     if(f)parts.push(lnMoney0(f)+' farm');
     if(d.covers)parts.push(lnNum(d.covers)+' guests');
-    // same weekday, excluding this night and any closed day, minimum 3 samples
-    const wd=rcWeekday(d.id), s=[];
-    rows.forEach(function(o){
-      if(o.id===d.id||rcClosed(o)||rcWeekday(o.id)!==wd)return;
-      const v=rcProd(o,revById[o.id]); if(v!=null)s.push(v);
-    });
-    if(s.length>=3&&r!=null){
-      const mean=s.reduce(function(a,b){return a+b;},0)/s.length, p=(r/mean-1)*100;
+    // same rule as the Recap tab (rcUsualOf), so the two never disagree
+    const wd=rcWeekday(d.id), u=rcUsualOf(rows,revById,d.id);
+    if(u&&r!=null){
+      const p=(r/u.mean-1)*100;
       parts.push((p>=0?'+':'')+p.toFixed(0)+'% vs a usual '+wd);
     }
     const el=(document.querySelector('[data-numline="recap"] .hc-num-val')||document.querySelector('.home-card[data-card="recap"] .hc-sub'));
