@@ -1801,6 +1801,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 /* 10. Service Charge nights: fixed columns so name / role / hours line up night to night,
        whether or not the night had card tips. */
 .scws-night .scws-tbl{table-layout:fixed;}
+.scws-brk{display:block; font-size:10.5px; font-weight:500; color:var(--ink-mute); white-space:nowrap; margin-top:1px; font-variant-numeric:tabular-nums;}
 .scws-night .scws-tbl td:nth-child(1){width:17%;}
 .scws-night .scws-tbl td:nth-child(2){width:33%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .scws-night .scws-tbl td:nth-child(3){width:10%;}
@@ -2083,7 +2084,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792654996';   // stamped by build-data.py at every deploy
+const BUILD='1792775657';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -11809,12 +11810,13 @@ function scwsPaint(all,periods){
           + `</div>`;
       const tp=n.ccPot>0;
       s+='<table class="scws-tbl"><tbody>';
-      if(tp)s+=`<tr class="scws-hd"><td></td><td></td><td></td><td>service chg</td><td>card tips</td><td>total</td></tr>`;
-      const money=(x)=>tp?`<td>${scwsMoney(x.amt)}</td><td>${scwsMoney(x.tip||0)}</td><td><b>${scwsMoney(scwsR2(x.amt+(x.tip||0)))}</b></td>`
+      // Tip nights keep the same four columns as no-tip nights; the split goes under the total in small type.
+      const brk=(a,t)=>`<span class="scws-brk">incl. ${scwsMoney(t)} card tips</span>`;   // total already includes tips; '+' read as added after (Sam 10/23)
+      const money=(x)=>tp?`<td><b>${scwsMoney(scwsR2(x.amt+(x.tip||0)))}</b>${brk(x.amt,x.tip||0)}</td>`
                         :`<td>${scwsMoney(x.amt)}</td>`;
       n.splits.forEach(x=>s+=`<tr><td class="nm">${esc(x.name)}</td><td class="scws-why">split · ${x.section?esc(x.section):(x.role==='Bartender'?'bar':'server')}${x.mult!=null&&x.mult<1?' · '+Math.round(x.mult*100)+'% of a share':''}</td><td>${x.hours}h</td>${money(x)}</tr>`);
       n.commissions.forEach(c=>s+=`<tr class="scws-comm"><td class="nm">${esc(c.name)}</td><td class="scws-why">${esc(c.why)}${c.mult<1?' · '+c.mult+'×':''}</td><td>${c.hours}h</td>${money(c)}</tr>`);
-      s+=tp?`</tbody><tfoot><tr><td colspan="3">Total</td><td><b>${scwsMoney(n.totalPaid)}</b></td><td><b>${scwsMoney(n.totalTips)}</b></td><td><b>${scwsMoney(scwsR2(n.totalPaid+n.totalTips))}</b></td></tr></tfoot></table>`
+      s+=tp?`</tbody><tfoot><tr><td colspan="3">Total paid</td><td><b>${scwsMoney(scwsR2(n.totalPaid+n.totalTips))}</b>${brk(n.totalPaid,n.totalTips)}</td></tr></tfoot></table>`
                 :`</tbody><tfoot><tr><td colspan="3">Total paid</td><td><b>${scwsMoney(n.totalPaid)}</b></td></tr></tfoot></table>`;
       if(!n.ok)s+='<ul class="scws-flags">'+n.flags.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';
       return s+'</div>';
