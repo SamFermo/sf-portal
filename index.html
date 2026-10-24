@@ -2084,7 +2084,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1792847496';   // stamped by build-data.py at every deploy
+const BUILD='1792868997';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4370,10 +4370,20 @@ function ckpSave(id,edited){
    Allergen chips per dish save with any answer on that dish. "Finish later" re-asks next login.
    Admin preview: ?kq (nothing saves). Chris only, by name. */
 const KQ_WHO='Chris Hoey';
+/* ITEM AUTHORS (2026-10-24, Sam): who entered each item, kept in board/itemAuthors {items:{<editDocId(name)>:{by,at,type}}} and written at post time so it survives the overnight bake that drops the live doc. The login question pop-up routes each item's open flags/questions to this author; an item with no recorded author falls back to the kitchen (KQ_WHO) for food. */
+let IAUTH={items:{},loaded:false,unsub:null};
+function iauthRef(){ return fbDb.collection('board').doc('itemAuthors'); }
+function iauthKey(name){ return editDocId(String(name||'')); }
+function iauthOwner(name){ const r=IAUTH.items[iauthKey(name)]; return (r&&r.by)?r.by:''; }
+function startItemAuthorsSync(){
+  if(!(fbReady&&fbDb)){ IAUTH.loaded=true; if(typeof kqMaybeShow==='function')kqMaybeShow(); return; }
+  if(IAUTH.unsub)IAUTH.unsub();
+  IAUTH.unsub=iauthRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; IAUTH.items=v.items||{}; IAUTH.loaded=true; if(typeof kqMaybeShow==='function')kqMaybeShow(); },function(){ IAUTH.loaded=true; if(typeof kqMaybeShow==='function')kqMaybeShow(); });
+}
 let KQ={asks:{},answers:{},loaded:false,medits:false,shown:false,tries:0,unsub:null,local:{},alg:{}};
 function kqRef(){ return fbDb.collection('board').doc('kitchenQs'); }
 function kqPreview(){ try{ return /[?&]kq\b/.test(location.search)&&isAdmin(); }catch(e){ return false; } }
-function kqForMe(){ return !!me&&!DEMO&&me.name===KQ_WHO; }
+function kqForMe(){ return !!me&&!DEMO; }
 function startKitchenQsSync(){
   if(!(fbReady&&fbDb))return; if(KQ.unsub)KQ.unsub();
   KQ.unsub=kqRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{}; KQ.asks=v.asks||{}; KQ.answers=v.answers||{}; KQ.loaded=true; kqMaybeShow(); },function(){ KQ.loaded=true; kqMaybeShow(); });
@@ -4399,11 +4409,14 @@ function kqItems(){
   Object.keys(KQ.asks).forEach(function(id){ const a=KQ.asks[id]; if(!a||KQ.answers[id]||KQ.local[id])return;
     if(!findDishByName(a.dish))return;
     out.push({id:id,kind:'ask',dish:a.dish,dishName:a.dish,component:a.component||'',q:a.q||''}); });
-  return out;
+  out.forEach(function(it){ it.owner=iauthOwner(it.dish)||KQ_WHO; });
+  if(kqPreview())return out;
+  if(!me)return [];
+  return out.filter(function(it){ return it.owner===me.name; });
 }
 function kqPending(){ return kqItems().filter(function(it){ return !KQ.local[it.id]; }); }
 function kqMaybeShow(){
-  if(KQ.shown||!KQ.loaded||!KQ.medits)return;
+  if(KQ.shown||!KQ.loaded||!KQ.medits||!IAUTH.loaded)return;
   const pv=kqPreview(); if(!(kqForMe()||pv))return;
   if(!kqPending().length)return;
   const busy=document.body.classList.contains('locked')||['announceModal','alertModal','ckpModal'].some(function(id){ const m=$(id); return m&&m.style.display==='flex'; });
@@ -4423,7 +4436,7 @@ function kqAlgSet(dish){
 function kqToggleAlg(el){ const d=el.getAttribute('data-dish'), a=el.getAttribute('data-alg'); const s=kqAlgSet(d); if(s.has(a))s.delete(a); else s.add(a); el.classList.toggle('on',s.has(a)); }
 function kqRender(){
   const m=$('kqModal'); if(!m)return;
-  const items=kqItems(), left=kqPending().length, pv=!kqForMe();
+  const items=kqItems(), left=kqPending().length, pv=kqPreview();
   let h='<div class="ann-card ckp-card"><div class="ann-emoji">🍳</div><div class="ann-title serif">The floor has questions for the kitchen</div>'
    +'<div class="ann-line">Answer in plain words, the way you would tell a server. What you type goes straight onto the dish card. Tick the allergen chips if they are wrong.</div>'
    +(pv?'<div class="ckp-pv">Preview: nothing you tap here saves.</div>':'');
@@ -4479,7 +4492,7 @@ function kqSave(id){
   const t=$('kq-t-'+id); const text=t?String(t.value||'').trim():''; if(!text){ if(t)t.focus(); return; }
   const rec={text:text,by:me?me.name:'',at:Date.now()};
   KQ.local[id]=rec;
-  if(!kqForMe()){ kqRender(); return; }   // preview: local only
+  if(kqPreview()){ kqRender(); return; }   // admin preview: local only
   kqApply(it,text);
   if(it.kind==='ask'){ KQ.answers[id]=rec; if(fbReady&&fbDb){ const o={}; o[id]=rec; kqRef().set({answers:o},{merge:true}).catch(function(){}); } }
   kqRender();
@@ -9852,8 +9865,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startKitchenQsSync(); startBarOverlaySync(); startMenuOverlaySync(); startMenuPubSync(); startSpecialsSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startKitchenQsSync(); startBarOverlaySync(); startMenuOverlaySync(); startSpecialsSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startKitchenQsSync(); startItemAuthorsSync(); startBarOverlaySync(); startMenuOverlaySync(); startMenuPubSync(); startSpecialsSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startKitchenQsSync(); startItemAuthorsSync(); startBarOverlaySync(); startMenuOverlaySync(); startSpecialsSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
@@ -10641,6 +10654,7 @@ function postLive(){
     by:currentUserName(),at:at,day:todayISO(),styled:styled};
   MLIVE[id]=rec;renderFresh();
   if(fbReady&&fbDb){ fbDb.collection('menu-live').doc(id).set(rec).catch(function(){mliveLsSet();}); } else mliveLsSet();
+  if(fbReady&&fbDb){ try{ var _ao={}; _ao[iauthKey(name)]={by:currentUserName(),at:at,type:rec.type}; iauthRef().set({items:_ao},{merge:true}).catch(function(){}); }catch(e){} }
   $('liveModal').classList.remove('open');
 }
 function rmLive(id){
