@@ -457,36 +457,41 @@ window.SF = {
      },
      {
       "name": "Risotto",
-      "desc": "Swan House georgia candy roaster, garlic, shallot, sherry, parmesan, fried sage, pepita",
+      "desc": "Arborio rice with sunchoke purée, roasted beets, pickled mustard, caraway",
       "price": "28",
       "raw": false,
       "pron": "ree-ZOH-toh",
-      "story": "Fall risotto built on Georgia Candy Roaster squash from Swan House Farm, with garlic and shallot, a splash of sherry, and Parmesan. Finished with fried sage leaves and toasted pepitas for crunch. Sweet, nutty, and savory.",
+      "story": "Creamy risotto finished with sherry butter and Parmesan, folded with roasted sunchoke purée. Roasted beets and pickled mustard bring acidity and earthiness. Caraway runs through it. Garnished with seeds and fresh dill.",
       "ingredients": [
-       {
-        "term": "Georgia Candy Roaster",
-        "pronunciation": null,
-        "note": "An heirloom winter squash, long and banana-shaped with pink-orange skin, grown at Swan House Farm. Sweet, smooth, and less watery than butternut, which is why it roasts and purees so well. It's the base flavor of this risotto."
-       },
        {
         "term": "Arborio",
         "pronunciation": "ar-BOR-ee-oh",
-        "note": "Short-grain Italian rice that releases starch as it cooks, creating risotto's signature creamy texture. Par-cooked in batches at the restaurant, finished per plate to order."
+        "note": "Short-grain Italian rice that releases starch as it cooks, giving risotto its creamy texture. Par-cooked in batches, finished per plate to order. Naturally gluten-free."
        },
        {
-        "term": "Sherry",
+        "term": "Roasted sunchoke purée",
         "pronunciation": null,
-        "note": "A fortified Spanish wine used here to deglaze and brighten the squash. Cooked in, so the alcohol is gone, but it is wine and should be mentioned to guests who avoid it entirely."
+        "note": "Roasted sunchoke blended into a purée and folded through the rice. The full composition of this prep has not been specified by the kitchen — confirm its ingredients before clearing the dish for any allergy."
        },
        {
-        "term": "Fried sage",
+        "term": "Pickled mustard",
         "pronunciation": null,
-        "note": "Whole sage leaves fried crisp in oil. They shatter on the plate and give the dish its savory, slightly piney aroma. A classic pairing with winter squash."
+        "note": "Brings a sharp, acidic bite against the sunchoke. It carries mustard, which we do not track as a chip — mention it for a mustard allergy."
        },
        {
-        "term": "Pepita",
-        "pronunciation": "peh-PEE-tah",
-        "note": "Hulled pumpkin seed, toasted. Adds crunch and a nutty finish. It is a seed, not a tree nut or peanut, but a guest with a seed allergy should know it's on the plate."
+        "term": "Sherry butter",
+        "pronunciation": null,
+        "note": "Butter worked with sherry, used with Parmesan to finish the rice. Dairy, and it carries wine (sherry), which cooks in."
+       },
+       {
+        "term": "Caraway",
+        "pronunciation": null,
+        "note": "A warm, faintly anise seed spice that runs through the dish."
+       },
+       {
+        "term": "Seeds and dill",
+        "pronunciation": null,
+        "note": "Toasted seeds and fresh dill scattered on top for crunch and a bright herb note."
        }
       ],
       "allergens": [
@@ -494,79 +499,63 @@ window.SF = {
        "allium"
       ],
       "canModify": [],
-      "allergenNote": "Naturally gluten-free. Dairy: Parmesan, and our risotto is finished with butter. Allium: garlic and shallot are cooked into this build, and the house risotto base is par-cooked with onion and white wine in the stock, so allium cannot come out. The pepitas are seeds, not nuts. UNCONFIRMED: ask the kitchen whether a dairy-free version is possible for this build, and whether the risotto stock is vegetable or chicken before calling it vegetarian.",
+      "allergenNote": "Naturally gluten-free — Arborio rice, no wheat. Dairy: sherry butter and Parmesan. Allium: confirmed in the build, not removable. The pickled mustard carries mustard, which we do not track as a chip — flag it for a mustard allergy. The roasted sunchoke purée's composition is not confirmed; confirm with the kitchen before clearing any allergy.",
       "flags": [
-       "Risotto stock: confirm vegetable vs chicken before clearing the dish as vegetarian.",
-       "Dairy-free: confirm with the kitchen whether Parmesan and butter can be dropped on this build (the squash version may rely on them more than the zucchini one did)."
+       "Roasted sunchoke purée composition not specified for this prep. Confirm with kitchen before clearing for any allergy."
       ],
-      "added": "2026-10-09"
+      "added": "2026-10-24"
      },
      {
-      "name": "Zuppa di Pesce",
-      "desc": "manila clams, black cod, yukon gold potatoes, matsutake mushrooms, garlic herb butter, clam stock, cream, fennel fronds",
-      "price": "38",
+      "name": "Cioppino",
+      "desc": "roasted cod, manila clams, potato, peppers, fennel · cioppino soup base, white wine reduction",
+      "price": "40",
       "raw": false,
-      "pron": "ZOOP-pah dee PEH-sheh",
-      "story": "Fish soup, and the replacement for the Pesce al Cartoccio: same black cod and matsutake, now a brothy bowl instead of a parchment parcel. A 3.5 oz piece of black cod is pan seared. In the pan go garlic, shallot and chili flakes, deglazed with white wine, then garlic herb butter, cream and clam stock. Manila clams simmer in that until they pop open, and the Yukon gold potatoes and matsutake cook gently in the sauce. Seasoned with salt and lemon, everything plated together in the broth, fennel fronds on top. Rich, briny, a little heat from the chili.",
+      "pron": "choh-PEE-noh",
+      "story": "Pan-roasted cod with ten manila clams. Garlic, shallot, fennel, and peppers go in the pan with white wine and cioppino soup base, reduced down as the clams open. Finished with salt, lemon, and butter. Fennel frond on top.",
       "ingredients": [
        {
-        "term": "Zuppa di Pesce",
-        "pronunciation": "ZOOP-pah dee PEH-sheh",
-        "note": "Italian for fish soup. Every coastal region has its own version built on whatever came off the boat. Ours is black cod and Manila clams in a clam stock and cream broth."
+        "term": "Cioppino",
+        "pronunciation": "choh-PEE-noh",
+        "note": "An Italian-American fish stew that began with San Francisco's Italian fishermen — whatever came off the boat, simmered in a tomato-and-wine broth. Ours is cod and Manila clams in a reduced white wine and soup-base broth."
        },
        {
         "term": "Manila clams",
         "pronunciation": null,
-        "note": "Small, sweet Pacific clams farmed in Puget Sound. They go into the sauce and simmer until the shells pop open, which is how the kitchen knows they are done. Shellfish. For a shellfish allergy the dish is made without clams or clam stock, with a double portion of cod in the cream sauce."
+        "note": "Small, sweet Pacific clams farmed in Puget Sound. Ten per plate, simmered in the sauce until the shells pop open, which is how the kitchen knows they are done. Shellfish."
        },
        {
-        "term": "Black cod",
+        "term": "Cod",
         "pronunciation": null,
-        "note": "Also called sablefish. Not a true cod: a deep-water Pacific fish with a rich, buttery, high-oil flesh that flakes into large soft pieces. Here a 3.5 oz portion, pan seared for a crust, then served in the broth."
+        "note": "A 7 oz portion, pan-roasted for a crust, then served in the broth. Fish."
        },
        {
-        "term": "Yukon gold potatoes",
+        "term": "Cioppino soup base",
         "pronunciation": null,
-        "note": "Waxy, buttery yellow potato. Cooked gently in the sauce so it soaks up the clam and cream flavor and holds its shape."
-       },
-       {
-        "term": "Matsutake",
-        "pronunciation": "mat-soo-TAH-keh",
-        "note": "A prized wild mushroom that grows in Pacific Northwest conifer forests in the fall. Firm, meaty, with a distinctive spicy-pine aroma (some say cinnamon). Highly sought after in Japan, foraged locally in season. Cooked gently in the sauce alongside the potatoes."
-       },
-       {
-        "term": "Garlic herb butter",
-        "pronunciation": null,
-        "note": "Butter, garlic and parsley, made ahead (Chris: just parsley, no anchovy or citrus zest). It melts into the cream and clam stock and is part of the sauce, so this dish cannot go dairy-free."
+        "note": "The base of the broth. Its full composition has not been specified by the kitchen — confirm the ingredients before clearing the dish for any allergy, shellfish and fish especially, and it may also carry gluten."
        },
        {
         "term": "The sauce",
         "pronunciation": null,
-        "note": "Garlic, shallot and chili flakes in the pan, deglazed with white wine, then garlic herb butter, cream and clam stock. Finished with salt and lemon. The chili flakes can be left off entirely. The garlic and shallot cannot. The wine cooks in, but mention it to guests who avoid alcohol entirely."
+        "note": "Garlic, shallot, fennel and peppers in the pan, deglazed with white wine and the soup base, reduced as the clams open, then finished with butter, salt and lemon. The garlic and shallot cannot come out. The wine cooks in, but mention it to guests who avoid alcohol entirely."
        },
        {
-        "term": "Clam stock",
+        "term": "Fennel frond",
         "pronunciation": null,
-        "note": "A purchased clam stock, not made in house; the base of the broth on the regular build. The packaging says gluten-free. Sam expects it carries wine and allium, which the sauce already has anyway. Shellfish. Left out entirely on the shellfish-free version."
-       },
-       {
-        "term": "Fennel fronds",
-        "pronunciation": null,
-        "note": "The feathery green tops of the fennel plant, laid on at the end. Light anise flavor, a fresh note against the cream."
+        "note": "The feathery green tops of the fennel plant, laid on at the end. A light anise note against the broth."
        }
       ],
       "allergens": [
+       "dairy",
        "fish",
        "shellfish",
-       "dairy",
        "allium"
       ],
-      "canModify": [
-       "shellfish"
+      "canModify": [],
+      "allergenNote": "Fish: the cod, the center of the dish. Shellfish: the Manila clams, and likely the soup base (composition unconfirmed). Dairy: finished with butter. Allium: garlic and shallot in the pan, not removable. The soup base's full composition is not confirmed, so it could carry gluten or other allergens — confirm with the kitchen before clearing any allergy.",
+      "flags": [
+       "Chapeno soup base composition not specified. Confirm with kitchen before clearing for any allergy, shellfish and fish especially."
       ],
-      "allergenNote": "Fish: black cod, the center of the dish. Shellfish: Manila clams and the clam stock. Shellfish-free version, per Sam: no clams, no clam stock, double portion of cod in the cream sauce only; ring it in as a modification. Dairy: garlic herb butter and cream are the sauce, so no dairy-free version. Allium: garlic and shallot are in the cream sauce and cannot come out, so this cannot be cleared for an allium allergy on either build. Chili flakes can be left off completely for a guest who wants no heat. White wine, cooked in. Gluten: none in the build. The clam stock is a purchased product and its packaging says gluten-free, so the dish is gluten-free as served on either build.",
-      "flags": [],
-      "added": "2026-10-20"
+      "added": "2026-10-23"
      },
      {
       "name": "Braised Short Rib",
@@ -18942,5 +18931,5 @@ window.SF = {
    }
   ]
  },
- "build": "1792775657"
+ "build": "1792847496"
 };
