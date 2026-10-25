@@ -549,10 +549,8 @@ window.SF = {
        "allium"
       ],
       "canModify": [],
-      "allergenNote": "Fish: the cod, the center of the dish. Shellfish: the Manila clams, and likely the soup base (composition unconfirmed). Dairy: finished with butter. Allium: garlic and shallot in the pan, not removable. The soup base's full composition is not confirmed, so it could carry gluten or other allergens — confirm with the kitchen before clearing any allergy.",
-      "flags": [
-       "Chapeno soup base composition not specified. Confirm with kitchen before clearing for any allergy, shellfish and fish especially."
-      ],
+      "allergenNote": "Fish: the cod, the center of the dish. Shellfish: the Manila clams, and likely the soup base (composition unconfirmed). Dairy: finished with butter. Allium: garlic and shallot in the pan, not removable. The soup base's full composition is not confirmed, so it could carry gluten or other allergens — confirm with the kitchen before clearing any allergy. Chapeno soup base composition not specified. Confirm with kitchen before clearing for any allergy, shellfish and fish especially: Onion, carrot, fennel, thyme, bay leaf, red chili flakes, black pepper, wine, clam stock, fish stock, tomato paste",
+      "flags": [],
       "added": "2026-10-23"
      },
      {
@@ -18929,5 +18927,5 @@ window.SF = {
    }
   ]
  },
- "build": "1792891342"
+ "build": "1792933686"
 };
