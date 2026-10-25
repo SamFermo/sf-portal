@@ -471,7 +471,7 @@ window.SF = {
        {
         "term": "Roasted sunchoke purée",
         "pronunciation": null,
-        "note": "Roasted sunchoke blended into a purée and folded through the rice. The full composition of this prep has not been specified by the kitchen — confirm its ingredients before clearing the dish for any allergy."
+        "note": "Roasted sunchoke blended with water and caraway seeds into a purée and folded through the rice. Just those three things: no dairy, no allium, no gluten in the purée itself (confirmed by Chris, 10/24)."
        },
        {
         "term": "Pickled mustard",
@@ -499,10 +499,8 @@ window.SF = {
        "allium"
       ],
       "canModify": [],
-      "allergenNote": "Naturally gluten-free — Arborio rice, no wheat. Dairy: sherry butter and Parmesan. Allium: confirmed in the build, not removable. The pickled mustard carries mustard, which we do not track as a chip — flag it for a mustard allergy. The roasted sunchoke purée's composition is not confirmed; confirm with the kitchen before clearing any allergy.",
-      "flags": [
-       "Roasted sunchoke purée composition not specified for this prep. Confirm with kitchen before clearing for any allergy."
-      ],
+      "allergenNote": "Naturally gluten-free — Arborio rice, no wheat. Dairy: sherry butter and Parmesan. Allium: confirmed in the build, not removable. The pickled mustard carries mustard, which we do not track as a chip — flag it for a mustard allergy. The sunchoke purée is water, sunchoke and caraway only.",
+      "flags": [],
       "added": "2026-10-24"
      },
      {
@@ -18931,5 +18929,5 @@ window.SF = {
    }
   ]
  },
- "build": "1792868997"
+ "build": "1792891342"
 };
