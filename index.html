@@ -2084,7 +2084,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1793020355';   // stamped by build-data.py at every deploy
+const BUILD='1793037933';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5309,6 +5309,17 @@ function schedWithEffects(sheet,reqs){
         G.row.shifts[G.di]=''; T.row.shifts[T.di]=sh;
         marks[schedFxKey(side,e.date,G.row.name)]=1; marks[schedFxKey(side,e.date,T.row.name)]=1; applied++; }
       else flag(acFirst(e.taker)+' taking '+acFirst(e.giver)+"'s "+sh+" doesn't match the sheet anymore, left as is");
+    } else if(e.kind==='open'){ const L=schedFxLoc(out,side,e.forName,e.date), sh=String(e.shift||'').trim();   // Phase C (2026-10-26)
+      if(!L||!sh)return;
+      /* drawn only while the sheet still has the giver on the shift (the companion 'off' applied
+         above and set the cell to R/O this pass); once the sheet itself says R/O, the sheet's
+         Coverage Needs row owns the ask and this draws nothing. */
+      if(!marks[schedFxKey(side,e.date,L.row.name)])return;
+      const w=L.row&&out[side].find(function(x){return (x.dates||[]).indexOf(e.date)>=0;}); if(!w)return;
+      w.coverage=w.coverage||[]; while(w.coverage.length<(w.dates||[]).length)w.coverage.push('');
+      const cur=String(w.coverage[L.di]||'').trim();
+      if(cur.split(/[;,]/).some(function(x){return x.trim().toLowerCase()===sh.toLowerCase();}))return;   // sheet already lists it
+      w.coverage[L.di]=cur?cur+', '+sh:sh; applied++;
     }
   }); });
   return {sched:out,marks:marks,conflicts:conflicts,applied:applied};
@@ -5318,6 +5329,11 @@ function applySchedOverlay(){
   let res; try{ res=schedWithEffects(sheet,getReqs()); }catch(err){ console.warn('[overlay] failed, showing the sheet as built',err); SF.schedule=sheet; SCHED_FX={marks:{},conflicts:{},applied:0}; return; }
   SF.schedule=res.sched; SCHED_FX={marks:res.marks,conflicts:res.conflicts,applied:res.applied};
   try{ const v=document.querySelector('.view.active'); if(v&&v.id==='schedule'&&schedState.side!=='timeoff')renderSchedule(); }catch(err){}
+  /* Phase C: approval-generated open shifts live in SF.schedule now, so the home chip, the
+     open pop-up and an open Shifts-needed modal must look again after the overlay lands. */
+  try{ if($('home')&&$('home').classList.contains('active'))renderHome(); }catch(err){}
+  try{ const m=$('osModal'); if(m&&m.style.display==='flex'&&typeof osRenderModal==='function')osRenderModal(); }catch(err){}
+  try{ if(typeof maybeShowOpenShifts==='function')maybeShowOpenShifts(); }catch(err){}
 }
 /* Open coverage shifts on this person's own side(s) inside the active window.
    The slot index mirrors the grid's per-cell filtered index so the claim key is
@@ -6059,7 +6075,7 @@ function acRender(){
   const b=acBlocked();
   h+='<div class="to-submit ac-actions"><button class="to-go" '+(b?'disabled title="'+esc(b)+'"':'')+' onclick="acSave(true)">'+(s.mode==='edit'?'Save schedule changes':'Approve as shown')+'</button></div>';
   h+='<div class="ac-second">'+(s.mode==='edit'?'':'<a onclick="acSave(false)">Approve without schedule changes</a> · ')+'<a onclick="acClose()">Cancel</a></div>';
-  if(s.type!=='timeoff'||acEffects().some(function(e){return e.kind==='open';}))h+='<div class="ac-foot">The schedule updates for everyone when you approve. Posting the open shift for pickup isn\'t automatic yet.</div>';
+  if(s.type!=='timeoff'||acEffects().some(function(e){return e.kind==='open';}))h+='<div class="ac-foot">The schedule updates for everyone when you approve, and any shift marked for pickup goes straight into Shifts needed.</div>';
   h+='</div>'; m.innerHTML=h; m.style.display='flex'; const card=m.querySelector('.ac-card'); if(card)card.scrollTop=keep;
 }
 

@@ -7721,8 +7721,8 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
-     "",
-     "",
+     "3:30 serve",
+     "3:30 serve",
      "",
      "",
      "",
@@ -7794,7 +7794,7 @@ window.SF = {
        "",
        "",
        "3:30 serve",
-       "3:30 Bar",
+       "",
        "3:30 Bar",
        "3:30 Bar"
       ]
@@ -7862,11 +7862,11 @@ window.SF = {
      {
       "name": "Mac",
       "shifts": [
-       "3:30 serve",
-       "3:30 serve",
+       "R/O",
+       "R/O",
        "",
        "",
-       "",
+       "3:30 Bar",
        "",
        "Sup Server"
       ]
@@ -8326,7 +8326,7 @@ window.SF = {
       "shifts": [
        "3:30 serve",
        "",
-       "3:30 serve",
+       "",
        "",
        "",
        "3:30 serve",
@@ -8374,7 +8374,7 @@ window.SF = {
       "shifts": [
        "3:30 serve",
        "",
-       "",
+       "3:30 serve",
        "",
        "",
        "",
@@ -15342,7 +15342,7 @@ window.SF = {
      "",
      "",
      "",
-     ""
+     "Expo"
     ],
     "covNotes": [
      "",
@@ -15387,7 +15387,7 @@ window.SF = {
        "1-close",
        "",
        "",
-       "Expo"
+       "R/O"
       ]
      },
      {
@@ -15396,10 +15396,10 @@ window.SF = {
        "",
        "",
        "9-7",
+       "",
        "9-7",
        "9-7",
-       "9-7",
-       ""
+       "9-7"
       ]
      },
      {
@@ -15480,10 +15480,10 @@ window.SF = {
        "9-7",
        "9-7",
        "9-7",
+       "9-7",
        "",
        "",
-       "",
-       "9-7"
+       ""
       ]
      },
      {
@@ -15621,10 +15621,10 @@ window.SF = {
       "shifts": [
        "1-close",
        "1-close",
-       "",
-       "",
-       "",
        "1-close",
+       "",
+       "",
+       "",
        "1-close"
       ]
      },
@@ -15657,10 +15657,10 @@ window.SF = {
       "shifts": [
        "1-close",
        "1-close",
-       "1-close",
+       "",
        "1-close",
        "",
-       "",
+       "1-close",
        ""
       ]
      },
@@ -16409,11 +16409,11 @@ window.SF = {
     "notes": [],
     "coverage": [
      "",
-     "",
-     "",
-     "",
-     "",
-     "",
+     "Expo",
+     "Expo",
+     "Admin",
+     "Expo",
+     "Expo",
      ""
     ],
     "covNotes": [
@@ -16442,11 +16442,11 @@ window.SF = {
       "name": "Chris",
       "shifts": [
        "",
-       "Expo",
-       "Expo",
-       "Admin",
-       "Expo",
-       "Expo",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
+       "R/O",
        ""
       ]
      },
@@ -18955,5 +18955,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793020355"
+ "build": "1793037933"
 };
