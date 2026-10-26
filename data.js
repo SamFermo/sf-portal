@@ -1491,9 +1491,36 @@ window.SF = {
    "glass": "",
    "bottle": "85",
    "grapes": "Carricante, Catarratto, Inzolia, Grecanico, and Minnella",
-   "pour": "Fresh and floral with a streak of white pepper and an assertive, smoky minerality. Light-bodied, silky-textured, with zesty but integrated acidity. Organically grown on the volcanic northern slope of Etna. Drink now or hold.",
+   "pour": "Fresh and floral with a streak of white pepper and an assertive, smoky minerality. Light-bodied, silky-textured, with zesty but integrated acidity. Organically grown on the volcanic northern slope of Etna. It never loses its brightness and pace, and the more it ages the more the terroir comes forward. Drink now or hold.",
    "producer": "Tenuta delle Terre Nere sits on the northern slope of Etna between 600 and 900 meters, with roughly 43 hectares of vineyards and 150 olive trees. Its crus tell the story of the mountain: the Calderara Cru (11 to 12 hectares, some of it pre-phylloxera, the rest 40 to 50 years old), the Guardiola Cru (2.1 hectares, almost entirely pre-phylloxera and the highest-altitude red-grape vineyards in Europe), and Feudo di Mezzo. 500,000 years of eruptions have left endlessly varied soils, mostly volcanic ash flecked with black pumice and rock. The high elevation drives dramatic day-to-night temperature swings, giving Etna's wines their elegance and lift, free of the heat and overripeness of typical southern bottlings.",
+   "winemaking": "Organically grown on the northern slope of Etna at 600 to 900 meters, from vineyards 5 to 15 years old on volcanic soil blended from several sites. Around 50,000 bottles a year.",
    "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 2,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
    "pronguide": [
     {
      "term": "Terre Nere",
@@ -1519,7 +1546,8 @@ window.SF = {
      "term": "Minnella",
      "pron": "mee-NEL-lah"
     }
-   ]
+   ],
+   "added": "2026-10-26"
   },
   {
    "section": "White/Rosé/Orange",
@@ -18927,5 +18955,5 @@ window.SF = {
    }
   ]
  },
- "build": "1792933686"
+ "build": "1793020355"
 };
