@@ -16787,18 +16787,6 @@ window.SF = {
      }
     },
     {
-     "name": "Audrey Bean",
-     "role": "Server",
-     "fwc": {
-      "status": "good",
-      "text": "Valid through Dec 13, 2027"
-     },
-     "mast": {
-      "status": "good",
-      "text": "Valid through Jan 26, 2031"
-     }
-    },
-    {
      "name": "Brittany Hinz",
      "role": "Server",
      "fwc": {
@@ -16820,18 +16808,6 @@ window.SF = {
      "mast": {
       "status": "good",
       "text": "Renewed July 2026, ABC Server Training certificate on file"
-     }
-    },
-    {
-     "name": "Helen Richardson",
-     "role": "Support Staff · Server training in progress",
-     "fwc": {
-      "status": "good",
-      "text": "Valid through May 7, 2028"
-     },
-     "mast": {
-      "status": "info",
-      "text": "N/A while support staff; required when promoted to server"
      }
     },
     {
@@ -17054,10 +17030,6 @@ window.SF = {
      "role": "Server"
     },
     {
-     "name": "Audrey Bean",
-     "role": "Server"
-    },
-    {
      "name": "Brittany Hinz",
      "role": "Server"
     },
@@ -17092,10 +17064,6 @@ window.SF = {
     {
      "name": "Sully Baker",
      "role": "Server"
-    },
-    {
-     "name": "Helen Richardson",
-     "role": "Support · Server in training"
     }
    ],
    "boh": [
@@ -18955,5 +18923,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793037933"
+ "build": "1793056782"
 };
