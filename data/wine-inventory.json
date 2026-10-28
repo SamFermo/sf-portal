@@ -616,7 +616,12 @@
     "GL Pecorino": "contesa-pecorino",
     "Pecorino Btl.": "contesa-pecorino",
     "Pecorino Btl": "contesa-pecorino",
-    "Pecorino": "contesa-pecorino"
+    "Pecorino": "contesa-pecorino",
+    "Brigaldara Btl.": "brigaldara-valpolicella-2024",
+    "Brigaldara Btl": "brigaldara-valpolicella-2024",
+    "Valpolicellla Btl.": "brigaldara-valpolicella-2024",
+    "Valpolicella Btl.": "brigaldara-valpolicella-2024",
+    "Valpolicella Btl": "brigaldara-valpolicella-2024"
   },
   "ignore": [
     "Corkage",

@@ -7661,7 +7661,7 @@ window.SF = {
        "Admin/MD 5-8",
        "",
        "",
-       "Float",
+       "MD",
        "Float",
        "Float"
       ]
@@ -7672,8 +7672,8 @@ window.SF = {
        "",
        "3:30 Bar",
        "3:30 serve",
-       "Sup Server",
-       "3:30 serve",
+       "3:30 Bar",
+       "3:30 Bar",
        "",
        ""
       ]
@@ -7684,7 +7684,7 @@ window.SF = {
        "",
        "Sup Server",
        "MD",
-       "MD",
+       "",
        "",
        "",
        ""
@@ -7768,7 +7768,7 @@ window.SF = {
        "",
        "",
        "3:30 Bar",
-       "3:30 Bar",
+       "MD",
        "Sup Server",
        "MD",
        "Float"
@@ -7781,7 +7781,7 @@ window.SF = {
        "R/O",
        "",
        "",
-       "3:30 Bar",
+       "3:30 serve",
        "",
        "Sup Server"
       ]
@@ -18659,7 +18659,12 @@ window.SF = {
    "GL Pecorino": "contesa-pecorino",
    "Pecorino Btl.": "contesa-pecorino",
    "Pecorino Btl": "contesa-pecorino",
-   "Pecorino": "contesa-pecorino"
+   "Pecorino": "contesa-pecorino",
+   "Brigaldara Btl.": "brigaldara-valpolicella-2024",
+   "Brigaldara Btl": "brigaldara-valpolicella-2024",
+   "Valpolicellla Btl.": "brigaldara-valpolicella-2024",
+   "Valpolicella Btl.": "brigaldara-valpolicella-2024",
+   "Valpolicella Btl": "brigaldara-valpolicella-2024"
   },
   "ignore": [
    "Corkage",
@@ -18849,5 +18854,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793162006"
+ "build": "1793193142"
 };
