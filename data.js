@@ -830,7 +830,7 @@ window.SF = {
    "region": "Sorbara, Modena, Emilia-Romagna, Italy",
    "type": "sparkling",
    "grapes": "Lambrusco di Sorbara",
-   "glass": "15",
+   "glass": "14",
    "bottle": "55",
    "pour": "Vibrant pink with fine, persistent bubbles — fresh raspberry and strawberry, a lift of violet, dry and refreshing with bright acidity. The most delicate style of Lambrusco.",
    "producer": "Founded in 1920, Paltrinieri farms 17 hectares between the Secchia and Panaro rivers in Modena; 15 of them are the sandy-loam 'Cristo' vineyard where these grapes grow. The wine is named for St. Agatha, patron saint of Sorbara. Alberto Paltrinieri, who took over in 1998, was among the first to gamble on a mono-varietal Sorbara. (Research puts it at ~11% ABV and notes some bottlings blend in Salomino rather than being 100% Sorbara — confirm the vintage and blend with your lead before quoting.)",
@@ -876,7 +876,7 @@ window.SF = {
      "pron": "lahm-BROOS-koh dee sor-BAH-rah"
     }
    ],
-   "added": "2026-07-30"
+   "added": "2026-10-27"
   },
   {
    "section": "Bubbles",
@@ -1050,17 +1050,17 @@ window.SF = {
    ]
   },
   {
-   "section": "Bubbles",
-   "name": "Paltrinieri \"Solco\" Lambrusco Salamino dell'Emilia",
-   "vintage": "NV",
-   "region": "Emilia, Italy",
-   "type": "sparkling",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Lambrusco Salamino",
-   "pour": "Deep purple-red with a fine, persistent perlage. Ripe cherry and black cherry over dark berries — currant, blackberry — with a floral lift; delicate and juicy, good acidity, a touch of tannin, and an easygoing semi-sweet finish.",
-   "producer": "Cantina Paltrinieri farms in Bomporto, in the heart of Lambrusco country in Emilia, best known for its Lambrusco di Sorbara. \"Solco\" is its easy, everyday frizzante. The fresh sheet lists this as Lambrusco Salamino; some importer listings show the Solco as Lambrusco di Sorbara, so confirm the grape with your lead before quoting.",
-   "winemaking": "100% Lambrusco Salamino, about 11% ABV. Semi-sweet, slightly tannic. Serve at 12–14°C.",
+   "section": "White/Rosé/Orange",
+   "name": "House White: Brigaldara Soave DOC",
+   "vintage": "2023",
+   "region": "Soave DOC, Veneto, Italy",
+   "type": "white",
+   "glass": "13",
+   "bottle": "50",
+   "grapes": "100% Garganega",
+   "pour": "Yellow apple and citrus with delicate floral notes and hints of mint and chamomile. Smooth and fluid on the palate, lifted by vibrant freshness and a subtle mineral touch, finishing clean.",
+   "producer": "Brigaldara is a Cesari-family estate in the Marano valley near San Floriano, north of Verona, far better known for its Amarone and Valpolicella. The founding date (1929) comes from research rather than the fresh sheet; confirm with your lead before quoting. Same producer as our Valpolicella.",
+   "winemaking": "100% Garganega from vines planted in 1980, hand-harvested in the second half of September. Temperature-controlled vinification, 6 months in stainless steel.",
    "has_notes": true,
    "specs": [
     {
@@ -1071,7 +1071,7 @@ window.SF = {
     },
     {
      "label": "Dryness",
-     "rating": 2,
+     "rating": 5,
      "low": "sweet",
      "high": "bone dry"
     },
@@ -1083,58 +1083,26 @@ window.SF = {
     },
     {
      "label": "Tannins",
-     "rating": 2,
+     "rating": 1,
      "low": "none",
      "high": "grippy"
     }
    ],
    "pronguide": [
     {
-     "term": "Paltrinieri",
-     "pron": "pahl-tree-NYEH-ree"
+     "term": "Brigaldara",
+     "pron": "bree-gahl-DAH-rah"
     },
     {
-     "term": "Lambrusco Salamino",
-     "pron": "lahm-BROO-skoh sah-lah-MEE-noh"
+     "term": "Soave",
+     "pron": "soh-AH-veh"
     },
     {
-     "term": "Solco",
-     "pron": "SOHL-koh"
-    },
-    {
-     "term": "dell'Emilia",
-     "pron": "del-eh-MEE-lyah"
+     "term": "Garganega",
+     "pron": "gar-GAH-neh-gah"
     }
-   ]
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "House White: Santa Barbara \"Le Vaglie\" Verdicchio dei Castelli di Jesi Classico",
-   "vintage": "",
-   "region": "Marche, Italy",
-   "type": "white",
-   "glass": "13",
-   "bottle": "50",
-   "grapes": "100% Verdicchio",
-   "pour": "Bright pale yellow with a touch of gold. Floral, citrus and fresh almond on the nose; fresh and smooth on the palate, with that signature almond note carrying through to a crisp finish.",
-   "producer": "Le Vaglie was created in 1992 to step outside the classic Verdicchio mold while paying tribute to the Marche's winemaking history: the typical almond character, with more complexity and freshness. Vines average 25 years, between the Adriatic and the Apennines.",
-   "winemaking": "Fermented in temperature-controlled stainless steel at 10-12°C; 8 months in stainless steel before bottling.",
-   "has_notes": true,
-   "specs": [],
-   "pronguide": [
-    {
-     "term": "Le Vaglie",
-     "pron": "leh VAHL-yeh"
-    },
-    {
-     "term": "Verdicchio",
-     "pron": "vehr-DEEK-kyoh"
-    },
-    {
-     "term": "Castelli di Jesi",
-     "pron": "kah-STEL-lee dee YEH-zee"
-    }
-   ]
+   ],
+   "added": "2026-10-27"
   },
   {
    "section": "White/Rosé/Orange",
@@ -1430,16 +1398,16 @@ window.SF = {
   },
   {
    "section": "White/Rosé/Orange",
-   "name": "La Spinetta Vermentino IGT",
-   "vintage": "2025",
-   "region": "Casanova, Terricciola, Tuscany, Italy",
+   "name": "Contesa Pecorino, Colline Pescaresi IGT",
+   "vintage": "2023",
+   "region": "Collecorvino, Pescara, Abruzzo, Italy",
    "type": "white",
-   "glass": "18",
-   "bottle": "75",
-   "grapes": "100% Vermentino",
-   "pour": "Savory, floral and aromatic: Mediterranean scrub, white flowers and bright citrus over a mineral core, with real energy and a fresh, salty finish.",
-   "producer": "La Spinetta (the Rivetti family) farms its Tuscan estate at Casanova, in Terricciola, on sandy soils of marine origin rich in oceanic sediments: the same site as our rosé. First vintage 2009; about 50,000 bottles a year. This is the Vermentino we pour at the farm dinners.",
-   "winemaking": "Hand-harvested in early to mid September from southeast-facing vines about 15 years old. Fermented with natural yeasts, then about 3 months on the lees in stainless steel. Around 13% ABV per the importer.",
+   "glass": "14",
+   "bottle": "55",
+   "grapes": "100% Pecorino",
+   "pour": "Vivid yellow with green glints. White flowers and fresh apple on the nose; fresh and zesty on the palate, fruit and acidity in balance, with a persistent finish.",
+   "producer": "Contesa is Rocco Pasetti's estate in Collecorvino, in the hills above Pescara, with vineyards around Moscufo and Silvi on sandy soils. Pecorino is an old grape of Abruzzo and the Marche that nearly disappeared in the last century and has been revived since; the name is said to come from sheep (pecore) grazing the vineyards. These facts come from the producer's sheet for its 'Vigna Corvino' Pecorino, so confirm the bottling with your lead before quoting. We pour the 2023.",
+   "winemaking": "Grapes are crushed and left on the skins overnight at about 8°C, then soft-pressed and fermented in steel at 16-18°C. Aged in steel and bottle. About 12% ABV and dry, per the producer sheet.",
    "has_notes": true,
    "specs": [
     {
@@ -1469,18 +1437,19 @@ window.SF = {
    ],
    "pronguide": [
     {
-     "term": "La Spinetta",
-     "pron": "lah spee-NET-tah"
+     "term": "Contesa",
+     "pron": "kohn-TEH-zah"
     },
     {
-     "term": "Vermentino",
-     "pron": "vehr-men-TEE-noh"
+     "term": "Pecorino",
+     "pron": "peh-koh-REE-noh"
     },
     {
-     "term": "Terricciola",
-     "pron": "teh-ree-CHOH-lah"
+     "term": "Collecorvino",
+     "pron": "kohl-leh-kor-VEE-noh"
     }
-   ]
+   ],
+   "added": "2026-10-27"
   },
   {
    "section": "White/Rosé/Orange",
@@ -1706,60 +1675,6 @@ window.SF = {
     {
      "term": "ponca",
      "pron": "POHN-kah"
-    }
-   ]
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Brigaldara Soave DOC",
-   "vintage": "",
-   "region": "Soave DOC, Veneto, Italy",
-   "type": "white",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Garganega",
-   "pour": "Yellow apple and citrus with delicate floral notes and hints of mint and chamomile. Smooth and fluid on the palate, lifted by vibrant freshness and a subtle mineral touch, finishing clean.",
-   "producer": "Brigaldara is a Cesari-family estate in the Marano valley near San Floriano, north of Verona, far better known for its Amarone and Valpolicella. The founding date (1929) and current vintage (2024) come from research rather than the fresh sheet; confirm with your lead before quoting.",
-   "winemaking": "100% Garganega from vines planted in 1980, hand-harvested in the second half of September. Temperature-controlled vinification, 6 months in stainless steel.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 2,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Brigaldara",
-     "pron": "bree-gahl-DAH-rah"
-    },
-    {
-     "term": "Soave",
-     "pron": "soh-AH-veh"
-    },
-    {
-     "term": "Garganega",
-     "pron": "gar-GAH-neh-gah"
     }
    ]
   },
@@ -18127,8 +18042,8 @@ window.SF = {
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
  "wineInv": {
-  "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage.",
-  "updated": "2026-10-09",
+  "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage. 2026-10-27: house white key now holds Brigaldara Soave (key unchanged, counts keyed by it); Contesa Pecorino added, took the Vermentino's glass spot; Specialty Cellars wines ship from Grape Expectations' warehouse.",
+  "updated": "2026-10-27",
   "glassesPerBottle": 4,
   "wines": [
    {
@@ -18136,7 +18051,7 @@ window.SF = {
     "name": "House Prosecco: Bellenda \"San Fermo\"",
     "type": "Sparkling",
     "status": "core-glass",
-    "vendor": "Grape Expectations"
+    "vendor": "Specialty Cellars"
    },
    {
     "key": "le-origini-passanello-lambrusco-grasparossa-2024",
@@ -18147,10 +18062,10 @@ window.SF = {
    },
    {
     "key": "le-vaglie-verdicchio-house-white",
-    "name": "House White: Le Vaglie Verdicchio",
+    "name": "House White: Brigaldara Soave DOC 2023",
     "type": "White",
     "status": "core-glass",
-    "vendor": "Elliot Bay"
+    "vendor": "Vinifera"
    },
    {
     "key": "vigna-del-lauro-sauvignon-blanc-collio-2024",
@@ -18163,8 +18078,15 @@ window.SF = {
     "key": "la-spinetta-vermentino-2025",
     "name": "La Spinetta Vermentino 2025",
     "type": "White",
-    "status": "core-glass",
+    "status": "cellar",
     "vendor": ""
+   },
+   {
+    "key": "contesa-pecorino",
+    "name": "Contesa Pecorino 2023",
+    "type": "White",
+    "status": "core-glass",
+    "vendor": "Vinifera"
    },
    {
     "key": "valle-dell-acate-thymbra-vermentino-2023",
@@ -18220,7 +18142,7 @@ window.SF = {
     "name": "Corte Pavone Rosso di Montalcino 2023",
     "type": "Red",
     "status": "core-glass",
-    "vendor": "Grape Expectations"
+    "vendor": "Specialty Cellars"
    },
    {
     "key": "g-d-vajra-langhe-nebbiolo-2024",
@@ -18593,7 +18515,7 @@ window.SF = {
    },
    {
     "key": "vandori-bubbles",
-    "name": "Vandori (comp bubbles for anniversaries)",
+    "name": "Vandori Prosecco (bar prosecco)",
     "type": "Sparkling",
     "status": "cellar",
     "vendor": "Odom",
@@ -18733,7 +18655,11 @@ window.SF = {
    "Tenuta Santa Maria Amarone Btl.": "tenuta-santa-maria-amarone-classico-riserva-2018",
    "Canalicchio Brunello Btl.": "canalicchio-di-sopra-brunello-di-montalcino-2006",
    "Viberti Barolo Btl.": "viberti-san-pietro-barolo-riserva-2018",
-   "Vietti Barolo Btl.": "vietti-barolo-ravera-2020"
+   "Vietti Barolo Btl.": "vietti-barolo-ravera-2020",
+   "GL Pecorino": "contesa-pecorino",
+   "Pecorino Btl.": "contesa-pecorino",
+   "Pecorino Btl": "contesa-pecorino",
+   "Pecorino": "contesa-pecorino"
   },
   "ignore": [
    "Corkage",
@@ -18923,5 +18849,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793056782"
+ "build": "1793161692"
 };

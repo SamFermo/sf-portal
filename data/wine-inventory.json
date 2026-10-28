@@ -1,6 +1,6 @@
 {
-  "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage.",
-  "updated": "2026-10-09",
+  "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage. 2026-10-27: house white key now holds Brigaldara Soave (key unchanged, counts keyed by it); Contesa Pecorino added, took the Vermentino's glass spot; Specialty Cellars wines ship from Grape Expectations' warehouse.",
+  "updated": "2026-10-27",
   "glassesPerBottle": 4,
   "wines": [
     {
@@ -8,7 +8,7 @@
       "name": "House Prosecco: Bellenda \"San Fermo\"",
       "type": "Sparkling",
       "status": "core-glass",
-      "vendor": "Grape Expectations"
+      "vendor": "Specialty Cellars"
     },
     {
       "key": "le-origini-passanello-lambrusco-grasparossa-2024",
@@ -19,10 +19,10 @@
     },
     {
       "key": "le-vaglie-verdicchio-house-white",
-      "name": "House White: Le Vaglie Verdicchio",
+      "name": "House White: Brigaldara Soave DOC 2023",
       "type": "White",
       "status": "core-glass",
-      "vendor": "Elliot Bay"
+      "vendor": "Vinifera"
     },
     {
       "key": "vigna-del-lauro-sauvignon-blanc-collio-2024",
@@ -35,8 +35,15 @@
       "key": "la-spinetta-vermentino-2025",
       "name": "La Spinetta Vermentino 2025",
       "type": "White",
-      "status": "core-glass",
+      "status": "cellar",
       "vendor": ""
+    },
+    {
+      "key": "contesa-pecorino",
+      "name": "Contesa Pecorino 2023",
+      "type": "White",
+      "status": "core-glass",
+      "vendor": "Vinifera"
     },
     {
       "key": "valle-dell-acate-thymbra-vermentino-2023",
@@ -92,7 +99,7 @@
       "name": "Corte Pavone Rosso di Montalcino 2023",
       "type": "Red",
       "status": "core-glass",
-      "vendor": "Grape Expectations"
+      "vendor": "Specialty Cellars"
     },
     {
       "key": "g-d-vajra-langhe-nebbiolo-2024",
@@ -465,7 +472,7 @@
     },
     {
       "key": "vandori-bubbles",
-      "name": "Vandori (comp bubbles for anniversaries)",
+      "name": "Vandori Prosecco (bar prosecco)",
       "type": "Sparkling",
       "status": "cellar",
       "vendor": "Odom",
@@ -605,7 +612,11 @@
     "Tenuta Santa Maria Amarone Btl.": "tenuta-santa-maria-amarone-classico-riserva-2018",
     "Canalicchio Brunello Btl.": "canalicchio-di-sopra-brunello-di-montalcino-2006",
     "Viberti Barolo Btl.": "viberti-san-pietro-barolo-riserva-2018",
-    "Vietti Barolo Btl.": "vietti-barolo-ravera-2020"
+    "Vietti Barolo Btl.": "vietti-barolo-ravera-2020",
+    "GL Pecorino": "contesa-pecorino",
+    "Pecorino Btl.": "contesa-pecorino",
+    "Pecorino Btl": "contesa-pecorino",
+    "Pecorino": "contesa-pecorino"
   },
   "ignore": [
     "Corkage",
