@@ -18043,7 +18043,7 @@ window.SF = {
  },
  "wineInv": {
   "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage. 2026-10-27: house white key now holds Brigaldara Soave (key unchanged, counts keyed by it); Contesa Pecorino added, took the Vermentino's glass spot; Specialty Cellars wines ship from Grape Expectations' warehouse. 2026-10-28 (Guinan, Task 1): vendors block = reps, text numbers, cutoff and delivery weekday (Mon=0; default order Thu, deliver Fri until the rep confirms), minimums. Per wine on the list: unit = bottles per case or pack as the rep sells it; rule = Adrian's pattern (par6 keep about 6 as loose bottles, case = 1 case, cases3 = multiples of 3 cases, sixpack2 = two 6-packs, eugenio = Vinifera 5-case mix, pace = sized from sales and rounded to the unit); cost = USD per bottle from the Master sheet Wines tab, null where not on file; usual = Adrian's words. Vandori is cellar on the display but orderable:true (bar prosecco, no Revel button).",
-  "updated": "2026-10-28",
+  "updated": "2026-10-29",
   "glassesPerBottle": 4,
   "vendors": {
    "Elliot Bay": {
@@ -18170,6 +18170,7 @@ window.SF = {
    {
     "key": "san-fermo-prosecco-house",
     "name": "House Prosecco: Bellenda \"San Fermo\"",
+    "short": "House Prosecco",
     "type": "Sparkling",
     "status": "core-glass",
     "vendor": "Specialty Cellars",
@@ -18188,6 +18189,7 @@ window.SF = {
    {
     "key": "le-vaglie-verdicchio-house-white",
     "name": "House White: Brigaldara Soave DOC 2023",
+    "short": "Soave",
     "type": "White",
     "status": "core-glass",
     "vendor": "Vinifera",
@@ -18199,6 +18201,7 @@ window.SF = {
    {
     "key": "vigna-del-lauro-sauvignon-blanc-collio-2024",
     "name": "Vigna del Lauro Sauvignon Blanc, Collio 2024",
+    "short": "Vigna del Lauro Sauv Blanc",
     "type": "White",
     "status": "core-glass",
     "vendor": "Elliot Bay",
@@ -18217,6 +18220,7 @@ window.SF = {
    {
     "key": "contesa-pecorino",
     "name": "Contesa Pecorino 2023",
+    "short": "Pecorino",
     "type": "White",
     "status": "core-glass",
     "vendor": "Vinifera",
@@ -18235,6 +18239,7 @@ window.SF = {
    {
     "key": "borgo-savaian-skins-are-kings",
     "name": "Borgo Savaian Masaret \"Skins are Kings\" Orange NV",
+    "short": "Borgo Savaian Orange",
     "type": "Orange",
     "status": "core-glass",
     "vendor": "Vinea",
@@ -18246,6 +18251,7 @@ window.SF = {
    {
     "key": "la-spinetta-il-rose-di-casanova-2025",
     "name": "La Spinetta \"Il Rosé di Casanova\" 2025",
+    "short": "La Spinetta Rosé",
     "type": "Rosé",
     "status": "core-glass",
     "vendor": "Elliot Bay",
@@ -18257,6 +18263,7 @@ window.SF = {
    {
     "key": "brigaldara-valpolicella-2024",
     "name": "Brigaldara Valpolicella 2024",
+    "short": "Valpolicella",
     "type": "Red",
     "status": "core-glass",
     "vendor": "Vinifera",
@@ -18275,6 +18282,7 @@ window.SF = {
    {
     "key": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
     "name": "House Red: Corsini \"Matot\" Langhe Rosso",
+    "short": "Matot",
     "type": "Red",
     "status": "core-glass",
     "vendor": "Casa Bruno",
@@ -18286,6 +18294,7 @@ window.SF = {
    {
     "key": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
     "name": "La Valentina \"Spelt\" Montepulciano d'Abruzzo Riserva 2021",
+    "short": "Spelt",
     "type": "Red",
     "status": "core-glass",
     "vendor": "Winebow",
@@ -18297,6 +18306,7 @@ window.SF = {
    {
     "key": "corte-pavone-rosso-di-montalcino-2023",
     "name": "Corte Pavone Rosso di Montalcino 2023",
+    "short": "Corte Pavone",
     "type": "Red",
     "status": "core-glass",
     "vendor": "Specialty Cellars",
@@ -18316,6 +18326,7 @@ window.SF = {
    {
     "key": "albino-rocca-langhe-nebbiolo",
     "name": "Albino Rocca Langhe Nebbiolo",
+    "short": "Albino Rocca Nebbiolo",
     "type": "Red",
     "status": "core-glass",
     "vendor": "Elliot Bay",
@@ -18327,6 +18338,7 @@ window.SF = {
    {
     "key": "louis-armand-premier-cru-champagne",
     "name": "Louis Armand Premier Cru Champagne",
+    "short": "Louis Armand",
     "type": "Sparkling",
     "status": "core-glass",
     "vendor": "Vinea",
@@ -18338,6 +18350,7 @@ window.SF = {
    {
     "key": "laurent-perrier-champagne",
     "name": "Laurent Perrier Champagne",
+    "short": "Laurent Perrier",
     "type": "Sparkling",
     "status": "core-bottle",
     "vendor": "Winebow",
@@ -18349,6 +18362,7 @@ window.SF = {
    {
     "key": "angelo-negro-unfiltered-arneis-2024",
     "name": "Angelo Negro Unfiltered Arneis 2024",
+    "short": "Angelo Negro Arneis",
     "type": "White",
     "status": "core-glass",
     "vendor": "Vehrs",
@@ -18360,6 +18374,7 @@ window.SF = {
    {
     "key": "rocca-del-principe-fiano-di-avellino",
     "name": "Rocca del Principe Fiano di Avellino 2025",
+    "short": "Fiano",
     "type": "White",
     "status": "core-glass",
     "vendor": "Elliot Bay",
@@ -18371,6 +18386,7 @@ window.SF = {
    {
     "key": "terre-nere-etna-bianco",
     "name": "Terre Nere Etna Bianco 2024",
+    "short": "Terre Nere Bianco",
     "type": "White",
     "status": "core-bottle",
     "vendor": "Elliot Bay",
@@ -18382,6 +18398,7 @@ window.SF = {
    {
     "key": "copertino-riserva-negroamaro-2016",
     "name": "Copertino Riserva Negroamaro 2017",
+    "short": "Copertino",
     "type": "Red",
     "status": "core-glass",
     "vendor": "Vehrs",
@@ -18393,6 +18410,7 @@ window.SF = {
    {
     "key": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
     "name": "Podere Ruggeri Corsini \"Armujan\" Barbera d'Alba Superiore 2022",
+    "short": "Armujan",
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Casa Bruno",
@@ -18405,6 +18423,7 @@ window.SF = {
    {
     "key": "felsina-berardenga-chianti-classico-2022",
     "name": "Felsina \"Berardenga\" Chianti Classico 2022",
+    "short": "Felsina Chianti",
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Elliot Bay",
@@ -18417,6 +18436,7 @@ window.SF = {
    {
     "key": "terre-nere-bellacolonna-etna-rosso-2022",
     "name": "Terre Nere \"Bellacolonna\" Etna Rosso 2022",
+    "short": "Bellacolonna",
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Elliot Bay",
@@ -18429,6 +18449,7 @@ window.SF = {
    {
     "key": "piaggia-il-sasso-carmignano",
     "name": "Piaggia \"Il Sasso\" Carmignano 2022",
+    "short": "Il Sasso",
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Elliot Bay",
@@ -18441,6 +18462,7 @@ window.SF = {
    {
     "key": "franco-molino-cascina-rocca-barolo-2019",
     "name": "Franco Molino \"Cascina Rocca\" Barolo 2019",
+    "short": "Franco Molino Barolo",
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Odom",
@@ -18452,6 +18474,7 @@ window.SF = {
    {
     "key": "castello-di-neive-barbaresco-santo-stefano-2022",
     "name": "Castello di Neive Barbaresco 2023",
+    "short": "Castello di Neive",
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Winebow",
@@ -18464,6 +18487,7 @@ window.SF = {
    {
     "key": "voliero-brunello-di-montalcino-2017",
     "name": "Voliero Brunello di Montalcino 2017",
+    "short": "Voliero Brunello",
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Elliot Bay",
@@ -18506,6 +18530,7 @@ window.SF = {
    {
     "key": "paltrinieri-sant-agata-lambrusco-di-sorbara",
     "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara 2024",
+    "short": "Sant'Agata Lambrusco",
     "type": "Sparkling",
     "status": "core-glass",
     "vendor": "Petit Monde",
@@ -18737,6 +18762,7 @@ window.SF = {
    {
     "key": "vandori-bubbles",
     "name": "Vandori Prosecco (bar prosecco)",
+    "short": "Vandori Prosecco",
     "type": "Sparkling",
     "status": "cellar",
     "vendor": "Odom",
@@ -19080,5 +19106,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793305158"
+ "build": "1793307203"
 };

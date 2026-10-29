@@ -1820,6 +1820,45 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 .ds-tools-s{flex:1; font-size:12px; color:var(--ink-mute); min-width:0;}
 .ds-tools-chev{color:var(--ink-soft); font-size:14px;}
 .ds-tools-body{padding:0 12px 12px;}
+/* WINE ORDERS (2026-10-29, Guinan) */
+.wo-card{border:1px solid rgba(230,200,120,.35); background:rgba(230,200,120,.05); border-radius:14px; padding:14px 14px 10px; margin:4px 0 18px; display:flex; flex-direction:column; gap:8px;}
+.wo-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:21px; font-weight:600; color:var(--ink);}
+.wo-sec{font-size:10.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-mute); margin:6px 0 0;}
+.wo-empty{font-size:12.5px; color:var(--ink-mute); margin:0;}
+.wo-o{border:1px solid rgba(205,216,244,.14); background:rgba(205,216,244,.05); border-radius:12px; padding:10px 12px; display:flex; flex-direction:column; gap:8px;}
+.wo-o.wo-due{border-color:rgba(230,200,120,.6); background:rgba(230,200,120,.08);}
+.wo-o.wo-issue{border-color:rgba(224,128,112,.6); background:rgba(192,57,43,.10);}
+.wo-h{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
+.wo-rep{font-size:15px; font-weight:700; color:var(--ink);} .wo-rep span{font-weight:500; color:var(--ink-soft); font-size:13px;}
+.wo-sub{font-size:11.5px; color:var(--ink-mute); margin-top:2px;}
+.wo-due .wo-h .wo-sub{color:var(--gold);}
+.wo-day{flex-shrink:0; font-size:12px; font-weight:700; color:var(--ink-soft); white-space:nowrap;}
+.wo-lines{display:flex; flex-direction:column; gap:4px;}
+.wo-line{display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--ink); padding:3px 0; border-bottom:1px solid rgba(205,216,244,.07);}
+.wo-line:last-child{border-bottom:none;}
+.wo-q{flex-shrink:0; min-width:58px; font-weight:800; color:var(--gold); font-variant-numeric:tabular-nums;}
+.wo-q-x{color:#e79a8a;}
+.wo-n{flex:1; min-width:0; line-height:1.3;}
+.wo-why{display:block; font-size:11px; color:var(--ink-mute); margin-top:1px;}
+.wo-step{display:flex; gap:6px; flex-shrink:0;}
+.wo-step button{border:1px solid rgba(230,200,120,.5); background:rgba(230,200,120,.1); color:var(--gold); border-radius:8px; padding:5px 10px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;}
+.wo-txt{font-size:12.5px; color:var(--ink-soft); background:rgba(0,0,0,.18); border-radius:10px; padding:8px 10px; line-height:1.4; overflow-wrap:anywhere;}
+.wo-txt span{display:block; font-size:10.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-mute); margin-bottom:3px;}
+.wo-act{display:flex; flex-wrap:wrap; align-items:center; gap:8px;}
+a.wi-btn{text-decoration:none; display:inline-block;}
+.wo-chk{display:flex; flex-direction:column; gap:8px;}
+.wo-ck{display:flex; flex-direction:column; gap:6px; padding:6px 0; border-bottom:1px solid rgba(205,216,244,.08);}
+.wo-ck-n{font-size:13.5px; color:var(--ink);} .wo-ck-n b{color:var(--gold); margin-right:4px;}
+.wo-ck-b{display:flex; flex-wrap:wrap; gap:6px;}
+.wo-ck-b button{background:rgba(205,216,244,.07); border:1px solid rgba(205,216,244,.2); color:var(--ink-soft); border-radius:999px; padding:6px 12px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
+.wo-ck-b button.on{background:#c0392b; border-color:#e08070; color:#fff;}
+.wo-ck-f{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-soft); flex-wrap:wrap;}
+.wo-ck-f input{font-size:16px; padding:6px 8px; border-radius:8px; border:1px solid rgba(205,216,244,.25); background:rgba(0,0,0,.2); color:var(--ink); font-family:inherit; width:90px;}
+.wo-ck-f input[type=text]{width:auto; flex:1; min-width:140px;}
+.wo-ck-k{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-soft);}
+.wo-hint{font-size:11.5px; color:var(--ink-mute); margin:0; font-style:italic;}
+.wo-hist summary{cursor:pointer; font-size:12.5px; color:var(--ink-soft); padding:4px 0;}
+.wo-btn:focus-visible,.wo-ck-b button:focus-visible,.wo-step button:focus-visible,.wi-btn:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
 /* WINE INVENTORY (2026-09-29) */
 .wi-bar{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; margin:4px 0 12px;}
 .wi-meta{font-size:12.5px; color:var(--ink-soft);}
@@ -2024,7 +2063,8 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 
 <section class="view" id="wineinv">
   <div class="view-head"><p class="view-eyebrow">Wine Team</p><h2 class="view-title">Wine Inventory</h2>
-    <p class="view-sub">Bottles on hand: the last count, plus deliveries, minus what Revel says we sold.</p></div>
+    <p class="view-sub">Orders and deliveries, then bottles on hand: the last count, plus deliveries, minus what Revel says we sold.</p></div>
+  <div id="woBody"></div>
   <div id="wiBody"></div>
 </section>
 
@@ -2084,7 +2124,7 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 </div>
 
 <script>
-const BUILD='1793305158';   // stamped by build-data.py at every deploy
+const BUILD='1793307203';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4836,6 +4876,7 @@ function wiRender(){
   }
   h+='<p class="wi-foot">Tap a wine to adjust it by −1, +1 or +6. Glass pours count as 1/'+D.gpb+' of a bottle. Weekly pace is the last 4 weeks of Revel sales. Wines that aren’t counted yet show a dash until their first count.</p>';
   body.innerHTML=h;
+  if(typeof woRender==='function')woRender();
 }
 function wiTx(fn,done){
   if(DEMO){ if(done)done(); return; }
@@ -4919,6 +4960,219 @@ function wiAdjSave(){ const A=WI.adj; if(!A||!A.d)return; if(window.event)window
     wiTx(function(cur){ cur.counts.push(rec); return cur; },function(){ WI.adj=null; wiRender(); });
   } else { const rec={id:wiNewId(),at:at,by:by,key:A.key,qty:A.d,note:'',kind:'adj'};
     wiTx(function(cur){ cur.receipts.push(rec); return cur; },function(){ WI.adj=null; wiRender(); }); }
+}
+
+/* ===== WINE ORDERS (2026-10-29, Guinan) =========================================
+   Sits at the top of the Wine Inventory tab. Spec: Codename: Guinan/specs/2026-10-28-wine-ordering-design.md s5.
+   STORAGE: board/wineorders = {orders:[{id, vendor, rep, delivery, cutoff, state, lines:[{key, qty_bottles,
+   qty_label, reason, est_cost}], text, placedAt, placedBy, sent_text, confirm, exceptions}], updated}.
+   state: draft (written by tools/wine_orders.py each morning) -> placed (Send tapped, or recorded from a
+   text sent outside the portal) -> delivered (checked in here) | skipped.
+   SEND: only Sam sends (Guinan rule: nothing goes to a rep without Sam's tap). Send opens Messages with
+   the rep's number and the text filled in (sms: link), then marks the order placed.
+   CHECK IN: per line Received / Short / Missing / Wrong wine. What actually came becomes a receipt on
+   board/wineinv (stock goes up by what came, not what was ordered). Short, missing or wrong (not kept)
+   lines become exceptions with a follow-up text; the morning order check counts them as still owed.
+   Both docs change in one transaction. */
+let WO={doc:null,loaded:false,unsub:null,edit:null,chk:null,armSkip:null};
+const WO_SENDERS=['sam'];
+function woRef(){ return fbDb.collection('board').doc('wineorders'); }
+function woFirst(){ return String((me&&me.name)||'').trim().split(/\s+/)[0].toLowerCase(); }
+function woCanSend(){ return !!me&&WO_SENDERS.indexOf(woFirst())>=0; }
+function woMaster(){ const d=(window.SF&&SF.wineInv)||{}; return {wines:d.wines||[],vendors:d.vendors||{}}; }
+function woWine(key){ return woMaster().wines.find(function(w){return w.key===key;})||{key:key,name:key}; }
+function woShortName(key){ const w=woWine(key); return w.short||String(w.name||key).replace(/^House (Red|White|Prosecco): /,''); }
+const WO_DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+function woDay(iso){ const [y,m,d]=String(iso).split('-').map(Number); return new Date(y,m-1,d); }
+function woDayName(iso){ return WO_DOW[woDay(iso).getDay()]; }
+function woDayShort(iso){ const d=woDay(iso); return WO_DOW[d.getDay()].slice(0,3)+' '+MON[d.getMonth()]+' '+d.getDate(); }
+function woToday(){ return wiIso(new Date()); }
+function woLabel(q,unit){ q=+q||0; if(unit===6&&q%6===0)return (q/6)+' x 6pk'; if(q%12===0&&q)return (q/12)+' cs'; return q+' btl'; }
+function woQtyLabel(l){ return woLabel(l.qty_bottles,(woWine(l.key).unit)||12); }
+/* Adrian's style. First text to a rep whose delivery days aren't confirmed asks for them. */
+function woText(o){
+  const v=woMaster().vendors[o.vendor]||{};
+  let t='Hey '+(o.rep||v.rep||'')+', for '+woDayName(o.delivery)+' please: '+(o.lines||[]).map(function(l){return woQtyLabel(l)+' '+woShortName(l.key);}).join(', ')+'. Thanks! Sam';
+  if(!v.confirmed)t+=' Also, what days can you deliver to us?';
+  return t;
+}
+function woFollowup(o){
+  const ex=(o.exceptions||[]).filter(function(e){return !e.resolved;}); if(!ex.length)return '';
+  const bits=ex.map(function(e){ const n=woShortName(e.key);
+    if(e.issue==='short')return 'short '+e.owed+' '+n;
+    if(e.issue==='missing')return 'missing the '+n;
+    return 'sent the wrong '+n+(e.note?' ('+e.note+')':''); });
+  const v=woMaster().vendors[o.vendor]||{};
+  return 'Hey '+(o.rep||v.rep||'')+', on the '+woDayName(o.delivery)+' delivery we were '+bits.join(', ')+'. Can you send '+(ex.length===1?'it':'them')+' with the next one? Thanks! Sam';
+}
+/* iPhone and Mac Messages take sms:<number>&body=. */
+function woSmsHref(phone,body){ return 'sms:'+String(phone||'')+'&body='+encodeURIComponent(body); }
+function woPhone(o){ return (woMaster().vendors[o.vendor]||{}).phone||''; }
+function woPhoneShow(p){ const m=String(p).match(/^\+1(\d{3})(\d{3})(\d{4})$/); return m?m[1]+'-'+m[2]+'-'+m[3]:String(p||'no number on file'); }
+
+/* Pure: apply a delivery check. inv = {counts, receipts}, od = {orders}. lines = [{key, got, issue, note, keep}].
+   Returns {inv, od}. issue null = received as ordered (got defaults to ordered). */
+function woApplyCheckin(od,inv,orderId,lines,who,now){
+  const orders=(od.orders||[]).map(function(o){return Object.assign({},o);});
+  const o=orders.find(function(x){return x.id===orderId;}); if(!o)throw new Error('order not found');
+  if(o.state==='delivered')throw new Error('already checked in');
+  const rec=(inv.receipts||[]).slice(), ex=[], conf=[];
+  (o.lines||[]).forEach(function(l,i){
+    const c=lines.find(function(x){return x.key===l.key;})||{key:l.key,issue:null};
+    const ord=+l.qty_bottles||0;
+    let got=c.issue==null?ord:(c.issue==='missing'?0:Math.max(0,Math.round(+c.got||0)));
+    if(c.issue==='wrong'&&!c.keep)got=0;
+    if(c.issue==='wrong'&&c.keep)got=Math.max(0,Math.round(+c.got||ord));
+    if(c.issue==='short'&&got>=ord){ c.issue=null; got=ord; }
+    if(got>0)rec.push({id:'r'+(now+i).toString(36)+o.id.slice(-3),at:now+i,by:who,key:l.key,qty:got,note:'order '+o.id+(c.issue?' ('+c.issue+')':'')});
+    conf.push({key:l.key,ordered:ord,got:got,issue:c.issue||null,note:c.note||''});
+    if(c.issue==='short'||c.issue==='missing')ex.push({key:l.key,issue:c.issue,ordered:ord,got:got,owed:ord-got,note:c.note||'',resolved:false});
+    if(c.issue==='wrong')ex.push({key:l.key,issue:'wrong',ordered:ord,got:got,owed:c.keep?0:ord,kept:!!c.keep,note:c.note||'',resolved:!!c.keep});
+  });
+  o.state='delivered'; o.confirm={at:now,by:who,lines:conf}; o.exceptions=ex;
+  if(woFollowup(o))o.followup_text=woFollowup(o);
+  return {inv:{counts:(inv.counts||[]).slice(),receipts:rec},od:{orders:orders,updated:woToday()}};
+}
+/* Pure: resolve one exception. came=true logs what finally arrived as a receipt. */
+function woApplyResolve(od,inv,orderId,key,came,who,now){
+  const orders=(od.orders||[]).map(function(o){return Object.assign({},o);});
+  const o=orders.find(function(x){return x.id===orderId;}); if(!o)throw new Error('order not found');
+  const rec=(inv.receipts||[]).slice();
+  o.exceptions=(o.exceptions||[]).map(function(e){ if(e.key!==key||e.resolved)return e;
+    if(came&&e.owed>0)rec.push({id:'r'+now.toString(36)+'x',at:now,by:who,key:key,qty:e.owed,note:'order '+o.id+' (came later)'});
+    return Object.assign({},e,{resolved:true,resolvedAt:now,resolvedBy:who,came:!!came}); });
+  return {inv:{counts:(inv.counts||[]).slice(),receipts:rec},od:{orders:orders,updated:woToday()}};
+}
+
+function woWatch(){ if(WO.unsub||!(fbReady&&fbDb))return;
+  WO.unsub=woRef().onSnapshot(function(s){ WO.doc=s.exists?(s.data()||{}):{}; WO.loaded=true; woRender(); },
+    function(){ WO.loaded=true; WO.err=true; woRender(); }); }
+/* One transaction over both docs. fn(od, inv) -> {od, inv}; inv may be null when only orders change. */
+function woTx(fn,done){
+  if(DEMO){ if(done)done(); return; }
+  if(!(fbReady&&fbDb)){ alert("Can't reach the server right now, so this isn't saved. Try again in a minute."); return; }
+  const a=woRef(), b=wiRef();
+  fbDb.runTransaction(function(tx){ return Promise.all([tx.get(a),tx.get(b)]).then(function(s){
+      const od=s[0].exists?(s[0].data()||{}):{}, d=s[1].exists?(s[1].data()||{}):{};
+      const inv={counts:Array.isArray(d.counts)?d.counts.slice():[],receipts:Array.isArray(d.receipts)?d.receipts.slice():[]};
+      const r=fn({orders:Array.isArray(od.orders)?od.orders:[]},inv);
+      tx.set(a,r.od); if(r.inv)tx.set(b,r.inv); }); })
+    .then(function(){ if(done)done(); })
+    .catch(function(e){ alert("That didn't save. "+(e&&e.message&&/already|not found/.test(e.message)?e.message+'.':'Check your connection and try again.')); });
+}
+function woWho(){ return (me&&me.name)||'unknown'; }
+
+function woSend(id){
+  if(!woCanSend())return;
+  const o=((WO.doc||{}).orders||[]).find(function(x){return x.id===id;}); if(!o)return;
+  const txt=woText(o), href=woSmsHref(woPhone(o),txt);
+  try{ window.location.href=href; }catch(e){}
+  woTx(function(od){ od.orders=od.orders.map(function(x){ return x.id!==id||x.state!=='draft'?x:Object.assign({},x,{state:'placed',placedAt:Date.now(),placedBy:woWho(),sent_text:txt}); }); od.updated=woToday(); return {od:od,inv:null}; });
+}
+function woSkip(id){
+  if(WO.armSkip!==id){ WO.armSkip=id; woRender(); return; }
+  WO.armSkip=null;
+  woTx(function(od){ od.orders=od.orders.map(function(x){ return x.id!==id?x:Object.assign({},x,{state:'skipped',skippedAt:Date.now(),skippedBy:woWho()}); }); od.updated=woToday(); return {od:od,inv:null}; });
+}
+function woEditStep(id,key,dir){
+  const o=((WO.doc||{}).orders||[]).find(function(x){return x.id===id;}); if(!o)return;
+  const w=woWine(key), step=w.rule==='par6'?1:(w.rule==='cases3'?36:(w.rule==='sixpack2'?12:(w.unit||12)));
+  woTx(function(od){ od.orders=od.orders.map(function(x){ if(x.id!==id||x.state!=='draft')return x;
+      const lines=(x.lines||[]).map(function(l){ return l.key!==key?l:Object.assign({},l,{qty_bottles:Math.max(0,(+l.qty_bottles||0)+dir*step),edited:true}); })
+        .filter(function(l){return l.qty_bottles>0;});
+      return Object.assign({},x,{lines:lines}); }); od.updated=woToday(); return {od:od,inv:null}; });
+}
+function woChkOpen(id){ const o=((WO.doc||{}).orders||[]).find(function(x){return x.id===id;}); if(!o)return;
+  WO.chk={id:id,lines:(o.lines||[]).map(function(l){return {key:l.key,issue:null,got:+l.qty_bottles||0,note:'',keep:false};})}; woRender(); }
+function woChkClose(){ WO.chk=null; woRender(); }
+function woChkSet(i,f,v){ if(!WO.chk)return; const c=WO.chk.lines[i];
+  if(f==='issue'){ c.issue=(c.issue===v?null:v); if(v==='short'&&c.issue)c.got=0; }
+  else if(f==='got')c.got=v; else if(f==='note')c.note=v; else if(f==='keep')c.keep=!!v;
+  if(f==='issue'||f==='keep')woRender(); }
+function woChkSave(){ if(!WO.chk)return; const id=WO.chk.id, lines=WO.chk.lines.map(function(c){return Object.assign({},c);});
+  const now=Date.now(), who=woWho();
+  woTx(function(od,inv){ return woApplyCheckin(od,inv,id,lines,who,now); }, function(){ WO.chk=null; woRender(); });
+}
+function woChkAll(id){ const o=((WO.doc||{}).orders||[]).find(function(x){return x.id===id;}); if(!o)return;
+  const now=Date.now(), who=woWho();
+  woTx(function(od,inv){ return woApplyCheckin(od,inv,id,[],who,now); }, function(){ WO.chk=null; woRender(); });
+}
+function woResolve(id,key,came){ const now=Date.now(), who=woWho();
+  woTx(function(od,inv){ return woApplyResolve(od,inv,id,key,came,who,now); }); }
+
+function woLinesHTML(o,editable){
+  return '<div class="wo-lines">'+(o.lines||[]).map(function(l){
+    return '<div class="wo-line"><span class="wo-q">'+esc(woQtyLabel(l))+'</span><span class="wo-n">'+esc(woWine(l.key).name||l.key)
+      +(l.reason?'<span class="wo-why">'+esc(l.reason)+'</span>':'')+'</span>'
+      +(editable?'<span class="wo-step"><button onclick="woEditStep(\''+o.id+'\',\''+l.key+'\',-1)" aria-label="Less">−</button><button onclick="woEditStep(\''+o.id+'\',\''+l.key+'\',1)" aria-label="More">+</button></span>':'')+'</div>';
+  }).join('')+'</div>';
+}
+function woHead(o,tag){
+  const v=woMaster().vendors[o.vendor]||{};
+  return '<div class="wo-h"><div><div class="wo-rep">'+esc(o.rep||v.rep||'')+' <span>· '+esc(o.vendor)+'</span></div>'
+    +'<div class="wo-sub">'+esc(tag)+'</div></div><div class="wo-day">'+esc(woDayShort(o.delivery))+'</div></div>';
+}
+function woChkHTML(o){
+  let h='<div class="wo-chk">';
+  WO.chk.lines.forEach(function(c,i){ const l=(o.lines||[])[i]||{};
+    h+='<div class="wo-ck"><div class="wo-ck-n"><b>'+esc(woQtyLabel(l))+'</b> '+esc(woWine(c.key).name||c.key)+'</div><div class="wo-ck-b">'
+      +[['short','Short'],['missing','Missing'],['wrong','Wrong wine']].map(function(b){return '<button class="'+(c.issue===b[0]?'on':'')+'" onclick="woChkSet('+i+',\'issue\',\''+b[0]+'\')">'+b[1]+'</button>';}).join('')+'</div>';
+    if(c.issue==='short')h+='<label class="wo-ck-f">How many bottles came? <input id="wo-got-'+i+'" type="number" inputmode="numeric" min="0" value="'+(+c.got||0)+'" oninput="woChkSet('+i+',\'got\',this.value)"></label>';
+    if(c.issue==='wrong')h+='<label class="wo-ck-f">What came instead? <input id="wo-note-'+i+'" type="text" value="'+esc(c.note)+'" placeholder="e.g. 2018 vintage" oninput="woChkSet('+i+',\'note\',this.value)"></label>'
+      +'<label class="wo-ck-k"><input id="wo-keep-'+i+'" type="checkbox"'+(c.keep?' checked':'')+' onchange="woChkSet('+i+',\'keep\',this.checked)"> We’re keeping it (count it as stock)</label>'
+      +(c.keep?'<label class="wo-ck-f">Bottles kept <input id="wo-kept-'+i+'" type="number" inputmode="numeric" min="0" value="'+(+c.got||0)+'" oninput="woChkSet('+i+',\'got\',this.value)"></label>':'');
+    h+='</div>'; });
+  return h+'<p class="wo-hint">Anything not marked counts as received in full.</p><div class="wo-act"><button class="wi-btn" onclick="woChkSave()">Save check-in</button><button class="ann-dismiss" onclick="woChkClose()">Cancel</button></div></div>';
+}
+function woRender(){
+  const el=$('woBody'); if(!el)return;
+  if(!wiCanTab()){ el.innerHTML=''; return; }
+  woWatch();
+  const orders=((WO.doc||{}).orders||[]), today=woToday();
+  if(!WO.loaded){ el.innerHTML='<div class="wo-card"><div class="wo-title">Wine orders</div><p class="wo-empty">Loading orders…</p></div>'; return; }
+  const drafts=orders.filter(function(o){return o.state==='draft'&&(o.lines||[]).length;}).sort(function(a,b){return a.cutoff<b.cutoff?-1:1;});
+  const placed=orders.filter(function(o){return o.state==='placed';}).sort(function(a,b){return a.delivery<b.delivery?-1:1;});
+  const issues=orders.filter(function(o){return o.state==='delivered'&&(o.exceptions||[]).some(function(e){return !e.resolved;});});
+  const hist=orders.filter(function(o){return (o.state==='delivered'||o.state==='skipped')&&o.delivery>=wiAddDays(today,-56);}).sort(function(a,b){return a.delivery<b.delivery?1:-1;});
+  let h='<div class="wo-card"><div class="wo-title">Wine orders</div>';
+  if(WO.err)h+='<div class="wi-alert"><b>Couldn’t load orders.</b> Check your connection and reopen the tab.</div>';
+  if(drafts.length){
+    h+='<div class="wo-sec">To place</div>';
+    drafts.forEach(function(o){ const due=o.cutoff===today, txt=woText(o), v=woMaster().vendors[o.vendor]||{};
+      h+='<div class="wo-o wo-draft'+(due?' wo-due':'')+'">'+woHead(o,(due?'Order today'+(v.cutoffTime?' by '+v.cutoffTime:''):'Order by '+woDayShort(o.cutoff))+(v.confirmed?'':' · delivery day not confirmed'))
+        +woLinesHTML(o,woCanSend())
+        +'<div class="wo-txt"><span>Text to '+esc(woPhoneShow(woPhone(o)))+'</span>'+esc(txt)+'</div>'
+        +(o.est_total?'<div class="wo-sub">About $'+Math.round(o.est_total)+(o.cost_known===false?', some costs missing':'')+'</div>':'')
+        +'<div class="wo-act">'+(woCanSend()?'<a class="wi-btn wo-send" href="'+esc(woSmsHref(woPhone(o),txt))+'" onclick="event.preventDefault();woSend(\''+o.id+'\')">Send text</a><button class="ann-dismiss" onclick="woSkip(\''+o.id+'\')">'+(WO.armSkip===o.id?'Tap again to skip this week':'Skip this week')+'</button>':'<span class="wo-sub">Waiting for Sam to send.</span>')+'</div></div>'; });
+  }
+  h+='<div class="wo-sec">Expected deliveries</div>';
+  if(!placed.length)h+='<p class="wo-empty">Nothing on order right now.</p>';
+  placed.forEach(function(o){ const late=o.delivery<today, isToday=o.delivery===today;
+    const by=String(o.placedBy||'').replace(/ \(.*\)$/,'');
+    const tag=(isToday?'Due today':(late?'Late, was due '+woDayName(o.delivery):'On order'))+(by?' · ordered by '+by:'');
+    h+='<div class="wo-o'+(isToday||late?' wo-due':'')+'">'+woHead(o,tag);
+    if(WO.chk&&WO.chk.id===o.id)h+=woChkHTML(o);
+    else h+=woLinesHTML(o,false)+'<div class="wo-act"><button class="wi-btn" onclick="woChkAll(\''+o.id+'\')">All received</button><button class="wi-btn wi-btn2" onclick="woChkOpen(\''+o.id+'\')">Something’s off</button></div>';
+    h+='</div>'; });
+  if(issues.length){
+    h+='<div class="wo-sec">Delivery problems</div>';
+    issues.forEach(function(o){ const t=o.followup_text||woFollowup(o);
+      h+='<div class="wo-o wo-issue">'+woHead(o,'Checked in by '+esc((o.confirm||{}).by||''))+'<div class="wo-lines">'
+        +(o.exceptions||[]).filter(function(e){return !e.resolved;}).map(function(e){
+          return '<div class="wo-line"><span class="wo-q wo-q-x">'+esc(e.issue==='short'?'short '+e.owed:(e.issue==='missing'?'missing':'wrong'))+'</span><span class="wo-n">'+esc(woWine(e.key).name||e.key)+(e.note?'<span class="wo-why">'+esc(e.note)+'</span>':'')+'</span>'
+            +'<span class="wo-step"><button onclick="woResolve(\''+o.id+'\',\''+e.key+'\',true)">It came</button><button onclick="woResolve(\''+o.id+'\',\''+e.key+'\',false)">Drop it</button></span></div>'; }).join('')+'</div>'
+        +(woCanSend()?'<div class="wo-txt"><span>Text to '+esc(woPhoneShow(woPhone(o)))+'</span>'+esc(t)+'</div><div class="wo-act"><a class="wi-btn" href="'+esc(woSmsHref(woPhone(o),t))+'">Text '+esc(o.rep||'')+'</a></div>':'<p class="wo-sub">This stays here for Sam until it’s sorted.</p>')+'</div>'; });
+  }
+  if(hist.length){
+    h+='<details class="wo-hist"><summary>Last 8 weeks ('+hist.length+')</summary>';
+    hist.forEach(function(o){ const n=(o.exceptions||[]).length;
+      h+='<div class="wi-ev"><span class="wi-ev-t">'+esc(woDayShort(o.delivery))+'</span><span class="wi-ev-x">'+esc(o.rep||'')+' · '+esc(o.vendor)+': '
+        +(o.state==='skipped'?'skipped':(o.lines||[]).map(function(l){return esc(woQtyLabel(l)+' '+woShortName(l.key));}).join(', '))
+        +(o.state==='delivered'?' <i>'+(n?n+' problem'+(n===1?'':'s'):'all received')+'</i>':'')+'</span></div>'; });
+    h+='</details>';
+  }
+  h+='</div>';
+  el.innerHTML=h;
 }
 
 function renderFrontDesk(keepSearch){
