@@ -7732,7 +7732,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "",
-       "",
+       "Sup Server",
        "",
        "3:30 serve",
        "3:30 serve"
@@ -18042,16 +18042,141 @@ window.SF = {
   "seat_note": "Seat positions traced from floorplan.png (OpenTable). p = side (t/b/l/r), o = order along that side, 0 first. Seat 1 is the pivot point."
  },
  "wineInv": {
-  "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage. 2026-10-27: house white key now holds Brigaldara Soave (key unchanged, counts keyed by it); Contesa Pecorino added, took the Vermentino's glass spot; Specialty Cellars wines ship from Grape Expectations' warehouse.",
-  "updated": "2026-10-27",
+  "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage. 2026-10-27: house white key now holds Brigaldara Soave (key unchanged, counts keyed by it); Contesa Pecorino added, took the Vermentino's glass spot; Specialty Cellars wines ship from Grape Expectations' warehouse. 2026-10-28 (Guinan, Task 1): vendors block = reps, text numbers, cutoff and delivery weekday (Mon=0; default order Thu, deliver Fri until the rep confirms), minimums. Per wine on the list: unit = bottles per case or pack as the rep sells it; rule = Adrian's pattern (par6 keep about 6 as loose bottles, case = 1 case, cases3 = multiples of 3 cases, sixpack2 = two 6-packs, eugenio = Vinifera 5-case mix, pace = sized from sales and rounded to the unit); cost = USD per bottle from the Master sheet Wines tab, null where not on file; usual = Adrian's words. Vandori is cellar on the display but orderable:true (bar prosecco, no Revel button).",
+  "updated": "2026-10-28",
   "glassesPerBottle": 4,
+  "vendors": {
+   "Elliot Bay": {
+    "rep": "Todd",
+    "phone": "+12063916208",
+    "cutoffDow": 3,
+    "cutoffTime": "22:00",
+    "deliveryDow": 4,
+    "confirmed": false,
+    "minimum": {
+     "usd": 100,
+     "cases": null
+    },
+    "note": "Takes orders until 10-11pm the night before.",
+    "phoneNote": "Adrian's order sheet says 206-391-6208; the Master sheet Vendors tab says 206-250-9190 (an Elliot Bay line on Adrian's sheet). Unconfirmed."
+   },
+   "Specialty Cellars": {
+    "rep": "Marsha",
+    "phone": "+13123718727",
+    "cutoffDow": 3,
+    "cutoffTime": "16:00",
+    "deliveryDow": 4,
+    "confirmed": false,
+    "minimum": {
+     "usd": 350,
+     "cases": 3
+    },
+    "note": "Order before 4pm. $20 delivery fee below the minimum. Prosecco gets the 3-case price on any quantity. Ships from Grape Expectations' warehouse."
+   },
+   "Vinifera": {
+    "rep": "Eugenio",
+    "phone": "+13235413276",
+    "cutoffDow": 3,
+    "cutoffTime": null,
+    "deliveryDow": 4,
+    "confirmed": false,
+    "minimum": {
+     "usd": null,
+     "cases": null
+    },
+    "note": "Any 5 cases mixed for 20% off. Delivers Tue, Wed, Fri; which day for us is unconfirmed."
+   },
+   "Vehrs": {
+    "rep": "Sal",
+    "phone": "+12068503540",
+    "cutoffDow": 3,
+    "cutoffTime": null,
+    "deliveryDow": 4,
+    "confirmed": false,
+    "minimum": {
+     "usd": null,
+     "cases": null
+    },
+    "note": "Usually delivers Friday unless asked for earlier. 3 mixed cases for a break."
+   },
+   "Vinea": {
+    "rep": "Janet",
+    "phone": "+12068419127",
+    "cutoffDow": 3,
+    "cutoffTime": null,
+    "deliveryDow": 4,
+    "confirmed": false,
+    "minimum": {
+     "usd": null,
+     "cases": null
+    },
+    "note": "Louis Armand break at 12 bottles."
+   },
+   "Petit Monde": {
+    "rep": "Graham",
+    "phone": "+16122401248",
+    "cutoffDow": 3,
+    "cutoffTime": null,
+    "deliveryDow": 4,
+    "confirmed": false,
+    "minimum": {
+     "usd": null,
+     "cases": null
+    },
+    "note": ""
+   },
+   "Winebow": {
+    "rep": "Abe",
+    "phone": "+12063916220",
+    "cutoffDow": 3,
+    "cutoffTime": null,
+    "deliveryDow": 4,
+    "confirmed": false,
+    "minimum": {
+     "usd": null,
+     "cases": null
+    },
+    "note": "3 mixed cases for a break.",
+    "phoneNote": "206-391-6220 is marked 'vm' on both sheets and may not take texts; Adrian's header row shows 206-713-8532, which is Craig Walker's NW Beverages line. Unconfirmed."
+   },
+   "Casa Bruno": {
+    "rep": "Andy",
+    "phone": "+12062509176",
+    "cutoffDow": 3,
+    "cutoffTime": null,
+    "deliveryDow": 4,
+    "confirmed": false,
+    "minimum": {
+     "usd": null,
+     "cases": null
+    },
+    "note": ""
+   },
+   "Odom": {
+    "rep": "Mike",
+    "phone": "+12065507127",
+    "cutoffDow": 3,
+    "cutoffTime": "15:00",
+    "deliveryDow": 4,
+    "confirmed": false,
+    "minimum": {
+     "usd": 200,
+     "cases": null
+    },
+    "note": "Order Thursday by 3pm for Friday."
+   }
+  },
   "wines": [
    {
     "key": "san-fermo-prosecco-house",
     "name": "House Prosecco: Bellenda \"San Fermo\"",
     "type": "Sparkling",
     "status": "core-glass",
-    "vendor": "Specialty Cellars"
+    "vendor": "Specialty Cellars",
+    "unit": 12,
+    "rule": "pace",
+    "cost": 13.33,
+    "usual": "2-3 cases, 1 is fine"
    },
    {
     "key": "le-origini-passanello-lambrusco-grasparossa-2024",
@@ -18065,14 +18190,22 @@ window.SF = {
     "name": "House White: Brigaldara Soave DOC 2023",
     "type": "White",
     "status": "core-glass",
-    "vendor": "Vinifera"
+    "vendor": "Vinifera",
+    "unit": 12,
+    "rule": "eugenio",
+    "cost": 11.25,
+    "usual": "part of the 5-case Vinifera mix"
    },
    {
     "key": "vigna-del-lauro-sauvignon-blanc-collio-2024",
     "name": "Vigna del Lauro Sauvignon Blanc, Collio 2024",
     "type": "White",
     "status": "core-glass",
-    "vendor": "Elliot Bay"
+    "vendor": "Elliot Bay",
+    "unit": 12,
+    "rule": "pace",
+    "cost": null,
+    "usual": "1-2 cases by stock and day of month"
    },
    {
     "key": "la-spinetta-vermentino-2025",
@@ -18086,7 +18219,11 @@ window.SF = {
     "name": "Contesa Pecorino 2023",
     "type": "White",
     "status": "core-glass",
-    "vendor": "Vinifera"
+    "vendor": "Vinifera",
+    "unit": 12,
+    "rule": "eugenio",
+    "cost": 11.93,
+    "usual": "1-2 cases"
    },
    {
     "key": "valle-dell-acate-thymbra-vermentino-2023",
@@ -18100,21 +18237,33 @@ window.SF = {
     "name": "Borgo Savaian Masaret \"Skins are Kings\" Orange NV",
     "type": "Orange",
     "status": "core-glass",
-    "vendor": "Vinea"
+    "vendor": "Vinea",
+    "unit": 6,
+    "rule": "pace",
+    "cost": 13.99,
+    "usual": "four 6-packs"
    },
    {
     "key": "la-spinetta-il-rose-di-casanova-2025",
     "name": "La Spinetta \"Il Rosé di Casanova\" 2025",
     "type": "Rosé",
     "status": "core-glass",
-    "vendor": "Elliot Bay"
+    "vendor": "Elliot Bay",
+    "unit": 12,
+    "rule": "pace",
+    "cost": 13.75,
+    "usual": "1 case in winter"
    },
    {
     "key": "brigaldara-valpolicella-2024",
     "name": "Brigaldara Valpolicella 2024",
     "type": "Red",
     "status": "core-glass",
-    "vendor": "Vinifera"
+    "vendor": "Vinifera",
+    "unit": 12,
+    "rule": "eugenio",
+    "cost": 10.6,
+    "usual": "slow; fills the 5-case mix"
    },
    {
     "key": "corte-scaletta-valpolicella-2022",
@@ -18128,21 +18277,33 @@ window.SF = {
     "name": "House Red: Corsini \"Matot\" Langhe Rosso",
     "type": "Red",
     "status": "core-glass",
-    "vendor": "Casa Bruno"
+    "vendor": "Casa Bruno",
+    "unit": 12,
+    "rule": "cases3",
+    "cost": 11.9,
+    "usual": "3+ cases, it flies"
    },
    {
     "key": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
     "name": "La Valentina \"Spelt\" Montepulciano d'Abruzzo Riserva 2021",
     "type": "Red",
     "status": "core-glass",
-    "vendor": "Winebow"
+    "vendor": "Winebow",
+    "unit": 12,
+    "rule": "cases3",
+    "cost": 14.89,
+    "usual": "3 cases, it flies"
    },
    {
     "key": "corte-pavone-rosso-di-montalcino-2023",
     "name": "Corte Pavone Rosso di Montalcino 2023",
     "type": "Red",
     "status": "core-glass",
-    "vendor": "Specialty Cellars"
+    "vendor": "Specialty Cellars",
+    "unit": 12,
+    "rule": "pace",
+    "cost": 19.83,
+    "usual": "1-2 cases"
    },
    {
     "key": "g-d-vajra-langhe-nebbiolo-2024",
@@ -18157,49 +18318,77 @@ window.SF = {
     "name": "Albino Rocca Langhe Nebbiolo",
     "type": "Red",
     "status": "core-glass",
-    "vendor": "Elliot Bay"
+    "vendor": "Elliot Bay",
+    "unit": 12,
+    "rule": "pace",
+    "cost": 15.0,
+    "usual": "maybe 2 cases, Nebbiolo can fly"
    },
    {
     "key": "louis-armand-premier-cru-champagne",
     "name": "Louis Armand Premier Cru Champagne",
     "type": "Sparkling",
     "status": "core-glass",
-    "vendor": "Vinea"
+    "vendor": "Vinea",
+    "unit": 6,
+    "rule": "sixpack2",
+    "cost": 24.99,
+    "usual": "two 6-packs (break at 12)"
    },
    {
     "key": "laurent-perrier-champagne",
     "name": "Laurent Perrier Champagne",
     "type": "Sparkling",
     "status": "core-bottle",
-    "vendor": "Winebow"
+    "vendor": "Winebow",
+    "unit": 6,
+    "rule": "par6",
+    "cost": null,
+    "usual": "keep about 6"
    },
    {
     "key": "angelo-negro-unfiltered-arneis-2024",
     "name": "Angelo Negro Unfiltered Arneis 2024",
     "type": "White",
     "status": "core-glass",
-    "vendor": "Vehrs"
+    "vendor": "Vehrs",
+    "unit": 12,
+    "rule": "pace",
+    "cost": 14.69,
+    "usual": "1 case"
    },
    {
     "key": "rocca-del-principe-fiano-di-avellino",
     "name": "Rocca del Principe Fiano di Avellino 2025",
     "type": "White",
     "status": "core-glass",
-    "vendor": "Elliot Bay"
+    "vendor": "Elliot Bay",
+    "unit": 12,
+    "rule": "pace",
+    "cost": 16.8,
+    "usual": "1 case"
    },
    {
     "key": "terre-nere-etna-bianco",
     "name": "Terre Nere Etna Bianco 2024",
     "type": "White",
     "status": "core-bottle",
-    "vendor": "Elliot Bay"
+    "vendor": "Elliot Bay",
+    "unit": 12,
+    "rule": "par6",
+    "cost": null,
+    "usual": "keep about 6"
    },
    {
     "key": "copertino-riserva-negroamaro-2016",
     "name": "Copertino Riserva Negroamaro 2017",
     "type": "Red",
     "status": "core-glass",
-    "vendor": "Vehrs"
+    "vendor": "Vehrs",
+    "unit": 12,
+    "rule": "pace",
+    "cost": 11.25,
+    "usual": "1 case"
    },
    {
     "key": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
@@ -18207,7 +18396,11 @@ window.SF = {
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Casa Bruno",
-    "fridge": true
+    "fridge": true,
+    "unit": 12,
+    "rule": "case",
+    "cost": 19.6,
+    "usual": "1 case at a time"
    },
    {
     "key": "felsina-berardenga-chianti-classico-2022",
@@ -18215,7 +18408,11 @@ window.SF = {
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Elliot Bay",
-    "fridge": true
+    "fridge": true,
+    "unit": 12,
+    "rule": "par6",
+    "cost": 21.7,
+    "usual": "keep about 6, moves fast"
    },
    {
     "key": "terre-nere-bellacolonna-etna-rosso-2022",
@@ -18223,7 +18420,11 @@ window.SF = {
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Elliot Bay",
-    "fridge": true
+    "fridge": true,
+    "unit": 12,
+    "rule": "par6",
+    "cost": null,
+    "usual": "keep about 6"
    },
    {
     "key": "piaggia-il-sasso-carmignano",
@@ -18231,14 +18432,22 @@ window.SF = {
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Elliot Bay",
-    "fridge": true
+    "fridge": true,
+    "unit": 12,
+    "rule": "par6",
+    "cost": null,
+    "usual": "keep about 6, moves fast"
    },
    {
     "key": "franco-molino-cascina-rocca-barolo-2019",
     "name": "Franco Molino \"Cascina Rocca\" Barolo 2019",
     "type": "Red",
     "status": "core-bottle",
-    "vendor": "Odom"
+    "vendor": "Odom",
+    "unit": 12,
+    "rule": "case",
+    "cost": null,
+    "usual": "1 case at a time"
    },
    {
     "key": "castello-di-neive-barbaresco-santo-stefano-2022",
@@ -18246,7 +18455,11 @@ window.SF = {
     "type": "Red",
     "status": "core-bottle",
     "vendor": "Winebow",
-    "fridge": true
+    "fridge": true,
+    "unit": 12,
+    "rule": "par6",
+    "cost": 30.0,
+    "usual": "keep about 6"
    },
    {
     "key": "voliero-brunello-di-montalcino-2017",
@@ -18255,7 +18468,11 @@ window.SF = {
     "status": "core-bottle",
     "vendor": "Elliot Bay",
     "fridge": true,
-    "fridgeNote": "Fridge = 2017s only. The one 2018 sits on the back-bar shelf, not for the list."
+    "fridgeNote": "Fridge = 2017s only. The one 2018 sits on the back-bar shelf, not for the list.",
+    "unit": 12,
+    "rule": "par6",
+    "cost": 49.0,
+    "usual": "keep about 6, moves fast"
    },
    {
     "key": "domaine-lingot-martin-pet-nat-rose",
@@ -18291,7 +18508,11 @@ window.SF = {
     "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara 2024",
     "type": "Sparkling",
     "status": "core-glass",
-    "vendor": "Petit Monde"
+    "vendor": "Petit Monde",
+    "unit": 12,
+    "rule": "pace",
+    "cost": 14.25,
+    "usual": "1 case goes a long way"
    },
    {
     "key": "folicello-il-rosso-lambrusco-dell-emilia",
@@ -18519,7 +18740,12 @@ window.SF = {
     "type": "Sparkling",
     "status": "cellar",
     "vendor": "Odom",
-    "note": "Not on the list. Poured as a gift for anniversaries, so it leaves without a Revel button."
+    "note": "Not on the list. Poured as a gift for anniversaries, so it leaves without a Revel button.",
+    "unit": 12,
+    "rule": "cases3",
+    "cost": null,
+    "usual": "always 3 cases (price drops at 3)",
+    "orderable": true
    },
    {
     "key": "sabbia-orange",
@@ -18854,5 +19080,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793193142"
+ "build": "1793305158"
 };
