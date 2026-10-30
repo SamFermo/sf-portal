@@ -2124,7 +2124,7 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 </div>
 
 <script>
-const BUILD='1793307203';   // stamped by build-data.py at every deploy
+const BUILD='1793399089';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -4837,7 +4837,7 @@ function wiRender(){
   let h='<div class="wi-bar">';
   h+='<div class="wi-meta">'+(lastCount?'Last count '+esc(wiShort(wiSvcDate(lastCount.at)))+(lastCount.by?' by '+esc(lastCount.by):''):(WI.loaded?'No count yet. Start with a full count.':'Loading counts…'))
     +' · '+(WI.revelErr?'<span class="wi-warn">Couldn’t load sales</span>':(S.lastDate?'Sales through '+esc(wiShort(S.lastDate)):'Loading sales…'))+'</div>';
-  h+='<div class="wi-actions"><button class="wi-btn" onclick="wiOpen(\'count\')">New count</button><button class="wi-btn wi-btn2" onclick="wiOpen(\'receive\')">Log a delivery</button></div></div>';
+  h+='<div class="wi-actions"><button class="wi-btn" onclick="wiOpen(\'count\')">New count</button></div></div>';
   h+='<div class="wi-seg">'+[['core','On the list'],['cellar','Cellar'],['all','All']].map(function(f){return '<button class="'+(WI.filter===f[0]?'on':'')+'" onclick="WI.filter=\''+f[0]+'\';wiRender()">'+f[1]+'</button>';}).join('')+'</div>';
   const um=Object.keys(S.unmapped);
   if(um.length)h+='<div class="wi-alert"><b>Revel buttons not on the map</b> (last 4 weeks). Their sales aren’t coming off any wine until they’re added to the wine master: '+um.map(function(n){return esc(n)+' ('+S.unmapped[n]+')';}).join(', ')+'</div>';
@@ -4858,9 +4858,9 @@ function wiRender(){
       const open=WI.adj&&WI.adj.key===w.key; if(open)cls+=' wi-open';
       h+='<div class="'+cls+'" onclick="wiAdjOpen(\''+w.key+'\')"><div class="wi-main"><div class="wi-name">'+esc(w.name)+'</div><div class="wi-sub">'+(w.status==='core-glass'?'<span class="wi-tag">glass</span>':'')+(w.status==='cellar'?'<span class="wi-tag wi-tag-c">cellar</span>':'')+(w.fridge?'<span class="wi-tag wi-tag-f">fridge</span>':'')+(sub.join(' · ')||(w.vendor?esc(w.vendor):'vendor not on file'))+(w.fridgeNote?'<span class="wi-fnote">'+esc(w.fridgeNote)+'</span>':'')+'</div></div><div class="wi-oh">'+oh+'</div></div>';
       if(open){ const base=s.onHand==null?0:s.onHand, d=WI.adj.d;
-        h+='<div class="wi-adj"><div class="wi-adj-btns"><button onclick="wiAdjBy(-1)"'+(d<=wiAdjFloor(base)?' disabled':'')+'>−1</button><button onclick="wiAdjBy(1)">+1</button><button onclick="wiAdjBy(6)">+6</button></div>'
+        h+='<div class="wi-adj" id="wiAdjStrip"><div class="wi-adj-btns"><button onclick="wiAdjBy(-1)"'+(d<=wiAdjFloor(base)?' disabled':'')+'>−1</button><button onclick="wiAdjBy(1)">+1</button><button onclick="wiAdjBy(6)">+6</button></div>'
           +'<div class="wi-adj-v">'+(s.onHand==null?'Starting count':wiNum(base))+' → <b>'+wiNum(base+d)+'</b></div>'
-          +'<div class="wi-adj-act"><button class="wi-btn" onclick="wiAdjSave()"'+(d?'':' disabled')+'>Save</button><button class="ann-dismiss" onclick="wiAdjClose()">Cancel</button></div></div>'; }
+          +'<div class="wi-adj-act"><button class="wi-btn" onclick="wiAdjSave()"'+(d&&!WI.adj.saving?'':' disabled')+'>'+(WI.adj.saving?'Saving…':'Save')+'</button><button class="ann-dismiss" onclick="wiAdjClose()">Cancel</button></div></div>'; }
     });
   });
   const ev=S.counts.map(function(c){return {t:'count',at:c.at,id:c.id,by:c.by,n:Object.keys(c.q||{}).length,when:c.when};})
@@ -4878,16 +4878,16 @@ function wiRender(){
   body.innerHTML=h;
   if(typeof woRender==='function')woRender();
 }
-function wiTx(fn,done){
+function wiTx(fn,done,fail){
   if(DEMO){ if(done)done(); return; }
-  if(!(fbReady&&fbDb)){ alert("Can't reach the server right now, so this isn't saved. Try again in a minute."); return; }
+  if(!(fbReady&&fbDb)){ if(fail)fail(); alert("Can't reach the server right now, so this isn't saved. Try again in a minute."); return; }
   const ref=wiRef();
   fbDb.runTransaction(function(tx){ return tx.get(ref).then(function(snap){
       const d=snap.exists?(snap.data()||{}):{};
       const cur={counts:Array.isArray(d.counts)?d.counts.slice():[],receipts:Array.isArray(d.receipts)?d.receipts.slice():[]};
       tx.set(ref,fn(cur)); }); })
     .then(function(){ if(done)done(); })
-    .catch(function(){ alert("That didn't save. Check your connection and try again."); });
+    .catch(function(){ if(fail)fail(); alert("That didn't save. Check your connection and try again."); });
 }
 function wiDel(t,id){
   if(WI.armDel!==id){ WI.armDel=id; wiRender(); setTimeout(function(){ if(WI.armDel===id){WI.armDel=null; wiRender();} },4000); return; }
@@ -4929,11 +4929,11 @@ function wiKeep(){ const M=WI.modal; if(!M)return;
   document.querySelectorAll('#wiModal input[data-k]').forEach(function(i){ if(i.value!=='')M.vals[i.dataset.k]=i.value; else delete M.vals[i.dataset.k]; });
   if($('wiRKey'))M.rKey=$('wiRKey').value; if($('wiRQty'))M.rQty=$('wiRQty').value; if($('wiRNote'))M.rNote=$('wiRNote').value; }
 function wiQty(n){ wiKeep(); WI.modal.rQty=String((+WI.modal.rQty||0)+n); wiModalRender(); }
-function wiSaveCount(){ wiKeep(); const M=WI.modal, q={};
+function wiSaveCount(){ wiKeep(); const M=WI.modal, q={}; if(M.saving)return;
   Object.keys(M.vals).forEach(function(k){ const v=parseFloat(M.vals[k]); if(isFinite(v)&&v>=0)q[k]=Math.round(v*100)/100; });
   if(!Object.keys(q).length){ alert('Enter at least one count first.'); return; }
   const at=Date.now(), svc0=wiSvcDate(at), rec={id:wiNewId(),at:at,by:me?me.name:'',when:M.when,svc:M.when==='before'?svc0:wiAddDays(svc0,1),q:q};
-  wiTx(function(cur){ cur.counts.push(rec); return cur; },function(){ wiClose(); });
+  M.saving=true; wiTx(function(cur){ cur.counts.push(rec); return cur; },function(){ wiClose(); },function(){ M.saving=false; });
 }
 function wiSaveReceipt(){ wiKeep(); const M=WI.modal, qty=parseFloat(M.rQty);
   if(!M.rKey){ alert('Choose the wine first.'); return; }
@@ -4945,21 +4945,33 @@ function wiSaveReceipt(){ wiKeep(); const M=WI.modal, qty=parseFloat(M.rQty);
 function wiStep(ev,n){ ev.preventDefault(); ev.stopPropagation(); const i=ev.currentTarget.parentNode.querySelector('input'); if(!i)return;
   const v=Math.round(((parseFloat(i.value)||0)+n)*100)/100; i.value=String(v); }
 /* row adjust: one wine open at a time; the change is held until Save */
-function wiAdjOpen(key){ if(!me){openLogin();return;} if(WI.adj&&WI.adj.key===key)return; WI.adj={key:key,d:0}; wiRender(); }
+function wiAdjOpen(key){ if(!me){openLogin();return;} if(WI.adj&&WI.adj.key===key)return;
+  if(WI.adj&&WI.adj.d&&!WI.adj.saving)wiAdjCommit(WI.adj);   /* tapping another wine saves the open one instead of dropping it (2026-10-30) */
+  WI.adj={key:key,d:0}; wiRender(); }
 function wiAdjClose(){ WI.adj=null; wiRender(); }
 function wiAdjBy(n){ const A=WI.adj; if(!A)return; if(window.event)window.event.stopPropagation();
   const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey[A.key]; const base=s&&s.onHand!=null?s.onHand:0;
-  A.d=Math.round(Math.max(A.d+n,wiAdjFloor(base))*100)/100; wiRender(); }
+  A.d=Math.round(Math.max(A.d+n,wiAdjFloor(base))*100)/100; wiAdjPaint(); }
+/* update the open strip in place: re-rendering the whole list on every tap made the page jump (2026-10-30) */
+function wiAdjPaint(){ const A=WI.adj, el=$('wiAdjStrip'); if(!A||!el||!el.querySelector){ wiRender(); return; }
+  const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey[A.key]; if(!s){ wiRender(); return; }
+  const base=s.onHand==null?0:s.onHand, b=el.querySelectorAll('.wi-adj-btns button'), v=el.querySelector('.wi-adj-v'), sv=el.querySelector('.wi-adj-act .wi-btn');
+  if(b[0])b[0].disabled=A.d<=wiAdjFloor(base);
+  if(v)v.innerHTML=(s.onHand==null?'Starting count':wiNum(base))+' → <b>'+wiNum(base+A.d)+'</b>';
+  if(sv){ sv.disabled=!A.d||!!A.saving; sv.textContent=A.saving?'Saving…':'Save'; } }
 /* lowest change allowed: down to 0 bottles; a wine already below 0 can only go up */
 function wiAdjFloor(base){ return base>0?-base:0; }
-function wiAdjSave(){ const A=WI.adj; if(!A||!A.d)return; if(window.event)window.event.stopPropagation();
-  const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey[A.key]; if(!s)return;
+function wiAdjSave(){ const A=WI.adj; if(!A||!A.d||A.saving)return; if(window.event)window.event.stopPropagation(); wiAdjCommit(A); }
+/* one save per change: A.saving blocks repeat taps while the write is in flight (they were stacking, 2026-10-30) */
+function wiAdjCommit(A){ const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey[A.key]; if(!s||!A.d||A.saving)return;
+  A.saving=true; if(WI.adj===A)wiAdjPaint();
+  const fin=function(){ if(WI.adj===A)WI.adj=null; wiRender(); }, fail=function(){ A.saving=false; if(WI.adj===A)wiAdjPaint(); };
   const at=Date.now(), by=me?me.name:'';
   if(s.count==null){ const hr=new Date(at).getHours(), when=(hr>=3&&hr<16)?'before':'after', svc0=wiSvcDate(at);
     const rec={id:wiNewId(),at:at,by:by,when:when,svc:when==='before'?svc0:wiAddDays(svc0,1),q:{[A.key]:Math.max(0,A.d)}};
-    wiTx(function(cur){ cur.counts.push(rec); return cur; },function(){ WI.adj=null; wiRender(); });
+    wiTx(function(cur){ cur.counts.push(rec); return cur; },fin,fail);
   } else { const rec={id:wiNewId(),at:at,by:by,key:A.key,qty:A.d,note:'',kind:'adj'};
-    wiTx(function(cur){ cur.receipts.push(rec); return cur; },function(){ WI.adj=null; wiRender(); }); }
+    wiTx(function(cur){ cur.receipts.push(rec); return cur; },fin,fail); }
 }
 
 /* ===== WINE ORDERS (2026-10-29, Guinan) =========================================
@@ -5051,14 +5063,15 @@ function woWatch(){ if(WO.unsub||!(fbReady&&fbDb))return;
 function woTx(fn,done){
   if(DEMO){ if(done)done(); return; }
   if(!(fbReady&&fbDb)){ alert("Can't reach the server right now, so this isn't saved. Try again in a minute."); return; }
+  if(WO.busy)return; WO.busy=true;
   const a=woRef(), b=wiRef();
   fbDb.runTransaction(function(tx){ return Promise.all([tx.get(a),tx.get(b)]).then(function(s){
       const od=s[0].exists?(s[0].data()||{}):{}, d=s[1].exists?(s[1].data()||{}):{};
       const inv={counts:Array.isArray(d.counts)?d.counts.slice():[],receipts:Array.isArray(d.receipts)?d.receipts.slice():[]};
       const r=fn({orders:Array.isArray(od.orders)?od.orders:[]},inv);
       tx.set(a,r.od); if(r.inv)tx.set(b,r.inv); }); })
-    .then(function(){ if(done)done(); })
-    .catch(function(e){ alert("That didn't save. "+(e&&e.message&&/already|not found/.test(e.message)?e.message+'.':'Check your connection and try again.')); });
+    .then(function(){ WO.busy=false; if(done)done(); })
+    .catch(function(e){ WO.busy=false; alert("That didn't save. "+(e&&e.message&&/already|not found/.test(e.message)?e.message+'.':'Check your connection and try again.')); });
 }
 function woWho(){ return (me&&me.name)||'unknown'; }
 
