@@ -691,6 +691,28 @@ body.tour-on{padding-bottom:230px;}
   background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); border-radius:10px;
   color:var(--ink); padding:9px 11px; font-family:inherit; font-size:13.5px; line-height:1.45;}
 .at-acts{display:flex; flex-wrap:wrap; gap:8px; margin-top:11px;}
+/* server strip + status row (2026-10-30) */
+.at-needs{display:flex; flex-direction:column; gap:8px; margin:0 0 12px;}
+.at-need{display:flex; align-items:center; gap:10px; border:1px solid var(--gold); background:rgba(230,200,120,.1); border-radius:12px; padding:9px 12px;}
+.at-need-l{display:flex; flex-direction:column; gap:2px; min-width:0; flex:1;}
+.at-need-num{font-size:20px; font-weight:800; color:var(--gold); line-height:1.1;}
+.at-need-meta{font-size:12px; color:var(--ink-soft);}
+.at-need-note{font-size:13px; color:var(--ink); white-space:pre-wrap; word-break:break-word;}
+.at-need-btn{flex:0 0 auto; min-height:48px; padding:0 20px; font-size:15px;}
+.at-status{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:4px 0 12px;}
+.at-status .at-fl{border-radius:12px; padding:13px 10px; font-size:14px; text-align:center;}
+.at-status .at-fl.on{background:rgba(230,200,120,.18); border-color:var(--gold); color:var(--gold);}
+.at-status .at-fl-reset{border-width:2px; font-weight:800;}
+.at-acts .at-meta{align-self:center;}
+/* iPad sideways: tables left, chat right (2026-10-30) */
+@media (min-width:900px) and (orientation:landscape){
+  .at-split-on #atticTabs{display:none;}
+  #boardBody.at-split{display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:16px; align-items:start;}
+  .at-split .at-tablescol{min-width:0;}
+  .at-split .at-chatcol{position:sticky; top:12px; display:flex; flex-direction:column; min-width:0; max-height:calc(100vh - 150px);}
+  .at-split .at-chatcol .chat-wrap{max-height:none; flex:1 1 auto; overflow-y:auto;}
+  .at-split .at-chatcol .chat-input-row{margin-top:10px;}
+}
 .at-btn{background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.2); color:var(--ink);
   border-radius:10px; padding:9px 15px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;}
 .at-btn.at-go{background:rgba(230,200,120,.2); border-color:var(--gold); color:var(--gold);}
@@ -1919,6 +1941,19 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 .wi-adj-act{display:flex; align-items:center; gap:8px;}
 .wi-in input{width:64px;}
 .wi-step{flex-shrink:0; border:1px solid var(--moon-edge); background:var(--moon-lo); color:var(--wood); border-radius:8px; padding:7px 8px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit;}
+/* WINE ADJUST v3 + COUNT DRAFT (2026-10-30, Guinan) */
+.wi-adj-set{display:flex; align-items:center; gap:8px; flex:1; min-width:150px; font-size:13px; color:var(--ink-soft);}
+.wi-adj-set input{width:92px; font-size:18px; font-weight:800; padding:7px 9px; border-radius:10px; border:1.5px solid rgba(230,200,120,.55); background:rgba(0,0,0,.2); color:var(--ink); font-family:inherit; text-align:center;}
+.wi-adj-set input:focus-visible{outline:2px solid var(--gold); outline-offset:1px;}
+.wi-adj-cancel{min-height:40px; padding:8px 14px; border-radius:10px; border:1px solid rgba(205,216,244,.25); background:none; color:var(--ink-soft); font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;}
+.wi-adj-ask{border-color:#e08070; background:rgba(192,57,43,.10);}
+.wi-adj-ask .wi-adj-v{flex-basis:100%; color:var(--ink);}
+.wi-saving{color:var(--gold); font-weight:800;}
+.wi-count-n{font-size:12px; font-weight:700; color:var(--accent);}
+.wi-in input::placeholder{color:var(--card-mute); opacity:.55;}
+.wi-card-act{flex-wrap:wrap;}
+.wi-card .wi-btn2{background:var(--moon-lo); color:var(--wood); border:1.5px solid var(--moon-edge);}
+.wi-in input{width:76px;}
 </style>
 </head>
 <body class="not-home">
@@ -2124,7 +2159,7 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 </div>
 
 <script>
-const BUILD='1793399089';   // stamped by build-data.py at every deploy
+const BUILD='1793404299';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2175,6 +2210,7 @@ function navTabs(){
   // Investors see the numbers and the menu those numbers came from. No ordering, tables,
   // verbals, schedule, directory, standards, crew board, front desk or day sheet.
   if(isInvestor())return [['recap','Recap'],['fresh','Fresh Talk']];
+  if(isHost())return [['board','The Attic']];   // the house phone: seating and nothing else
   let head=isMgr()?[['today','Day Sheet']]:[['today','Day at a Glance']];
   // Recap supersedes Last Night for the full tier, so only one of the two ever appears.
   // Partial-tier managers keep Last Night, which is still the only view they have.
@@ -2248,6 +2284,7 @@ function numbersCardHTML(){
     '</button>';
 }
 function go(id){
+  if(id==='home'&&typeof isHost==='function'&&isHost())id='board';   // Host Stand has no home
   if(id==='numbers'){ const nv=numViews(); id=(numLast&&nv.some(function(v){return v[0]===numLast;}))?numLast:(nv[0]?nv[0][0]:'home'); }
   if(isNumView(id)){ numLast=id; numSwitchRender(id); }
   // 'orders' is a normal view like every other tab (2026-07-01) — Farm Order/Remy renders INSIDE
@@ -2261,7 +2298,7 @@ function go(id){
   if(id==='standards')showStdPane(stdTab);
   if(id==='compliance'){renderCompliance();markComplianceSeen();}
   if(id==='fresh')markFreshSeen();
-  if(id==='board'&&atSub==='chat')chatMarkSeen();
+  if(id==='board'&&(atSub==='chat'||atSplit()))chatMarkSeen();
   if(id==='orders')markOrdersSeen();
   if(id==='today')markCalloffSeen();
   updateAttn();
@@ -2493,10 +2530,17 @@ async function hashPin(pin){
 function profilesArr(){return Object.keys(PROFILES).map(k=>PROFILES[k]);}
 function isInvestorP(p){return !!(p&&p.investor===true);}
 function isInvestor(){return isInvestorP(me);}
+/* Host Stand (2026-10-30): the house iPhone's seating-only login. Not a manager, never in the
+   name picker, session persists past 3am like an investor's. Attic only, locked to the MD side.
+   Attribution is plain "Host Stand" by Sam's call (2026-10-23). */
+function isHostP(p){return !!(p&&p.host===true);}
+function isHost(){return isHostP(me);}
+function isSpecialP(p){return isInvestorP(p)||isHostP(p);}
+function hostProfiles(){return profilesArr().filter(p=>isHostP(p)&&p.active!==false);}
 /* Investors are real profiles so they can have their own PIN and be deactivated, but they are
    not staff. Every list that unions PROFILES has to exclude them or they turn up needing a food
    handler card. activeProfiles() is the login picker and the base for those unions. */
-function activeProfiles(){return profilesArr().filter(p=>p.active!==false&&!isInvestorP(p)).sort((a,b)=>a.name.localeCompare(b.name));}
+function activeProfiles(){return profilesArr().filter(p=>p.active!==false&&!isSpecialP(p)).sort((a,b)=>a.name.localeCompare(b.name));}
 function investorProfiles(){return profilesArr().filter(p=>isInvestorP(p)&&p.active!==false);}
 function next3am(from){const e=new Date(from);e.setHours(3,0,0,0);if(e.getTime()<=from)e.setDate(e.getDate()+1);return e.getTime();}
 function getSession(){try{return JSON.parse(localStorage.getItem('sf-session')||'null');}catch(e){return null;}}
@@ -2538,7 +2582,7 @@ function sessionValid(){
   if(!s||!s.name)return false;
   const p=PROFILES[s.name];
   if(!p||p.active===false)return false;            // deactivating the profile still logs them out
-  if(s.exp===null)return isInvestorP(p);           // never-expiring, and only for an investor
+  if(s.exp===null)return isSpecialP(p);            // never-expiring: investors and the Host Stand phone
   // A remembered session dies the moment the profile loses canRemember, so revoking the
   // flag in Firestore logs that person back out on their next app open. Checking it HERE
   // rather than only hiding the checkbox means a hand-crafted localStorage entry does not
@@ -2577,6 +2621,28 @@ const DEMO_CODE='5341';
 /* Investors are deliberately absent from the name picker, so they need their own way in.
    PIN-only: there is one investor profile, so there is nothing to disambiguate. The PIN is
    checked against the same salted SHA-256 hash every staff PIN uses. */
+async function hostLogin(){
+  const hp=hostProfiles()[0];
+  if(!hp){ alert('No Host Stand profile is set up yet.'); return; }
+  if(!hp.pinHash){
+    const a=prompt('Set the Host Stand PIN (4\u20136 digits). Not the Revel PIN.'); if(a===null)return;
+    const c=String(a).trim(); if(!/^\d{4,6}$/.test(c)){ alert('PIN must be 4\u20136 digits.'); return; }
+    const b=prompt('Confirm the PIN'); if(b===null)return;
+    if(String(b).trim()!==c){ alert('The two PINs didn\u2019t match.'); return; }
+    const h0=await hashPin(c);
+    if(fbReady&&fbDb&&hp.id){ await fbDb.collection('staff').doc(hp.id).update({pinHash:h0}).catch(function(){}); }
+    hp.pinHash=h0;
+  }else{
+    const c=prompt('Host Stand PIN'); if(c===null)return;
+    const h=await hashPin(String(c).trim());
+    if(h!==hp.pinHash){ alert('That PIN didn\u2019t match.'); return; }
+  }
+  setSession(hp.name,true);   // the house phone stays signed in past the 3am reset
+  me=hp;
+  const g=$('loginGate'); if(g)g.classList.remove('open');
+  document.body.classList.remove('locked');
+  refreshAuthUI(); go('board');
+}
 async function investorLogin(){
   const inv=investorProfiles()[0];
   if(!inv){ alert('No investor profile is set up yet.'); return; }
@@ -2622,6 +2688,7 @@ function refreshAuthUI(){
   if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
   if($('access')&&$('access').classList.contains('active'))renderAccess();
   renderBoard();
+  if(isHost()&&!($('board')&&$('board').classList.contains('active')))go('board');
   applySchedDefault();// show/hide the Mine tab and pick the landing side for this person
   renderSchedule();   // re-render so the signed-in user's row highlight follows the login
   startFrontDeskSync();
@@ -2641,7 +2708,7 @@ let loginName=null;
 function openLogin(){loginName=null;renderLogin();$('loginGate').classList.add('open');}
 function renderLogin(){
   if(!loginName){
-    $('loginBody').innerHTML=`<input class="who-search" id="loginSearch" placeholder="Find your name…"><div class="who-list" id="loginList"></div><div class="login-demo"><button class="login-demo-btn" onclick="investorLogin()">Investor sign-in</button><button class="login-demo-btn" onclick="enterDemo()">View as guest (demo)</button></div>`;
+    $('loginBody').innerHTML=`<input class="who-search" id="loginSearch" placeholder="Find your name…"><div class="who-list" id="loginList"></div><div class="login-demo"><button class="login-demo-btn" onclick="hostLogin()">Host Stand</button><button class="login-demo-btn" onclick="investorLogin()">Investor sign-in</button><button class="login-demo-btn" onclick="enterDemo()">View as guest (demo)</button></div>`;
     renderLoginNames('');
     $('loginSearch').oninput=e=>renderLoginNames(e.target.value);
     setTimeout(()=>{try{$('loginSearch').focus();}catch(e){}},60);
@@ -2792,7 +2859,7 @@ function welcomeGo(){
   startTour(false);
 }
 let TOUR={on:false,i:0,steps:[],replay:false};
-function tourPending(){ return !!(me && !DEMO && !isInvestor() && me.tourSeen!==true); }
+function tourPending(){ return !!(me && !DEMO && !isInvestor() && !isHost() && me.tourSeen!==true); }
 function tourSteps(){
   var ids=['home'];
   try{ navTabs().forEach(function(t){ if(ids.indexOf(t[0])<0)ids.push(t[0]); }); }catch(e){}
@@ -3045,7 +3112,7 @@ function annForMe(A){ if(!A)return false; if(A.forName)return !!(me&&me.name===A
    it back). Managers see their own only; the roster view is Compliance → Coming Due. */
 function annCardAlerts(){
   try{
-    if(!me||!me.name||DEMO||(typeof isInvestor==='function'&&isInvestor()))return [];
+    if(!me||!me.name||DEMO||(typeof isInvestor==='function'&&isInvestor())||isHost())return [];
     const L=compDueList(), mine=L.due.filter(function(d){return d.name===me.name&&d.days<0;});
     const und=L.undated.filter(function(d){return d.name===me.name;});
     const ix=compRosterIndex()[me.name.toLowerCase()];
@@ -3114,7 +3181,7 @@ function annAck(){
 }
 function annShouldShow(){ annPick(); if(!(me && me.contactSet && annActive() && !annDismissedNow()))return false;
   return annIsInfo() ? !annAcked() : !annMyRsvp(); }
-function maybeShowAnnounce(){ setTimeout(ckpMaybeShow,900); setTimeout(kqMaybeShow,1200); if(isInvestor())return; if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
+function maybeShowAnnounce(){ setTimeout(ckpMaybeShow,900); setTimeout(kqMaybeShow,1200); if(isInvestor()||isHost())return; if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
 /* Full roster behind the tally: staff (from PROFILES.announceRsvp) plus the
    hand-added external entries in ANNOUNCE_GUESTS. Single source both the compact
    tally and the full list (annOpenFullList) read from, so they can't drift. */
@@ -3481,7 +3548,7 @@ function maybeShowOpenShifts(){
   if(osShownSession)return;
   if(!(me&&me.contactSet&&osActive()&&osLoaded&&!osDismissedNow()))return;
   if(!OS_PREVIEW){
-    if(isInvestor()||DEMO)return;
+    if(isInvestor()||isHost()||DEMO)return;
     if(!osAnyOpenForMe())return;
   }
   const a=$('announceModal'),al=$('alertModal');
@@ -4762,10 +4829,10 @@ function fdMatchesQuery(e,q){
    SALES WINDOW: a count taken "before service" includes that service date's sales; "after
    close" starts the next service date. Service date = local time minus 3 hours, so a count
    at 1am belongs to the night before. Sales come from the revel collection (4am brief). */
-let WI={doc:null,loaded:false,unsub:null,revel:null,revelAt:0,revelErr:false,filter:'core',armDel:null,adj:null};
+let WI={doc:null,loaded:false,unsub:null,revel:null,revelAt:0,revelErr:false,filter:'core',armDel:null,adj:null,pend:{},countDraft:null};
 /* Who sees Wine Inventory (tab, home card, edits): every manager, plus the wine team by first
    name, same convention as SRV_VIEWERS. Sam 2026-09-29: Adrian, Katie, Tim and Sully. */
-const WI_VIEWERS=['sam','adrian','katie','tim','sully'];
+const WI_VIEWERS=['sam','katie','tim','sully'];   /* Adrian removed 2026-10-30 (left 10/29) */
 /* Who sees the Study deck. Sam 2026-10-06: him and Sully only while it settles.
    Unlike WI_VIEWERS this does NOT grant every manager — that is deliberate, not an
    oversight. study.html enforces the same list on its own; this is only the door. */
@@ -4833,9 +4900,14 @@ function wiRender(){
   const D=wiData();
   if(!D.wines.length){ body.innerHTML='<p class="board-empty">No wine master loaded (data/wine-inventory.json is missing from this build).</p>'; return; }
   const S=wiCompute(D,WI.doc||{},WI.revel||{});
-  const lastCount=S.counts.length?S.counts[S.counts.length-1]:null;
+  /* top line: when the list wines were last counted, grouped by day (it used to show the last record's label) */
+  const byDay={}; let nList=0, nNone=0;
+  D.wines.forEach(function(w){ if(w.status==='cellar'&&!w.orderable)return; nList++;
+    const s=S.byKey[w.key]; if(!s||s.countAt==null){ nNone++; return; } const dd=s.svc||wiSvcDate(s.countAt); byDay[dd]=(byDay[dd]||0)+1; });
+  const days=Object.keys(byDay).sort().reverse();
+  const cl=days.length?'List counted '+days.slice(0,3).map(function(dd){return esc(wiShort(dd))+' ('+byDay[dd]+')';}).join(', ')+(days.length>3?' and earlier':'')+(nNone?' · '+nNone+' never counted':''):'';
   let h='<div class="wi-bar">';
-  h+='<div class="wi-meta">'+(lastCount?'Last count '+esc(wiShort(wiSvcDate(lastCount.at)))+(lastCount.by?' by '+esc(lastCount.by):''):(WI.loaded?'No count yet. Start with a full count.':'Loading counts…'))
+  h+='<div class="wi-meta">'+(S.counts.length?cl:(WI.loaded?'No count yet. Start with a full count.':'Loading counts…'))
     +' · '+(WI.revelErr?'<span class="wi-warn">Couldn’t load sales</span>':(S.lastDate?'Sales through '+esc(wiShort(S.lastDate)):'Loading sales…'))+'</div>';
   h+='<div class="wi-actions"><button class="wi-btn" onclick="wiOpen(\'count\')">New count</button></div></div>';
   h+='<div class="wi-seg">'+[['core','On the list'],['cellar','Cellar'],['all','All']].map(function(f){return '<button class="'+(WI.filter===f[0]?'on':'')+'" onclick="WI.filter=\''+f[0]+'\';wiRender()">'+f[1]+'</button>';}).join('')+'</div>';
@@ -4855,12 +4927,16 @@ function wiRender(){
       if(s.adj)sub.push((s.adj>0?'+':'−')+wiNum(Math.abs(s.adj))+' adjusted');
       if(s.count!=null)sub.push('−'+wiNum(s.sold)+' sold');
       if(s.wk>0)sub.push(wiNum(s.wk)+'/wk'+(s.weeks!=null&&s.onHand>0?' · ~'+(s.weeks>=10?'10+':wiNum(Math.round(s.weeks*10)/10))+' wks left':''));
+      if(WI.pend[w.key])sub.unshift('<b class="wi-saving">saving…</b>');
       const open=WI.adj&&WI.adj.key===w.key; if(open)cls+=' wi-open';
       h+='<div class="'+cls+'" onclick="wiAdjOpen(\''+w.key+'\')"><div class="wi-main"><div class="wi-name">'+esc(w.name)+'</div><div class="wi-sub">'+(w.status==='core-glass'?'<span class="wi-tag">glass</span>':'')+(w.status==='cellar'?'<span class="wi-tag wi-tag-c">cellar</span>':'')+(w.fridge?'<span class="wi-tag wi-tag-f">fridge</span>':'')+(sub.join(' · ')||(w.vendor?esc(w.vendor):'vendor not on file'))+(w.fridgeNote?'<span class="wi-fnote">'+esc(w.fridgeNote)+'</span>':'')+'</div></div><div class="wi-oh">'+oh+'</div></div>';
-      if(open){ const base=s.onHand==null?0:s.onHand, d=WI.adj.d;
-        h+='<div class="wi-adj" id="wiAdjStrip"><div class="wi-adj-btns"><button onclick="wiAdjBy(-1)"'+(d<=wiAdjFloor(base)?' disabled':'')+'>−1</button><button onclick="wiAdjBy(1)">+1</button><button onclick="wiAdjBy(6)">+6</button></div>'
-          +'<div class="wi-adj-v">'+(s.onHand==null?'Starting count':wiNum(base))+' → <b>'+wiNum(base+d)+'</b></div>'
-          +'<div class="wi-adj-act"><button class="wi-btn" onclick="wiAdjSave()"'+(d&&!WI.adj.saving?'':' disabled')+'>'+(WI.adj.saving?'Saving…':'Save')+'</button><button class="ann-dismiss" onclick="wiAdjClose()">Cancel</button></div></div>'; }
+      if(open){ const A=WI.adj, base=s.onHand==null?0:s.onHand, d=A.d;
+        if(A.ask){ const to=D.wines.find(function(x){return x.key===A.ask;})||{};
+          h+='<div class="wi-adj wi-adj-ask" id="wiAdjStrip"><div class="wi-adj-v">Save <b>'+(d>0?'+':'−')+wiNum(Math.abs(d))+'</b> to '+esc(w.short||w.name)+' before opening '+esc(to.short||to.name||'the next wine')+'?</div>'
+            +'<div class="wi-adj-act"><button class="wi-btn" onclick="wiAdjAsk(true)">Save it</button><button class="wi-btn wi-btn2" onclick="wiAdjAsk(false)">Don’t save</button></div></div>'; }
+        else h+='<div class="wi-adj" id="wiAdjStrip"><div class="wi-adj-btns"><button onclick="wiAdjBy(-1)"'+(d<=wiAdjFloor(base)?' disabled':'')+'>−1</button><button onclick="wiAdjBy(1)">+1</button><button onclick="wiAdjBy(6)">+6</button></div>'
+          +'<label class="wi-adj-set"><span>'+(s.onHand==null?'Starting count':wiNum(base)+' →')+'</span><input id="wiAdjSet" type="number" inputmode="decimal" min="0" step="0.25" aria-label="Bottles on hand" value="'+wiNum(base+d)+'" oninput="wiAdjSetTo(this.value)" onkeydown="if(event.key===\'Enter\'){event.preventDefault();wiAdjSave();}"></label>'
+          +'<div class="wi-adj-act"><button class="wi-btn" onclick="wiAdjSave()"'+(d?'':' disabled')+'>Save</button><button class="wi-adj-cancel" onclick="wiAdjClose()">Cancel</button></div></div>'; }
     });
   });
   const ev=S.counts.map(function(c){return {t:'count',at:c.at,id:c.id,by:c.by,n:Object.keys(c.q||{}).length,when:c.when};})
@@ -4896,22 +4972,41 @@ function wiDel(t,id){
 }
 function wiNewId(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 function wiOpen(kind){ if(!me){openLogin();return;} const hr=new Date().getHours();
-  WI.modal={kind:kind,when:(hr>=3&&hr<16)?'before':'after',vals:{},rKey:'',rQty:'',rNote:'',scope:WI.filter==='cellar'?'cellar':(WI.filter==='all'?'all':'core')};
+  WI.modal={kind:kind,when:(hr>=3&&hr<17)?'before':'after',vals:{},rKey:'',rQty:'',rNote:'',scope:WI.filter==='cellar'?'cellar':(WI.filter==='all'?'all':'core')};
+  if(kind==='count'){ const dr=wiDraftLoad(); if(dr){ WI.modal.vals=Object.assign({},dr.vals||{}); if(dr.when)WI.modal.when=dr.when; } }
   wiModalRender(); }
+/* COUNT DRAFT (2026-10-30): typed numbers survive Close, a tap outside the card, and a reload, until the count is
+   saved or Cleared. Kept per person in this browser for 18 hours. */
+function wiDraftKey(){ return 'sf-wi-countdraft-'+String((me&&me.name)||'').toLowerCase(); }
+function wiDraftLoad(){ if(WI.countDraft)return WI.countDraft;
+  try{ const d=JSON.parse(localStorage.getItem(wiDraftKey())||'null'); if(d&&d.at&&Date.now()-d.at<18*3600*1000){ WI.countDraft=d; return d; } }catch(e){}
+  return null; }
+function wiDraftSave(){ const M=WI.modal; if(!M||M.kind!=='count')return;
+  WI.countDraft=Object.keys(M.vals).length?{vals:Object.assign({},M.vals),when:M.when,at:Date.now()}:null;
+  try{ if(WI.countDraft)localStorage.setItem(wiDraftKey(),JSON.stringify(WI.countDraft)); else localStorage.removeItem(wiDraftKey()); }catch(e){} }
+function wiDraftClear(){ WI.countDraft=null; try{ localStorage.removeItem(wiDraftKey()); }catch(e){} }
+function wiCountInput(i){ const M=WI.modal; if(!M)return; if(i.value!=='')M.vals[i.dataset.k]=i.value; else delete M.vals[i.dataset.k]; wiDraftSave(); wiCountN(); }
+function wiCountN(){ const el=$('wiCountN'), M=WI.modal; if(!el||!M||!el.querySelector)return; const tot=document.querySelectorAll('#wiModal input[data-k]').length;
+  el.textContent=Object.keys(M.vals).length+' entered · '+Math.max(0,tot-Object.keys(M.vals).filter(function(k){return document.querySelector('#wiModal input[data-k="'+k+'"]');}).length)+' left on this list'; }
+function wiCountClear(){ const M=WI.modal; if(!M)return; if(!M.armClear){ M.armClear=true; wiModalRender(); return; }
+  M.armClear=false; M.vals={}; wiDraftClear(); wiModalRender(); }
 function wiClose(){ WI.modal=null; const m=$('wiModal'); if(m)m.style.display='none'; }
 function wiModalRender(){
   const M=WI.modal; if(!M)return; const D=wiData(); let m=$('wiModal');
   if(!m){ m=document.createElement('div'); m.id='wiModal'; m.className='comp-modal'; m.onclick=function(e){if(e.target===m)wiClose();}; document.body.appendChild(m); }
   let h='<div class="wi-card">';
   if(M.kind==='count'){
-    h+='<div class="wi-card-h">New count</div><div class="wi-card-s">Enter bottles on hand, partials as decimals (half a bottle = 0.5). Leave a wine blank to keep its last count.</div>';
+    const S=wiCompute(D,WI.doc||{},WI.revel||{});
+    h+='<div class="wi-card-h">New count</div><div class="wi-card-s">Type what’s on the shelf, quarter bottles as decimals (half a bottle = 0.5). The faint number is what the portal expects. Blank keeps the last count. Your numbers stay here until you save or clear them.</div>';
+    h+='<div class="wi-count-n" id="wiCountN"></div>';
     h+='<div class="wi-seg wi-seg-sm">'+[['before','Before tonight’s service'],['after','After close']].map(function(f){return '<button class="'+(M.when===f[0]?'on':'')+'" onclick="wiKeep();WI.modal.when=\''+f[0]+'\';wiModalRender()">'+f[1]+'</button>';}).join('')+'</div>';
     h+='<div class="wi-seg wi-seg-sm">'+[['core','On the list'],['cellar','Cellar'],['all','All']].map(function(f){return '<button class="'+(M.scope===f[0]?'on':'')+'" onclick="wiKeep();WI.modal.scope=\''+f[0]+'\';wiModalRender()">'+f[1]+'</button>';}).join('')+'</div>';
     h+='<div class="wi-list">';
     WI_TYPES.forEach(function(t){ const rows=D.wines.filter(function(w){return w.type===t&&(M.scope==='all'||(M.scope==='core'?w.status!=='cellar':w.status==='cellar'));}); if(!rows.length)return;
       h+='<div class="wi-lh">'+esc(t)+'</div>';
-      rows.forEach(function(w){ h+='<label class="wi-in"><span>'+esc(w.name)+'</span><input type="number" inputmode="decimal" min="0" step="0.25" data-k="'+w.key+'" value="'+esc(M.vals[w.key]!=null?M.vals[w.key]:'')+'"><button type="button" class="wi-step" onclick="wiStep(event,1)">+1</button><button type="button" class="wi-step" onclick="wiStep(event,6)">+6</button></label>'; }); });
-    h+='</div><div class="wi-card-act"><button class="wi-btn" onclick="wiSaveCount()">Save count</button><button class="ann-dismiss" onclick="wiClose()">Cancel</button></div>';
+      rows.forEach(function(w){ const s=S.byKey[w.key], ex=s&&s.onHand!=null?wiNum(Math.max(0,s.onHand)):'';
+        h+='<label class="wi-in"><span>'+esc(w.name)+'</span><input type="number" inputmode="decimal" min="0" step="0.25" data-k="'+w.key+'" placeholder="'+ex+'" value="'+esc(M.vals[w.key]!=null?M.vals[w.key]:'')+'" oninput="wiCountInput(this)"><button type="button" class="wi-step" onclick="wiStep(event,1)">+1</button><button type="button" class="wi-step" onclick="wiStep(event,6)">+6</button></label>'; }); });
+    h+='</div><div class="wi-card-act"><button class="wi-btn" onclick="wiSaveCount()">Save count</button><button class="wi-btn wi-btn2" onclick="wiClose()">Close, keep numbers</button><button class="ann-dismiss" onclick="wiCountClear()">'+(M.armClear?'Tap again to clear':'Clear')+'</button></div>';
   } else {
     h+='<div class="wi-card-h">Log a delivery</div><div class="wi-card-s">Bottles received, checked against the invoice. Deliveries count toward what’s on hand from the wine’s last count forward.</div>';
     h+='<select class="wi-sel" id="wiRKey"><option value="">Choose a wine…</option>';
@@ -4922,18 +5017,19 @@ function wiModalRender(){
       +'<input class="wi-sel" id="wiRNote" placeholder="Note, e.g. invoice number (optional)" value="'+esc(M.rNote)+'">';
     h+='<div class="wi-card-act"><button class="wi-btn" onclick="wiSaveReceipt()">Save delivery</button><button class="ann-dismiss" onclick="wiClose()">Cancel</button></div>';
   }
-  h+='</div>'; m.innerHTML=h; m.style.display='flex';
+  h+='</div>'; m.innerHTML=h; m.style.display='flex'; if(M.kind==='count')wiCountN();
 }
 /* keep typed values across a re-render of the count modal */
 function wiKeep(){ const M=WI.modal; if(!M)return;
   document.querySelectorAll('#wiModal input[data-k]').forEach(function(i){ if(i.value!=='')M.vals[i.dataset.k]=i.value; else delete M.vals[i.dataset.k]; });
+  if(M.kind==='count')wiDraftSave();
   if($('wiRKey'))M.rKey=$('wiRKey').value; if($('wiRQty'))M.rQty=$('wiRQty').value; if($('wiRNote'))M.rNote=$('wiRNote').value; }
 function wiQty(n){ wiKeep(); WI.modal.rQty=String((+WI.modal.rQty||0)+n); wiModalRender(); }
 function wiSaveCount(){ wiKeep(); const M=WI.modal, q={}; if(M.saving)return;
   Object.keys(M.vals).forEach(function(k){ const v=parseFloat(M.vals[k]); if(isFinite(v)&&v>=0)q[k]=Math.round(v*100)/100; });
   if(!Object.keys(q).length){ alert('Enter at least one count first.'); return; }
   const at=Date.now(), svc0=wiSvcDate(at), rec={id:wiNewId(),at:at,by:me?me.name:'',when:M.when,svc:M.when==='before'?svc0:wiAddDays(svc0,1),q:q};
-  M.saving=true; wiTx(function(cur){ cur.counts.push(rec); return cur; },function(){ wiClose(); },function(){ M.saving=false; });
+  M.saving=true; wiTx(function(cur){ cur.counts.push(rec); return cur; },function(){ wiDraftClear(); wiClose(); },function(){ M.saving=false; });
 }
 function wiSaveReceipt(){ wiKeep(); const M=WI.modal, qty=parseFloat(M.rQty);
   if(!M.rKey){ alert('Choose the wine first.'); return; }
@@ -4943,11 +5039,18 @@ function wiSaveReceipt(){ wiKeep(); const M=WI.modal, qty=parseFloat(M.rQty);
 }
 /* +1/+6 in the count list: bump the input in place (no re-render, so the list keeps its scroll) */
 function wiStep(ev,n){ ev.preventDefault(); ev.stopPropagation(); const i=ev.currentTarget.parentNode.querySelector('input'); if(!i)return;
-  const v=Math.round(((parseFloat(i.value)||0)+n)*100)/100; i.value=String(v); }
+  const v=Math.round(((parseFloat(i.value)||0)+n)*100)/100; i.value=String(v); wiCountInput(i); }
 /* row adjust: one wine open at a time; the change is held until Save */
+/* ADJUST v3 (2026-10-30): a "set to" box beside -1/+1/+6; Save closes the strip at once and the write finishes in
+   the background (closing on the server's answer moved the rows under the next tap); tapping another wine with an
+   unsaved change asks first instead of saving or dropping it. */
 function wiAdjOpen(key){ if(!me){openLogin();return;} if(WI.adj&&WI.adj.key===key)return;
-  if(WI.adj&&WI.adj.d&&!WI.adj.saving)wiAdjCommit(WI.adj);   /* tapping another wine saves the open one instead of dropping it (2026-10-30) */
+  if(WI.adj&&WI.adj.d){ WI.adj.ask=key; wiRender(); return; }
   WI.adj={key:key,d:0}; wiRender(); }
+function wiAdjAsk(save){ const A=WI.adj; if(!A||!A.ask)return; if(window.event)window.event.stopPropagation();
+  const next=A.ask; A.ask=null; if(save)wiAdjCommit(A); WI.adj={key:next,d:0}; wiRender(); }
+function wiAdjSetTo(v){ const A=WI.adj; if(!A)return; const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey[A.key]; const base=s&&s.onHand!=null?s.onHand:0;
+  const x=parseFloat(v); A.d=(isFinite(x)&&x>=0)?Math.round((x-base)*100)/100:0; wiAdjPaint(); }
 function wiAdjClose(){ WI.adj=null; wiRender(); }
 function wiAdjBy(n){ const A=WI.adj; if(!A)return; if(window.event)window.event.stopPropagation();
   const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey[A.key]; const base=s&&s.onHand!=null?s.onHand:0;
@@ -4958,16 +5061,19 @@ function wiAdjPaint(){ const A=WI.adj, el=$('wiAdjStrip'); if(!A||!el||!el.query
   const base=s.onHand==null?0:s.onHand, b=el.querySelectorAll('.wi-adj-btns button'), v=el.querySelector('.wi-adj-v'), sv=el.querySelector('.wi-adj-act .wi-btn');
   if(b[0])b[0].disabled=A.d<=wiAdjFloor(base);
   if(v)v.innerHTML=(s.onHand==null?'Starting count':wiNum(base))+' → <b>'+wiNum(base+A.d)+'</b>';
-  if(sv){ sv.disabled=!A.d||!!A.saving; sv.textContent=A.saving?'Saving…':'Save'; } }
+  const inp=el.querySelector('#wiAdjSet'); if(inp&&document.activeElement!==inp)inp.value=wiNum(base+A.d);
+  if(sv){ sv.disabled=!A.d; } }
 /* lowest change allowed: down to 0 bottles; a wine already below 0 can only go up */
 function wiAdjFloor(base){ return base>0?-base:0; }
-function wiAdjSave(){ const A=WI.adj; if(!A||!A.d||A.saving)return; if(window.event)window.event.stopPropagation(); wiAdjCommit(A); }
+function wiAdjSave(){ const A=WI.adj; if(!A||!A.d||A.saving)return; if(window.event)window.event.stopPropagation();
+  WI.adj=null; wiAdjCommit(A); wiRender(); }
 /* one save per change: A.saving blocks repeat taps while the write is in flight (they were stacking, 2026-10-30) */
 function wiAdjCommit(A){ const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey[A.key]; if(!s||!A.d||A.saving)return;
-  A.saving=true; if(WI.adj===A)wiAdjPaint();
-  const fin=function(){ if(WI.adj===A)WI.adj=null; wiRender(); }, fail=function(){ A.saving=false; if(WI.adj===A)wiAdjPaint(); };
+  A.saving=true; WI.pend[A.key]=(WI.pend[A.key]||0)+1;
+  const done=function(){ WI.pend[A.key]=Math.max(0,(WI.pend[A.key]||1)-1); if(!WI.pend[A.key])delete WI.pend[A.key]; };
+  const fin=function(){ done(); wiRender(); }, fail=function(){ done(); A.saving=false; if(!WI.adj)WI.adj={key:A.key,d:A.d}; wiRender(); };
   const at=Date.now(), by=me?me.name:'';
-  if(s.count==null){ const hr=new Date(at).getHours(), when=(hr>=3&&hr<16)?'before':'after', svc0=wiSvcDate(at);
+  if(s.count==null){ const hr=new Date(at).getHours(), when=(hr>=3&&hr<17)?'before':'after', svc0=wiSvcDate(at);
     const rec={id:wiNewId(),at:at,by:by,when:when,svc:when==='before'?svc0:wiAddDays(svc0,1),q:{[A.key]:Math.max(0,A.d)}};
     wiTx(function(cur){ cur.counts.push(rec); return cur; },fin,fail);
   } else { const rec={id:wiNewId(),at:at,by:by,key:A.key,qty:A.d,note:'',kind:'adj'};
@@ -4986,7 +5092,7 @@ function wiAdjCommit(A){ const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byK
    board/wineinv (stock goes up by what came, not what was ordered). Short, missing or wrong (not kept)
    lines become exceptions with a follow-up text; the morning order check counts them as still owed.
    Both docs change in one transaction. */
-let WO={doc:null,loaded:false,unsub:null,edit:null,chk:null,armSkip:null};
+let WO={doc:null,loaded:false,unsub:null,edit:null,chk:null,armSkip:null,armAll:null};
 const WO_SENDERS=['sam'];
 function woRef(){ return fbDb.collection('board').doc('wineorders'); }
 function woFirst(){ return String((me&&me.name)||'').trim().split(/\s+/)[0].toLowerCase(); }
@@ -5093,7 +5199,9 @@ function woEditStep(id,key,dir){
   woTx(function(od){ od.orders=od.orders.map(function(x){ if(x.id!==id||x.state!=='draft')return x;
       const lines=(x.lines||[]).map(function(l){ return l.key!==key?l:Object.assign({},l,{qty_bottles:Math.max(0,(+l.qty_bottles||0)+dir*step),edited:true}); })
         .filter(function(l){return l.qty_bottles>0;});
-      return Object.assign({},x,{lines:lines}); }); od.updated=woToday(); return {od:od,inv:null}; });
+      const known=lines.every(function(l){return woWine(l.key).cost!=null;});   /* recompute the estimate on edit (2026-10-30) */
+      const tot=Math.round(lines.reduce(function(a,l){return a+(+l.qty_bottles||0)*(+woWine(l.key).cost||0);},0)*100)/100;
+      return Object.assign({},x,{lines:lines,est_total:tot,cost_known:known}); }); od.updated=woToday(); return {od:od,inv:null}; });
 }
 function woChkOpen(id){ const o=((WO.doc||{}).orders||[]).find(function(x){return x.id===id;}); if(!o)return;
   WO.chk={id:id,lines:(o.lines||[]).map(function(l){return {key:l.key,issue:null,got:+l.qty_bottles||0,note:'',keep:false};})}; woRender(); }
@@ -5107,6 +5215,8 @@ function woChkSave(){ if(!WO.chk)return; const id=WO.chk.id, lines=WO.chk.lines.
   woTx(function(od,inv){ return woApplyCheckin(od,inv,id,lines,who,now); }, function(){ WO.chk=null; woRender(); });
 }
 function woChkAll(id){ const o=((WO.doc||{}).orders||[]).find(function(x){return x.id===id;}); if(!o)return;
+  if(WO.armAll!==id){ WO.armAll=id; woRender(); return; }   /* asks twice: one stray tap used to add a whole delivery (2026-10-30) */
+  WO.armAll=null;
   const now=Date.now(), who=woWho();
   woTx(function(od,inv){ return woApplyCheckin(od,inv,id,[],who,now); }, function(){ WO.chk=null; woRender(); });
 }
@@ -5165,7 +5275,7 @@ function woRender(){
     const tag=(isToday?'Due today':(late?'Late, was due '+woDayName(o.delivery):'On order'))+(by?' · ordered by '+by:'');
     h+='<div class="wo-o'+(isToday||late?' wo-due':'')+'">'+woHead(o,tag);
     if(WO.chk&&WO.chk.id===o.id)h+=woChkHTML(o);
-    else h+=woLinesHTML(o,false)+'<div class="wo-act"><button class="wi-btn" onclick="woChkAll(\''+o.id+'\')">All received</button><button class="wi-btn wi-btn2" onclick="woChkOpen(\''+o.id+'\')">Something’s off</button></div>';
+    else h+=woLinesHTML(o,false)+'<div class="wo-act"><button class="wi-btn" onclick="woChkAll(\''+o.id+'\')">'+(WO.armAll===o.id?'Tap again: all received':'All received')+'</button><button class="wi-btn wi-btn2" onclick="woChkOpen(\''+o.id+'\')">Something’s off</button></div>';
     h+='</div>'; });
   if(issues.length){
     h+='<div class="wo-sec">Delivery problems</div>';
@@ -5187,7 +5297,6 @@ function woRender(){
   h+='</div>';
   el.innerHTML=h;
 }
-
 function renderFrontDesk(keepSearch){
   if(!isMgr()){$('fdBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
   const prev=keepSearch&&$('fd-search')?$('fd-search').value:'';
@@ -5973,7 +6082,7 @@ function alertReply(reqId){
     });
 }
 function maybeShowAlerts(){
-  if(!me||DEMO||isInvestor()||alertsShownSession||!toLoaded)return;
+  if(!me||DEMO||isInvestor()||isHost()||alertsShownSession||!toLoaded)return;
   const am=$('announceModal');
   if(am&&am.style.display==='flex')return;   // never stack on the announcement; annClose retries
   const list=alertsForModal();
@@ -6978,7 +7087,7 @@ function compWithExtras(){
   ['boh','foh'].forEach(function(k){(C.roster[k]||[]).forEach(function(p){if(p.name)seen.add(p.name.toLowerCase());});});
   const out={boh:(C.roster.boh||[]).slice(), foh:(C.roster.foh||[]).slice()};
   Object.keys(PROFILES).forEach(function(n){const p=PROFILES[n]||{};const nm=p.name||n;
-    if(p.active===true && !isInvestorP(p) && nm && !seen.has(nm.toLowerCase()) && (p.area==='foh'||p.area==='boh')){
+    if(p.active===true && !isSpecialP(p) && nm && !seen.has(nm.toLowerCase()) && (p.area==='foh'||p.area==='boh')){
       out[p.area].push({name:nm, role:(p.role||'Staff'), fwc:null, mast:null, isNew:true});
     }});
   ['foh','boh'].forEach(function(k){ out[k].sort(function(a,b){ return a.name.localeCompare(b.name); }); });
@@ -7319,7 +7428,7 @@ function dirWithExtras(){const S=SF.staff,base=S.directory||{},seen=new Set();
   ['foh','boh','office'].forEach(function(k){(base[k]||[]).forEach(function(p){if(p.name)seen.add(p.name.toLowerCase());});});
   const out={foh:(base.foh||[]).slice(),boh:(base.boh||[]).slice(),office:(base.office||[]).slice()};
   Object.keys(PROFILES).forEach(function(n){const p=PROFILES[n]||{};const nm=p.name||n;
-    if(p.active===true&&!isInvestorP(p)&&nm&&!seen.has(nm.toLowerCase())){
+    if(p.active===true&&!isSpecialP(p)&&nm&&!seen.has(nm.toLowerCase())){
       const a=(p.area==='boh')?'boh':(p.area==='office')?'office':'foh';
       out[a].push({name:nm,role:(p.role||'Staff'),isNew:true});}});
   return out;}
@@ -10179,12 +10288,22 @@ function persistBoard(b){
    verbal type in board/verbals is now the single source. Its per-device seen
    tracking and the verbals gold-pill it drove are gone; glow is handled by
    updateAttn().) */
+/* Split (2026-10-30): an iPad held sideways shows the tables and a running chat side by side;
+   the Tables | Chat pill hides. A phone sideways is under 900px and keeps the pill. */
+let atSplitLast=null;
+function atSplit(){ try{ return window.matchMedia('(min-width:900px) and (orientation:landscape)').matches; }catch(e){ return false; } }
 function renderBoard(){
-  /* The pre-service blurb that used to sit here was written for the old notes board and
-     never applied to this tab. Removed 2026-08-14 along with the add-a-note bar. */
-  if($('boardBody')){ const _ui=atCaptureUI();
-    $('boardBody').innerHTML=(atSub==='chat')?chatPaneHTML():atticPaneHTML();
-    atRestoreUI(_ui); atPlacePanel(); }
+  if($('boardBody')){ const _ui=atCaptureUI(), split=atSplit(), bb=$('boardBody');
+    const cw=bb.querySelector('.chat-wrap'), stick=!cw||(cw.scrollHeight-cw.scrollTop-cw.clientHeight<80);
+    document.body.classList.toggle('at-split-on',split); bb.classList.toggle('at-split',split);
+    if(split){ if(atSub==='chat')atSub='tables';
+      bb.innerHTML='<div class="at-tablescol">'+atticPaneHTML()+'</div><div class="at-chatcol">'+chatPaneHTML()+'</div>'; }
+    else bb.innerHTML=(atSub==='chat')?chatPaneHTML():atticPaneHTML();
+    if(atSplitLast!==split){ const tb=$('atticTabs'); if(tb)tb.querySelectorAll('.subtab').forEach(function(b){b.classList.toggle('active',b.dataset.at===atSub);});
+      if(typeof replaceAllPills==='function')requestAnimationFrame(replaceAllPills); }
+    atSplitLast=split;
+    atRestoreUI(_ui); atPlacePanel();
+    const nw=bb.querySelector('.chat-wrap'); if(nw&&stick)nw.scrollTop=nw.scrollHeight; }
   updateAttn();
 }
 /* TABLE COMBOS — MD pushes tables together for tonight (51+52+53 → "51").
@@ -10194,21 +10313,22 @@ function comboFor(t){const u=String(t).trim().toUpperCase();return getCombos().f
 function comboPrimary(t){const c=comboFor(t);return c?String(c.primary):String(t).trim();}
 let comboPick=null;   // null = idle, [] = picking
 let comboPrimaryPick=null;  // chosen reference table; null = default to lowest number
-function startCombo(){if(!isMgr())return;comboPick=[];comboPrimaryPick=null;renderBoard();}
+function atCanMD(){return isMgr()||(typeof isHost==='function'&&isHost());}
+function startCombo(){if(!atCanMD())return;comboPick=[];comboPrimaryPick=null;renderBoard();}
 function cancelCombo(){comboPick=null;comboPrimaryPick=null;renderBoard();}
 function toggleComboPick(t){if(!comboPick)return;const i=comboPick.indexOf(t);if(i>=0){comboPick.splice(i,1);if(comboPrimaryPick===t)comboPrimaryPick=null;}else comboPick.push(t);renderBoard();}
 function setComboPrimary(t){if(!comboPick||comboPick.indexOf(t)<0)return;comboPrimaryPick=t;renderBoard();}
 function comboSort(arr){return arr.slice().sort((a,b)=>(parseInt(String(a).replace(/\D/g,''))||999)-(parseInt(String(b).replace(/\D/g,''))||999));}
 function comboChosenPrimary(){return (comboPrimaryPick&&comboPick&&comboPick.indexOf(comboPrimaryPick)>=0)?comboPrimaryPick:(comboPick&&comboPick.length?comboSort(comboPick)[0]:null);}
 function saveCombo(){
-  if(!isMgr()||!comboPick||comboPick.length<2)return;
+  if(!atCanMD()||!comboPick||comboPick.length<2)return;
   const sorted=comboSort(comboPick),primary=comboChosenPrimary();
   const b=getBoard();b.combos=b.combos||[];b.combos.push({primary:primary,tables:sorted});
   comboPick=null;comboPrimaryPick=null;persistBoard(b);renderBoard();
 }
-function rmCombo(i){if(!isMgr())return;const b=getBoard();(b.combos||[]).splice(i,1);persistBoard(b);renderBoard();}
+function rmCombo(i){if(!atCanMD())return;const b=getBoard();(b.combos||[]).splice(i,1);persistBoard(b);renderBoard();}
 function comboUIHTML(){
-  if(!isMgr())return '';
+  if(!atCanMD())return '';
   let h=`<div class="combo-wrap">`;
   getCombos().forEach((c,i)=>h+=`<span class="combo-chip">${esc(c.tables.join('+'))} → ${esc(c.primary)}<span class="x" onclick="rmCombo(${i})">✕</span></span>`);
   if(comboPick){
@@ -10325,7 +10445,7 @@ function atSecList(){
 /* --- role: MD or server. Managers default to MD, everyone else to Server, and
        anybody can flip it. Resets with the nightly session rollover. ---------- */
 function atRoleKey(){return 'sf-role-'+todayISO();}
-function atRole(){try{const v=localStorage.getItem(atRoleKey());if(v==='md'||v==='server')return v;}catch(e){}return isMgr()?'md':'server';}
+function atRole(){if(typeof isHost==='function'&&isHost())return 'md';try{const v=localStorage.getItem(atRoleKey());if(v==='md'||v==='server')return v;}catch(e){}return isMgr()?'md':'server';}
 function atSetRole(r){try{localStorage.setItem(atRoleKey(),r);}catch(e){}atOpen='';atDraft=null;atMoveFrom='';renderBoard();}
 function atIsMD(){return atRole()==='md';}
 
@@ -10410,7 +10530,7 @@ function startTablesSync(){
        note mid-sentence, so the tick touches only the countdown nodes. -------- */
 function atStartTick(){
   if(atTimer)return;
-  window.addEventListener('resize',function(){atPlacePanel();});
+  window.addEventListener('resize',function(){ if($('board')&&$('board').classList.contains('active')&&atSplit()!==atSplitLast)renderBoard(); else atPlacePanel(); });
   atTimer=setInterval(atTickCds,15000);
   document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')atTickCds();});
 }
@@ -10483,6 +10603,28 @@ function atPostNote(t){
   atWrite(t,{notes:atNotes(atRec(t)).concat([
     {by:who,role:atIsMD()?'md':'server',at:Date.now(),text:v,seenBy:[who]}]).slice(-30)},'note sent');
 }
+/* Server strip (2026-10-30): every table in this section that is seated and not yet acked, or
+   carries an unread MD note, with one Got it. Acks straight away, no panel. Empty when nothing
+   is pending. Same rules as atNeedsMe for the server side. */
+function atNeedsHTML(){
+  const meN=currentUserName()||'', items=[];
+  atSecTiles().forEach(function(g){ const t=g.t, r=atRec(t); if(!r)return;
+    const unseen=atNotes(r).filter(function(x){return x&&x.by!==meN&&(x.seenBy||[]).indexOf(meN)<0;});
+    if(r.state==='seated'&&!r.seatAck&&r.by!==meN)items.push({t:t,kind:'seat',r:r,note:unseen.length?unseen[unseen.length-1].text:''});
+    else if(unseen.length)items.push({t:t,kind:'note',r:r,note:unseen[unseen.length-1].text,at:unseen[unseen.length-1].at});
+  });
+  if(!items.length)return '';
+  return '<div class="at-needs">'+items.map(function(it){ const r=it.r;
+    const meta=it.kind==='seat'
+      ?((r.covers?r.covers+' cover'+(r.covers>1?'s':''):'')+(r.occ&&r.occ.length?' · '+atSymbols(r.occ):'')+' · seated '+esc(atStamp(r.at))+(r.by?' by '+esc(String(r.by).split(' ')[0]):''))
+      :('note from the MD · '+esc(atStamp(it.at)));
+    return '<div class="at-need"><div class="at-need-l"><span class="at-need-num">'+esc(it.t)+'</span><span class="at-need-meta">'+meta+'</span>'+
+      (it.note?'<span class="at-need-note">'+esc(it.note)+'</span>':'')+'</div>'+
+      '<button class="at-btn at-go at-need-btn" onclick="'+(it.kind==='seat'?'atAckSeat':'atAckNotes')+'(\''+esc(it.t)+'\')">Got it</button></div>';
+  }).join('')+'</div>';
+}
+function atUnflag(t){ const r=atRec(t); if(!r||!r.flag||r.flagAck)return;
+  atWrite(t,{flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},'status withdrawn'); atOpen='';atDraft=null; }
 function atAckNotes(t){
   const meN=currentUserName()||'';
   const r=atRec(t); if(!r||!atNotesUnseen(r))return;
@@ -10684,12 +10826,18 @@ function atPanelHTML(t){
     if(seated&&!r.seatAck){
       h+='<div class="at-acts"><button class="at-btn at-go" onclick="atAckSeat(\''+esc(t)+'\')">Got it</button></div>';
     }
+    /* status first (Sam 2026-10-23): the four flags are what a server does most, so they sit at
+       the top as a 2x2 grid. The pressed one is the live flag; tapping it again withdraws it.
+       Reset is last and heaviest because the MD acking it clears the table. */
+    const live=(r&&r.flag&&!r.flagAck)?r.flag:'';
+    h+='<div class="at-lab">Status</div><div class="at-status">'+
+      AT_FLAG_ORDER.map(function(k){const on=live===k;
+        return '<button class="at-fl at-f-'+AT_FLAG[k].c+(on?' on':'')+(k==='reset'?' at-fl-reset':'')+'" onclick="'+
+          (on?'atUnflag(\''+esc(t)+'\')':'atFlagIt(\''+esc(t)+'\',\''+k+'\')')+'">'+esc(AT_FLAG[k].l)+(on?' \u2713':'')+'</button>';}).join('')+'</div>';
     h+=atThreadHTML(t,r);
     h+='<textarea class="at-note" id="at-nt-'+key+'" placeholder="Note to the MD"></textarea>';
-    h+='<div class="at-acts"><button class="at-btn at-go" onclick="atPostNote(\''+esc(t)+'\')">Send note</button></div>';
-    h+='<div class="at-lab">Tell the MD</div><div class="at-row">'+
-      AT_FLAG_ORDER.map(function(k){return '<button class="at-fl at-f-'+AT_FLAG[k].c+'" onclick="atFlagIt(\''+esc(t)+'\',\''+k+'\')">'+esc(AT_FLAG[k].l)+'</button>';}).join('')+
-      '<div class="at-meta">A flag sends whatever is typed above along with it.</div></div>';
+    h+='<div class="at-acts"><button class="at-btn at-go" onclick="atPostNote(\''+esc(t)+'\')">Send note</button>'+
+      '<span class="at-meta">A status sends whatever is typed here along with it.</span></div>';
   }
 
   if(r&&r.log&&r.log.length){
@@ -10713,7 +10861,9 @@ function atticPaneHTML(){
   const order=(SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[];
   let h='';
   if(atSyncErr)h+='<div class="at-warn">Live sync is down. What you see is this device only, and nothing you tap will reach the floor. Tell the MD out loud.</div>';
-  h+='<div class="at-bar"><div class="at-roles"><button class="at-rb'+(atIsMD()?' on':'')+'" onclick="atSetRole(\'md\')">MD</button>'+
+  if(isHost()){ atSec='Attic'; atSecOpen=false;   // Attic only for now (Sam 2026-10-23); switcher can come back later
+    h+='<div class="at-bar"><div class="at-roles"><span class="at-rb on">Host Stand · MD</span></div><span class="at-secbtn">Attic</span></div>'; }
+  else h+='<div class="at-bar"><div class="at-roles"><button class="at-rb'+(atIsMD()?' on':'')+'" onclick="atSetRole(\'md\')">MD</button>'+
     '<button class="at-rb'+(!atIsMD()?' on':'')+'" onclick="atSetRole(\'server\')">Server</button></div>'+
     '<button class="at-secbtn" onclick="atToggleSecs()">'+esc(atSec)+' <span class="at-caret">'+(atSecOpen?'⌃':'⌄')+'</span></button></div>';
   if(atSecOpen){
@@ -10721,6 +10871,7 @@ function atticPaneHTML(){
       return '<button class="fchip'+(atSec===n?' active':'')+'" onclick="atPickSec(\''+esc(n)+'\')">'+esc(n)+'</button>';}).join('')+'</div>';
   }
   if(atMoveFrom)h+='<div class="at-movebar">Moving <b>'+esc(atMoveFrom)+'</b> — tap an open table<button class="at-btn at-cancel" onclick="atCancelMove()">Cancel</button></div>';
+  if(!atIsMD())h+=atNeedsHTML();
   const tabs=atSecTiles();
   const room=AT_ROOM[atSec];
   h+='<div class="at-grid'+(room?' at-room" style="--at-cols:'+room.cols:'')+'">'+(tabs.length?tabs.map(function(g){return atTileHTML(g.t,g);}).join(''):'<div class="board-empty">No tables mapped for '+esc(atSec)+'.</div>')+
@@ -10740,7 +10891,7 @@ function startChatSync(){
     chatUnsub=fbDb.collection('chat').where('date','==',todayISO()).onSnapshot(function(snap){
       CHAT={}; snap.docs.forEach(function(d){CHAT[d.id]=d.data();});
       chatLoaded=true; chatSyncErr=false; chatLsSet();
-      if(atSub==='chat'&&$('board')&&$('board').classList.contains('active'))chatMarkSeen();
+      if((atSub==='chat'||atSplit())&&$('board')&&$('board').classList.contains('active'))chatMarkSeen();
       renderBoard();
     },function(){ chatSyncErr=true; CHAT=chatLsGet(); chatLoaded=false; renderBoard(); });
   }else{ chatSyncErr=!DEMO; CHAT=chatLsGet(); }

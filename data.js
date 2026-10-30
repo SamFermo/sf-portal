@@ -18043,7 +18043,7 @@ window.SF = {
  },
  "wineInv": {
   "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage. 2026-10-27: house white key now holds Brigaldara Soave (key unchanged, counts keyed by it); Contesa Pecorino added, took the Vermentino's glass spot; Specialty Cellars wines ship from Grape Expectations' warehouse. 2026-10-28 (Guinan, Task 1): vendors block = reps, text numbers, cutoff and delivery weekday (Mon=0; default order Thu, deliver Fri until the rep confirms), minimums. Per wine on the list: unit = bottles per case or pack as the rep sells it; rule = Adrian's pattern (par6 keep about 6 as loose bottles, case = 1 case, cases3 = multiples of 3 cases, sixpack2 = two 6-packs, eugenio = Vinifera 5-case mix, pace = sized from sales and rounded to the unit); cost = USD per bottle from the Master sheet Wines tab, null where not on file; usual = Adrian's words. Vandori is cellar on the display but orderable:true (bar prosecco, no Revel button).",
-  "updated": "2026-10-29",
+  "updated": "2026-10-30",
   "glassesPerBottle": 4,
   "vendors": {
    "Elliot Bay": {
@@ -18052,13 +18052,12 @@ window.SF = {
     "cutoffDow": 3,
     "cutoffTime": "22:00",
     "deliveryDow": 4,
-    "confirmed": false,
+    "confirmed": true,
     "minimum": {
      "usd": 100,
      "cases": null
     },
-    "note": "Takes orders until 10-11pm the night before.",
-    "phoneNote": "Adrian's order sheet says 206-391-6208; the Master sheet Vendors tab says 206-250-9190 (an Elliot Bay line on Adrian's sheet). Unconfirmed."
+    "note": "Delivers to Ballard Tue, Wed, Fri. Orders until 10-11pm the night before (their system takes orders to midnight). Text or email. (Todd 10/30)"
    },
    "Specialty Cellars": {
     "rep": "Marsha",
@@ -18092,12 +18091,12 @@ window.SF = {
     "cutoffDow": 3,
     "cutoffTime": null,
     "deliveryDow": 4,
-    "confirmed": false,
+    "confirmed": true,
     "minimum": {
      "usd": null,
      "cases": null
     },
-    "note": "Usually delivers Friday unless asked for earlier. 3 mixed cases for a break."
+    "note": "Friday delivery; earlier on request per order, or a permanent change if we want. Any method: text, email, call. (Sal 10/30)"
    },
    "Vinea": {
     "rep": "Janet",
@@ -18116,14 +18115,14 @@ window.SF = {
     "rep": "Graham",
     "phone": "+16122401248",
     "cutoffDow": 3,
-    "cutoffTime": null,
+    "cutoffTime": "17:00",
     "deliveryDow": 4,
-    "confirmed": false,
+    "confirmed": true,
     "minimum": {
      "usd": null,
      "cases": null
     },
-    "note": ""
+    "note": "Delivers Tue, Wed, Fri. Order by 5pm the day before, no hard cutoff. Text or email (he'll reply by text). Sant'Agata out of stock until 11/18. (Graham 10/30)"
    },
    "Winebow": {
     "rep": "Abe",
@@ -18140,8 +18139,8 @@ window.SF = {
     "phoneNote": "206-391-6220 is marked 'vm' on both sheets and may not take texts; Adrian's header row shows 206-713-8532, which is Craig Walker's NW Beverages line. Unconfirmed."
    },
    "Casa Bruno": {
-    "rep": "Andy",
-    "phone": "+12062509176",
+    "rep": "Sid",
+    "phone": "+18476872462",
     "cutoffDow": 3,
     "cutoffTime": null,
     "deliveryDow": 4,
@@ -18150,20 +18149,20 @@ window.SF = {
      "usd": null,
      "cases": null
     },
-    "note": ""
+    "note": "Sid Samberg emailed 10/29 as our contact ('hit me up with orders'); Adrian's notes said Andy. Asked Sid 10/30 whether he covers Matot/Armujan; no answer yet. Number from his signature."
    },
    "Odom": {
-    "rep": "Mike",
-    "phone": "+12065507127",
+    "rep": "Matthew",
+    "phone": "+12068400966",
     "cutoffDow": 3,
-    "cutoffTime": "15:00",
+    "cutoffTime": "16:00",
     "deliveryDow": 4,
-    "confirmed": false,
+    "confirmed": true,
     "minimum": {
      "usd": 200,
      "cases": null
     },
-    "note": "Order Thursday by 3pm for Friday."
+    "note": "Matthew Lindley is our rep (10/30). Thursday by 4pm for Friday; off-day orders when needed. Email or text. Vandori $8.05 one case, $6.25 at 3 cases. $200 minimum."
    }
   },
   "wines": [
@@ -18207,7 +18206,7 @@ window.SF = {
     "vendor": "Elliot Bay",
     "unit": 12,
     "rule": "pace",
-    "cost": null,
+    "cost": 13.99,
     "usual": "1-2 cases by stock and day of month"
    },
    {
@@ -18392,7 +18391,7 @@ window.SF = {
     "vendor": "Elliot Bay",
     "unit": 12,
     "rule": "par6",
-    "cost": null,
+    "cost": 24.5,
     "usual": "keep about 6"
    },
    {
@@ -18443,7 +18442,7 @@ window.SF = {
     "fridge": true,
     "unit": 12,
     "rule": "par6",
-    "cost": null,
+    "cost": 26.6,
     "usual": "keep about 6"
    },
    {
@@ -18456,7 +18455,7 @@ window.SF = {
     "fridge": true,
     "unit": 12,
     "rule": "par6",
-    "cost": null,
+    "cost": 28.0,
     "usual": "keep about 6, moves fast"
    },
    {
@@ -18468,7 +18467,7 @@ window.SF = {
     "vendor": "Odom",
     "unit": 12,
     "rule": "case",
-    "cost": null,
+    "cost": 20.65,
     "usual": "1 case at a time"
    },
    {
@@ -18537,7 +18536,8 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 14.25,
-    "usual": "1 case goes a long way"
+    "usual": "1 case goes a long way",
+    "outUntil": "2026-11-18"
    },
    {
     "key": "folicello-il-rosso-lambrusco-dell-emilia",
@@ -18769,7 +18769,7 @@ window.SF = {
     "note": "Not on the list. Poured as a gift for anniversaries, so it leaves without a Revel button.",
     "unit": 12,
     "rule": "cases3",
-    "cost": null,
+    "cost": 6.25,
     "usual": "always 3 cases (price drops at 3)",
     "orderable": true
    },
@@ -19106,5 +19106,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793399089"
+ "build": "1793404299"
 };
