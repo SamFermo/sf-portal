@@ -33,27 +33,27 @@
       "rep": "Eugenio",
       "phone": "+13235413276",
       "cutoffDow": 3,
-      "cutoffTime": null,
-      "deliveryDow": 4,
-      "confirmed": false,
-      "minimum": {
-        "usd": null,
-        "cases": null
-      },
-      "note": "Any 5 cases mixed for 20% off. Delivers Tue, Wed, Fri; which day for us is unconfirmed."
-    },
-    "Vehrs": {
-      "rep": "Sal",
-      "phone": "+12068503540",
-      "cutoffDow": 3,
-      "cutoffTime": null,
+      "cutoffTime": "17:00",
       "deliveryDow": 4,
       "confirmed": true,
       "minimum": {
         "usd": null,
         "cases": null
       },
-      "note": "Friday delivery; earlier on request per order, or a permanent change if we want. Any method: text, email, call. (Sal 10/30)"
+      "note": "Any 5 cases mixed for 20% off. Delivers Tue, Wed, Fri, cutoff 5pm the day before; last-minute by text, not guaranteed. Email or text orders. 323-541-3276 confirmed (Eugenio 11/2)."
+    },
+    "Vehrs": {
+      "rep": "Sal",
+      "phone": "+12068503540",
+      "cutoffDow": 3,
+      "cutoffTime": "16:30",
+      "deliveryDow": 4,
+      "confirmed": true,
+      "minimum": {
+        "usd": null,
+        "cases": null
+      },
+      "note": "Friday delivery; earlier on request per order, or a permanent change if we want. Any method: text, email, call. (Sal 10/30) Friday orders due Thursday 4:30pm. Invoices auto-email from Encompass DSD (Sal 11/2)."
     },
     "Vinea": {
       "rep": "Janet",
@@ -66,7 +66,7 @@
         "usd": null,
         "cases": null
       },
-      "note": "Delivers Tue-Fri, 9am-3pm. Order by 10pm the night before for the next delivery day; she'll bring a last-minute order herself on a non-delivery day. Text orders are fine (Janet 10/31). Louis Armand break at 12 bottles (Adrian); her 10-13 list prints $30.99, $28.99 at 36 (asked 11/1)."
+      "note": "Delivers Tue-Fri, 9am-3pm. Order by 10pm the night before for the next delivery day; she'll bring a last-minute order herself on a non-delivery day. Text orders are fine (Janet 10/31). Louis Armand break at 12 bottles (Adrian); price rose this year, we have paid $28.99 on recent orders, 12 bottles of sparkling gets that price (Janet 11/2)."
     },
     "Petit Monde": {
       "rep": "Graham",
@@ -302,7 +302,7 @@
       "vendor": "Vinea",
       "unit": 6,
       "rule": "sixpack2",
-      "cost": 24.99,
+      "cost": 28.99,
       "usual": "two 6-packs (break at 12)"
     },
     {

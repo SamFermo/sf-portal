@@ -833,7 +833,7 @@ window.SF = {
    "glass": "14",
    "bottle": "55",
    "pour": "Vibrant pink with fine, persistent bubbles — fresh raspberry and strawberry, a lift of violet, dry and refreshing with bright acidity. The most delicate style of Lambrusco.",
-   "producer": "Founded in 1920, Paltrinieri farms 17 hectares between the Secchia and Panaro rivers in Modena; 15 of them are the sandy-loam 'Cristo' vineyard where these grapes grow. The wine is named for St. Agatha, patron saint of Sorbara. Alberto Paltrinieri, who took over in 1998, was among the first to gamble on a mono-varietal Sorbara. (Research puts it at ~11% ABV and notes some bottlings blend in Salomino rather than being 100% Sorbara — confirm the vintage and blend with your lead before quoting.)",
+   "producer": "Paltrinieri traces its start to 1926 and farms 17 hectares in Cristo di Sorbara, the sandy strip between the Secchia and Panaro rivers north of Modena. The wine is named for St. Agatha, patron saint of Sorbara. Alberto Paltrinieri, who took over in 1998, was among the first to gamble on a mono-varietal Sorbara. (Research puts it at ~11% ABV and notes some bottlings blend in Salomino rather than being 100% Sorbara — confirm the vintage and blend with your lead before quoting.)",
    "winemaking": "Grapes are gently pressed and vatted for a first fermentation, then a second fermentation by the Martinotti (Charmat) method in pressurized autoclaves, using native yeasts. Bottled at low pressure to preserve the fruit and varietal aromatics.",
    "has_notes": true,
    "specs": [
@@ -876,7 +876,7 @@ window.SF = {
      "pron": "lahm-BROOS-koh dee sor-BAH-rah"
     }
    ],
-   "added": "2026-10-27"
+   "added": "2026-11-02"
   },
   {
    "section": "Bubbles",
@@ -1004,9 +1004,9 @@ window.SF = {
    "glass": "",
    "bottle": "125",
    "grapes": "52% Chardonnay, 35% Pinot Noir, 13% Pinot Meunier (approximate)",
-   "pour": "Elegant and Chardonnay-driven — delicate citrus blossom, vine peach, and white fruit on the nose, with beautiful freshness and a long, refined finish. Blended from over 100 reserve vintages.",
-   "producer": "Laurent-Perrier is based in Tours-sur-Marne, Champagne. Founded in 1812, the house is known for its Chardonnay-forward style and long cellar aging. La Cuvée is their flagship non-vintage blend, assembled from over 100 different wines and 100+ vintages of reserve wines.",
-   "winemaking": "Multi-vintage blend of more than 100 wines. Aged approximately 4 years in the cellar on lees before disgorgement. Traditional Champagne method.",
+   "pour": "Elegant and Chardonnay-driven — delicate citrus blossom, vine peach, and white fruit on the nose, with beautiful freshness and a long, refined finish. Drawn from more than 100 crus, with 15 to 30% reserve wine.",
+   "producer": "Laurent-Perrier is based in Tours-sur-Marne, Champagne. Founded in 1812, the house is known for its Chardonnay-forward style and long cellar aging. La Cuvée is their flagship non-vintage blend, drawn from more than 100 crus, with 15 to 30% reserve wine.",
+   "winemaking": "Multi-vintage blend from more than 100 crus. Aged approximately 4 years in the cellar on lees before disgorgement. Traditional Champagne method.",
    "has_notes": true,
    "specs": [
     {
@@ -1047,7 +1047,8 @@ window.SF = {
      "term": "La Cuvée",
      "pron": "lah koo-VAY"
     }
-   ]
+   ],
+   "added": "2026-11-02"
   },
   {
    "section": "White/Rosé/Orange",
@@ -1059,7 +1060,7 @@ window.SF = {
    "bottle": "50",
    "grapes": "100% Pinot Grigio",
    "pour": "Deep straw yellow, with acacia flower and white orchard fruit — banana and pear — leading to a notably intense palate. A richer, Collio style of Pinot Grigio.",
-   "producer": "From the Savaian family's estate at Cormons in the Collio, the same growers behind the Masaret orange wine. The Pinot Grigio comes off ponca, the stratified marl-and-sandstone soil of the Collio hills, from vines averaging around 15 years, in a temperate Upper Adriatic climate moderated by the nearby sea. We pour the 2025. ABV was not on the fresh sheet; confirm with your lead before quoting it.",
+   "producer": "From the Bastiani family's Borgo Savaian estate at Cormons in the Collio, the same growers behind the Masaret orange wine. The Pinot Grigio comes off ponca, the stratified marl-and-sandstone soil of the Collio hills, from vines averaging around 15 years, in a temperate Upper Adriatic climate moderated by the nearby sea. We pour the 2025. ABV was not on the fresh sheet; confirm with your lead before quoting it.",
    "winemaking": "100% Pinot Grigio off ponca (marl and sandstone) in the Collio; vines about 15 years old. Vinified and matured in stainless steel for 5–6 months.",
    "has_notes": true,
    "specs": [
@@ -1122,7 +1123,7 @@ window.SF = {
    "bottle": "55",
    "grapes": "60% Tocai Friulano, 20% Ribolla Gialla, 20% Istrian Malvasia",
    "pour": "Bruised peach, tea, and cashews — a skin-contact Friulian field blend from a three-generation family estate 12km from the Slovenian border, unfiltered and earthy.",
-   "producer": "With roots stretching back three generations in Cormons, the Savaian family farms 18 hectares alongside Mount Quarin, maintaining a human-scale estate committed to indigenous varieties and natural farming.",
+   "producer": "With roots stretching back three generations in Cormons, the Bastiani family farms 27.5 hectares on the flank of Monte Quarin, maintaining a human-scale estate committed to indigenous varieties and natural farming.",
    "winemaking": "Destemmed grapes fermented naturally on the skins in stainless steel at ~24°C. Post-fermentation skin maceration of approximately 90 days. Unfiltered, racked twice before bottling.",
    "has_notes": true,
    "specs": [
@@ -1168,7 +1169,8 @@ window.SF = {
      "term": "Cormons",
      "pron": "KOR-mohns"
     }
-   ]
+   ],
+   "added": "2026-11-02"
   },
   {
    "section": "White/Rosé/Orange",
@@ -1468,9 +1470,9 @@ window.SF = {
    "glass": "",
    "bottle": "85",
    "grapes": "Carricante, Catarratto, Inzolia, Grecanico, and Minnella",
-   "pour": "Fresh and floral with a streak of white pepper and an assertive, smoky minerality. Light-bodied, silky-textured, with zesty but integrated acidity. Organically grown on the volcanic northern slope of Etna. It never loses its brightness and pace, and the more it ages the more the terroir comes forward. Drink now or hold.",
+   "pour": "Fresh and floral with a streak of white pepper and an assertive, smoky minerality. Light-bodied, silky-textured, with zesty but integrated acidity. Organically grown on the volcanic north and east sides of Etna. It never loses its brightness and pace, and the more it ages the more the terroir comes forward. Drink now or hold.",
    "producer": "Tenuta delle Terre Nere sits on the northern slope of Etna between 600 and 900 meters, with roughly 43 hectares of vineyards and 150 olive trees. Its crus tell the story of the mountain: the Calderara Cru (11 to 12 hectares, some of it pre-phylloxera, the rest 40 to 50 years old), the Guardiola Cru (2.1 hectares, almost entirely pre-phylloxera and the highest-altitude red-grape vineyards in Europe), and Feudo di Mezzo. 500,000 years of eruptions have left endlessly varied soils, mostly volcanic ash flecked with black pumice and rock. The high elevation drives dramatic day-to-night temperature swings, giving Etna's wines their elegance and lift, free of the heat and overripeness of typical southern bottlings.",
-   "winemaking": "Organically grown on the northern slope of Etna at 600 to 900 meters, from vineyards 5 to 15 years old on volcanic soil blended from several sites. Around 50,000 bottles a year.",
+   "winemaking": "Organically grown on the north and east sides of Etna at 600 to 900 meters, from vines 5 to 100 years old on volcanic soil, blended from several sites. Around 50,000 bottles a year.",
    "has_notes": true,
    "specs": [
     {
@@ -1524,7 +1526,7 @@ window.SF = {
      "pron": "mee-NEL-lah"
     }
    ],
-   "added": "2026-10-26"
+   "added": "2026-11-02"
   },
   {
    "section": "White/Rosé/Orange",
@@ -1802,14 +1804,14 @@ window.SF = {
    "section": "Red",
    "name": "Albino Rocca Langhe Nebbiolo DOC",
    "vintage": "2025",
-   "region": "Barbaresco, Piedmont, Italy",
+   "region": "Roero hills and Barbaresco, Piedmont, Italy",
    "type": "red",
    "glass": "17",
    "bottle": "70",
-   "grapes": "Nebbiolo",
-   "pour": "Tasting notes not yet confirmed for this bottling. As a Langhe Nebbiolo from a Barbaresco house, expect the grape's signature: red cherry and wild strawberry, rose and dried herbs, bright acidity and a firm but lighter tannic frame than the estate's Barbaresco.",
-   "producer": "Albino Rocca is a family estate in the village of Barbaresco itself, bottling since 1960 and now run by Angelo Rocca's daughters Daniela, Monica and Paola with Paola's husband Carlo Castellengo. About 18 hectares, 10 of them Nebbiolo, in the Ovello (Vigna Loreto), Ronchi and Montersino vineyards; farmed sustainably (SQNPI and Green Experience certified). This replaced the G.D. Vajra Langhe Nebbiolo in October 2026, at $17 a glass and $70 a bottle.",
-   "winemaking": "Not confirmed with the importer yet. Albino Rocca's Langhe Nebbiolo is the estate's earlier-drinking Nebbiolo, raised to show fruit rather than the long cask aging of their Barbaresco. Ask your lead for the tech sheet.",
+   "grapes": "Mainly Nebbiolo, with a small share of Cabernet Franc",
+   "pour": "Tasting notes not yet confirmed for this bottling. As a Langhe Nebbiolo from a Barbaresco family, expect the grape's signature: red cherry and wild strawberry, rose and dried herbs, bright acidity and a firm but lighter tannic frame than the estate's Barbaresco.",
+   "producer": "Albino Rocca is a family estate in the village of Barbaresco itself, bottling since 1960 and now run by Angelo Rocca's daughters Daniela, Monica and Paola with Paola's husband Carlo Castellengo. About 18 hectares, 10 of them Nebbiolo, in the Ovello (Vigna Loreto), Ronchi and Montersino vineyards; farmed sustainably (SQNPI and Green Experience certified). This wine, which the estate calls Rosso di Rocca, is not young Barbaresco: the fruit comes mostly from Castagnito and Magliano Alfieri in the Roero hills, with a small part from Barbaresco. It replaced the G.D. Vajra Langhe Nebbiolo in October 2026, at $17 a glass and $70 a bottle.",
+   "winemaking": "Matured for several months in stainless steel, with none of the long cask aging of the estate's Barbaresco. We have no sheet specific to the 2025, so ask your lead before quoting exact percentages.",
    "has_notes": false,
    "specs": [],
    "pronguide": [
@@ -1830,7 +1832,7 @@ window.SF = {
      "pron": "bar-bah-RES-koh"
     }
    ],
-   "added": "2026-10-09"
+   "added": "2026-11-02"
   },
   {
    "section": "Red",
@@ -1842,7 +1844,7 @@ window.SF = {
    "bottle": "80",
    "grapes": "100% Sangiovese",
    "pour": "Packed with blackberry, black cherry, cedar, prune, and espresso — complex and spicy, with mouth-watering acidity, lively tannins, and a long, dry, persistent finish with lingering leather and tobacco.",
-   "producer": "Corte Pavone was converted to organic and biodynamic farming in the early 1970s by owner Rainer Loacker in the Casanuova area of Montalcino at 1,500 ft elevation. Winemaker Hayo Loacker ages in Slavonian, French, and Austrian oak. Certified vegan, organic, biodynamic, and La Renaissance des Appellations.",
+   "producer": "Rainer Loacker, of the South Tyrolean wine family, bought Corte Pavone in 1996. The winery sits at about 500 meters in Montalcino, and the estate follows biodynamic principles. Winemaker Hayo Loacker ages in Slavonian, French, and Austrian oak. Certified vegan, organic, biodynamic, and La Renaissance des Appellations.",
    "winemaking": "70% of the Sangiovese aged in used barrel, 30% in tonneau for 18 months. Placed in stainless steel tanks for 1 month before bottling.",
    "has_notes": true,
    "specs": [
@@ -1884,7 +1886,8 @@ window.SF = {
      "term": "Sangiovese",
      "pron": "san-joh-VEH-zeh"
     }
-   ]
+   ],
+   "added": "2026-11-02"
   },
   {
    "section": "Red",
@@ -18022,27 +18025,27 @@ window.SF = {
     "rep": "Eugenio",
     "phone": "+13235413276",
     "cutoffDow": 3,
-    "cutoffTime": null,
-    "deliveryDow": 4,
-    "confirmed": false,
-    "minimum": {
-     "usd": null,
-     "cases": null
-    },
-    "note": "Any 5 cases mixed for 20% off. Delivers Tue, Wed, Fri; which day for us is unconfirmed."
-   },
-   "Vehrs": {
-    "rep": "Sal",
-    "phone": "+12068503540",
-    "cutoffDow": 3,
-    "cutoffTime": null,
+    "cutoffTime": "17:00",
     "deliveryDow": 4,
     "confirmed": true,
     "minimum": {
      "usd": null,
      "cases": null
     },
-    "note": "Friday delivery; earlier on request per order, or a permanent change if we want. Any method: text, email, call. (Sal 10/30)"
+    "note": "Any 5 cases mixed for 20% off. Delivers Tue, Wed, Fri, cutoff 5pm the day before; last-minute by text, not guaranteed. Email or text orders. 323-541-3276 confirmed (Eugenio 11/2)."
+   },
+   "Vehrs": {
+    "rep": "Sal",
+    "phone": "+12068503540",
+    "cutoffDow": 3,
+    "cutoffTime": "16:30",
+    "deliveryDow": 4,
+    "confirmed": true,
+    "minimum": {
+     "usd": null,
+     "cases": null
+    },
+    "note": "Friday delivery; earlier on request per order, or a permanent change if we want. Any method: text, email, call. (Sal 10/30) Friday orders due Thursday 4:30pm. Invoices auto-email from Encompass DSD (Sal 11/2)."
    },
    "Vinea": {
     "rep": "Janet",
@@ -18055,7 +18058,7 @@ window.SF = {
      "usd": null,
      "cases": null
     },
-    "note": "Delivers Tue-Fri, 9am-3pm. Order by 10pm the night before for the next delivery day; she'll bring a last-minute order herself on a non-delivery day. Text orders are fine (Janet 10/31). Louis Armand break at 12 bottles (Adrian); her 10-13 list prints $30.99, $28.99 at 36 (asked 11/1)."
+    "note": "Delivers Tue-Fri, 9am-3pm. Order by 10pm the night before for the next delivery day; she'll bring a last-minute order herself on a non-delivery day. Text orders are fine (Janet 10/31). Louis Armand break at 12 bottles (Adrian); price rose this year, we have paid $28.99 on recent orders, 12 bottles of sparkling gets that price (Janet 11/2)."
    },
    "Petit Monde": {
     "rep": "Graham",
@@ -18291,7 +18294,7 @@ window.SF = {
     "vendor": "Vinea",
     "unit": 6,
     "rule": "sixpack2",
-    "cost": 24.99,
+    "cost": 28.99,
     "usual": "two 6-packs (break at 12)"
    },
    {
@@ -19054,5 +19057,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793630841"
+ "build": "1793648626"
 };
