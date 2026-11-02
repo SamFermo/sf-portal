@@ -691,6 +691,11 @@ body.tour-on{padding-bottom:230px;}
   background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); border-radius:10px;
   color:var(--ink); padding:9px 11px; font-family:inherit; font-size:13.5px; line-height:1.45;}
 .at-acts{display:flex; flex-wrap:wrap; gap:8px; margin-top:11px;}
+.at-signout{margin-left:auto; color:var(--ink-mute); font-size:12px;}
+.at-confirm{position:fixed; inset:0; z-index:300; background:rgba(4,8,20,.72); display:flex; align-items:center; justify-content:center; padding:20px;}
+.at-confirm-box{background:#131a30; border:1px solid rgba(205,216,244,.2); border-radius:14px; padding:18px 18px 14px; max-width:320px; width:100%;}
+.at-confirm-box p{margin:0 0 6px; font-size:15px; color:var(--ink);}
+#atticTabs .subtab{position:relative;}
 /* server strip + status row (2026-10-30) */
 .at-needs{display:flex; flex-direction:column; gap:8px; margin:0 0 12px;}
 .at-need{display:flex; align-items:center; gap:10px; border:1px solid var(--gold); background:rgba(230,200,120,.1); border-radius:12px; padding:9px 12px;}
@@ -2161,7 +2166,7 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 </div>
 
 <script>
-const BUILD='1793588865';   // stamped by build-data.py at every deploy
+const BUILD='1793590632';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2623,6 +2628,13 @@ const DEMO_CODE='5341';
 /* Investors are deliberately absent from the name picker, so they need their own way in.
    PIN-only: there is one investor profile, so there is nothing to disambiguate. The PIN is
    checked against the same salted SHA-256 hash every staff PIN uses. */
+function hostSignOut(){
+  const m=document.createElement('div'); m.className='at-confirm';
+  m.innerHTML='<div class="at-confirm-box"><p>Sign the house phone out of Host Stand?</p><div class="at-acts"><button class="at-btn at-go" id="atSoYes">Sign out</button><button class="at-btn at-cancel" id="atSoNo">Cancel</button></div></div>';
+  document.body.appendChild(m);
+  m.querySelector('#atSoNo').onclick=function(){m.remove();};
+  m.querySelector('#atSoYes').onclick=function(){m.remove();logout();};
+}
 async function hostLogin(){
   const hp=hostProfiles()[0];
   if(!hp){ alert('No Host Stand profile is set up yet.'); return; }
@@ -10355,6 +10367,9 @@ function renderBoard(){
     if(atSplitLast!==split){ const tb=$('atticTabs'); if(tb)tb.querySelectorAll('.subtab').forEach(function(b){b.classList.toggle('active',b.dataset.at===atSub);});
       if(typeof replaceAllPills==='function')requestAnimationFrame(replaceAllPills); }
     atSplitLast=split;
+    const cb=document.querySelector('#atticTabs .subtab[data-at="chat"]');
+    if(cb){ let bd=cb.querySelector('.tab-badge'); const n=(chatLoaded&&!split)?chatUnread():0;
+      if(n>0){ if(!bd){bd=document.createElement('span');bd.className='tab-badge';cb.appendChild(bd);} bd.textContent=n; } else if(bd)bd.remove(); }
     atRestoreUI(_ui); atPlacePanel();
     const nw=bb.querySelector('.chat-wrap'); if(nw&&stick)nw.scrollTop=nw.scrollHeight; }
   updateAttn();
@@ -10498,7 +10513,8 @@ function atSecList(){
 /* --- role: MD or server. Managers default to MD, everyone else to Server, and
        anybody can flip it. Resets with the nightly session rollover. ---------- */
 function atRoleKey(){return 'sf-role-'+todayISO();}
-function atRole(){if(typeof isHost==='function'&&isHost())return 'md';try{const v=localStorage.getItem(atRoleKey());if(v==='md'||v==='server')return v;}catch(e){}return isMgr()?'md':'server';}
+function atRole(){if(typeof isHost==='function'&&isHost())return 'md';if(!isMgr())return 'server';   /* Sam 2026-11-01: only managers can flip to MD */
+  try{const v=localStorage.getItem(atRoleKey());if(v==='md'||v==='server')return v;}catch(e){}return isMgr()?'md':'server';}
 function atSetRole(r){try{localStorage.setItem(atRoleKey(),r);}catch(e){}atOpen='';atDraft=null;atMoveFrom='';renderBoard();}
 function atIsMD(){return atRole()==='md';}
 
@@ -10915,9 +10931,11 @@ function atticPaneHTML(){
   let h='';
   if(atSyncErr)h+='<div class="at-warn">Live sync is down. What you see is this device only, and nothing you tap will reach the floor. Tell the MD out loud.</div>';
   if(isHost()){ atSec='Attic'; atSecOpen=false;   // Attic only for now (Sam 2026-10-23); switcher can come back later
-    h+='<div class="at-bar"><div class="at-roles"><span class="at-rb on">Host Stand · MD</span></div><span class="at-secbtn">Attic</span></div>'; }
-  else h+='<div class="at-bar"><div class="at-roles"><button class="at-rb'+(atIsMD()?' on':'')+'" onclick="atSetRole(\'md\')">MD</button>'+
-    '<button class="at-rb'+(!atIsMD()?' on':'')+'" onclick="atSetRole(\'server\')">Server</button></div>'+
+    h+='<div class="at-bar"><div class="at-roles"><span class="at-rb on">Host Stand · MD</span></div><span class="at-secbtn">Attic</span>'+
+      '<button class="at-secbtn at-signout" onclick="hostSignOut()">Sign out</button></div>'; }
+  else h+='<div class="at-bar"><div class="at-roles">'+(isMgr()
+      ?'<button class="at-rb'+(atIsMD()?' on':'')+'" onclick="atSetRole(\'md\')">MD</button><button class="at-rb'+(!atIsMD()?' on':'')+'" onclick="atSetRole(\'server\')">Server</button>'
+      :'<span class="at-rb on">Server</span>')+'</div>'+
     '<button class="at-secbtn" onclick="atToggleSecs()">'+esc(atSec)+' <span class="at-caret">'+(atSecOpen?'⌃':'⌄')+'</span></button></div>';
   if(atSecOpen){
     h+='<div class="at-secs">'+order.map(function(n){
@@ -10962,8 +10980,16 @@ function chatSend(){
   if(!DEMO&&fbReady&&fbDb)fbDb.collection('chat').doc(id).set(doc).catch(function(){chatSyncErr=true;renderBoard();});
   renderBoard();
 }
+/* 'Seen' used to stamp the moment a message rendered on any open Attic screen, so an iPad left
+   on the counter read everything (Sam 2026-11-01). Now it needs the chat on a VISIBLE screen and
+   a touch on this device in the last 45 seconds; otherwise the next touch stamps it. */
+let chatLastTouch=0;
+function chatAttentive(){ return Date.now()-chatLastTouch<45000; }
+function chatOnScreen(){ return document.visibilityState==='visible'&&!!$('board')&&$('board').classList.contains('active')&&(atSub==='chat'||atSplit()); }
+document.addEventListener('pointerdown',function(){ chatLastTouch=Date.now(); if(chatOnScreen()&&chatLoaded&&chatUnread()>0){ chatMarkSeen(); renderBoard(); } },{passive:true,capture:true});
 function chatMarkSeen(){
   const meN=currentUserName(); if(!meN||DEMO)return;
+  if(!chatOnScreen()||!chatAttentive())return;
   Object.keys(CHAT).forEach(function(k){
     const m=CHAT[k]; if(!m||m.by===meN)return;
     const s=m.seen||[]; if(s.indexOf(meN)>=0)return;
