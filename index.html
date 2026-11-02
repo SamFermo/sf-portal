@@ -2166,7 +2166,7 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 </div>
 
 <script>
-const BUILD='1793590632';   // stamped by build-data.py at every deploy
+const BUILD='1793606387';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3681,10 +3681,15 @@ function termMatches(a,b){
    only subtracts, and it is invalidated if the dish's menu line changed since.
    Residual gap: a recipe changed silently under an identical component name and
    an identical desc is not detectable here. That one comes from the kitchen. */
+/* HOUSE STYLE (Sam, 2026-11-01): menu descriptors are all lowercase, matching the printed menu
+   ("corona beans", "swan house farm peperonata", "pecorino romano"). Dish names keep their caps.
+   Applied when anyone saves a description, when cards render, and when the menu publishes, so a
+   capital typed in an edit never reaches the floor or sanfermoseattle.com. Content is never changed. */
+function descCase(s){ return String(s==null?'':s).replace(/\s+/g,' ').trim().toLowerCase(); }
 function flagResolved(ed,it){
   if(!ed)return [];
   if(Array.isArray(ed.resolvedComponents))
-    return ed.resolvedComponents.filter(r=>r&&r.component&&(!r.desc||r.desc===it.desc));
+    return ed.resolvedComponents.filter(r=>r&&r.component&&(!r.desc||descCase(r.desc)===descCase(it.desc)));
   // Back-compat for overlays written before resolvedComponents existed: infer the
   // resolved set from whatever the old cleared-flags array dropped.
   if(Array.isArray(ed.flags)){
@@ -4682,9 +4687,9 @@ function boReset(){
    from its card, live for everyone, no deploy. board/barOverlay.cocktails {slug:{build,price,ingredients:[{name,description,amount?,highlight?}],by,at}}.
    The overlay wins over bar.json until Restore deletes it. Name and pronunciation guide stay as printed. */
 function ckEff(c){
-  const o=BO.cocktails&&BO.cocktails[boSlug(c.name)]; if(!o)return c;
+  const o=BO.cocktails&&BO.cocktails[boSlug(c.name)]; if(!o)return (c.build&&descCase(c.build)!==c.build)?Object.assign({},c,{build:descCase(c.build)}):c;
   const ing=Array.isArray(o.ingredients)&&o.ingredients.length?o.ingredients.map(function(i){ return Object.assign({},i,{ov:true}); }):c.ingredients;
-  return Object.assign({},c,{build:o.build||c.build,price:o.price||c.price,ingredients:ing,__ov:true});
+  return Object.assign({},c,{build:descCase(o.build||c.build),price:o.price||c.price,ingredients:ing,__ov:true});
 }
 /* WINE quick edit (2026-10-06, Sam). Name-gated, not manager-gated: Sam, Adrian, Sully.
    board/barOverlay.wines {slug:{glass,bottle,vintage,by,at}}. Name, region, notes stay as printed. */
@@ -4758,7 +4763,7 @@ function ckeRm(i){ if(!CKE)return; CKE.rows.splice(i,1); ckeRender(); }
 function ckeAdd(){ if(!CKE)return; CKE.rows.push({name:'',description:'',amount:'',highlight:''}); ckeRender(); }
 function ckeSave(){
   if(!CKE||!boCan())return;
-  const build=String(CKE.build||'').trim(), price=String(CKE.price||'').trim();
+  const build=descCase(CKE.build), price=String(CKE.price||'').trim();
   const ing=[]; CKE.rows.forEach(function(r){ const n=String(r.name||'').trim(); if(!n)return;
     const o={name:n,description:String(r.description||'').trim()||'Not described yet. Ask your bar lead what is in this one.'};
     if(r.amount)o.amount=r.amount; if(r.highlight)o.highlight=r.highlight; ing.push(o); });
@@ -11074,7 +11079,7 @@ function liveBlockHTML(type){
     if(p.price)h+=`<span class="live-price">${esc(p.price)}</span>`;
     if(isMgr())h+=`<span class="live-x" onclick="rmLive('${p.id}')">✕</span>`;
     if(p.replaces)h+=`<div class="live-replaces">replaces ${esc(p.replaces)}</div>`;
-    if(p.sub)h+=`<div class="live-sub">${esc(p.sub)}</div>`;
+    if(p.sub)h+=`<div class="live-sub">${esc(descCase(p.sub))}</div>`;
     if(p.body)h+=`<div class="live-body">${esc(p.body)}</div>`;
     if(p.pron)h+=`<div class="live-pron">Say it right: ${esc(p.pron)}</div>`;
     if(p.type==='dish'){
@@ -11156,7 +11161,7 @@ function postLive(){
   const at=Date.now(), id=todayISO()+'_'+at+'_'+Math.random().toString(36).slice(2,7);
   const replaces=($('lm-replaces').value||'').trim();
   const rec={type:$('lm-type').value,name:name,price:($('lm-price').value||'').trim(),
-    sub:styled?($('lm-sub').value||'').trim():'',
+    sub:styled?descCase($('lm-sub').value):'',
     body:styled?($('lm-body').value||'').trim():($('lm-notes').value||'').trim(),
     pron:styled?($('lm-pron').value||'').trim():'',
     rawNotes:($('lm-notes').value||'').trim(),
@@ -11378,7 +11383,7 @@ function foEff(it){
   return r;
 }
 const getEditedDish0=getEditedDish;
-getEditedDish=function(it){ return foEff(getEditedDish0(it)); };
+getEditedDish=function(it){ const r=foEff(getEditedDish0(it)); if(r&&r.desc!=null&&descCase(r.desc)!==r.desc)return Object.assign({},r,{desc:descCase(r.desc)}); return r; };
 const FOE_ASK='Not described yet. Ask the kitchen what this is.';
 let FOE=null;
 function foeOpen(slug){
@@ -11416,7 +11421,7 @@ function foeRm(i){ if(!FOE)return; FOE.rows.splice(i,1); foeRender(); }
 function foeAdd(){ if(!FOE)return; FOE.rows.push({term:'',pronunciation:'',note:''}); foeRender(); }
 function foeSave(){
   if(!FOE||!foCan())return;
-  const price=String(FOE.price||'').trim().replace(/^\$/,''), desc=String(FOE.desc||'').trim();
+  const price=String(FOE.price||'').trim().replace(/^\$/,''), desc=descCase(FOE.desc);
   if(!price||!desc)return;
   const ing=[]; FOE.rows.forEach(function(r){ const t=String(r.term||'').trim(); if(!t)return;
     const o={term:t,note:String(r.note||'').trim()||FOE_ASK}; if(r.pronunciation)o.pronunciation=r.pronunciation; ing.push(o); });
@@ -11449,7 +11454,7 @@ function startMenuPubSync(){
 /* Guest-facing fields ONLY. Allergen flags, pronunciation, story, ingredients and
    review state are staff tools and never leave the portal. */
 function pubItem(it){
-  const o={name:(it.name||'').trim(), desc:(it.desc||'').trim()};
+  const o={name:(it.name||'').trim(), desc:descCase(it.desc)};
   const p=(it.price==null?'':it.price).toString().trim();
   if(p)o.price=p;
   return o;
@@ -11470,7 +11475,7 @@ function buildMenuSnapshot(){
     if(items.length)sections.push({section:sec.section,items:items});
   });
   const cocktails=((SF.bar&&SF.bar.cocktails)||[]).map(function(c){
-    const o={name:(c.name||'').trim(), desc:(c.build||c.tagline||'').trim()};
+    const o={name:(c.name||'').trim(), desc:descCase(c.build||c.tagline)};
     const p=(c.price==null?'':c.price).toString().trim(); if(p)o.price=p;
     return o;
   }).filter(function(i){return i.name;});
@@ -11574,7 +11579,7 @@ function emGetModify(){
 async function saveEdit(){
   if(!isMgr()||!editTarget)return;
   var name=($('em-name').value||'').trim();
-  var desc=($('em-desc').value||'').trim();
+  var desc=descCase($('em-desc').value);
   if(!name||!desc){$('em-status').textContent='Name and description are required.';return;}
   var btn=$('em-save-btn');btn.disabled=true;btn.textContent='Polishing…';
   $('em-status').textContent='Asking Remy to polish the story and ingredients…';

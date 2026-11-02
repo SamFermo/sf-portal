@@ -204,7 +204,7 @@ window.SF = {
      },
      {
       "name": "Bruschetta",
-      "desc": "Swan House Farm peperonata, burrata, micro basil, saba",
+      "desc": "swan house farm peperonata, burrata, micro basil, saba",
       "price": "20",
       "raw": false,
       "pron": "broo-SKET-tah",
@@ -243,7 +243,7 @@ window.SF = {
      },
      {
       "name": "Ribollita",
-      "desc": "Corona beans, cabbage, zucchini, torn croutons, pistachio, chili flake",
+      "desc": "corona beans, cabbage, zucchini, torn croutons, pistachio, chili flake",
       "price": "16",
       "raw": false,
       "pron": "ree-boh-LEE-tah",
@@ -457,7 +457,7 @@ window.SF = {
      },
      {
       "name": "Risotto",
-      "desc": "Arborio rice with sunchoke purée, roasted beets, pickled mustard, caraway",
+      "desc": "arborio rice with sunchoke purée, roasted beets, pickled mustard, caraway",
       "price": "28",
       "raw": false,
       "pron": "ree-ZOH-toh",
@@ -700,7 +700,7 @@ window.SF = {
   "specials": [
    {
     "name": "Farmhouse Primavera",
-    "desc": "Rigatoni, eggplant, bell peppers, heirloom tomatoes, pecorino Romano",
+    "desc": "rigatoni, eggplant, bell peppers, heirloom tomatoes, pecorino romano",
     "price": "29",
     "raw": false,
     "story": "Eggplant, bell peppers, and heirloom tomatoes from the farm are sautéed with garlic, shallot, and red chili flake. Tossed with rigatoni in pomodoro sauce, finished with pecorino Romano and tomato leaf oil.",
@@ -737,7 +737,7 @@ window.SF = {
    },
    {
     "name": "Salmon Collar",
-    "desc": "Grilled salmon collar with herb and shallot salad",
+    "desc": "grilled salmon collar with herb and shallot salad",
     "price": "25",
     "raw": false,
     "story": "Salmon collar brushed with a calabrian chili paste and grilled to medium. Served with a fresh herb and shallot salad.",
@@ -18195,7 +18195,8 @@ window.SF = {
     "unit": 12,
     "rule": "eugenio",
     "cost": 11.25,
-    "usual": "part of the 5-case Vinifera mix"
+    "usual": "part of the 5-case Vinifera mix",
+    "hold": "running out the Soave; house white switches to Borgo Savaian Pinot Grigio (Vinea) when it's gone (Sam 11/1)"
    },
    {
     "key": "vigna-del-lauro-sauvignon-blanc-collio-2024",
@@ -19106,5 +19107,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793590632"
+ "build": "1793606387"
 };
