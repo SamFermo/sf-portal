@@ -1,6 +1,6 @@
 {
   "_note": "Wine inventory master for the portal's Wine Inventory tab. Revel button names map to a wine key; a glass button depletes 1/glassesPerBottle of a bottle. Temporary source: 'San Fermo Wine Master & Count' Google Sheet (2026-09-29). 2026-09-30: statuses follow Adrian's printed menu (core-glass = has a glass price on it, core-bottle = bottle only, cellar = off the printed list but kept for verbals/back stock). phaseOut:true = crossed off on his copy, sell through. Keys never change (counts are keyed by them), so a few keys carry an old vintage. 2026-10-27: house white key now holds Brigaldara Soave (key unchanged, counts keyed by it); Contesa Pecorino added, took the Vermentino's glass spot; Specialty Cellars wines ship from Grape Expectations' warehouse. 2026-10-28 (Guinan, Task 1): vendors block = reps, text numbers, cutoff and delivery weekday (Mon=0; default order Thu, deliver Fri until the rep confirms), minimums. Per wine on the list: unit = bottles per case or pack as the rep sells it; rule = Adrian's pattern (par6 keep about 6 as loose bottles, case = 1 case, cases3 = multiples of 3 cases, sixpack2 = two 6-packs, eugenio = Vinifera 5-case mix, pace = sized from sales and rounded to the unit); cost = USD per bottle from the Master sheet Wines tab, null where not on file; usual = Adrian's words. Vandori is cellar on the display but orderable:true (bar prosecco, no Revel button).",
-  "updated": "2026-10-30",
+  "updated": "2026-11-01",
   "glassesPerBottle": 4,
   "vendors": {
     "Elliot Bay": {
@@ -59,14 +59,14 @@
       "rep": "Janet",
       "phone": "+12068419127",
       "cutoffDow": 3,
-      "cutoffTime": null,
+      "cutoffTime": "22:00",
       "deliveryDow": 4,
-      "confirmed": false,
+      "confirmed": true,
       "minimum": {
         "usd": null,
         "cases": null
       },
-      "note": "Louis Armand break at 12 bottles."
+      "note": "Delivers Tue-Fri, 9am-3pm. Order by 10pm the night before for the next delivery day; she'll bring a last-minute order herself on a non-delivery day. Text orders are fine (Janet 10/31). Louis Armand break at 12 bottles (Adrian); her 10-13 list prints $30.99, $28.99 at 36 (asked 11/1)."
     },
     "Petit Monde": {
       "rep": "Graham",
@@ -83,30 +83,30 @@
     },
     "Winebow": {
       "rep": "Abe",
-      "phone": "+12063916220",
+      "phone": "+12063265274",
       "cutoffDow": 3,
-      "cutoffTime": null,
+      "cutoffTime": "16:00",
       "deliveryDow": 4,
-      "confirmed": false,
+      "confirmed": true,
       "minimum": {
         "usd": null,
         "cases": null
       },
-      "note": "3 mixed cases for a break.",
-      "phoneNote": "206-391-6220 is marked 'vm' on both sheets and may not take texts; Adrian's header row shows 206-713-8532, which is Craig Walker's NW Beverages line. Unconfirmed."
+      "note": "Delivers Tue-Fri in Seattle. Order by 4pm the day before. Prefers email for orders, text works (Abe 10/31). 3 mixed cases for a break. Laurent Perrier $40/btl by the 6-pack, $37 at 18 bottles.",
+      "phoneNote": "206-326-5274 is the number in Abe's 10/31 signature; he did not answer whether 206-391-6220 (marked vm) is right."
     },
     "Casa Bruno": {
       "rep": "Sid",
       "phone": "+18476872462",
       "cutoffDow": 3,
-      "cutoffTime": null,
+      "cutoffTime": "17:00",
       "deliveryDow": 4,
-      "confirmed": false,
+      "confirmed": true,
       "minimum": {
         "usd": null,
         "cases": null
       },
-      "note": "Sid Samberg emailed 10/29 as our contact ('hit me up with orders'); Adrian's notes said Andy. Asked Sid 10/30 whether he covers Matot/Armujan; no answer yet. Number from his signature."
+      "note": "Sid Samberg is our rep for all Casa Bruno, Matot and Armujan included (Sid 10/30). Delivers Tue-Fri, next day if ordered by about 5pm, flexible. Email or text."
     },
     "Odom": {
       "rep": "Matthew",
@@ -244,7 +244,7 @@
       "vendor": "Casa Bruno",
       "unit": 12,
       "rule": "cases3",
-      "cost": 11.9,
+      "cost": 10.5,
       "usual": "3+ cases, it flies"
     },
     {
@@ -312,7 +312,7 @@
       "vendor": "Winebow",
       "unit": 6,
       "rule": "par6",
-      "cost": null,
+      "cost": 40.0,
       "usual": "keep about 6"
     },
     {

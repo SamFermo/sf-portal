@@ -1844,6 +1844,8 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 .ds-tools-body{padding:0 12px 12px;}
 /* WINE ORDERS (2026-10-29, Guinan) */
 .wo-card{border:1px solid rgba(230,200,120,.35); background:rgba(230,200,120,.05); border-radius:14px; padding:14px 14px 10px; margin:4px 0 18px; display:flex; flex-direction:column; gap:8px;}
+.wr-card{border-color:rgba(150,200,255,.35); background:rgba(150,200,255,.05);}
+.wr-card .wr-n{white-space:nowrap; min-width:64px;}
 .wo-title{font-family:'Cormorant Garamond','Caladea',serif; font-size:21px; font-weight:600; color:var(--ink);}
 .wo-sec{font-size:10.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-mute); margin:6px 0 0;}
 .wo-empty{font-size:12.5px; color:var(--ink-mute); margin:0;}
@@ -2159,7 +2161,7 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 </div>
 
 <script>
-const BUILD='1793405858';   // stamped by build-data.py at every deploy
+const BUILD='1793588865';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5295,7 +5297,58 @@ function woRender(){
     h+='</details>';
   }
   h+='</div>';
-  el.innerHTML=h;
+  el.innerHTML=(typeof wrHTML==='function'?wrHTML():'')+h;   /* Revel badge card sits above the orders (2026-11-01) */
+}
+
+/* ===== REVEL BADGES (2026-11-01, Guinan) ==========================================
+   Sam 11/1: keep the count badges on Revel's bottle buttons right by hand, "a minute or two" after a
+   delivery or a count, so servers can see what's left. The badges count down by themselves with each
+   bottle sold, but they can only be set on the iPad (Revel has no web or API route to them), so a
+   delivery, a count or an adjustment leaves them wrong. This card lists every bottle-list wine
+   (status core-bottle) whose portal count changed for any reason other than a sale since someone last
+   marked its badge set, with the number to set. Done records it.
+   STORAGE: board/winerevel = {set:{<key>:{n,at,by}}, updated}. A doc of its own because the
+   wineinv and wineorders writers rewrite their docs whole and would drop an extra field. */
+let WR={doc:null,loaded:false,unsub:null,busy:false,arm:false};
+function wrRef(){ return fbDb.collection('board').doc('winerevel'); }
+function wrWatch(){ if(WR.unsub||!(fbReady&&fbDb))return;
+  WR.unsub=wrRef().onSnapshot(function(s){ WR.doc=s.exists?(s.data()||{}):{}; WR.loaded=true; woRender(); },
+    function(){ WR.loaded=true; WR.err=true; woRender(); }); }
+/* Pure, for the harness: (master, wineinv doc, revel sales by date, winerevel doc) -> [{key,name,n,why,at}] */
+function wrDue(D,doc,rv,wr){
+  const S=wiCompute(D,doc||{},rv||{}), set=(wr&&wr.set)||{}, rec=Array.isArray((doc||{}).receipts)?doc.receipts:[], out=[];
+  D.wines.forEach(function(w){ if(w.status!=='core-bottle')return;
+    const s=S.byKey[w.key]; if(!s||s.onHand==null)return;
+    let last=s.countAt||0, why='count';
+    rec.forEach(function(r){ if(r.key===w.key&&(+r.at||0)>last){ last=+r.at; why=r.kind==='adj'?'adjusted':'delivery'; } });
+    const m=set[w.key]; if(m&&(+m.at||0)>=last)return;
+    out.push({key:w.key,name:w.short||w.name,n:Math.max(0,Math.floor(s.onHand+1e-9)),why:why,at:last}); });
+  return out.sort(function(a,b){return a.name<b.name?-1:(a.name>b.name?1:0);});
+}
+function wrList(){ return wrDue(wiData(),WI.doc||{},WI.revel||{},WR.doc||{}); }
+/* Pure: merge marks into the winerevel doc. */
+function wrApply(d,picks,who,now){ const set=Object.assign({},(d&&d.set)||{});
+  picks.forEach(function(p){ set[p.key]={n:p.n,at:now,by:who}; }); return {set:set,updated:wiIso(new Date(now))}; }
+function wrDone(keys){
+  if(WR.busy)return;
+  const picks=wrList().filter(function(d){return keys.indexOf(d.key)>=0;}); if(!picks.length)return;
+  if(DEMO)return;
+  if(!(fbReady&&fbDb)){ alert("Can't reach the server right now, so this isn't saved. Try again in a minute."); return; }
+  WR.busy=true; const now=Date.now(), who=woWho();
+  fbDb.runTransaction(function(tx){ return tx.get(wrRef()).then(function(s){ tx.set(wrRef(),wrApply(s.exists?(s.data()||{}):{},picks,who,now)); }); })
+    .then(function(){ WR.busy=false; WR.arm=false; woRender(); })
+    .catch(function(){ WR.busy=false; alert("That didn't save. Check your connection and try again."); });
+}
+function wrAll(){ if(!WR.arm){ WR.arm=true; woRender(); return; } WR.arm=false; wrDone(wrList().map(function(d){return d.key;})); }
+function wrHTML(){
+  wrWatch();
+  if(!WR.loaded||!WI.loaded||!WI.revel)return '';   /* no card until counts and sales are both in: never show a number that's missing sales */
+  const due=wrList(); if(!due.length)return '';
+  const why={count:'after a count',delivery:'after a delivery',adjusted:'after an adjustment'};
+  let h='<div class="wo-card wr-card"><div class="wo-title">Update Revel</div><p class="wo-sub">Set these counts on the bottle buttons in Revel, then tap Done. If any sold tonight, take those off first.</p><div class="wo-lines">';
+  due.forEach(function(d){ h+='<div class="wo-line"><span class="wo-q wr-n">set to '+d.n+'</span><span class="wo-n">'+esc(d.name)+'<span class="wo-why">'+esc(why[d.why]||'')+'</span></span><span class="wo-step"><button onclick="wrDone([\''+d.key+'\'])">Done</button></span></div>'; });
+  h+='</div>'+(due.length>1?'<div class="wo-act"><button class="wi-btn wi-btn2" onclick="wrAll()">'+(WR.arm?'Tap again: all '+due.length+' set':'All set')+'</button></div>':'')+'</div>';
+  return h;
 }
 function renderFrontDesk(keepSearch){
   if(!isMgr()){$('fdBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
