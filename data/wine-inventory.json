@@ -144,16 +144,17 @@
     },
     {
       "key": "le-vaglie-verdicchio-house-white",
-      "name": "House White: Brigaldara Soave DOC 2023",
-      "short": "Soave",
+      "name": "House White: Borgo Savaian Pinot Grigio, Collio 2025",
+      "short": "Borgo Savaian PG",
       "type": "White",
       "status": "core-glass",
-      "vendor": "Vinifera",
+      "vendor": "Vinea",
       "unit": 12,
-      "rule": "eugenio",
-      "cost": 11.25,
-      "usual": "part of the 5-case Vinifera mix",
-      "hold": "running out the Soave; house white switches to Borgo Savaian Pinot Grigio (Vinea) when it's gone (Sam 11/1)"
+      "rule": "pace",
+      "cost": 9.79,
+      "usual": "new house white 11/2; pace builds from counts. $8.99 at 36 bottles (glass-pour break)",
+      "hold": "waiting on the first count of the Borgo PG (Sully: already pouring it, 11/2); not reordered until Sam counts it",
+      "was": "Brigaldara Soave DOC 2023 (Vinifera, $11.25) until 11/2"
     },
     {
       "key": "vigna-del-lauro-sauvignon-blanc-collio-2024",

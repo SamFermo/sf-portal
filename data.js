@@ -1051,21 +1051,21 @@ window.SF = {
   },
   {
    "section": "White/Rosé/Orange",
-   "name": "House White: Brigaldara Soave DOC",
-   "vintage": "2023",
-   "region": "Soave DOC, Veneto, Italy",
+   "name": "House White: Borgo Savaian Pinot Grigio, Collio DOC",
+   "vintage": "2025",
+   "region": "Collio DOC, Friuli-Venezia Giulia, Italy",
    "type": "white",
    "glass": "13",
    "bottle": "50",
-   "grapes": "100% Garganega",
-   "pour": "Yellow apple and citrus with delicate floral notes and hints of mint and chamomile. Smooth and fluid on the palate, lifted by vibrant freshness and a subtle mineral touch, finishing clean.",
-   "producer": "Brigaldara is a Cesari-family estate in the Marano valley near San Floriano, north of Verona, far better known for its Amarone and Valpolicella. The founding date (1929) comes from research rather than the fresh sheet; confirm with your lead before quoting. Same producer as our Valpolicella.",
-   "winemaking": "100% Garganega from vines planted in 1980, hand-harvested in the second half of September. Temperature-controlled vinification, 6 months in stainless steel.",
+   "grapes": "100% Pinot Grigio",
+   "pour": "Deep straw yellow, with acacia flower and white orchard fruit — banana and pear — leading to a notably intense palate. A richer, Collio style of Pinot Grigio.",
+   "producer": "From the Savaian family's estate at Cormons in the Collio, the same growers behind the Masaret orange wine. The Pinot Grigio comes off ponca, the stratified marl-and-sandstone soil of the Collio hills, from vines averaging around 15 years, in a temperate Upper Adriatic climate moderated by the nearby sea. We pour the 2025. ABV was not on the fresh sheet; confirm with your lead before quoting it.",
+   "winemaking": "100% Pinot Grigio off ponca (marl and sandstone) in the Collio; vines about 15 years old. Vinified and matured in stainless steel for 5–6 months.",
    "has_notes": true,
    "specs": [
     {
      "label": "Body",
-     "rating": 2,
+     "rating": 3,
      "low": "light",
      "high": "full"
     },
@@ -1090,19 +1090,27 @@ window.SF = {
    ],
    "pronguide": [
     {
-     "term": "Brigaldara",
-     "pron": "bree-gahl-DAH-rah"
+     "term": "Borgo Savaian",
+     "pron": "BOR-goh sah-vah-YAHN"
     },
     {
-     "term": "Soave",
-     "pron": "soh-AH-veh"
+     "term": "Pinot Grigio",
+     "pron": "PEE-noh GREE-joh"
     },
     {
-     "term": "Garganega",
-     "pron": "gar-GAH-neh-gah"
+     "term": "Collio",
+     "pron": "KOHL-lyoh"
+    },
+    {
+     "term": "Cormons",
+     "pron": "KOR-mohns"
+    },
+    {
+     "term": "ponca",
+     "pron": "POHN-kah"
     }
    ],
-   "added": "2026-10-27"
+   "added": "2026-11-02"
   },
   {
    "section": "White/Rosé/Orange",
@@ -1613,68 +1621,6 @@ window.SF = {
     {
      "term": "Kellerei Cantina",
      "pron": "keh-leh-RYE kahn-TEE-nah"
-    }
-   ]
-  },
-  {
-   "section": "White/Rosé/Orange",
-   "name": "Borgo Savaian Pinot Grigio, Collio DOC",
-   "vintage": "",
-   "region": "Collio DOC, Friuli-Venezia Giulia, Italy",
-   "type": "white",
-   "glass": "",
-   "bottle": "",
-   "grapes": "100% Pinot Grigio",
-   "pour": "Deep straw yellow, with acacia flower and white orchard fruit — banana and pear — leading to a notably intense palate. A richer, Collio style of Pinot Grigio.",
-   "producer": "From the Savaian family's estate at Cormons in the Collio, the same growers behind the Masaret orange wine. The Pinot Grigio comes off ponca, the stratified marl-and-sandstone soil of the Collio hills, from vines averaging around 15 years, in a temperate Upper Adriatic climate moderated by the nearby sea. Current release vintage and ABV were not on the fresh sheet; confirm with your lead before quoting.",
-   "winemaking": "100% Pinot Grigio off ponca (marl and sandstone) in the Collio; vines about 15 years old. Vinified and matured in stainless steel for 5–6 months.",
-   "has_notes": true,
-   "specs": [
-    {
-     "label": "Body",
-     "rating": 3,
-     "low": "light",
-     "high": "full"
-    },
-    {
-     "label": "Dryness",
-     "rating": 5,
-     "low": "sweet",
-     "high": "bone dry"
-    },
-    {
-     "label": "Acidity",
-     "rating": 4,
-     "low": "soft",
-     "high": "bright"
-    },
-    {
-     "label": "Tannins",
-     "rating": 1,
-     "low": "none",
-     "high": "grippy"
-    }
-   ],
-   "pronguide": [
-    {
-     "term": "Borgo Savaian",
-     "pron": "BOR-goh sah-vah-YAHN"
-    },
-    {
-     "term": "Pinot Grigio",
-     "pron": "PEE-noh GREE-joh"
-    },
-    {
-     "term": "Collio",
-     "pron": "KOHL-lyoh"
-    },
-    {
-     "term": "Cormons",
-     "pron": "KOR-mohns"
-    },
-    {
-     "term": "ponca",
-     "pron": "POHN-kah"
     }
    ]
   },
@@ -8732,8 +8678,8 @@ window.SF = {
     "coverage": [
      "",
      "",
-     "",
-     "",
+     "3:30 Bar",
+     "3:30 Bar",
      "",
      "",
      ""
@@ -8837,8 +8783,8 @@ window.SF = {
       "shifts": [
        "",
        "",
-       "3:30 Bar",
-       "3:30 Bar",
+       "R/O",
+       "R/O",
        "Sup Server",
        "3:30 Bar",
        "MD"
@@ -15822,7 +15768,7 @@ window.SF = {
       "shifts": [
        "9-7",
        "9-7",
-       "9-7",
+       "R/O",
        "",
        "",
        "",
@@ -18187,16 +18133,17 @@ window.SF = {
    },
    {
     "key": "le-vaglie-verdicchio-house-white",
-    "name": "House White: Brigaldara Soave DOC 2023",
-    "short": "Soave",
+    "name": "House White: Borgo Savaian Pinot Grigio, Collio 2025",
+    "short": "Borgo Savaian PG",
     "type": "White",
     "status": "core-glass",
-    "vendor": "Vinifera",
+    "vendor": "Vinea",
     "unit": 12,
-    "rule": "eugenio",
-    "cost": 11.25,
-    "usual": "part of the 5-case Vinifera mix",
-    "hold": "running out the Soave; house white switches to Borgo Savaian Pinot Grigio (Vinea) when it's gone (Sam 11/1)"
+    "rule": "pace",
+    "cost": 9.79,
+    "usual": "new house white 11/2; pace builds from counts. $8.99 at 36 bottles (glass-pour break)",
+    "hold": "waiting on the first count of the Borgo PG (Sully: already pouring it, 11/2); not reordered until Sam counts it",
+    "was": "Brigaldara Soave DOC 2023 (Vinifera, $11.25) until 11/2"
    },
    {
     "key": "vigna-del-lauro-sauvignon-blanc-collio-2024",
@@ -19107,5 +19054,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793606420"
+ "build": "1793630841"
 };
