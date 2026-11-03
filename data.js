@@ -8320,7 +8320,7 @@ window.SF = {
     ],
     "coverage": [
      "MD (Sam R/O)",
-     "Admin/MD 5-8 (Sam R/O)",
+     "",
      "",
      "",
      "3:30 Bar (Brittany R/O)",
@@ -8365,7 +8365,7 @@ window.SF = {
       "name": "Allegra",
       "shifts": [
        "3:30 serve",
-       "",
+       "3:30 serve",
        "3:30 serve",
        "",
        "",
@@ -8473,7 +8473,7 @@ window.SF = {
       "name": "Sully",
       "shifts": [
        "",
-       "Sup Server",
+       "MD",
        "MD",
        "",
        "MD",
@@ -19087,5 +19087,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793737627"
+ "build": "1793737646"
 };
