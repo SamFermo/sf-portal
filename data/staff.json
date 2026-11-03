@@ -6,8 +6,8 @@
       "role": "Executive Chef & GM"
     },
     {
-      "name": "Adrian Bravo",
-      "role": "FOH Manager"
+      "name": "Sully Baker",
+      "role": "Maître d'"
     },
     {
       "name": "Katie Kuntz",
@@ -28,10 +28,6 @@
   ],
   "directory": {
     "foh": [
-      {
-        "name": "Adrian Bravo",
-        "role": "FOH Manager"
-      },
       {
         "name": "Katie Kuntz",
         "role": "Bar Manager"
@@ -61,10 +57,6 @@
         "role": "Server"
       },
       {
-        "name": "Julian Biro",
-        "role": "Server"
-      },
-      {
         "name": "Mac Solomon",
         "role": "Server"
       },
@@ -78,7 +70,7 @@
       },
       {
         "name": "Sully Baker",
-        "role": "Server"
+        "role": "Maître d'"
       }
     ],
     "boh": [

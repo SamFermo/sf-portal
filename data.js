@@ -16623,18 +16623,6 @@ window.SF = {
      }
     },
     {
-     "name": "Adrian Bravo",
-     "role": "FOH Manager",
-     "fwc": {
-      "status": "info",
-      "text": "Lapsed 8/29/2026. Not renewing, last day 10/29"
-     },
-     "mast": {
-      "status": "good",
-      "text": "ServSafe Alcohol WA, valid through Jun 9, 2031"
-     }
-    },
-    {
      "name": "Allegra Dunbar",
      "role": "Server",
      "fwc": {
@@ -16695,18 +16683,6 @@ window.SF = {
      }
     },
     {
-     "name": "Julian Biro",
-     "role": "Server",
-     "fwc": {
-      "status": "warn",
-      "text": "Expires Oct 6, 2026"
-     },
-     "mast": {
-      "status": "good",
-      "text": "Valid through Apr 1, 2029"
-     }
-    },
-    {
      "name": "Katie Kuntz",
      "role": "Bar Manager",
      "fwc": {
@@ -16756,7 +16732,7 @@ window.SF = {
     },
     {
      "name": "Sully Baker",
-     "role": "Server",
+     "role": "Maître d'",
      "fwc": {
       "status": "good",
       "text": "Complete through May 9, 2029 (national cert accepted in lieu of WA card)"
@@ -16770,28 +16746,12 @@ window.SF = {
   },
   "comingDue": [
    {
-    "name": "Adrian Bravo",
-    "cred": "FWC",
-    "date": "Aug 29, 2026",
-    "area": "FOH · Manager",
-    "urgency": "warn",
-    "window": "102 days"
-   },
-   {
     "name": "Jackie Hanley",
     "cred": "FWC",
     "date": "Oct 1, 2026",
     "area": "FOH · Server",
     "urgency": "warn",
     "window": "135 days"
-   },
-   {
-    "name": "Julian Biro",
-    "cred": "FWC",
-    "date": "Oct 6, 2026",
-    "area": "FOH · Server",
-    "urgency": "warn",
-    "window": "140 days"
    },
    {
     "name": "Gopala Corral",
@@ -16851,8 +16811,8 @@ window.SF = {
     "role": "Executive Chef & GM"
    },
    {
-    "name": "Adrian Bravo",
-    "role": "FOH Manager"
+    "name": "Sully Baker",
+    "role": "Maître d'"
    },
    {
     "name": "Katie Kuntz",
@@ -16873,10 +16833,6 @@ window.SF = {
   ],
   "directory": {
    "foh": [
-    {
-     "name": "Adrian Bravo",
-     "role": "FOH Manager"
-    },
     {
      "name": "Katie Kuntz",
      "role": "Bar Manager"
@@ -16906,10 +16862,6 @@ window.SF = {
      "role": "Server"
     },
     {
-     "name": "Julian Biro",
-     "role": "Server"
-    },
-    {
      "name": "Mac Solomon",
      "role": "Server"
     },
@@ -16923,7 +16875,7 @@ window.SF = {
     },
     {
      "name": "Sully Baker",
-     "role": "Server"
+     "role": "Maître d'"
     }
    ],
    "boh": [
@@ -19135,5 +19087,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793736676"
+ "build": "1793737133"
 };

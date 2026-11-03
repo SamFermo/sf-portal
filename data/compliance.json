@@ -151,18 +151,6 @@
         }
       },
       {
-        "name": "Adrian Bravo",
-        "role": "FOH Manager",
-        "fwc": {
-          "status": "info",
-          "text": "Lapsed 8/29/2026. Not renewing, last day 10/29"
-        },
-        "mast": {
-          "status": "good",
-          "text": "ServSafe Alcohol WA, valid through Jun 9, 2031"
-        }
-      },
-      {
         "name": "Allegra Dunbar",
         "role": "Server",
         "fwc": {
@@ -223,18 +211,6 @@
         }
       },
       {
-        "name": "Julian Biro",
-        "role": "Server",
-        "fwc": {
-          "status": "warn",
-          "text": "Expires Oct 6, 2026"
-        },
-        "mast": {
-          "status": "good",
-          "text": "Valid through Apr 1, 2029"
-        }
-      },
-      {
         "name": "Katie Kuntz",
         "role": "Bar Manager",
         "fwc": {
@@ -284,7 +260,7 @@
       },
       {
         "name": "Sully Baker",
-        "role": "Server",
+        "role": "Maître d'",
         "fwc": {
           "status": "good",
           "text": "Complete through May 9, 2029 (national cert accepted in lieu of WA card)"
@@ -298,28 +274,12 @@
   },
   "comingDue": [
     {
-      "name": "Adrian Bravo",
-      "cred": "FWC",
-      "date": "Aug 29, 2026",
-      "area": "FOH · Manager",
-      "urgency": "warn",
-      "window": "102 days"
-    },
-    {
       "name": "Jackie Hanley",
       "cred": "FWC",
       "date": "Oct 1, 2026",
       "area": "FOH · Server",
       "urgency": "warn",
       "window": "135 days"
-    },
-    {
-      "name": "Julian Biro",
-      "cred": "FWC",
-      "date": "Oct 6, 2026",
-      "area": "FOH · Server",
-      "urgency": "warn",
-      "window": "140 days"
     },
     {
       "name": "Gopala Corral",
