@@ -1893,24 +1893,27 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 .wo-hist summary{cursor:pointer; font-size:12.5px; color:var(--ink-soft); padding:4px 0;}
 .wo-btn:focus-visible,.wo-ck-b button:focus-visible,.wo-step button:focus-visible,.wi-btn:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
 /* WINE INVENTORY (2026-09-29) */
-#winebook.view{max-width:880px;}
+#wineinv.view{max-width:880px;}
 /* Readability (Sam 11/3, "overly transparent"): this tab is dense reading, so every panel is solid. */
-#winebook .wo-card{background:#141e3e;border-color:rgba(230,200,120,.45);}
-#winebook .wo-o{background:#1b2750;border-color:rgba(205,216,244,.22);}
-#winebook .wi-row{background:#16224a;border-color:rgba(205,216,244,.2);}
-#winebook .wi-row.wi-low{background:#2a2a3a;border-color:rgba(230,200,120,.7);}
-#winebook .wi-row.wi-neg{background:#37202f;border-color:rgba(224,128,112,.7);}
-#winebook .wb-more{background:#1b2750;color:var(--ink);}
-#winebook .wb-in{background:#16224a;border-color:rgba(205,216,244,.32);}
-#winebook .wi-seg button:not(.on){background:#16224a;color:var(--ink);border-color:rgba(205,216,244,.28);}
-#winebook .wb-warn{background:#2a2a3a;}
-#winebook .wi-sub,#winebook .wo-sub,#winebook .wo-why,#winebook .wo-hint,#winebook .wb-sub,#winebook .wb-note .m,#winebook .wi-oh-l{color:var(--ink-soft);}
-#winebook .wb-tbl th{color:var(--ink-soft);}
-#winebook .wb-tbl .wb-mute{color:var(--ink-soft);}
+#wineinv .wo-card{background:#141e3e;border-color:rgba(230,200,120,.45);}
+#wineinv .wo-o{background:#1b2750;border-color:rgba(205,216,244,.22);}
+#wineinv .wi-row{background:#16224a;border-color:rgba(205,216,244,.2);}
+#wineinv .wi-row.wi-low{background:#2a2a3a;border-color:rgba(230,200,120,.7);}
+#wineinv .wi-row.wi-neg{background:#37202f;border-color:rgba(224,128,112,.7);}
+#wineinv .wb-more{background:#1b2750;color:var(--ink);}
+#wineinv .wb-in{background:#16224a;border-color:rgba(205,216,244,.32);}
+#wineinv .wi-seg button:not(.on){background:#16224a;color:var(--ink);border-color:rgba(205,216,244,.28);}
+#wineinv .wb-warn{background:#2a2a3a;}
+#wineinv .wi-sub,#wineinv .wo-sub,#wineinv .wo-why,#wineinv .wo-hint,#wineinv .wb-sub,#wineinv .wb-note .m,#wineinv .wi-oh-l{color:var(--ink-soft);}
+#wineinv .wb-tbl th{color:var(--ink-soft);}
+#wineinv .wb-tbl .wb-mute{color:var(--ink-soft);}
 .wb-stamp{font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;text-align:center;}
 .wb-warn{font-size:12.5px;color:var(--gold);background:rgba(230,200,120,.08);border:1px solid rgba(230,200,120,.3);border-radius:10px;padding:7px 11px;margin:0 0 12px;}
-.wb-seg{justify-content:center;margin:0 0 18px;}
-.wb-lede{font-family:'Cormorant Garamond','Caladea',serif;font-size:23px;line-height:1.28;font-weight:600;color:var(--ink);margin:0 0 16px;text-wrap:pretty;}
+.wb-seg{justify-content:center;margin:0 0 14px;}
+.wb-prev summary{cursor:pointer;list-style:revert;}
+.wb-prev-s{font-size:12.5px;color:var(--ink-soft);margin-left:6px;}
+.wb-prev:not([open]){padding-bottom:14px;}
+.wb-lede{font-family:'Cormorant Garamond','Caladea',serif;font-size:19px;line-height:1.28;font-weight:600;color:var(--ink);margin:0 0 16px;text-wrap:pretty;}
 .wb-p{font-size:13px;color:var(--ink-soft);margin:6px 0 0;line-height:1.5;}
 .wb-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px;}
 .wb-in{font:inherit;font-size:14px;color:var(--ink);background:rgba(205,216,244,.07);border:1px solid rgba(205,216,244,.2);border-radius:10px;padding:8px 11px;min-width:0;width:100%;}
@@ -2182,15 +2185,11 @@ select.wb-in option{color:#241f15;}
 </section>
 
 <section class="view" id="wineinv">
-  <div class="view-head"><p class="view-eyebrow">Wine Team</p><h2 class="view-title">Wine Inventory</h2>
+  <div class="view-head"><p class="view-eyebrow">Wine Team</p><h2 class="view-title">Wine</h2>
     <p class="view-sub">Orders and deliveries, then bottles on hand: the last count, plus deliveries, minus what Revel says we sold.</p></div>
+  <div id="wbBody"></div>
   <div id="woBody"></div>
   <div id="wiBody"></div>
-</section>
-
-<section class="view" id="winebook">
-  <div class="view-head"><p class="view-eyebrow">Wine Team</p><h2 class="view-title">Wine Book</h2></div>
-  <div id="wbBody"></div>
 </section>
 
 <section class="view view-flush" id="orders">
@@ -2249,7 +2248,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793737133';   // stamped by build-data.py at every deploy
+const BUILD='1793737627';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2313,15 +2312,14 @@ function navTabs(){
   // a chip they will never open, so BOH does not get it.
   const base=(me&&String(me.area||'').toLowerCase()==='boh')?TABS.filter(function(x){return x[0]!=='board';}):TABS;
   let t=isMgr()?head.concat(base,[['frontdesk','Front Desk']]):head.concat(base);
-  if(typeof wiCanTab==='function'&&wiCanTab())t=t.concat([['wineinv','Wine Inventory']]);   // managers + wine team
-  if(typeof wbCanTab==='function'&&wbCanTab())t=t.concat([['winebook','Wine Book']]);   // WB_VIEWERS
+  if(typeof wiCanTab==='function'&&wiCanTab())t=t.concat([['wineinv','Wine']]);   // managers + wine team
   if(isMgr())t=t.concat([['orders','Farm Order']]);
   return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 /* Manager chip (2026-10-22): twelve chips ran three screens wide on a phone. Managers get one "Manager"
-   chip; tapping it shows Front Desk / Wine Inventory / Farm Order / Staff Access inline right after it.
+   chip; tapping it shows Front Desk / Wine / Farm Order / Staff Access inline right after it.
    The grouped chips stay in #navChips (hidden, not removed) so every glow/badge selector still finds
    them; the Manager chip glows when a hidden one does. Opening a grouped tab keeps the group open. */
-const NAV_MGR_GROUP=['frontdesk','wineinv','winebook','orders','access'];
+const NAV_MGR_GROUP=['frontdesk','wineinv','orders','access'];
 let navMgrOpen=false;
 function navGrouped(){ const t=navTabs(); if(!isMgr())return null;
   const g=t.filter(function(x){return NAV_MGR_GROUP.indexOf(x[0])>=0;}); return g.length>=2?g:null; }
@@ -2375,6 +2373,7 @@ function numbersCardHTML(){
     '</button>';
 }
 function go(id){
+  if(id==='winebook')id='wineinv';   // old Wine Book links
   if(id==='home'&&typeof isHost==='function'&&isHost())id='board';   // Host Stand has no home
   if(id==='numbers'){ const nv=numViews(); id=(numLast&&nv.some(function(v){return v[0]===numLast;}))?numLast:(nv[0]?nv[0][0]:'home'); }
   if(isNumView(id)){ numLast=id; numSwitchRender(id); }
@@ -2385,7 +2384,7 @@ function go(id){
   document.body.classList.toggle('not-home',id!=='home');
   navMgrReveal(id);
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id||(c.dataset.go==='numbers'&&isNumView(id))));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='wineinv')wiRender(); if(id==='winebook')wbRender(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender(); if(id==='servers')srvRender();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='wineinv'){ WB.sub='main'; wbRender(); wiRender(); } if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender(); if(id==='servers')srvRender();
   if(id==='standards')showStdPane(stdTab);
   if(id==='compliance'){renderCompliance();markComplianceSeen();}
   if(id==='fresh')markFreshSeen();
@@ -2415,7 +2414,7 @@ function wideCardHTML(id,ic,title,detail){
    data-card="fresh" stays on the wrapper so the unseen-glow (updateAttn) still lands. */
 function wiCardHTML(){
   const ws=((window.SF&&SF.wineInv&&SF.wineInv.wines)||[]), on=ws.filter(w=>w.status!=='cellar').length, gl=ws.filter(w=>w.status==='core-glass').length, ce=ws.length-on;
-  return wideCardHTML('wineinv','❦','Wine Inventory','Bottles on hand, counts &amp; deliveries · '+on+' on the list ('+gl+' by the glass), '+ce+' in the cellar');
+  return wideCardHTML('wineinv','❦','Wine','Check in orders, counts and bottles on hand · '+on+' on the list ('+gl+' by the glass), '+ce+' in the cellar');
 }
 function freshCardHTML(){
   const nw=freshNewList(), unseen=freshUnseen().length>0;
@@ -2541,7 +2540,6 @@ function renderHome(){
   // An odd card count leaves one card alone on its row: center it, same look as the orphan rule.
   if(!isInvestor()){ const sc=std.map(stdCardHTML); if(sc.length%2) sc[sc.length-1]=sc[sc.length-1].replace('class="home-card"','class="home-card home-card-solo"'); html += sc.join(''); }
   if(!isInvestor() && typeof wiCanTab==='function' && wiCanTab()) html += wiCardHTML();   // full width (Sam 9/30)
-  if(!isInvestor() && typeof wbCanTab==='function' && wbCanTab()) html += wbCardHTML();   // WB_VIEWERS
   if(!isInvestor() && typeof studyCanSee==='function' && studyCanSee()) html += studyCardHTML();   // Study deck (Sam 10/6)
   if(mgr && !isInvestor()) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
   $('homeGrid').innerHTML=html;
@@ -2923,8 +2921,7 @@ const TOUR_COPY={
   lastnight:{t:'Last Night',b:'How last night landed, pulled straight from the morning brief.'},
   scws:{t:'Service Charge',b:'The nightly service charge worksheet rebuilt from Revel. Useful for checking a night, but Tim\'s numbers remain the system of record.'},
   frontdesk:{t:'Front Desk',b:'Passwords, vendor contacts and account info. Managers can add, edit and remove entries here.'},
-  wineinv:{t:'Wine Inventory',b:'Bottles on hand for every wine: the last count, plus deliveries logged since, minus what Revel says sold. Do counts and log deliveries here.'},
-  winebook:{t:'Wine Book',b:'What to order, how each wine is selling, the reps, their catalogs and shared notes.'},
+  wineinv:{t:'Wine',b:'Check in orders here. Bottles on hand for every wine: the last count, plus deliveries logged since, minus what Revel says sold. Do counts and log deliveries here.'},
   orders:{t:'Farm Order',b:'Place and track the farm order without leaving the app.'},
   access:{t:'Staff Access',b:'Add people, set or reset PINs, and lock out anyone who leaves.'}
 };
@@ -4960,23 +4957,21 @@ function fdMatchesQuery(e,q){
   const t=(e.name+' '+e.desc+' '+(e.items||[]).map(d=>d.label+' '+d.value).join(' ')).toLowerCase();
   return q.split(/\s+/).every(w=>t.includes(w));
 }
-/* ===== WINE BOOK (2026-11-03, Guinan). Sam's buying book, moved in from the private page at his ask ("Eyes only for sully tim and me").
+/* ===== WINE BOOK (2026-11-03, Guinan). The buying side of the Wine tab. Combined with Wine Inventory on Sam's word 11/3 ("Combine the wine tabs"): the tab opens on orders, check-ins and counts for everyone with wine access; these sections sit beside it for WB_VIEWERS.
    Gate: Sam, Sully, Katie, Chris, Jose and Tim by first name, on top of mgr/admin (Sam 11/3: nothing sensitive there).
    UI-only like every gate here (floor plan 8.6): board is readable by anyone who digs. Nothing about the book is in the public repo.
    STORAGE: board/winebook {inventory,sales,reps,catalogs,market: JSON strings, pushed} written by Codename: Guinan/page/build_page_data.py --push;
    board/winebookCat {json} Italian catalog lines, read only when someone searches; board/winebookNotes {notes:[{id,kind,text,wine,rep,by,at,done}]}
-   written only here. On hand and weeks left are worked out live with wiCompute so this tab never disagrees with Wine Inventory;
+   written only here. The short-stock line is worked out live with wiCompute so it never disagrees with the counts below it;
    pace, orders, sales and everything else are as of the last push. Plan: Codename: Guinan/page/README.md. */
 const WB_VIEWERS=['sam','sully','katie','chris','jose','tim'];
-const WB={sub:'cellar',feed:null,at:0,err:false,loading:false,filter:'list',q:'',open:{},catQ:'',cat:null,catLoading:false,catErr:false,notes:[],notesOn:false,notesReady:false,noteFilter:'all',delArm:null,draft:{text:'',kind:'wish',wine:'',rep:''},msg:'',saving:false,rt:null,liveWait:0};
-const WB_SUBS=[['cellar','Cellar'],['sales','Our sales'],['reps','Reps'],['catalogs','Catalogs'],['market','Market'],['notes','Notes']];
+const WB={sub:'main',feed:null,at:0,err:false,loading:false,catQ:'',cat:null,catLoading:false,catErr:false,notes:[],notesOn:false,notesReady:false,noteFilter:'all',delArm:null,draft:{text:'',kind:'wish',wine:'',rep:''},msg:'',saving:false,rt:null,liveWait:0};
+const WB_SUBS=[['main','Orders & counts'],['sales','Our sales'],['reps','Reps'],['catalogs','Catalogs'],['market','Market'],['notes','Notes']];
 const WB_KINDS={wish:'Wine to try',tasting:'Tasting note',rep:'Rep conversation',idea:'Next list idea'};
-const WB_GROUPS={glass:'By the glass',bottle:'Bottle list',bar:'Bar',phase:'Selling through',cellar:'Cellar'};
 const WB_DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 function wbCanTab(){ if(typeof isInvestor==='function'&&isInvestor())return false;
   const f=String(me&&me.name||'').trim().split(/\s+/)[0].toLowerCase();
   return !!(me&&(me.admin||me.mgr)&&WB_VIEWERS.indexOf(f)>=0); }
-function wbCardHTML(){ return wideCardHTML('winebook','❧','Wine Book','What to order, how each wine is selling, the reps, their catalogs and our notes'); }
 function wbRef(){ return fbDb.collection('board').doc('winebook'); }
 function wbNotesRef(){ return fbDb.collection('board').doc('winebookNotes'); }
 function wbDate(iso){ if(!iso)return null; const a=String(iso).slice(0,10).split('-').map(Number); return new Date(a[0],a[1]-1,a[2]); }
@@ -4999,7 +4994,7 @@ function wbWatchNotes(){ if(WB.notesOn||!(fbReady&&fbDb))return; WB.notesOn=true
   wbNotesRef().onSnapshot(function(s){ const n=(s.exists&&(s.data()||{}).notes)||[]; WB.notes=n.slice().sort(function(a,b){return (b.at||'')<(a.at||'')?-1:1;}); WB.notesReady=true;
       if(WB.sub==='notes'&&$('wbNoteList'))wbFillNotes(); else if(WB.sub==='reps')wbRender(); },
     function(){ WB.notesReady=true; WB.notesErr=true; if(WB.sub==='notes')wbRender(); }); }
-function wbLive(){ /* live on hand from the same math as Wine Inventory; null until counts and sales are in */
+function wbLive(){ /* live on hand from the same math as the count list; null until counts and sales are in */
   if(typeof wiCompute!=='function'||!WI.loaded||!WI.revel)return null;
   try{ return wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey; }catch(e){ return null; } }
 function wbWines(){ const inv=WB.feed&&WB.feed.inventory; if(!inv)return []; const L=wbLive();
@@ -5007,62 +5002,41 @@ function wbWines(){ const inv=WB.feed&&WB.feed.inventory; if(!inv)return []; con
     const r=Object.assign({},w,{onHand:s.onHand}); r.weeks=w.perWk>0?Math.max(s.onHand,0)/w.perWk:null;
     if(w.state==='ok'||w.state==='watch')r.state=(r.weeks!=null&&r.weeks<2)?'watch':'ok';
     return r; }); }
+function wbMainShow(on){ ['woBody','wiBody'].forEach(function(id){ const e=$(id); if(e)e.style.display=on?'':'none'; }); }
 function wbRender(){
   const b=$('wbBody'); if(!b)return;
-  if(!wbCanTab()){ b.innerHTML='<p class="board-empty">Not available.</p>'; return; }
+  if(!wbCanTab()){ b.innerHTML=''; wbMainShow(true); return; }   /* wine access without the book: the page as it always was */
   wbLoad(false); wbWatchNotes();
-  if(typeof wiWatch==='function'){ wiWatch(); wiLoadRevel(false); }
-  if(!WI.revel||!WI.loaded){ if(WB.liveWait<20&&!WB.rt){ WB.liveWait++; WB.rt=setTimeout(function(){ WB.rt=null; if($('winebook').classList.contains('active')&&WB.sub==='cellar')wbRender(); },1500); } }
+  wbMainShow(WB.sub==='main');
+  if(WB.sub==='main'&&(!WI.revel||!WI.loaded)){ if(WB.liveWait<20&&!WB.rt){ WB.liveWait++; WB.rt=setTimeout(function(){ WB.rt=null; if($('wineinv').classList.contains('active')&&WB.sub==='main')wbRender(); },1500); } }
   let h='<div class="wi-seg wb-seg">'+WB_SUBS.map(function(s){ return '<button class="'+(WB.sub===s[0]?'on':'')+'" onclick="wbSub(\''+s[0]+'\')">'+s[1]+'</button>'; }).join('')+'</div>';
-  if(WB.err&&!WB.feed){ b.innerHTML=h+'<p class="wb-warn">The book did not load. Check the connection and open this tab again.</p>'; return; }
-  if(!WB.feed&&(WB.loading||!WB.at)){ b.innerHTML=h+'<p class="board-empty">Opening the book…</p>'; return; }
-  if(!WB.feed){ b.innerHTML=h+'<p class="board-empty">Nothing here yet. The book fills in at the next morning refresh.</p>'; return; }
+  if(WB.err&&!WB.feed){ b.innerHTML=h+(WB.sub==='main'?'':'<p class="wb-warn">This section did not load. Check the connection and open the tab again.</p>'); return; }
+  if(!WB.feed){ b.innerHTML=h+(WB.sub==='main'?'':'<p class="board-empty">'+(WB.loading||!WB.at?'Opening…':'Nothing here yet. It fills in at the next morning refresh.')+'</p>'); return; }
   const inv=WB.feed.inventory;
-  if(inv){ const g=new Date(String(inv.generated).replace(/([+-]\d\d)(\d\d)$/,'$1:$2')), age=(Date.now()-g)/36e5;
+  if(inv&&WB.sub!=='notes'){ const g=new Date(String(inv.generated).replace(/([+-]\d\d)(\d\d)$/,'$1:$2')), age=(Date.now()-g)/36e5;
     h+='<p class="wb-stamp">Sales through '+esc(wbD(inv.revelThrough))+' · refreshed '+WB_DOW[g.getDay()]+' '+(g.getMonth()+1)+'/'+g.getDate()+' at '+esc(g.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}))+'</p>';
-    if(age>36)h+='<p class="wb-warn">This is more than a day old, so the morning refresh may have missed. On hand is still live.</p>'; }
-  const fn={cellar:wbCellar,sales:wbSales,reps:wbReps,catalogs:wbCatalogs,market:wbMarket,notes:wbNotes}[WB.sub];
+    if(age>36)h+='<p class="wb-warn">This is more than a day old, so the morning refresh may have missed.'+(WB.sub==='main'?' Bottle counts below are still live.':'')+'</p>'; }
+  const fn={main:wbMain,sales:wbSales,reps:wbReps,catalogs:wbCatalogs,market:wbMarket,notes:wbNotes}[WB.sub];
   b.innerHTML=h+fn();
-  if(WB.sub==='cellar')wbFillInv();
   if(WB.sub==='sales')wbChart();
   if(WB.sub==='catalogs')wbFillCat();
   if(WB.sub==='notes')wbFillNotes();
 }
-function wbSub(s){ WB.sub=s; wbRender(); const v=$('wbBody'); if(v&&v.scrollIntoView)try{v.scrollIntoView({block:'nearest'});}catch(e){} }
-/* ---- cellar */
-function wbCellar(){
-  const inv=WB.feed.inventory; if(!inv)return '<p class="board-empty">The cellar data did not load.</p>';
+function wbSub(s){ WB.sub=s; wbRender(); if(s==='main'&&typeof wiRender==='function')wiRender(); const v=$('wineinv'); if(v&&v.scrollIntoView&&window.scrollY>200)try{v.scrollIntoView({block:'start'});}catch(e){} }
+/* ---- main: one line on what is short, the order preview folded away so check-ins stay near the top */
+function wbMain(){
+  const inv=WB.feed.inventory; if(!inv)return '';
   const W=wbWines(), low=W.filter(function(w){return w.state==='low';}), watch=W.filter(function(w){return w.state==='watch';});
   const by=function(k){ return W.find(function(w){return w.key===k;}); };
   let t=low.length?(low.length+(low.length===1?' wine runs':' wines run')+' short before the next delivery.'):'Nothing runs out before its next delivery.';
   if(watch.length)t+=' '+watch.length+(low.length?' more':'')+' under two weeks: '+watch.map(function(w){return w.short;}).join(', ')+'.';
   let h='<p class="wb-lede">'+esc(t)+'</p>';
   if(inv.orders&&inv.orders.length){ const tot=inv.orders.reduce(function(a,o){return a+(o.total||0);},0);
-    h+='<div class="wo-card"><div class="wo-title">What the next order looks like</div><p class="wo-hint">If nothing changes before '+esc(wbD(inv.orders[0].cutoff))+', the morning check drafts this, about '+wbUsd(tot)+' in all. Orders go out from Wine Inventory.</p>';
+    h+='<details class="wo-card wb-prev"'+(WB.prevOpen?' open':'')+' ontoggle="WB.prevOpen=this.open"><summary><span class="wo-title">Next order preview</span> <span class="wb-prev-s">about '+wbUsd(tot)+' by '+esc(wbD(inv.orders[0].cutoff))+'</span></summary><p class="wo-hint">If nothing changes, the morning check drafts this. It moves with sales. Orders go out from the card below.</p>';
     inv.orders.forEach(function(o){ h+='<div class="wo-o"><div class="wo-h"><div><div class="wo-rep">'+esc(o.rep)+' <span>'+esc(o.vendor)+'</span></div><div class="wo-sub">By '+esc(wbD(o.cutoff))+(o.cutoffTime?' '+esc(wbT(o.cutoffTime)):'')+(o.belowMin?' · under the minimum':'')+'</div></div><div class="wo-day">'+(o.total?wbUsd(o.total)+' · ':'')+'lands '+esc(wbD(o.delivery))+'</div></div><div class="wo-lines">'
       +o.lines.map(function(l){ const w=by(l.key); return '<div class="wo-line"><span class="wo-q">'+esc(l.label)+'</span><span class="wo-n">'+esc(w?w.short:l.name)+(l.why?'<span class="wo-why">'+esc(l.why)+'</span>':'')+'</span></div>'; }).join('')+'</div></div>'; });
-    h+='</div>'; }
-  if(inv.placed&&inv.placed.length){ h+='<div class="fd-cat">On the way</div>'+inv.placed.map(function(o){ return '<div class="wb-mv"><span>'+esc(o.rep)+': '+o.lines.map(function(l){const w=by(l.key);return esc((l.label||'')+' '+(w?w.short:''));}).join(', ')+'</span><span>'+esc(wbD(o.delivery))+'</span></div>'; }).join(''); }
-  h+='<div class="fd-cat">The cellar</div><div class="wi-seg wb-tools">'+[['list','On the list'],['glass','Glass'],['bottle','Bottle'],['phase','Selling through'],['cellar','Cellar']].map(function(f){ return '<button class="'+(WB.filter===f[0]?'on':'')+'" onclick="WB.filter=\''+f[0]+'\';wbFillInv();wbFilterMark(this)">'+f[1]+'</button>'; }).join('')+'</div>';
-  h+='<div class="wb-tools"><input class="wb-in" id="wbInvQ" type="search" placeholder="Find a wine or rep" value="'+esc(WB.q)+'" oninput="WB.q=this.value;wbFillInv()"></div><div id="wbInvList"></div>';
-  h+='<p class="wb-p">On hand is live and matches Wine Inventory, a glass as a quarter bottle. Per week blends the last 4 weeks with last year when last year was the same bottle. Tap a wine for how it got there.</p>';
+    h+='</details>'; }
   return h;
-}
-function wbFilterMark(btn){ [].forEach.call(btn.parentNode.children,function(c){c.classList.toggle('on',c===btn);}); }
-function wbFillInv(){
-  const box=$('wbInvList'); if(!box)return;
-  const RANK={low:0,count:1,watch:2,ok:3,held:4,sell:5}, f=WB.filter, q=WB.q.trim().toLowerCase();
-  let rows=wbWines().filter(function(w){ return f==='list'?['glass','bottle','bar'].indexOf(w.group)>=0:w.group===f; });
-  if(q)rows=rows.filter(function(w){ return (w.name+' '+w.short+' '+w.rep+' '+w.vendor).toLowerCase().indexOf(q)>=0; });
-  rows.sort(function(a,b){ return (RANK[a.state]-RANK[b.state])||((a.weeks==null?999:a.weeks)-(b.weeks==null?999:b.weeks)); });
-  const PILL={low:['low','Short before delivery'],watch:['watch','Under 2 weeks'],held:['held','Held'],count:['held','Needs a count']};
-  box.innerHTML=rows.length?rows.map(function(w){ const p=PILL[w.state], open=!!WB.open[w.key];
-    const sub=[f==='list'?WB_GROUPS[w.group]:null,w.rep||null,w.perWk?wbN(w.perWk)+'/wk':null,w.weeks!=null?'~'+(w.weeks>=10?'10+':wbN(w.weeks))+' wks left':null,w.orderEst?'order '+w.orderEst.label:null].filter(Boolean).join(' · ');
-    let more='';
-    if(open){ const bits=[w.name]; if(w.vendor)bits.push(w.vendor+(w.rep?' ('+w.rep+')':'')); if(w.nextDelivery)bits.push('Next delivery '+wbD(w.nextDelivery)); if(w.source)bits.push('Pace from '+w.source); if(w.usual)bits.push('Usually: '+w.usual);
-      if(w.orderEst&&w.orderEst.why)bits.push('Order: '+w.orderEst.why); if(w.incoming)bits.push(wbN(w.incoming)+' bottles on the way'); if(w.hold)bits.push(w.hold); if(w.outUntil)bits.push('Out at the rep until '+wbD(w.outUntil)); if(w.note)bits.push(w.note); if(w.lastCount)bits.push('Last counted '+wbD(w.lastCount));
-      more='<div class="wb-more">'+esc(bits.join('. ').replace(/\.\./g,'.'))+'.</div>'; }
-    return '<div class="wi-row'+(open?' wi-open':'')+(w.state==='watch'?' wi-low':w.state==='low'?' wi-neg':'')+'" onclick="WB.open[\''+w.key+'\']=!WB.open[\''+w.key+'\'];wbFillInv()"><div class="wi-main"><div class="wi-name">'+esc(w.short)+'</div><div class="wi-sub">'+esc(sub)+'</div>'+(p?'<span class="wb-pill wb-p-'+p[0]+'">'+p[1]+'</span>':'')+'</div><div class="wi-oh"><span class="wi-oh-n'+(w.onHand==null?' wi-none':'')+'">'+(w.onHand==null?'–':wiNum(w.onHand))+'</span><span class="wi-oh-l">'+(w.onHand==null?'not counted':'on hand')+'</span></div></div>'+more; }).join(''):'<p class="board-empty">No wine matches that.</p>';
 }
 /* ---- sales */
 function wbSales(){
@@ -5183,7 +5157,7 @@ function wbNoteAdd(){ const D=WB.draft, t=D.text.trim(), msg=$('wbMsg'), btn=$('
 }
 function wbNoteDone(id){ wbNoteTx(function(a){ return a.map(function(n){ return n.id===id?Object.assign({},n,{done:!n.done}):n; }); }).catch(function(){ const m=$('wbMsg'); if(m)m.textContent='Did not save. Try again.'; }); }
 function wbNoteDel(id){ if(WB.delArm!==id){ WB.delArm=id; wbFillNotes(); return; } WB.delArm=null; wbNoteTx(function(a){ return a.filter(function(n){ return n.id!==id; }); }).catch(function(){ const m=$('wbMsg'); if(m)m.textContent='Did not delete. Try again.'; }); }
-window.addEventListener('resize',function(){ clearTimeout(WB.rz); WB.rz=setTimeout(function(){ if(WB.sub==='sales'&&$('winebook')&&$('winebook').classList.contains('active'))wbChart(); },150); });
+window.addEventListener('resize',function(){ clearTimeout(WB.rz); WB.rz=setTimeout(function(){ if(WB.sub==='sales'&&$('wineinv')&&$('wineinv').classList.contains('active'))wbChart(); },150); });
 /* ===== WINE INVENTORY (2026-09-29) ============================================
    Manager-only. Bottles on hand = the last count of each wine + deliveries logged since
    that count - bottles Revel says we sold since that count. Display only: no ordering yet.
