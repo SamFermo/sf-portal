@@ -7963,7 +7963,7 @@ window.SF = {
     "coverage": [
      "",
      "",
-     "3:30 serve (Nam R/O)",
+     "",
      "",
      "",
      "",
@@ -8020,7 +8020,7 @@ window.SF = {
       "shifts": [
        "",
        "",
-       "",
+       "3:30 serve",
        "3:30 serve",
        "3:30 Bar",
        "Sup Server",
@@ -8141,11 +8141,11 @@ window.SF = {
     "coverage": [
      "",
      "",
-     "3:30 serve (Nam R/O)",
+     "",
      "",
      "3:30 Bar (Brittany R/O)",
      "Sup Server (Brittany R/O)",
-     "3:30 Bar (Brittany R/O), 3:30 serve (Josie R/O)"
+     "3:30 serve (Josie R/O)"
     ],
     "covNotes": [
      "",
@@ -8198,7 +8198,7 @@ window.SF = {
       "shifts": [
        "",
        "",
-       "",
+       "3:30 serve",
        "3:30 serve",
        "R/O",
        "R/O",
@@ -8286,7 +8286,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "",
-       ""
+       "3:30 Bar"
       ]
      },
      {
@@ -8325,7 +8325,7 @@ window.SF = {
      "",
      "3:30 Bar (Brittany R/O)",
      "Sup Server (Brittany R/O)",
-     "3:30 Bar (Brittany R/O)"
+     ""
     ],
     "covNotes": [
      "",
@@ -8466,7 +8466,7 @@ window.SF = {
        "",
        "3:30 serve",
        "",
-       ""
+       "3:30 Bar"
       ]
      },
      {
@@ -8500,7 +8500,7 @@ window.SF = {
      "MD (Sam R/O)",
      "Admin/MD 5-8 (Sam R/O)",
      "",
-     "3:30 serve (Brittany R/O)",
+     "",
      "",
      "",
      ""
@@ -8545,7 +8545,7 @@ window.SF = {
        "3:30 serve",
        "",
        "3:30 serve",
-       "",
+       "3:30 serve",
        "",
        "3:30 serve",
        "3:30 serve"
@@ -19135,5 +19135,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793736607"
+ "build": "1793736676"
 };
