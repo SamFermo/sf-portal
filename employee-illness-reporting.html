@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Employee Illness Reporting · San Fermo</title>
+<style>
+  :root{
+    --moon:#f5efe1; --moon-hi:#fdfaf1; --moon-edge:#d9cbab;
+    --ink:#241f15; --soft:#5f5540; --mute:#9a8c6c;
+    --accent:#4a6a3a; --accent-dark:#2e4624; --accent-soft:#cdd9bb;
+    --rust:#b04a1a; --rust-soft:#f3ddc7;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#1b2238}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;color:var(--ink);line-height:1.55;-webkit-text-size-adjust:100%}
+  .page{max-width:720px;margin:0 auto;padding:16px}
+  .sheet{background:var(--moon);border:1px solid var(--moon-edge);border-radius:14px;padding:28px 24px 24px}
+  .serif{font-family:'Caladea','Cambria',Georgia,'Times New Roman',serif}
+  .kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:700}
+  h1{font-size:30px;line-height:1.1;margin:6px 0 4px;font-weight:600}
+  .eff{font-size:13px;color:var(--soft);margin:0 0 18px}
+  p{font-size:15.5px;margin:0 0 12px}
+  h2{font-size:18px;margin:22px 0 6px;font-weight:600;color:var(--accent-dark)}
+  .flag{background:var(--rust-soft);border-left:4px solid var(--rust);padding:12px 14px;border-radius:8px;margin:12px 0;font-size:15px}
+  .sig{margin-top:18px;font-size:15.5px}
+  a{color:var(--accent-dark);font-weight:600}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px;justify-content:space-between;align-items:center}
+  .bar .right{display:flex;gap:10px}
+  .btn{display:inline-block;padding:9px 16px;border-radius:10px;background:var(--accent);color:#eef6e6;font-weight:700;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--moon);border:1px solid rgba(245,239,225,.45)}
+  .btn.big{font-size:15px;padding:12px 18px;width:100%;text-align:center}
+  .note{font-size:13.5px;color:var(--soft);margin:8px 0 0}
+  .foot{text-align:center;font-size:12px;color:#7d8cb4;margin:14px 0 6px}
+  .sign{margin-top:26px;padding:18px 16px;border:2px solid var(--accent-soft);border-radius:12px;background:var(--moon-hi)}
+  .sign-title{font-size:19px;font-weight:600;color:var(--accent-dark);margin:0 0 8px}
+  .sign-text{font-size:15px;margin:0 0 12px}
+  .sign-wait{font-size:14px;color:var(--soft);margin:0 0 10px}
+  .sign-done{font-size:16px;color:var(--accent-dark);margin:0 0 4px}
+  .gate{display:none;position:fixed;inset:0;background:#1b2238;align-items:center;justify-content:center;padding:16px}
+  .gate-card{background:var(--moon);border-radius:14px;padding:26px 22px;max-width:420px;color:var(--ink)}
+  .gate-card p{font-size:15px;color:var(--soft)}
+  [data-lang]{display:none}
+  body.en [data-lang="en"], body.es [data-lang="es"]{display:block}
+  @media print{
+    @page{margin:0.6in}
+    html,body{background:#fff}
+    .page{max-width:none;padding:0}
+    .sheet{border:0;border-radius:0;padding:0;background:#fff}
+    .bar,.foot,.sign,.gate{display:none !important}
+    p{font-size:12.5px} h2{font-size:15px;margin-top:12px}
+  }
+</style>
+</head>
+<body class="en">
+<div class="page">
+  <div class="bar">
+    <a class="btn ghost" href="index.html#standards/docs">← Documents</a>
+    <div class="right">
+      <button class="btn ghost" id="langBtn" onclick="toggleLang()">Español</button>
+      <button class="btn" onclick="window.print()">Print</button>
+    </div>
+  </div>
+
+  <div class="sheet">
+  <div data-lang="en">
+    <div class="kicker">San Fermo · Whole team · Front and back of house</div>
+    <h1 class="serif">Employee Illness Reporting</h1>
+    <p class="eff">House policy · Effective November 3, 2026 · Required by the Washington food code (WAC 246-215)</p>
+
+    <p>Washington's food code requires every employee to tell the person in charge about certain symptoms and illnesses, and requires the person in charge to keep sick people away from food. It applies to everyone, front and back of house. Food handled by someone who is sick has to be thrown out, and one sick shift can turn into an outbreak, so this one matters.</p>
+    <div class="flag"><b>Report before your shift, not when you arrive.</b> Call or text the person in charge of your shift. Telling a coworker doesn't count. Nobody gets in trouble for reporting; not reporting is the problem. You can use your paid sick time for days you're kept home.</div>
+
+    <h2 class="serif">Stay home and tell us if you have</h2>
+    <p><b>Vomiting or diarrhea.</b> You can't come in. You can come back once you've been symptom-free for more than 24 hours.</p>
+    <p><b>Jaundice</b> (yellow skin or yellow eyes). You can't come in. The person in charge notifies the health department, and you come back only with their approval.</p>
+    <p><b>A doctor's diagnosis of norovirus, hepatitis A, Shigella, shiga toxin-producing E. coli, typhoid fever or Salmonella,</b> even if you feel fine. You can't come in. The person in charge notifies the health department, and you come back only with their approval.</p>
+
+    <h2 class="serif">Tell us, and you'll work away from food, if you have</h2>
+    <p><b>A sore throat with a fever.</b> No work with open food, clean dishes, utensils or linens until the symptoms are gone, or until you bring a doctor's note.</p>
+    <p><b>An infected cut, burn or boil</b> that is red, oozing or full of pus, on your hands, wrists or arms. No work with open food until it's covered with a waterproof bandage, plus a glove if it's on your hand or wrist.</p>
+    <p><b>Sneezing, coughing or a runny nose.</b> No work with open food or clean dishes until it clears up.</p>
+
+    <h2 class="serif">If it starts during your shift</h2>
+    <p>Stop, tell the person in charge, and go home. Any food you were handling gets thrown out. If you vomit or have diarrhea at work, the area is cleaned using the Vomit and Diarrhea Cleanup procedure, also under Standards, Documents.</p>
+
+    <h2 class="serif">A note from your doctor</h2>
+    <p>If a health practitioner gives you a note saying your vomiting, diarrhea or jaundice comes from something that isn't contagious (pregnancy, Crohn's disease or IBS, for example), give it to the person in charge and you can work as usual.</p>
+
+    <h2 class="serif">For the person in charge</h2>
+    <p>Keep sick people home or away from food as above. Notify Public Health – Seattle &amp; King County about jaundice, any of the diagnosed illnesses above, and any guest who says they got sick from eating here, and keep any food the guest names. Write every illness report and call-off for illness in the nightly log with the time and what was reported.</p>
+  </div>
+  <div data-lang="es" lang="es">
+    <div class="kicker">San Fermo · Todo el equipo · Salón y cocina</div>
+    <h1 class="serif">Reporte de enfermedad del empleado</h1>
+    <p class="eff">Política de la casa · Vigente desde el 3 de noviembre de 2026 · Requerida por el código de alimentos de Washington (WAC 246-215)</p>
+
+    <p>El código de alimentos de Washington exige que todo empleado le avise a la persona a cargo sobre ciertos síntomas y enfermedades, y que la persona a cargo mantenga a las personas enfermas lejos de la comida. Aplica a todos, salón y cocina. La comida que toca alguien enfermo se tiene que tirar, y un solo turno trabajado enfermo puede convertirse en un brote, así que esto es importante.</p>
+    <div class="flag"><b>Avisa antes de tu turno, no cuando llegues.</b> Llama o manda un mensaje a la persona a cargo de tu turno. Decírselo a un compañero no cuenta. Nadie se mete en problemas por avisar; el problema es no avisar. Puedes usar tus horas de enfermedad pagadas para los días que te quedes en casa.</div>
+
+    <h2 class="serif">Quédate en casa y avísanos si tienes</h2>
+    <p><b>Vómito o diarrea.</b> No puedes venir. Puedes regresar cuando lleves más de 24 horas sin síntomas.</p>
+    <p><b>Ictericia</b> (piel u ojos amarillos). No puedes venir. La persona a cargo avisa al departamento de salud, y regresas solo con su aprobación.</p>
+    <p><b>Un diagnóstico médico de norovirus, hepatitis A, Shigella, E. coli productora de toxina shiga, fiebre tifoidea o Salmonella,</b> aunque te sientas bien. No puedes venir. La persona a cargo avisa al departamento de salud, y regresas solo con su aprobación.</p>
+
+    <h2 class="serif">Avísanos, y trabajarás lejos de la comida, si tienes</h2>
+    <p><b>Dolor de garganta con fiebre.</b> Nada de trabajar con comida expuesta, platos limpios, utensilios o mantelería hasta que se te quiten los síntomas, o hasta que traigas una nota del médico.</p>
+    <p><b>Una cortada, quemadura o grano infectado</b> que esté rojo, supure o tenga pus, en las manos, muñecas o brazos. Nada de trabajar con comida expuesta hasta que esté cubierto con una venda impermeable, más un guante si está en la mano o la muñeca.</p>
+    <p><b>Estornudos, tos o nariz que escurre.</b> Nada de trabajar con comida expuesta ni platos limpios hasta que se te quite.</p>
+
+    <h2 class="serif">Si empieza durante tu turno</h2>
+    <p>Detente, avisa a la persona a cargo y vete a casa. Toda la comida que estabas manejando se tira. Si vomitas o tienes diarrea en el trabajo, el área se limpia con el procedimiento de Limpieza de vómito y diarrea, también en Standards, Documents.</p>
+
+    <h2 class="serif">Una nota de tu médico</h2>
+    <p>Si un profesional de la salud te da una nota que dice que tu vómito, diarrea o ictericia viene de algo que no es contagioso (embarazo, enfermedad de Crohn o colon irritable, por ejemplo), dásela a la persona a cargo y puedes trabajar normalmente.</p>
+
+    <h2 class="serif">Para la persona a cargo</h2>
+    <p>Mantén a las personas enfermas en casa o lejos de la comida como se indica arriba. Avisa a Public Health – Seattle &amp; King County sobre ictericia, cualquiera de las enfermedades diagnosticadas de arriba, y cualquier cliente que diga que se enfermó por comer aquí, y guarda la comida que el cliente mencione. Anota cada reporte de enfermedad y cada ausencia por enfermedad en el registro de la noche con la hora y lo que se reportó.</p>
+  </div>
+
+  <div class="sign" id="sign">
+    <div class="sign-title serif" id="signTitle">I've read this</div>
+    <div id="signBody"><div class="sign-wait">Checking your portal login…</div></div>
+  </div>
+  </div>
+  <div class="foot">San Fermo · 5341 Ballard Ave NW · Unlisted page, do not share outside the team.</div>
+</div>
+
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="kicker">San Fermo staff portal</div>
+    <h1 class="serif" style="font-size:24px">Log in to read this</h1>
+    <p>This page is for the San Fermo team. Open the portal, log in with your name and PIN, then come back here from Standards, Documents.</p>
+    <p lang="es">Esta página es para el equipo de San Fermo. Abre el portal, entra con tu nombre y PIN, y vuelve aquí desde Standards, Documents.</p>
+    <a class="btn" href="index.html">Open the portal</a>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>
+/* Same pattern as lcb-class-recap.html. "I've read this" writes policyAcks.<POLICY_ID> on the
+   person's staff doc: the verifiable record WAC 246-215-02115 asks for. Standards → Documents
+   lists who has read it; the announcement card unlocks on it. */
+const POLICY_ID='illness-2026-11';
+const CFG={apiKey:"AIzaSyByAhPS7C86jXG-8y9EQGNbMwncmBPl9oc",authDomain:"sf-staff-portal.firebaseapp.com",projectId:"sf-staff-portal",storageBucket:"sf-staff-portal.firebasestorage.app",messagingSenderId:"395019590035",appId:"1:395019590035:web:d7fcccb093b09b9cb67066"};
+const T={
+  en:{title:"I've read this",btn:"I've read this and I'll report",text:function(n){return 'I, <b>'+n+'</b>, have read the Employee Illness Reporting policy and will report these symptoms and illnesses to the person in charge before working.';},
+      done:function(n,d){return '✓ Read by <b>'+n+'</b> on '+d+'.';},donenote:'Recorded on your staff record. You can close this page.',
+      note:'Tapping records your name and today\'s date on your staff record.',saving:'Saving…',
+      err:function(m){return 'Couldn\'t save ('+m+'). Try again in a minute, or tell Sam or Sully.';},retry:'Try again',other:'Español',
+      offline:function(m){return 'Can\'t reach the portal right now ('+m+'). You can still read this page; tap the button when you\'re back online.';}},
+  es:{title:'Ya lo leí',btn:'Ya lo leí y voy a avisar',text:function(n){return 'Yo, <b>'+n+'</b>, leí la política de Reporte de enfermedad del empleado y avisaré a la persona a cargo sobre estos síntomas y enfermedades antes de trabajar.';},
+      done:function(n,d){return '✓ Leído por <b>'+n+'</b> el '+d+'.';},donenote:'Quedó registrado en tu ficha de personal. Puedes cerrar esta página.',
+      note:'Al tocar el botón se registran tu nombre y la fecha de hoy en tu ficha de personal.',saving:'Guardando…',
+      err:function(m){return 'No se pudo guardar ('+m+'). Inténtalo en un minuto o avisa a Sam o a Sully.';},retry:'Intentar de nuevo',other:'English',
+      offline:function(m){return 'No se puede conectar con el portal ahora ('+m+'). Puedes leer esta página; toca el botón cuando vuelvas a tener conexión.';}}
+};
+let LANG='en';
+try{ const q=new URLSearchParams(location.search).get('lang'); const s=localStorage.getItem('sf-doc-lang'); LANG=(q==='es'||q==='en')?q:(s==='es'?'es':'en'); }catch(e){}
+function session(){ try{ const s=JSON.parse(localStorage.getItem('sf-session')||'null'); if(!s||!s.name)return null; if(s.exp!==null&&s.exp!==undefined&&Date.now()>s.exp)return null; return s; }catch(e){ return null; } }
+function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function showGate(){ document.getElementById('gate').style.display='flex'; document.querySelector('.page').style.display='none'; }
+function when(ms){ return new Date(ms).toLocaleDateString(LANG==='es'?'es-US':'en-US',{month:'long',day:'numeric',year:'numeric'}); }
+let db=null, staffDoc=null, prof=null, state='wait', stateExtra=null;
+function paint(s,extra){
+  state=s; stateExtra=extra; const t=T[LANG], b=document.getElementById('signBody'), nm=esc(prof?prof.name:'');
+  document.getElementById('signTitle').textContent=t.title;
+  if(s==='wait'){ return; }
+  if(s==='signed'){ b.innerHTML='<div class="sign-done">'+t.done(nm,esc(when(extra)))+'</div><div class="note">'+t.donenote+'</div>'; return; }
+  if(s==='error'){ b.innerHTML='<div class="sign-wait">'+t.err(esc(extra||'no connection'))+'</div><button class="btn" onclick="ack()">'+t.retry+'</button>'; return; }
+  if(s==='offline'){ b.innerHTML='<div class="sign-wait">'+t.offline(esc(extra||''))+'</div>'; return; }
+  if(s==='saving'){ b.innerHTML='<div class="sign-wait">'+t.saving+'</div>'; return; }
+  b.innerHTML='<p class="sign-text">'+t.text(nm)+'</p><button class="btn big" onclick="ack()">'+t.btn+'</button><div class="note">'+t.note+'</div>';
+}
+function applyLang(){
+  document.body.className=LANG; document.documentElement.lang=LANG;
+  document.getElementById('langBtn').textContent=T[LANG].other;
+  try{ localStorage.setItem('sf-doc-lang',LANG); }catch(e){}
+  paint(state,stateExtra);
+}
+function toggleLang(){ LANG=(LANG==='en')?'es':'en'; applyLang(); window.scrollTo(0,0); }
+async function ack(){
+  if(!db||!staffDoc||!prof)return paint('error','not logged in');
+  paint('saving');
+  try{
+    const at=Date.now(), patch={}; patch['policyAcks.'+POLICY_ID]={at:at,name:prof.name,via:'page',lang:LANG};
+    await db.collection('staff').doc(staffDoc).update(patch);
+    paint('signed',at);
+  }catch(e){ paint('error',e&&e.message); }
+}
+applyLang();
+(async function(){
+  const s=session(); if(!s){ showGate(); return; }
+  try{
+    firebase.initializeApp(CFG); db=firebase.firestore();
+    await firebase.auth().signInAnonymously();
+    const q=await db.collection('staff').where('name','==',s.name).limit(1).get();
+    if(q.empty){ showGate(); return; }
+    staffDoc=q.docs[0].id; prof=q.docs[0].data()||{};
+    if(prof.active===false){ showGate(); return; }
+    const a=prof.policyAcks&&prof.policyAcks[POLICY_ID];
+    if(a&&a.at)paint('signed',a.at); else paint('ready');
+  }catch(e){ paint('offline',e&&e.message); }
+})();
+</script>
+</body>
+</html>

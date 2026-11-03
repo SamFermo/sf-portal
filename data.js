@@ -876,7 +876,7 @@ window.SF = {
      "pron": "lahm-BROOS-koh dee sor-BAH-rah"
     }
    ],
-   "added": "2026-11-02"
+   "added": "2026-10-27"
   },
   {
    "section": "Bubbles",
@@ -1047,8 +1047,7 @@ window.SF = {
      "term": "La Cuvée",
      "pron": "lah koo-VAY"
     }
-   ],
-   "added": "2026-11-02"
+   ]
   },
   {
    "section": "White/Rosé/Orange",
@@ -1110,8 +1109,7 @@ window.SF = {
      "term": "ponca",
      "pron": "POHN-kah"
     }
-   ],
-   "added": "2026-11-02"
+   ]
   },
   {
    "section": "White/Rosé/Orange",
@@ -1169,8 +1167,7 @@ window.SF = {
      "term": "Cormons",
      "pron": "KOR-mohns"
     }
-   ],
-   "added": "2026-11-02"
+   ]
   },
   {
    "section": "White/Rosé/Orange",
@@ -1526,7 +1523,7 @@ window.SF = {
      "pron": "mee-NEL-lah"
     }
    ],
-   "added": "2026-11-02"
+   "added": "2026-10-26"
   },
   {
    "section": "White/Rosé/Orange",
@@ -1832,7 +1829,7 @@ window.SF = {
      "pron": "bar-bah-RES-koh"
     }
    ],
-   "added": "2026-11-02"
+   "added": "2026-10-09"
   },
   {
    "section": "Red",
@@ -1886,8 +1883,7 @@ window.SF = {
      "term": "Sangiovese",
      "pron": "san-joh-VEH-zeh"
     }
-   ],
-   "added": "2026-11-02"
+   ]
   },
   {
    "section": "Red",
@@ -18125,28 +18121,33 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 13.33,
-    "usual": "2-3 cases, 1 is fine"
+    "usual": "2-3 cases, 1 is fine",
+    "glass": 13,
+    "bottle": 50
    },
    {
     "key": "le-origini-passanello-lambrusco-grasparossa-2024",
     "name": "Le Origini \"Passanello\" Lambrusco Grasparossa 2024",
     "type": "Sparkling",
     "status": "cellar",
-    "vendor": "Elliot Bay"
+    "vendor": "Elliot Bay",
+    "glass": 14,
+    "bottle": 55
    },
    {
     "key": "le-vaglie-verdicchio-house-white",
-    "name": "House White: Borgo Savaian Pinot Grigio, Collio 2025",
-    "short": "Borgo Savaian PG",
+    "name": "House White: Brigaldara Soave DOC 2023 (pouring Borgo PG until gone)",
+    "short": "Soave",
     "type": "White",
     "status": "core-glass",
-    "vendor": "Vinea",
+    "vendor": "Vinifera",
     "unit": 12,
-    "rule": "pace",
-    "cost": 9.79,
-    "usual": "new house white 11/2; pace builds from counts. $8.99 at 36 bottles (glass-pour break)",
-    "hold": "waiting on the first count of the Borgo PG (Sully: already pouring it, 11/2); not reordered until Sam counts it",
-    "was": "Brigaldara Soave DOC 2023 (Vinifera, $11.25) until 11/2"
+    "rule": "eugenio",
+    "cost": 11.25,
+    "usual": "part of the 5-case Vinifera mix",
+    "was": "Borgo Savaian Pinot Grigio (SRW leftover, Vinea) is being run out first; it is not reordered",
+    "glass": 13,
+    "bottle": 50
    },
    {
     "key": "vigna-del-lauro-sauvignon-blanc-collio-2024",
@@ -18158,7 +18159,9 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 13.99,
-    "usual": "1-2 cases by stock and day of month"
+    "usual": "1-2 cases by stock and day of month",
+    "glass": 16,
+    "bottle": 65
    },
    {
     "key": "la-spinetta-vermentino-2025",
@@ -18177,14 +18180,18 @@ window.SF = {
     "unit": 12,
     "rule": "eugenio",
     "cost": 11.93,
-    "usual": "1-2 cases"
+    "usual": "1-2 cases",
+    "glass": 14,
+    "bottle": 55
    },
    {
     "key": "valle-dell-acate-thymbra-vermentino-2023",
     "name": "Valle dell'Acate \"Thymbra\" Vermentino 2023",
     "type": "White",
     "status": "cellar",
-    "vendor": "Elliot Bay"
+    "vendor": "Elliot Bay",
+    "glass": 18,
+    "bottle": 75
    },
    {
     "key": "borgo-savaian-skins-are-kings",
@@ -18196,7 +18203,9 @@ window.SF = {
     "unit": 6,
     "rule": "pace",
     "cost": 13.99,
-    "usual": "four 6-packs"
+    "usual": "four 6-packs",
+    "glass": 14,
+    "bottle": 55
    },
    {
     "key": "la-spinetta-il-rose-di-casanova-2025",
@@ -18208,7 +18217,9 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 13.75,
-    "usual": "1 case in winter"
+    "usual": "1 case in winter",
+    "glass": 16,
+    "bottle": 65
    },
    {
     "key": "brigaldara-valpolicella-2024",
@@ -18220,14 +18231,18 @@ window.SF = {
     "unit": 12,
     "rule": "eugenio",
     "cost": 10.6,
-    "usual": "slow; fills the 5-case mix"
+    "usual": "slow; fills the 5-case mix",
+    "glass": 15,
+    "bottle": 60
    },
    {
     "key": "corte-scaletta-valpolicella-2022",
     "name": "Corte Scaletta Valpolicella 2022",
     "type": "Red",
     "status": "cellar",
-    "vendor": "Vinea"
+    "vendor": "Vinea",
+    "glass": 15,
+    "bottle": 60
    },
    {
     "key": "podere-ruggeri-corsini-matot-langhe-rosso-house-",
@@ -18239,7 +18254,9 @@ window.SF = {
     "unit": 12,
     "rule": "cases3",
     "cost": 10.5,
-    "usual": "3+ cases, it flies"
+    "usual": "3+ cases, it flies",
+    "glass": 13,
+    "bottle": 50
    },
    {
     "key": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
@@ -18251,7 +18268,9 @@ window.SF = {
     "unit": 12,
     "rule": "cases3",
     "cost": 14.89,
-    "usual": "3 cases, it flies"
+    "usual": "3 cases, it flies",
+    "glass": 15,
+    "bottle": 60
    },
    {
     "key": "corte-pavone-rosso-di-montalcino-2023",
@@ -18263,7 +18282,9 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 19.83,
-    "usual": "1-2 cases"
+    "usual": "1-2 cases",
+    "glass": 19,
+    "bottle": 80
    },
    {
     "key": "g-d-vajra-langhe-nebbiolo-2024",
@@ -18271,7 +18292,9 @@ window.SF = {
     "type": "Red",
     "status": "cellar",
     "vendor": "",
-    "phaseOut": true
+    "phaseOut": true,
+    "glass": 17,
+    "bottle": 75
    },
    {
     "key": "albino-rocca-langhe-nebbiolo",
@@ -18283,7 +18306,9 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 15.0,
-    "usual": "maybe 2 cases, Nebbiolo can fly"
+    "usual": "maybe 2 cases, Nebbiolo can fly",
+    "glass": 17,
+    "bottle": 70
    },
    {
     "key": "louis-armand-premier-cru-champagne",
@@ -18295,7 +18320,9 @@ window.SF = {
     "unit": 6,
     "rule": "sixpack2",
     "cost": 28.99,
-    "usual": "two 6-packs (break at 12)"
+    "usual": "two 6-packs (break at 12)",
+    "glass": 25,
+    "bottle": 100
    },
    {
     "key": "laurent-perrier-champagne",
@@ -18307,7 +18334,8 @@ window.SF = {
     "unit": 6,
     "rule": "par6",
     "cost": 40.0,
-    "usual": "keep about 6"
+    "usual": "keep about 6",
+    "bottle": 125
    },
    {
     "key": "angelo-negro-unfiltered-arneis-2024",
@@ -18319,7 +18347,9 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 14.69,
-    "usual": "1 case"
+    "usual": "1 case",
+    "glass": 15,
+    "bottle": 60
    },
    {
     "key": "rocca-del-principe-fiano-di-avellino",
@@ -18331,7 +18361,9 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 16.8,
-    "usual": "1 case"
+    "usual": "1 case",
+    "glass": 17,
+    "bottle": 70
    },
    {
     "key": "terre-nere-etna-bianco",
@@ -18343,7 +18375,8 @@ window.SF = {
     "unit": 12,
     "rule": "par6",
     "cost": 24.5,
-    "usual": "keep about 6"
+    "usual": "keep about 6",
+    "bottle": 85
    },
    {
     "key": "copertino-riserva-negroamaro-2016",
@@ -18355,7 +18388,9 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 11.25,
-    "usual": "1 case"
+    "usual": "1 case",
+    "glass": 14,
+    "bottle": 55
    },
    {
     "key": "podere-ruggeri-corsini-armujan-barbera-d-alba-su",
@@ -18368,7 +18403,8 @@ window.SF = {
     "unit": 12,
     "rule": "case",
     "cost": 19.6,
-    "usual": "1 case at a time"
+    "usual": "1 case at a time",
+    "bottle": 80
    },
    {
     "key": "felsina-berardenga-chianti-classico-2022",
@@ -18381,7 +18417,8 @@ window.SF = {
     "unit": 12,
     "rule": "par6",
     "cost": 21.7,
-    "usual": "keep about 6, moves fast"
+    "usual": "keep about 6, moves fast",
+    "bottle": 90
    },
    {
     "key": "terre-nere-bellacolonna-etna-rosso-2022",
@@ -18394,7 +18431,8 @@ window.SF = {
     "unit": 12,
     "rule": "par6",
     "cost": 26.6,
-    "usual": "keep about 6"
+    "usual": "keep about 6",
+    "bottle": 100
    },
    {
     "key": "piaggia-il-sasso-carmignano",
@@ -18407,7 +18445,8 @@ window.SF = {
     "unit": 12,
     "rule": "par6",
     "cost": 28.0,
-    "usual": "keep about 6, moves fast"
+    "usual": "keep about 6, moves fast",
+    "bottle": 100
    },
    {
     "key": "franco-molino-cascina-rocca-barolo-2019",
@@ -18419,7 +18458,8 @@ window.SF = {
     "unit": 12,
     "rule": "case",
     "cost": 20.65,
-    "usual": "1 case at a time"
+    "usual": "1 case at a time",
+    "bottle": 95
    },
    {
     "key": "castello-di-neive-barbaresco-santo-stefano-2022",
@@ -18432,7 +18472,8 @@ window.SF = {
     "unit": 12,
     "rule": "par6",
     "cost": 30.0,
-    "usual": "keep about 6"
+    "usual": "keep about 6",
+    "bottle": 135
    },
    {
     "key": "voliero-brunello-di-montalcino-2017",
@@ -18446,28 +18487,33 @@ window.SF = {
     "unit": 12,
     "rule": "par6",
     "cost": 49.0,
-    "usual": "keep about 6, moves fast"
+    "usual": "keep about 6, moves fast",
+    "bottle": 145
    },
    {
     "key": "domaine-lingot-martin-pet-nat-rose",
     "name": "Domaine Lingot-Martin Pet Nat Rosé",
     "type": "Sparkling",
     "status": "cellar",
-    "vendor": ""
+    "vendor": "",
+    "glass": 14,
+    "bottle": 55
    },
    {
     "key": "il-ceo-vespri-pet-nat",
     "name": "Il Ceo \"Vespri\" Pet Nat",
     "type": "Sparkling",
     "status": "cellar",
-    "vendor": "Walden Selections"
+    "vendor": "Walden Selections",
+    "bottle": 70
    },
    {
     "key": "pojer-e-sandri-zero-infinito-pet-nat",
     "name": "Pojer e Sandri \"Zero Infinito\" Pet Nat",
     "type": "Sparkling",
     "status": "cellar",
-    "vendor": ""
+    "vendor": "",
+    "bottle": 80
    },
    {
     "key": "claudio-plessi-muntanera-rosato",
@@ -18475,7 +18521,8 @@ window.SF = {
     "type": "Sparkling",
     "status": "core-bottle",
     "vendor": "Petit Monde",
-    "phaseOut": true
+    "phaseOut": true,
+    "bottle": 70
    },
    {
     "key": "paltrinieri-sant-agata-lambrusco-di-sorbara",
@@ -18488,7 +18535,9 @@ window.SF = {
     "rule": "pace",
     "cost": 14.25,
     "usual": "1 case goes a long way",
-    "outUntil": "2026-11-18"
+    "outUntil": "2026-11-18",
+    "glass": 14,
+    "bottle": 55
    },
    {
     "key": "folicello-il-rosso-lambrusco-dell-emilia",
@@ -18502,14 +18551,18 @@ window.SF = {
     "name": "Apres Sol Brut Rosé",
     "type": "Sparkling",
     "status": "cellar",
-    "vendor": "Odom"
+    "vendor": "Odom",
+    "glass": 16,
+    "bottle": 65
    },
    {
     "key": "pietramore-trebbiano-d-abruzzo-superiore-2021",
     "name": "Pietramore Trebbiano d'Abruzzo Superiore 2021",
     "type": "White",
     "status": "cellar",
-    "vendor": "Vinea"
+    "vendor": "Vinea",
+    "glass": 15,
+    "bottle": 60
    },
    {
     "key": "pietramore-passerina-abruzzo-superiore",
@@ -18523,21 +18576,24 @@ window.SF = {
     "name": "I Pentri \"Flora\" Falanghina 2021",
     "type": "White",
     "status": "cellar",
-    "vendor": "Vinifera"
+    "vendor": "Vinifera",
+    "bottle": 80
    },
    {
     "key": "l-archetipo-greco-bianco-2024",
     "name": "L'Archetipo Greco Bianco 2024",
     "type": "White",
     "status": "cellar",
-    "vendor": "Vinea"
+    "vendor": "Vinea",
+    "bottle": 60
    },
    {
     "key": "schiopetto-sauvignon-blanc-collio",
     "name": "Schiopetto Sauvignon Blanc, Collio",
     "type": "White",
     "status": "cellar",
-    "vendor": "Elliot Bay"
+    "vendor": "Elliot Bay",
+    "bottle": 75
    },
    {
     "key": "viberti-derthona-timorasso-2023",
@@ -18545,21 +18601,24 @@ window.SF = {
     "type": "White",
     "status": "core-bottle",
     "vendor": "",
-    "phaseOut": true
+    "phaseOut": true,
+    "bottle": 95
    },
    {
     "key": "scarpa-monferrato-bianco-timorasso-2020",
     "name": "Scarpa Monferrato Bianco (Timorasso) 2020",
     "type": "White",
     "status": "cellar",
-    "vendor": "Cru Selections"
+    "vendor": "Cru Selections",
+    "bottle": 100
    },
    {
     "key": "fontodi-meriggio-bianco-2022",
     "name": "Fontodi \"Meriggio\" Bianco 2022",
     "type": "White",
     "status": "cellar",
-    "vendor": "Vinifera"
+    "vendor": "Vinifera",
+    "bottle": 110
    },
    {
     "key": "terlan-terlaner-i-primo-grande-cuvee-2021",
@@ -18567,7 +18626,8 @@ window.SF = {
     "type": "White",
     "status": "core-bottle",
     "vendor": "Vehrs",
-    "phaseOut": true
+    "phaseOut": true,
+    "bottle": 340
    },
    {
     "key": "gilbert-cellars-orange-2024",
@@ -18581,56 +18641,66 @@ window.SF = {
     "name": "Ruth Lewandowski \"Tatto\" Orange 2022",
     "type": "Orange",
     "status": "cellar",
-    "vendor": "Walden Selections"
+    "vendor": "Walden Selections",
+    "bottle": 70
    },
    {
     "key": "le-vigne-di-faraone-cerasuolo-d-abruzzo-2024",
     "name": "Le Vigne di Faraone Cerasuolo d'Abruzzo 2024",
     "type": "Rosé",
     "status": "cellar",
-    "vendor": "Vinea"
+    "vendor": "Vinea",
+    "glass": 15,
+    "bottle": 60
    },
    {
     "key": "boffalora-umo-chiavennasca-2021",
     "name": "Boffalora \"Umo\" Chiavennasca 2021",
     "type": "Red",
     "status": "cellar",
-    "vendor": "Petit Monde"
+    "vendor": "Petit Monde",
+    "glass": 20,
+    "bottle": 85
    },
    {
     "key": "i-pentri-kerres-piedirosso-2016",
     "name": "I Pentri \"Kerres\" Piedirosso 2016",
     "type": "Red",
     "status": "cellar",
-    "vendor": "Vinifera"
+    "vendor": "Vinifera",
+    "bottle": 85
    },
    {
     "key": "la-miraja-ruche-di-castagnole-monferrato-2023",
     "name": "La Miraja Ruché di Castagnole Monferrato 2023",
     "type": "Red",
     "status": "cellar",
-    "vendor": "Vehrs"
+    "vendor": "Vehrs",
+    "bottle": 90
    },
    {
     "key": "uccelliera-rapace-2019",
     "name": "Uccelliera \"Rapace\" 2019",
     "type": "Red",
     "status": "cellar",
-    "vendor": "Elliot Bay"
+    "vendor": "Elliot Bay",
+    "bottle": 95
    },
    {
     "key": "scarpa-verduno-pelaverga-2022",
     "name": "Scarpa Verduno Pelaverga 2022",
     "type": "Red",
     "status": "cellar",
-    "vendor": "Cru Selections"
+    "vendor": "Cru Selections",
+    "bottle": 110
    },
    {
     "key": "zenato-cresasso-corvina-2015",
     "name": "Zenato \"Cresasso\" Corvina 2015",
     "type": "Red",
     "status": "cellar",
-    "vendor": ""
+    "vendor": "",
+    "bottle": 150
    },
    {
     "key": "cocito-baluchin-barbaresco-riserva-2017",
@@ -18639,7 +18709,8 @@ window.SF = {
     "status": "core-bottle",
     "vendor": "Elliot Bay",
     "phaseOut": true,
-    "fridge": true
+    "fridge": true,
+    "bottle": 165
    },
    {
     "key": "cantina-terlano-porphyr-lagrein-riserva-2021",
@@ -18648,14 +18719,16 @@ window.SF = {
     "status": "core-bottle",
     "vendor": "Vehrs",
     "phaseOut": true,
-    "fridge": true
+    "fridge": true,
+    "bottle": 190
    },
    {
     "key": "arpepe-sassella-rocce-rosse-riserva",
     "name": "Arpepe \"Sassella Rocce Rosse\" Riserva",
     "type": "Red",
     "status": "cellar",
-    "vendor": "Walden Selections"
+    "vendor": "Walden Selections",
+    "bottle": 200
    },
    {
     "key": "tenuta-santa-maria-amarone-classico-riserva-2018",
@@ -18664,14 +18737,16 @@ window.SF = {
     "status": "core-bottle",
     "vendor": "Elliot Bay",
     "phaseOut": true,
-    "fridge": true
+    "fridge": true,
+    "bottle": 200
    },
    {
     "key": "canalicchio-di-sopra-brunello-di-montalcino-2006",
     "name": "Canalicchio di Sopra Brunello di Montalcino 2006",
     "type": "Red",
     "status": "cellar",
-    "vendor": ""
+    "vendor": "",
+    "bottle": 225
    },
    {
     "key": "ciacci-piccolomini-brunello-di-montalcino-2019",
@@ -18694,21 +18769,24 @@ window.SF = {
     "status": "core-bottle",
     "vendor": "Elliot Bay",
     "phaseOut": true,
-    "fridge": true
+    "fridge": true,
+    "bottle": 250
    },
    {
     "key": "vietti-barolo-ravera-2020",
     "name": "Vietti Barolo \"Ravera\" 2020",
     "type": "Red",
     "status": "cellar",
-    "vendor": "Winebow"
+    "vendor": "Winebow",
+    "bottle": 275
    },
    {
     "key": "antinori-tignanello-2021",
     "name": "Antinori \"Tignanello\" 2021",
     "type": "Red",
     "status": "cellar",
-    "vendor": "Southern Glazer's"
+    "vendor": "Southern Glazer's",
+    "bottle": 300
    },
    {
     "key": "vandori-bubbles",
@@ -19057,5 +19135,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793648626"
+ "build": "1793695115"
 };

@@ -2020,18 +2020,22 @@ a.wi-btn{text-decoration:none; display:inline-block;}
   <div class="view-head"><p class="view-eyebrow">Cards</p><h2 class="view-title">Compliance</h2>
     <p class="view-sub" id="compSub"></p>
     <div class="subtabs-wrap"><div class="subtabs" id="compTabs"><span class="subpill" id="compPill"></span>
-      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button><button class="subtab" data-comp="all">All Cards</button><button class="subtab" data-comp="tonight">Tonight's Staff</button><button class="subtab" data-comp="policy">Sign-offs</button></div></div>
+      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button><button class="subtab" data-comp="all">All Cards</button><button class="subtab" data-comp="tonight">Tonight's Staff</button></div></div>
   </div>
   <div id="compBody"></div>
 </section>
 
 <section class="view" id="standards">
-  <div class="view-head"><p class="view-eyebrow">FOH</p><h2 class="view-title">Standards</h2>
-    <p class="view-sub">The room, daily duties, and steps of service.</p></div>
+  <div class="view-head"><p class="view-eyebrow">House</p><h2 class="view-title">Standards</h2>
+    <p class="view-sub">House documents, the room, daily duties, and steps of service.</p></div>
   <div class="subtabs-wrap"><div class="subtabs" id="stdTabs"><span class="subpill" id="stdPill"></span>
-    <button class="subtab active" data-std="seating">Seating</button><button class="subtab" data-std="duties">Duties</button><button class="subtab" data-std="service">Service</button></div></div>
+    <button class="subtab active" data-std="docs">Documents</button><button class="subtab" data-std="seating">Seating</button><button class="subtab" data-std="duties">Duties</button><button class="subtab" data-std="service">Service</button></div></div>
 
-  <div class="std-pane" id="std-seating">
+  <div class="std-pane" id="std-docs">
+    <div id="docsBody"></div>
+  </div>
+
+  <div class="std-pane" id="std-seating" style="display:none">
     <div id="seatBody"></div>
   </div>
 
@@ -2166,7 +2170,7 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 </div>
 
 <script>
-const BUILD='1793648626';   // stamped by build-data.py at every deploy
+const BUILD='1793695115';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2450,7 +2454,7 @@ function renderHome(){
   const std=[['board','⌗','The Attic','Seat, time & flag tonight\'s tables'],
     ['schedule','◷','Schedule','This week + the month'],
     ['compliance','✓','Compliance','FWC & MAST cards, yours and the roster'],
-    ['standards','▦','Standards','Room, duties & steps of service'],
+    ['standards','▦','Standards','House documents, room, duties & service'],
     ['directory','✉','Directory','The team & contacts']];
   if(mgr) std.push(['frontdesk','⚿','Front Desk','Passwords, contacts & accounts']);   // sits beside Directory
   // Investors get Recap + Fresh Talk only. The standard card block and Farm Order are staff surfaces.
@@ -2831,8 +2835,8 @@ const TOUR_COPY={
   board:{t:'The Attic',b:'Tonight\'s tables upstairs. Tap a table to open it: the MD seats it with a turn time and any occasion, the server acknowledges and flags anything that needs the MD. Chat is the same room, in words. Other sections are one tap behind the section button.'},
   schedule:{t:'Schedule',b:'This week and the month ahead, front and back of house. Time off requests go in here too, under the Time Off tab, and you can see where they stand.'},
   compliance:{t:'Compliance',b:'Food worker and MAST cards for the whole roster. Snap a photo of your own card on your row and a manager verifies it. Coming Due is computed from the dates on file, so it is current every time you open it.'},
-  standards:{t:'Standards',b:'How we do things: daily duties, steps of service, sidework and closing lists. Your food handler card and any other certifications get uploaded and tracked in here as well.',
-    boh:'How we do things: daily duties, prep and closing lists, and the room itself. Your food handler card and any other certifications get uploaded and tracked in here, and the app will warn you before one expires.'},
+  standards:{t:'Standards',b:'How we do things: our house documents and policies, daily duties, steps of service, sidework and closing lists. Your food handler card and any other certifications get uploaded and tracked in here as well.',
+    boh:'How we do things: our house documents and policies, daily duties, prep and closing lists, and the room itself. Your food handler card and any other certifications get uploaded and tracked in here, and the app will warn you before one expires.'},
   directory:{t:'Directory',b:'Everyone on the team and how to reach them. You only appear the ways you chose a moment ago, and you can change that anytime by tapping your name up top.'},
   recap:{t:'Recap',b:'How the restaurant and the farm are actually doing, last night through the month, with the week ahead alongside it.'},
   lastnight:{t:'Last Night',b:'How last night landed, pulled straight from the morning brief.'},
@@ -2982,7 +2986,7 @@ function dlApply(force){
     const d=dlBest(all,key,x=>x._originalName||x.name); if(d)id='dcard-'+fcSlug(d._originalName||d.name); }
   else if(kind==='cocktail'){ dlFresh('bar'); const c=dlBest((SF.bar&&SF.bar.cocktails)||[],key,x=>x.name); if(c)id='ckcard-'+fcSlug(c.name); }
   else if(kind==='amaro'){ dlFresh('bar'); const a=dlBest((SF.bar&&SF.bar.afterDinner)||[],key,x=>x.name); if(a)id='adcard-'+boSlug(a.name); }
-  else if(kind==='standards'){ const p=['seating','duties','service'].indexOf(key)>=0?key:'service';
+  else if(kind==='standards'){ const p=['docs','seating','duties','service'].indexOf(key)>=0?key:'docs';
     go('standards'); const b=$('stdTabs')&&$('stdTabs').querySelector('[data-std="'+p+'"]'); if(b)b.click(); return; }
   else return;
   if(id)setTimeout(()=>jumpToCard(id),180);
@@ -3015,6 +3019,44 @@ function afterLogin(){
    (arrayUnion); the legacy single noticeAck field is still honored. */
 const ANNOUNCES=[
   {
+  /* LCB class recap (2026-11-03). Opens Standards → Documents; Got it stays locked until the
+     recap page writes policyAcks['recap-2026-11']. */
+  kind:'info',
+  aud:'all',
+  id:'lcb-recap-2026-11',
+  showUntil:'2026-12-31',
+  emoji:'\uD83D\uDCCB',
+  title:'Liquor Board class recap',
+  lines:[
+    "Ryan left several things for the house to decide. The recap has where we landed: checking and holding IDs, tables with a guest who can't show ID, cutting someone off, what goes in the nightly log, tastings, and your own drinking.",
+    "It's in a new Documents section under Standards, with the alcohol standards, both handbooks and the incident procedure, in English and Spanish. Read the recap and tap I've read this at the bottom."
+  ],
+  go:{hash:'standards/docs',label:'Open Documents'},
+  requiresPolicy:'recap-2026-11',
+  lockLabel:'Read the recap first',
+  lockNote:"Got it unlocks once you've tapped I've read this.",
+  note:"All of it is house policy as of November 3."
+  },
+  {
+  /* Employee illness reporting (2026-11-03). WAC 246-215-02115: staff informed of the duty to report
+     "in a verifiable manner"; the read-acknowledge is that record. */
+  kind:'info',
+  aud:'all',
+  id:'illness-2026-11',
+  showUntil:'2026-12-31',
+  emoji:'\uD83E\uDD12',
+  title:'Calling in sick: what to report',
+  lines:[
+    "Washington's food code requires every one of us to tell the person in charge about certain symptoms before a shift: vomiting, diarrhea, yellow skin or eyes, a sore throat with a fever, an infected cut on your hands or arms, or a doctor's diagnosis of a foodborne illness.",
+    "The new Employee Illness Reporting page under Standards, Documents says what to report, who to tell and when you can come back. Read it and tap I've read this at the bottom. Nobody gets in trouble for reporting."
+  ],
+  go:{hash:'standards/docs',label:'Open Documents'},
+  requiresPolicy:'illness-2026-11',
+  lockLabel:'Read the illness page first',
+  lockNote:"Got it unlocks once you've tapped I've read this.",
+  note:"The vomit and diarrhea cleanup procedure is in the same section."
+  },
+  {
   kind:'info',
   aud:'all',
   id:'alcohol-protocols-2026-10',
@@ -3024,7 +3066,7 @@ const ANNOUNCES=[
   lines:[
     "Our alcohol service standards are now house policy and are written into the employee handbook. They apply to everyone, kitchen included.",
     "Card anyone who looks under 50, regulars too. Two ID checks at the bar. A bottle of wine means everyone at the table shows ID. Any sign of intoxication means no more alcohol. Drinking or using on shift means immediate termination; shift drinks only after you've clocked out.",
-    "Read the full standards (revised Oct 20 with the Liquor Board's answers to our questions) and sign at the bottom of the page. The handbooks and the incident procedure are under Compliance, Sign-offs."
+    "Read the full standards (revised Nov 3 after the Liquor Board class) and sign at the bottom of the page. The handbooks and all our procedures are under Standards, Documents."
   ],
   link:{href:'alcohol-service-protocols.html',label:'Read and sign the standards'},
   requiresPolicy:'alcohol-2026-10',   /* Got it stays locked until the signature is on the staff doc (2026-10-17) */
@@ -3179,7 +3221,7 @@ function annAcked(){ return !!(me && annDoneFor(ANNOUNCE)); }
    page onto the staff doc (policyAcks.<id>), arrives here through the staff snapshot, and
    annPolicyRefresh repaints the open card so the button unlocks without a reload. */
 function annPolicyLocked(A){ if(!A||!A.requiresPolicy)return false; if(!me)return true; if(DEMO)return false; const p=PROFILES[me.name]||me; return !(p.policyAcks&&p.policyAcks[A.requiresPolicy]&&p.policyAcks[A.requiresPolicy].at); }
-function annPolicyRefresh(){ const m=$('announceModal'); if(!m||m.style.display!=='flex'||!ANNOUNCE||!ANNOUNCE.requiresPolicy)return;
+function annPolicyRefresh(){ try{ if(stdTab==='docs'&&$('docsBody')&&$('docsBody').offsetParent)renderStdDocs(); }catch(e){} const m=$('announceModal'); if(!m||m.style.display!=='flex'||!ANNOUNCE||!ANNOUNCE.requiresPolicy)return;
   const c0=m.querySelector('.ann-card'), y=c0?c0.scrollTop:0; m.innerHTML=annCardHTML(null); const c1=m.querySelector('.ann-card'); if(c1&&y)c1.scrollTop=y; }
 function annAck(){
   if(annPolicyLocked(ANNOUNCE))return;
@@ -3278,6 +3320,9 @@ function annCalloffHTML(A){ const t=todayISO(), side=A.aud||'foh', mySide=!!(me&
     +(more?'<div class="ann-more">'+(annPendingCount()-1)+' more after this</div>':'')+'</div>'; }
 function annCoRefresh(){ const m=$('announceModal'); if(!m||m.style.display!=='flex'||!ANNOUNCE||ANNOUNCE.kind!=='calloff')return;
   const c0=m.querySelector('.ann-card'), y=c0?c0.scrollTop:0; m.innerHTML=annCardHTML(null); const c1=m.querySelector('.ann-card'); if(c1&&y)c1.scrollTop=y; }   /* keep the scroll spot when a list updates (2026-10-01) */
+/* Close the card without acknowledging and jump inside the portal (2026-11-03). The card
+   comes back at the next login until Got it, which waits on requiresPolicy. */
+function annGo(h){ annClose(); if(location.hash==='#'+h)dlApply(true); else location.hash=h; }
 function annClose(){ const m=$('announceModal'); if(m)m.style.display='none';
   // alerts deliberately queue behind the announcement rather than stacking on it
   try{ setTimeout(maybeShowAlerts,350); }catch(e){} }
@@ -3290,9 +3335,10 @@ function annCardHTML(existing){
       <div class="ann-title serif">${esc(A.title)}</div>
       <div class="ann-lines">${A.lines.map(l=>`<div class="ann-line">${esc(l)}</div>`).join('')}</div>
       ${A.link?`<div class="ann-linkwrap"><a class="ann-link" href="${esc(A.link.href)}" target="_blank" rel="noopener">${esc(A.link.label||'Open')} →</a></div>`:''}
+      ${A.go?`<div class="ann-linkwrap"><button class="ann-link" style="border:0;cursor:pointer;" onclick="annGo('${esc(A.go.hash)}')">${esc(A.go.label||'Open')} →</button></div>`:''}
       ${A.note?`<div class="ann-note">${esc(A.note)}</div>`:''}
       ${annPolicyLocked(A)
-        ?`<div class="to-submit"><button class="to-go" disabled style="opacity:.45;cursor:not-allowed">Sign the protocols first</button></div><div class="ann-more">Got it unlocks once your signature is on file.</div>`
+        ?`<div class="to-submit"><button class="to-go" disabled style="opacity:.45;cursor:not-allowed">${esc(A.lockLabel||'Sign the protocols first')}</button></div><div class="ann-more">${esc(A.lockNote||'Got it unlocks once your signature is on file.')}</div>`
         :`<div class="to-submit"><button class="to-go" onclick="annAck()">${annPendingCount()>1?'Got it, next':'Got it'}</button></div>`}
       ${annPendingCount()>1?`<div class="ann-more">${annPendingCount()-1} more after this</div>`:''}
     </div>`;
@@ -6619,10 +6665,11 @@ function attachZoom(wrap,img){
   wrap.addEventListener('pointercancel',function(e){ptrs.delete(e.pointerId);pinch=null;pan=null;});
 }
 /* STANDARDS — one tab housing Seating / Duties / Compliance / Service via a pill switcher. */
-let stdTab='seating';
+let stdTab='docs';
 function showStdPane(v){
-  ['seating','duties','service'].forEach(function(k){var p=$('std-'+k);if(p)p.style.display=(k===v)?'':'none';});
-  if(v==='seating')renderSeating();
+  ['docs','seating','duties','service'].forEach(function(k){var p=$('std-'+k);if(p)p.style.display=(k===v)?'':'none';});
+  if(v==='docs')renderStdDocs();
+  else if(v==='seating')renderSeating();
   else if(v==='duties')renderDuties();
   else if(v==='service')renderService();
   requestAnimationFrame(replaceAllPills);
@@ -7386,7 +7433,9 @@ function offDownload(f){ if(OFF.url)URL.revokeObjectURL(OFF.url); OFF.url=URL.cr
    the record: who has signed, when, and who hasn't. WAC 314-29-015(4) names a signed
    acknowledgment of the alcohol policy on file per employee as a mitigating factor. */
 const POLICIES=[
-  {id:'alcohol-2026-10', title:'Alcohol Service Standards', dated:'2026-10-17', revised:'2026-10-20', href:'alcohol-service-protocols.html'}
+  {id:'recap-2026-11', title:'Liquor Board Class Recap', dated:'2026-11-03', href:'lcb-class-recap.html', kind:'read'},
+  {id:'illness-2026-11', title:'Employee Illness Reporting', dated:'2026-11-03', href:'employee-illness-reporting.html', kind:'read'},
+  {id:'alcohol-2026-10', title:'Alcohol Service Standards', dated:'2026-10-17', revised:'2026-11-03', href:'alcohol-service-protocols.html'}
 ];
 function policyAckFor(p,pol){ const a=p&&p.policyAcks&&p.policyAcks[pol.id]; return (a&&a.at)?a:null; }
 function policyRows(pol){
@@ -7395,7 +7444,10 @@ function policyRows(pol){
   return out;
 }
 const HOUSE_DOCS=[
-  {title:'Alcohol Service Standards', sub:'House policy · read and sign', href:'alcohol-service-protocols.html', es:'docs/alcohol-service-standards-es.pdf'},
+  {title:'Liquor Board Class Recap', sub:'Nov 2, 2026 · what changed after the class', href:'lcb-class-recap.html', es:'lcb-class-recap.html?lang=es', policy:'recap-2026-11'},
+  {title:'Alcohol Service Standards', sub:'House policy · revised Nov 3, 2026', href:'alcohol-service-protocols.html', es:'docs/alcohol-service-standards-es.pdf', policy:'alcohol-2026-10'},
+  {title:'Employee Illness Reporting', sub:'What to report before a shift, and when you can come back', href:'employee-illness-reporting.html', es:'employee-illness-reporting.html?lang=es', policy:'illness-2026-11'},
+  {title:'Vomit and Diarrhea Cleanup', sub:'Step by step, with what goes in the kit', href:'vomit-diarrhea-cleanup.html', es:'vomit-diarrhea-cleanup.html?lang=es'},
   {title:'Employee Handbook · Front of House', sub:'General policies, with Alcohol Service Standards', href:'docs/employee-handbook-foh.pdf', es:'docs/employee-handbook-foh-es.pdf'},
   {title:'Employee Handbook · Back of House', sub:'General policies, with Alcohol Service Standards', href:'docs/employee-handbook-boh.pdf', es:'docs/employee-handbook-boh-es.pdf'},
   {title:'Broken Glass and Guest Incident Procedure', sub:'What to do when something goes wrong at a table', href:'docs/broken-glass-and-guest-incident-procedure.pdf', es:'docs/broken-glass-and-guest-incident-procedure-es.pdf'}
@@ -7411,6 +7463,44 @@ function renderHouseDocs(){
   });
   return h+'</div>';
 }
+/* Standards → Documents (2026-11-03). The house documents shelf moved here from Compliance →
+   Sign-offs. Rows tied to a POLICIES entry show the signed-in person's own read/sign state. */
+function goDocs(){ if(location.hash==='#standards/docs')dlApply(true); else location.hash='standards/docs'; }
+function renderStdDocs(){
+  const b=$('docsBody'); if(!b)return;
+  const prof=me?(PROFILES[me.name]||me):null;
+  const open=[].slice.call(b.querySelectorAll('details[open]')).map(function(d){return d.getAttribute('data-pol');});
+  let h='<p class="view-sub" style="margin:2px 0 10px;">Our written policies and procedures, in English and Spanish. Newest on top. Questions go to Sam, Sully or the person in charge.</p><div class="comp-card">';
+  HOUSE_DOCS.forEach(function(x){
+    const pol=x.policy?POLICIES.find(function(p){return p.id===x.policy;}):null, ack=(pol&&prof&&!DEMO)?policyAckFor(prof,pol):null, rd=pol&&pol.kind==='read';
+    const tag=(!pol||!prof||DEMO)?'':(ack?'<span class="pill st-good" style="margin-left:6px;">✓ '+(rd?'read':'signed')+'</span>':'<span class="pill st-warn" style="margin-left:6px;">'+(rd?'please read':'please sign')+'</span>');
+    h+='<div class="comp-row" style="grid-template-columns:1fr auto;"><div><div class="comp-name">'+esc(x.title)+tag+'</div><div class="comp-role">'+esc(x.sub)+'</div></div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">'
+      +'<a class="ann-link" href="'+esc(x.href)+'" target="_blank" rel="noopener">English →</a>'
+      +(x.es?'<a class="ann-link" href="'+esc(x.es)+'" target="_blank" rel="noopener">Español →</a>':'')
+      +'</div></div>';
+  });
+  b.innerHTML=h+'</div>'+renderStdSignoffs();
+  open.forEach(function(id){ const d=b.querySelector('details[data-pol="'+id+'"]'); if(d)d.open=true; });
+}
+/* Sign-offs (moved from Compliance 2026-11-03): who has signed or read each policy. */
+function renderStdSignoffs(){
+  let h='<div class="section-label">Sign-offs</div><p class="view-sub" style="margin:0 0 8px;">Who has signed or read each policy. Tap one to see the list.</p>';
+  POLICIES.forEach(function(pol){
+    const rows=policyRows(pol), all=rows.boh.concat(rows.foh), n=all.filter(function(r){return !!r.ack;}).length, rd=pol.kind==='read';
+    h+='<details class="comp-card" data-pol="'+esc(pol.id)+'" style="padding:12px 15px;"><summary style="cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;">'
+      +'<span class="comp-name">'+esc(pol.title)+'</span><span class="pill '+(all.length&&n===all.length?'st-good':'st-warn')+'">'+n+' of '+all.length+(rd?' read':' signed')+'</span></summary>'
+      +'<div class="comp-role" style="margin:6px 0 2px;">Effective '+esc(fmtShort(pol.dated))+(pol.revised?' · revised '+esc(fmtShort(pol.revised)):'')+'</div>';
+    [['Back of House','boh'],['Front of House','foh']].forEach(function(lk){
+      h+='<div class="section-label" style="margin-top:10px;">'+lk[0]+'</div>';
+      rows[lk[1]].forEach(function(r){ const when=r.ack?new Date(r.ack.at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+        h+='<div class="comp-row" style="grid-template-columns:1fr auto;"><div><div class="comp-name">'+esc(r.name)+'</div><div class="comp-role">'+esc(r.role)+'</div></div>'
+          +(r.ack?'<span class="pill st-good">✓ '+(rd?'read':'signed')+' '+esc(when)+'</span>':'<span class="pill st-warn">'+(rd?'not read':'not signed')+'</span>')+'</div>'; });
+    });
+    h+='</details>';
+  });
+  return h;
+}
 function renderPolicySignoffs(){
   let h='';
   POLICIES.forEach(function(pol){
@@ -7418,26 +7508,27 @@ function renderPolicySignoffs(){
     const mine=me?policyAckFor(PROFILES[me.name]||me,pol):null;
     h+='<div class="comp-card" style="padding:14px 15px;">'
       +'<div class="comp-name" style="font-size:16px;">'+esc(pol.title)+'</div>'
-      +'<div class="comp-role">Effective '+esc(fmtShort(pol.dated))+(pol.revised?' · revised '+esc(fmtShort(pol.revised)):'')+' · '+signed+' of '+all.length+' signed</div>'
+      +'<div class="comp-role">Effective '+esc(fmtShort(pol.dated))+(pol.revised?' · revised '+esc(fmtShort(pol.revised)):'')+' · '+signed+' of '+all.length+(pol.kind==='read'?' read':' signed')+'</div>'
       +'<div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">'
-      +'<a class="ann-link" href="'+esc(pol.href)+'" target="_blank" rel="noopener">'+(mine?'Read it again':'Read and sign')+' →</a>'
-      +(mine?'<span class="comp-role">You signed '+esc(new Date(mine.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}))+'</span>':'<span class="comp-role">Sign at the bottom of the page.</span>')
+      +'<a class="ann-link" href="'+esc(pol.href)+'" target="_blank" rel="noopener">'+(mine?'Read it again':(pol.kind==='read'?'Read it':'Read and sign'))+' →</a>'
+      +(mine?'<span class="comp-role">You '+(pol.kind==='read'?'read it':'signed')+' '+esc(new Date(mine.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}))+'</span>':'<span class="comp-role">'+(pol.kind==='read'?'Tap I\'ve read this at the bottom of the page.':'Sign at the bottom of the page.')+'</span>')
       +'</div></div>';
     [['Back of House','boh'],['Front of House','foh']].forEach(function(lk){
       h+='<div class="section-label">'+lk[0]+'</div><div class="comp-card">';
       rows[lk[1]].forEach(function(r){
         const when=r.ack?new Date(r.ack.at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
         h+='<div class="comp-row" style="grid-template-columns:1fr auto;"><div><div class="comp-name">'+esc(r.name)+'</div><div class="comp-role">'+esc(r.role)+'</div></div>'
-          +(r.ack?'<span class="pill st-good">✓ signed '+esc(when)+'</span>':'<span class="pill st-warn">not signed</span>')+'</div>';
+          +(r.ack?'<span class="pill st-good">✓ '+(pol.kind==='read'?'read':'signed')+' '+esc(when)+'</span>':'<span class="pill st-warn">'+(pol.kind==='read'?'not read':'not signed')+'</span>')+'</div>';
       });
       h+='</div>';
     });
   });
-  h+=renderHouseDocs();
+  h+='<div class="section-label">House documents</div><div class="comp-card" style="padding:14px 15px;"><div class="comp-role">The class recap, the alcohol standards, both handbooks and the incident procedure now live under Standards, Documents.</div>'
+    +'<div style="margin-top:10px;"><button class="ann-link" style="border:0;cursor:pointer;" onclick="goDocs()">Open Documents →</button></div></div>';
   $('compBody').innerHTML=h;
 }
 function renderCompliance(){const C=SF.compliance, R=compWithExtras();
-  if(compTab==='policy'){ $('compSub').textContent='Written policies, signed in the portal, and house documents'; renderPolicySignoffs(); updateStdBadges(); return; }
+  if(compTab==='policy'){ $('compSub').textContent='Written policies, signed or read in the portal'; renderPolicySignoffs(); updateStdBadges(); return; }
   $('compSub').textContent=`${R.foh.length+R.boh.length} active · FWC & MAST`;
   if(compTab==='due'){
     const L=compDueList(), past=L.due.filter(function(d){return d.days<0;});

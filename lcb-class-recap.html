@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Liquor Board Class Recap · San Fermo</title>
+<style>
+  :root{
+    --moon:#f5efe1; --moon-hi:#fdfaf1; --moon-edge:#d9cbab;
+    --ink:#241f15; --soft:#5f5540; --mute:#9a8c6c;
+    --accent:#4a6a3a; --accent-dark:#2e4624; --accent-soft:#cdd9bb;
+    --rust:#b04a1a; --rust-soft:#f3ddc7;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#1b2238}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;color:var(--ink);line-height:1.55;-webkit-text-size-adjust:100%}
+  .page{max-width:720px;margin:0 auto;padding:16px}
+  .sheet{background:var(--moon);border:1px solid var(--moon-edge);border-radius:14px;padding:28px 24px 24px}
+  .serif{font-family:'Caladea','Cambria',Georgia,'Times New Roman',serif}
+  .kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:700}
+  h1{font-size:30px;line-height:1.1;margin:6px 0 4px;font-weight:600}
+  .eff{font-size:13px;color:var(--soft);margin:0 0 18px}
+  p{font-size:15.5px;margin:0 0 12px}
+  h2{font-size:18px;margin:22px 0 6px;font-weight:600;color:var(--accent-dark)}
+  .flag{background:var(--rust-soft);border-left:4px solid var(--rust);padding:12px 14px;border-radius:8px;margin:12px 0;font-size:15px}
+  .sig{margin-top:18px;font-size:15.5px}
+  a{color:var(--accent-dark);font-weight:600}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px;justify-content:space-between;align-items:center}
+  .bar .right{display:flex;gap:10px}
+  .btn{display:inline-block;padding:9px 16px;border-radius:10px;background:var(--accent);color:#eef6e6;font-weight:700;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--moon);border:1px solid rgba(245,239,225,.45)}
+  .btn.big{font-size:15px;padding:12px 18px;width:100%;text-align:center}
+  .note{font-size:13.5px;color:var(--soft);margin:8px 0 0}
+  .foot{text-align:center;font-size:12px;color:#7d8cb4;margin:14px 0 6px}
+  .sign{margin-top:26px;padding:18px 16px;border:2px solid var(--accent-soft);border-radius:12px;background:var(--moon-hi)}
+  .sign-title{font-size:19px;font-weight:600;color:var(--accent-dark);margin:0 0 8px}
+  .sign-text{font-size:15px;margin:0 0 12px}
+  .sign-wait{font-size:14px;color:var(--soft);margin:0 0 10px}
+  .sign-done{font-size:16px;color:var(--accent-dark);margin:0 0 4px}
+  .gate{display:none;position:fixed;inset:0;background:#1b2238;align-items:center;justify-content:center;padding:16px}
+  .gate-card{background:var(--moon);border-radius:14px;padding:26px 22px;max-width:420px;color:var(--ink)}
+  .gate-card p{font-size:15px;color:var(--soft)}
+  [data-lang]{display:none}
+  body.en [data-lang="en"], body.es [data-lang="es"]{display:block}
+  @media print{
+    @page{margin:0.6in}
+    html,body{background:#fff}
+    .page{max-width:none;padding:0}
+    .sheet{border:0;border-radius:0;padding:0;background:#fff}
+    .bar,.foot,.sign,.gate{display:none !important}
+    p{font-size:12.5px} h2{font-size:15px;margin-top:12px}
+  }
+</style>
+</head>
+<body class="en">
+<div class="page">
+  <div class="bar">
+    <a class="btn ghost" href="index.html#standards/docs">← Documents</a>
+    <div class="right">
+      <button class="btn ghost" id="langBtn" onclick="toggleLang()">Español</button>
+      <button class="btn" onclick="window.print()">Print</button>
+    </div>
+  </div>
+
+  <div class="sheet">
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+    <div class="kicker">San Fermo · Whole team · Front and back of house</div>
+    <h1 class="serif">Liquor Board Class Recap</h1>
+    <p class="eff">From Officer Ryan Grande's Responsible Liquor Sales class, November 2, 2026 · House policy from November 3, 2026</p>
+
+    <p>Hey everyone,</p>
+    <p>Thank you for showing up for Ryan's class on Monday. A lot of it was a refresher, but he left several things for the house to decide, so here's where we landed. All of this is house policy starting now, and it's written into the Alcohol Service Standards and both handbooks.</p>
+
+    <h2 class="serif">The recheck could happen any day</h2>
+    <p>The Board will send in someone under 21 carrying their real ID. The only thing they're allowed to lie about is saying yes when asked if they're 21. If you ask for their date of birth, they have to give you the real one.</p>
+
+    <h2 class="serif">Checking IDs</h2>
+    <p>Our rule hasn't changed: card anyone who looks under 50. Have them take the ID out of the wallet and hand it to you. Flex it, look at the photo for signs of Photoshop (no shadow behind the ears, flash on the face, the black t-shirt), and compare it against a real Washington ID if you have doubts. On a Washington ID, the last four digits of the DD number at the bottom are a 24-hour time, so anything above 2359 or a letter there means it's fake. Ask something that isn't on the card, like their middle name or what county they live in. A vertical ID means they're 25 at most, so be extra careful with those. If you're unsure at all, take your time, walk the ID away from the table and have Sully, Katie or me look at it. Ryan was clear that the Board looks at whether we took real steps, and scanners don't count as one. Fakes are made to scan.</p>
+
+    <h2 class="serif">What counts</h2>
+    <p>The ID has to be valid, and it's good through the end of its expiration date. A Washington paper temporary license from the DOL is acceptable. Temporary licenses from other states and digital IDs on a phone are not. Per current WAC, Global Entry and NEXUS cards are fine.</p>
+
+    <h2 class="serif">Fake IDs</h2>
+    <p>If you believe an ID is fake, we keep it. We're legally allowed to hold it for law enforcement to verify. Tell the guest that, and hand the ID to the person in charge. If the guest gets hostile, give it back. It isn't worth getting hurt over.</p>
+
+    <h2 class="serif">Suspected minor at a table</h2>
+    <p>If someone at the table can't produce ID, the bottle stays off the table, the server pours, and we watch for sharing. If we catch them sharing, they get one warning, and the second time the table is closed out and asked to leave. If the person without ID is not caught sharing but shows obvious signs of being intoxicated, close the table out and ask them to leave.</p>
+    <p>The warning is there for honest mistakes, like parents who don't realize they can't give their teenager a sip of champagne here, not for guests trying to skirt the system. Either way, it stops: Washington law doesn't allow anyone under 21 to drink on our premises, even with a parent. Don't ever make the decision on this alone, ask the person in charge their opinion or for them to step in.</p>
+
+    <h2 class="serif">Cutting someone off</h2>
+    <p>When we cut off an intoxicated guest, it doesn't mean the whole table is cut off, but nothing gets shared. Any bottle is poured by the server and kept off the table. If we see sharing, the whole table is closed out and asked to leave. If the guest tries to get a drink from another server, the bar or another table, they're escorted out. They get one chance to show they'll follow the rules, so we can help them sober up a bit before they head out.</p>
+
+    <h2 class="serif">Report to the log</h2>
+    <p>Any time you refuse service, cut someone off or keep an ID, put it in the nightly log with the time and a short description of the person (height, hair, what they were wearing). It protects you and the restaurant if a complaint or a lawsuit comes in later. The same goes for any incident during your shift.</p>
+
+    <h2 class="serif">Tastings</h2>
+    <p>New wines get tasted at fresh talk, sip and spit, as a short staff tasting led by Sully, Katie or me. For a new cocktail, everyone clocks out for the first few minutes of fresh talk to taste it, then clocks back in. Cocktail R&amp;D happens at the start of the shift, around 3:30, out of sight of guests. No R&amp;D tasting during service. If it happens out of a genuine misunderstanding it's a write-up, and if it gets to the point of intoxication it's termination. Nothing new gets tasted unless Sully, Katie or I am on duty.</p>
+
+    <h2 class="serif">Your own drinking</h2>
+    <p>No drinking on the clock. A shift drink is fine after you clock out. Nobody can be intoxicated on the premises, on or off the clock, and we won't serve a staff member who is.</p>
+
+    <h2 class="serif">MAST permits</h2>
+    <p>You don't need to carry the hard copy, but it has to be current. The portal warns you well ahead of time, so there's no excuse for letting it expire.</p>
+
+    <p>Everything here, plus the full standards, both handbooks and the incident procedure, lives under Standards, Documents in the portal.</p>
+    <p class="sig">Thanks everyone,<br>Sam</p>
+  </div>
+
+  <!-- ===================== ESPAÑOL ===================== -->
+  <div data-lang="es" lang="es">
+    <div class="kicker">San Fermo · Todo el equipo · Salón y cocina</div>
+    <h1 class="serif">Resumen de la clase de la Junta de Licores</h1>
+    <p class="eff">De la clase de Venta Responsable de Licor del oficial Ryan Grande, 2 de noviembre de 2026 · Política de la casa desde el 3 de noviembre de 2026</p>
+
+    <p>Hola a todos,</p>
+    <p>Gracias por venir a la clase de Ryan el lunes. Mucho fue un repaso, pero dejó varias cosas para que la casa decida, así que aquí está lo que decidimos. Todo esto es política de la casa desde ahora, y está escrito en las Normas de Servicio de Alcohol y en los dos manuales.</p>
+
+    <h2 class="serif">La nueva inspección puede llegar cualquier día</h2>
+    <p>La Junta mandará a alguien menor de 21 con su identificación verdadera. Lo único en lo que puede mentir es en decir que sí cuando le preguntan si tiene 21. Si le pides su fecha de nacimiento, tiene que darte la verdadera.</p>
+
+    <h2 class="serif">Revisar identificaciones</h2>
+    <p>Nuestra regla no cambia: pide identificación a cualquiera que aparente menos de 50 años. Pide que saquen la identificación de la cartera y te la entreguen. Dóblala un poco, revisa la foto buscando señales de Photoshop (sin sombra detrás de las orejas, flash en la cara, la camiseta negra) y compárala con una identificación real de Washington si tienes dudas. En una identificación de Washington, los últimos cuatro dígitos del número DD abajo son una hora en formato de 24 horas, así que cualquier número mayor a 2359 o una letra ahí significa que es falsa. Pregunta algo que no esté en la tarjeta, como su segundo nombre o en qué condado viven. Una identificación vertical significa que tienen 25 años como máximo, así que ten más cuidado con esas. Si tienes cualquier duda, tómate tu tiempo, lleva la identificación lejos de la mesa y pide a Sully, a Katie o a mí que la revisemos. Ryan dejó claro que la Junta se fija en si tomamos medidas reales, y los escáneres no cuentan como una. Las falsas están hechas para pasar el escáner.</p>
+
+    <h2 class="serif">Qué se acepta</h2>
+    <p>La identificación tiene que ser válida, y sirve hasta el final de su fecha de vencimiento. Se acepta la licencia temporal de papel de Washington que da el DOL. No se aceptan licencias temporales de otros estados ni identificaciones digitales en el teléfono. Según el WAC actual, las tarjetas Global Entry y NEXUS están bien.</p>
+
+    <h2 class="serif">Identificaciones falsas</h2>
+    <p>Si crees que una identificación es falsa, nos la quedamos. La ley nos permite retenerla para que la policía la verifique. Díselo al cliente y entrega la identificación a la persona a cargo. Si el cliente se pone agresivo, devuélvela. No vale la pena salir lastimado.</p>
+
+    <h2 class="serif">Posible menor en una mesa</h2>
+    <p>Si alguien en la mesa no puede mostrar identificación, la botella se queda fuera de la mesa, el mesero sirve y vigilamos que no compartan. Si los vemos compartiendo, reciben una advertencia, y la segunda vez se cierra la cuenta y se les pide que se retiren. Si a la persona sin identificación no la vemos compartiendo pero muestra señales claras de intoxicación, cierra la cuenta y pídeles que se retiren.</p>
+    <p>La advertencia existe para errores honestos, como padres que no saben que aquí no pueden darle un sorbo de champán a su hijo adolescente, no para clientes que intentan burlar el sistema. En cualquier caso se detiene: la ley de Washington no permite que nadie menor de 21 beba en nuestro local, aunque esté con sus padres. Nunca tomes esta decisión solo; pide la opinión de la persona a cargo o que intervenga.</p>
+
+    <h2 class="serif">Cortar el servicio a alguien</h2>
+    <p>Cuando le cortamos el servicio a un cliente intoxicado, no significa que se le corte a toda la mesa, pero no se comparte nada. Cualquier botella la sirve el mesero y se queda fuera de la mesa. Si vemos que comparten, se cierra la cuenta de toda la mesa y se les pide que se retiren. Si el cliente intenta conseguir una bebida de otro mesero, de la barra o de otra mesa, se le acompaña a la salida. Tiene una oportunidad de mostrar que va a seguir las reglas, para que podamos ayudarle a recuperarse un poco antes de irse.</p>
+
+    <h2 class="serif">Anotarlo en el registro</h2>
+    <p>Cada vez que niegues el servicio, cortes el servicio a alguien o te quedes con una identificación, anótalo en el registro de la noche con la hora y una breve descripción de la persona (estatura, cabello, qué llevaba puesto). Te protege a ti y al restaurante si después llega una queja o una demanda. Lo mismo para cualquier incidente durante tu turno.</p>
+
+    <h2 class="serif">Catas</h2>
+    <p>Los vinos nuevos se prueban en la fresh talk, probando y escupiendo, como una cata corta para el personal dirigida por Sully, Katie o yo. Para un cóctel nuevo, todos marcan la salida durante los primeros minutos de la fresh talk para probarlo y luego vuelven a marcar la entrada. El desarrollo de cócteles se hace al inicio del turno, alrededor de las 3:30, fuera de la vista de los clientes. Nada de catas de desarrollo durante el servicio. Si pasa por un malentendido genuino es una amonestación por escrito, y si llega al punto de intoxicación es despido. No se prueba nada nuevo a menos que Sully, Katie o yo estemos de turno.</p>
+
+    <h2 class="serif">Lo que tú bebes</h2>
+    <p>Nada de beber durante el turno. La bebida de fin de turno está bien después de marcar la salida. Nadie puede estar intoxicado en el local, en turno o fuera de turno, y no le servimos a un empleado que lo esté.</p>
+
+    <h2 class="serif">Permisos MAST</h2>
+    <p>No necesitas llevar la copia física, pero tiene que estar vigente. El portal te avisa con mucha anticipación, así que no hay excusa para dejarlo vencer.</p>
+
+    <p>Todo esto, junto con las normas completas, los dos manuales y el procedimiento de incidentes, está en el portal en Standards, Documents.</p>
+    <p class="sig">Gracias a todos,<br>Sam</p>
+  </div>
+
+  <div class="sign" id="sign">
+    <div class="sign-title serif" id="signTitle">I've read this</div>
+    <div id="signBody"><div class="sign-wait">Checking your portal login…</div></div>
+  </div>
+  </div>
+  <div class="foot">San Fermo · 5341 Ballard Ave NW · Unlisted page, do not share outside the team.</div>
+</div>
+
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="kicker">San Fermo staff portal</div>
+    <h1 class="serif" style="font-size:24px">Log in to read this</h1>
+    <p>This page is for the San Fermo team. Open the portal, log in with your name and PIN, then come back here from Standards, Documents.</p>
+    <p lang="es">Esta página es para el equipo de San Fermo. Abre el portal, entra con tu nombre y PIN, y vuelve aquí desde Standards, Documents.</p>
+    <a class="btn" href="index.html">Open the portal</a>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>
+/* Same project, anonymous auth and session check as alcohol-service-protocols.html.
+   Tapping "I've read this" writes policyAcks.<POLICY_ID> on the person's staff doc; the
+   portal's announcement card unlocks on it and Standards, Documents lists it. */
+const POLICY_ID='recap-2026-11';
+const CFG={apiKey:"AIzaSyByAhPS7C86jXG-8y9EQGNbMwncmBPl9oc",authDomain:"sf-staff-portal.firebaseapp.com",projectId:"sf-staff-portal",storageBucket:"sf-staff-portal.firebasestorage.app",messagingSenderId:"395019590035",appId:"1:395019590035:web:d7fcccb093b09b9cb67066"};
+const T={
+  en:{title:"I've read this",btn:"I've read this recap",text:function(n){return 'I, <b>'+n+'</b>, have read the Liquor Board class recap and understand the house policies in it.';},
+      done:function(n,d){return '✓ Read by <b>'+n+'</b> on '+d+'.';},donenote:'Recorded on your staff record. You can close this page.',
+      note:'Tapping records your name and today\'s date on your staff record.',saving:'Saving…',
+      err:function(m){return 'Couldn\'t save ('+m+'). Try again in a minute, or tell Sam or Sully.';},retry:'Try again',other:'Español',
+      offline:function(m){return 'Can\'t reach the portal right now ('+m+'). You can still read this page; tap the button when you\'re back online.';}},
+  es:{title:'Ya lo leí',btn:'Ya leí este resumen',text:function(n){return 'Yo, <b>'+n+'</b>, leí el resumen de la clase de la Junta de Licores y entiendo las políticas de la casa que contiene.';},
+      done:function(n,d){return '✓ Leído por <b>'+n+'</b> el '+d+'.';},donenote:'Quedó registrado en tu ficha de personal. Puedes cerrar esta página.',
+      note:'Al tocar el botón se registran tu nombre y la fecha de hoy en tu ficha de personal.',saving:'Guardando…',
+      err:function(m){return 'No se pudo guardar ('+m+'). Inténtalo en un minuto o avisa a Sam o a Sully.';},retry:'Intentar de nuevo',other:'English',
+      offline:function(m){return 'No se puede conectar con el portal ahora ('+m+'). Puedes leer esta página; toca el botón cuando vuelvas a tener conexión.';}}
+};
+let LANG='en';
+try{ const q=new URLSearchParams(location.search).get('lang'); const s=localStorage.getItem('sf-recap-lang'); LANG=(q==='es'||q==='en')?q:(s==='es'?'es':'en'); }catch(e){}
+function session(){ try{ const s=JSON.parse(localStorage.getItem('sf-session')||'null'); if(!s||!s.name)return null; if(s.exp!==null&&s.exp!==undefined&&Date.now()>s.exp)return null; return s; }catch(e){ return null; } }
+function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function showGate(){ document.getElementById('gate').style.display='flex'; document.querySelector('.page').style.display='none'; }
+function when(ms){ return new Date(ms).toLocaleDateString(LANG==='es'?'es-US':'en-US',{month:'long',day:'numeric',year:'numeric'}); }
+let db=null, staffDoc=null, prof=null, state='wait', stateExtra=null;
+function paint(s,extra){
+  state=s; stateExtra=extra; const t=T[LANG], b=document.getElementById('signBody'), nm=esc(prof?prof.name:'');
+  document.getElementById('signTitle').textContent=t.title;
+  if(s==='wait'){ return; }
+  if(s==='signed'){ b.innerHTML='<div class="sign-done">'+t.done(nm,esc(when(extra)))+'</div><div class="note">'+t.donenote+'</div>'; return; }
+  if(s==='error'){ b.innerHTML='<div class="sign-wait">'+t.err(esc(extra||'no connection'))+'</div><button class="btn" onclick="ack()">'+t.retry+'</button>'; return; }
+  if(s==='offline'){ b.innerHTML='<div class="sign-wait">'+t.offline(esc(extra||''))+'</div>'; return; }
+  if(s==='saving'){ b.innerHTML='<div class="sign-wait">'+t.saving+'</div>'; return; }
+  b.innerHTML='<p class="sign-text">'+t.text(nm)+'</p><button class="btn big" onclick="ack()">'+t.btn+'</button><div class="note">'+t.note+'</div>';
+}
+function applyLang(){
+  document.body.className=LANG; document.documentElement.lang=LANG;
+  document.getElementById('langBtn').textContent=T[LANG].other;
+  try{ localStorage.setItem('sf-recap-lang',LANG); }catch(e){}
+  paint(state,stateExtra);
+}
+function toggleLang(){ LANG=(LANG==='en')?'es':'en'; applyLang(); window.scrollTo(0,0); }
+async function ack(){
+  if(!db||!staffDoc||!prof)return paint('error','not logged in');
+  paint('saving');
+  try{
+    const at=Date.now(), patch={}; patch['policyAcks.'+POLICY_ID]={at:at,name:prof.name,via:'page',lang:LANG};
+    await db.collection('staff').doc(staffDoc).update(patch);
+    paint('signed',at);
+  }catch(e){ paint('error',e&&e.message); }
+}
+applyLang();
+(async function(){
+  const s=session(); if(!s){ showGate(); return; }
+  try{
+    firebase.initializeApp(CFG); db=firebase.firestore();
+    await firebase.auth().signInAnonymously();
+    const q=await db.collection('staff').where('name','==',s.name).limit(1).get();
+    if(q.empty){ showGate(); return; }
+    staffDoc=q.docs[0].id; prof=q.docs[0].data()||{};
+    if(prof.active===false){ showGate(); return; }
+    const a=prof.policyAcks&&prof.policyAcks[POLICY_ID];
+    if(a&&a.at)paint('signed',a.at); else paint('ready');
+  }catch(e){ paint('offline',e&&e.message); }
+})();
+</script>
+</body>
+</html>
