@@ -2189,7 +2189,7 @@ select.wb-in option{color:#241f15;}
 </section>
 
 <section class="view" id="winebook">
-  <div class="view-head"><p class="view-eyebrow">Sam · Sully · Tim</p><h2 class="view-title">Wine Book</h2></div>
+  <div class="view-head"><p class="view-eyebrow">Wine Team</p><h2 class="view-title">Wine Book</h2></div>
   <div id="wbBody"></div>
 </section>
 
@@ -2249,7 +2249,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793715088';   // stamped by build-data.py at every deploy
+const BUILD='1793736607';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2314,7 +2314,7 @@ function navTabs(){
   const base=(me&&String(me.area||'').toLowerCase()==='boh')?TABS.filter(function(x){return x[0]!=='board';}):TABS;
   let t=isMgr()?head.concat(base,[['frontdesk','Front Desk']]):head.concat(base);
   if(typeof wiCanTab==='function'&&wiCanTab())t=t.concat([['wineinv','Wine Inventory']]);   // managers + wine team
-  if(typeof wbCanTab==='function'&&wbCanTab())t=t.concat([['winebook','Wine Book']]);   // Sam, Sully, Tim
+  if(typeof wbCanTab==='function'&&wbCanTab())t=t.concat([['winebook','Wine Book']]);   // WB_VIEWERS
   if(isMgr())t=t.concat([['orders','Farm Order']]);
   return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 /* Manager chip (2026-10-22): twelve chips ran three screens wide on a phone. Managers get one "Manager"
@@ -2541,7 +2541,7 @@ function renderHome(){
   // An odd card count leaves one card alone on its row: center it, same look as the orphan rule.
   if(!isInvestor()){ const sc=std.map(stdCardHTML); if(sc.length%2) sc[sc.length-1]=sc[sc.length-1].replace('class="home-card"','class="home-card home-card-solo"'); html += sc.join(''); }
   if(!isInvestor() && typeof wiCanTab==='function' && wiCanTab()) html += wiCardHTML();   // full width (Sam 9/30)
-  if(!isInvestor() && typeof wbCanTab==='function' && wbCanTab()) html += wbCardHTML();   // Sam, Sully, Tim
+  if(!isInvestor() && typeof wbCanTab==='function' && wbCanTab()) html += wbCardHTML();   // WB_VIEWERS
   if(!isInvestor() && typeof studyCanSee==='function' && studyCanSee()) html += studyCardHTML();   // Study deck (Sam 10/6)
   if(mgr && !isInvestor()) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
   $('homeGrid').innerHTML=html;
@@ -2924,7 +2924,7 @@ const TOUR_COPY={
   scws:{t:'Service Charge',b:'The nightly service charge worksheet rebuilt from Revel. Useful for checking a night, but Tim\'s numbers remain the system of record.'},
   frontdesk:{t:'Front Desk',b:'Passwords, vendor contacts and account info. Managers can add, edit and remove entries here.'},
   wineinv:{t:'Wine Inventory',b:'Bottles on hand for every wine: the last count, plus deliveries logged since, minus what Revel says sold. Do counts and log deliveries here.'},
-  winebook:{t:'Wine Book',b:'For Sam, Sully and Tim: what to order, how each wine is selling, the reps, their catalogs and shared notes.'},
+  winebook:{t:'Wine Book',b:'What to order, how each wine is selling, the reps, their catalogs and shared notes.'},
   orders:{t:'Farm Order',b:'Place and track the farm order without leaving the app.'},
   access:{t:'Staff Access',b:'Add people, set or reset PINs, and lock out anyone who leaves.'}
 };
@@ -4961,13 +4961,13 @@ function fdMatchesQuery(e,q){
   return q.split(/\s+/).every(w=>t.includes(w));
 }
 /* ===== WINE BOOK (2026-11-03, Guinan). Sam's buying book, moved in from the private page at his ask ("Eyes only for sully tim and me").
-   Gate: Sam, Tim and Sully by first name, on top of mgr/admin, same posture as SRV_VIEWERS. Katie and other managers do not get it.
+   Gate: Sam, Sully, Katie, Chris, Jose and Tim by first name, on top of mgr/admin (Sam 11/3: nothing sensitive there).
    UI-only like every gate here (floor plan 8.6): board is readable by anyone who digs. Nothing about the book is in the public repo.
    STORAGE: board/winebook {inventory,sales,reps,catalogs,market: JSON strings, pushed} written by Codename: Guinan/page/build_page_data.py --push;
    board/winebookCat {json} Italian catalog lines, read only when someone searches; board/winebookNotes {notes:[{id,kind,text,wine,rep,by,at,done}]}
    written only here. On hand and weeks left are worked out live with wiCompute so this tab never disagrees with Wine Inventory;
    pace, orders, sales and everything else are as of the last push. Plan: Codename: Guinan/page/README.md. */
-const WB_VIEWERS=['sam','tim','sully'];
+const WB_VIEWERS=['sam','sully','katie','chris','jose','tim'];
 const WB={sub:'cellar',feed:null,at:0,err:false,loading:false,filter:'list',q:'',open:{},catQ:'',cat:null,catLoading:false,catErr:false,notes:[],notesOn:false,notesReady:false,noteFilter:'all',delArm:null,draft:{text:'',kind:'wish',wine:'',rep:''},msg:'',saving:false,rt:null,liveWait:0};
 const WB_SUBS=[['cellar','Cellar'],['sales','Our sales'],['reps','Reps'],['catalogs','Catalogs'],['market','Market'],['notes','Notes']];
 const WB_KINDS={wish:'Wine to try',tasting:'Tasting note',rep:'Rep conversation',idea:'Next list idea'};
