@@ -8143,7 +8143,7 @@ window.SF = {
      "",
      "",
      "",
-     "3:30 Bar (Brittany R/O)",
+     "3:30 serve",
      "Sup Server (Brittany R/O)",
      "3:30 serve (Josie R/O)"
     ],
@@ -8284,7 +8284,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 serve",
-       "3:30 serve",
+       "3:30 Bar",
        "",
        "3:30 Bar"
       ]
@@ -8323,7 +8323,7 @@ window.SF = {
      "",
      "",
      "",
-     "3:30 Bar (Brittany R/O)",
+     "3:30 serve",
      "Sup Server (Brittany R/O)",
      ""
     ],
@@ -8464,7 +8464,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "",
-       "3:30 serve",
+       "3:30 Bar",
        "",
        "3:30 Bar"
       ]
@@ -19087,5 +19087,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793737646"
+ "build": "1793738803"
 };
