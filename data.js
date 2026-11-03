@@ -8899,12 +8899,12 @@ window.SF = {
       "name": "Allegra",
       "shifts": [
        "3:30 serve",
-       "",
+       "3:30 serve",
+       "3:30 serve",
        "3:30 serve",
        "",
        "",
-       "3:30 serve",
-       "3:30 serve"
+       ""
       ]
      },
      {
@@ -8995,12 +8995,12 @@ window.SF = {
       "name": "Sabba",
       "shifts": [
        "3:30 Bar",
-       "3:30 serve",
-       "3:30 serve",
-       "3:30 serve",
+       "",
        "3:30 serve",
        "",
-       ""
+       "3:30 serve",
+       "3:30 serve",
+       "3:30 serve"
       ]
      },
      {
@@ -15481,7 +15481,7 @@ window.SF = {
       "shifts": [
        "1-close",
        "1-close",
-       "1-close",
+       "",
        "",
        "",
        "",
@@ -15541,7 +15541,7 @@ window.SF = {
       "shifts": [
        "10-8",
        "10-8",
-       "",
+       "1-close",
        "",
        "1-close",
        "",
@@ -19135,5 +19135,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793695672"
+ "build": "1793715088"
 };

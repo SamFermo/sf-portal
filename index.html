@@ -1814,6 +1814,10 @@ body::before{background:linear-gradient(rgba(9,15,34,.87), rgba(6,10,24,.93)), u
 .ds-person{background:rgba(14,22,48,.82); border:1px solid rgba(205,216,244,.08);}
 .ds-person.ds-pickup{background:rgba(36,66,40,.72);}
 .comp-upload-note{color:var(--ink-soft);}
+/* Readability, whole portal (Sam 11/3: "overly transparent", "difficult to read"). Inside a tab the pasta photo is gone: text sits on solid night sky and the sticky header is solid. The home screen and login keep the photo. */
+body.not-home::before{background:#0a1228;}
+header.app{background:rgba(8,16,40,.97);}
+body:not(.not-home) .ann-home{background:#141e3e;}
 /* 7. One chart palette: Recap's magnitude bars and lines were a default electric blue.
       Moon-silver fits the portal and stays distinct from restaurant amber / farm green. */
 :root{--rc-mag:#a9b8de;}
@@ -1890,6 +1894,19 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 .wo-btn:focus-visible,.wo-ck-b button:focus-visible,.wo-step button:focus-visible,.wi-btn:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
 /* WINE INVENTORY (2026-09-29) */
 #winebook.view{max-width:880px;}
+/* Readability (Sam 11/3, "overly transparent"): this tab is dense reading, so every panel is solid. */
+#winebook .wo-card{background:#141e3e;border-color:rgba(230,200,120,.45);}
+#winebook .wo-o{background:#1b2750;border-color:rgba(205,216,244,.22);}
+#winebook .wi-row{background:#16224a;border-color:rgba(205,216,244,.2);}
+#winebook .wi-row.wi-low{background:#2a2a3a;border-color:rgba(230,200,120,.7);}
+#winebook .wi-row.wi-neg{background:#37202f;border-color:rgba(224,128,112,.7);}
+#winebook .wb-more{background:#1b2750;color:var(--ink);}
+#winebook .wb-in{background:#16224a;border-color:rgba(205,216,244,.32);}
+#winebook .wi-seg button:not(.on){background:#16224a;color:var(--ink);border-color:rgba(205,216,244,.28);}
+#winebook .wb-warn{background:#2a2a3a;}
+#winebook .wi-sub,#winebook .wo-sub,#winebook .wo-why,#winebook .wo-hint,#winebook .wb-sub,#winebook .wb-note .m,#winebook .wi-oh-l{color:var(--ink-soft);}
+#winebook .wb-tbl th{color:var(--ink-soft);}
+#winebook .wb-tbl .wb-mute{color:var(--ink-soft);}
 .wb-stamp{font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;text-align:center;}
 .wb-warn{font-size:12.5px;color:var(--gold);background:rgba(230,200,120,.08);border:1px solid rgba(230,200,120,.3);border-radius:10px;padding:7px 11px;margin:0 0 12px;}
 .wb-seg{justify-content:center;margin:0 0 18px;}
@@ -2232,7 +2249,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793695672';   // stamped by build-data.py at every deploy
+const BUILD='1793715088';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
