@@ -840,6 +840,28 @@ body.tour-on{padding-bottom:230px;}
 .cu-datelab{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--card-mute);}
 .cu-date{font-size:12px; padding:4px 8px; border-radius:7px; border:1px solid var(--moon-edge); background:rgba(205,216,244,.06); color:var(--wood); font-family:inherit;}
 .cu-ocr{font-size:10.5px; color:var(--gold-deep); font-style:italic; flex-basis:100%;}
+/* shellfish & mushroom records (2026-11-03) */
+.rec-add{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 6px;}
+.rec-btn{border:0;cursor:pointer;font:inherit;}
+.rec-row{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:.5px dotted var(--moon-edge);}
+.rec-row:last-child{border-bottom:none;}
+.rec-row.void .comp-name,.rec-row.void .rec-dates{text-decoration:line-through;opacity:.6;}
+.rec-thumb{width:56px;height:56px;border-radius:8px;border:1px solid var(--moon-edge);background:#fffdf7;padding:0;overflow:hidden;cursor:pointer;font-size:22px;}
+.rec-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.rec-main{min-width:0;}
+.rec-dates{font-size:13px;color:var(--card-ink);margin:2px 0;}
+.rec-voidnote{font-size:11.5px;color:#a85454;margin-top:2px;}
+.rec-act{display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+.rec-past{font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;background:none;border:0;cursor:pointer;}
+.rec-modal{width:min(460px,92vw);overflow:auto;}
+.rec-help{font-size:12.5px;color:var(--card-soft);margin:0;line-height:1.45;}
+.rec-photo{display:block;text-align:center;padding:12px;border:1.5px dashed var(--moon-edge);border-radius:10px;color:var(--wood);font-weight:700;cursor:pointer;}
+.rec-photo input{display:none;}
+.rec-prev{max-width:100%;max-height:34vh;object-fit:contain;border-radius:8px;align-self:center;}
+.rec-lab{display:flex;flex-direction:column;gap:4px;font-size:11.5px;font-weight:700;color:var(--card-soft);text-transform:uppercase;letter-spacing:.06em;}
+.rec-lab input{font:inherit;font-size:15px;text-transform:none;letter-spacing:0;font-weight:400;padding:8px 10px;border:1px solid var(--moon-edge);border-radius:8px;background:#fffdf7;color:var(--card-ink);}
+.rec-msg{font-size:12.5px;color:#a85454;min-height:1em;}
+@media (max-width:540px){#compTabs .subtab{min-width:0;padding:7px 8px;font-size:12.5px;}}
 .comp-modal{position:fixed; inset:0; background:rgba(20,16,10,.82); display:none; align-items:center; justify-content:center; z-index:9999; padding:18px;}
 .comp-modal-inner{background:var(--moon); border-radius:16px; padding:14px; max-width:94vw; max-height:90vh; display:flex; flex-direction:column; gap:10px; box-shadow:0 12px 40px rgba(0,0,0,.5);}
 .comp-modal-head{font-weight:700; color:var(--wood); font-size:13px;}
@@ -2097,7 +2119,7 @@ select.wb-in option{color:#241f15;}
   <div class="view-head"><p class="view-eyebrow">Cards</p><h2 class="view-title">Compliance</h2>
     <p class="view-sub" id="compSub"></p>
     <div class="subtabs-wrap"><div class="subtabs" id="compTabs"><span class="subpill" id="compPill"></span>
-      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button><button class="subtab" data-comp="all">All Cards</button><button class="subtab" data-comp="tonight">Tonight's Staff</button></div></div>
+      <button class="subtab active" data-comp="roster">Roster</button><button class="subtab" data-comp="due">Coming Due</button><button class="subtab" data-comp="all">All Cards</button><button class="subtab" data-comp="tonight">Tonight's Staff</button><button class="subtab" data-comp="recs">Shellfish &amp; Mushrooms</button></div></div>
   </div>
   <div id="compBody"></div>
 </section>
@@ -2248,7 +2270,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793738803';   // stamped by build-data.py at every deploy
+const BUILD='1793749440';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -7054,6 +7076,138 @@ function resetDuties(){setDute({});renderDuties();}
 let compTab='roster';
 function ic(st){return st==='good'?'✓':st==='alarm'?'!':'•';}
 
+/* ===== SHELLFISH & MUSHROOM RECORDS (2026-11-03) ===========================
+   Compliance → Shellfish & Mushrooms. Shellstock tags (WAC 246-215-03290: first/last served dates,
+   kept 90 days after the last, in date order) and wild-mushroom identifier papers (WAC 246-215-03225:
+   kept 90 days after receipt). Spec: specs/2026-11-03-shellfish-mushroom-records-design.md.
+   `records` = small synced docs (with a ~240px thumb); `recordImg` = full photo, fetched on tap.
+   Firestore rules make records append-only: create; close an open bag once; void once; never delete.
+   Saves need a live connection: no localStorage fallback, a record that never reached the server
+   is not a record. ========================================================== */
+let REC={}, recUnsub=null, REC_LOADED=false, REC_ERR='', REC_PAST_OPEN=false, REC_F=null;
+const REC_SPECIES=['Chanterelle (Cantharellus formosus)','White chanterelle (Cantharellus subalbidus)','Yellowfoot (Craterellus tubaeformis)','Black trumpet (Craterellus cornucopioides)','Hedgehog (Hydnum repandum)','Porcini (Boletus edulis)','Lobster (Hypomyces lactifluorum)','Matsutake (Tricholoma murrillianum)','Morel (Morchella spp.)','Cauliflower (Sparassis crispa)','Oyster (Pleurotus ostreatus)','Bear’s tooth (Hericium abietis)','Saffron milk cap (Lactarius deliciosus)','Blue chanterelle (Polyozellus multiplex)','Oregon white truffle (Tuber oregonense)','Oregon black truffle (Leucangium carthusianum)'];
+function recAdd(iso,n){const[y,m,d]=iso.split('-').map(Number);const t=new Date(y,m-1,d+n),p=x=>String(x).padStart(2,'0');return t.getFullYear()+'-'+p(t.getMonth()+1)+'-'+p(t.getDate());}
+function recShort(iso){if(!iso)return '';const[y,m,d]=iso.split('-').map(Number);return MON[m-1]+' '+d+(y!==new Date().getFullYear()?', '+y:'');}
+function recKeepUntil(r){return r.kind==='shellfish'?(r.last?recAdd(r.last,90):null):recAdd(r.received,90);}
+function recSync(){
+  if(recUnsub||!fbReady||!fbDb)return;
+  recUnsub=fbDb.collection('records').onSnapshot(function(snap){
+    REC={}; snap.docs.forEach(function(d){REC[d.id]=d.data();});
+    if(!snap.metadata||!snap.metadata.fromCache)REC_LOADED=true; REC_ERR='';
+    if(compTab==='recs'&&$('compBody'))recRender();
+  },function(e){ REC_ERR=(e&&e.code)||'error'; recUnsub=null; if(compTab==='recs'&&$('compBody'))recRender(); });
+}
+function recRow(id,r){
+  const v=!!r.void, keep=recKeepUntil(r);
+  let dates=r.kind==='shellfish'?('First served '+recShort(r.first)+(r.last?' · last '+recShort(r.last):' · bag open')):('Received '+recShort(r.received));
+  let h='<div class="rec-row'+(v?' void':'')+'"><button class="rec-thumb" onclick="recView(\''+id+'\')">'+(r.thumb?'<img src="'+r.thumb+'" alt="">':'📄')+'</button><div class="rec-main">'
+    +'<div class="comp-name">'+esc(r.item||(r.kind==='shellfish'?'Shellfish tag':'Wild mushrooms'))+(r.vendor?' <span class="comp-role">· '+esc(r.vendor)+'</span>':'')+'</div>'
+    +'<div class="rec-dates">'+esc(dates)+'</div>'
+    +'<div class="comp-role">Logged by '+esc(String(r.by||'?').split(' ')[0])+(r.closedBy?' · emptied by '+esc(String(r.closedBy).split(' ')[0]):'')+(keep&&!v?' · keep until '+esc(recShort(keep)):'')+'</div>'
+    +(v?'<div class="rec-voidnote">Voided by '+esc(String(r.void.by||'?').split(' ')[0])+': '+esc(r.void.why||'')+'</div>':'')
+    +'</div><div class="rec-act">';
+  if(!v&&r.kind==='shellfish'&&!r.last)h+='<button class="cu-btn ok" onclick="recCloseOpen(\''+id+'\')">Bag empty</button>';
+  if(!v&&isMgr())h+='<button class="cu-btn x" onclick="recVoidOpen(\''+id+'\')">Void</button>';
+  return h+'</div></div>';
+}
+function recRender(){
+  recSync();
+  $('compSub').textContent='Shellfish tags and wild mushroom papers, kept 90 days';
+  let h='<p class="board-note">Shellfish: log the tag when you open a bag and leave the tag on the bag. Tap Bag empty when it is gone. Wild mushrooms: log the forager’s ID paper the day it arrives. Farmed mushrooms don’t need it. Keep the paper file too until the health department OKs this.</p>';
+  h+='<div class="rec-add"><button class="ann-link rec-btn" onclick="recFormOpen(\'shellfish\')">+ Shellfish tag</button><button class="ann-link rec-btn" onclick="recFormOpen(\'mushroom\')">+ Wild mushroom paper</button></div>';
+  if(!fbReady)h+='<div class="comp-past">No connection to the server, so records can’t load or save right now.</div>';
+  else if(REC_ERR)h+='<div class="comp-past">Records didn’t load ('+esc(REC_ERR)+'). Check the connection and reopen this tab.</div>';
+  else if(!REC_LOADED&&!Object.keys(REC).length)h+='<div class="board-empty">Loading records…</div>';
+  const t=todayISO(), all=Object.keys(REC).map(function(k){return [k,REC[k]];});
+  const open=all.filter(function(x){return x[1].kind==='shellfish'&&!x[1].last&&!x[1].void;}).sort(function(a,b){return (b[1].first||'').localeCompare(a[1].first||'');});
+  const past=function(x){const k=recKeepUntil(x[1]);return k&&k<t;};
+  const sh=all.filter(function(x){return x[1].kind==='shellfish'&&(x[1].last||x[1].void);}).sort(function(a,b){return ((b[1].last||b[1].first)||'').localeCompare((a[1].last||a[1].first)||'')||(b[1].at||0)-(a[1].at||0);});
+  const mu=all.filter(function(x){return x[1].kind==='mushroom';}).sort(function(a,b){return (b[1].received||'').localeCompare(a[1].received||'')||(b[1].at||0)-(a[1].at||0);});
+  const sec=function(lab,rows,empty){h+='<div class="section-label">'+lab+'</div><div class="comp-card">'+(rows.length?rows.map(function(x){return recRow(x[0],x[1]);}).join(''):'<div class="board-empty">'+empty+'</div>')+'</div>';};
+  if(REC_LOADED||Object.keys(REC).length){
+    sec('Open bags',open,'No open bags logged.');
+    sec('Shellfish tags',sh.filter(function(x){return !past(x);}),'No emptied bags in the last 90 days.');
+    sec('Wild mushrooms',mu.filter(function(x){return !past(x);}),'No wild mushroom papers in the last 90 days.');
+    const old=sh.concat(mu).filter(past);
+    if(old.length){ h+='<div class="section-label"><button class="rec-past" onclick="REC_PAST_OPEN=!REC_PAST_OPEN;recRender()">Past 90 days, still kept ('+old.length+') '+(REC_PAST_OPEN?'▴':'▾')+'</button></div>';
+      if(REC_PAST_OPEN)h+='<div class="comp-card">'+old.map(function(x){return recRow(x[0],x[1]);}).join('')+'</div>'; }
+  }
+  $('compBody').innerHTML=h; if(typeof updateStdBadges==='function')updateStdBadges();
+}
+/* ---- add form ---- */
+function recModal(html){let m=$('recModal');if(!m){m=document.createElement('div');m.id='recModal';m.className='comp-modal';m.onclick=function(e){if(e.target===m)recModalClose();};document.body.appendChild(m);}m.innerHTML='<div class="comp-modal-inner rec-modal">'+html+'</div>';m.style.display='flex';}
+function recModalClose(){const m=$('recModal');if(m){m.style.display='none';m.innerHTML='';}REC_F=null;}
+function recFormOpen(kind){
+  REC_F={kind:kind,full:null,thumb:null,busy:false};
+  const t=todayISO(), sh=kind==='shellfish';
+  let h='<div class="comp-modal-head">'+(sh?'Shellfish tag':'Wild mushroom ID paper')+'</div>'
+   +'<p class="rec-help">'+(sh?'Photograph the whole tag so the harvest date, area and certification number are readable. Leave the tag on the bag.':'Photograph the forager’s signed identification paper, all of it. Keep the paper itself in the file for now.')+'</p>'
+   +'<label class="rec-photo" id="recPhotoLbl"><input type="file" accept="image/*" capture="environment" onchange="recPick(this)"><span id="recPhotoTxt">📷 Take photo</span></label><img id="recPrev" class="rec-prev" style="display:none" alt="">'
+   +'<label class="rec-lab">'+(sh?'First served':'Received')+'<input type="date" id="recDate" value="'+t+'" max="'+t+'"></label>'
+   +'<label class="rec-lab">'+(sh?'What (optional)':'Species')+'<input type="text" id="recItem" '+(sh?'placeholder="e.g. Manila clams"':'list="recSpecies" placeholder="e.g. Chanterelle"')+'></label>'
+   +(sh?'':'<datalist id="recSpecies">'+REC_SPECIES.map(function(s){return '<option value="'+esc(s)+'">';}).join('')+'</datalist>')
+   +'<label class="rec-lab">Vendor (optional)<input type="text" id="recVendor" value="'+(sh?'':'Foraged &amp; Found')+'"></label>'
+   +'<div class="rec-msg" id="recMsg"></div>'
+   +'<div class="crop-actions"><button class="crop-btn ghost" onclick="recModalClose()">Cancel</button><button class="crop-btn primary" id="recSave" onclick="recSave()">Save</button></div>';
+  recModal(h);
+}
+function recScale(img,max,q0,limit){const s=Math.min(1,max/Math.max(img.width,img.height)),w=Math.max(1,Math.round(img.width*s)),hh=Math.max(1,Math.round(img.height*s));
+  const c=document.createElement('canvas');c.width=w;c.height=hh;c.getContext('2d').drawImage(img,0,0,w,hh);let q=q0,d=c.toDataURL('image/jpeg',q);while(d.length>limit&&q>0.35){q-=0.08;d=c.toDataURL('image/jpeg',q);}return d;}
+function recPick(inp){
+  const f=inp.files&&inp.files[0]; if(!f||!REC_F)return; $('recPhotoTxt').textContent='Reading photo…';
+  const url=URL.createObjectURL(f), img=new Image();
+  img.onload=function(){ try{ let full=recScale(img,1600,0.82,900000); if(full.length>900000)full=recScale(img,1200,0.7,900000);
+      if(full.length>950000){ $('recMsg').textContent='That photo is too large to save. Try again a little further back.'; return; }
+      REC_F.full=full; REC_F.thumb=recScale(img,240,0.6,40000); $('recPrev').src=full; $('recPrev').style.display='block'; $('recPhotoTxt').textContent='Retake photo'; $('recMsg').textContent='';
+    }finally{URL.revokeObjectURL(url);} };
+  img.onerror=function(){ URL.revokeObjectURL(url); $('recPhotoTxt').textContent='📷 Take photo'; $('recMsg').textContent='Couldn’t read that photo. Try again.'; };
+  img.src=url;
+}
+function recSave(){
+  const F=REC_F; if(!F||F.busy)return; const msg=$('recMsg'), d=($('recDate').value||''), t=todayISO();
+  if(!F.full){msg.textContent='Take the photo first.';return;}
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||d>t){msg.textContent='Pick a date, today or earlier.';return;}
+  if(F.kind==='mushroom'&&!$('recItem').value.trim()){msg.textContent='Add the species.';return;}
+  if(!fbReady||!fbDb||DEMO){msg.textContent='Not saved: no connection to the server. Try again when you’re online.';return;}
+  const id=F.kind+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,6);
+  const doc={kind:F.kind,item:$('recItem').value.trim(),vendor:$('recVendor').value.trim(),thumb:F.thumb,by:currentUserName()||'',at:Date.now()};
+  if(F.kind==='shellfish'){doc.first=d;doc.last=null;}else{doc.received=d;}
+  F.busy=true; $('recSave').disabled=true; msg.textContent='Saving…';
+  setTimeout(function(){ if(REC_F===F&&F.busy&&$('recMsg'))$('recMsg').textContent='Still not confirmed after 20 seconds, the connection is slow. Leave this open. If it never finishes, check the list before logging it again.'; },20000);
+  fbDb.collection('recordImg').doc(id).set({data:F.full}).then(function(){ return fbDb.collection('records').doc(id).set(doc); })
+   .then(function(){ return fbDb.collection('records').doc(id).get({source:'server'}); })
+   .then(function(s){ if(!s.exists)throw new Error('not on server'); recModalClose(); REC[id]=s.data(); recRender(); })
+   .catch(function(e){ F.busy=false; $('recSave').disabled=false; msg.textContent='Not saved ('+((e&&e.code)||'error')+'). Check the connection and tap Save again.'; });
+}
+/* ---- close a bag / void ---- */
+function recCloseOpen(id){const r=REC[id];if(!r)return;const t=todayISO();
+  recModal('<div class="comp-modal-head">Bag empty</div><p class="rec-help">'+esc(r.item||'Shellfish tag')+', first served '+esc(recShort(r.first))+'. The last served date can’t be changed after this.</p>'
+   +'<label class="rec-lab">Last served<input type="date" id="recDate" value="'+t+'" min="'+esc(r.first)+'" max="'+t+'"></label><div class="rec-msg" id="recMsg"></div>'
+   +'<div class="crop-actions"><button class="crop-btn ghost" onclick="recModalClose()">Cancel</button><button class="crop-btn primary" id="recSave" onclick="recCloseSave(\''+id+'\')">Save</button></div>');}
+function recCloseSave(id){const r=REC[id],d=$('recDate').value,msg=$('recMsg');if(!r)return;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||d<r.first||d>todayISO()){msg.textContent='Pick a date between '+recShort(r.first)+' and today.';return;}
+  if(!fbReady||!fbDb||DEMO){msg.textContent='Not saved: no connection to the server.';return;}
+  $('recSave').disabled=true; msg.textContent='Saving…';
+  fbDb.collection('records').doc(id).update({last:d,closedBy:currentUserName()||'',closedAt:Date.now()}).then(recModalClose)
+   .catch(function(e){ $('recSave').disabled=false; msg.textContent='Not saved ('+((e&&e.code)||'error')+').'; });}
+function recVoidOpen(id){const r=REC[id];if(!r||!isMgr())return;
+  recModal('<div class="comp-modal-head">Void this record</div><p class="rec-help">It stays in the log, struck through, with your name and reason. Nothing is deleted. Log the right one separately.</p>'
+   +'<label class="rec-lab">Reason<input type="text" id="recWhy" placeholder="e.g. wrong photo, logged twice"></label><div class="rec-msg" id="recMsg"></div>'
+   +'<div class="crop-actions"><button class="crop-btn ghost" onclick="recModalClose()">Cancel</button><button class="crop-btn primary" id="recSave" onclick="recVoidSave(\''+id+'\')">Void</button></div>');}
+function recVoidSave(id){const why=$('recWhy').value.trim(),msg=$('recMsg');if(why.length<3){msg.textContent='Say why.';return;}
+  if(!fbReady||!fbDb||DEMO){msg.textContent='Not saved: no connection to the server.';return;}
+  $('recSave').disabled=true;
+  fbDb.collection('records').doc(id).update({void:{by:currentUserName()||'',at:Date.now(),why:why}}).then(recModalClose)
+   .catch(function(e){ $('recSave').disabled=false; msg.textContent='Not saved ('+((e&&e.code)||'error')+').'; });}
+/* ---- full photo ---- */
+function recView(id){const r=REC[id];if(!r)return;
+  const head=esc(r.item||(r.kind==='shellfish'?'Shellfish tag':'Wild mushrooms'))+' · '+esc(r.kind==='shellfish'?('first served '+recShort(r.first)+(r.last?', last '+recShort(r.last):', bag open')):('received '+recShort(r.received)));
+  recModal('<div class="comp-modal-head">'+head+'</div><div id="recFull" class="comp-modal-msg">Loading photo…</div><div class="crop-actions"><button class="crop-btn" onclick="recModalClose()">Close</button></div>');
+  if(!fbReady||!fbDb){$('recFull').textContent='No connection, so the full photo can’t load.';return;}
+  fbDb.collection('recordImg').doc(id).get().then(function(s){const el=$('recFull');if(!el)return;const d=s.exists?(s.data()||{}).data:null;
+    if(d){el.className='';el.innerHTML='<img class="comp-modal-img" src="'+d+'" alt="">';}else el.textContent='The full photo is missing for this record.';})
+   .catch(function(){const el=$('recFull');if(el)el.textContent='The photo didn’t load. Check the connection.';});}
+
 /* ===== COMPLIANCE CARD UPLOADS ============================================
    Employees upload their own FWC / MAST card from their compliance row (managers
    can upload on anyone's row); a manager then verifies it. To keep the live sync
@@ -7808,6 +7962,7 @@ function renderPolicySignoffs(){
   $('compBody').innerHTML=h;
 }
 function renderCompliance(){const C=SF.compliance, R=compWithExtras();
+  if(compTab==='recs'){ recRender(); return; }
   if(compTab==='policy'){ $('compSub').textContent='Written policies, signed or read in the portal'; renderPolicySignoffs(); updateStdBadges(); return; }
   $('compSub').textContent=`${R.foh.length+R.boh.length} active · FWC & MAST`;
   if(compTab==='due'){
