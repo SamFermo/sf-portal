@@ -1889,6 +1889,63 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 .wo-hist summary{cursor:pointer; font-size:12.5px; color:var(--ink-soft); padding:4px 0;}
 .wo-btn:focus-visible,.wo-ck-b button:focus-visible,.wo-step button:focus-visible,.wi-btn:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
 /* WINE INVENTORY (2026-09-29) */
+#winebook.view{max-width:880px;}
+.wb-stamp{font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;text-align:center;}
+.wb-warn{font-size:12.5px;color:var(--gold);background:rgba(230,200,120,.08);border:1px solid rgba(230,200,120,.3);border-radius:10px;padding:7px 11px;margin:0 0 12px;}
+.wb-seg{justify-content:center;margin:0 0 18px;}
+.wb-lede{font-family:'Cormorant Garamond','Caladea',serif;font-size:23px;line-height:1.28;font-weight:600;color:var(--ink);margin:0 0 16px;text-wrap:pretty;}
+.wb-p{font-size:13px;color:var(--ink-soft);margin:6px 0 0;line-height:1.5;}
+.wb-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px;}
+.wb-in{font:inherit;font-size:14px;color:var(--ink);background:rgba(205,216,244,.07);border:1px solid rgba(205,216,244,.2);border-radius:10px;padding:8px 11px;min-width:0;width:100%;}
+.wb-in::placeholder{color:var(--ink-mute);}
+.wb-tools .wb-in{flex:1 1 170px;width:auto;}
+.wb-in:focus{outline:none;border-color:var(--gold);}
+select.wb-in option{color:#241f15;}
+.wb-more{background:rgba(205,216,244,.05);border:1px solid var(--gold);border-top:none;border-radius:0 0 12px 12px;padding:9px 12px;margin:0 0 6px;font-size:12.5px;line-height:1.5;color:var(--ink-soft);}
+.wb-pill{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.03em;padding:2px 7px;border-radius:99px;margin-top:4px;white-space:nowrap;}
+.wb-p-low{background:rgba(192,57,43,.25);color:#f0a699;}
+.wb-p-watch{background:rgba(230,200,120,.18);color:var(--gold);}
+.wb-p-held{background:rgba(205,216,244,.14);color:var(--silver);}
+.wb-chart{position:relative;margin:4px 0 6px;}
+.wb-chart svg{display:block;width:100%;}
+.wb-tip{position:absolute;top:2px;pointer-events:none;background:var(--moon);color:var(--card-ink);font-size:12px;font-weight:600;padding:4px 8px;border-radius:8px;white-space:nowrap;z-index:2;}
+.wb-leg{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--ink-soft);}
+.wb-leg i{display:inline-block;width:18px;border-top:2px solid;vertical-align:middle;margin-right:6px;}
+.wb-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:4px 20px;}
+.wb-mv{display:flex;justify-content:space-between;gap:12px;padding:6px 2px;border-bottom:1px solid rgba(205,216,244,.09);font-size:13.5px;color:var(--ink);}
+.wb-mv span:last-child{color:var(--ink-soft);white-space:nowrap;font-variant-numeric:tabular-nums;}
+.wb-scroll{overflow-x:auto;margin:0 -2px;}
+.wb-tbl{border-collapse:collapse;width:100%;font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;}
+.wb-tbl th{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);text-align:left;padding:5px 7px;border-bottom:1px solid rgba(205,216,244,.2);white-space:nowrap;}
+.wb-tbl td{padding:7px;border-bottom:1px solid rgba(205,216,244,.09);vertical-align:top;}
+.wb-tbl .n{text-align:right;white-space:nowrap;}
+.wb-tbl .wb-mute{color:var(--ink-mute);}
+.wb-sub{display:block;font-size:11.5px;color:var(--ink-mute);}
+.wb-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px;align-items:start;}
+.wb-card{background:radial-gradient(120% 120% at 30% 22%,var(--moon-hi),var(--moon) 55%,var(--moon-lo));color:var(--card-ink);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:9px;min-width:0;font-size:13.5px;line-height:1.42;box-shadow:0 8px 24px rgba(0,0,0,.28);}
+.wb-card h3{font-family:'Cormorant Garamond','Caladea',serif;font-size:21px;font-weight:600;color:var(--wood);margin:0;line-height:1.1;}
+.wb-card .wb-co{font-size:12px;color:var(--card-soft);}
+.wb-card a{color:var(--wood);font-weight:600;text-decoration:none;overflow-wrap:anywhere;}
+.wb-kv{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;margin:0;}
+.wb-kv dt{color:var(--card-soft);} .wb-kv dd{margin:0;min-width:0;}
+.wb-lbl{display:block;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--wood-soft);margin-bottom:2px;}
+.wb-card ul{margin:0;padding-left:17px;display:flex;flex-direction:column;gap:3px;}
+.wb-card details summary{cursor:pointer;font-size:12.5px;color:var(--card-soft);}
+.wb-card .wb-det{display:flex;flex-direction:column;gap:6px;padding-top:6px;font-size:12.5px;}
+.wb-unconf{align-self:flex-start;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px;background:var(--rust-soft);color:var(--rust);}
+.wb-entry{display:flex;flex-direction:column;gap:12px;padding-bottom:16px;}
+.wb-item h4{font-family:'Caladea',Georgia,serif;font-size:16px;color:var(--ink);margin:0 0 3px;}
+.wb-item p{font-size:13.5px;color:var(--ink-soft);margin:0 0 4px;line-height:1.5;}
+.wb-item b{color:var(--gold);}
+.wb-item a{color:var(--silver);font-size:12px;}
+.wb-form{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));margin-bottom:10px;}
+.wb-form textarea{grid-column:1/-1;min-height:80px;resize:vertical;}
+.wb-note{padding:10px 2px;border-bottom:1px solid rgba(205,216,244,.1);}
+.wb-note .t{font-size:14px;color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere;}
+.wb-note.done .t{color:var(--ink-mute);text-decoration:line-through;}
+.wb-note .m{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:11.5px;color:var(--ink-mute);margin-top:3px;}
+.wb-lnk{background:none;border:none;padding:0;font:inherit;color:var(--gold);text-decoration:underline;cursor:pointer;}
+.wb-hits{font-size:12px;color:var(--ink-soft);border-left:2px solid rgba(230,200,120,.4);padding-left:9px;margin-top:6px;display:flex;flex-direction:column;gap:2px;}
 .wi-bar{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; margin:4px 0 12px;}
 .wi-meta{font-size:12.5px; color:var(--ink-soft);}
 .wi-warn{color:#e79a8a; font-weight:700;}
@@ -2114,6 +2171,11 @@ a.wi-btn{text-decoration:none; display:inline-block;}
   <div id="wiBody"></div>
 </section>
 
+<section class="view" id="winebook">
+  <div class="view-head"><p class="view-eyebrow">Sam · Sully · Tim</p><h2 class="view-title">Wine Book</h2></div>
+  <div id="wbBody"></div>
+</section>
+
 <section class="view view-flush" id="orders">
   <div id="ordBody"></div>
 </section>
@@ -2170,7 +2232,7 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 </div>
 
 <script>
-const BUILD='1793695150';   // stamped by build-data.py at every deploy
+const BUILD='1793695672';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2235,13 +2297,14 @@ function navTabs(){
   const base=(me&&String(me.area||'').toLowerCase()==='boh')?TABS.filter(function(x){return x[0]!=='board';}):TABS;
   let t=isMgr()?head.concat(base,[['frontdesk','Front Desk']]):head.concat(base);
   if(typeof wiCanTab==='function'&&wiCanTab())t=t.concat([['wineinv','Wine Inventory']]);   // managers + wine team
+  if(typeof wbCanTab==='function'&&wbCanTab())t=t.concat([['winebook','Wine Book']]);   // Sam, Sully, Tim
   if(isMgr())t=t.concat([['orders','Farm Order']]);
   return (typeof isAdmin==='function'&&isAdmin())?t.concat([['access','Staff Access']]):t;}
 /* Manager chip (2026-10-22): twelve chips ran three screens wide on a phone. Managers get one "Manager"
    chip; tapping it shows Front Desk / Wine Inventory / Farm Order / Staff Access inline right after it.
    The grouped chips stay in #navChips (hidden, not removed) so every glow/badge selector still finds
    them; the Manager chip glows when a hidden one does. Opening a grouped tab keeps the group open. */
-const NAV_MGR_GROUP=['frontdesk','wineinv','orders','access'];
+const NAV_MGR_GROUP=['frontdesk','wineinv','winebook','orders','access'];
 let navMgrOpen=false;
 function navGrouped(){ const t=navTabs(); if(!isMgr())return null;
   const g=t.filter(function(x){return NAV_MGR_GROUP.indexOf(x[0])>=0;}); return g.length>=2?g:null; }
@@ -2305,7 +2368,7 @@ function go(id){
   document.body.classList.toggle('not-home',id!=='home');
   navMgrReveal(id);
   $('navChips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.go===id||(c.dataset.go==='numbers'&&isNumView(id))));
-  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='wineinv')wiRender(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender(); if(id==='servers')srvRender();
+  if(id==='access')renderAccess(); if(id==='directory')renderDirectory(); if(id==='frontdesk')renderFrontDesk(); if(id==='wineinv')wiRender(); if(id==='winebook')wbRender(); if(id==='orders')renderOrders(); if(id==='today')renderToday(); if(id==='lastnight')lnRender(); if(id==='recap')rcRender(); if(id==='scws')scwsRender(); if(id==='servers')srvRender();
   if(id==='standards')showStdPane(stdTab);
   if(id==='compliance'){renderCompliance();markComplianceSeen();}
   if(id==='fresh')markFreshSeen();
@@ -2461,6 +2524,7 @@ function renderHome(){
   // An odd card count leaves one card alone on its row: center it, same look as the orphan rule.
   if(!isInvestor()){ const sc=std.map(stdCardHTML); if(sc.length%2) sc[sc.length-1]=sc[sc.length-1].replace('class="home-card"','class="home-card home-card-solo"'); html += sc.join(''); }
   if(!isInvestor() && typeof wiCanTab==='function' && wiCanTab()) html += wiCardHTML();   // full width (Sam 9/30)
+  if(!isInvestor() && typeof wbCanTab==='function' && wbCanTab()) html += wbCardHTML();   // Sam, Sully, Tim
   if(!isInvestor() && typeof studyCanSee==='function' && studyCanSee()) html += studyCardHTML();   // Study deck (Sam 10/6)
   if(mgr && !isInvestor()) html += ordersCardHTML();   // Farm Order = full-width, anchors the bottom (opens Remy)
   $('homeGrid').innerHTML=html;
@@ -2843,6 +2907,7 @@ const TOUR_COPY={
   scws:{t:'Service Charge',b:'The nightly service charge worksheet rebuilt from Revel. Useful for checking a night, but Tim\'s numbers remain the system of record.'},
   frontdesk:{t:'Front Desk',b:'Passwords, vendor contacts and account info. Managers can add, edit and remove entries here.'},
   wineinv:{t:'Wine Inventory',b:'Bottles on hand for every wine: the last count, plus deliveries logged since, minus what Revel says sold. Do counts and log deliveries here.'},
+  winebook:{t:'Wine Book',b:'For Sam, Sully and Tim: what to order, how each wine is selling, the reps, their catalogs and shared notes.'},
   orders:{t:'Farm Order',b:'Place and track the farm order without leaving the app.'},
   access:{t:'Staff Access',b:'Add people, set or reset PINs, and lock out anyone who leaves.'}
 };
@@ -4878,6 +4943,230 @@ function fdMatchesQuery(e,q){
   const t=(e.name+' '+e.desc+' '+(e.items||[]).map(d=>d.label+' '+d.value).join(' ')).toLowerCase();
   return q.split(/\s+/).every(w=>t.includes(w));
 }
+/* ===== WINE BOOK (2026-11-03, Guinan). Sam's buying book, moved in from the private page at his ask ("Eyes only for sully tim and me").
+   Gate: Sam, Tim and Sully by first name, on top of mgr/admin, same posture as SRV_VIEWERS. Katie and other managers do not get it.
+   UI-only like every gate here (floor plan 8.6): board is readable by anyone who digs. Nothing about the book is in the public repo.
+   STORAGE: board/winebook {inventory,sales,reps,catalogs,market: JSON strings, pushed} written by Codename: Guinan/page/build_page_data.py --push;
+   board/winebookCat {json} Italian catalog lines, read only when someone searches; board/winebookNotes {notes:[{id,kind,text,wine,rep,by,at,done}]}
+   written only here. On hand and weeks left are worked out live with wiCompute so this tab never disagrees with Wine Inventory;
+   pace, orders, sales and everything else are as of the last push. Plan: Codename: Guinan/page/README.md. */
+const WB_VIEWERS=['sam','tim','sully'];
+const WB={sub:'cellar',feed:null,at:0,err:false,loading:false,filter:'list',q:'',open:{},catQ:'',cat:null,catLoading:false,catErr:false,notes:[],notesOn:false,notesReady:false,noteFilter:'all',delArm:null,draft:{text:'',kind:'wish',wine:'',rep:''},msg:'',saving:false,rt:null,liveWait:0};
+const WB_SUBS=[['cellar','Cellar'],['sales','Our sales'],['reps','Reps'],['catalogs','Catalogs'],['market','Market'],['notes','Notes']];
+const WB_KINDS={wish:'Wine to try',tasting:'Tasting note',rep:'Rep conversation',idea:'Next list idea'};
+const WB_GROUPS={glass:'By the glass',bottle:'Bottle list',bar:'Bar',phase:'Selling through',cellar:'Cellar'};
+const WB_DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function wbCanTab(){ if(typeof isInvestor==='function'&&isInvestor())return false;
+  const f=String(me&&me.name||'').trim().split(/\s+/)[0].toLowerCase();
+  return !!(me&&(me.admin||me.mgr)&&WB_VIEWERS.indexOf(f)>=0); }
+function wbCardHTML(){ return wideCardHTML('winebook','❧','Wine Book','What to order, how each wine is selling, the reps, their catalogs and our notes'); }
+function wbRef(){ return fbDb.collection('board').doc('winebook'); }
+function wbNotesRef(){ return fbDb.collection('board').doc('winebookNotes'); }
+function wbDate(iso){ if(!iso)return null; const a=String(iso).slice(0,10).split('-').map(Number); return new Date(a[0],a[1]-1,a[2]); }
+function wbD(iso){ const x=wbDate(iso); return x?WB_DOW[x.getDay()]+' '+(x.getMonth()+1)+'/'+x.getDate():''; }
+function wbMD(iso){ const x=wbDate(iso); return x?(x.getMonth()+1)+'/'+x.getDate():''; }
+function wbT(t){ if(!t)return ''; const a=t.split(':').map(Number), h=a[0]%12||12; return h+(a[1]?':'+String(a[1]).padStart(2,'0'):'')+(a[0]<12?'am':'pm'); }
+function wbN(x,p){ if(x==null)return ''; const r=Number(x).toFixed(p==null?1:p); return r.indexOf('.')>=0?r.replace(/0+$/,'').replace(/\.$/,''):r; }
+function wbUsd(x,p){ return x==null?'':'$'+Number(x).toLocaleString('en-US',{minimumFractionDigits:p||0,maximumFractionDigits:p||0}); }
+function wbPhone(p){ const d=String(p||'').replace(/\D/g,'').replace(/^1/,''); return d.length===10?d.slice(0,3)+'-'+d.slice(3,6)+'-'+d.slice(6):String(p||''); }
+function wbLoad(force){
+  if(WB.loading||!(fbReady&&fbDb))return;
+  if(WB.feed&&!force&&Date.now()-WB.at<5*60*1000)return;
+  WB.loading=true;
+  wbRef().get().then(function(s){ const d=s.exists?(s.data()||{}):null, out={};
+    if(d)['inventory','sales','reps','catalogs','market'].forEach(function(k){ try{ out[k]=JSON.parse(d[k]); }catch(e){ out[k]=null; } });
+    WB.feed=d?out:null; WB.at=Date.now(); WB.err=false; WB.loading=false; wbRender(); })
+  .catch(function(){ WB.err=true; WB.loading=false; wbRender(); });
+}
+function wbWatchNotes(){ if(WB.notesOn||!(fbReady&&fbDb))return; WB.notesOn=true;
+  wbNotesRef().onSnapshot(function(s){ const n=(s.exists&&(s.data()||{}).notes)||[]; WB.notes=n.slice().sort(function(a,b){return (b.at||'')<(a.at||'')?-1:1;}); WB.notesReady=true;
+      if(WB.sub==='notes'&&$('wbNoteList'))wbFillNotes(); else if(WB.sub==='reps')wbRender(); },
+    function(){ WB.notesReady=true; WB.notesErr=true; if(WB.sub==='notes')wbRender(); }); }
+function wbLive(){ /* live on hand from the same math as Wine Inventory; null until counts and sales are in */
+  if(typeof wiCompute!=='function'||!WI.loaded||!WI.revel)return null;
+  try{ return wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey; }catch(e){ return null; } }
+function wbWines(){ const inv=WB.feed&&WB.feed.inventory; if(!inv)return []; const L=wbLive();
+  return inv.wines.map(function(w){ const s=L&&L[w.key]; if(!s||s.onHand==null)return w;
+    const r=Object.assign({},w,{onHand:s.onHand}); r.weeks=w.perWk>0?Math.max(s.onHand,0)/w.perWk:null;
+    if(w.state==='ok'||w.state==='watch')r.state=(r.weeks!=null&&r.weeks<2)?'watch':'ok';
+    return r; }); }
+function wbRender(){
+  const b=$('wbBody'); if(!b)return;
+  if(!wbCanTab()){ b.innerHTML='<p class="board-empty">Not available.</p>'; return; }
+  wbLoad(false); wbWatchNotes();
+  if(typeof wiWatch==='function'){ wiWatch(); wiLoadRevel(false); }
+  if(!WI.revel||!WI.loaded){ if(WB.liveWait<20&&!WB.rt){ WB.liveWait++; WB.rt=setTimeout(function(){ WB.rt=null; if($('winebook').classList.contains('active')&&WB.sub==='cellar')wbRender(); },1500); } }
+  let h='<div class="wi-seg wb-seg">'+WB_SUBS.map(function(s){ return '<button class="'+(WB.sub===s[0]?'on':'')+'" onclick="wbSub(\''+s[0]+'\')">'+s[1]+'</button>'; }).join('')+'</div>';
+  if(WB.err&&!WB.feed){ b.innerHTML=h+'<p class="wb-warn">The book did not load. Check the connection and open this tab again.</p>'; return; }
+  if(!WB.feed&&(WB.loading||!WB.at)){ b.innerHTML=h+'<p class="board-empty">Opening the book…</p>'; return; }
+  if(!WB.feed){ b.innerHTML=h+'<p class="board-empty">Nothing here yet. The book fills in at the next morning refresh.</p>'; return; }
+  const inv=WB.feed.inventory;
+  if(inv){ const g=new Date(String(inv.generated).replace(/([+-]\d\d)(\d\d)$/,'$1:$2')), age=(Date.now()-g)/36e5;
+    h+='<p class="wb-stamp">Sales through '+esc(wbD(inv.revelThrough))+' · refreshed '+WB_DOW[g.getDay()]+' '+(g.getMonth()+1)+'/'+g.getDate()+' at '+esc(g.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}))+'</p>';
+    if(age>36)h+='<p class="wb-warn">This is more than a day old, so the morning refresh may have missed. On hand is still live.</p>'; }
+  const fn={cellar:wbCellar,sales:wbSales,reps:wbReps,catalogs:wbCatalogs,market:wbMarket,notes:wbNotes}[WB.sub];
+  b.innerHTML=h+fn();
+  if(WB.sub==='cellar')wbFillInv();
+  if(WB.sub==='sales')wbChart();
+  if(WB.sub==='catalogs')wbFillCat();
+  if(WB.sub==='notes')wbFillNotes();
+}
+function wbSub(s){ WB.sub=s; wbRender(); const v=$('wbBody'); if(v&&v.scrollIntoView)try{v.scrollIntoView({block:'nearest'});}catch(e){} }
+/* ---- cellar */
+function wbCellar(){
+  const inv=WB.feed.inventory; if(!inv)return '<p class="board-empty">The cellar data did not load.</p>';
+  const W=wbWines(), low=W.filter(function(w){return w.state==='low';}), watch=W.filter(function(w){return w.state==='watch';});
+  const by=function(k){ return W.find(function(w){return w.key===k;}); };
+  let t=low.length?(low.length+(low.length===1?' wine runs':' wines run')+' short before the next delivery.'):'Nothing runs out before its next delivery.';
+  if(watch.length)t+=' '+watch.length+(low.length?' more':'')+' under two weeks: '+watch.map(function(w){return w.short;}).join(', ')+'.';
+  let h='<p class="wb-lede">'+esc(t)+'</p>';
+  if(inv.orders&&inv.orders.length){ const tot=inv.orders.reduce(function(a,o){return a+(o.total||0);},0);
+    h+='<div class="wo-card"><div class="wo-title">What the next order looks like</div><p class="wo-hint">If nothing changes before '+esc(wbD(inv.orders[0].cutoff))+', the morning check drafts this, about '+wbUsd(tot)+' in all. Orders go out from Wine Inventory.</p>';
+    inv.orders.forEach(function(o){ h+='<div class="wo-o"><div class="wo-h"><div><div class="wo-rep">'+esc(o.rep)+' <span>'+esc(o.vendor)+'</span></div><div class="wo-sub">By '+esc(wbD(o.cutoff))+(o.cutoffTime?' '+esc(wbT(o.cutoffTime)):'')+(o.belowMin?' · under the minimum':'')+'</div></div><div class="wo-day">'+(o.total?wbUsd(o.total)+' · ':'')+'lands '+esc(wbD(o.delivery))+'</div></div><div class="wo-lines">'
+      +o.lines.map(function(l){ const w=by(l.key); return '<div class="wo-line"><span class="wo-q">'+esc(l.label)+'</span><span class="wo-n">'+esc(w?w.short:l.name)+(l.why?'<span class="wo-why">'+esc(l.why)+'</span>':'')+'</span></div>'; }).join('')+'</div></div>'; });
+    h+='</div>'; }
+  if(inv.placed&&inv.placed.length){ h+='<div class="fd-cat">On the way</div>'+inv.placed.map(function(o){ return '<div class="wb-mv"><span>'+esc(o.rep)+': '+o.lines.map(function(l){const w=by(l.key);return esc((l.label||'')+' '+(w?w.short:''));}).join(', ')+'</span><span>'+esc(wbD(o.delivery))+'</span></div>'; }).join(''); }
+  h+='<div class="fd-cat">The cellar</div><div class="wi-seg wb-tools">'+[['list','On the list'],['glass','Glass'],['bottle','Bottle'],['phase','Selling through'],['cellar','Cellar']].map(function(f){ return '<button class="'+(WB.filter===f[0]?'on':'')+'" onclick="WB.filter=\''+f[0]+'\';wbFillInv();wbFilterMark(this)">'+f[1]+'</button>'; }).join('')+'</div>';
+  h+='<div class="wb-tools"><input class="wb-in" id="wbInvQ" type="search" placeholder="Find a wine or rep" value="'+esc(WB.q)+'" oninput="WB.q=this.value;wbFillInv()"></div><div id="wbInvList"></div>';
+  h+='<p class="wb-p">On hand is live and matches Wine Inventory, a glass as a quarter bottle. Per week blends the last 4 weeks with last year when last year was the same bottle. Tap a wine for how it got there.</p>';
+  return h;
+}
+function wbFilterMark(btn){ [].forEach.call(btn.parentNode.children,function(c){c.classList.toggle('on',c===btn);}); }
+function wbFillInv(){
+  const box=$('wbInvList'); if(!box)return;
+  const RANK={low:0,count:1,watch:2,ok:3,held:4,sell:5}, f=WB.filter, q=WB.q.trim().toLowerCase();
+  let rows=wbWines().filter(function(w){ return f==='list'?['glass','bottle','bar'].indexOf(w.group)>=0:w.group===f; });
+  if(q)rows=rows.filter(function(w){ return (w.name+' '+w.short+' '+w.rep+' '+w.vendor).toLowerCase().indexOf(q)>=0; });
+  rows.sort(function(a,b){ return (RANK[a.state]-RANK[b.state])||((a.weeks==null?999:a.weeks)-(b.weeks==null?999:b.weeks)); });
+  const PILL={low:['low','Short before delivery'],watch:['watch','Under 2 weeks'],held:['held','Held'],count:['held','Needs a count']};
+  box.innerHTML=rows.length?rows.map(function(w){ const p=PILL[w.state], open=!!WB.open[w.key];
+    const sub=[f==='list'?WB_GROUPS[w.group]:null,w.rep||null,w.perWk?wbN(w.perWk)+'/wk':null,w.weeks!=null?'~'+(w.weeks>=10?'10+':wbN(w.weeks))+' wks left':null,w.orderEst?'order '+w.orderEst.label:null].filter(Boolean).join(' · ');
+    let more='';
+    if(open){ const bits=[w.name]; if(w.vendor)bits.push(w.vendor+(w.rep?' ('+w.rep+')':'')); if(w.nextDelivery)bits.push('Next delivery '+wbD(w.nextDelivery)); if(w.source)bits.push('Pace from '+w.source); if(w.usual)bits.push('Usually: '+w.usual);
+      if(w.orderEst&&w.orderEst.why)bits.push('Order: '+w.orderEst.why); if(w.incoming)bits.push(wbN(w.incoming)+' bottles on the way'); if(w.hold)bits.push(w.hold); if(w.outUntil)bits.push('Out at the rep until '+wbD(w.outUntil)); if(w.note)bits.push(w.note); if(w.lastCount)bits.push('Last counted '+wbD(w.lastCount));
+      more='<div class="wb-more">'+esc(bits.join('. ').replace(/\.\./g,'.'))+'.</div>'; }
+    return '<div class="wi-row'+(open?' wi-open':'')+(w.state==='watch'?' wi-low':w.state==='low'?' wi-neg':'')+'" onclick="WB.open[\''+w.key+'\']=!WB.open[\''+w.key+'\'];wbFillInv()"><div class="wi-main"><div class="wi-name">'+esc(w.short)+'</div><div class="wi-sub">'+esc(sub)+'</div>'+(p?'<span class="wb-pill wb-p-'+p[0]+'">'+p[1]+'</span>':'')+'</div><div class="wi-oh"><span class="wi-oh-n'+(w.onHand==null?' wi-none':'')+'">'+(w.onHand==null?'–':wiNum(w.onHand))+'</span><span class="wi-oh-l">'+(w.onHand==null?'not counted':'on hand')+'</span></div></div>'+more; }).join(''):'<p class="board-empty">No wine matches that.</p>';
+}
+/* ---- sales */
+function wbSales(){
+  const d=WB.feed.sales; if(!d)return '<p class="board-empty">The sales data did not load.</p>';
+  const t=d.total, pct=t.lyWk?Math.round((t.thisWk/t.lyWk-1)*100):null;
+  let h='<p class="wb-lede">'+wbN(t.thisWk,0)+' bottles a week over the 4 weeks to '+esc(wbD(d.window.end))+(pct!=null?', '+(pct>=0?'up ':'down ')+Math.abs(pct)+'% on the same weeks last year.':'.')+'</p>';
+  h+='<div class="fd-cat">Wine by the week</div><div class="wb-leg"><span><i style="border-color:#b08f38"></i>This year</span><span><i style="border-color:#4f8fdc"></i>Same weeks last year, running on past today</span></div><div class="wb-chart" id="wbChart"></div>';
+  const mv=d.wines.filter(function(w){return w.prevWk>0;}).map(function(w){return Object.assign({},w,{chg:w.thisWk-w.prevWk});}).sort(function(a,b){return b.chg-a.chg;});
+  const list=function(a){ return a.map(function(w){ return '<div class="wb-mv"><span>'+esc(w.short)+'</span><span>'+wbN(w.prevWk)+' to '+wbN(w.thisWk)+'</span></div>'; }).join(''); };
+  h+='<div class="wb-two"><div><div class="fd-cat">Moving up</div>'+list(mv.filter(function(w){return w.chg>0;}).slice(0,5))+'</div><div><div class="fd-cat">Slowing down</div>'+list(mv.filter(function(w){return w.chg<0;}).slice(-5).reverse())+'</div><div><div class="fd-cat">By colour</div>'+d.byType.map(function(y){ return '<div class="wb-mv"><span>'+esc(y.type)+'</span><span>'+wbN(y.prevWk)+' to '+wbN(y.thisWk)+'</span></div>'; }).join('')+'</div></div><p class="wb-p">Bottles a week, the 4 weeks before against the last 4.</p>';
+  h+='<div class="fd-cat">Every wine on the list</div><div class="wb-scroll"><table class="wb-tbl"><thead><tr><th>Wine</th><th class="n">A week</th><th class="n">Before</th><th class="n">Last yr</th><th class="n">Gl / btl</th><th class="n">Glass cost</th><th class="n">Btl cost</th></tr></thead><tbody>'
+    +d.wines.slice().sort(function(a,b){return b.thisWk-a.thisWk;}).map(function(w){ return '<tr><td>'+esc(w.short)+'</td><td class="n">'+wbN(w.thisWk)+'</td><td class="n">'+wbN(w.prevWk)+'</td><td class="n'+(w.lySame?'':' wb-mute')+'">'+(w.lyWk==null?'':wbN(w.lyWk)+(w.lySame?'':'*'))+'</td><td class="n">'+w.glasses+' / '+w.bottles+'</td><td class="n">'+(w.glassPct==null?'':wbN(w.glassPct,0)+'%')+'</td><td class="n">'+(w.bottlePct==null?'':wbN(w.bottlePct,0)+'%')+'</td></tr>'; }).join('')+'</tbody></table></div>';
+  h+='<p class="wb-p">A week is bottles sold over the 4 weeks, a glass as a quarter bottle. Gl / btl are the actual counts. Cost uses the cost on file and the menu price. * Last year looks like a different bottle on that button, or a very different pace, so it stays out of the order math.</p>';
+  return h;
+}
+function wbChart(){
+  const box=$('wbChart'), d=WB.feed.sales; if(!box||!d)return;
+  const wk=d.weeks, W=Math.max(280,box.clientWidth||640), H=Math.min(260,Math.max(190,W*.36)), m={t:12,r:30,b:22,l:32};
+  const max=Math.max.apply(null,wk.map(function(w){return Math.max(w.ty||0,w.ly||0);}))*1.08;
+  const X=function(i){return m.l+(W-m.l-m.r)*i/(wk.length-1);}, Y=function(v){return m.t+(H-m.t-m.b)*(1-v/max);};
+  let s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Bottles of wine sold per week, this year against last year">';
+  for(let v=0;v<=max;v+=50)s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="rgba(205,216,244,.13)"/><text x="'+(m.l-6)+'" y="'+(Y(v)+4)+'" text-anchor="end" font-size="11" fill="#7d8cb4">'+v+'</text>';
+  const every=W<460?5:3;
+  wk.forEach(function(w,i){ if((wk.length-1-i)%every===0)s+='<text x="'+X(i)+'" y="'+(H-5)+'" text-anchor="middle" font-size="11" fill="#7d8cb4">'+wbMD(w.end)+'</text>'; });
+  const path=function(k){ let p='',on=false; wk.forEach(function(w,i){ if(w[k]==null){on=false;return;} p+=(on?'L':'M')+X(i).toFixed(1)+' '+Y(w[k]).toFixed(1); on=true; }); return p; };
+  s+='<path d="'+path('ly')+'" fill="none" stroke="#4f8fdc" stroke-width="2" stroke-linejoin="round"/><path d="'+path('ty')+'" fill="none" stroke="#b08f38" stroke-width="2" stroke-linejoin="round"/>';
+  let li=-1; wk.forEach(function(w,i){ if(w.ty!=null)li=i; });
+  if(li>=0)s+='<circle cx="'+X(li)+'" cy="'+Y(wk[li].ty)+'" r="4" fill="#b08f38" stroke="#0a1430" stroke-width="2"/>';
+  s+='<line id="wbCross" y1="'+m.t+'" y2="'+(H-m.b)+'" stroke="#b7c4e6" opacity="0"/><rect id="wbHit" x="'+m.l+'" y="0" width="'+(W-m.l-m.r)+'" height="'+H+'" fill="transparent"/></svg><div class="wb-tip" id="wbTip" hidden></div>';
+  box.innerHTML=s;
+  const hit=$('wbHit'), tip=$('wbTip'), cross=$('wbCross'), svg=box.querySelector('svg');
+  const mv=function(e){ const r=svg.getBoundingClientRect(), px=(e.clientX-r.left)*W/r.width, i=Math.max(0,Math.min(wk.length-1,Math.round((px-m.l)/(W-m.l-m.r)*(wk.length-1)))), w=wk[i];
+    cross.setAttribute('x1',X(i)); cross.setAttribute('x2',X(i)); cross.setAttribute('opacity',1);
+    tip.hidden=false; tip.textContent='Week to '+wbMD(w.end)+': '+(w.ty!=null?wbN(w.ty,0)+' this year':'not here yet')+(w.ly!=null?', '+wbN(w.ly,0)+' last year':'');
+    const tw=tip.offsetWidth; tip.style.left=Math.max(0,Math.min(box.clientWidth-tw,X(i)*r.width/W-tw/2))+'px'; };
+  hit.addEventListener('pointermove',mv); hit.addEventListener('pointerdown',mv);
+  hit.addEventListener('pointerleave',function(){ tip.hidden=true; cross.setAttribute('opacity',0); });
+}
+/* ---- reps */
+function wbReps(){
+  const d=WB.feed.reps; if(!d)return '<p class="board-empty">The rep data did not load.</p>';
+  let h='<p class="wb-p" style="margin:0 0 12px;text-align:center">Biggest first. A week at cost is what we go through at current pace, which is not the same as what was invoiced.</p><div class="wb-cards">';
+  d.reps.forEach(function(r){ const mine=WB.notes.filter(function(n){return n.rep===r.vendor;});
+    const min=r.minimum&&(r.minimum.usd||r.minimum.cases)?[r.minimum.usd?wbUsd(r.minimum.usd):null,r.minimum.cases?r.minimum.cases+' cases':null].filter(Boolean).join(' or '):'';
+    h+='<article class="wb-card"><div><h3>'+esc(r.rep)+'</h3><span class="wb-co">'+esc(r.vendor)+(r.spendWk?' · about '+wbUsd(r.spendWk)+' a week at cost':'')+'</span></div>'
+      +(r.confirmed?'':'<span class="wb-unconf">Terms not confirmed by rep</span>')
+      +'<dl class="wb-kv">'+(r.phone?'<dt>Text</dt><dd><a href="sms:'+esc(r.phone)+'">'+esc(wbPhone(r.phone))+'</a></dd>':'')+(r.email?'<dt>Email</dt><dd><a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a></dd>':'')+(r.cutoffTime?'<dt>Order by</dt><dd>'+esc(wbT(r.cutoffTime))+' the day before</dd>':'')+(min?'<dt>Minimum</dt><dd>'+esc(min)+'</dd>':'')+(r.invoices?'<dt>Invoices</dt><dd>'+esc(r.invoices)+'</dd>':'')+'</dl>'
+      +(r.asks&&r.asks.length?'<div><span class="wb-lbl">Open with them</span><ul>'+r.asks.map(function(a){return '<li>'+esc(a)+'</li>';}).join('')+'</ul></div>':'')
+      +'<div><span class="wb-lbl">What we buy</span>'+r.wines.map(function(w){return esc(w.short)+' '+wbN(w.perWk)+'/wk';}).join(', ')+'</div>'
+      +(mine.length?'<div><span class="wb-lbl">Notes</span><ul>'+mine.slice(0,5).map(function(n){return '<li>'+esc(n.text)+(n.by?' ('+esc(n.by)+')':'')+'</li>';}).join('')+'</ul></div>':'')
+      +'<details><summary>Their book and the history</summary><div class="wb-det">'+(r.terms?'<div>'+esc(r.terms)+'</div>':'')+(r.book?'<div>'+esc(r.book)+'</div>':'')+(r.log&&r.log.length?'<ul>'+r.log.map(function(l){return '<li><b>'+esc(wbMD(l[0]))+'</b> '+esc(l[1])+'</li>';}).join('')+'</ul>':'')+'</div></details></article>'; });
+  h+='</div>';
+  if(d.others&&d.others.length)h+='<div class="fd-cat">Other contacts</div><div class="wb-scroll"><table class="wb-tbl"><tbody>'+d.others.map(function(o){return '<tr><td>'+esc(o.vendor)+'<span class="wb-sub">'+esc(o.note||'')+'</span></td><td>'+esc(o.rep)+'</td><td>'+esc(o.email)+'</td><td class="n">'+esc(o.phone)+'</td></tr>';}).join('')+'</tbody></table></div>';
+  return h;
+}
+/* ---- catalogs */
+function wbLoadCat(){ if(WB.cat||WB.catLoading||!(fbReady&&fbDb))return; WB.catLoading=true;
+  fbDb.collection('board').doc('winebookCat').get().then(function(s){ try{ WB.cat=JSON.parse((s.data()||{}).json).rows; }catch(e){ WB.catErr=true; } WB.catLoading=false; if(WB.sub==='catalogs')wbFillCat(); else if(WB.sub==='notes')wbFillNotes(); })
+  .catch(function(){ WB.catErr=true; WB.catLoading=false; if(WB.sub==='catalogs')wbFillCat(); }); }
+function wbFillCat(){ const box=$('wbCatRes'); if(!box)return; const q=WB.catQ.trim().toLowerCase();
+  if(WB.catErr){ box.innerHTML='<p class="wb-warn">The catalogs did not load. Open this tab again.</p>'; return; }
+  if(q.length<3){ box.innerHTML='<p class="wb-p">'+(WB.cat?WB.cat.length.toLocaleString('en-US')+' Italian wines to search. ':'')+'Try a producer, grape or place: pecorino, etna rosso, cavallotto. Italian lines only for now.</p>'; return; }
+  if(!WB.cat){ box.innerHTML='<p class="board-empty">Opening the catalogs…</p>'; return; }
+  const toks=q.split(/\s+/), res=WB.cat.filter(function(r){ const hay=(r.p+' '+r.w+' '+r.r+' '+r.v).toLowerCase(); return toks.every(function(t){return hay.indexOf(t)>=0;}); }).sort(function(a,b){return a.f-b.f;});
+  box.innerHTML=res.length?'<div class="wb-scroll"><table class="wb-tbl"><thead><tr><th>Wine</th><th>Book</th><th class="n">List</th><th class="n">Break</th><th class="n">Pg</th></tr></thead><tbody>'+res.slice(0,60).map(function(r){ return '<tr><td>'+esc((r.p?r.p+' ':'')+r.w+(r.v&&r.w.indexOf(r.v)<0?' '+r.v:''))+(r.r?'<span class="wb-sub">'+esc(r.r)+'</span>':'')+'</td><td>'+esc(r.a)+'</td><td class="n">'+wbUsd(r.f,2)+'</td><td class="n">'+(r.b?wbUsd(r.b,2):'')+'</td><td class="n">'+esc(r.pg||'')+'</td></tr>'; }).join('')+'</tbody></table></div>'+(res.length>60?'<p class="wb-p">Showing the 60 cheapest of '+res.length+'. Narrow it down.</p>':''):'<p class="board-empty">Nothing in the Italian lines we hold.</p>';
+}
+function wbCatalogs(){
+  const d=WB.feed.catalogs; if(!d)return '<p class="board-empty">The catalog data did not load.</p>';
+  const gaps=d.check.filter(function(c){return c.gap!=null&&Math.abs(c.gap)>=3;}).sort(function(a,b){return Math.abs(b.gap)-Math.abs(a.gap);});
+  const KIND={new:'New',price:'Price',gone:'Dropped'};
+  let h='<p class="wb-lede">'+gaps.length+' of our wines sit more than 3% off the rep’s book.'+(d.changes.length?' '+d.changes.length+' changes since the last lists.':'')+'</p>';
+  h+='<div class="fd-cat">What changed</div>'+(d.changes.length?'<div class="wb-scroll"><table class="wb-tbl"><tbody>'+d.changes.slice(0,60).map(function(c){ return '<tr><td>'+KIND[c.kind]+'</td><td>'+esc(c.wine)+'<span class="wb-sub">'+esc(c.vendor)+'</span></td><td class="n">'+(c.was!=null&&c.price!=null?wbUsd(c.was,2)+' to '+wbUsd(c.price,2):wbUsd(c.price!=null?c.price:c.was,2))+'</td></tr>'; }).join('')+'</tbody></table></div>':'<p class="wb-p">Nothing yet. Each rep has one list on file, so there is nothing to compare. When a second list from the same rep arrives, new wines, price moves and dropped lines show here.</p>');
+  h+='<div class="fd-cat">Our wines against the books</div><div class="wb-scroll"><table class="wb-tbl"><thead><tr><th>Wine</th><th class="n">On file</th><th class="n">Book</th><th class="n">Gap</th></tr></thead><tbody>'+gaps.map(function(c){ return '<tr><td>'+esc(c.short)+'<span class="wb-sub">'+esc(c.vendor)+(c.basis?' · '+esc(c.basis):'')+'</span></td><td class="n">'+wbUsd(c.cost,2)+'</td><td class="n">'+wbUsd(c.book,2)+'</td><td class="n">'+(c.gap>0?'+':'')+wbN(c.gap,0)+'%</td></tr>'; }).join('')+'</tbody></table></div>';
+  h+='<p class="wb-p">Invoices settle these. A book price is what the rep prints, not always what we pay. Compared on '+d.check.filter(function(c){return c.book!=null;}).length+' wines; '+d.check.filter(function(c){return c.book==null;}).length+' have no book to check against.</p>';
+  h+='<div class="fd-cat">Search the books</div><input class="wb-in" id="wbCatQ" type="search" placeholder="Producer, grape or place" value="'+esc(WB.catQ)+'" onfocus="wbLoadCat()" oninput="WB.catQ=this.value;wbLoadCat();wbFillCat()"><div id="wbCatRes" style="margin-top:8px"></div>';
+  h+='<div class="fd-cat">Books on file</div><div class="wb-scroll"><table class="wb-tbl"><tbody>'+d.catalogs.map(function(c){ return '<tr><td>'+esc(c.vendor)+'</td><td>'+(c.file?esc(c.file.replace(c.slug+'-','')):'<span class="wb-mute">None in hand</span>')+'</td><td class="n">'+(c.rows?c.rows.toLocaleString('en-US')+' wines':'')+'</td></tr>'; }).join('')+'</tbody></table></div><p class="wb-p">New lists file themselves each morning when a rep emails one.</p>';
+  return h;
+}
+/* ---- market */
+function wbMarket(){ const m=WB.feed.market;
+  if(!m||!m.length)return '<p class="board-empty">Market notes show here as dated entries.</p>';
+  return m.slice().sort(function(a,b){return a.date<b.date?1:-1;}).map(function(t){ return '<div class="wb-entry"><div class="fd-cat">'+esc(wbD(t.date))+(t.by?' · '+esc(t.by):'')+'</div>'+(t.items||[]).map(function(i){ return '<div class="wb-item"><h4>'+esc(i.head)+'</h4><p>'+esc(i.body)+'</p>'+(i.so?'<p><b>For us:</b> '+esc(i.so)+'</p>':'')+(i.sources&&i.sources.length?'<p>'+i.sources.map(function(s){return '<a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.title)+'</a>';}).join(' · ')+'</p>':'')+'</div>'; }).join('')+'</div>'; }).join('');
+}
+/* ---- notes */
+function wbNotes(){
+  const D=WB.draft, inv=WB.feed.inventory, rp=WB.feed.reps;
+  if(WB.notes.some(function(n){return n.kind==='wish'&&!n.done;}))wbLoadCat();
+  return '<div class="fd-cat">Write it down</div><div class="wb-form"><textarea class="wb-in" id="wbNoteText" placeholder="Vajra Langhe Nebbiolo, try again for winter by the glass" oninput="WB.draft.text=this.value">'+esc(D.text)+'</textarea>'
+    +'<select class="wb-in" aria-label="Kind" onchange="WB.draft.kind=this.value">'+Object.keys(WB_KINDS).map(function(k){return '<option value="'+k+'"'+(D.kind===k?' selected':'')+'>'+WB_KINDS[k]+'</option>';}).join('')+'</select>'
+    +'<input class="wb-in" aria-label="Wine" list="wbWineList" placeholder="Wine (optional)" value="'+esc(D.wine)+'" oninput="WB.draft.wine=this.value"><datalist id="wbWineList">'+(inv?inv.wines.filter(function(w){return ['glass','bottle','bar'].indexOf(w.group)>=0;}).map(function(w){return '<option value="'+esc(w.short)+'">';}).join(''):'')+'</datalist>'
+    +'<select class="wb-in" aria-label="Rep" onchange="WB.draft.rep=this.value"><option value="">Rep (optional)</option>'+(rp?rp.reps.map(function(r){return '<option value="'+esc(r.vendor)+'"'+(D.rep===r.vendor?' selected':'')+'>'+esc(r.rep)+', '+esc(r.vendor)+'</option>';}).join(''):'')+'</select></div>'
+    +'<div class="wi-actions" style="align-items:center"><button class="wi-btn" id="wbSave" onclick="wbNoteAdd()">Save note</button><span class="wb-p" id="wbMsg" style="margin:0"></span></div>'
+    +'<div class="fd-cat">Our notes</div><div class="wi-seg wb-tools">'+[['all','All']].concat(Object.keys(WB_KINDS).map(function(k){return [k,WB_KINDS[k]];})).map(function(k){return '<button class="'+(WB.noteFilter===k[0]?'on':'')+'" onclick="WB.noteFilter=\''+k[0]+'\';wbFilterMark(this);wbFillNotes()">'+k[1]+'</button>';}).join('')+'</div><div id="wbNoteList"></div>'
+    +(WB.notesErr?'<p class="wb-warn">Notes did not load. Open this tab again.</p>':'');
+}
+function wbHits(n){ if(!WB.cat)return [];
+  const STOP={wine:1,wines:1,with:1,from:1,that:1,this:1,have:1,what:1,like:1,maybe:1,want:1,would:1,should:1,about:1,again:1,winter:1,summer:1,next:1,list:1,bottle:1,glass:1};
+  const toks=(n.text.toLowerCase().match(/[a-zà-ÿ'0-9]{4,}/g)||[]).filter(function(t){return !STOP[t];}).slice(0,8); if(!toks.length)return [];
+  const need=Math.min(2,toks.length), out=[];
+  WB.cat.forEach(function(r){ const hay=(r.p+' '+r.w).toLowerCase(); let k=0; toks.forEach(function(t){ if(hay.indexOf(t)>=0)k++; }); if(k>=need)out.push({k:k,r:r}); });
+  return out.sort(function(a,b){return b.k-a.k||a.r.f-b.r.f;}).slice(0,4);
+}
+function wbFillNotes(){ const box=$('wbNoteList'); if(!box)return;
+  if(!WB.notesReady){ box.innerHTML='<p class="board-empty">Opening the notes…</p>'; return; }
+  const rows=WB.notes.filter(function(n){return WB.noteFilter==='all'||n.kind===WB.noteFilter;});
+  box.innerHTML=rows.length?rows.map(function(n){ const hits=n.kind==='wish'&&!n.done?wbHits(n):[], armed=WB.delArm===n.id;
+    return '<div class="wb-note'+(n.done?' done':'')+'"><div class="t">'+esc(n.text)+'</div><div class="m"><span>'+esc(WB_KINDS[n.kind]||n.kind)+'</span><span>'+esc(n.by||'')+' '+esc(wbMD(n.at))+'</span>'+(n.wine?'<span>'+esc(n.wine)+'</span>':'')+(n.rep?'<span>'+esc(n.rep)+'</span>':'')
+      +(n.kind==='wish'?'<button class="wb-lnk" onclick="wbNoteDone(\''+n.id+'\')">'+(n.done?'Put back':'Done')+'</button>':'')+'<button class="wb-lnk" onclick="wbNoteDel(\''+n.id+'\')">'+(armed?'Tap again to delete':'Delete')+'</button></div>'
+      +(hits.length?'<div class="wb-hits"><span>Closest Italian lines in the books:</span>'+hits.map(function(x){return '<span>'+esc((x.r.p?x.r.p+' ':'')+x.r.w)+', '+esc(x.r.a)+' '+wbUsd(x.r.f,2)+'</span>';}).join('')+'</div>':'')+'</div>'; }).join(''):'<p class="board-empty">Nothing here yet. Wines to try get checked against the reps’ books automatically.</p>';
+}
+function wbNoteTx(change){ return fbDb.runTransaction(function(tx){ const r=wbNotesRef(); return tx.get(r).then(function(s){ const n=((s.exists&&(s.data()||{}).notes)||[]).slice(); tx.set(r,{notes:change(n)},{merge:true}); }); }); }
+function wbNoteAdd(){ const D=WB.draft, t=D.text.trim(), msg=$('wbMsg'), btn=$('wbSave');
+  if(!t){ msg.textContent='Write something first.'; return; } if(WB.saving)return;
+  WB.saving=true; btn.disabled=true; msg.textContent='Saving…';
+  const by=String(me&&me.name||'').trim().split(/\s+/)[0], n={id:'n'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),kind:D.kind,text:t,wine:D.wine.trim()||null,rep:D.rep||null,by:by,at:new Date().toISOString(),done:false};
+  wbNoteTx(function(a){ a.push(n); return a; }).then(function(){ WB.draft={text:'',kind:D.kind,wine:'',rep:''}; WB.saving=false; wbRender(); const m=$('wbMsg'); if(m)m.textContent='Saved.'; })
+  .catch(function(){ WB.saving=false; btn.disabled=false; msg.textContent='Did not save. Your words are still in the box; try again.'; });
+}
+function wbNoteDone(id){ wbNoteTx(function(a){ return a.map(function(n){ return n.id===id?Object.assign({},n,{done:!n.done}):n; }); }).catch(function(){ const m=$('wbMsg'); if(m)m.textContent='Did not save. Try again.'; }); }
+function wbNoteDel(id){ if(WB.delArm!==id){ WB.delArm=id; wbFillNotes(); return; } WB.delArm=null; wbNoteTx(function(a){ return a.filter(function(n){ return n.id!==id; }); }).catch(function(){ const m=$('wbMsg'); if(m)m.textContent='Did not delete. Try again.'; }); }
+window.addEventListener('resize',function(){ clearTimeout(WB.rz); WB.rz=setTimeout(function(){ if(WB.sub==='sales'&&$('winebook')&&$('winebook').classList.contains('active'))wbChart(); },150); });
 /* ===== WINE INVENTORY (2026-09-29) ============================================
    Manager-only. Bottles on hand = the last count of each wine + deliveries logged since
    that count - bottles Revel says we sold since that count. Display only: no ordering yet.
