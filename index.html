@@ -2276,7 +2276,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793820090';   // stamped by build-data.py at every deploy
+const BUILD='1793822146';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5487,7 +5487,7 @@ function woQtyLabel(l){ return woLabel(l.qty_bottles,(woWine(l.key).unit)||12); 
 /* Adrian's style. First text to a rep whose delivery days aren't confirmed asks for them. */
 function woText(o){
   const v=woMaster().vendors[o.vendor]||{};
-  let t='Hey '+(o.rep||v.rep||'')+', for '+woDayName(o.delivery)+' please: '+(o.lines||[]).map(function(l){return woQtyLabel(l)+' '+woShortName(l.key);}).join(', ')+'. Thanks! Sam';
+  let t='Hey '+(o.rep||v.rep||'')+', for '+woDayName(o.delivery)+' please: '+(o.lines||[]).map(function(l){return woQtyLabel(l)+' '+woShortName(l.key);}).join(', ')+'.'+(v.orderNote?' '+v.orderNote:'')+' Thanks! Sam';
   if(!v.confirmed)t+=' Also, what days can you deliver to us?';
   return t;
 }
@@ -5503,6 +5503,11 @@ function woFollowup(o){
 /* iPhone and Mac Messages take sms:<number>&body=. */
 function woSmsHref(phone,body){ return 'sms:'+String(phone||'')+'&body='+encodeURIComponent(body); }
 function woPhone(o){ return (woMaster().vendors[o.vendor]||{}).phone||''; }
+/* Reps who asked for email (2026-11-04). */
+function woEmail(o){ const v=woMaster().vendors[o.vendor]||{}; return v.orderBy==='email'&&v.email?v.email:''; }
+function woMailHref(addr,body){ return 'mailto:'+addr+'?subject='+encodeURIComponent('Fermo Order')+'&body='+encodeURIComponent(body); }
+function woHref(o,body){ const e=woEmail(o); return e?woMailHref(e,body):woSmsHref(woPhone(o),body); }
+function woToLabel(o){ const e=woEmail(o); return e?'Email to '+e:'Text to '+woPhoneShow(woPhone(o)); }
 function woPhoneShow(p){ const m=String(p).match(/^\+1(\d{3})(\d{3})(\d{4})$/); return m?m[1]+'-'+m[2]+'-'+m[3]:String(p||'no number on file'); }
 
 /* Pure: apply a delivery check. inv = {counts, receipts}, od = {orders}. lines = [{key, got, issue, note, keep}].
@@ -5561,9 +5566,9 @@ function woWho(){ return (me&&me.name)||'unknown'; }
 function woSend(id){
   if(!woCanSend())return;
   const o=((WO.doc||{}).orders||[]).find(function(x){return x.id===id;}); if(!o)return;
-  const txt=woText(o), href=woSmsHref(woPhone(o),txt);
+  const txt=woText(o), href=woHref(o,txt);
   try{ window.location.href=href; }catch(e){}
-  woTx(function(od){ od.orders=od.orders.map(function(x){ return x.id!==id||x.state!=='draft'?x:Object.assign({},x,{state:'placed',placedAt:Date.now(),placedBy:woWho(),sent_text:txt}); }); od.updated=woToday(); return {od:od,inv:null}; });
+  woTx(function(od){ od.orders=od.orders.map(function(x){ return x.id!==id||x.state!=='draft'?x:Object.assign({},x,{state:'placed',placedAt:Date.now(),placedBy:woWho(),sent_text:txt,sent_via:woEmail(o)?'email':'text'}); }); od.updated=woToday(); return {od:od,inv:null}; });
 }
 function woSkip(id){
   if(WO.armSkip!==id){ WO.armSkip=id; woRender(); return; }
@@ -5641,9 +5646,10 @@ function woRender(){
     drafts.forEach(function(o){ const due=o.cutoff===today, txt=woText(o), v=woMaster().vendors[o.vendor]||{};
       h+='<div class="wo-o wo-draft'+(due?' wo-due':'')+'">'+woHead(o,(due?'Order today'+(v.cutoffTime?' by '+v.cutoffTime:''):'Order by '+woDayShort(o.cutoff))+(v.confirmed?'':' · delivery day not confirmed'))
         +woLinesHTML(o,woCanSend())
-        +'<div class="wo-txt"><span>Text to '+esc(woPhoneShow(woPhone(o)))+'</span>'+esc(txt)+'</div>'
+        +'<div class="wo-txt"><span>'+esc(woToLabel(o))+'</span>'+esc(txt)+'</div>'
+        +(v.orderPref?'<div class="wo-sub">'+esc(v.orderPref)+'</div>':'')
         +(o.est_total?'<div class="wo-sub">About $'+Math.round(o.est_total)+(o.cost_known===false?', some costs missing':'')+'</div>':'')
-        +'<div class="wo-act">'+(woCanSend()?'<a class="wi-btn wo-send" href="'+esc(woSmsHref(woPhone(o),txt))+'" onclick="event.preventDefault();woSend(\''+o.id+'\')">Send text</a><button class="ann-dismiss" onclick="woSkip(\''+o.id+'\')">'+(WO.armSkip===o.id?'Tap again to skip this week':'Skip this week')+'</button>':'<span class="wo-sub">Waiting for Sam to send.</span>')+'</div></div>'; });
+        +'<div class="wo-act">'+(woCanSend()?'<a class="wi-btn wo-send" href="'+esc(woHref(o,txt))+'" onclick="event.preventDefault();woSend(\''+o.id+'\')">'+(woEmail(o)?'Send email':'Send text')+'</a><button class="ann-dismiss" onclick="woSkip(\''+o.id+'\')">'+(WO.armSkip===o.id?'Tap again to skip this week':'Skip this week')+'</button>':'<span class="wo-sub">Waiting for Sam to send.</span>')+'</div></div>'; });
   }
   h+='<div class="wo-sec">Expected deliveries</div>';
   if(!placed.length)h+='<p class="wo-empty">Nothing on order right now.</p>';
@@ -5661,7 +5667,7 @@ function woRender(){
         +(o.exceptions||[]).filter(function(e){return !e.resolved;}).map(function(e){
           return '<div class="wo-line"><span class="wo-q wo-q-x">'+esc(e.issue==='short'?'short '+e.owed:(e.issue==='missing'?'missing':'wrong'))+'</span><span class="wo-n">'+esc(woWine(e.key).name||e.key)+(e.note?'<span class="wo-why">'+esc(e.note)+'</span>':'')+'</span>'
             +'<span class="wo-step"><button onclick="woResolve(\''+o.id+'\',\''+e.key+'\',true)">It came</button><button onclick="woResolve(\''+o.id+'\',\''+e.key+'\',false)">Drop it</button></span></div>'; }).join('')+'</div>'
-        +(woCanSend()?'<div class="wo-txt"><span>Text to '+esc(woPhoneShow(woPhone(o)))+'</span>'+esc(t)+'</div><div class="wo-act"><a class="wi-btn" href="'+esc(woSmsHref(woPhone(o),t))+'">Text '+esc(o.rep||'')+'</a></div>':'<p class="wo-sub">This stays here for Sam until it’s sorted.</p>')+'</div>'; });
+        +(woCanSend()?'<div class="wo-txt"><span>'+esc(woToLabel(o))+'</span>'+esc(t)+'</div><div class="wo-act"><a class="wi-btn" href="'+esc(woHref(o,t))+'">'+(woEmail(o)?'Email ':'Text ')+esc(o.rep||'')+'</a></div>':'<p class="wo-sub">This stays here for Sam until it’s sorted.</p>')+'</div>'; });
   }
   if(hist.length){
     h+='<details class="wo-hist"><summary>Last 8 weeks ('+hist.length+')</summary>';

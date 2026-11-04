@@ -14,7 +14,8 @@
         "usd": 100,
         "cases": null
       },
-      "note": "Delivers to Ballard Tue, Wed, Fri. Orders until 10-11pm the night before (their system takes orders to midnight). Text or email. (Todd 10/30)"
+      "note": "Delivers to Ballard Tue, Wed, Fri. Orders until 10-11pm the night before (their system takes orders to midnight). Text or email. (Todd 10/30)",
+      "orderPref": "Text or email (Todd 10/30)"
     },
     "Specialty Cellars": {
       "rep": "Marsha",
@@ -27,7 +28,9 @@
         "usd": 350,
         "cases": 3
       },
-      "note": "Order before 4pm. $20 delivery fee below the minimum. Prosecco gets the 3-case price on any quantity. Ships from Grape Expectations' warehouse."
+      "note": "Order before 4pm. $20 delivery fee below the minimum. Prosecco gets the 3-case price on any quantity. Ships from Grape Expectations' warehouse.",
+      "orderNote": "Please email me the invoice too.",
+      "orderPref": "Marsha has not said"
     },
     "Vinifera": {
       "rep": "Eugenio",
@@ -40,7 +43,9 @@
         "usd": null,
         "cases": null
       },
-      "note": "Any 5 cases mixed for 20% off. Delivers Tue, Wed, Fri, cutoff 5pm the day before; last-minute by text, not guaranteed. Email or text orders. 323-541-3276 confirmed (Eugenio 11/2)."
+      "note": "Any 5 cases mixed for 20% off. Delivers Tue, Wed, Fri, cutoff 5pm the day before; last-minute by text, not guaranteed. Email or text orders. 323-541-3276 confirmed (Eugenio 11/2).",
+      "orderNote": "Please email me the invoice too.",
+      "orderPref": "Email or text (Eugenio)"
     },
     "Vehrs": {
       "rep": "Sal",
@@ -53,7 +58,8 @@
         "usd": null,
         "cases": null
       },
-      "note": "Friday delivery; earlier on request per order, or a permanent change if we want. Any method: text, email, call. (Sal 10/30) Friday orders due Thursday 4:30pm. Invoices auto-email from Encompass DSD (Sal 11/2)."
+      "note": "Friday delivery; earlier on request per order, or a permanent change if we want. Any method: text, email, call. (Sal 10/30) Friday orders due Thursday 4:30pm. Invoices auto-email from Encompass DSD (Sal 11/2).",
+      "orderPref": "Any way: text, email or call (Sal 10/30)"
     },
     "Vinea": {
       "rep": "Janet",
@@ -66,7 +72,8 @@
         "usd": null,
         "cases": null
       },
-      "note": "Delivers Tue-Fri, 9am-3pm. Order by 10pm the night before for the next delivery day; she'll bring a last-minute order herself on a non-delivery day. Text orders are fine (Janet 10/31). Louis Armand break at 12 bottles (Adrian); price rose this year, we have paid $28.99 on recent orders, 12 bottles of sparkling gets that price (Janet 11/2)."
+      "note": "Delivers Tue-Fri, 9am-3pm. Order by 10pm the night before for the next delivery day; she'll bring a last-minute order herself on a non-delivery day. Text orders are fine (Janet 10/31). Louis Armand break at 12 bottles (Adrian); price rose this year, we have paid $28.99 on recent orders, 12 bottles of sparkling gets that price (Janet 11/2).",
+      "orderPref": "Text is fine (Janet 10/31)"
     },
     "Petit Monde": {
       "rep": "Graham",
@@ -79,7 +86,9 @@
         "usd": null,
         "cases": null
       },
-      "note": "Delivers Tue, Wed, Fri. Order by 5pm the day before, no hard cutoff. Text or email (he'll reply by text). Sant'Agata out of stock until 11/18. (Graham 10/30)"
+      "note": "Delivers Tue, Wed, Fri. Order by 5pm the day before, no hard cutoff. Text or email (he'll reply by text). Sant'Agata out of stock until 11/18. (Graham 10/30)",
+      "orderNote": "Please email me the invoice too.",
+      "orderPref": "Text or email, he replies by text (Graham 10/30)"
     },
     "Winebow": {
       "rep": "Abe",
@@ -93,7 +102,10 @@
         "cases": null
       },
       "note": "Delivers Tue-Fri in Seattle. Order by 4pm the day before. Prefers email for orders, text works (Abe 10/31). 3 mixed cases for a break. Laurent Perrier $40/btl by the 6-pack, $37 at 18 bottles.",
-      "phoneNote": "206-326-5274 is the number in Abe's 10/31 signature; he did not answer whether 206-391-6220 (marked vm) is right."
+      "phoneNote": "206-326-5274 is the number in Abe's 10/31 signature; he did not answer whether 206-391-6220 (marked vm) is right.",
+      "orderPref": "Prefers email, text works (Abe 10/31)",
+      "orderBy": "email",
+      "email": "abe.geballe@winebow.com"
     },
     "Casa Bruno": {
       "rep": "Sid",
@@ -106,7 +118,9 @@
         "usd": null,
         "cases": null
       },
-      "note": "Sid Samberg is our rep for all Casa Bruno, Matot and Armujan included (Sid 10/30). Delivers Tue-Fri, next day if ordered by about 5pm, flexible. Email or text."
+      "note": "Sid Samberg is our rep for all Casa Bruno, Matot and Armujan included (Sid 10/30). Delivers Tue-Fri, next day if ordered by about 5pm, flexible. Email or text.",
+      "orderNote": "Please email me the invoice too.",
+      "orderPref": "Email or text (Sid 10/30)"
     },
     "Odom": {
       "rep": "Matthew",
@@ -119,7 +133,8 @@
         "usd": 200,
         "cases": null
       },
-      "note": "Matthew Lindley is our rep (10/30). Thursday by 4pm for Friday; off-day orders when needed. Email or text. Vandori $8.05 one case, $6.25 at 3 cases. $200 minimum."
+      "note": "Matthew Lindley is our rep (10/30). Thursday by 4pm for Friday; off-day orders when needed. Email or text. Vandori $8.05 one case, $6.25 at 3 cases. $200 minimum.",
+      "orderPref": "Email or text (Matthew)"
     }
   },
   "wines": [
