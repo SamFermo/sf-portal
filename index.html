@@ -2276,7 +2276,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793819126';   // stamped by build-data.py at every deploy
+const BUILD='1793820049';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -12799,11 +12799,18 @@ function scwsApplyOverride(w,ov){
 /* An approval is only good for the flags it was given. Compare a canonical signature —
    sorted, joined — so that if the nightly run later produces a DIFFERENT flag (a new punch
    problem, a fresh instruction) the night reopens instead of riding yesterday's sign-off. */
-function scwsFlagSig(flags){ return (flags||[]).slice().sort().join('||'); }
+/* The reopen notice is a message about the approval, not a flag about the night. It must never
+   go into a signature, or a re-approval signs its own warning and can never match again
+   (11/03: Sam re-approved and the night reopened forever). Old approvals that already signed
+   it heal on load because the stored flags are re-signed through this filter. */
+const SCWS_REOPEN='This night changed after ';
+function scwsRealFlags(flags){ return (flags||[]).filter(f=>String(f).indexOf(SCWS_REOPEN)!==0); }
+function scwsFlagSig(flags){ return scwsRealFlags(flags).slice().sort().join('||'); }
 
 function scwsApplyApproval(w,ap){
   if(!ap||!ap.sig)return w;
-  if(scwsFlagSig(w.flags)!==ap.sig){
+  const apSig=ap.flags?scwsFlagSig(ap.flags):ap.sig;
+  if(scwsFlagSig(w.flags)!==apSig){
     w.reopened=true;
     w.flags=(w.flags||[]).concat(['This night changed after '+(ap.by||'a manager')+' approved it — review again.']);
     w.ok=false; return w;
@@ -13134,7 +13141,7 @@ function scwsResetOverride(){
 function scwsApprove(iso){
   if(!scwsCanEdit())return;
   const n=scwsNights().filter(x=>x.date===iso)[0]; if(!n)return;
-  const ap={sig:scwsFlagSig(n.flags),flags:(n.flags||[]).slice(),
+  const ap={sig:scwsFlagSig(n.flags),flags:scwsRealFlags(n.flags),
             by:scwsFirst(me&&me.name),at:new Date().toISOString()};
   if(SCWS.clock[iso])SCWS.clock[iso].appr=ap;
   const done=()=>scwsRender();
