@@ -2270,7 +2270,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793749440';   // stamped by build-data.py at every deploy
+const BUILD='1793755907';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3292,7 +3292,7 @@ function annDoneFor(A){ if(!me)return false;
 function annPendingCount(){ const t=todayISO(); return annAll().filter(function(A){return t<=A.showUntil&&annForMe(A)&&!annDoneFor(A);}).length; }
 function annPick(){ const t=todayISO();
   const live=annAll().filter(function(A){return t<=A.showUntil&&annForMe(A);});
-  const pend=live.filter(function(A){return !annDoneFor(A);});
+  const pend=live.filter(function(A){return !annDoneFor(A)&&!annDismissedFor(A.id);});   // closed today = parked until 3am (2026-11-03)
   ANNOUNCE=pend[0]||live[0]||ANNOUNCES[ANNOUNCES.length-1]; return ANNOUNCE; }
 let annShownSession=false, annGuests=0;
 /* Non-staff RSVPs (family/friends Sam adds by hand — no staff profile to hang a
@@ -3312,6 +3312,7 @@ function startAnnounceGuestsSync(){
   }
 }
 function annDismissKey(){return 'sf-announce-'+ANNOUNCE.id;}
+function annDismissedFor(id){ try{const s=JSON.parse(localStorage.getItem('sf-announce-'+id)||'null'); return !!(s&&s.exp&&Date.now()<s.exp);}catch(e){return false;} }
 function annDismissedNow(){ try{const s=JSON.parse(localStorage.getItem(annDismissKey())||'null'); return !!(s&&s.exp&&Date.now()<s.exp);}catch(e){return false;} }
 function annDismiss(){ try{localStorage.setItem(annDismissKey(),JSON.stringify({exp:next3am(Date.now())}));}catch(e){} annClose(); }
 function annActive(){ return todayISO()<=ANNOUNCE.showUntil && annForMe(ANNOUNCE); }
@@ -3425,6 +3426,9 @@ function annCoRefresh(){ const m=$('announceModal'); if(!m||m.style.display!=='f
    comes back at the next login until Got it, which waits on requiresPolicy. */
 function annGo(h){ annClose(); if(location.hash==='#'+h)dlApply(true); else location.hash=h; }
 function annClose(){ const m=$('announceModal'); if(m)m.style.display='none';
+  /* closing is not acking, but it is 'not now': park this card until the next 3am so a reload
+     (swipe-back after an hour, pull-to-refresh) does not bounce it straight back (2026-11-03) */
+  try{ if(ANNOUNCE&&ANNOUNCE.id&&!annDoneFor(ANNOUNCE))localStorage.setItem('sf-announce-'+ANNOUNCE.id,JSON.stringify({exp:next3am(Date.now())})); }catch(e){}
   // alerts deliberately queue behind the announcement rather than stacking on it
   try{ setTimeout(maybeShowAlerts,350); }catch(e){} }
 function annCardHTML(existing){
@@ -11517,7 +11521,10 @@ function chatSend(){
 let chatLastTouch=0;
 function chatAttentive(){ return Date.now()-chatLastTouch<45000; }
 function chatOnScreen(){ return document.visibilityState==='visible'&&!!$('board')&&$('board').classList.contains('active')&&(atSub==='chat'||atSplit()); }
-document.addEventListener('pointerdown',function(){ chatLastTouch=Date.now(); if(chatOnScreen()&&chatLoaded&&chatUnread()>0){ chatMarkSeen(); renderBoard(); } },{passive:true,capture:true});
+document.addEventListener('pointerdown',function(){ chatLastTouch=Date.now(); },{passive:true,capture:true});
+/* Stamp on CLICK, in the bubble phase, so the tapped control has already run and the redraw cannot
+   pull the button out from under the finger (iOS drops a tap whose target is replaced mid-gesture). */
+document.addEventListener('click',function(){ if(chatOnScreen()&&chatLoaded&&chatUnread()>0){ chatMarkSeen(); renderBoard(); } },false);
 function chatMarkSeen(){
   const meN=currentUserName(); if(!meN||DEMO)return;
   if(!chatOnScreen()||!chatAttentive())return;
