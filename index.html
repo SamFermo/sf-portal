@@ -2276,7 +2276,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793763593';   // stamped by build-data.py at every deploy
+const BUILD='1793818667';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5725,12 +5725,60 @@ function wrHTML(){
   h+='</div>'+(due.length>1?'<div class="wo-act"><button class="wi-btn wi-btn2" onclick="wrAll()">'+(WR.arm?'Tap again: all '+due.length+' set':'All set')+'</button></div>':'')+'</div>';
   return h;
 }
+/* WEBSITE CLICKS (2026-11-04). Both public sites count taps on the buttons that matter into
+   swan-house-checkin clicks/<site>_<YYYY-MM-DD> (public read, +1-only writes; rules 2026-11-04).
+   Shown at the top of Front Desk for managers: last 7 days per site. Visits and pages live in
+   Cloudflare Web Analytics (linked). Reuses a 'swan' compat app with the sites' App Check key. */
+const WEB_KEYS=[['reserve','Reservations button'],['opentable','Went on to OpenTable'],['order','Order online'],
+  ['giftcards','Gift cards'],['tickets','Farm dinner tickets'],['signup','Mailing list sign-ups'],
+  ['email','Email links'],['call','Tapped to call'],['instagram','Instagram'],['crosssite','Went to the other site']];
+const WEB_CFG={apiKey:"AIzaSyDEOMCOO0EH1RV4vogLF4aOWD0e52dsOOI",authDomain:"swan-house-checkin.firebaseapp.com",
+  projectId:"swan-house-checkin",storageBucket:"swan-house-checkin.firebasestorage.app",
+  messagingSenderId:"743743999844",appId:"1:743743999844:web:e124dd6fa5f791f87b7471"};
+let WEB={data:null,at:0,loading:false,err:false};
+function webApp(){
+  let app=(firebase.apps||[]).find(a=>a.name==='swan');
+  if(!app){ app=firebase.initializeApp(WEB_CFG,'swan');
+    try{ if(firebase.appCheck&&firebase.appCheck.ReCaptchaEnterpriseProvider) firebase.appCheck(app).activate(new firebase.appCheck.ReCaptchaEnterpriseProvider('6LeCgjAtAAAAABX8x9jbb3tkOXmmQ5UvNZD1RL2_'),true); }catch(e){} }
+  return app;
+}
+function webDays(){ const out=[]; const f=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles'});
+  for(let i=0;i<7;i++) out.push(f.format(new Date(Date.now()-i*86400000))); return out; }
+function fdWebLoad(){
+  if(!isMgr()||WEB.loading||(WEB.data&&Date.now()-WEB.at<300000)||!window.firebase)return;
+  WEB.loading=true;
+  try{
+    const db=webApp().firestore(); const days=webDays(); const gets=[];
+    ['sanfermo','swanhouse'].forEach(site=>days.forEach(d=>gets.push(db.collection('clicks').doc(site+'_'+d).get().then(x=>[site,d,x.exists?x.data():{}]))));
+    Promise.all(gets).then(rows=>{
+      const t={sanfermo:{},swanhouse:{}}, today={sanfermo:{},swanhouse:{}}; const d0=days[0];
+      rows.forEach(([site,d,data])=>Object.keys(data).forEach(k=>{ const n=+data[k]||0; t[site][k]=(t[site][k]||0)+n; if(d===d0) today[site][k]=(today[site][k]||0)+n; }));
+      WEB={data:{t,today},at:Date.now(),loading:false,err:false}; const el=$('fdWeb'); if(el) el.outerHTML=fdWebHTML();
+    }).catch(()=>{ WEB.loading=false; WEB.err=true; const el=$('fdWeb'); if(el) el.outerHTML=fdWebHTML(); });
+  }catch(e){ WEB.loading=false; WEB.err=true; }
+}
+function fdWebHTML(){
+  let h='<div class="fd-card" id="fdWeb"><div class="fd-name">Website clicks · last 7 days</div>';
+  h+='<div class="fd-desc">Taps on the buttons that matter, counted on both public sites. Visits, pages and where people came from: <a href="https://dash.cloudflare.com/9d1f46ca96862d6921ae0f2f2ce4c323/web-analytics/sites" target="_blank" rel="noopener">Cloudflare Web Analytics</a>.</div>';
+  if(WEB.err&&!WEB.data){ return h+'<div class="fd-desc">Couldn\'t load the counts right now.</div></div>'; }
+  if(!WEB.data){ return h+'<div class="fd-desc">Loading…</div></div>'; }
+  const t=WEB.data.t, td=WEB.data.today;
+  const rows=WEB_KEYS.filter(([k])=>(t.sanfermo[k]||0)+(t.swanhouse[k]||0)>0);
+  if(!rows.length) return h+'<div class="fd-desc">No clicks counted yet. Counting started Nov 4.</div></div>';
+  h+='<table style="width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.9rem"><tr style="text-align:left;opacity:.7"><th style="padding:.25rem 0;font-weight:500"></th><th style="font-weight:500">San Fermo</th><th style="font-weight:500">Swan House</th></tr>';
+  rows.forEach(([k,label])=>{ const a=t.sanfermo[k]||0, b=t.swanhouse[k]||0, ta=td.sanfermo[k]||0, tb=td.swanhouse[k]||0;
+    const cell=(n,tn)=>n?(n+(tn?` <span style="opacity:.6">(${tn} today)</span>`:'')):'<span style="opacity:.4">–</span>';
+    h+=`<tr style="border-top:1px solid rgba(0,0,0,.08)"><td style="padding:.35rem .5rem .35rem 0">${esc(label)}</td><td>${cell(a,ta)}</td><td>${cell(b,tb)}</td></tr>`; });
+  return h+'</table></div>';
+}
 function renderFrontDesk(keepSearch){
   if(!isMgr()){$('fdBody').innerHTML='<p class="board-empty">Manager access required.</p>';return;}
   const prev=keepSearch&&$('fd-search')?$('fd-search').value:'';
   const q=(prev||'').toLowerCase().trim();
   const all=fdSorted().filter(e=>fdMatchesQuery(e,q));
+  fdWebLoad();
   let h=`<div class="fd-search-wrap"><input id="fd-search" class="fd-search" placeholder="What do you need help with?" value="${esc(prev)}" oninput="renderFrontDesk(true)"></div>`;
+  h=fdWebHTML()+h;
   h+=`<button class="fd-add-btn" onclick="fdShowForm()">+ Add entry</button>`;
   h+=`<div id="fdFormSlot"></div>`;
   if(!all.length&&q){h+=`<p class="board-empty">No matches for "${esc(prev)}". Try different keywords.</p>`;$('fdBody').innerHTML=h;$('fd-search').focus();return;}
