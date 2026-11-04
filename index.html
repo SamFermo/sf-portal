@@ -660,6 +660,12 @@ body.tour-on{padding-bottom:230px;}
 .at-f-o .at-fdot,.at-fdot.at-f-o{background:#e08a3c;} .at-f-b .at-fdot,.at-fdot.at-f-b{background:#5aa9d6;}
 .at-f-r .at-fdot,.at-fdot.at-f-r{background:#d4654a;} .at-f-g .at-fdot,.at-fdot.at-f-g{background:#6db657;}
 /* the open table takes the whole row — this IS the expanded button */
+.at-acts-stick{position:sticky; bottom:0; z-index:5; margin:11px -13px -15px; padding:10px 13px calc(12px + env(safe-area-inset-bottom,0px));
+  background:#080c1a; border-top:1px solid rgba(230,200,120,.25); border-radius:0 0 15px 15px;}
+.at-acts-stick .at-btn.at-go{flex:1 1 auto; min-height:48px; font-size:16px;}
+.at-panel .at-acts-stick .at-btn{background-color:#0b1020; background-image:linear-gradient(rgba(205,216,244,.08),rgba(205,216,244,.08));}
+.at-panel .at-acts-stick .at-btn.at-go{background-color:#0b1020; background-image:linear-gradient(rgba(230,200,120,.2),rgba(230,200,120,.2));}
+.at-sb,.at-oc,.at-fl,.at-btn,.at-tile{touch-action:manipulation;}
 .at-panel{grid-column:1/-1; background:rgba(8,12,26,.72); border:1.5px solid rgba(230,200,120,.42);
   border-radius:16px; padding:13px 13px 15px;}
 .at-p-head{display:flex; align-items:center; gap:9px; margin-bottom:11px;}
@@ -2270,7 +2276,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793755907';   // stamped by build-data.py at every deploy
+const BUILD='1793763593';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -11170,15 +11176,25 @@ function atTap(t){
   renderBoard();
 }
 function atClose(){atOpen='';atDraft=null;atMoveFrom='';renderBoard();}
-function atToggleOcc(k){if(!atDraft)return;atDraft.occ[k]=!atDraft.occ[k];renderBoard();}
-function atCovers(d){if(!atDraft)return;atDraft.covers=Math.max(1,Math.min(20,(atDraft.covers||0)+d));renderBoard();}
+/* Draft-only changes (nothing written yet) repaint the open panel in place. A full renderBoard()
+   swapped the tapped button out from under the finger, which is what made the page jump on iOS. */
+function atDraftPaint(){
+  const c=$('at-dc-covers'), o=$('at-dc-out'), f=$('at-dc-from');
+  if(!atDraft||!c||!o){ renderBoard(); return; }
+  c.textContent=atDraft.covers;
+  o.textContent=atClock(atDraft.outAt);
+  if(f)f.textContent=atCdText(Math.round((atDraft.outAt-Date.now())/60000))+' from now';
+  document.querySelectorAll('#boardBody .at-oc[data-occ]').forEach(function(b){ b.classList.toggle('on',!!atDraft.occ[b.dataset.occ]); });
+}
+function atToggleOcc(k){if(!atDraft)return;atDraft.occ[k]=!atDraft.occ[k];atDraftPaint();}
+function atCovers(d){if(!atDraft)return;atDraft.covers=Math.max(1,Math.min(20,(atDraft.covers||0)+d));atDraftPaint();}
 /* Off an odd minute, the first press snaps to a quarter hour in the direction pressed:
    +15 from 8:37 gives 8:45, never 8:30. On the grid it steps a clean 15. */
 function atStep(cur,mins){const q=9e5;
   if(cur%q===0)return cur+mins*60000;
   return mins>0?Math.ceil(cur/q)*q:Math.floor(cur/q)*q;}
 function atBump(mins){if(!atDraft)return;
-  atDraft.outAt=Math.max(atFloorOut(),atStep(atDraft.outAt,mins));renderBoard();}
+  atDraft.outAt=Math.max(atFloorOut(),atStep(atDraft.outAt,mins));atDraftPaint();}
 function atDraftNote(v){if(atDraft)atDraft.note=v;}
 function atSeat(t){
   if(!atIsMD()||!atDraft||atDraft.table!==t)return;
@@ -11408,14 +11424,14 @@ function atPanelHTML(t){
     if(!seated){
       h+=atThreadHTML(t,r);
       h+='<div class="at-lab">Occasion</div><div class="at-row">'+
-        AT_OCC_ORDER.map(function(k){return '<button class="at-oc'+(atDraft&&atDraft.occ[k]?' on':'')+'" onclick="atToggleOcc(\''+k+'\')">'+AT_OCC[k].s+' '+esc(AT_OCC[k].l)+'</button>';}).join('')+'</div>';
+        AT_OCC_ORDER.map(function(k){return '<button class="at-oc'+(atDraft&&atDraft.occ[k]?' on':'')+'" data-occ="'+k+'" onclick="atToggleOcc(\''+k+'\')">'+AT_OCC[k].s+' '+esc(AT_OCC[k].l)+'</button>';}).join('')+'</div>';
       h+='<div class="at-row at-step"><span class="at-lab">Covers</span>'+
-        '<button class="at-sb" onclick="atCovers(-1)">−</button><b>'+esc(atDraft?atDraft.covers:2)+'</b><button class="at-sb" onclick="atCovers(1)">+</button></div>';
+        '<button class="at-sb" onclick="atCovers(-1)">−</button><b id="at-dc-covers">'+esc(atDraft?atDraft.covers:2)+'</b><button class="at-sb" onclick="atCovers(1)">+</button></div>';
       h+='<div class="at-row at-step"><span class="at-lab">Out by</span>'+
-        '<button class="at-sb" onclick="atBump(-15)">−15</button><b>'+esc(atClock(atDraft?atDraft.outAt:0))+'</b><button class="at-sb" onclick="atBump(15)">+15</button>'+
-        '<span class="at-meta">'+esc(atCdText(atDraft?Math.round((atDraft.outAt-Date.now())/60000):null))+' from now</span></div>';
+        '<button class="at-sb" onclick="atBump(-15)">−15</button><b id="at-dc-out">'+esc(atClock(atDraft?atDraft.outAt:0))+'</b><button class="at-sb" onclick="atBump(15)">+15</button>'+
+        '<span class="at-meta" id="at-dc-from">'+esc(atCdText(atDraft?Math.round((atDraft.outAt-Date.now())/60000):null))+' from now</span></div>';
       h+='<textarea class="at-note" id="at-note-'+key+'" placeholder="Note for the server" oninput="atDraftNote(this.value)">'+esc(atDraft?atDraft.note:'')+'</textarea>';
-      h+='<div class="at-acts"><button class="at-btn at-go" onclick="atSeat(\''+esc(t)+'\')">Seat</button>'+
+      h+='<div class="at-acts at-acts-stick"><button class="at-btn at-go" onclick="atSeat(\''+esc(t)+'\')">Seat</button>'+
         '<button class="at-btn at-cancel" onclick="atClose()">Cancel</button></div>';
     }else{
       h+='<div class="at-row at-step"><span class="at-lab">Out by</span>'+
