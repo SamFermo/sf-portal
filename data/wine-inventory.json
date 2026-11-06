@@ -92,7 +92,7 @@
     },
     "Winebow": {
       "rep": "Abe",
-      "phone": "+12063265274",
+      "phone": "+12067138532",
       "cutoffDow": 3,
       "cutoffTime": "16:00",
       "deliveryDow": 4,
@@ -102,7 +102,6 @@
         "cases": null
       },
       "note": "Delivers Tue-Fri in Seattle. Order by 4pm the day before. Prefers email for orders, text works (Abe 10/31). 3 mixed cases for a break. Laurent Perrier $40/btl by the 6-pack, $37 at 18 bottles.",
-      "phoneNote": "206-326-5274 is the number in Abe's 10/31 signature; he did not answer whether 206-391-6220 (marked vm) is right.",
       "orderPref": "Prefers email, text works (Abe 10/31)",
       "orderBy": "email",
       "email": "abe.geballe@winebow.com"

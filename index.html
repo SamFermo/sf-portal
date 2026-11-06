@@ -2276,7 +2276,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793822146';   // stamped by build-data.py at every deploy
+const BUILD='1793954671';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2400,10 +2400,22 @@ function numbersCardHTML(){
     lines.map(function(l){return '<div class="hc-num-line" data-numline="'+l[0]+'" onclick="event.stopPropagation();go(\''+l[0]+'\')"><span class="hc-num-lab">'+l[1]+'</span><span class="hc-num-val">'+l[2]+'</span></div>';}).join('')+
     '</button>';
 }
+/* BATCH-B-2026-11-06: views are gated by the signed-in person's own nav, so a shared iPad never
+   keeps or reopens the last manager's Recap, Front Desk or Farm Order for the next person. */
+function goAllowed(id){
+  if(!me||id==='home')return true;
+  try{
+    if(navTabs().some(function(t){return t[0]===id;}))return true;
+    if(isNumView(id)&&numViews().some(function(v){return v[0]===id;}))return true;
+    if(id==='lastnight'&&typeof lnCanTab==='function'&&lnCanTab())return true;
+  }catch(e){ return true; }
+  return false;
+}
 function go(id){
   if(id==='winebook')id='wineinv';   // old Wine Book links
   if(id==='home'&&typeof isHost==='function'&&isHost())id='board';   // Host Stand has no home
   if(id==='numbers'){ const nv=numViews(); id=(numLast&&nv.some(function(v){return v[0]===numLast;}))?numLast:(nv[0]?nv[0][0]:'home'); }
+  if(!goAllowed(id))id=(typeof isHost==='function'&&isHost())?'board':'home';
   if(isNumView(id)){ numLast=id; numSwitchRender(id); }
   // 'orders' is a normal view like every other tab (2026-07-01) — Farm Order/Remy renders INSIDE
   // #orders via renderOrders(), so the sticky header, nav chips, and page background stay put
@@ -2416,7 +2428,7 @@ function go(id){
   if(id==='standards')showStdPane(stdTab);
   if(id==='compliance'){renderCompliance();markComplianceSeen();}
   if(id==='fresh')markFreshSeen();
-  if(id==='board'&&(atSub==='chat'||atSplit()))chatMarkSeen();
+  if(id==='board'&&atSub==='chat'&&!atSplit())chatMarkSeen();   // BATCH-A: opening the Attic on the iPad is not reading chat
   if(id==='orders')markOrdersSeen();
   if(id==='today')markCalloffSeen();
   updateAttn();
@@ -2755,7 +2767,8 @@ async function hostLogin(){
     const b=prompt('Confirm the PIN'); if(b===null)return;
     if(String(b).trim()!==c){ alert('The two PINs didn\u2019t match.'); return; }
     const h0=await hashPin(c);
-    if(fbReady&&fbDb&&hp.id){ await fbDb.collection('staff').doc(hp.id).update({pinHash:h0}).catch(function(){}); }
+    if(fbReady&&fbDb&&hp.id){ let ok=true; await fbDb.collection('staff').doc(hp.id).update({pinHash:h0}).catch(function(){ok=false;});
+      if(!ok){ alert('The Host Stand PIN did not save. Check the connection and try again.'); return; } }
     hp.pinHash=h0;
   }else{
     const c=prompt('Host Stand PIN'); if(c===null)return;
@@ -2810,6 +2823,7 @@ function applyAuthGate(){
 }
 function refreshAuthUI(){
   buildNav(); renderAccountBar(); renderHome();
+  { const av=document.querySelector('.view.active'); if(av&&!goAllowed(av.id))go('home'); }   // BATCH-B
   if($('directory')&&$('directory').classList.contains('active'))renderDirectory();
   if($('access')&&$('access').classList.contains('active'))renderAccess();
   renderBoard();
@@ -2889,11 +2903,13 @@ async function submitNewPin(){
   if(!/^\d{4,6}$/.test(a)){ if(err){err.textContent='PIN must be 4–6 digits.';err.style.display='block';} return; }
   if(a!==b){ if(err){err.textContent="The two PINs don't match.";err.style.display='block';} return; }
   const h=await hashPin(a);
-  if(fbReady&&fbDb&&p.id){ await fbDb.collection('staff').doc(p.id).update({pinHash:h}).catch(function(){}); }
+  if(fbReady&&fbDb&&p.id){ let ok=true; await fbDb.collection('staff').doc(p.id).update({pinHash:h}).catch(function(){ok=false;});
+    if(!ok){ if(err){err.textContent='Your PIN did not save. Check your connection and try again.';err.style.display='block';} return; } }
   p.pinHash=h; setSession(p.name); me=p;
   $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); afterLogin();
 }
-function logout(){clearSession();me=null;document.body.classList.add('locked');try{if('clearAppBadge' in navigator)navigator.clearAppBadge();}catch(e){}openLogin();}
+function logout(){ try{ var rf=document.getElementById('remyFrame'); if(rf)rf.remove(); document.querySelectorAll('[id$="Modal"]').forEach(function(m){ m.classList.remove('open'); if(m.style&&m.style.display&&m.style.display!=='none')m.style.display='none'; }); }catch(e){}   // BATCH-B: next person never inherits Farm Order or an open editor
+  clearSession();me=null;document.body.classList.add('locked');try{if('clearAppBadge' in navigator)navigator.clearAppBadge();}catch(e){}openLogin();}
 
 /* contact-consent wall */
 function openConsent(){
@@ -3576,6 +3592,7 @@ function startOpenShiftsSync(){
     osUnsub=osDocRef().onSnapshot(function(snap){
       osIngest(snap.data()); osLoaded=true;
       if($('home')&&$('home').classList.contains('active'))renderHome();
+      if(typeof renderSchedule==='function')renderSchedule();   // grid slots follow pickups
       const m=$('osModal'); if(m&&m.style.display==='flex')osRenderModal();
       if(typeof maybeShowOpenShifts==='function')maybeShowOpenShifts();
     },function(){ osLoaded=false; });
@@ -3585,7 +3602,19 @@ function startOpenShiftsSync(){
 function osEntryKey(askId,name){ return (askId+'__'+osSlug(name)).replace(/[^a-z0-9_-]+/g,'-'); }
 function osForAsk(id){ return Object.keys(OSCLAIMS).map(function(k){return OSCLAIMS[k];}).filter(function(c){return c&&c.askId===id;}); }
 function osConfirmedCount(id){ return osForAsk(id).filter(function(c){return c.status==='confirmed';}).length; }
-function osFilled(ask){ return osConfirmedCount(ask.id)>=ask.need; }
+/* RULINGS-2026-11-06 (Sam): a shift picked up in one place clears it from the other. Grid claims
+   (claims/*, kind coverage) and Shifts Needed pickups (board/openshifts) count against the same need. */
+function cvGridClaims(side,date,lab){ return Object.keys(CLAIMS||{}).map(function(k){return CLAIMS[k];}).filter(function(c){
+  return c&&c.kind==='coverage'&&c.side===side&&c.date===date&&osSlug(c.shift)===osSlug(lab); }); }
+function osAskFor(side,date,lab){ return osAsks().find(function(a){return a.side===side&&a.date===date&&osSlug(a.shift)===osSlug(lab);})||null; }
+function osPickupsFor(side,date,lab){ const a=osAskFor(side,date,lab); return a?osForAsk(a.id).slice().sort(function(x,y){return (x.at||0)-(y.at||0);}):[]; }
+/* Which Shifts Needed pickup (if any) covers grid slot j: open grid slots of the same label take pickups in order. */
+function cvSlotOsTaker(side,date,labels,j){
+  const lab=labels[j], ps=osPickupsFor(side,date,lab); if(!ps.length)return null; let free=0;
+  for(let i=0;i<j;i++){ if(labels[i]===lab&&!CLAIMS[claimKey(side,date,'cv-'+lab+'-'+i)])free++; }
+  return free<ps.length?ps[free]:null;
+}
+function osFilled(ask){ return osConfirmedCount(ask.id)+cvGridClaims(ask.side,ask.date,ask.shift).length>=ask.need; }
 function osMine(id){ const who=currentUserName(); if(!who)return null; const l=osForAsk(id);
   for(let i=0;i<l.length;i++){ if(l[i].by===who)return l[i]; } return null; }
 function osMyArea(){ return me?(me.area||''):''; }   // 'foh' | 'boh' | 'office'
@@ -3624,6 +3653,7 @@ function osTake(askId){
   if(!me){openLogin();return;}
   const ask=osAskById(askId); if(!ask)return;
   if(osMine(askId))return;
+  if(cvGridClaims(ask.side,ask.date,ask.shift).length>=ask.need){ alert('Someone already claimed this shift on the schedule.'); osRenderModal(); return; }
   if(!confirm('Pick up the '+ask.shift+' shift on '+fmtLong(ask.date)+'? A manager still confirms it.'))return;
   const key=osEntryKey(askId,me.name);
   const entry={key:key, askId:askId, side:ask.side, date:ask.date, shift:ask.shift, by:me.name, at:Date.now(), status:'pending'};
@@ -3654,8 +3684,8 @@ function osHomeChipHTML(){
      before the snapshot). Staff: gone once every shift has someone on it, pending or confirmed.
      Managers: stays while any pickup still waits for approval, gone once all are confirmed. */
   if(!osLoaded)return '';
-  const openN=vis.filter(function(a){return osForAsk(a.id).length<a.need;}).length;
-  const waitN=isMgr()?vis.reduce(function(n,a){return n+osForAsk(a.id).filter(function(c){return c.status!=='confirmed';}).length;},0):0;
+  const openN=vis.filter(function(a){return osForAsk(a.id).length+cvGridClaims(a.side,a.date,a.shift).length<a.need;}).length;
+  const waitN=isMgr()?vis.reduce(function(n,a){return n+osForAsk(a.id).filter(function(c){return c.status!=='confirmed';}).length+(isAdmin()?cvGridClaims(a.side,a.date,a.shift).filter(claimPending).length:0);},0):0;   // grid claims waiting too (confirm buttons are in the roster's schedule)
   if(!openN&&!waitN)return '';
   const parts=[];
   if(openN)parts.push(openN+' shift'+(openN>1?'s need':' needs')+' coverage');
@@ -3667,13 +3697,17 @@ function osHomeChipHTML(){
 function osSideLabel(s){ return s==='boh'?'Kitchen':'Floor'; }
 function osAskHTML(ask){
   const list=osForAsk(ask.id).slice().sort(function(a,b){return (a.at||0)-(b.at||0);});
-  const conf=osConfirmedCount(ask.id), filled=osFilled(ask), mgr=isAdmin();
+  const conf=osConfirmedCount(ask.id)+cvGridClaims(ask.side,ask.date,ask.shift).filter(function(c){return !claimPending(c);}).length, filled=osFilled(ask), mgr=isAdmin();
   const roster = list.length ? list.map(function(c){
       const nm=esc(String(c.by).split(' ')[0]);
       if(c.status==='confirmed')return '<span class="os-conf">'+nm+' ✓ on</span>';
       const cbtn=mgr?' <button class="os-btn confirm" onclick="osConfirm(\''+esc(c._id)+'\')">Confirm</button>':'';
       return '<span class="os-pend">'+nm+' · pending</span>'+cbtn;
-    }).join('<br>') : '<span style="color:var(--card-mute);font-style:italic">No one yet.</span>';
+    }).join('<br>') : '';
+  const gridL=cvGridClaims(ask.side,ask.date,ask.shift).map(function(c){ const gk=claimKey(c.side,c.date,'cv-'+c.shift+'-'+(c.slot||0));
+    return '<span class="'+(claimPending(c)?'os-pend':'os-conf')+'">'+esc(String(c.claimedBy).split(' ')[0])+(claimPending(c)?' · claimed on the schedule':' ✓ on (schedule)')+'</span>'
+      +(claimPending(c)&&mgr&&CLAIMS[gk]?' <button class="os-btn confirm" onclick="approveClaim(\''+esc(gk)+'\');osRenderModal();renderHome();">Confirm</button>':''); }).join('<br>');
+  const rosterAll=[roster,gridL].filter(Boolean).join('<br>')||'<span style="color:var(--card-mute);font-style:italic">No one yet.</span>';
   const mine=osMine(ask.id), onMySide=osMyArea()===ask.side, avail=osAvailOn(ask.side,ask.date), working=avail==='working', ro=avail==='ro';
   let youLine='';
   if(mine) youLine='<div class="os-you">You’re down for this '+(mine.status==='confirmed'?'— confirmed ✓':'— pending a manager’s confirm')+'.</div>';
@@ -3687,7 +3721,7 @@ function osAskHTML(ask){
     '<div class="os-slot-top"><span class="os-slot-date">'+esc(fmtLong(ask.date))+'</span>'+
     '<span class="os-slot-need'+(filled?' done':'')+'">'+needTxt+'</span></div>'+
     '<div class="os-slot-sub">'+esc(osSideLabel(ask.side))+' · '+esc(ask.shift)+'</div>'+
-    '<div class="os-roster">'+roster+'</div>'+youLine+actions+'</div>';
+    '<div class="os-roster">'+rosterAll+'</div>'+youLine+actions+'</div>';
 }
 function osCardHTML(){
   const vis=osVisibleAsks();
@@ -3940,6 +3974,8 @@ let algTags=[];   // multiple allergens can be checked at once (one guest, sever
 function algFoodItems(){var out=[];(SF.menu.food||[]).forEach(function(s){(s.items||[]).forEach(function(it){out.push(it);});});(SF.menu.desserts||[]).forEach(function(it){out.push(it);});if(typeof activeSpecials==='function')activeSpecials().forEach(function(it){out.push(it);});
   // Tonight's menu, not the printed one (2026-10-06): drop what's replaced or 86'd, add live dishes.
   out=out.filter(function(it){ return !replacedByLive(it.name)&&!foOutToday(it.name); });
+  // BATCH-A-2026-11-06: same-day allergen corrections live in MEDITS; the card shows them, so the check must too.
+  out=out.map(function(it){ return (typeof getEditedDish==='function')?getEditedDish(it):it; });
   if(typeof liveItems==='function')liveItems('dish').forEach(function(p){ out.push({name:p.name+' (live)',allergens:p.allergens||[],canModify:[],allergenNote:p.algConfirmed?'':'Allergens were not entered for this live dish. Ask the kitchen.',_algUnknown:!p.algConfirmed}); });
   return out;}
 var ALG_UNCERTAIN=/(confirm|unconfirmed|pending|verify|checking|\bcheck\b|status|tbd)/;
@@ -4677,7 +4713,13 @@ function kqIsAllergenQ(component){
   const c=termKey(component);
   return ALL_ALLERGENS.indexOf(c)>=0||/-free$/.test(c)||/^confirm\b/.test(c)||/\bclaim\b/.test(c)||c.split(' ').length>5;
 }
-function kqStripUnconfirmed(note){ return String(note||'').replace(/\s*UNCONFIRMED:[\s\S]*$/,'').trim(); }
+function kqStripUnconfirmed(note,base){
+  /* Remove only the baked warning itself (taken from the printed note), never answers appended after it.
+     No base: the old behaviour for callers that have no printed note to compare against. */
+  note=String(note||'');
+  if(base!==undefined){ const m=String(base||'').match(/UNCONFIRMED:[\s\S]*$/); if(!m)return note.trim();
+    const i=note.indexOf(m[0]); return (i<0?note:(note.slice(0,i)+note.slice(i+m[0].length))).replace(/\s{2,}/g,' ').trim(); }
+  return note.replace(/\s*UNCONFIRMED:[\s\S]*$/,'').trim(); }
 /* Every open question on tonight's menu, grouped by dish. */
 function kqItems(){
   const out=[], seen={};
@@ -4712,11 +4754,17 @@ function kqOpen(){
   kqRender(); m.style.display='flex';
 }
 function kqClose(){ const m=$('kqModal'); if(m)m.style.display='none'; }
+/* BATCH-E-2026-11-06: the chips are the dish's CURRENT allergens plus only what Chris tapped.
+   A cached copy let a stale checklist save over a newer allergen added by someone else. */
+function kqAlgTouch(dish){ if(!KQ.alg[dish]||!KQ.alg[dish].add)KQ.alg[dish]={add:new Set(),rm:new Set()}; return KQ.alg[dish]; }
 function kqAlgSet(dish){
-  if(!KQ.alg[dish]){ const f=findDishByName(dish); const ed=f?getEditedDish(f.dish):null; KQ.alg[dish]=new Set((ed&&ed.allergens)||[]); }
-  return KQ.alg[dish];
+  const f=findDishByName(dish), ed=f?getEditedDish(f.dish):null, t=kqAlgTouch(dish);
+  const s=new Set((ed&&ed.allergens)||[]); t.add.forEach(function(a){s.add(a);}); t.rm.forEach(function(a){s.delete(a);});
+  return s;
 }
-function kqToggleAlg(el){ const d=el.getAttribute('data-dish'), a=el.getAttribute('data-alg'); const s=kqAlgSet(d); if(s.has(a))s.delete(a); else s.add(a); el.classList.toggle('on',s.has(a)); }
+function kqToggleAlg(el){ const d=el.getAttribute('data-dish'), a=el.getAttribute('data-alg'), t=kqAlgTouch(d);
+  if(kqAlgSet(d).has(a)){ t.add.delete(a); t.rm.add(a); } else { t.rm.delete(a); t.add.add(a); }
+  el.classList.toggle('on',kqAlgSet(d).has(a)); }
 function kqRender(){
   const m=$('kqModal'); if(!m)return;
   const items=kqItems(), left=kqPending().length, pv=kqPreview();
@@ -4751,6 +4799,13 @@ function kqApply(it,text){
   const ings=(ed.ingredients||[]).slice(); let note=ed.allergenNote||'';
   const comp=it.component||'';
   const fi=comp?ings.findIndex(function(g){ return g&&termMatches(g.term,comp); }):-1;
+  const resolved=flagResolved(raw,found.dish).slice();
+  if(it.kind==='flag'&&!resolved.some(function(r){ return termMatches(r.component,comp); }))
+    resolved.push({component:comp,desc:found.dish.desc,at:Date.now()});
+  // Nothing left open on this dish: drop the stale "UNCONFIRMED: ..." sentence BEFORE adding the answer,
+  // so the strip can't take the kitchen's answer with it.
+  const stillOpen=((ed._flags!==undefined)?ed._flags:(ed.flags||[])).filter(function(f){ return !resolved.some(function(r){ return termMatches(r.component,flagNorm(f).component); }); });
+  if(!stillOpen.length)note=kqStripUnconfirmed(note,found.dish.allergenNote||'');
   if(it.kind==='flag'&&!kqIsAllergenQ(comp)){
     if(fi>=0)ings[fi]=Object.assign({},ings[fi],{note:text}); else ings.push({term:comp,pronunciation:null,note:text});
   } else if(it.kind==='ask'&&fi>=0){
@@ -4758,17 +4813,12 @@ function kqApply(it,text){
   } else {
     note=(note?note.replace(/\s+$/,'')+' ':'')+(comp?comp.replace(/\.$/,'')+': ':'')+text;
   }
-  const resolved=flagResolved(raw,found.dish).slice();
-  if(it.kind==='flag'&&!resolved.some(function(r){ return termMatches(r.component,comp); }))
-    resolved.push({component:comp,desc:found.dish.desc,at:Date.now()});
-  // Nothing left open on this dish: the baked "UNCONFIRMED: ..." sentence is stale, drop it.
-  const stillOpen=((ed._flags!==undefined)?ed._flags:(ed.flags||[])).filter(function(f){ return !resolved.some(function(r){ return termMatches(r.component,flagNorm(f).component); }); });
-  if(!stillOpen.length)note=kqStripUnconfirmed(note);
   const algs=ALL_ALLERGENS.filter(function(a){ return kqAlgSet(it.dish).has(a); });
   const rec={originalName:it.dish, name:ed.name, desc:ed.desc, price:ed.price, pron:ed.pron||'', story:ed.story||'',
     ingredients:ings, allergens:algs, canModify:ed.canModify||[], allergenNote:note, raw:!!ed.raw, section:found.section,
     resolvedComponents:resolved, menuDate:(SF.menu&&SF.menu.menuDate)||'', editedBy:currentUserName()||'kitchen', editedAt:Date.now()};
-  commitEditRec(rec); return true;
+  if(raw&&Array.isArray(raw.flags))rec.flags=raw.flags;   // keep the other open questions this overlay carries
+  commitEditRec(rec); delete KQ.alg[it.dish]; return true;
 }
 function kqSave(id){
   const it=kqItems().find(function(x){ return x.id===id; }); if(!it)return;
@@ -5329,6 +5379,7 @@ function wiRender(){
   }
   h+='<p class="wi-foot">Tap a wine to adjust it by −1, +1 or +6. Glass pours count as 1/'+D.gpb+' of a bottle. Weekly pace is the last 4 weeks of Revel sales. Wines that aren’t counted yet show a dash until their first count.</p>';
   body.innerHTML=h;
+  if(WI.docErr)body.insertAdjacentHTML('afterbegin','<p class="board-empty" style="border:1px solid currentColor;border-radius:8px;padding:10px">Wine counts aren\'t syncing. What you see may be out of date, so don\'t enter a count until you reload the portal.</p>');
   if(typeof woRender==='function')woRender();
 }
 function wiTx(fn,done,fail){
@@ -5568,7 +5619,14 @@ function woSend(id){
   const o=((WO.doc||{}).orders||[]).find(function(x){return x.id===id;}); if(!o)return;
   const txt=woText(o), href=woHref(o,txt);
   try{ window.location.href=href; }catch(e){}
-  woTx(function(od){ od.orders=od.orders.map(function(x){ return x.id!==id||x.state!=='draft'?x:Object.assign({},x,{state:'placed',placedAt:Date.now(),placedBy:woWho(),sent_text:txt,sent_via:woEmail(o)?'email':'text'}); }); od.updated=woToday(); return {od:od,inv:null}; });
+  /* Opening Messages or Mail isn't sending. Ask when the portal comes back, and only then mark it placed. */
+  let left=false, asked=false;
+  const ask=function(){ if(asked)return; asked=true; document.removeEventListener('visibilitychange',vis);
+    if(!confirm('Did the order to '+(o.rep||o.vendor||'the rep')+' go out?'))return;
+    woTx(function(od){ od.orders=od.orders.map(function(x){ return x.id!==id||x.state!=='draft'?x:Object.assign({},x,{state:'placed',placedAt:Date.now(),placedBy:woWho(),sent_text:txt,sent_via:woEmail(o)?'email':'text'}); }); od.updated=woToday(); return {od:od,inv:null}; }); };
+  const vis=function(){ if(document.visibilityState==='hidden')left=true; else if(left)setTimeout(ask,400); };
+  document.addEventListener('visibilitychange',vis);
+  setTimeout(function(){ if(!left)ask(); },8000);   // composer opened in another window (desktop): ask after a while
 }
 function woSkip(id){
   if(WO.armSkip!==id){ WO.armSkip=id; woRender(); return; }
@@ -5885,6 +5943,7 @@ function startClaimsSync(){
     if(claimsUnsub)claimsUnsub();
     claimsUnsub=fbDb.collection('claims').onSnapshot(function(snap){
       CLAIMS={}; snap.docs.forEach(function(d){CLAIMS[d.id]=d.data();});
+      if(typeof osRenderModal==='function')osRenderModal(); if($('home')&&$('home').classList.contains('active')&&typeof renderHome==='function')renderHome();   // Shifts Needed follows grid claims
       renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge();
       if(typeof maybeShowAlerts==='function')maybeShowAlerts();
     },function(){ CLAIMS=clLsGet(); renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge(); });
@@ -5910,6 +5969,8 @@ function approveClaim(k){
   if(!DEMO){ if(fbReady&&fbDb){ fbDb.collection('claims').doc(k).update({status:'confirmed',confirmedBy:c.confirmedBy,confirmedAt:c.confirmedAt}).catch(function(){clLsSet();}); } else clLsSet(); }
 }
 function claimShiftCv(side,date,label,idx){
+  const a=osAskFor(side,date,label);
+  if(a&&osForAsk(a.id).length+cvGridClaims(side,date,label).length>=a.need){ alert('Someone already picked this shift up in Shifts needed.'); renderSchedule(); return; }
   doClaim(claimKey(side,date,'cv-'+label+'-'+idx),'the '+label+' shift on '+fmtLong(date),{side:side,date:date,shift:label,slot:idx,kind:'coverage'});
 }
 function unclaimByKey(k){
@@ -5956,8 +6017,10 @@ function weekTableHTML(w,today){
       const cell=cov[i]||'';
       /* coverage NOTE (e.g. "1 call off"): information, never claimable */
       const d=w.dates[i]; let inner=String(covN[i]||'').trim()?`<button class="cov-note" onclick="coOpen('${schedState.side}','${d}')">${esc(covN[i])}<small>tap</small></button>`:'';
-      String(cell||'').split(',').map(x=>x.trim()).filter(Boolean).forEach((lab,j)=>{
-        const k=claimKey(schedState.side,d,'cv-'+lab+'-'+j), c=CLAIMS[k];
+      const labs=String(cell||'').split(',').map(x=>x.trim()).filter(Boolean);
+      labs.forEach((lab,j)=>{
+        const k=claimKey(schedState.side,d,'cv-'+lab+'-'+j), c=CLAIMS[k], osT=c?null:cvSlotOsTaker(schedState.side,d,labs,j);
+        if(osT){ inner+=`<span class="${osT.status==='confirmed'?'ro-claimed':'ro-claim-pend'}">${esc(lab)}<small>${osT.status==='confirmed'?'✓ ':''}${esc(String(osT.by).split(' ')[0])} · via Shifts needed</small></span>`; return; }
         if(c){
           const nm=esc(String(c.claimedBy).split(' ')[0]);
           if(!claimPending(c)) inner+=`<span class="ro-claimed" onclick="unclaimByKey('${k}')">${esc(lab)}<small>✓ ${nm}</small></span>`;
@@ -6203,8 +6266,10 @@ function myOpenShifts(from,to){
       const cov=w.coverage||[];
       (w.dates||[]).forEach(function(d,i){
         if(d<from||d>to)return;
-        String(cov[i]||'').split(',').map(x=>x.trim()).filter(Boolean).forEach(function(lab,j){
-          out.push({side:side,iso:d,label:lab,slot:j,key:claimKey(side,d,'cv-'+lab+'-'+j)});
+        const labs=String(cov[i]||'').split(',').map(x=>x.trim()).filter(Boolean);
+        labs.forEach(function(lab,j){
+          const k=claimKey(side,d,'cv-'+lab+'-'+j);
+          out.push({side:side,iso:d,label:lab,slot:j,key:k,osBy:CLAIMS[k]?null:cvSlotOsTaker(side,d,labs,j)});
         });
       });
     });
@@ -6232,7 +6297,9 @@ function mineOffHTML(iso,today){
 }
 function mineOpenHTML(o,today,multi){
   const c=CLAIMS[o.key];let right;
-  if(c){
+  if(!c&&o.osBy){
+    right='<span class="'+(o.osBy.status==='confirmed'?'ro-claimed':'ro-claim-pend')+'">'+esc(o.label)+'<small>'+esc(String(o.osBy.by).split(' ')[0])+' · via Shifts needed</small></span>';
+  }else if(c){
     const nm=esc(String(c.claimedBy).split(' ')[0]);
     right=claimPending(c)
       ?'<span class="ro-claim-pend" onclick="unclaimByKey(\''+o.key+'\')">'+esc(o.label)+'<small>'+nm+' · claimed</small></span>'
@@ -6393,16 +6460,17 @@ let toUnsub=null, toState=null, toFormOpen=false;
 function toLsGet(){try{return JSON.parse(localStorage.getItem('sf-timeoff')||'[]');}catch(e){return [];}}
 function toLsSet(a){try{localStorage.setItem('sf-timeoff',JSON.stringify(a));}catch(e){}}
 function getReqs(){return toState||toLsGet();}
+var toSyncErr=false;
 function startTimeoffSync(){
   if(fbReady&&fbDb){
     if(toUnsub)toUnsub();
-    toUnsub=fbDb.collection('timeoff').orderBy('createdAt','desc').limit(120).onSnapshot(function(snap){
+    toUnsub=fbDb.collection('timeoff').orderBy('createdAt','desc').limit(500).onSnapshot(function(snap){   // 120 let old approvals with future effects fall off
       toState=snap.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o;});
-      toLoaded=true;   // success path ONLY — never the fallback below
+      toLoaded=true; toSyncErr=false;   // success path ONLY — never the fallback below
       applySchedOverlay();
       if(schedState.side==='timeoff')renderTimeoff();
       updatePendingBadge(); maybeShowAlerts();
-    },function(){ toState=toLsGet(); applySchedOverlay(); if(schedState.side==='timeoff')renderTimeoff(); updatePendingBadge(); });
+    },function(){ toSyncErr=true; if(!toLoaded)toState=toLsGet(); applySchedOverlay(); if(schedState.side==='timeoff')renderTimeoff(); updatePendingBadge(); });
   }else{ toState=toLsGet(); applySchedOverlay(); updatePendingBadge(); }
 }
 /* ===== ALERTS — "somebody said something to you" ===========================
@@ -6596,7 +6664,10 @@ function submitTimeoff(){
   if(end<start){alert('The end date is before the start date.');return;}
   var req={name:who,start:start,end:end,reason:reason,status:'pending',createdAt:Date.now(),comments:[]};
   if(DEMO){ toFormOpen=false; renderTimeoff(); alert('Demo view — your time-off request was not submitted.'); return; }
-  if(fbReady&&fbDb){ toState=[Object.assign({id:'tmp'+Date.now()},req)].concat(toState||[]); fbDb.collection('timeoff').add(req).catch(function(){toLsAdd(req);}); }
+  if(fbReady&&fbDb){ var tmpId='tmp'+Date.now(); toState=[Object.assign({id:tmpId},req)].concat(toState||[]);
+    fbDb.collection('timeoff').add(req).catch(function(){   // BATCH-C-2026-11-06: loud, not a device-only copy
+      toState=(toState||[]).filter(function(x){return x.id!==tmpId;}); renderTimeoff();
+      alert('Your request did NOT send. Check your connection and submit it again.'); }); }
   else { toLsAdd(req); }
   toFormOpen=false;renderTimeoff();
 }
@@ -6606,8 +6677,11 @@ function decideTimeoff(id,status,extra){
   if(AC_PREVIEW){ alert('Preview on this computer: nothing is saved. On the live portal this would mark it '+status+'.'); return; }
   /* extra = the approval card's effects/parse; same update as the status so a half-approved request can't exist */
   var patch=Object.assign({status:status,decidedBy:currentUserName()||'Manager',decidedAt:Date.now()},extra||{});
-  if(toState){var r0=toState.find(function(x){return x.id===id;});if(r0)Object.assign(r0,patch);}
-  if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).update(patch).catch(function(){}); }
+  var r0=toState?toState.find(function(x){return x.id===id;}):null, prev=r0?Object.assign({},r0):null;
+  if(r0)Object.assign(r0,patch);
+  if(fbReady&&fbDb&&String(id).indexOf('ls')!==0){ fbDb.collection('timeoff').doc(id).update(patch).catch(function(){
+    if(r0&&prev){ Object.keys(r0).forEach(function(k){delete r0[k];}); Object.assign(r0,prev); }
+    applySchedOverlay(); renderTimeoff(); alert('That '+status+' did NOT save. Nothing changed. Check your connection and try again.'); }); }
   else { var a=toLsGet();var r=a.find(function(x){return x.id===id;});if(r)Object.assign(r,patch);toLsSet(a);toState=a; }
   applySchedOverlay(); renderTimeoff();
 }
@@ -6886,7 +6960,7 @@ function acSave(withEffects){
   const s=acState; if(!s)return; if(withEffects){ const b=acBlocked(); if(b){ alert(b); return; } }
   const effects=withEffects?acEffects():[];
   const extra={effects:effects,effectsBy:currentUserName()||'Manager',effectsAt:Date.now(),effectsV:((s.r&&s.r.effectsV)||0)+1,parse:acParseStamp(s.parse)};
-  if(!withEffects)extra.effectsSkipped=true;
+  extra.effectsSkipped=!withEffects;   // BATCH-A: adding changes later must clear the skip
   if(AC_PREVIEW||DEMO){ s.saved={status:s.mode==='edit'?'(unchanged)':'approved',extra:extra}; acRender(); return; }   // preview: show, never write
   if(s.mode==='edit')acPatchReq(s.id,extra); else decideTimeoff(s.id,'approved',extra);
   acClose(); renderTimeoff();
@@ -6968,7 +7042,7 @@ function renderTimeoff(){
   var occVal=toFormOpen&&$('to-reason')?$('to-reason').value:'';
   var sVal=toFormOpen&&$('to-start')?$('to-start').value:today;
   var eVal=toFormOpen&&$('to-end')?$('to-end').value:today;
-  var h=`<div class="to-actions"><button class="to-newbtn" onclick="toggleToForm()">${toFormOpen?'Close':'＋ Request off'}</button></div>`;
+  var h=(toSyncErr?'<p class="board-empty" style="border:1px solid currentColor;border-radius:8px;padding:10px">Time off isn\'t syncing right now. What you see may be out of date. Reload the portal to retry.</p>':'')+`<div class="to-actions"><button class="to-newbtn" onclick="toggleToForm()">${toFormOpen?'Close':'＋ Request off'}</button></div>`;
   h+=`<div class="to-form ${toFormOpen?'open':''}">`;
   h+=`<div class="who-as">Requesting as <b>${esc(who||'—')}</b></div>`;
   h+=`<div class="row2"><div><label>From</label><input type="date" id="to-start" value="${esc(sVal)}"></div><div><label>To</label><input type="date" id="to-end" value="${esc(eVal)}"></div></div>`;
@@ -7416,10 +7490,10 @@ function compSaveUpload(cred,name,dataUrl){
   const key=compKey(cred,name); delete COMP_IMG[key];
   const meta={name:name,cred:cred,status:'pending',uploadedBy:currentUserName()||'',uploadedAt:Date.now()};
   if(fbReady&&fbDb){
-    COMP_UP[key]=meta;
-    fbDb.collection('complianceImg').doc(key).set({data:dataUrl}).then(function(){
-      return fbDb.collection('compliance').doc(key).set(meta);
-    }).catch(function(){ compUpMsg(cred,name,'Upload failed — check connection and retry.'); });
+    const prevUp=COMP_UP[key]; COMP_UP[key]=meta;
+    const bt=fbDb.batch(); bt.set(fbDb.collection('complianceImg').doc(key),{data:dataUrl}); bt.set(fbDb.collection('compliance').doc(key),meta);
+    bt.commit().catch(function(){ if(prevUp)COMP_UP[key]=prevUp; else delete COMP_UP[key]; renderCompliance();
+      compUpMsg(cred,name,'Upload failed. Nothing was saved. Check connection and retry.'); alert('The card photo did NOT upload. Try again.'); });
   } else {
     meta.img=dataUrl; COMP_UP[key]=meta; compLsSet();
   }
@@ -7494,15 +7568,16 @@ function compVerify(cred,name,expires){
   if(!isMgr())return; const key=compKey(cred,name); const m=Object.assign({},COMP_UP[key]||{});
   m.status='verified'; m.reviewedBy=currentUserName()||''; m.reviewedAt=Date.now();
   if(expires)m.expires=expires; else delete m.expires;
-  COMP_UP[key]=m;
-  if(fbReady&&fbDb)fbDb.collection('compliance').doc(key).set(m).catch(function(){compLsSet();}); else compLsSet();
+  const prevM=COMP_UP[key]; COMP_UP[key]=m;
+  if(fbReady&&fbDb)fbDb.collection('compliance').doc(key).set(m).catch(function(){ COMP_UP[key]=prevM; renderCompliance(); alert('Verification did NOT save. Try again.'); }); else compLsSet();
   renderCompliance(); if(typeof updateAttn==='function')updateAttn();
 }
 function compRemove(cred,name){
   if(!compCanUpload(name))return;
   if(!confirm('Remove '+cred+' card for '+name+'?'))return;
-  const key=compKey(cred,name); delete COMP_UP[key]; delete COMP_IMG[key];
-  if(fbReady&&fbDb){ fbDb.collection('compliance').doc(key).delete().catch(function(){}); fbDb.collection('complianceImg').doc(key).delete().catch(function(){}); }
+  const key=compKey(cred,name), pU=COMP_UP[key], pI=COMP_IMG[key]; delete COMP_UP[key]; delete COMP_IMG[key];
+  if(fbReady&&fbDb){ const bt=fbDb.batch(); bt.delete(fbDb.collection('compliance').doc(key)); bt.delete(fbDb.collection('complianceImg').doc(key));
+    bt.commit().catch(function(){ if(pU)COMP_UP[key]=pU; if(pI)COMP_IMG[key]=pI; renderCompliance(); alert('The card was NOT removed. Try again.'); }); }
   else compLsSet();
   renderCompliance(); if(typeof updateAttn==='function')updateAttn();
 }
@@ -10596,9 +10671,11 @@ function rcCompareBlock(scope,w){
   const today=todayISO();
   // Live period: cut both windows to the same number of elapsed days.
   let curTo=w.to, prevTo=prev.to, note='', elapsed=null;
-  if(w.live&&today<w.to){
-    elapsed=rcSpan(w.from,today).length;
-    curTo=today;
+  if(w.live){
+    const lastCap=(RC.rows[0]||{}).id||today; let endCur=lastCap<today?lastCap:today; if(endCur>w.to)endCur=w.to;   // today's night isn't captured until 4am
+    if(endCur<w.from)return '';
+    elapsed=rcSpan(w.from,endCur).length;
+    curTo=endCur;
     prevTo=rcShift(prev.from,elapsed-1);
     if(prevTo>prev.to)prevTo=prev.to;
   }
@@ -10678,7 +10755,7 @@ function rcRangeHTML(rows,title,lede,proj,projLabel,recKind,narr){
   let h='<div class="rc-hero"><div class="ln-stat-k">'+title+'</div>'+
     rcHero('Product sales', R.rest, lnNum(R.covers)+' guests · '+lnMoney0(R.rest/R.covers)+'/guest',
       R.farm, R.net, R.farm?'rung in during this window':'no farm ring-in in this window',
-      lnMoney0(R.gross)+' rung less '+lnMoney0(R.disc)+' discounts ('+dpct.toFixed(1)+'%)')+
+      lnMoney0(R.gross)+' rung less '+lnMoney0(R.disc)+' discounts ('+(dpct!=null?dpct.toFixed(1)+'%':'n/a')+')')+
     '<div class="ln-note">'+lede+'</div></div>';
   h+=rcNarr(narr,'revenue');
   if(recKind)h+=rcRecordBlock(recKind,R.rest,proj);
@@ -10747,7 +10824,7 @@ function rcRangeHTML(rows,title,lede,proj,projLabel,recKind,narr){
 function rcDrawRange(rows){
   const rev=RC.rev;
   const rev1=document.getElementById('rcChRev');
-  if(rev1){ const data=rows.map(function(d){ return {date:d.id,a:rcRest(rev[d.id],d)||0,b:rcFarm(rev[d.id])}; });
+  if(rev1){ const data=rows.map(function(d){ return {date:d.id,a:rcProd(d,rev[d.id])||0,b:rcFarm(rev[d.id])}; });   // BATCH-D-2026-11-06: was net (rcRest), labelled Product
     rev1.innerHTML=rcStackSVG(data, rev1.clientWidth);
     rcBind(rev1,function(i){ const x=data[i];
       return '<div class="rc-tt">'+rcDayShort(x.date)+' '+lnPrettyDate(x.date)+'</div>'+
@@ -10827,6 +10904,7 @@ function rcPaint(){
     fi.onchange=apply; ti.onchange=apply;
   }
   if(rows&&rows.length)rcDrawRange(rows);
+  if(RC.refreshErr)el.insertAdjacentHTML('afterbegin',lnFailHTML('Couldn’t refresh ('+RC.refreshErr+'). These numbers may be out of date.'));
 }
 function rcCardHTML(){ return wideCardHTML('recap','◐','Recap','Last night in context'); }
 /* Fills the card subtitle with last night's headline the same way lnHomePrime does, so the
@@ -10885,7 +10963,7 @@ function rcRender(){
   .then(function(res){
     let rows=[]; res[0].forEach(function(d){ rows.push(Object.assign({id:d.id},d.data())); });
     rows.sort(function(a,b){ return a.id<b.id?1:(a.id>b.id?-1:0); });
-    RC.rows=rows.slice(0,62);
+    RC.rows=rows.slice(0,400); RC.refreshErr='';   // was 62: September lost its first nights once November started
     RC.rev={}; if(res[1])res[1].forEach(function(d){ RC.rev[d.id]=d.data(); });
     RC.board={}; if(res[2])res[2].forEach(function(d){ RC.board[d.id]=d.data(); });
     RC.dw={}; if(res[3])res[3].forEach(function(d){ RC.dw[d.id]=d.data(); });
@@ -10896,6 +10974,7 @@ function rcRender(){
     rcSyncRecords();
   }).catch(function(e){
     if(!RC.rows.length)el.innerHTML=lnFailHTML('Couldn’t load the recap ('+((e&&e.message)||'read failed')+').');
+    else { RC.refreshErr=(e&&e.message)||'read failed'; rcPaint(); }
   });
 }
 
@@ -11051,7 +11130,9 @@ const AT_FLAG={incomplete:{l:'Party incomplete',c:'o'},bussing:{l:'Bussing neede
 const AT_FLAG_ORDER=['incomplete','bussing','dragging','reset'];
 const AT_DEFAULT_MIN=120;   /* a table turns in two hours unless the MD says otherwise */
 
-let ATBL={}, atblLoaded=false, atblUnsub=null, atSyncErr=false;
+let ATBL={}, atblLoaded=false, atblUnsub=null, atSyncErr=false, atOffline=false;
+window.addEventListener('offline',function(){ atOffline=true; if(typeof renderBoard==='function')renderBoard(); });
+window.addEventListener('online',function(){ if(typeof renderBoard==='function')renderBoard(); });
 let CHAT={}, chatLoaded=false, chatUnsub=null, chatSyncErr=false;
 let atSec='Attic', atSecOpen=false, atOpen='', atDraft=null, atMoveFrom='', atSub='tables';
 let atTimer=null;
@@ -11107,7 +11188,7 @@ function atSecList(){
 
 /* --- role: MD or server. Managers default to MD, everyone else to Server, and
        anybody can flip it. Resets with the nightly session rollover. ---------- */
-function atRoleKey(){return 'sf-role-'+todayISO();}
+function atRoleKey(){return 'sf-role-'+atDay();}
 function atRole(){if(typeof isHost==='function'&&isHost())return 'md';if(!isMgr())return 'server';   /* Sam 2026-11-01: only managers can flip to MD */
   try{const v=localStorage.getItem(atRoleKey());if(v==='md'||v==='server')return v;}catch(e){}return isMgr()?'md':'server';}
 function atSetRole(r){try{localStorage.setItem(atRoleKey(),r);}catch(e){}atOpen='';atDraft=null;atMoveFrom='';renderBoard();}
@@ -11129,10 +11210,15 @@ function atRoundQuarter(ms){return Math.round(ms/9e5)*9e5;}
 function atFloorOut(){return Math.ceil((Date.now()+15*60000)/9e5)*9e5;}
 
 /* --- records ---------------------------------------------------------------- */
-function atDocId(t){return todayISO()+'__'+String(comboPrimary(t)).toUpperCase();}
+/* RULINGS: the Attic's day is the SERVICE day, rolling at 3am like logins, so a device open past
+   midnight keeps the same floor and the same chat. */
+function atDay(){ const d=new Date(); if(d.getHours()<3)d.setDate(d.getDate()-1); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+let atDayCur='';
+setInterval(function(){ if(atDayCur&&atDay()!==atDayCur&&typeof startTablesSync==='function'){ startTablesSync(); if(typeof startChatSync==='function')startChatSync(); } },60000);
+function atDocId(t){return atDay()+'__'+String(comboPrimary(t)).toUpperCase();}
 function atRec(t){return ATBL[atDocId(t)]||null;}
-function atLsGet(){try{return JSON.parse(localStorage.getItem('sf-tables-'+todayISO())||'{}');}catch(e){return {};}}
-function atLsSet(){try{localStorage.setItem('sf-tables-'+todayISO(),JSON.stringify(ATBL));}catch(e){}}
+function atLsGet(){try{return JSON.parse(localStorage.getItem('sf-tables-'+atDay())||'{}');}catch(e){return {};}}
+function atLsSet(){try{localStorage.setItem('sf-tables-'+atDay(),JSON.stringify(ATBL));}catch(e){}}
 function atOccList(o){return AT_OCC_ORDER.filter(function(k){return o&&o[k];});}
 function atGlow(r){
   if(!r)return '';
@@ -11160,23 +11246,57 @@ function atNeedsMe(r){
   return false;
 }
 
-function atWrite(t,patch,what){
+function atPrep(t,patch,what){
   const id=atDocId(t), now=Date.now(), who=currentUserName()||'';
   const cur=ATBL[id]||{};
-  const next=Object.assign({},cur,patch,{date:todayISO(),table:comboPrimary(t)});
+  const next=Object.assign({},cur,patch,{date:atDay(),table:comboPrimary(t)});
   if(what)next.log=(cur.log||[]).concat([{at:now,by:who,what:what}]).slice(-40);
-  ATBL[id]=next; atLsSet();
+  ATBL[id]=next;
+  /* Firestore gets only the fields this action changed. Writing the whole cached record let a
+     device with a one-second-old copy undo the other device's acknowledge, timer or note. */
+  const w=Object.assign({},patch,{date:next.date,table:next.table});
+  if(what)w.log=(typeof firebase!=='undefined'&&firebase.firestore)?firebase.firestore.FieldValue.arrayUnion({at:now,by:who,what:what}):next.log;
+  return {id:id,w:w};
+}
+/* Notes are a shared list two devices add to at once: build the new list from the SERVER copy
+   inside a transaction, so a send or a Got it on one device can't wipe the other's. */
+function atTxNotes(t,mut,what,extra,onFail){
+  const pid=atDocId(t), prev=ATBL[pid]?JSON.parse(JSON.stringify(ATBL[pid])):null;
+  const x=atPrep(t,Object.assign({},extra||{},{notes:mut(atNotes(atRec(t)))}),what), mine=ATBL[pid]; atLsSet(); renderBoard();
+  if(DEMO||!(fbReady&&fbDb))return;
+  const ref=fbDb.collection('tables').doc(x.id), who=currentUserName()||'';
+  fbDb.runTransaction(function(tx){ return tx.get(ref).then(function(d){
+    const cur=d.exists?(d.data()||{}):{};
+    tx.set(ref,Object.assign({},extra||{},{notes:mut(atNotes(cur)),date:x.w.date,table:x.w.table,
+      log:firebase.firestore.FieldValue.arrayUnion({at:Date.now(),by:who,what:what})}),{merge:true});
+  }); }).catch(function(){ if(ATBL[pid]===mine){ if(prev)ATBL[pid]=prev; else delete ATBL[pid]; atLsSet(); }   // a newer snapshot or action wins
+    atSyncErr=true; renderBoard(); if(onFail)onFail(); });
+}
+/* Acknowledge only the notes this person was shown when they tapped, never one that landed after. */
+function atAckMut(meN,keys){ return function(list){ return list.map(function(n){
+  if(!n||n.by===meN||(n.seenBy||[]).indexOf(meN)>=0)return n;
+  if(keys&&keys.indexOf(n.by+'|'+n.at)<0)return n;
+  return Object.assign({},n,{seenBy:(n.seenBy||[]).concat([meN])}); }); }; }
+function atUnseenKeys(r,meN){ return atNotes(r).filter(function(n){return n&&n.by!==meN&&(n.seenBy||[]).indexOf(meN)<0;}).map(function(n){return n.by+'|'+n.at;}); }
+function atNoteFail(t,text,lead){ return function(){
+  alert((lead||('Table '+t+': that note did NOT send.'))+'\n\nYour note: "'+text+'"\n\nNothing was saved. Check the connection and do it again.'); }; }
+function atWrite(t,patch,what){
+  const x=atPrep(t,patch,what); atLsSet();
   if(!DEMO&&fbReady&&fbDb){
-    fbDb.collection('tables').doc(id).set(next,{merge:true}).catch(function(){atSyncErr=true;renderBoard();});
+    fbDb.collection('tables').doc(x.id).set(x.w,{merge:true}).catch(function(){atSyncErr=true;renderBoard();});
   }
   renderBoard();
 }
 
 function startTablesSync(){
-  try{const s=localStorage.getItem('sf-attic-sec-'+todayISO()); if(s)atSec=s;}catch(e){}
+  try{const s=localStorage.getItem('sf-attic-sec-'+atDay()); if(s)atSec=s;}catch(e){}
   if(fbReady&&fbDb){
     if(atblUnsub)atblUnsub();
-    atblUnsub=fbDb.collection('tables').where('date','==',todayISO()).onSnapshot(function(snap){
+    atDayCur=atDay(); atblLoaded=false; atOffline=false;   // a new listener always takes its first snapshot
+    atblUnsub=fbDb.collection('tables').where('date','==',atDay()).onSnapshot({includeMetadataChanges:true},function(snap){
+      const off=!!(snap.metadata&&snap.metadata.fromCache)||!navigator.onLine;
+      if(!snap.docChanges().length&&atblLoaded&&off===atOffline)return;   // metadata-only, nothing visible changed: don't redraw under a finger
+      atOffline=off;
       ATBL={}; snap.docs.forEach(function(d){ATBL[d.id]=d.data();});
       atblLoaded=true; atSyncErr=false; atLsSet();
       renderBoard();
@@ -11255,11 +11375,12 @@ function atSeat(t){
   const d=atDraft, who=currentUserName()||'', v=(d.note||'').trim();
   /* the seat-time note posts into the thread, not the old single field. Pre-seat
      notes on the table carry forward — a party being seated doesn't erase them. */
-  let ns=atNotes(atRec(t));
-  if(v)ns=ns.concat([{by:who,role:'md',at:Date.now(),text:v,seenBy:[who]}]).slice(-30);
-  atWrite(t,{state:'seated',covers:d.covers||0,occ:atOccList(d.occ),outAt:d.outAt,note:'',notes:ns,
-    by:who,at:Date.now(),seatAck:null,flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},
-    'seated '+(d.covers||'?')+', out by '+atClock(d.outAt));
+  const nn=v?{by:who,role:'md',at:Date.now(),text:v,seenBy:[who]}:null;
+  atTxNotes(t,function(list){ return nn?list.concat([nn]).slice(-30):list; },
+    'seated '+(d.covers||'?')+', out by '+atClock(d.outAt),
+    {state:'seated',covers:d.covers||0,occ:atOccList(d.occ),outAt:d.outAt,note:'',
+     by:who,at:Date.now(),seatAck:null,flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},
+    nn?atNoteFail(t,v,'Seating table '+t+' did NOT save, and neither did its note.'):function(){ alert('Seating table '+t+' did NOT save. Check the connection and seat it again.'); });
   atOpen='';atDraft=null;
 }
 function atAdjust(t,mins){
@@ -11274,8 +11395,8 @@ function atPostNote(t){
   const v=(el.value||'').trim(); if(!v)return;
   const who=currentUserName()||'';
   el.value='';
-  atWrite(t,{notes:atNotes(atRec(t)).concat([
-    {by:who,role:atIsMD()?'md':'server',at:Date.now(),text:v,seenBy:[who]}]).slice(-30)},'note sent');
+  const nn={by:who,role:atIsMD()?'md':'server',at:Date.now(),text:v,seenBy:[who]};
+  atTxNotes(t,function(list){ return list.concat([nn]).slice(-30); },'note sent',null,atNoteFail(t,v));
 }
 /* Server strip (2026-10-30): every table in this section that is seated and not yet acked, or
    carries an unread MD note, with one Got it. Acks straight away, no panel. Empty when nothing
@@ -11302,10 +11423,7 @@ function atUnflag(t){ const r=atRec(t); if(!r||!r.flag||r.flagAck)return;
 function atAckNotes(t){
   const meN=currentUserName()||'';
   const r=atRec(t); if(!r||!atNotesUnseen(r))return;
-  atWrite(t,{notes:atNotes(r).map(function(n){
-    if(!n||n.by===meN||(n.seenBy||[]).indexOf(meN)>=0)return n;
-    return Object.assign({},n,{seenBy:(n.seenBy||[]).concat([meN])});
-  })},'notes acknowledged');
+  atTxNotes(t,atAckMut(meN,atUnseenKeys(r,meN)),'notes acknowledged');
 }
 function atUnseat(t){
   if(!atIsMD())return;
@@ -11320,12 +11438,18 @@ function atDoMove(from,to){
   const r=atRec(from), dst=atRec(to);
   if(!r||r.state!=='seated'){atMoveFrom='';renderBoard();return;}
   if(dst&&dst.state==='seated'){atMoveFrom='';renderBoard();return;}   // never move onto a live table
-  atWrite(to,{state:'seated',covers:r.covers||0,occ:r.occ||[],outAt:r.outAt||0,note:r.note||'',notes:atNotes(r),
+  const a=atPrep(to,{state:'seated',covers:r.covers||0,occ:r.occ||[],outAt:r.outAt||0,note:r.note||'',notes:atNotes(r),
     by:r.by||'',at:r.at||Date.now(),seatAck:r.seatAck||null,flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},
     'moved in from '+comboPrimary(from));
-  atWrite(from,{state:'open',covers:0,occ:[],outAt:0,note:'',notes:[],by:'',at:0,seatAck:null,
+  const c=atPrep(from,{state:'open',covers:0,occ:[],outAt:0,note:'',notes:[],by:'',at:0,seatAck:null,
     flag:'',flagNote:'',flagBy:'',flagAt:0,flagAck:null},'moved to '+comboPrimary(to));
-  atMoveFrom=''; atOpen=to; atDraft=null;
+  atLsSet();
+  if(!DEMO&&fbReady&&fbDb){   // both tables in one commit: a party can't end up in two places or nowhere
+    const bt=fbDb.batch(), col=fbDb.collection('tables');
+    bt.set(col.doc(a.id),a.w,{merge:true}); bt.set(col.doc(c.id),c.w,{merge:true});
+    bt.commit().catch(function(){atSyncErr=true;renderBoard();});
+  }
+  atMoveFrom=''; atOpen=to; atDraft=null; renderBoard();
 }
 function atFlagIt(t,kind){
   /* a note typed in the box rides into the THREAD alongside the flag — flagNote is
@@ -11333,11 +11457,12 @@ function atFlagIt(t,kind){
   const el=$('at-nt-'+String(t).replace(/\W/g,'')), who=currentUserName()||'';
   const v=el?(el.value||'').trim():'';
   const patch={flag:kind,flagNote:'',flagBy:who,flagAt:Date.now(),flagAck:null};
+  const what='flagged '+(AT_FLAG[kind]?AT_FLAG[kind].l.toLowerCase():kind);
   if(v){
-    patch.notes=atNotes(atRec(t)).concat([{by:who,role:atIsMD()?'md':'server',at:Date.now(),text:v,seenBy:[who]}]).slice(-30);
+    const nn={by:who,role:atIsMD()?'md':'server',at:Date.now(),text:v,seenBy:[who]};
     if(el)el.value='';
-  }
-  atWrite(t,patch,'flagged '+(AT_FLAG[kind]?AT_FLAG[kind].l.toLowerCase():kind));
+    atTxNotes(t,function(list){ return list.concat([nn]).slice(-30); },what,patch,atNoteFail(t,v,'Table '+t+': the flag and its note did NOT save.'));
+  } else atWrite(t,patch,what);
   atOpen='';atDraft=null;
 }
 function atAckSeat(t){
@@ -11345,11 +11470,8 @@ function atAckSeat(t){
      lives in the thread now, and owing a second ack for the same tap is noise */
   const meN=currentUserName()||'', r=atRec(t);
   const patch={seatAck:{by:meN,at:Date.now()}};
-  if(r&&atNotesUnseen(r))patch.notes=atNotes(r).map(function(n){
-    if(!n||n.by===meN||(n.seenBy||[]).indexOf(meN)>=0)return n;
-    return Object.assign({},n,{seenBy:(n.seenBy||[]).concat([meN])});
-  });
-  atWrite(t,patch,'seat acknowledged');
+  if(r&&atNotesUnseen(r))atTxNotes(t,atAckMut(meN,atUnseenKeys(r,meN)),'seat acknowledged',patch);
+  else atWrite(t,patch,'seat acknowledged');
   atOpen='';atDraft=null;
 }
 function atAckFlag(t){
@@ -11370,7 +11492,7 @@ function atAckFlag(t){
   }
   atOpen='';atDraft=null;
 }
-function atPickSec(n){atSec=n;atOpen='';atDraft=null;atMoveFrom='';try{localStorage.setItem('sf-attic-sec-'+todayISO(),n);}catch(e){}renderBoard();}
+function atPickSec(n){atSec=n;atOpen='';atDraft=null;atMoveFrom='';try{localStorage.setItem('sf-attic-sec-'+atDay(),n);}catch(e){}renderBoard();}
 function atToggleSecs(){atSecOpen=!atSecOpen;renderBoard();}
 function atSubGo(v){atSub=v;atOpen='';atDraft=null;if(v==='chat')chatMarkSeen();renderBoard();}
 
@@ -11534,6 +11656,7 @@ function atPlacePanel(){
 function atticPaneHTML(){
   const order=(SF.seating&&SF.seating.sections&&SF.seating.sections.order)||[];
   let h='';
+  if(!atSyncErr&&(atOffline||!navigator.onLine))h+='<div class="at-warn">Offline, not syncing. Taps on this device are held until it reconnects, and nobody else can see them yet.</div>';
   if(atSyncErr)h+='<div class="at-warn">Live sync is down. What you see is this device only, and nothing you tap will reach the floor. Tell the MD out loud.</div>';
   if(isHost()){ atSec='Attic'; atSecOpen=false;   // Attic only for now (Sam 2026-10-23); switcher can come back later
     h+='<div class="at-bar"><div class="at-roles"><span class="at-rb on">Host Stand · MD</span></div><span class="at-secbtn">Attic</span>'+
@@ -11559,16 +11682,15 @@ function atticPaneHTML(){
 /* ===== CHAT — one room, everyone on shift, clears with the nightly reset ======
    Its own collection, one doc per message. A message is never rewritten by
    anyone but its own sender, so two people typing at once cannot collide. */
-function chatLsGet(){try{return JSON.parse(localStorage.getItem('sf-chat-'+todayISO())||'{}');}catch(e){return {};}}
-function chatLsSet(){try{localStorage.setItem('sf-chat-'+todayISO(),JSON.stringify(CHAT));}catch(e){}}
+function chatLsGet(){try{return JSON.parse(localStorage.getItem('sf-chat-'+atDay())||'{}');}catch(e){return {};}}
+function chatLsSet(){try{localStorage.setItem('sf-chat-'+atDay(),JSON.stringify(CHAT));}catch(e){}}
 function startChatSync(){
   if(fbReady&&fbDb){
     if(chatUnsub)chatUnsub();
-    chatUnsub=fbDb.collection('chat').where('date','==',todayISO()).onSnapshot(function(snap){
+    chatUnsub=fbDb.collection('chat').where('date','==',atDay()).onSnapshot(function(snap){
       CHAT={}; snap.docs.forEach(function(d){CHAT[d.id]=d.data();});
       chatLoaded=true; chatSyncErr=false; chatLsSet();
-      if((atSub==='chat'||atSplit())&&$('board')&&$('board').classList.contains('active'))chatMarkSeen();
-      renderBoard();
+      renderBoard();   // BATCH-A: a message arriving is not a message read (Sam 11/1)
     },function(){ chatSyncErr=true; CHAT=chatLsGet(); chatLoaded=false; renderBoard(); });
   }else{ chatSyncErr=!DEMO; CHAT=chatLsGet(); }
 }
@@ -11580,7 +11702,7 @@ function chatSend(){
   const el=$('chat-in'); if(!el)return;
   const v=(el.value||'').trim(); if(!v)return;
   const id='c'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
-  const doc={date:todayISO(),at:Date.now(),by:currentUserName()||'',role:atRole(),text:v,seen:[]};
+  const doc={date:atDay(),at:Date.now(),by:currentUserName()||'',role:atRole(),text:v,seen:[]};
   CHAT[id]=doc; chatLsSet(); el.value='';
   if(!DEMO&&fbReady&&fbDb)fbDb.collection('chat').doc(id).set(doc).catch(function(){chatSyncErr=true;renderBoard();});
   renderBoard();
@@ -11594,7 +11716,7 @@ function chatOnScreen(){ return document.visibilityState==='visible'&&!!$('board
 document.addEventListener('pointerdown',function(){ chatLastTouch=Date.now(); },{passive:true,capture:true});
 /* Stamp on CLICK, in the bubble phase, so the tapped control has already run and the redraw cannot
    pull the button out from under the finger (iOS drops a tap whose target is replaced mid-gesture). */
-document.addEventListener('click',function(){ if(chatOnScreen()&&chatLoaded&&chatUnread()>0){ chatMarkSeen(); renderBoard(); } },false);
+document.addEventListener('click',function(e){ if(atSplit()&&!(e&&e.target&&e.target.closest&&e.target.closest('.at-chatcol')))return; if(chatOnScreen()&&chatLoaded&&chatUnread()>0){ chatMarkSeen(); renderBoard(); } },false);
 function chatMarkSeen(){
   const meN=currentUserName(); if(!meN||DEMO)return;
   if(!chatOnScreen()||!chatAttentive())return;
@@ -11602,7 +11724,7 @@ function chatMarkSeen(){
     const m=CHAT[k]; if(!m||m.by===meN)return;
     const s=m.seen||[]; if(s.indexOf(meN)>=0)return;
     m.seen=s.concat([meN]);
-    if(fbReady&&fbDb)fbDb.collection('chat').doc(k).set({seen:m.seen},{merge:true}).catch(function(){});
+    if(fbReady&&fbDb)fbDb.collection('chat').doc(k).update({seen:firebase.firestore.FieldValue.arrayUnion(meN)}).catch(function(){ chatSyncErr=true; });
   });
   chatLsSet();
 }
@@ -12234,8 +12356,9 @@ function publishEdit(){if(editPolished){var r=editPolished;editPolished=null;com
 function commitEditRec(rec){
   var id=editDocId(rec.originalName);
   try{ var _qs=boSlug(rec.originalName); if(FO.dishes&&FO.dishes[_qs]){ var _qp={}; _qp[_qs]=null; foWrite(_qp); } }catch(e){}
-  MEDITS[id]=rec;renderFresh();
-  if(fbReady&&fbDb){fbDb.collection('menu-edits').doc(id).set(rec).catch(function(){meditsLsSet();});}else{meditsLsSet();}
+  var prevRec=MEDITS[id]; MEDITS[id]=rec;renderFresh();
+  if(fbReady&&fbDb){fbDb.collection('menu-edits').doc(id).set(rec).catch(function(){ if(prevRec)MEDITS[id]=prevRec; else delete MEDITS[id]; renderFresh();
+    alert('The edit to '+(rec.originalName||'this dish')+' did NOT save. Other phones still show the old card. Try again.'); });}else{meditsLsSet();}
   var btn=$('em-save-btn');if(btn){btn.disabled=false;btn.textContent='Save & Polish';btn.onclick=saveEdit;}
   $('editModal').classList.remove('open');
 }
@@ -12243,8 +12366,8 @@ function revertEdit(){
   if(!isMgr()||!editTarget)return;
   if(!confirm('Revert to the base data? The edit will be removed.'))return;
   var id=editDocId(editTarget.originalName);
-  delete MEDITS[id];renderFresh();
-  if(fbReady&&fbDb){fbDb.collection('menu-edits').doc(id).delete().catch(function(){meditsLsSet();});}else{meditsLsSet();}
+  var prevRec=MEDITS[id]; delete MEDITS[id];renderFresh();
+  if(fbReady&&fbDb){fbDb.collection('menu-edits').doc(id).delete().catch(function(){ if(prevRec)MEDITS[id]=prevRec; renderFresh(); alert('The revert did NOT save. Try again.'); });}else{meditsLsSet();}
   $('editModal').classList.remove('open');
 }
 
@@ -12711,9 +12834,10 @@ function scwsPeriodRange(key){
 /* Crew rides on the nightly revel doc — revel/<date>.crew — so there's no second
    collection to keep in sync and no extra Firestore rule to maintain. */
 function scwsLoad(){
-  if(SCWS.ready)return Promise.resolve();
+  if(SCWS.ready&&Date.now()-(SCWS.at||0)<60000)return Promise.resolve();
   if(!(fbReady&&fbDb))return Promise.resolve();
   return fbDb.collection('revel').get().then(snap=>{
+    SCWS.clock={}; SCWS.err=''; SCWS.at=Date.now();
     snap.forEach(doc=>{
       const d=doc.data()||{};
       if(d.crew&&d.crew.length)SCWS.clock[doc.id]={shifts:d.crew,trainees:d.crew_trainees||[],
@@ -12723,7 +12847,7 @@ function scwsLoad(){
                                                   appr:d.scws_approved||null};
     });
     SCWS.ready=true;
-  }).catch(()=>{SCWS.ready=true;});
+  }).catch(e=>{ SCWS.err=(e&&e.message)||'read failed'; });   // LOUD: render says so; next open retries
 }
 
 /* A stored sheet wins over recomputing here. The nightly pipeline reads the manager log —
@@ -12812,11 +12936,14 @@ function scwsApplyOverride(w,ov){
 const SCWS_REOPEN='This night changed after ';
 function scwsRealFlags(flags){ return (flags||[]).filter(f=>String(f).indexOf(SCWS_REOPEN)!==0); }
 function scwsFlagSig(flags){ return scwsRealFlags(flags).slice().sort().join('||'); }
+/* Sam 11/6: an approval covers the money too. Approvals made before this carry no amtSig and keep the old flags-only check. */
+function scwsAmtSig(w){ return ['pool:'+(w.pool||0)].concat((w.splits||[]).map(function(x){return 's:'+x.name+':'+x.amt+':'+(x.tip||0);}),
+  (w.commissions||[]).map(function(x){return 'c:'+x.name+':'+x.amt+':'+(x.tip||0);})).sort().join('|'); }
 
 function scwsApplyApproval(w,ap){
-  if(!ap||!ap.sig)return w;
+  if(!ap||(!ap.sig&&!ap.amtSig))return w;   // a no-flag approval still carries the money signature
   const apSig=ap.flags?scwsFlagSig(ap.flags):ap.sig;
-  if(scwsFlagSig(w.flags)!==apSig){
+  if(scwsFlagSig(w.flags)!==apSig||(ap.amtSig&&scwsAmtSig(w)!==ap.amtSig)){
     w.reopened=true;
     w.flags=(w.flags||[]).concat(['This night changed after '+(ap.by||'a manager')+' approved it — review again.']);
     w.ok=false; return w;
@@ -12838,6 +12965,11 @@ function scwsNights(){
       (cd.sheet.flags||[]).forEach(f=>{if(w.flags.indexOf(f)<0)w.flags.push(f);});
       w.ok=false;
     }
+    if(cd.sheet&&cd.sheet.ccPot){   // BATCH-B: the backup path used to drop card tips to $0
+      w.ccPot=cd.sheet.ccPot; const heads=w.splits.concat(w.commissions);
+      w.ccPerHead=heads.length?scwsR2(w.ccPot/heads.length):0; heads.forEach(x=>{x.tip=w.ccPerHead;});
+      w.totalTips=scwsR2(w.ccPerHead*heads.length);
+    }
     w.covers=cd.covers;
     if(cd.over)scwsApplyOverride(w,cd.over);
     scwsApplyApproval(w,cd.appr);
@@ -12851,6 +12983,7 @@ function scwsRender(){
   if(!scwsCanTab()){body.innerHTML='<p class="board-empty">Not available.</p>';return;}
   body.innerHTML='<p class="board-empty">Loading…</p>';
   scwsLoad().then(()=>{
+    if(SCWS.err&&!SCWS.ready){body.innerHTML='<p class="board-empty">Couldn\'t load the service charge data ('+esc(SCWS.err)+'). Nothing here is current. <button class="to-newbtn" onclick="SCWS.err=\'\';scwsRender()">Try again</button></p>';return;}
     const all=scwsNights();
     if(!all.length){body.innerHTML='<p class="board-empty">No clock data yet. The nightly feed hasn\'t been wired up — see the handoff note.</p>';return;}
     const periods=scwsPeriods(all.map(n=>n.date));
@@ -12975,6 +13108,7 @@ function scwsPaint(all,periods){
       <b>Draft — not the system of record until Tim signs off.</b></p>`;
 
   body.innerHTML=h;
+  if(SCWS.err)body.insertAdjacentHTML('afterbegin','<p class="board-empty" style="border:1px solid currentColor;border-radius:8px;padding:10px">These numbers may be out of date: the last refresh failed ('+esc(SCWS.err)+'). <button class="to-newbtn" onclick="SCWS.err=\'\';SCWS.at=0;scwsRender()">Try again</button></p>');   // stale warning survives subtab/period changes
   const sel=$('scwsPeriod'); if(sel)sel.onchange=()=>{SCWS.period=sel.value;scwsPaint(all,periods);};
   const tabs=$('scwsTabs');
   if(tabs&&typeof initPill==='function')initPill(tabs,tabs.querySelector('.subpill'),'sc',v=>{SCWS.sub=v;scwsPaint(all,periods);});
@@ -13123,21 +13257,25 @@ function scwsSaveOverride(){
     if(m!=null&&m>=0&&m<1)mult[n]=Math.round(m*100)/100;});
   if(!split.reduce((a,n)=>a+(mult[n]!=null?mult[n]:1),0))return;
   const ov={split:split,comm:comm,mult:mult,by:scwsFirst(me&&me.name),at:new Date().toISOString()};
+  const prevOv=SCWS.clock[E.iso]?SCWS.clock[E.iso].over:null;
   if(SCWS.clock[E.iso])SCWS.clock[E.iso].over=ov;
   const done=()=>{ $('scwsModal').classList.remove('open'); scwsRender(); };
   if(fbReady&&fbDb&&!DEMO){
-    fbDb.collection('revel').doc(E.iso).set({scws_override:ov},{merge:true}).then(done)
-      .catch(function(e){ alert('Could not save: '+(e&&e.message?e.message:'write failed')); });
+    /* update() replaces scws_override whole; set(...,{merge:true}) deep-merged mult, so a person
+       restored to 100% kept their old cut in the stored record. */
+    fbDb.collection('revel').doc(E.iso).update({scws_override:ov}).then(done)
+      .catch(function(e){ if(SCWS.clock[E.iso])SCWS.clock[E.iso].over=prevOv; alert('Could not save, nothing changed: '+(e&&e.message?e.message:'write failed')); });
   } else done();
 }
 
 function scwsResetOverride(){
   const E=SCWS_ED; if(!E)return;
+  const prevOv=SCWS.clock[E.iso]?SCWS.clock[E.iso].over:null;
   if(SCWS.clock[E.iso])SCWS.clock[E.iso].over=null;
   const done=()=>{ $('scwsModal').classList.remove('open'); scwsRender(); };
   if(fbReady&&fbDb&&!DEMO){
     fbDb.collection('revel').doc(E.iso).set({scws_override:null},{merge:true}).then(done)
-      .catch(function(e){ alert('Could not reset: '+(e&&e.message?e.message:'write failed')); });
+      .catch(function(e){ if(SCWS.clock[E.iso])SCWS.clock[E.iso].over=prevOv; alert('Could not reset, nothing changed: '+(e&&e.message?e.message:'write failed')); });
   } else done();
 }
 
@@ -13147,23 +13285,25 @@ function scwsResetOverride(){
 function scwsApprove(iso){
   if(!scwsCanEdit())return;
   const n=scwsNights().filter(x=>x.date===iso)[0]; if(!n)return;
-  const ap={sig:scwsFlagSig(n.flags),flags:scwsRealFlags(n.flags),
+  const ap={sig:scwsFlagSig(n.flags),flags:scwsRealFlags(n.flags),amtSig:scwsAmtSig(n),
             by:scwsFirst(me&&me.name),at:new Date().toISOString()};
+  const prevAp=SCWS.clock[iso]?SCWS.clock[iso].appr:null;
   if(SCWS.clock[iso])SCWS.clock[iso].appr=ap;
   const done=()=>scwsRender();
   if(fbReady&&fbDb&&!DEMO){
     fbDb.collection('revel').doc(iso).set({scws_approved:ap},{merge:true}).then(done)
-      .catch(function(e){ alert('Could not approve: '+(e&&e.message?e.message:'write failed')); });
+      .catch(function(e){ if(SCWS.clock[iso])SCWS.clock[iso].appr=prevAp; scwsRender(); alert('Could not approve, still open: '+(e&&e.message?e.message:'write failed')); });
   } else done();
 }
 
 function scwsUnapprove(iso){
   if(!scwsCanEdit())return;
+  const prevAp=SCWS.clock[iso]?SCWS.clock[iso].appr:null;
   if(SCWS.clock[iso])SCWS.clock[iso].appr=null;
   const done=()=>scwsRender();
   if(fbReady&&fbDb&&!DEMO){
     fbDb.collection('revel').doc(iso).set({scws_approved:null},{merge:true}).then(done)
-      .catch(function(e){ alert('Could not reopen: '+(e&&e.message?e.message:'write failed')); });
+      .catch(function(e){ if(SCWS.clock[iso])SCWS.clock[iso].appr=prevAp; scwsRender(); alert('Could not reopen, still approved: '+(e&&e.message?e.message:'write failed')); });
   } else done();
 }
 
