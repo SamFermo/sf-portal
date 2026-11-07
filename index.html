@@ -2315,7 +2315,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794013857';   // stamped by build-data.py at every deploy
+const BUILD='1794017130';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3158,7 +3158,7 @@ function dlApply(force){
   let h=''; try{h=decodeURIComponent((location.hash||'').slice(1));}catch(e){h=(location.hash||'').slice(1);}
   if(!h){dlDone=null;return;}
   if(!force&&h===dlDone)return;
-  dlDone=h;
+  dlDone=null; try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}   // DOCLOOP-2026-11-06: a deep link is used once, then cleared, so it never reopens at the next launch
   const i=h.indexOf('/'), kind=(i<0?h:h.slice(0,i)).toLowerCase(), key=i<0?'':h.slice(i+1);
   let id=null;
   if(kind==='wine'){ dlFresh('wine'); const w=dlBest(SF.wines,key,x=>x.name); if(w)id='wcard-'+SF.wines.indexOf(w); }
@@ -3368,6 +3368,7 @@ function annCardAlerts(){
 }
 function annAll(){ const alerts=annCardAlerts(); return alerts.length?ANNOUNCES.slice(0,1).concat(alerts,ANNOUNCES.slice(1)):ANNOUNCES; }
 function annDoneFor(A){ if(!me)return false;
+  if(A.requiresPolicy&&!DEMO&&!annPolicyLocked(A))return true;   // DOCLOOP-2026-11-06: read/signed = done, no extra Got it next login
   if(A.kind==='info'||A.kind==='calloff')return me.noticeAck===A.id||(Array.isArray(me.noticeAcks)&&me.noticeAcks.indexOf(A.id)>=0);
   const r=me.announceRsvp; return !!(r&&r.id===A.id); }
 function annPendingCount(){ const t=todayISO(); return annAll().filter(function(A){return t<=A.showUntil&&annForMe(A)&&!annDoneFor(A);}).length; }
