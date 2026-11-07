@@ -2315,7 +2315,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1793956992';   // stamped by build-data.py at every deploy
+const BUILD='1794010923';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5369,11 +5369,14 @@ function wiWatch(){ if(WI.unsub||!(fbReady&&fbDb))return;
     function(){ WI.loaded=true; WI.docErr=true; wiRefresh(); }); }
 function wiLoadRevel(force){
   if(!(fbReady&&fbDb))return;
+  if(WI.revelPending)return;   // one read at a time: render calls this, and a failed read used to re-render into another read, forever
   if(WI.revel&&!force&&Date.now()-WI.revelAt<10*60*1000)return;
-  fbDb.collection('revel').get().then(function(snap){ const m={};
+  if(!force&&WI.revelErrAt&&Date.now()-WI.revelErrAt<2*60*1000)return;   // after a failure, wait before trying again
+  WI.revelPending=true;
+  fbDb.collection('revel').get().then(function(snap){ WI.revelPending=false; const m={};
     snap.docs.forEach(function(d){ const w=((d.data()||{}).drinks||{}).wine; if(w&&(w.bottle_items||w.glass_items))m[d.id]={b:w.bottle_items||[],g:w.glass_items||[]}; });
     WI.revel=m; WI.revelAt=Date.now(); WI.revelErr=false; wiRefresh(); })
-  .catch(function(){ WI.revelErr=true; wiRefresh(); });
+  .catch(function(){ WI.revelPending=false; WI.revelErr=true; WI.revelErrAt=Date.now(); wiRefresh(); });
 }
 function wiRefresh(){ if($('wineinv')&&$('wineinv').classList.contains('active'))wiRender(); if(WI.modal)wiModalRender(); }
 
@@ -9910,12 +9913,21 @@ function lnRender(){
   });
 }
 function lnCardHTML(){ return wideCardHTML('lastnight','◑','Last Night','Last night’s numbers'); }
+/* READ-LEAK-2026-11-06: the home cards re-read whole collections on every home redraw (600-800 reads a time
+   for a manager, more every night as history grows). They now reuse the last read for ten minutes and
+   redraw from it, so the card still shows its number. */
+const HOME_PRIME_TTL=10*60*1000;
+function homePrimeFetch(key,fetch){
+  const c=homePrimeFetch.c||(homePrimeFetch.c={});
+  if(c[key]&&Date.now()-c[key].at<HOME_PRIME_TTL)return c[key].p;
+  const p=fetch(); c[key]={at:Date.now(),p:p};
+  p.catch(function(){ delete c[key]; });   // a failed read is retried next time, not cached
+  return p;
+}
 function lnHomePrime(){
   if(!lnCanTab()||!fbReady||!fbDb)return;
   const tier=lnTier(), wantRev=(tier==='full');
-  const q=fbDb.collection('revel').get();
-  const qr=wantRev?fbDb.collection('revel_rev').get():Promise.resolve(null);
-  Promise.all([q,qr]).then(function(res){
+  homePrimeFetch('ln-'+tier,function(){ return Promise.all([fbDb.collection('revel').get(), wantRev?fbDb.collection('revel_rev').get():Promise.resolve(null)]); }).then(function(res){
     let d=null; res[0].forEach(function(x){ const o=Object.assign({id:x.id},x.data()); if(!d||o.id>d.id)d=o; }); if(!d)return;
     let rev=null; if(res[1]){ res[1].forEach(function(x){ if(x.id===d.id)rev=x.data(); }); }
     const parts=[];
@@ -10998,7 +11010,7 @@ function rcCardHTML(){ return wideCardHTML('recap','◐','Recap','Last night in 
    night, because the raw total is the thing that confuses people. */
 function rcHomePrime(){
   if(!rcCanTab()||!fbReady||!fbDb)return;
-  Promise.all([fbDb.collection('revel').get(), fbDb.collection('revel_rev').get()])
+  homePrimeFetch('rc',function(){ return Promise.all([fbDb.collection('revel').get(), fbDb.collection('revel_rev').get()]); })
   .then(function(res){
     const rows=[], revById={};
     res[0].forEach(function(x){ rows.push(Object.assign({id:x.id},x.data())); });
@@ -12678,13 +12690,14 @@ let ordAvail=null, ordAvailAt=0;   // Kelly's availability feed — feeds the Fa
    short-flags into the recent-orders list so Chris sees the farm's response. */
 let remyDb=null, remyReady=false, remyOrders=[], remyUnsub=null;
 function remyInit(){
-  if(remyReady||!window.firebase||!window.REMY_ORDERS_CONFIG)return;
+  if(remyReady||remyInit._started||!window.firebase||!window.REMY_ORDERS_CONFIG)return;
+  remyInit._started=true;   // one auth observer, not one per home redraw
   try{
     const app=getRemyApp();
     remyDb=app.firestore();
-    app.auth().onAuthStateChanged(function(u){ if(u){ remyReady=true; remyStartSync(); } });
-    app.auth().signInAnonymously().catch(function(){ remyReady=false; });
-  }catch(e){ remyReady=false; }
+    if(!remyInit._obs)remyInit._obs=app.auth().onAuthStateChanged(function(u){ if(u){ remyReady=true; remyStartSync(); } });   // registered once, kept across sign-in retries
+    app.auth().signInAnonymously().catch(function(){ remyReady=false; remyInit._started=false; });
+  }catch(e){ remyReady=false; remyInit._started=false; }
 }
 function remyStartSync(){
   if(!remyDb||remyUnsub)return;
@@ -12919,10 +12932,12 @@ function scwsPeriodRange(key){
 /* ---------- load ---------- */
 /* Crew rides on the nightly revel doc — revel/<date>.crew — so there's no second
    collection to keep in sync and no extra Firestore rule to maintain. */
-function scwsLoad(){
-  if(SCWS.ready&&Date.now()-(SCWS.at||0)<60000)return Promise.resolve();
+function scwsLoad(soft){
+  // soft (home card): reuse for 10 minutes; the tab itself refreshes after 60 s. One read in flight at a time.
+  if(SCWS.ready&&Date.now()-(SCWS.at||0)<(soft?HOME_PRIME_TTL:60000))return Promise.resolve();
   if(!(fbReady&&fbDb))return Promise.resolve();
-  return fbDb.collection('revel').get().then(snap=>{
+  if(SCWS.pending)return SCWS.pending;
+  return SCWS.pending=fbDb.collection('revel').get().then(snap=>{ SCWS.pending=null;
     SCWS.clock={}; SCWS.err=''; SCWS.at=Date.now();
     snap.forEach(doc=>{
       const d=doc.data()||{};
@@ -12933,7 +12948,7 @@ function scwsLoad(){
                                                   appr:d.scws_approved||null};
     });
     SCWS.ready=true;
-  }).catch(e=>{ SCWS.err=(e&&e.message)||'read failed'; });   // LOUD: render says so; next open retries
+  }).catch(e=>{ SCWS.pending=null; SCWS.err=(e&&e.message)||'read failed'; });   // LOUD: render says so; next open retries
 }
 
 /* A stored sheet wins over recomputing here. The nightly pipeline reads the manager log —
@@ -13617,7 +13632,7 @@ function scwsCardHTML(){ return wideCardHTML('scws','⚖','Service Charge','Last
    the same way the Recap card primes itself. */
 function scwsHomePrime(){
   if(!scwsCanTab()||!fbReady||!fbDb)return;
-  scwsLoad().then(function(){
+  scwsLoad(true).then(function(){
     const nights=scwsNights(); if(!nights.length)return;
     const n=nights[0];
     const parts=[scwsMoney(n.share)+' a share', n.splits.length+'-way'];

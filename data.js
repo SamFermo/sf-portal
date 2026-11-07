@@ -18073,7 +18073,7 @@ window.SF = {
      "cases": null
     },
     "note": "Matthew Lindley is our rep (10/30). Thursday by 4pm for Friday; off-day orders when needed. Email or text. Vandori $8.05 one case, $6.25 at 3 cases. $200 minimum.",
-    "orderPref": "Email or text (Matthew)"
+    "orderPref": "Email or text (Matthew). Before sending, check with Katie on Vandori Prosecco: it goes in cocktails and anniversary bubbles, so the portal can't track it."
    }
   },
   "wines": [
@@ -18219,7 +18219,7 @@ window.SF = {
     "vendor": "Casa Bruno",
     "unit": 12,
     "rule": "cases3",
-    "cost": 10.5,
+    "cost": 11.9,
     "usual": "3+ cases, it flies",
     "glass": 13,
     "bottle": 50
@@ -18233,7 +18233,7 @@ window.SF = {
     "vendor": "Winebow",
     "unit": 12,
     "rule": "cases3",
-    "cost": 14.89,
+    "cost": 17.49,
     "usual": "3 cases, it flies",
     "glass": 15,
     "bottle": 60
@@ -18271,7 +18271,7 @@ window.SF = {
     "vendor": "Elliot Bay",
     "unit": 12,
     "rule": "pace",
-    "cost": 15.0,
+    "cost": 16.8,
     "usual": "maybe 2 cases, Nebbiolo can fly",
     "glass": 17,
     "bottle": 70
@@ -18761,7 +18761,7 @@ window.SF = {
     "type": "Sparkling",
     "status": "cellar",
     "vendor": "Odom",
-    "note": "Not on the list. Poured as a gift for anniversaries, so it leaves without a Revel button.",
+    "note": "Not on the list. Goes in cocktails and is poured as anniversary bubbles, so it leaves without a Revel button and the portal can't track it. Check with Katie on every Odom order (Sam, 2026-11-06).",
     "unit": 12,
     "rule": "cases3",
     "cost": 6.25,
@@ -19101,5 +19101,5 @@ window.SF = {
    }
   ]
  },
- "build": "1793956992"
+ "build": "1794010923"
 };
