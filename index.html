@@ -1080,6 +1080,24 @@ body.tour-on{padding-bottom:230px;}
 .ds-row-btn{flex:0 0 auto; font-size:11px; font-weight:700; padding:4px 10px; border-radius:7px; border:1px solid var(--ink-mute); background:transparent; color:var(--ink-soft); cursor:pointer; font-family:inherit;}
 .ds-row-btn:hover{border-color:var(--gold); color:var(--ink);}
 .ds-row-btn.undo{border-color:#6db657; color:#6db657;}
+.ds-row-btn + .ds-row-btn{margin-left:6px;}
+.ds-move-tag{margin-left:7px; font-size:9px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#8a6a1c; background:rgba(201,162,74,.16); border:1px solid rgba(201,162,74,.45); border-radius:999px; padding:1px 6px; vertical-align:middle; display:inline-block;}
+.ds-was{margin-left:7px; font-size:10.5px; font-style:italic; color:var(--ink-mute); vertical-align:middle; display:inline-block; text-decoration:none;}
+.ds-chg{margin:4px 0 10px; padding:12px; border:1px solid rgba(201,162,74,.45); border-radius:10px; display:flex; flex-direction:column; gap:8px;}
+.ds-chg-q{font-size:12px; font-weight:700; color:var(--ink-soft);}
+.ds-chg-opts{display:flex; flex-wrap:wrap; gap:6px;}
+.ds-tap{cursor:pointer; min-height:44px; box-sizing:border-box; -webkit-tap-highlight-color:rgba(201,162,74,.18);}
+.ds-person .ds-row-btn.undo{min-height:44px; min-width:60px;}
+.ds-away .ds-pname{text-decoration:none !important;}
+.ds-tap-open{border-color:rgba(201,162,74,.7) !important;}
+.ds-chg-chip{min-height:44px; padding:0 14px; font-size:14px;}
+.ds-chg-none{opacity:.8;}
+.ds-chg-top{display:flex; align-items:center; justify-content:space-between;}
+.ds-chg-x{min-width:44px; min-height:44px; background:transparent; border:0; color:var(--ink-mute); font-size:18px; cursor:pointer;}
+.ds-chg-sub{font-weight:400; font-size:11px; color:var(--ink-mute);}
+.ds-chg-link{align-self:flex-start; background:transparent; border:0; padding:8px 0; color:var(--gold); font-size:12.5px; font-family:inherit; cursor:pointer;}
+.ds-side-hint{margin-left:8px; font-size:10px; font-weight:600; letter-spacing:.04em; text-transform:none; color:var(--ink-mute);}
+.ds-jump{display:block; margin:0 0 10px auto; background:transparent; border:1px solid rgba(201,162,74,.5); color:var(--gold); border-radius:999px; padding:8px 14px; font-size:12.5px; font-family:inherit; cursor:pointer;}
 .ds-row-btn.x{border-color:rgba(168,84,84,.5); color:#c98080; padding:4px 8px;}
 .ds-editbar{margin:12px 0 4px;}
 .ds-edit-btn{background:transparent; color:var(--ink-soft); border:1px solid var(--ink-mute); border-radius:9px; padding:8px 16px; font-size:13px; font-weight:800; font-family:inherit; cursor:pointer;}
@@ -2315,7 +2333,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794060410';   // stamped by build-data.py at every deploy
+const BUILD='1794079937';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -8356,7 +8374,7 @@ function dsAtStamp(ms){ if(!ms)return ''; const d=new Date(ms), t=dsWxStamp(ms),
 function dsCoversFresh(c){ return !!(c&&c.at&&(Date.now()-c.at)<36*36e5); }
 function dsRefreshWeather(){ const iso=dsDate(); delete dsWxCache[iso]; dsRenderWeather(iso); }
 function dsDate(){return dsDateSel||todayISO();}
-function dsSetDate(iso){dsDateSel=iso||null;dsContactSel=new Set();dsCovSel=new Set();dsCovSide=null;dsPickupOpen=false;dsEditStaff=false;renderToday();}
+function dsSetDate(iso){dsChg=null;dsDateSel=iso||null;dsContactSel=new Set();dsCovSel=new Set();dsCovSide=null;dsPickupOpen=false;dsEditStaff=false;renderToday();}
 function dsHr(h){const ap=h>=12?'p':'a';let hh=h%12;if(hh===0)hh=12;return hh+ap;}
 
 /* ===== DAY ROSTER OVERRIDES — per-day call-offs + pickups, layered on the
@@ -8372,9 +8390,12 @@ function dsRosterOv(iso){
   if(iso===todayISO()){ const b=getBoard(); r=b&&b.roster; }
   else r=dsRosterCache[iso];
   r=r||{};
-  return {calledOff:r.calledOff||[], added:r.added||[], volunteers:r.volunteers||[], offerOff:!!r.offerOff, offApproved:r.offApproved||null, offApprovedList:Array.isArray(r.offApprovedList)?r.offApprovedList:(r.offApproved?[r.offApproved]:[])};
+  if(typeof dsTxPend!=='undefined'&&dsTxPend&&dsTxPend[iso]&&dsTxPend[iso].length)r=dsTxApply(iso,dsNormRoster(r));   // swaps still saving: display only
+  return {calledOff:r.calledOff||[], added:r.added||[], volunteers:r.volunteers||[], offerOff:!!r.offerOff, offApproved:r.offApproved||null, offApprovedList:Array.isArray(r.offApprovedList)?r.offApprovedList:(r.offApproved?[r.offApproved]:[]), moves:Array.isArray(r.moves)?r.moves:[], home:Array.isArray(r.home)?r.home:[]};
 }
-function dsCalledOffSet(iso){ const s=new Set(); dsRosterOv(iso).calledOff.forEach(function(n){s.add(String(n).toLowerCase());}); return s; }
+function dsCalledOffSet(iso){ const s=new Set(), ov=dsRosterOv(iso); ov.calledOff.forEach(function(n){s.add(String(n).toLowerCase());});
+  (ov.home||[]).forEach(function(h){ if(h&&h.name)s.add(String(h.name).toLowerCase()); });   // sent home = off, whatever calledOff says
+  return s; }
 function dsEnsureRoster(iso){
   coWatch(iso);                                     // call-off list for this date rides along
   // Today is already live via boardState — drop any date listener and bail.
@@ -8385,45 +8406,54 @@ function dsEnsureRoster(iso){
     dsRosterUnsubIso=iso;
     dsRosterUnsub=fbDb.collection('board').doc(iso).onSnapshot(function(snap){
       const d=snap.exists?(snap.data()||{}):{};
-      dsRosterCache[iso]=d.roster||{};
+      dsRosterCache[iso]=d.roster||{}; dsTxSnap(iso);
       dsCoversCache[iso]=d.covers||null;            // look-ahead covers for the selected date
       if(dsDate()===iso)renderToday();              // live: reflect another manager's change
     },function(){ if(!dsRosterCache[iso])dsRosterCache[iso]={}; });
   } else { dsRosterCache[iso]=dsLocalRoster(iso); }
 }
-function dsSetRoster(iso,roster){
-  if(iso===todayISO()){ const b=getBoard(); b.roster=roster; persistBoard(b); }
+function dsSetRoster(iso,roster,keys){
+  /* writes only the roster fields this change touched (roster.<key>), never the whole roster */
+  const part={}; (keys||Object.keys(roster)).forEach(function(k){ if(roster[k]!==undefined)part[k]=roster[k]; });
+  if(iso===todayISO()){ const b=getBoard(); b.roster=roster; boardState=b;
+    if(DEMO){}
+    else if(fbReady&&fbDb){ fbDb.collection('board').doc(iso).set({roster:part},{merge:true}).catch(function(){lsSetBoard(b);}); }
+    else lsSetBoard(b); }
   else { dsRosterCache[iso]=roster;
-    if(fbReady&&fbDb){ fbDb.collection('board').doc(iso).set({roster:roster},{merge:true}).catch(function(){dsLocalRosterSet(iso,roster);}); }
+    if(fbReady&&fbDb){ fbDb.collection('board').doc(iso).set({roster:part},{merge:true}).catch(function(){dsLocalRosterSet(iso,roster);}); }
     else dsLocalRosterSet(iso,roster); }
   renderToday();
 }
 /* Merge a patch into the day's roster doc, preserving the other fields
    (calledOff / added / volunteers / offerOff all live in one doc). */
-function dsRosterPatch(iso,patch){ const c=dsRosterOv(iso);
-  dsSetRoster(iso, Object.assign({calledOff:c.calledOff,added:c.added,volunteers:c.volunteers,offerOff:c.offerOff,offApproved:c.offApproved,offApprovedList:c.offApprovedList}, patch)); }
+function dsRosterPatch(iso,patch){ if(dsTxBusy(iso)){ alert('One second, the last swap is still saving. Try again.'); return; } const c=dsRosterOv(iso);
+  dsSetRoster(iso, Object.assign({calledOff:c.calledOff,added:c.added,volunteers:c.volunteers,offerOff:c.offerOff,offApproved:c.offApproved,offApprovedList:c.offApprovedList,moves:c.moves,home:c.home}, patch), Object.keys(patch)); }
 function dsApprEntry(iso,name){ const k=String(name||'').toLowerCase(); if(!k)return null; return dsRosterOv(iso).offApprovedList.find(function(a){return String(a.name||'').toLowerCase()===k;})||null; }
 /* Manager approves a flex volunteer for the night off: records the pick + auto-marks
    them called off (drops from tonight's counts, contact list, coverage). Undo reverses both. */
 function dsApproveCallOff(name,iso){ iso=iso||dsDate();
   if(!isAdmin()){alert('Only a manager can approve a call-off.');return;}
-  const c=dsRosterOv(iso), co=c.calledOff.slice();
-  if(co.map(function(x){return x.toLowerCase();}).indexOf(String(name).toLowerCase())<0)co.push(name);
-  const ent={name:name,at:Date.now(),by:currentUserName()||'Sam'}, lst=c.offApprovedList.filter(function(a){return String(a.name||'').toLowerCase()!==String(name).toLowerCase();}).concat([ent]);
-  dsRosterPatch(iso,{offApproved:ent, offApprovedList:lst, calledOff:co}); }
-function dsUndoApproveCallOff(name,iso){ iso=iso||dsDate(); const c=dsRosterOv(iso);
-  const lst=c.offApprovedList.filter(function(a){return String(a.name||'').toLowerCase()!==String(name).toLowerCase();});
-  dsRosterPatch(iso,{offApproved:lst.length?lst[lst.length-1]:null, offApprovedList:lst, calledOff:c.calledOff.filter(function(x){return x.toLowerCase()!==String(name).toLowerCase();})}); }
-function dsCallOff(name){ const iso=dsDate(),co=dsRosterOv(iso).calledOff.slice();
-  if(co.map(function(x){return x.toLowerCase();}).indexOf(String(name).toLowerCase())<0)co.push(name);
-  dsRosterPatch(iso,{calledOff:co}); }
-function dsUndoCallOff(name){ const iso=dsDate();
-  dsRosterPatch(iso,{calledOff:dsRosterOv(iso).calledOff.filter(function(x){return x.toLowerCase()!==String(name).toLowerCase();})}); }
+  const k=String(name).toLowerCase(), ent={name:name,at:Date.now(),by:currentUserName()||'Sam'};
+  dsRosterTx(iso,function(r){ if(!r.calledOff.some(function(x){return String(x).toLowerCase()===k;}))r.calledOff.push(name);
+    const prev=Array.isArray(r.offApprovedList)?r.offApprovedList:(r.offApproved?[r.offApproved]:[]);
+    r.offApprovedList=prev.filter(function(a){return String(a.name||'').toLowerCase()!==k;}).concat([ent]); r.offApproved=ent; return r; }); }
+function dsUndoApproveCallOff(name,iso){ iso=iso||dsDate(); const k=String(name).toLowerCase();
+  dsRosterTx(iso,function(r){ const prev=Array.isArray(r.offApprovedList)?r.offApprovedList:(r.offApproved?[r.offApproved]:[]);
+    const lst=prev.filter(function(a){return String(a.name||'').toLowerCase()!==k;});
+    r.offApprovedList=lst; r.offApproved=lst.length?lst[lst.length-1]:null;
+    r.calledOff=r.calledOff.filter(function(x){return String(x).toLowerCase()!==k;}); return r; }); }
+function dsCallOff(name){ const k=String(name).toLowerCase();
+  dsRosterTx(dsDate(),function(r){ if(!r.calledOff.some(function(x){return String(x).toLowerCase()===k;}))r.calledOff.push(name); return r; }); }
+function dsUndoCallOff(name){ const k=String(name).toLowerCase();
+  dsRosterTx(dsDate(),function(r){ r.calledOff=r.calledOff.filter(function(x){return String(x).toLowerCase()!==k;}); return r; }); }
 function dsAddPickup(name,side,shift){ const iso=dsDate(),added=dsRosterOv(iso).added.slice();
   added.push({id:'p'+Date.now()+Math.random().toString(36).slice(2,5),name:name,side:(side==='boh'?'boh':'foh'),shift:(shift||'picked up')});
   dsRosterPatch(iso,{added:added}); }
-function dsRemovePickup(id){ const iso=dsDate();
-  dsRosterPatch(iso,{added:dsRosterOv(iso).added.filter(function(a){return a.id!==id;})}); }
+function dsRemovePickup(id){ const iso=dsDate(), ix=dsBuildNameIndex();
+  dsRosterTx(iso,function(r){ const a=r.added.find(function(x){return x.id===id;});
+    const k=a?dsResolve(a.name,ix).full.toLowerCase():'', sd=a?a.side:'';
+    r.added=r.added.filter(function(x){return x.id!==id;});
+    r.moves=r.moves.filter(function(m){return !(k&&m.side===sd&&String(m.name||'').toLowerCase()===k);}); return r; }); }
 /* --- manager "offer the night off" flag + staff volunteer (first-come) --- */
 function dsToggleOffer(){ const iso=dsDate(); dsRosterPatch(iso,{offerOff:!dsRosterOv(iso).offerOff}); }
 /* ===== CALL-OFF LIST (2026-09-19) =============================================
@@ -8479,7 +8509,7 @@ let cbRosterUnsubs={}, cbRosterLoaded={}, cbOpenState=false;
 function cbRosterWatch(iso){
   if(iso===todayISO()||cbRosterUnsubs[iso]||!(fbReady&&fbDb))return;
   cbRosterUnsubs[iso]=fbDb.collection('board').doc(iso).onSnapshot(function(snap){
-    const d=snap.exists?(snap.data()||{}):{}; dsRosterCache[iso]=d.roster||{}; cbRosterLoaded[iso]=true; cbRefresh();
+    const d=snap.exists?(snap.data()||{}):{}; dsRosterCache[iso]=d.roster||{}; dsTxSnap(iso); cbRosterLoaded[iso]=true; cbRefresh();
   },function(){});
 }
 function cbReady(iso){ if(DEMO)return true; if(!(fbReady&&fbDb))return false; return iso===todayISO()?!!boardState:!!cbRosterLoaded[iso]; }
@@ -8583,13 +8613,146 @@ function dsLeadNames(iso){
 function dsPickupToggle(on){ dsPickupOpen=!!on; renderToday(); }
 function dsPickupSubmit(){ const n=$('ds-pick-name'); if(!n||!n.value)return; const s=$('ds-pick-side'),sh=$('ds-pick-shift');
   const shift=((sh&&sh.value)||'').trim(); dsPickupOpen=false; dsAddPickup(n.value,(s&&s.value)||'foh',shift); }
+/* ===== SWAP (2026-11-06): who's moving where during the night. =====
+   board/{iso}.roster.moves = [{id,name,side,shift,was,cover,at,by}]: that person's row on `side`
+   now reads `shift` (a row is added if they weren't on that side). Last entry per person+side wins; earlier ones stay so Undo of a later swap reveals the one before.
+   board/{iso}.roster.home  = [{id,name,why:'sick'|'early',at,to,wasOff,by}]: went home mid-shift.
+   They also go into calledOff so counts, contacts, coverage and Tonight's Staff treat them as off.
+   One swap writes its entries under ONE id; Undo removes every entry with that id, and takes the
+   person back out of calledOff unless they were already called off before the swap (wasOff). */
+let dsChg=null;
+function dsFirst(n){ const s=String(n||''), q=s.match(/"([^"]+)"/); return q?q[1]:s.split(' ')[0]; }
+function dsNowHM(){ const d=new Date(); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+function dsHM12(hm){ const m=String(hm||'').match(/^(\d{1,2}):(\d{2})/); if(!m)return ''; let h=+m[1]; const ap=h>=12?'p':'a'; h=h%12||12; return h+(m[2]==='00'?'':':'+m[2])+ap; }
+function dsMoveFor(iso,full,side){ const k=String(full||'').toLowerCase(); let hit=null;
+  dsRosterOv(iso).moves.forEach(function(m){ if(m&&m.side===side&&String(m.name||'').toLowerCase()===k)hit=m; }); return hit; }
+function dsHomeFor(iso,full){ const k=String(full||'').toLowerCase(); let hit=null;
+  dsRosterOv(iso).home.forEach(function(h){ if(h&&String(h.name||'').toLowerCase()===k)hit=h; }); return hit; }
+function dsSpotOf(shift){ const s=String(shift||'').replace(/\s*·\s*from\s+\S+$/i,'').trim(); return s.replace(/^\d{1,2}(:\d{2})?\s+(?=\S)/,''); }
+const DS_SPOTS={foh:['MD','Sup Server','Server','Bar','Support','Expo','Float'], boh:['Expo','Line','Prep','Porter']};
+function dsSpotShift(side,spot){ return (side==='boh'&&spot==='Line')?'Line 1-close':spot; }
+function dsChgOpen(side,full,shift){ dsChg={side:side,full:full,shift:shift,why:'',spot:'',to:'',more:false,timeOpen:false,at:'',sig0:dsSwapSig(dsRosterView(dsDate()),[String(full).toLowerCase()])}; renderToday(); dsChgReveal(); }
+function dsChgClose(){ dsChg=null; renderToday(); }
+function dsChgSet(k,v){ if(!dsChg)return; dsChg[k]=v; if(k==='timeOpen'&&v&&!dsChg.at)dsChg.at=dsNowHM(); if(k!=='at')dsChgRefresh(); }
+function dsChgRefresh(){ const f=document.querySelector('#todayBody .ds-chg'); if(!f){ renderToday(); dsChgReveal(); return; }
+  const w=document.createElement('div'); w.innerHTML=dsChgFormHTML(dsDate()); f.replaceWith(w.firstChild); dsChgReveal(); }
+function dsChgReveal(){ requestAnimationFrame(function(){ const f=document.querySelector('#todayBody .ds-chg'); if(!f)return;
+  const r=f.getBoundingClientRect(), vh=window.innerHeight||800;
+  if(r.bottom>vh-8)window.scrollBy({top:Math.max(0,Math.min(r.bottom-vh+16, r.top-130)),behavior:'smooth'}); }); }
+function dsChgPick(to){ if(!dsChg)return; dsChg.to=to||''; dsChgSave(); }
+/* who can take over: managers on tonight first, then the same side, then the other side */
+function dsChgTakers(iso,c){
+  const list=dsWorkingList(iso).filter(function(x){return x.name!==c.full;});
+  const isM=function(n){const p=PROFILES[n]||{};return !!(p.admin||p.mgr);};
+  return list.filter(function(x){return isM(x.name);})
+    .concat(list.filter(function(x){return !isM(x.name)&&x.side===c.side;}), list.filter(function(x){return !isM(x.name)&&x.side!==c.side;}))
+    .map(function(x){return x.name;});
+}
+function dsChgFormHTML(iso){
+  const c=dsChg, first=dsFirst(c.full), spot=dsChgSpot(iso,c)||'their spot';
+  const chip=function(on,js,l,cls){return '<button class="ds-chip ds-chg-chip'+(on?' on':'')+(cls?' '+cls:'')+'" onclick="'+js+'">'+l+'</button>';};
+  let h='<div class="ds-chg"><div class="ds-chg-top"><span class="ds-chg-q">'+esc(first)+' · '+esc(spot)+'</span><button class="ds-chg-x" onclick="dsChgClose()" aria-label="Close">✕</button></div>'+
+    '<div class="ds-chg-opts">'+chip(c.why==='sick',"dsChgSet('why','sick')",'Home sick')+chip(c.why==='early',"dsChgSet('why','early')",'Home early')+chip(c.why==='move',"dsChgSet('why','move')",'Move spot')+'</div>';
+  if(c.why==='move'){ h+='<div class="ds-chg-q">'+esc(first)+' moves to</div><div class="ds-chg-opts">'+
+    DS_SPOTS[c.side].filter(function(s){return s.toLowerCase()!==spot.toLowerCase();}).map(function(s){return chip(c.spot===s,"dsChgSet('spot','"+jq(s)+"')",esc(s));}).join('')+'</div>'; }
+  if(c.why==='sick'||c.why==='early'||(c.why==='move'&&c.spot)){
+    const t=dsChgTakers(iso,c), fc={}; t.forEach(function(n){const f=dsFirst(n); fc[f]=(fc[f]||0)+1;});
+    h+='<div class="ds-chg-q">Who takes over '+esc(spot)+'? <span class="ds-chg-sub">tap to save</span></div><div class="ds-chg-opts">'+
+      t.map(function(n){return chip(false,"dsChgPick('"+jq(n)+"')",esc(fc[dsFirst(n)]>1?n:dsFirst(n)));}).join('')+
+      chip(false,"dsChgPick('')",'Nobody, leave it open','ds-chg-none')+'</div>';
+    if(!c.more){ h+='<button class="ds-chg-link" onclick="dsChgSet(\'more\',true)">Someone not on tonight…</button>'; }
+    else { const co=dsCalledOffSet(iso), on={}; t.forEach(function(n){on[n]=1;});
+      const rest=activeProfiles().map(function(p){return p.name;}).filter(function(n){return n!==c.full&&!on[n]&&!co.has(n.toLowerCase());});
+      h+='<select class="ds-sc-sel" onchange="if(this.value)dsChgPick(this.value)"><option value="">Pick someone not on tonight</option>'+
+        rest.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('')+'</select>'; }
+    if(!c.timeOpen){ h+='<button class="ds-chg-link" onclick="dsChgSet(\'timeOpen\',true)">As of now · change time</button>'; }
+    else { h+='<label class="ds-chg-sub">As of <input type="time" class="ds-sc-sel" value="'+esc(c.at)+'" onchange="dsChgSet(\'at\',this.value)"></label>'; }
+  }
+  return h+'</div>';
+}
+/* Swap writes: a transaction on board/{iso} reads the roster fresh from the server, applies the change
+   and writes ONLY the roster field, so a phone that hasn't caught up can't wipe another manager's swap
+   and nothing is written before the doc exists on the server. The screen updates right away; if the
+   write fails it says so and puts the screen back. (Other Day Sheet writes still use persistBoard.) */
+function dsNormRoster(r){ r=r||{}; return Object.assign({},r,{calledOff:Array.isArray(r.calledOff)?r.calledOff.slice():[], added:Array.isArray(r.added)?r.added.slice():[],
+  volunteers:Array.isArray(r.volunteers)?r.volunteers.slice():[], moves:Array.isArray(r.moves)?r.moves.slice():[], home:Array.isArray(r.home)?r.home.slice():[]}); }
+function dsRosterLocal(iso,r){ if(iso===todayISO()){ const b=getBoard(); b.roster=r; boardState=b; } else dsRosterCache[iso]=r; }
+function dsRosterRaw(iso){ if(iso===todayISO()){ const b=getBoard(); return (b&&b.roster)||{}; } return dsRosterCache[iso]||{}; }
+var dsTxN=0, dsTxSlow=false, dsTxQ=Promise.resolve(), dsTxPend={};
+/* the overlay: every swap this phone has sent and the server hasn't echoed back yet, replayed in order over
+   the confirmed roster. A replay that no longer fits (already landed, or changed elsewhere) is skipped. */
+function dsTxApply(iso,r){ ((dsTxPend&&dsTxPend[iso])||[]).forEach(function(op){ try{ r=op.fn(dsNormRoster(r)); }catch(e){} }); return r; }
+function dsRosterView(iso){ return dsNormRoster(dsTxApply(iso,dsNormRoster(dsRosterRaw(iso)))); }
+function dsTxSnap(iso){ if(typeof dsTxPend==='undefined'||!dsTxPend)return; const p=dsTxPend[iso]; if(p&&p.length)dsTxPend[iso]=p.filter(function(op){return !op.committed;}); }
+function dsTxBusy(iso){ return typeof dsTxPend!=='undefined'&&!!dsTxPend&&(dsTxPend[iso]||[]).some(function(op){return !op.committed;}); }
+function dsTxDrop(iso,op){ const p=dsTxPend[iso]; if(!p)return; const i=p.indexOf(op); if(i>=0)p.splice(i,1); }
+function dsRosterTx(iso,fn){
+  try{ fn(dsRosterView(iso)); }catch(e){ alert(e.message||String(e)); renderToday(); return; }
+  if(DEMO){ dsRosterLocal(iso,fn(dsRosterView(iso))); renderToday(); return; }   // demo: in memory only, persistBoard never writes
+  if(!(fbReady&&fbDb)){ alert("Can't reach the server right now, so that isn't saved. Try again in a minute."); renderToday(); return; }
+  const op={fn:fn,committed:false}; (dsTxPend[iso]=dsTxPend[iso]||[]).push(op); dsTxN++; renderToday();
+  const tmr=setTimeout(function(){ if(dsTxN>0){ dsTxSlow=true; if(dsDate()===iso)renderToday(); } },8000);
+  const settle=function(){ clearTimeout(tmr); dsTxN=Math.max(0,dsTxN-1); if(!dsTxN)dsTxSlow=false; };
+  const ref=fbDb.collection('board').doc(iso);
+  const run=function(){ return fbDb.runTransaction(function(tx){ return tx.get(ref).then(function(snap){
+      const d=snap.exists?(snap.data()||{}):{}, r=fn(dsNormRoster(d.roster));
+      if(snap.exists)tx.update(ref,{roster:r}); else tx.set(ref,{roster:r},{merge:true}); return r; }); }); };
+  const job=dsTxQ.then(run,run); dsTxQ=job.catch(function(){});
+  job.then(function(){ settle(); op.committed=true;
+      setTimeout(function(){ dsTxDrop(iso,op); if(dsDate()===iso)renderToday(); },15000);
+      if(dsDate()===iso)renderToday(); })
+    .catch(function(e){ settle(); dsTxDrop(iso,op); if(dsDate()===iso)renderToday();
+      alert((e&&e.swap)?e.message:"That didn't save. Check your connection and try again."); });
+}
+/* ids of every swap entry naming any of these people; a change on another phone changes the signature */
+function dsSwapSig(r,keys){ const k={}; keys.forEach(function(x){ if(x)k[x]=1; });
+  return (r.moves||[]).filter(function(m){return k[String(m.name||'').toLowerCase()];}).map(function(m){return m.id;})
+    .concat((r.home||[]).filter(function(h){return k[String(h.name||'').toLowerCase()];}).map(function(h){return 'h'+h.id;})).sort().join(','); }
+/* the leaver's position as the sheet shows it: a scheduled-1-close porter is Porter */
+function dsChgSpot(iso,c){ if(c.side==='boh'){ const res=dsResolve(c.full,dsBuildNameIndex());
+    if(dsBohBucket(c.shift,res.role,res.full,!!dsMoveFor(iso,c.full,'boh'))==='Porter'&&!/porter|dish/i.test(c.shift))return 'Porter'; }
+  return dsSpotOf(c.shift); }
+function dsChgSave(){
+  const c=dsChg; if(!c)return; const iso=dsDate();
+  if(c.why==='move'&&!c.spot){ alert('Pick '+dsFirst(c.full)+'\'s new spot first.'); return; }
+  if(c.why==='move'&&!c.to&&dsSpotOf(c.shift).toLowerCase()===c.spot.toLowerCase()){ alert('That\'s the spot '+dsFirst(c.full)+' is already in.'); return; }
+  const id='w'+Date.now()+Math.random().toString(36).slice(2,5), at=c.at||dsNowHM(), from=' · from '+dsHM12(at), by=currentUserName()||'';
+  const kL=c.full.toLowerCase(), kT=String(c.to||'').toLowerCase(), add=[], lSpot=dsChgSpot(iso,c);
+  if(c.why==='move')add.push({id:id,name:c.full,side:c.side,shift:dsSpotShift(c.side,c.spot)+from,was:lSpot,cover:'',at:at,by:by});
+  if(c.to){ const ix=dsBuildNameIndex(); let destWas='', srcWas='';
+    ['foh','boh'].forEach(function(sd){ const day=dsDayRows(sd,iso);
+      (day?day.rows:[]).forEach(function(r){ if(dsResolve(r.name,ix).full.toLowerCase()!==kT)return; if(r._move&&r._move.away)return;
+        const b=(sd==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,'','',true); if(b==='_off'||b==='_farm')return;
+        if(sd===c.side)destWas=dsSpotOf(r.shift);
+        else { srcWas=srcWas||dsSpotOf(r.shift);
+          add.push({id:id,name:c.to,side:sd,src:r.shift,shift:'on '+(c.side==='boh'?'BOH':'FOH')+' '+lSpot,away:true,at:at,by:by}); } }); });
+    add.push({id:id,name:c.to,side:c.side,shift:lSpot+from,was:srcWas||destWas,cover:c.full,at:at,by:by}); }
+  if(c.sig0!=null&&dsSwapSig(dsRosterView(iso),[kL])!==c.sig0){ dsChg=null; renderToday(); alert(dsFirst(c.full)+' was just changed on another phone. Have a look and try again.'); return; }
+  const why=c.why, full=c.full, to=c.to||'', sig=dsSwapSig(dsRosterView(iso),[kL,kT]);
+  dsChg=null;
+  dsRosterTx(iso,function(r){
+    if(dsSwapSig(r,[kL,kT])!==sig){ const er=new Error(dsFirst(full)+(kT?' or '+dsFirst(to):'')+' was just changed on another phone, so this didn\'t save. Have a look and try again.'); er.swap=1; throw er; }
+    if(kT&&r.calledOff.some(function(x){return String(x).toLowerCase()===kT;})){ const er=new Error(dsFirst(to)+' was just called off on another phone, so this didn\'t save.'); er.swap=1; throw er; }
+    if(why!=='move'){ const wasOff=r.calledOff.some(function(x){return String(x).toLowerCase()===kL;});
+      r.home=r.home.filter(function(x){return String(x.name||'').toLowerCase()!==kL;});
+      r.home.push({id:id,name:full,why:why,at:at,to:to,wasOff:wasOff,by:by});
+      if(!wasOff)r.calledOff.push(full); }
+    r.moves=r.moves.concat(add); return r; });
+}
+function dsJumpRoster(){ if(dsCollapsed.foh||dsCollapsed.boh){ dsCollapsed.foh=false; dsCollapsed.boh=false; renderToday(); }
+  const s=document.querySelector('#todayBody .ds-side'); if(s)window.scrollTo({top:Math.max(0,s.getBoundingClientRect().top+window.scrollY-120),behavior:'smooth'}); }
+function dsChgUndo(id){ dsRosterTx(dsDate(),function(r){
+  const appr={}; (Array.isArray(r.offApprovedList)?r.offApprovedList:(r.offApproved?[r.offApproved]:[])).forEach(function(a){ if(a&&a.name)appr[String(a.name).toLowerCase()]=1; });
+  const gone=r.home.filter(function(h){return h.id===id&&!h.wasOff;}).map(function(h){return String(h.name||'').toLowerCase();}).filter(function(k){return !appr[k];});
+  r.moves=r.moves.filter(function(m){return m.id!==id;}); r.home=r.home.filter(function(h){return h.id!==id;});
+  r.calledOff=r.calledOff.filter(function(x){return gone.indexOf(String(x).toLowerCase())<0;}); return r; }); }
 /* "Edit day's staff" mode — gates the per-row call-off / undo / pickup controls so
    managers enter an explicit edit mode rather than seeing always-on row buttons that
    read like the night-off offer. Distinct, clearly-labeled control above the roster. */
-function dsEditStaffToggle(){ dsEditStaff=!dsEditStaff; if(!dsEditStaff)dsPickupOpen=false; renderToday(); }
+function dsEditStaffToggle(){ dsEditStaff=!dsEditStaff; if(!dsEditStaff){dsPickupOpen=false;dsChg=null;} renderToday(); }
 function dsEditStaffBarHTML(){ const on=dsEditStaff;
   let h='<div class="ds-editbar"><button class="ds-edit-btn'+(on?' on':'')+'" onclick="dsEditStaffToggle()">'+(on?'✓ Done editing staff':'✎ Edit day’s staff')+'</button>';
-  if(on)h+='<div class="ds-edit-hint">Tap <b>Call off</b> next to anyone to mark them off, <b>Undo</b> to put them back, or add a pickup below. This only changes the roster for this day — it is <b>not</b> the night-off offer.</div>';
+  if(on)h+='<div class="ds-edit-hint">Tap a name any time to send someone home or move them and pick who takes over. Here, <b>Call off</b> marks someone off for the whole night, <b>Undo</b> puts them back, or add a pickup below. This only changes the roster for this day — it is <b>not</b> the night-off offer.</div>';
   return h+'</div>'; }
 function dsShiftChangeHTML(iso){
   let h='<div class="ds-contact ds-shiftchg"><div class="ds-side-head">Shift change</div>';
@@ -8643,7 +8806,13 @@ function dsDayRows(side,iso){
     rows=(w.rows||[]).map(r=>({name:r.name,shift:String(r.shifts[di]||'').trim()})).filter(r=>r.shift); }
   const added=dsRosterOv(iso).added.filter(function(a){return a.side===side;});   // shift pickups layered on
   added.forEach(function(a){rows.push({name:a.name,shift:a.shift||'picked up',_pickup:a.id});});
-  if(!w&&!added.length)return null;
+  const mv=dsRosterOv(iso).moves.filter(function(m){return m.side===side&&m.name;});
+  if(mv.length){ const ix=dsBuildNameIndex(), hit={};
+    rows=rows.map(function(r){ const full=dsResolve(r.name,ix).full, m=dsMoveFor(iso,full,side);
+      if(!m)return r; hit[full.toLowerCase()]=1; return m.away?Object.assign({},r,{shift:m.src||r.shift,_move:m}):Object.assign({},r,{shift:m.shift,_move:m}); });
+    mv.forEach(function(m){ const k=String(m.name).toLowerCase(); if(hit[k])return; hit[k]=1;
+      const last=dsMoveFor(iso,m.name,side); if(last.away)return; rows.push({name:last.name,shift:last.shift,_move:last}); }); }
+  if(!w&&!added.length&&!mv.length)return null;
   return {label:label,notes:notes,coverage:coverage,rows:rows};
 }
 const DS_FOH_ORDER=['MD','Sup Server','Server','Bar','Support','Expo','Float','Other'];
@@ -8666,11 +8835,11 @@ const DS_BOH_ORDER=['Kitchen Lead','Line (1–close)','Porter','Expo','Daytime /
 // full name (lowercase). Add names here if more cooks pick up the porter role.
 const DS_PORTERS=new Set(['antolin "tony" reyes','anna velasco-ojeda']);
 function dsIsPorter(full,role){const rl=(role||'').toLowerCase();return DS_PORTERS.has(String(full||'').toLowerCase())||rl.includes('porter')||rl.includes('dish');}
-function dsBohBucket(shift,role,full){
+function dsBohBucket(shift,role,full,moved){
   const s=shift.toLowerCase(), rl=(role||'').toLowerCase();
   if(s.includes('r/o'))return '_off';
   if(s.includes('farm'))return '_farm';
-  if(dsIsPorter(full,role))return 'Porter';
+  if((!moved&&dsIsPorter(full,role))||s.includes('porter')||s.includes('dish'))return 'Porter';
   // A chef/sous reads as Kitchen Lead only when in a leadership slot (expo, MD,
   // admin, float, training). A lead working an actual cook shift buckets by that
   // shift — e.g. Jose on 1-close is a line cook, not the lead, even with Chris on expo.
@@ -8687,8 +8856,8 @@ function dsKlRank(role){const r=(role||'').toLowerCase(); if(r.includes('chef de
 const DS_KITCHEN_HIDE='sam west';
 function dsBohRowsFiltered(iso,idx){
   const day=dsDayRows('boh',iso); if(!day)return day;
-  let samPresent=false, samExpo=false, otherExpo=0;
-  day.rows.forEach(r=>{const res=dsResolve(r.name,idx), sh=r.shift.toLowerCase(), expo=sh.includes('expo')&&!sh.includes('r/o');
+  let samPresent=false, samExpo=false, otherExpo=0; const coX=dsCalledOffSet(iso);
+  day.rows.forEach(r=>{const res=dsResolve(r.name,idx), sh=r.shift.toLowerCase(), expo=sh.includes('expo')&&!sh.includes('r/o')&&!coX.has(res.full.toLowerCase());
     if(res.full.toLowerCase()===DS_KITCHEN_HIDE){samPresent=true; if(expo)samExpo=true;}
     else if(expo)otherExpo++;});
   const keepSam=samPresent&&samExpo&&otherExpo===0;
@@ -8719,27 +8888,42 @@ function dsSideHTML(title,side,iso,idx){
   const order=(side==='foh')?DS_FOH_ORDER:DS_BOH_ORDER, groups={}, farm=[]; let onCount=0;
   const co=dsCalledOffSet(iso);
   day.rows.forEach(r=>{
-    const res=dsResolve(r.name,idx), b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role,res.full);
+    const mvd=!!(r._move&&!r._move.away), away=!!(r._move&&r._move.away);
+    const res=dsResolve(r.name,idx), b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role,res.full,mvd);
     if(b==='_off')return;
     if(b==='_farm'){farm.push({res,shift:r.shift});return;}
     const off=co.has(res.full.toLowerCase());
-    if(!off)onCount++;
-    (groups[b]=groups[b]||[]).push({res,shift:r.shift,off:off,pickup:r._pickup||null});
+    if(!off&&!away)onCount++;
+    (groups[b]=groups[b]||[]).push({res,shift:r.shift,off:off,pickup:r._pickup||null,move:r._move||null});
   });
   if(groups['Kitchen Lead'])groups['Kitchen Lead'].sort((a,b)=>dsKlRank(a.res.role)-dsKlRank(b.res.role));
-  let h=`<div class="ds-side"><div class="ds-side-head ds-side-toggle" onclick="dsCollapseToggle('${side}')"><span class="ds-chev">${chev}</span> ${esc(title)}<span class="ds-side-count">${onCount} on</span></div>`;
+  let h=`<div class="ds-side"><div class="ds-side-head ds-side-toggle" onclick="dsCollapseToggle('${side}')"><span class="ds-chev">${chev}</span> ${esc(title)}${isMgr()&&!collapsed?'<span class="ds-side-hint">tap a name to swap</span>':''}<span class="ds-side-count">${onCount} on</span></div>`;
   if(collapsed)return h+`</div>`;
   const personRow=function(x){
-    const cls='ds-person'+(x.off?' ds-off':'')+(x.pickup?' ds-pickup':'');
-    const tag=x.pickup?'<span class="ds-pickup-tag">picked up</span>':(x.off?'<span class="ds-off-tag">called off</span>':'');
+    const away=!!(x.move&&x.move.away);
+    const cls='ds-person'+(x.off||away?' ds-off ds-away':'')+(x.pickup?' ds-pickup':'')+(x.move&&!x.off&&!away?' ds-moved':'');
+    const hm=x.off?dsHomeFor(iso,x.res.full):null;
+    let tag='';
+    if(x.off&&hm)tag='<span class="ds-off-tag">home '+(hm.why==='sick'?'sick':'early')+(hm.at?' '+esc(dsHM12(hm.at)):'')+'</span>'+(hm.to?'<span class="ds-was">'+esc(dsFirst(hm.to))+' took over</span>':'');
+    else if(x.off)tag='<span class="ds-off-tag">called off</span>';
+    else if(away)tag='<span class="ds-move-tag">'+esc(x.move.shift)+'</span>';
+    else if(x.move)tag='<span class="ds-move-tag">'+(x.move.cover?'for '+esc(dsFirst(x.move.cover)):'moved')+'</span>'+(x.move.was?'<span class="ds-was">was '+esc(x.move.was)+'</span>':'');
+    else if(x.pickup)tag='<span class="ds-pickup-tag">picked up</span>';
     let ctrl='';
-    if(isMgr()&&dsEditStaff){
-      if(x.off)ctrl=`<button class="ds-row-btn undo" onclick="dsUndoCallOff('${jq(x.res.full)}')">Undo</button>`;
-      else if(x.pickup)ctrl=`<button class="ds-row-btn x" onclick="dsRemovePickup('${x.pickup}')" title="Remove pickup">✕</button>`;
-      else ctrl=`<button class="ds-row-btn" onclick="dsCallOff('${jq(x.res.full)}')">Call off</button>`;
-    }
+    const mgrNow=isMgr(), undoHm=hm?`<button class="ds-row-btn undo" onclick="event.stopPropagation();dsChgUndo('${jq(hm.id)}')">Undo</button>`:'';
+    const undoMv=(x.move&&!x.off)?`<button class="ds-row-btn undo" onclick="event.stopPropagation();dsChgUndo('${jq(x.move.id)}')">Undo</button>`:'';
+    if(mgrNow&&dsEditStaff){
+      if(x.off&&hm)ctrl=undoHm;
+      else if(x.off)ctrl=`<button class="ds-row-btn undo" onclick="event.stopPropagation();dsUndoCallOff('${jq(x.res.full)}')">Undo</button>`;
+      else if(away)ctrl=undoMv;
+      else ctrl=(x.pickup?`<button class="ds-row-btn x" onclick="event.stopPropagation();dsRemovePickup('${x.pickup}')" title="Remove pickup">✕</button>`
+        :`<button class="ds-row-btn" onclick="event.stopPropagation();dsCallOff('${jq(x.res.full)}')">Call off</button>`)+undoMv;
+    } else if(mgrNow){ ctrl=(x.off&&hm)?undoHm:undoMv; }
     const meRow=(me&&x.res.full===me.name)?' ds-me':'';
-    return `<div class="${cls}${meRow}"><span class="ds-pname">${esc(x.res.full)}${tag}</span><span class="ds-pshift">${esc(x.shift)}</span>${ctrl}</div>`;
+    const isOpen=!!(mgrNow&&dsChg&&dsChg.side===side&&dsChg.full===x.res.full), tapOk=mgrNow&&!(x.off&&hm)&&!away;
+    const form=isOpen?dsChgFormHTML(iso):'';
+    const tapAttr=tapOk?` onclick="${isOpen?'dsChgClose()':`dsChgOpen('${side}','${jq(x.res.full)}','${jq(x.shift)}')`}"`:'';
+    return `<div class="${cls}${meRow}${tapOk?' ds-tap':''}${isOpen?' ds-tap-open':''}"${tapAttr}><span class="ds-pname">${esc(x.res.full)}${tag}</span><span class="ds-pshift">${esc(x.shift)}</span>${ctrl}</div>`+form;
   };
   let any=false;
   order.forEach(b=>{const arr=groups[b]; if(!arr||!arr.length)return; any=true;
@@ -8753,7 +8937,7 @@ function dsWorkingList(iso){
   const idx=dsBuildNameIndex(), seen={}, out=[], co=dsCalledOffSet(iso);
   ['foh','boh'].forEach(side=>{const day=(side==='boh')?dsBohRowsFiltered(iso,idx):dsDayRows(side,iso); if(!day)return;
     day.rows.forEach(r=>{const res=dsResolve(r.name,idx),b=(side==='foh')?dsFohBucket(r.shift):dsBohBucket(r.shift,res.role,res.full);
-      if(b==='_off')return; if(co.has(res.full.toLowerCase()))return; if(seen[res.full])return; seen[res.full]=1;
+      if(b==='_off')return; if(r._move&&r._move.away)return; if(co.has(res.full.toLowerCase()))return; if(seen[res.full])return; seen[res.full]=1;
       if(PROFILES[res.full])out.push({name:res.full,side:side});});});
   return out;
 }
@@ -9421,6 +9605,8 @@ function renderToday(){
   const offerOn=dsRosterOv(iso).offerOff;
   let h='';
   h+=`<div class="ds-datebar"><label class="ds-datelab">Date</label><input type="date" id="ds-date" class="ds-dateinput" value="${iso}" onchange="dsSetDate(this.value)">${isToday?'':`<button class="ds-today-btn" onclick="dsSetDate('')">Back to today</button>`}</div>`;
+  if(mgr)h+='<button class="ds-jump" onclick="dsJumpRoster()">Who\'s on ↓</button>';
+  if(mgr&&dsTxSlow)h+='<div class="ds-alert">⚠ Your last swap hasn\'t reached the server yet. Other phones won\'t see it until it does. Check your connection.</div>';
   h+=dsDayEventHeaderHTML(iso);
   h+=dsCovNoteHTML(iso,isToday);
   if(isToday&&calloffApprovedForMe()){ h+='<div class="ds-offapp-banner">🌙 Sam gave you the night off tonight — you\'re off. Enjoy it.</div>'; markCalloffSeen(); }
@@ -11109,6 +11295,7 @@ function startBoardSync(){
     if(boardUnsub)boardUnsub();
     boardUnsub=fbDb.collection('board').doc(boardDocId()).onSnapshot(function(snap){
       const d=snap.exists?snap.data():null;
+      try{ dsTxSnap(boardDocId()); }catch(e){}
       boardState=d?{eightySixed:d.eightySixed||[],specials:d.specials||[],tables:d.tables||[],combos:d.combos||[],roster:d.roster||{calledOff:[],added:[]},covers:d.covers||null}:{eightySixed:[],specials:[],tables:[],combos:[],roster:{calledOff:[],added:[]},covers:null};
       renderBoard();
     },function(){ boardState=lsGetBoard(); renderBoard(); });
@@ -11119,7 +11306,10 @@ function startBoardSync(){
 function persistBoard(b){
   boardState=b;
   if(DEMO)return;   // demo: update the in-memory view only, never persist
-  if(fbReady&&fbDb){ fbDb.collection('board').doc(boardDocId()).set(b).catch(function(){lsSetBoard(b);}); }
+  /* 2026-11-06: the roster is written only by its own paths (dsSetRoster, swap transactions), and the rest
+     merges, so saving tables or 86s from a phone that hasn't caught up can't put back an old roster. */
+  if(fbReady&&fbDb){ const w=Object.assign({},b); delete w.roster;
+    fbDb.collection('board').doc(boardDocId()).set(w,{merge:true}).catch(function(){lsSetBoard(b);}); }
   else { lsSetBoard(b); }
 }
 /* (The legacy nightly "86 Tonight" board list was retired 2026-06-23 — the 86
