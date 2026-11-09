@@ -2333,7 +2333,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794079937';   // stamped by build-data.py at every deploy
+const BUILD='1794185677';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5895,20 +5895,20 @@ function wrHTML(){
   return h;
 }
 /* WEBSITE CLICKS (2026-11-04). Both public sites count taps on the buttons that matter into
-   swan-house-checkin clicks/<site>_<YYYY-MM-DD> (public read, +1-only writes; rules 2026-11-04).
+   sanfermo-websites clicks/<site>_<YYYY-MM-DD> (public read, +1-only writes). Moved off swan-house-checkin 2026-11-08.
    Shown at the top of Front Desk for managers: last 7 days per site. Visits and pages live in
-   Cloudflare Web Analytics (linked). Reuses a 'swan' compat app with the sites' App Check key. */
+   Cloudflare Web Analytics (linked). Uses its own 'websites' compat app pointed at sanfermo-websites. */
 const WEB_KEYS=[['reserve','Reservations button'],['opentable','Went on to OpenTable'],['order','Order online'],
   ['giftcards','Gift cards'],['tickets','Farm dinner tickets'],['signup','Mailing list sign-ups'],
   ['email','Email links'],['call','Tapped to call'],['instagram','Instagram'],['crosssite','Went to the other site']];
-const WEB_CFG={apiKey:"AIzaSyDEOMCOO0EH1RV4vogLF4aOWD0e52dsOOI",authDomain:"swan-house-checkin.firebaseapp.com",
-  projectId:"swan-house-checkin",storageBucket:"swan-house-checkin.firebasestorage.app",
-  messagingSenderId:"743743999844",appId:"1:743743999844:web:e124dd6fa5f791f87b7471"};
+const WEB_CFG={apiKey:"AIzaSyCLy6F9DQCUb9jc3AC-VWlSvgAlnQFUMIM",authDomain:"sanfermo-websites.firebaseapp.com",
+  projectId:"sanfermo-websites",storageBucket:"sanfermo-websites.firebasestorage.app",
+  messagingSenderId:"1077584217667",appId:"1:1077584217667:web:0216d61212179d583676f6"};
 let WEB={data:null,at:0,loading:false,err:false};
 function webApp(){
-  let app=(firebase.apps||[]).find(a=>a.name==='swan');
-  if(!app){ app=firebase.initializeApp(WEB_CFG,'swan');
-    try{ if(firebase.appCheck&&firebase.appCheck.ReCaptchaEnterpriseProvider) firebase.appCheck(app).activate(new firebase.appCheck.ReCaptchaEnterpriseProvider('6LeCgjAtAAAAABX8x9jbb3tkOXmmQ5UvNZD1RL2_'),true); }catch(e){} }
+  let app=(firebase.apps||[]).find(a=>a.name==='websites');
+  if(!app){ app=firebase.initializeApp(WEB_CFG,'websites');
+    /* 2026-11-08: sanfermo-websites has no App Check; public-read rules cover this. */ }
   return app;
 }
 function webDays(){ const out=[]; const f=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles'});
