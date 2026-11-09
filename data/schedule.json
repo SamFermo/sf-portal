@@ -4916,9 +4916,9 @@
         "",
         "",
         "",
-        "3:30 serve",
+        "",
         "Sup Server (Brittany R/O)",
-        "3:30 serve (Josie R/O)"
+        ""
       ],
       "covNotes": [
         "",
@@ -4961,7 +4961,7 @@
             "",
             "",
             "",
-            "",
+            "3:30 serve",
             "3:30 serve",
             "3:30 serve"
           ]
@@ -4987,7 +4987,7 @@
             "3:30 serve",
             "3:30 serve",
             "3:30 serve",
-            ""
+            "3:30 serve"
           ]
         },
         {
@@ -13032,7 +13032,7 @@
         "",
         "Expo",
         "Expo",
-        "",
+        "Admin",
         "Expo",
         "Expo",
         ""

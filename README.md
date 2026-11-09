@@ -77,7 +77,10 @@ automatically). Examples:
 Every value written to the FOH or BOH sheet also gets the matching cell color, so the sheet stays
 readable for Sam's own edits. BOH: green = production/early start (9-7, 9-5, 10-8, 12-10), blue =
 line 1-close, yellow = porter 1-close (Tony, Anna), purple = Expo/Admin, teal = MD, red = R/O, no
-fill = x. FOH: copy the colors already used on that sheet. The portal's BOH grid mirrors these
+fill = x. FOH: blue = serve, yellow = bar, purple = MD/Admin/Sup Server, green = Float, red = R/O.
+Since 2026-11-08 the colors are conditional-format rules on the BOH November + Template tabs and the
+FOH Winter Nov–Feb tabs, so any value written (by hand, by Claude, or by the 6am sweep's write-back)
+colors itself. A NEW month tab must get the same rules (copy them from an existing tab). The portal's BOH grid mirrors these
 (`bohTone()` in index.html).
 
 ### Schedule — HARD RULE (2026-06-11 incident)
