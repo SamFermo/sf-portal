@@ -72,6 +72,14 @@ automatically). Examples:
 - **Compliance changes:** keep `compliance.json` in step with the Compliance
   Notebook artifact.
 
+### Schedule — sheet colors (Sam, 2026-11-08)
+
+Every value written to the FOH or BOH sheet also gets the matching cell color, so the sheet stays
+readable for Sam's own edits. BOH: green = production/early start (9-7, 9-5, 10-8, 12-10), blue =
+line 1-close, yellow = porter 1-close (Tony, Anna), purple = Expo/Admin, teal = MD, red = R/O, no
+fill = x. FOH: copy the colors already used on that sheet. The portal's BOH grid mirrors these
+(`bohTone()` in index.html).
+
 ### Schedule — HARD RULE (2026-06-11 incident)
 
 The FOH/BOH Google Sheets are the single source of truth for the schedule.
