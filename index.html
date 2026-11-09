@@ -315,10 +315,11 @@ body.tour-on{padding-bottom:230px;}
 .shift.farm{color:var(--accent-dark); font-weight:700;} .shift.md{color:var(--gold-deep); font-weight:700;}
 /* KITCHEN TONES (2026-11-08, Sam): BOH cells carry the same colors as the BOH Google Sheet,
    so the portal and the sheet read alike. green = morning/production start, blue = line 1-close,
-   yellow = porter 1-close, purple = expo/admin, teal = MD, red = R/O. FOH is untouched. */
+   yellow = porter 1-close, purple = expo/admin, teal = MD, red = R/O. FOH (same day, Sam): blue = serve, yellow = bar, purple = MD/Admin/Sup Server, green = Float, red = R/O. */
 .shift[class*="tn-"]{padding:1px 5px; border-radius:4px; color:#2a2622;}
 .shift.tn-prod{background:#a8d4a4;} .shift.tn-line{background:#a8c8e8;} .shift.tn-dish{background:#f8dc8a;}
 .shift.tn-expo{background:#b299c7;} .shift.tn-md{background:#4a9ea8; color:#fff;} .shift.tn-ro{background:#f4c7c3; color:var(--rust);}
+.shift.tn-serve{background:#9fc5e8;} .shift.tn-bar{background:#ffe599;} .shift.tn-lead{background:#b4a7d6;} .shift.tn-float{background:#b6d7a8;}
 .legend .sw{display:inline-block; width:10px; height:10px; border-radius:3px; vertical-align:-1px; margin-right:3px;}
 /* .shift.fx (changed by an approved request) is deliberately unstyled: Sam 2026-09-28, the gold dot confused staff. Edited days look like any other day. */
 .legend{font-size:11px; color:var(--ink-mute); margin-top:8px; line-height:1.7;}
@@ -2182,6 +2183,7 @@ select.wb-in option{color:#241f15;}
   <div id="schedClaims"></div>
   <div class="filterbar" id="schedRanges" style="justify-content:center; padding-top:2px;"></div>
   <div id="schedBody"></div>
+  <div class="legend" id="schedLegendFoh" style="display:none"><b>Floor colors</b> · <span class="sw" style="background:#9fc5e8"></span>serve · <span class="sw" style="background:#ffe599"></span>bar · <span class="sw" style="background:#b4a7d6"></span>MD / admin / sup server · <span class="sw" style="background:#b6d7a8"></span>float · <span class="sw" style="background:#f4c7c3"></span>R/O</div>
   <div class="legend" id="schedLegendBoh" style="display:none"><b>Kitchen colors</b> · <span class="sw" style="background:#a8d4a4"></span>production / early start · <span class="sw" style="background:#a8c8e8"></span>line 1-close · <span class="sw" style="background:#f8dc8a"></span>porter · <span class="sw" style="background:#b299c7"></span>expo / admin · <span class="sw" style="background:#4a9ea8"></span>MD · <span class="sw" style="background:#f4c7c3"></span>R/O</div>
   <div class="legend" id="schedLegend"><b>3:30 serve / Bar</b> floor or bar · <b>Sup Server</b> support server · <b>MD</b> manager on duty · <b>Expo</b> expediting · <b>Farm</b> Swan House farm dinner · <b>R/O</b> requested off · <b>Open</b> row = shifts we still need covered — tap one to claim it (Sam confirms the final schedule) · <b>9-5 / 8-6 / 1-close</b> prep &amp; line times</div>
 </section>
@@ -2341,7 +2343,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794196794';   // stamped by build-data.py at every deploy
+const BUILD='1794197732';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -6140,7 +6142,10 @@ function fdDelete(id,name){
 let schedState={side:'foh',range:'week'};
 function currentWeekIndex(weeks){const t=todayISO();for(let i=0;i<weeks.length;i++){if(t>=weeks[i].dates[0]&&t<=weeks[i].dates[6])return i;}let idx=0;for(let i=0;i<weeks.length;i++){if(weeks[i].dates[0]<=t)idx=i;}return idx;}
 const BOH_TONE_PORTERS=new Set(['tony','anna']);   // sheet row names of the always-porters (see DS_PORTERS)
-function bohTone(s,name){ if(schedState.side!=='boh'||!s)return ''; const t=String(s).trim(), u=t.toUpperCase();
+function fohTone(s){ const t=String(s||'').trim(), u=t.toUpperCase(); if(!t||u==='X')return '';
+  if(u==='R/O')return 'tn-ro'; if(/^(MD|ADMIN)|SUP SERVER/.test(u))return 'tn-lead';
+  if(/BAR/.test(u))return 'tn-bar'; if(/^FLOAT/.test(u))return 'tn-float'; if(/SERVE/.test(u))return 'tn-serve'; return ''; }
+function bohTone(s,name){ if(schedState.side==='foh')return fohTone(s); if(schedState.side!=='boh'||!s)return ''; const t=String(s).trim(), u=t.toUpperCase();
   if(!t||u==='X')return ''; if(u==='R/O')return 'tn-ro'; if(u==='MD')return 'tn-md';
   if(u.startsWith('EXPO')||u.startsWith('ADMIN'))return 'tn-expo';
   if(/^1-?close$/i.test(t))return BOH_TONE_PORTERS.has(String(name||'').trim().toLowerCase())?'tn-dish':'tn-line';
@@ -6665,7 +6670,7 @@ function renderSchedule(){
   renderSchedClaims();               // manager pending-claims panel — every subtab, before the side-specific view
   const onTimeoff=schedState.side==='timeoff', onMine=schedState.side==='mine';
   $('schedRanges').style.display=onTimeoff?'none':'flex';
-  const lg=$('schedLegend');if(lg)lg.style.display=(onTimeoff||onMine)?'none':'block';const lgb=$('schedLegendBoh');if(lgb)lgb.style.display=(onTimeoff||onMine||schedState.side!=='boh')?'none':'block';
+  const lg=$('schedLegend');if(lg)lg.style.display=(onTimeoff||onMine)?'none':'block';const lgf=$('schedLegendFoh');if(lgf)lgf.style.display=(onTimeoff||onMine||schedState.side!=='foh')?'none':'block';const lgb=$('schedLegendBoh');if(lgb)lgb.style.display=(onTimeoff||onMine||schedState.side!=='boh')?'none':'block';
   if(onTimeoff){renderTimeoff();return;}
   if(onMine){renderMine();return;}   // must return before SF.schedule['mine'] is dereferenced
   const weeks=SF.schedule[schedState.side],today=todayISO();let sel;
