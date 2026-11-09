@@ -2343,7 +2343,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794261396';   // stamped by build-data.py at every deploy
+const BUILD='1794261598';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3196,6 +3196,8 @@ function dlApply(force){
     const d=dlBest(all,key,x=>x._originalName||x.name); if(d)id='dcard-'+fcSlug(d._originalName||d.name); }
   else if(kind==='cocktail'){ dlFresh('bar'); const c=dlBest((SF.bar&&SF.bar.cocktails)||[],key,x=>x.name); if(c)id='ckcard-'+fcSlug(c.name); }
   else if(kind==='amaro'){ dlFresh('bar'); const a=dlBest((SF.bar&&SF.bar.afterDinner)||[],key,x=>x.name); if(a)id='adcard-'+boSlug(a.name); }
+  else if(kind==='schedule'){ const sd=['mine','foh','boh','timeoff'].indexOf(key)>=0?key:'mine';   // 2026-11-09: #schedule/timeoff for poplog buttons
+    go('schedule'); setTimeout(()=>{ try{ setSchedSide(sd); }catch(e){} },60); return; }
   else if(kind==='standards'){ const p=['docs','seating','duties','service'].indexOf(key)>=0?key:'docs';
     go('standards'); const b=$('stdTabs')&&$('stdTabs').querySelector('[data-std="'+p+'"]'); if(b)b.click(); return; }
   else return;
@@ -3345,6 +3347,21 @@ const ANNOUNCES=[
     "Starting the week of 11/30 you move from Sundays to Fridays. Your week is Monday, Tuesday, Friday and Saturday, 1 to close. Sunday 11/22 is your last Sunday.",
     "If that conflicts with anything, let me know."
   ],
+  note:""
+  },
+  {
+  kind:'info',
+  aud:'foh',
+  forName:'Jackie Hanley',
+  id:'sched-change-2026-11-jackie-wed',
+  showUntil:'2026-12-13',
+  emoji:'\uD83D\uDCC5',
+  title:'Wednesdays are yours',
+  lines:[
+    "Starting Wednesday 11/25 you're on Wednesdays, 3:30 serve. Thanks for taking them on.",
+    "You mentioned there might be a Wednesday you can't make. If there is, tap Pick a Wednesday and put in the date as a time-off request. If that's sorted itself out, just tap Got it."
+  ],
+  go:{hash:'schedule/timeoff',label:'Pick a Wednesday'},
   note:""
   },
   {
