@@ -830,7 +830,7 @@ window.SF = {
    "region": "Sorbara, Modena, Emilia-Romagna, Italy",
    "type": "sparkling",
    "grapes": "Lambrusco di Sorbara",
-   "glass": "14",
+   "glass": "15",
    "bottle": "55",
    "pour": "Vibrant pink with fine, persistent bubbles — fresh raspberry and strawberry, a lift of violet, dry and refreshing with bright acidity. The most delicate style of Lambrusco.",
    "producer": "Paltrinieri traces its start to 1926 and farms 17 hectares in Cristo di Sorbara, the sandy strip between the Secchia and Panaro rivers north of Modena. The wine is named for St. Agatha, patron saint of Sorbara. Alberto Paltrinieri, who took over in 1998, was among the first to gamble on a mono-varietal Sorbara. (Research puts it at ~11% ABV and notes some bottlings blend in Salomino rather than being 100% Sorbara — confirm the vintage and blend with your lead before quoting.)",
@@ -1409,8 +1409,8 @@ window.SF = {
    "vintage": "2023",
    "region": "Abruzzo, Italy",
    "type": "white",
-   "glass": "14",
-   "bottle": "55",
+   "glass": "18",
+   "bottle": "75",
    "grapes": "100% Pecorino",
    "pour": "Vivid yellow with green glints. White flowers and fresh apple on the nose; fresh and zesty on the palate, fruit and acidity in balance, with a persistent finish.",
    "producer": "Contesa is Rocco Pasetti's estate in Collecorvino, in the hills above Pescara, with vineyards around Moscufo and Silvi on sandy soils. Pecorino is an old grape of Abruzzo and the Marche that nearly disappeared in the last century and has been revived since; the name is said to come from sheep (pecore) grazing the vineyards. We pour the 2023 Pecorino Abruzzo DOC. The winemaking notes come from the producer's sheet for a different Contesa Pecorino ('Vigna Corvino'), so confirm details with your lead before quoting.",
@@ -18147,8 +18147,8 @@ window.SF = {
     "rule": "eugenio",
     "cost": 11.93,
     "usual": "1-2 cases",
-    "glass": 14,
-    "bottle": 55
+    "glass": 18,
+    "bottle": 75
    },
    {
     "key": "valle-dell-acate-thymbra-vermentino-2023",
@@ -18502,7 +18502,7 @@ window.SF = {
     "cost": 14.25,
     "usual": "1 case goes a long way",
     "outUntil": "2026-11-18",
-    "glass": 14,
+    "glass": 15,
     "bottle": 55
    },
    {
@@ -19101,5 +19101,5 @@ window.SF = {
    }
   ]
  },
- "build": "1794185677"
+ "build": "1794191504"
 };

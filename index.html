@@ -2333,7 +2333,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794185677';   // stamped by build-data.py at every deploy
+const BUILD='1794191504';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -9935,6 +9935,7 @@ function lnPaint(el, rows, revById, tier){
   if(isFull){ h+=lnEfficiencyBlock(rev); }      // RevPASH/sales-per-seat full-only (net-derivable)
   h+=lnFoodBlock(latest.food);
   h+=lnMenuCostBlock(latest.food);   // Remy plate cost × units sold → theoretical menu-mix food cost
+  h+=lnWineCostBlock(latest.drinks&&latest.drinks.wine);   // wine master cost × units sold → theoretical wine cost
   h+=lnDrinksBlock(latest.drinks);
   h+=lnWineBlock(latest.drinks&&latest.drinks.wine);
   h+=lnStripBlock(rows, revById, isFull);
@@ -10069,6 +10070,49 @@ function lnMenuCostBlock(food){
   });
   h+='</table>';
   h+='<div class="ln-note">Remy plate cost × units sold. '+cov.toFixed(0)+'% of food sales costed'+(uncosted.length?' · not costed: '+esc(uncosted.join(', ')):'')+'. Estimates from the recipe map — a modeled figure that sharpens as portions get tuned.</div>';
+  return h+'</div>';
+}
+
+/* ---------- Menu-mix wine cost (wine master cost × units sold) — 2026-11-08 ---------- */
+// Each Revel wine button maps to a wine in SF.wineInv (same map the Wine Inventory tab uses).
+// A glass is 1/glassesPerBottle of the bottle's cost. Buttons with no wine or no cost (corkage,
+// open wine, pairings, specials) don't cost and are named in the coverage line.
+function lnWineCostKey(buttons, name){
+  const n=String(name||''); if(buttons[n])return buttons[n];
+  const t=n.trim(); if(buttons[t])return buttons[t];
+  const lo=t.toLowerCase(); for(const b in buttons){ if(b.trim().toLowerCase()===lo)return buttons[b]; }
+  return null;
+}
+function lnWineCostBlock(wine){
+  const D=(window.SF&&SF.wineInv)||{}; const ws=D.wines||[], buttons=D.buttons||{}, gpb=+D.glassesPerBottle||4;
+  if(!wine||!ws.length)return '';
+  const byKey={}; ws.forEach(function(w){ byKey[w.key]=w; });
+  const per={}, uncosted={}; let cCost=0,cRev=0,totRev=0;
+  [['g',wine.glass_items],['b',wine.bottle_items]].forEach(function(pair){
+    (pair[1]||[]).forEach(function(it){
+      const q=Number(it.qty)||0, rev=Number(it.rev)||0; totRev+=rev;
+      const w=byKey[lnWineCostKey(buttons,it.name)]; const cost=w?Number(w.cost):NaN;
+      if(w&&cost>0&&q>0){
+        const ext=cost*q/(pair[0]==='g'?gpb:1); cCost+=ext; cRev+=rev;
+        const nm=w.short||w.name; const r=per[nm]||(per[nm]={n:nm,gl:0,bt:0,ext:0,rev:0});
+        if(pair[0]==='g')r.gl+=q; else r.bt+=q; r.ext+=ext; r.rev+=rev;
+      } else if(q>0){ uncosted[it.name]=(uncosted[it.name]||0)+q; }
+    });
+  });
+  const rows=Object.keys(per).map(function(k){return per[k];});
+  if(!rows.length)return '';
+  rows.sort(function(a,b){return b.ext-a.ext;});
+  const pct=cRev>0?cCost/cRev*100:0, cov=totRev>0?cRev/totRev*100:0;
+  const unc=Object.keys(uncosted).map(function(k){return k.trim()+' ('+lnNum(uncosted[k])+')';});
+  let h='<div class="ln-sec">Menu-mix wine cost</div><div class="ln-card">';
+  h+='<div class="ln-row"><span class="nm">Theoretical wine cost</span><span class="qv">'+pct.toFixed(1)+'% · '+lnMoney0(cCost)+' cost on '+lnMoney0(cRev)+'</span></div>';
+  h+='<table class="ln-strip"><tr><th>Wine</th><th>Sold</th><th>Cost</th><th>Sales</th><th>WC%</th></tr>';
+  rows.slice(0,8).forEach(function(r){
+    const sold=[]; if(r.gl)sold.push(lnNum(r.gl)+' gl'); if(r.bt)sold.push(lnNum(r.bt)+' btl');
+    h+='<tr><td>'+esc(r.n)+'</td><td>'+esc(sold.join(' · '))+'</td><td>'+lnMoney0(r.ext)+'</td><td>'+lnMoney0(r.rev)+'</td><td>'+(r.rev>0?(r.ext/r.rev*100).toFixed(0)+'%':'—')+'</td></tr>';
+  });
+  h+='</table>';
+  h+='<div class="ln-note">Wine list cost × units sold, '+gpb+' pours to a bottle. '+cov.toFixed(0)+'% of wine sales costed'+(unc.length?' · not costed: '+esc(unc.join(', ')):'')+'. Uses the cost on file, so a price change from a rep shows here once the wine list is updated.</div>';
   return h+'</div>';
 }
 

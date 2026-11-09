@@ -207,8 +207,8 @@
       "rule": "eugenio",
       "cost": 11.93,
       "usual": "1-2 cases",
-      "glass": 14,
-      "bottle": 55
+      "glass": 18,
+      "bottle": 75
     },
     {
       "key": "valle-dell-acate-thymbra-vermentino-2023",
@@ -562,7 +562,7 @@
       "cost": 14.25,
       "usual": "1 case goes a long way",
       "outUntil": "2026-11-18",
-      "glass": 14,
+      "glass": 15,
       "bottle": 55
     },
     {
