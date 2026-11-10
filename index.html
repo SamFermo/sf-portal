@@ -422,7 +422,7 @@ body.tour-on{padding-bottom:230px;}
 .co-leave{background:none; border:none; color:var(--gold-deep); font-size:12.5px; font-weight:700; text-decoration:underline; cursor:pointer;}
 .co-list{align-self:stretch; text-align:left; border-top:1px solid var(--moon-edge); padding-top:9px; display:flex; flex-direction:column; gap:5px;}
 .co-list-h{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--card-mute);}
-.co-row{display:flex; align-items:center; gap:9px; font-size:14px; color:var(--card-ink); padding:6px 9px; border-radius:8px; background:var(--moon-hi);} .co-row.me{outline:2px solid var(--gold-deep);} .co-row.appr{background:var(--accent-soft);}
+.co-row{display:flex; align-items:center; gap:9px; font-size:14px; color:var(--card-ink); padding:6px 9px; border-radius:8px; background:var(--moon-hi);} .co-row.me{outline:2px solid var(--gold-deep);} .co-row.appr{background:var(--accent-soft);} .co-row.sick .co-at,.co-at.co-sick{color:#c0392b; font-weight:700;} .co-sick-note{font-size:13px; font-weight:600; color:#8a2a1f; background:rgba(192,57,43,.10); border:1px solid rgba(192,57,43,.30); border-radius:8px; padding:7px 10px; margin:4px 0;} .ds-vol-row.sick .ds-vol-type{color:#c0392b; font-weight:700;}
 .co-row.co-empty{color:var(--card-mute); font-style:italic; background:none; padding-left:0;}
 .co-n{width:20px; font-weight:700; color:var(--wood);} .co-name{flex:1; font-weight:700;} .co-at{font-size:11.5px; color:var(--card-mute);}
 .cov-note{display:inline-block; font-size:10.5px; font-weight:700; line-height:1.2; color:#2a1f08; background:#e7bf5e; border-radius:6px; padding:3px 6px;}
@@ -2343,7 +2343,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794261598';   // stamped by build-data.py at every deploy
+const BUILD='1794341820';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3633,13 +3633,14 @@ function annCalloffHTML(A){ const t=todayISO(), side=A.aud||'foh', mySide=!!(me&
   (A.nights||[]).filter(function(iso){return iso>=t;}).forEach(function(iso){ coWatch(iso);
     const w=dsWeekFor(side,iso), note=w?String((w.covNotes||[])[w.dates.indexOf(iso)]||'').trim():'', n=coHeads(note);
     const list=coMerged(iso).filter(function(v){return v.type!=='oncall';}), k=me?list.findIndex(function(v){return v.name===me.name;}):-1;
-    const avail=mySide?osAvailOn(side,iso):null, day=fmtLong(iso).split(',')[0].slice(0,3)+' '+fmtShort(iso);
+    const avail=mySide?osAvailOn(side,iso):null, day=fmtLong(iso).split(',')[0].slice(0,3)+' '+fmtShort(iso), sk=dsSickList(iso);
     let ctl;
-    if(k>=0)ctl='<span class="acn-you">You\'re #'+(k+1)+'</span><button class="co-leave" onclick="coLeave(\''+iso+'\')">Take me off</button>';
+    if(k>=0&&list[k].sick)ctl='<span class="acn-you">🤒 Out sick</span>';
+    else if(k>=0)ctl='<span class="acn-you">You\'re #'+(k+1)+'</span><button class="co-leave" onclick="coLeave(\''+iso+'\')">Take me off</button>';
     else if(!mySide)ctl='<span class="acn-na">Floor team only</span>';
     else if(avail==='working')ctl='<button class="acn-go" onclick="coJoin(\''+side+'\',\''+iso+'\')">Put me down</button>';
     else ctl='<span class="acn-na">'+(avail==='ro'?'Already off':'Not on')+'</span>';
-    rows+='<div class="acn-row'+(k>=0?' me':'')+'"><div class="acn-day"><b>'+esc(day)+(iso===t?' · tonight':'')+'</b><span>'+n+' going · '+list.length+' asked</span></div><div class="acn-ctl">'+ctl+'</div></div>'; });
+    rows+='<div class="acn-row'+(k>=0?' me':'')+'"><div class="acn-day"><b>'+esc(day)+(iso===t?' · tonight':'')+'</b><span>'+n+' going · '+(list.length-sk.length)+' asked'+(sk.length?' · 🤒 '+esc(sk.map(function(a){return dsFirst(a.name);}).join(', '))+' out sick':'')+'</span></div><div class="acn-ctl">'+ctl+'</div></div>'; });
   if(!rows)rows='<div class="co-hint">These nights have passed.</div>';
   const more=annPendingCount()>1;
   return '<div class="ann-card co-card"><div class="ann-emoji">'+A.emoji+'</div><div class="ann-title serif">'+esc(A.title)+'</div>'
@@ -8611,7 +8612,17 @@ function coHeads(note){ const m=String(note||'').match(/(\d+)/); const n=m?parse
 function coWho(n){ return n===1?'One person':((['','One','Two','Three','Four','Five'][n]||String(n))+' people'); }
 function coEntries(iso){ return (coCache[iso]||[]).slice(); }
 /* both sources, earliest ask first, one row per person */
+/* OUT SICK (2026-11-10, Sam): anyone sent home sick for a night (roster.home why:'sick', set by the
+   Day Sheet swap) leads that night's call-off list as "out sick · approved", and everyone asking to
+   flex sees who is already out. Names show to all staff (Sam's call). Read-only: no new writes. */
+function dsSickList(iso){ const seen={}, out=[];
+  (dsRosterOv(iso).home||[]).forEach(function(h){ if(!h||h.why!=='sick'||!h.name)return; const k=String(h.name).toLowerCase(); if(seen[k])return; seen[k]=1; out.push({name:h.name, at:h.at||'', to:h.to||''}); });
+  return out; }
+function dsSickNoteHTML(iso,exceptName){ const s=dsSickList(iso).filter(function(a){return !exceptName||a.name!==exceptName;}); if(!s.length)return '';
+  const n=s.map(function(a){return a.name;}), who=n.length===1?n[0]+' is':n.slice(0,-1).join(', ')+' and '+n[n.length-1]+' are';
+  return '<div class="co-sick-note">🤒 '+esc(who)+' already out sick '+(iso===todayISO()?'tonight':'this night')+', so a flex night off is less likely.</div>'; }
 function coMerged(iso){ const seen={}, out=[];
+  dsSickList(iso).forEach(function(a){ const k=String(a.name).toLowerCase(); seen[k]=1; out.push({name:a.name, type:'off', sick:true, at:0}); });
   coEntries(iso).concat(dsRosterOv(iso).volunteers||[]).sort(function(a,b){return (a.at||0)-(b.at||0);})
     .forEach(function(v){ const k=String(v.name||'').toLowerCase(); if(!k||seen[k])return; seen[k]=1; out.push(v); });
   return out; }
@@ -8692,8 +8703,9 @@ function cbRender(){
     h+='<div class="cb-night'+(done?' done':'')+'"><div class="cb-head"><span class="cb-day">'+esc(fmtLong(n.iso))+(n.iso===t?' · tonight':'')+'</span><span class="cb-need">'+(done?'Set ✓':esc(need))+'</span></div>';
     if(!n.list.length)h+='<div class="co-row co-empty">Nobody yet.</div>';
     n.list.forEach(function(v,i){ const ap=!!dsApprEntry(n.iso,v.name);
-      h+='<div class="co-row'+(ap?' appr':'')+'"><span class="co-n">'+(i+1)+'</span><span class="co-name">'+esc(v.name)+(v.side?' <span class="cb-side">'+(v.side==='boh'?'kitchen':'floor')+'</span>':'')+'</span>';
-      if(adm)h+=ap?'<button class="cb-btn on" onclick="cbUndo(\''+n.iso+'\',\''+jq(v.name)+'\')"'+(ready?'':' disabled')+'>✓ Off · undo</button>'
+      h+='<div class="co-row'+(ap||v.sick?' appr':'')+(v.sick?' sick':'')+'"><span class="co-n">'+(i+1)+'</span><span class="co-name">'+esc(v.name)+(v.side?' <span class="cb-side">'+(v.side==='boh'?'kitchen':'floor')+'</span>':'')+'</span>';
+      if(v.sick)h+='<span class="co-at co-sick">🤒 out sick · approved</span>';
+      else if(adm)h+=ap?'<button class="cb-btn on" onclick="cbUndo(\''+n.iso+'\',\''+jq(v.name)+'\')"'+(ready?'':' disabled')+'>✓ Off · undo</button>'
                   :'<button class="cb-btn" onclick="cbApprove(\''+n.iso+'\',\''+jq(v.name)+'\')"'+(ready?'':' disabled')+'>Approve</button>';
       else h+='<span class="co-at">'+(ap?'✓ off':esc(reqStamp(v.at)))+'</span>';
       h+='</div>'; });
@@ -8712,15 +8724,17 @@ function coRender(){ const s=coState; if(!s)return; let m=$('coModal');
   let h='<div class="ann-card co-card"><div class="ann-emoji">🌙</div><div class="ann-title serif">'+esc(fmtLong(iso))+'</div>';
   h+='<div class="ann-line">'+coWho(coHeads(note))+' '+(side==='foh'?'on the floor':'in the kitchen')+(coHeads(note)>1?' get':' gets')+' called off '+(iso===todayISO()?'tonight':'this night')+(note?' ('+esc(note)+')':'')+'. First to ask is first to go.</div>';
   if(past)h+='<div class="co-hint">This night has passed.</div>';
+  else if(onList&&list[mine].sick)h+='<div class="co-you">You\'re marked out sick. Feel better.</div>';
   else if(onList)h+='<div class="co-you">You\'re #'+(mine+1)+' in line.</div><button class="co-leave" onclick="coLeave(\''+iso+'\')">Take me off the list</button>';
   else if(!mySide)h+='<div class="co-hint">'+(isMgr()?'You approve the night off from Day at a Glance on the day.':'This one is for the '+(side==='foh'?'floor':'kitchen')+' team.')+'</div>';
   else if(avail==='working')h+='<div class="to-submit"><button class="to-go" onclick="coJoin(\''+side+'\',\''+iso+'\')">Yes, consider me for the night off</button></div>';
   else h+='<div class="co-hint">'+(avail==='ro'?'You already have this day off.':"You're not on the schedule this night, so there's nothing to be called off from.")+'</div>';
+  if(!past&&!(onList&&list[mine].sick))h+=dsSickNoteHTML(iso,me&&me.name);
   h+='<div class="co-list"><div class="co-list-h">Asked so far</div>';
   if(!loaded)h+='<div class="co-row co-empty">Loading…</div>';
   else if(!list.length)h+='<div class="co-row co-empty">Nobody yet.</div>';
   else list.forEach(function(v,i){ const isA=!!dsApprEntry(iso,v.name);
-    h+='<div class="co-row'+(me&&v.name===me.name?' me':'')+(isA?' appr':'')+'"><span class="co-n">'+(i+1)+'</span><span class="co-name">'+esc(v.name)+'</span><span class="co-at">'+(isA?'✓ off':esc(reqStamp(v.at)))+'</span></div>'; });
+    h+='<div class="co-row'+(me&&v.name===me.name?' me':'')+(isA||v.sick?' appr':'')+(v.sick?' sick':'')+'"><span class="co-n">'+(i+1)+'</span><span class="co-name">'+esc(v.name)+'</span><span class="co-at">'+(v.sick?'🤒 out sick · approved':isA?'✓ off':esc(reqStamp(v.at)))+'</span></div>'; });
   h+='</div><button class="ann-dismiss" onclick="coClose()">Close</button></div>';
   m.innerHTML=h; m.style.display='flex';
 }
@@ -9639,8 +9653,9 @@ function dsVolunteerListHTML(iso){ const vs=dsVolunteersSorted(iso); if(!vs.leng
   const appr=dsRosterOv(iso).offApproved, apprName=appr&&appr.name;
   let h='<div class="ds-vol-list"><div class="ds-side-head">Volunteered to flex · first-come</div>';
   vs.forEach(function(v,i){ const isAppr=!!dsApprEntry(iso,v.name);
-    h+='<div class="ds-vol-row'+(isAppr?' approved':'')+'"><span class="ds-vol-n">'+(i+1)+'</span><span class="ds-vol-name">'+esc(v.name)+'</span><span class="ds-vol-type">'+(v.type==='oncall'?'on-call':'night off')+'</span><span class="ds-vol-at">'+dsWxStamp(v.at)+'</span>';
-    if(isAdmin()){
+    h+='<div class="ds-vol-row'+(isAppr||v.sick?' approved':'')+(v.sick?' sick':'')+'"><span class="ds-vol-n">'+(i+1)+'</span><span class="ds-vol-name">'+esc(v.name)+'</span><span class="ds-vol-type">'+(v.sick?'🤒 out sick · approved':v.type==='oncall'?'on-call':'night off')+'</span><span class="ds-vol-at">'+dsWxStamp(v.at)+'</span>';
+    if(v.sick){}
+    else if(isAdmin()){
       if(isAppr)h+='<button class="ds-vol-appr on" onclick="dsUndoApproveCallOff(\''+jq(v.name)+'\')">✓ Off tonight · undo</button>';
       else if(v.type==='off')h+='<button class="ds-vol-appr" onclick="dsApproveCallOff(\''+jq(v.name)+'\')">Approve night off</button>';
     }
@@ -9652,8 +9667,9 @@ function dsVolunteerListHTML(iso){ const vs=dsVolunteersSorted(iso); if(!vs.leng
    of the sheet with the same clear (never-faded) button the manager toggle uses. */
 function dsStaffOfferHTML(iso){
   const mine=dsMyVolunteer(iso), scheduled=dsAmScheduled(iso);
-  let h='<div class="ds-staffoffer-top">';
-  if(mine){ const pos=dsVolunteersSorted(iso).findIndex(function(v){return v.name===(me&&me.name);})+1;
+  let h='<div class="ds-staffoffer-top">'+(scheduled&&!(mine&&mine.sick)?dsSickNoteHTML(iso,me&&me.name):'');
+  if(mine&&mine.sick){ h+='<div class="ds-offer-status">🤒 You\'re marked out sick tonight. Feel better.</div>'; }
+  else if(mine){ const pos=dsVolunteersSorted(iso).findIndex(function(v){return v.name===(me&&me.name);})+1;
     h+='<div class="ds-offer-status">✓ You\'re on the '+(mine.type==='oncall'?'on-call':'call-off')+' list — #'+pos+' in line.<button class="ds-offer-undo" onclick="dsUnvolunteer()">Take me off</button></div>';
   } else {
     h+='<button class="ds-offer-btn" onclick="dsVolunteer()">'+(scheduled?'🌙 Offer to take the night off':'🖐 Put me on-call — available if you\'re short')+'</button>';
