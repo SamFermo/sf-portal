@@ -1981,6 +1981,11 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 .wo-ck-f input[type=text]{width:auto; flex:1; min-width:140px;}
 .wo-ck-k{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-soft);}
 .wo-hint{font-size:11.5px; color:var(--ink-mute); margin:0; font-style:italic;}
+.wo-pend{border-color:rgba(230,200,120,.6);}
+.wo-bld{gap:10px;}
+.wo-bld .wo-q-0{color:var(--ink-mute); font-weight:600;}
+.wo-step button:disabled{opacity:.35; cursor:default;}
+.wo-bld-f{display:flex; flex-direction:column; gap:4px; font-size:11.5px; color:var(--ink-mute);}
 .wo-hist summary{cursor:pointer; font-size:12.5px; color:var(--ink-soft); padding:4px 0;}
 .wo-btn:focus-visible,.wo-ck-b button:focus-visible,.wo-step button:focus-visible,.wi-btn:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
 /* WINE INVENTORY (2026-09-29) */
@@ -2343,7 +2348,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794341820';   // stamped by build-data.py at every deploy
+const BUILD='1794418086';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5315,21 +5320,23 @@ function wbWines(){ const inv=WB.feed&&WB.feed.inventory; if(!inv)return []; con
     if(w.state==='ok'||w.state==='watch')r.state=(r.weeks!=null&&r.weeks<2)?'watch':'ok';
     return r; }); }
 function wbMainShow(on){ ['woBody','wiBody'].forEach(function(id){ const e=$(id); if(e)e.style.display=on?'':'none'; }); }
+function woPendFill(){ if($('woPend')&&typeof woRender==='function')woRender(); }
 function wbRender(){
   const b=$('wbBody'); if(!b)return;
-  if(!wbCanTab()){ b.innerHTML=''; wbMainShow(true); return; }   /* wine access without the book: the page as it always was */
+  if(!wbCanTab()){ b.innerHTML=''; wbMainShow(true); woPendFill(); return; }   /* wine access without the book: the page as it always was */
   wbLoad(false); wbWatchNotes();
   wbMainShow(WB.sub==='main');
   if(WB.sub==='main'&&(!WI.revel||!WI.loaded)){ if(WB.liveWait<20&&!WB.rt){ WB.liveWait++; WB.rt=setTimeout(function(){ WB.rt=null; if($('wineinv').classList.contains('active')&&WB.sub==='main')wbRender(); },1500); } }
   let h='<div class="wi-seg wb-seg">'+WB_SUBS.map(function(s){ return '<button class="'+(WB.sub===s[0]?'on':'')+'" onclick="wbSub(\''+s[0]+'\')">'+s[1]+'</button>'; }).join('')+'</div>';
-  if(WB.err&&!WB.feed){ b.innerHTML=h+(WB.sub==='main'?'':'<p class="wb-warn">This section did not load. Check the connection and open the tab again.</p>'); return; }
-  if(!WB.feed){ b.innerHTML=h+(WB.sub==='main'?'':'<p class="board-empty">'+(WB.loading||!WB.at?'Opening…':'Nothing here yet. It fills in at the next morning refresh.')+'</p>'); return; }
+  if(WB.sub==='main')h+='<div id="woPend"></div>';   /* Waiting on (orders) sits right under the tabs, 2026-11-11 */
+  if(WB.err&&!WB.feed){ b.innerHTML=h+(WB.sub==='main'?'':'<p class="wb-warn">This section did not load. Check the connection and open the tab again.</p>'); woPendFill(); return; }
+  if(!WB.feed){ b.innerHTML=h+(WB.sub==='main'?'':'<p class="board-empty">'+(WB.loading||!WB.at?'Opening…':'Nothing here yet. It fills in at the next morning refresh.')+'</p>'); woPendFill(); return; }
   const inv=WB.feed.inventory;
   if(inv&&WB.sub!=='notes'){ const g=new Date(String(inv.generated).replace(/([+-]\d\d)(\d\d)$/,'$1:$2')), age=(Date.now()-g)/36e5;
     h+='<p class="wb-stamp">Sales through '+esc(wbD(inv.revelThrough))+' · refreshed '+WB_DOW[g.getDay()]+' '+(g.getMonth()+1)+'/'+g.getDate()+' at '+esc(g.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}))+'</p>';
     if(age>36)h+='<p class="wb-warn">This is more than a day old, so the morning refresh may have missed.'+(WB.sub==='main'?' Bottle counts below are still live.':'')+'</p>'; }
   const fn={main:wbMain,sales:wbSales,reps:wbReps,catalogs:wbCatalogs,market:wbMarket,notes:wbNotes}[WB.sub];
-  b.innerHTML=h+fn();
+  b.innerHTML=h+fn(); woPendFill();
   if(WB.sub==='sales')wbChart();
   if(WB.sub==='catalogs')wbFillCat();
   if(WB.sub==='notes')wbFillNotes();
@@ -5344,7 +5351,7 @@ function wbMain(){
   if(watch.length)t+=' '+watch.length+(low.length?' more':'')+' under two weeks: '+watch.map(function(w){return w.short;}).join(', ')+'.';
   let h='<p class="wb-lede">'+esc(t)+'</p>';
   if(inv.orders&&inv.orders.length){ const tot=inv.orders.reduce(function(a,o){return a+(o.total||0);},0);
-    h+='<details class="wo-card wb-prev"'+(WB.prevOpen?' open':'')+' ontoggle="WB.prevOpen=this.open"><summary><span class="wo-title">Next order preview</span> <span class="wb-prev-s">about '+wbUsd(tot)+' by '+esc(wbD(inv.orders[0].cutoff))+'</span></summary><p class="wo-hint">If nothing changes, the morning check drafts this. It moves with sales. Orders go out from the card below.</p>';
+    h+='<details class="wo-card wb-prev"'+(WB.prevOpen?' open':'')+' ontoggle="WB.prevOpen=this.open"><summary><span class="wo-title">Next order preview</span> <span class="wb-prev-s">about '+wbUsd(tot)+' by '+esc(wbD(inv.orders[0].cutoff))+'</span></summary><p class="wo-hint">Only wines that would run short before the delivery after this one. If nothing changes, the morning check drafts this two days before the order-by day. It moves with sales. Orders go out from the card below.</p>';
     inv.orders.forEach(function(o){ h+='<div class="wo-o"><div class="wo-h"><div><div class="wo-rep">'+esc(o.rep)+' <span>'+esc(o.vendor)+'</span></div><div class="wo-sub">By '+esc(wbD(o.cutoff))+(o.cutoffTime?' '+esc(wbT(o.cutoffTime)):'')+(o.belowMin?' · under the minimum':'')+'</div></div><div class="wo-day">'+(o.total?wbUsd(o.total)+' · ':'')+'lands '+esc(wbD(o.delivery))+'</div></div><div class="wo-lines">'
       +o.lines.map(function(l){ const w=by(l.key); return '<div class="wo-line"><span class="wo-q">'+esc(l.label)+'</span><span class="wo-n">'+esc(w?w.short:l.name)+(l.why?'<span class="wo-why">'+esc(l.why)+'</span>':'')+'</span></div>'; }).join('')+'</div></div>'; });
     h+='</details>'; }
@@ -5752,8 +5759,13 @@ function wiAdjCommit(A){ const s=wiCompute(wiData(),WI.doc||{},WI.revel||{}).byK
    CHECK IN: per line Received / Short / Missing / Wrong wine. What actually came becomes a receipt on
    board/wineinv (stock goes up by what came, not what was ordered). Short, missing or wrong (not kept)
    lines become exceptions with a follow-up text; the morning order check counts them as still owed.
-   Both docs change in one transaction. */
-let WO={doc:null,loaded:false,unsub:null,edit:null,chk:null,armSkip:null,armAll:null};
+   Both docs change in one transaction.
+   2026-11-11 (Sam): the morning check now drafts only wines that would run short before the delivery after
+   this one, and only from 2 days before the order-by day. Sam can also build an order here himself (Start an
+   order): pick a rep and a delivery, set bottles per wine. It replaces that rep's draft for that delivery and is
+   marked manual, so the morning check keeps it until its cutoff. Expected deliveries and delivery problems sit at
+   the very top of the tab (#woPend, a slot the Wine Book draws under its tabs; without the book, top of #woBody). */
+let WO={doc:null,loaded:false,unsub:null,edit:null,chk:null,armSkip:null,armAll:null,bld:null};
 const WO_SENDERS=['sam'];
 function woRef(){ return fbDb.collection('board').doc('wineorders'); }
 function woFirst(){ return String((me&&me.name)||'').trim().split(/\s+/)[0].toLowerCase(); }
@@ -5896,6 +5908,83 @@ function woChkAll(id){ const o=((WO.doc||{}).orders||[]).find(function(x){return
 function woResolve(id,key,came){ const now=Date.now(), who=woWho();
   woTx(function(od,inv){ return woApplyResolve(od,inv,id,key,came,who,now); }); }
 
+/* Build an order by hand (2026-11-11). Delivery days follow the master like tools/wine_core.next_delivery:
+   deliveryDow/cutoffDow are Mon=0 weekdays, default Fri/Thu; first delivery whose cutoff is today or later. */
+function woNextDeliveries(vendor,n){
+  const v=woMaster().vendors[vendor]||{}, dd=v.deliveryDow==null?4:+v.deliveryDow, cd=v.cutoffDow==null?3:+v.cutoffDow;
+  const lead=((dd-cd)%7+7)%7, today=woToday(), out=[]; let x=today;
+  for(let i=0;i<70&&out.length<n;i++){ if((woDay(x).getDay()+6)%7===dd&&wiAddDays(x,-lead)>=today)out.push({delivery:x,cutoff:wiAddDays(x,-lead)}); x=wiAddDays(x,1); }
+  return out;
+}
+function woBldStepOf(w){ return w.rule==='par6'?1:(w.unit||12); }
+function woBldWines(vendor){
+  return woMaster().wines.filter(function(w){return w.vendor===vendor&&!w.phaseOut;})
+    .sort(function(a,b){ const oa=(a.status==='cellar'&&!a.orderable)?1:0, ob=(b.status==='cellar'&&!b.orderable)?1:0;
+      return oa-ob||String(a.short||a.name).localeCompare(String(b.short||b.name)); });
+}
+function woOnHand(){ try{ if(typeof wiCompute!=='function'||!WI.loaded||!WI.revel)return null; return wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey; }catch(e){ return null; } }
+function woBldOpen(){ if(!woCanSend())return; WO.bld={vendor:'',delivery:'',q:{}}; woRender(); }
+function woBldClose(){ WO.bld=null; woRender(); }
+/* Choosing a rep starts from that rep's draft if there is one, so this also works as "edit the whole order". */
+function woBldVendor(vendor){
+  const opts=vendor?woNextDeliveries(vendor,3):[], q={};
+  const dr=((WO.doc||{}).orders||[]).filter(function(o){return o.state==='draft'&&o.vendor===vendor&&opts.some(function(d){return d.delivery===o.delivery;});})
+    .sort(function(a,b){return a.delivery<b.delivery?-1:1;})[0];
+  if(dr)(dr.lines||[]).forEach(function(l){ q[l.key]=+l.qty_bottles||0; });
+  WO.bld={vendor:vendor,delivery:dr?dr.delivery:(opts[0]?opts[0].delivery:''),q:q}; woRender();
+}
+function woBldDay(d){ const B=WO.bld; if(!B)return;
+  /* a draft already waiting for that delivery wins, so switching days never carries one order's bottles onto another (Odo 2026-11-11) */
+  const dr=((WO.doc||{}).orders||[]).find(function(o){return o.state==='draft'&&o.vendor===B.vendor&&o.delivery===d;});
+  if(dr){ const q={}; (dr.lines||[]).forEach(function(l){ q[l.key]=+l.qty_bottles||0; }); B.q=q; }
+  B.delivery=d; woRender(); }
+function woBldStep(key,dir){ const B=WO.bld; if(!B)return; const w=woWine(key);
+  B.q[key]=Math.max(0,(+B.q[key]||0)+dir*woBldStepOf(w)); woRender(); }
+function woBldLines(B){
+  const who=String(woWho()).split(/\s+/)[0];
+  return Object.keys(B.q).filter(function(k){return B.q[k]>0;}).map(function(k){ const w=woWine(k), q=+B.q[k];
+    return {key:k,name:w.name||k,qty_bottles:q,qty_label:woLabel(q,w.unit||12),reason:'added by '+who,est_cost:w.cost!=null?Math.round(q*w.cost*100)/100:null,edited:true}; });
+}
+/* Pure, exported for the test: put Sam's order into od. Replaces that rep's draft for the same delivery (or adds
+   one) and drops the rep's other untouched morning drafts, which the morning check would drop anyway. */
+function woApplyBuild(od,B,d,lines,who,now){
+  const v=woMaster().vendors[B.vendor]||{};
+  const known=lines.every(function(l){return l.est_cost!=null;}), tot=Math.round(lines.reduce(function(a,l){return a+(l.est_cost||0);},0)*100)/100;
+  const ex=(od.orders||[]).find(function(o){return o.state==='draft'&&o.vendor===B.vendor&&o.delivery===d.delivery;});
+  let orders=(od.orders||[]).filter(function(o){ return !(o!==ex&&o.state==='draft'&&o.vendor===B.vendor&&!o.manual&&!(o.lines||[]).some(function(l){return l.edited;})); });
+  if(ex)orders=orders.map(function(o){ return o!==ex?o:Object.assign({},o,{lines:lines,est_total:tot,cost_known:known,manual:true,editedAt:now,editedBy:who}); });
+  else orders=orders.concat([{id:'m'+now.toString(16)+String(B.vendor).slice(0,3).toLowerCase(),vendor:B.vendor,rep:v.rep||'',delivery:d.delivery,cutoff:d.cutoff,
+    cutoff_time:v.cutoffTime||null,confirmed:!!v.confirmed,state:'draft',manual:true,lines:lines,est_total:tot,cost_known:known,created:now,createdBy:who}]);
+  return {od:{orders:orders,updated:woToday()},inv:null};
+}
+function woBldSave(){
+  const B=WO.bld; if(!B||!B.vendor||!B.delivery||!woCanSend())return;
+  const d=woNextDeliveries(B.vendor,3).find(function(x){return x.delivery===B.delivery;}); if(!d)return;
+  const lines=woBldLines(B); if(!lines.length)return;
+  const now=Date.now(), who=woWho();
+  woTx(function(od){ return woApplyBuild(od,B,d,lines,who,now); }, function(){ WO.bld=null; woRender(); });
+}
+function woBldHTML(){
+  const B=WO.bld, V=woMaster().vendors;
+  let h='<div class="wo-o wo-bld"><div class="wo-rep">New order</div>'
+    +'<label class="wo-bld-f">Rep<select class="wi-sel" id="woBldV" onchange="woBldVendor(this.value)"><option value="">Choose a rep…</option>'
+    +Object.keys(V).sort(function(a,b){return String(V[a].rep||a).localeCompare(String(V[b].rep||b));}).map(function(k){
+      return '<option value="'+esc(k)+'"'+(B.vendor===k?' selected':'')+'>'+esc((V[k].rep?V[k].rep+' · ':'')+k)+'</option>'; }).join('')+'</select></label>';
+  if(B.vendor){
+    const opts=woNextDeliveries(B.vendor,3), wines=woBldWines(B.vendor), oh=woOnHand();
+    h+='<label class="wo-bld-f">Delivery<select class="wi-sel" id="woBldD" onchange="woBldDay(this.value)">'+opts.map(function(d){
+      return '<option value="'+d.delivery+'"'+(B.delivery===d.delivery?' selected':'')+'>'+esc(woDayShort(d.delivery))+' · order by '+esc(woDayShort(d.cutoff))+'</option>'; }).join('')+'</select></label>';
+    if(!wines.length)h+='<p class="wo-empty">No wines on the list from this rep.</p>';
+    else h+='<div class="wo-lines">'+wines.map(function(w){ const q=+B.q[w.key]||0, s=oh&&oh[w.key];
+      const info=s&&s.onHand!=null?(wiNum(Math.max(0,s.onHand))+' on hand'+(s.wk>0?' · about '+wiNum(Math.round(Math.max(0,s.onHand)/s.wk*10)/10)+' wks':'')):'';
+      return '<div class="wo-line"><span class="wo-q'+(q?'':' wo-q-0')+'">'+(q?esc(woLabel(q,w.unit||12)):'–')+'</span><span class="wo-n">'+esc(w.short||w.name||w.key)
+        +(info?'<span class="wo-why">'+esc(info)+'</span>':'')+'</span><span class="wo-step"><button onclick="woBldStep(\''+w.key+'\',-1)" aria-label="Less"'+(q?'':' disabled')+'>−</button><button onclick="woBldStep(\''+w.key+'\',1)" aria-label="More">+</button></span></div>'; }).join('')+'</div>';
+    const lines=woBldLines(B), tot=lines.reduce(function(a,l){return a+(l.est_cost||0);},0);
+    if(tot)h+='<div class="wo-sub">About $'+Math.round(tot)+(lines.every(function(l){return l.est_cost!=null;})?'':', some costs missing')+'</div>';
+    h+='<div class="wo-act"><button class="wi-btn" onclick="woBldSave()"'+(lines.length?'':' disabled')+'>Add to To place</button><button class="ann-dismiss" onclick="woBldClose()">Cancel</button></div>';
+  } else h+='<div class="wo-act"><button class="ann-dismiss" onclick="woBldClose()">Cancel</button></div>';
+  return h+'</div>';
+}
 function woLinesHTML(o,editable){
   return '<div class="wo-lines">'+(o.lines||[]).map(function(l){
     return '<div class="wo-line"><span class="wo-q">'+esc(woQtyLabel(l))+'</span><span class="wo-n">'+esc(woWine(l.key).name||l.key)
@@ -5922,7 +6011,7 @@ function woChkHTML(o){
 }
 function woRender(){
   const el=$('woBody'); if(!el)return;
-  if(!wiCanTab()){ el.innerHTML=''; return; }
+  if(!wiCanTab()){ el.innerHTML=''; if($('woPend'))$('woPend').innerHTML=''; return; }
   woWatch();
   const orders=((WO.doc||{}).orders||[]), today=woToday();
   if(!WO.loaded){ el.innerHTML='<div class="wo-card"><div class="wo-title">Wine orders</div><p class="wo-empty">Loading orders…</p></div>'; return; }
@@ -5930,10 +6019,31 @@ function woRender(){
   const placed=orders.filter(function(o){return o.state==='placed';}).sort(function(a,b){return a.delivery<b.delivery?-1:1;});
   const issues=orders.filter(function(o){return o.state==='delivered'&&(o.exceptions||[]).some(function(e){return !e.resolved;});});
   const hist=orders.filter(function(o){return (o.state==='delivered'||o.state==='skipped')&&o.delivery>=wiAddDays(today,-56);}).sort(function(a,b){return a.delivery<b.delivery?1:-1;});
+  /* Waiting on (2026-11-11, Sam): what's on order and what a rep still owes us, at the very top of the tab */
+  let p='';
+  if(placed.length){ p+='<div class="wo-sec">Expected deliveries</div>';
+  placed.forEach(function(o){ const late=o.delivery<today, isToday=o.delivery===today;
+    const by=String(o.placedBy||'').replace(/ \(.*\)$/,'');
+    const tag=(isToday?'Due today':(late?'Late, was due '+woDayName(o.delivery):'On order'))+(by?' · ordered by '+by:'');
+    p+='<div class="wo-o'+(isToday||late?' wo-due':'')+'">'+woHead(o,tag);
+    if(WO.chk&&WO.chk.id===o.id)p+=woChkHTML(o);
+    else p+=woLinesHTML(o,false)+'<div class="wo-act"><button class="wi-btn" onclick="woChkAll(\''+o.id+'\')">'+(WO.armAll===o.id?'Tap again: all received':'All received')+'</button><button class="wi-btn wi-btn2" onclick="woChkOpen(\''+o.id+'\')">Something’s off</button></div>';
+    p+='</div>'; }); }
+  if(issues.length){
+    p+='<div class="wo-sec">Delivery problems</div>';
+    issues.forEach(function(o){ const t=o.followup_text||woFollowup(o);
+      p+='<div class="wo-o wo-issue">'+woHead(o,'Checked in by '+esc((o.confirm||{}).by||''))+'<div class="wo-lines">'
+        +(o.exceptions||[]).filter(function(e){return !e.resolved;}).map(function(e){
+          return '<div class="wo-line"><span class="wo-q wo-q-x">'+esc(e.issue==='short'?'short '+e.owed:(e.issue==='missing'?'missing':'wrong'))+'</span><span class="wo-n">'+esc(woWine(e.key).name||e.key)+(e.note?'<span class="wo-why">'+esc(e.note)+'</span>':'')+'</span>'
+            +'<span class="wo-step"><button onclick="woResolve(\''+o.id+'\',\''+e.key+'\',true)">It came</button><button onclick="woResolve(\''+o.id+'\',\''+e.key+'\',false)">Drop it</button></span></div>'; }).join('')+'</div>'
+        +(woCanSend()?'<div class="wo-txt"><span>'+esc(woToLabel(o))+'</span>'+esc(t)+'</div><div class="wo-act"><a class="wi-btn" href="'+esc(woHref(o,t))+'">'+(woEmail(o)?'Email ':'Text ')+esc(o.rep||'')+'</a></div>':'<p class="wo-sub">This stays here for Sam until it’s sorted.</p>')+'</div>'; });
+  }
+  const pend=p?'<div class="wo-card wo-pend"><div class="wo-title">Waiting on</div>'+p+'</div>':'';
   let h='<div class="wo-card"><div class="wo-title">Wine orders</div>';
   if(WO.err)h+='<div class="wi-alert"><b>Couldn’t load orders.</b> Check your connection and reopen the tab.</div>';
+  if(drafts.length||woCanSend())h+='<div class="wo-sec">To place</div>';
+  if(!drafts.length&&woCanSend()&&!WO.bld)h+='<p class="wo-empty">Nothing needs ordering yet. Drafts show up here two days before a rep’s order-by day, only for wines that would run short.</p>';
   if(drafts.length){
-    h+='<div class="wo-sec">To place</div>';
     drafts.forEach(function(o){ const due=o.cutoff===today, txt=woText(o), v=woMaster().vendors[o.vendor]||{};
       h+='<div class="wo-o wo-draft'+(due?' wo-due':'')+'">'+woHead(o,(due?'Order today'+(v.cutoffTime?' by '+v.cutoffTime:''):'Order by '+woDayShort(o.cutoff))+(v.confirmed?'':' · delivery day not confirmed'))
         +woLinesHTML(o,woCanSend())
@@ -5942,24 +6052,8 @@ function woRender(){
         +(o.est_total?'<div class="wo-sub">About $'+Math.round(o.est_total)+(o.cost_known===false?', some costs missing':'')+'</div>':'')
         +'<div class="wo-act">'+(woCanSend()?'<a class="wi-btn wo-send" href="'+esc(woHref(o,txt))+'" onclick="event.preventDefault();woSend(\''+o.id+'\')">'+(woEmail(o)?'Send email':'Send text')+'</a><button class="ann-dismiss" onclick="woSkip(\''+o.id+'\')">'+(WO.armSkip===o.id?'Tap again to skip this week':'Skip this week')+'</button>':'<span class="wo-sub">Waiting for Sam to send.</span>')+'</div></div>'; });
   }
-  h+='<div class="wo-sec">Expected deliveries</div>';
+  if(woCanSend())h+=WO.bld?woBldHTML():'<div class="wo-act"><button class="wi-btn wi-btn2" onclick="woBldOpen()">Start an order</button></div>';
   if(!placed.length)h+='<p class="wo-empty">Nothing on order right now.</p>';
-  placed.forEach(function(o){ const late=o.delivery<today, isToday=o.delivery===today;
-    const by=String(o.placedBy||'').replace(/ \(.*\)$/,'');
-    const tag=(isToday?'Due today':(late?'Late, was due '+woDayName(o.delivery):'On order'))+(by?' · ordered by '+by:'');
-    h+='<div class="wo-o'+(isToday||late?' wo-due':'')+'">'+woHead(o,tag);
-    if(WO.chk&&WO.chk.id===o.id)h+=woChkHTML(o);
-    else h+=woLinesHTML(o,false)+'<div class="wo-act"><button class="wi-btn" onclick="woChkAll(\''+o.id+'\')">'+(WO.armAll===o.id?'Tap again: all received':'All received')+'</button><button class="wi-btn wi-btn2" onclick="woChkOpen(\''+o.id+'\')">Something’s off</button></div>';
-    h+='</div>'; });
-  if(issues.length){
-    h+='<div class="wo-sec">Delivery problems</div>';
-    issues.forEach(function(o){ const t=o.followup_text||woFollowup(o);
-      h+='<div class="wo-o wo-issue">'+woHead(o,'Checked in by '+esc((o.confirm||{}).by||''))+'<div class="wo-lines">'
-        +(o.exceptions||[]).filter(function(e){return !e.resolved;}).map(function(e){
-          return '<div class="wo-line"><span class="wo-q wo-q-x">'+esc(e.issue==='short'?'short '+e.owed:(e.issue==='missing'?'missing':'wrong'))+'</span><span class="wo-n">'+esc(woWine(e.key).name||e.key)+(e.note?'<span class="wo-why">'+esc(e.note)+'</span>':'')+'</span>'
-            +'<span class="wo-step"><button onclick="woResolve(\''+o.id+'\',\''+e.key+'\',true)">It came</button><button onclick="woResolve(\''+o.id+'\',\''+e.key+'\',false)">Drop it</button></span></div>'; }).join('')+'</div>'
-        +(woCanSend()?'<div class="wo-txt"><span>'+esc(woToLabel(o))+'</span>'+esc(t)+'</div><div class="wo-act"><a class="wi-btn" href="'+esc(woHref(o,t))+'">'+(woEmail(o)?'Email ':'Text ')+esc(o.rep||'')+'</a></div>':'<p class="wo-sub">This stays here for Sam until it’s sorted.</p>')+'</div>'; });
-  }
   if(hist.length){
     h+='<details class="wo-hist"><summary>Last 8 weeks ('+hist.length+')</summary>';
     hist.forEach(function(o){ const n=(o.exceptions||[]).length;
@@ -5969,7 +6063,9 @@ function woRender(){
     h+='</details>';
   }
   h+='</div>';
-  el.innerHTML=(typeof wrHTML==='function'?wrHTML():'')+h;   /* Revel badge card sits above the orders (2026-11-01) */
+  const slot=$('woPend');
+  if(slot&&slot.isConnected!==false){ slot.innerHTML=pend; el.innerHTML=(typeof wrHTML==='function'?wrHTML():'')+h; }
+  else el.innerHTML=pend+(typeof wrHTML==='function'?wrHTML():'')+h;   /* Revel badge card sits above the orders (2026-11-01); Waiting on above both (2026-11-11) */
 }
 
 /* ===== REVEL BADGES (2026-11-01, Guinan) ==========================================
