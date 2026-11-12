@@ -9030,6 +9030,7 @@ window.SF = {
     ],
     "label": "",
     "notes": [
+     "Christmas Eve, Closed",
      "Christmas, Closed"
     ],
     "coverage": [
@@ -9069,7 +9070,7 @@ window.SF = {
        "",
        "3:30 Bar",
        "3:30 serve",
-       "Sup Server",
+       "",
        "",
        "",
        ""
@@ -9093,7 +9094,7 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
+       "",
        "",
        "Sup Server",
        "3:30 Bar"
@@ -9105,7 +9106,7 @@ window.SF = {
        "",
        "",
        "",
-       "3:30 serve",
+       "",
        "",
        "3:30 serve",
        ""
@@ -9141,7 +9142,7 @@ window.SF = {
        "",
        "",
        "3:30 Bar",
-       "3:30 Bar",
+       "",
        "",
        "3:30 Bar",
        "MD"
@@ -9177,7 +9178,7 @@ window.SF = {
        "3:30 Bar",
        "3:30 serve",
        "3:30 serve",
-       "3:30 serve",
+       "",
        "",
        "",
        ""
@@ -9189,7 +9190,7 @@ window.SF = {
        "",
        "Sup Server",
        "MD",
-       "MD",
+       "",
        "",
        "MD",
        ""
@@ -19092,5 +19093,5 @@ window.SF = {
    }
   ]
  },
- "build": "1794469352"
+ "build": "1794492455"
 };
