@@ -17922,6 +17922,7 @@ window.SF = {
    "Elliot Bay": {
     "rep": "Todd",
     "phone": "+12063916208",
+    "email": "todd.alkema@elliottbaywines.com",
     "cutoffDow": 3,
     "cutoffTime": "22:00",
     "deliveryDow": 4,
@@ -17936,6 +17937,7 @@ window.SF = {
    "Specialty Cellars": {
     "rep": "Marsha",
     "phone": "+13123718727",
+    "email": "damianwinegroup@gmail.com",
     "cutoffDow": 3,
     "cutoffTime": "16:00",
     "deliveryDow": 4,
@@ -17951,6 +17953,7 @@ window.SF = {
    "Vinifera": {
     "rep": "Eugenio",
     "phone": "+13235413276",
+    "email": "eugenio.vinifera@gmail.com",
     "cutoffDow": 3,
     "cutoffTime": "17:00",
     "deliveryDow": 4,
@@ -17966,6 +17969,7 @@ window.SF = {
    "Vehrs": {
     "rep": "Sal",
     "phone": "+12068503540",
+    "email": "SalH@vehrsinc.com",
     "cutoffDow": 3,
     "cutoffTime": "16:30",
     "deliveryDow": 4,
@@ -17980,6 +17984,7 @@ window.SF = {
    "Vinea": {
     "rep": "Janet",
     "phone": "+12068419127",
+    "email": "janet@vineaimports.com",
     "cutoffDow": 3,
     "cutoffTime": "22:00",
     "deliveryDow": 4,
@@ -17994,6 +17999,7 @@ window.SF = {
    "Petit Monde": {
     "rep": "Graham",
     "phone": "+16122401248",
+    "email": "graham@petitmondewine.com",
     "cutoffDow": 3,
     "cutoffTime": "17:00",
     "deliveryDow": 4,
@@ -18025,6 +18031,7 @@ window.SF = {
    "Casa Bruno": {
     "rep": "Sid",
     "phone": "+18476872462",
+    "email": "sid@casabrunowines.com",
     "cutoffDow": 3,
     "cutoffTime": "17:00",
     "deliveryDow": 4,
@@ -18040,6 +18047,7 @@ window.SF = {
    "Odom": {
     "rep": "Matthew",
     "phone": "+12068400966",
+    "email": "Matthew.Lindley@odomcorp.com",
     "cutoffDow": 3,
     "cutoffTime": "16:00",
     "deliveryDow": 4,
@@ -18230,11 +18238,17 @@ window.SF = {
    },
    {
     "key": "g-d-vajra-langhe-nebbiolo-2024",
-    "name": "G.D. Vajra Langhe Nebbiolo 2024",
+    "name": "G.D. Vajra Langhe Nebbiolo 2025",
+    "short": "Vajra Nebbiolo",
     "type": "Red",
     "status": "cellar",
-    "vendor": "",
-    "phaseOut": true,
+    "orderable": true,
+    "replaces": "albino-rocca-langhe-nebbiolo",
+    "vendor": "Winebow",
+    "unit": 12,
+    "rule": "pace",
+    "cost": 17.25,
+    "usual": "Sam 2026-11-11: back in for the Albino Rocca. Abe quoted $17.25 (2025 vintage) 11/9, low until more land 11/16. Key keeps the old 2024 vintage (keys never change). The Nebbiolo Revel buttons still count off the Albino Rocca until it is poured out.",
     "glass": 17,
     "bottle": 75
    },
@@ -18249,6 +18263,7 @@ window.SF = {
     "rule": "pace",
     "cost": 16.8,
     "usual": "maybe 2 cases, Nebbiolo can fly",
+    "hold": "switching to the Vajra from Abe (Sam 11/11); pour out what's left",
     "glass": 17,
     "bottle": 70
    },
@@ -19077,5 +19092,5 @@ window.SF = {
    }
   ]
  },
- "build": "1794467398"
+ "build": "1794469352"
 };

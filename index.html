@@ -1988,7 +1988,8 @@ a.wi-btn{text-decoration:none; display:inline-block;}
 .wo-step button{min-width:44px; min-height:40px;}
 .wo-bld-in{width:58px; font-size:16px; padding:6px 6px; border-radius:8px; border:1px solid rgba(205,216,244,.25); background:rgba(0,0,0,.2); color:var(--ink); font-family:inherit; text-align:center;}
 .wo-bld-q{flex-shrink:0; display:flex; align-items:center; gap:5px; min-width:92px;}
-.wo-bld-u{font-size:11.5px; color:var(--ink-mute); font-weight:700;}
+.wo-bld-u{font-size:11.5px; color:var(--gold); font-weight:800; background:rgba(230,200,120,.1); border:1px solid rgba(230,200,120,.4); border-radius:7px; padding:6px 7px; min-width:40px; min-height:34px; cursor:pointer; font-family:inherit;}
+.wo-min{font-size:12.5px; font-weight:700; color:#f0c987;} .wo-min.ok{color:#9fd49a;}
 .wo-warn{font-size:12px; color:#f0c987; background:rgba(230,170,60,.12); border:1px solid rgba(230,170,60,.4); border-radius:9px; padding:7px 9px;}
 .wo-stale{color:#f0c987 !important;}
 .wo-txtd summary{cursor:pointer; font-size:12px; color:var(--ink-soft); padding:2px 0;}
@@ -2357,7 +2358,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794467398';   // stamped by build-data.py at every deploy
+const BUILD='1794469352';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5831,7 +5832,13 @@ function woFollowup(o){
 function woSmsHref(phone,body){ return 'sms:'+String(phone||'')+'&body='+encodeURIComponent(body); }
 function woPhone(o){ return (woMaster().vendors[o.vendor]||{}).phone||''; }
 /* Reps who asked for email (2026-11-04). */
-function woEmail(o){ const v=woMaster().vendors[o.vendor]||{}; return v.orderBy==='email'&&v.email?v.email:''; }
+/* text or email: the rep's preference, unless Sam picked the other way on this order (2026-11-11) */
+function woEmail(o){ const v=woMaster().vendors[o.vendor]||{}, pick=(WO.via||{})[o.id];
+  if(pick==='text')return ''; if(pick==='email')return v.email||''; return v.orderBy==='email'&&v.email?v.email:''; }
+function woVia(id,via){ WO.via=WO.via||{}; WO.via[id]=via; woRender(); }
+function woOtherWay(o){ const v=woMaster().vendors[o.vendor]||{}, e=woEmail(o);
+  if(e)return v.phone?'<button class="ann-dismiss" onclick="woVia(\''+o.id+'\',\'text\')">Text instead</button>':'';
+  return v.email?'<button class="ann-dismiss" onclick="woVia(\''+o.id+'\',\'email\')">Email instead</button>':''; }
 function woMailHref(addr,body){ return 'mailto:'+addr+'?subject='+encodeURIComponent('Fermo Order')+'&body='+encodeURIComponent(body); }
 function woHref(o,body){ const e=woEmail(o); return e?woMailHref(e,body):woSmsHref(woPhone(o),body); }
 function woToLabel(o){ const e=woEmail(o); return e?'Email to '+e:'Text to '+woPhoneShow(woPhone(o)); }
@@ -5968,16 +5975,37 @@ function woBldUnit(w,B){ const st=woBldStepFor(B,w); return st===1?'btl':(st===6
 function woBldEdit(id){ if(!woCanSend())return; const o=((WO.doc||{}).orders||[]).find(function(x){return x.id===id;}); if(!o)return;
   const q={}, u={}; (o.lines||[]).forEach(function(l){ q[l.key]=+l.qty_bottles||0; if(q[l.key]%woBldStepOf(woWine(l.key)))u[l.key]=1; }); WO.chk=null;
   WO.bld={vendor:o.vendor,delivery:o.delivery,q:q,u:u,editId:id}; woRender(); }
+/* tap the unit to switch a line between cases and bottles; going back to cases rounds up to a whole case */
+function woBldUnitToggle(key){ const B=WO.bld; if(!B)return; const w=woWine(key), def=woBldStepOf(w), pack=w.unit||12;
+  B.u=B.u||{}; const cur=woBldStepFor(B,w);
+  if(cur===1){ if(pack===def)delete B.u[key]; else B.u[key]=pack; const q=+B.q[key]||0; if(q)B.q[key]=Math.ceil(q/pack)*pack; }
+  else { if(def===1)delete B.u[key]; else B.u[key]=1; }   /* bottle-default wines (par6) can go to cases too (Odo 2026-11-11) */
+  woRender(); }
 function woBldType(key,v){ const B=WO.bld; if(!B)return; const w=woWine(key), n=parseFloat(v);
   B.q[key]=isFinite(n)&&n>0?Math.round(n)*woBldStepFor(B,w):0; woBldPaint(); }
+function woBldMinHTML(B,lines){ const v=woMaster().vendors[B.vendor]||{}, mn=v.minimum||{}; if(!mn.usd&&!mn.cases)return '';
+  const known=lines.every(function(l){return l.est_cost!=null;}), tot=lines.reduce(function(a,l){return a+(l.est_cost||0);},0), cs=lines.reduce(function(a,l){return a+(+l.qty_bottles||0);},0)/12;
+  const ok=(mn.usd!=null&&known&&tot>=mn.usd)||(mn.cases!=null&&cs>=mn.cases), who=(v.rep||B.vendor)+'’s minimum';
+  if(ok)return '<div class="wo-min ok">Meets '+esc(who)+'.</div>';
+  const bits=[]; if(mn.usd!=null)bits.push('$'+Math.max(0,Math.ceil(mn.usd-tot))+' to go on $'+mn.usd); if(mn.cases!=null)bits.push(wiNum(Math.max(0,mn.cases-cs))+' cases to go on '+mn.cases);
+  return '<div class="wo-min">'+esc(who)+': '+esc(bits.join(' or '))+(known?'':' (some costs missing)')+'.</div>'; }
 function woBldPaint(){ const B=WO.bld; if(!B)return; const lines=woBldLines(B), tot=lines.reduce(function(a,l){return a+(l.est_cost||0);},0);
   const t=$('woBldTot'); if(t&&'textContent' in t)t.textContent=tot?'About $'+Math.round(tot)+(lines.every(function(l){return l.est_cost!=null;})?'':', some costs missing'):'';
-  const b=$('woBldSave'); if(b&&'disabled' in b)b.disabled=!lines.length; }
+  const b=$('woBldSave'); if(b&&'disabled' in b)b.disabled=!lines.length;
+  const m=$('woBldMin'); if(m&&'innerHTML' in m)m.innerHTML=woBldMinHTML(B,lines); }
 function woPlacedFor(vendor,delivery){ return ((WO.doc||{}).orders||[]).find(function(o){return o.state==='placed'&&o.vendor===vendor&&o.delivery===delivery;}); }
+/* The rep's wines, most often ordered first (orders sent or delivered through the portal), then by how fast they
+   sell, then the rest of the list (Sam 2026-11-11: "in order of most often ordered from that vendor"). */
+function woOrderFreq(vendor){ const f={};
+  ((WO.doc||{}).orders||[]).forEach(function(o){ if(o.vendor!==vendor||(o.state!=='placed'&&o.state!=='delivered'))return;
+    (o.lines||[]).forEach(function(l){ const x=f[l.key]||(f[l.key]={n:0,btl:0}); x.n++; x.btl+=+l.qty_bottles||0; }); });
+  return f; }
 function woBldWines(vendor){
+  const f=woOrderFreq(vendor), oh=woOnHand()||{};
   return woMaster().wines.filter(function(w){return w.vendor===vendor&&!w.phaseOut;})
-    .sort(function(a,b){ const oa=(a.status==='cellar'&&!a.orderable)?1:0, ob=(b.status==='cellar'&&!b.orderable)?1:0;
-      return oa-ob||String(a.short||a.name).localeCompare(String(b.short||b.name)); });
+    .sort(function(a,b){ const fa=f[a.key]||{n:0,btl:0}, fb=f[b.key]||{n:0,btl:0}, pa=(oh[a.key]||{}).wk||0, pb=(oh[b.key]||{}).wk||0;
+      const oa=(a.status==='cellar'&&!a.orderable)?1:0, ob=(b.status==='cellar'&&!b.orderable)?1:0;
+      return fb.n-fa.n||fb.btl-fa.btl||oa-ob||pb-pa||String(a.short||a.name).localeCompare(String(b.short||b.name)); });
 }
 function woOnHand(){ try{ if(typeof wiCompute!=='function'||!WI.loaded||!WI.revel)return null; return wiCompute(wiData(),WI.doc||{},WI.revel||{}).byKey; }catch(e){ return null; } }
 function woBldOpen(){ if(!woCanSend())return; WO.chk=null; WO.bld={vendor:'',delivery:'',q:{}}; woRender(); }
@@ -6041,12 +6069,14 @@ function woBldHTML(){
     if(pl)h+='<div class="wo-warn">Already on order for '+esc(woDayShort(pl.delivery))+': '+esc((pl.lines||[]).map(function(l){return woQtyLabel(l)+' '+woShortName(l.key);}).join(', '))+'. Saving this makes a second order.</div>';
     if(!wines.length)h+='<p class="wo-empty">No wines on the list from this rep.</p>';
     else h+='<div class="wo-lines">'+wines.map(function(w){ const q=+B.q[w.key]||0, st=woBldStepFor(B,w), s=oh&&oh[w.key];
-      const info=s&&s.onHand!=null?(wiNum(Math.max(0,s.onHand))+' on hand'+(s.wk>0?' · about '+wiNum(Math.round(Math.max(0,s.onHand)/s.wk*10)/10)+' wks':'')):'';
-      return '<div class="wo-line"><span class="wo-bld-q"><input class="wo-bld-in" id="woBq-'+esc(w.key)+'" type="number" inputmode="numeric" min="0" step="1" placeholder="0" aria-label="'+esc(woBldUnit(w,B))+' of '+esc(w.short||w.name)+'" value="'+(q?Math.round(q/st):'')+'" oninput="woBldType(\''+w.key+'\',this.value)"><span class="wo-bld-u">'+woBldUnit(w,B)+'</span></span>'
+      const fq=woOrderFreq(B.vendor)[w.key];
+      const info=(s&&s.onHand!=null?(wiNum(Math.max(0,s.onHand))+' on hand'+(s.wk>0?' · about '+wiNum(Math.round(Math.max(0,s.onHand)/s.wk*10)/10)+' wks':'')):'')+(fq?((s&&s.onHand!=null)?' · ':'')+'ordered '+fq.n+'×':'');
+      return '<div class="wo-line"><span class="wo-bld-q"><input class="wo-bld-in" id="woBq-'+esc(w.key)+'" type="number" inputmode="numeric" min="0" step="1" placeholder="0" aria-label="'+esc(woBldUnit(w,B))+' of '+esc(w.short||w.name)+'" value="'+(q?Math.round(q/st):'')+'" oninput="woBldType(\''+w.key+'\',this.value)"><button class="wo-bld-u" onclick="woBldUnitToggle(\''+w.key+'\')" aria-label="Switch between cases and bottles">'+woBldUnit(w,B)+'</button></span>'
         +'<span class="wo-n">'+esc(w.short||w.name||w.key)+(info?'<span class="wo-why">'+esc(info)+'</span>':'')+'</span>'
         +'<span class="wo-step"><button onclick="woBldStep(\''+w.key+'\',-1)" aria-label="Less"'+(q?'':' disabled')+'>−</button><button onclick="woBldStep(\''+w.key+'\',1)" aria-label="More">+</button></span></div>'; }).join('')+'</div>';
+    if(typeof wbCanTab==='function'&&wbCanTab())h+='<div class="wo-sub">Not on our list? <a href="#" onclick="event.preventDefault();wbSub(\'catalogs\')">Search the reps’ books</a>, then add it to the wine master.</div>';
     const lines=woBldLines(B), tot=lines.reduce(function(a,l){return a+(l.est_cost||0);},0);
-    h+='<div class="wo-sub" id="woBldTot">'+(tot?'About $'+Math.round(tot)+(lines.every(function(l){return l.est_cost!=null;})?'':', some costs missing'):'')+'</div>';
+    h+='<div id="woBldMin">'+woBldMinHTML(B,lines)+'</div><div class="wo-sub" id="woBldTot">'+(tot?'About $'+Math.round(tot)+(lines.every(function(l){return l.est_cost!=null;})?'':', some costs missing'):'')+'</div>';
     h+='<div class="wo-act"><button class="wi-btn" id="woBldSave" onclick="woBldSave()"'+(lines.length?'':' disabled')+'>'+(B.editId?'Save changes':(pl?'Add a second order':'Add to To place'))+'</button><button class="ann-dismiss" onclick="woBldClose()">Cancel</button></div>';
   } else h+='<div class="wo-act"><button class="ann-dismiss" onclick="woBldClose()">Cancel</button></div>';
   return h+'</div>';
@@ -6126,8 +6156,8 @@ function woRender(){
     if(woBelowMin(o))h+='<div class="wo-warn">Under '+esc(o.rep||o.vendor)+'’s minimum ('+esc(woMinText(o))+').'+(o.hold&&!o.manual&&!o.orig?' Nothing runs out if it waits a week.':'')+'</div>';
     h+=(o.est_total?'<div class="wo-sub">About $'+Math.round(o.est_total)+(o.cost_known===false?', some costs missing':'')+(v.orderPref?' · '+esc(v.orderPref):'')+'</div>':(v.orderPref?'<div class="wo-sub">'+esc(v.orderPref)+'</div>':''))
       +'<details class="wo-txtd"><summary>'+esc(woToLabel(o))+'</summary><div class="wo-txt">'+esc(txt)+'</div></details>'
-      +'<div class="wo-act">'+(woCanSend()?'<a class="wi-btn wo-send" href="'+esc(woHref(o,txt))+'" onclick="event.preventDefault();woSend(\''+o.id+'\')">'+(woEmail(o)?'Send email':'Send text')+'</a><button class="wi-btn wi-btn2" onclick="woBldEdit(\''+o.id+'\')">Edit</button>':'<span class="wo-sub">Waiting for Sam to send.</span>')
-      +'<button class="ann-dismiss" onclick="woChkOpen(\''+o.id+'\')">Already delivered</button>'
+      +'<div class="wo-act">'+(woCanSend()?'<a class="wi-btn wo-send" href="'+esc(woHref(o,txt))+'" onclick="event.preventDefault();woSend(\''+o.id+'\')">'+(woEmail(o)?'Send email':'Send text')+'</a><button class="wi-btn wi-btn2" onclick="woBldEdit(\''+o.id+'\')">Edit or add wine</button>':'<span class="wo-sub">Waiting for Sam to send.</span>')
+      +(woCanSend()?woOtherWay(o):'')+'<button class="ann-dismiss" onclick="woChkOpen(\''+o.id+'\')">Already delivered</button>'
       +(woCanSend()?'<button class="ann-dismiss" onclick="woSkip(\''+o.id+'\')">'+(WO.armSkip===o.id?'Tap again to skip this week':'Skip this week')+'</button>':'')+'</div></div>'; });
   if(!placed.length)h+='<p class="wo-empty">Nothing on order right now.</p>';
   if(hist.length){
