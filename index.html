@@ -2358,7 +2358,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794492455';   // stamped by build-data.py at every deploy
+const BUILD='1794542973';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2910,6 +2910,8 @@ function onProfiles(){
   applyAuthGate();
   /* Sign-offs subtab reads policyAcks off PROFILES; repaint when a signature lands (2026-10-17) */
   try{ if(typeof compTab!=='undefined'&&compTab==='policy'&&$('compBody')&&$('compBody').innerHTML)renderCompliance(); }catch(e){}
+  /* Coming Due's nudge panel reads noticeAcks off PROFILES for Seen / Not yet (2026-11-12) */
+  try{ if(typeof compTab!=='undefined'&&compTab==='due'&&cnCan()&&CNUDGE.at&&$('compBody')&&$('compBody').innerHTML)renderCompliance(); }catch(e){}
   try{ annPolicyRefresh(); }catch(e){}
   try{ if(_remyMountPending&&me&&$('orders')&&$('orders').classList.contains('active'))remyMount(); }catch(e){}
 }
@@ -3520,11 +3522,58 @@ function annCardAlerts(){
     und.forEach(function(d){ lines.push('Your '+(d.cred==='FWC'?'Food Worker Card':'MAST permit')+' is flagged with no date on file'+(d.text?': '+d.text:'.')); key.push(d.cred+':nodate'); });
     gaps.forEach(function(g){ lines.push(g.replace('No FWC card on file','We have no copy of your Food Worker Card on file.').replace('No MAST card on file','We have no copy of your MAST permit on file.')); key.push(g.indexOf('FWC')>=0?'FWC:missing':'MAST:missing'); });
     if(!lines.length)return [];
+    if(mine.length&&CNUDGE.at&&CNUDGE.names.indexOf(me.name)>=0)key.push('nudge:'+CNUDGE.at);   // Sam's re-send button (2026-11-12): a new stamp = a new id = the card shows again
     const needM=key.some(function(k){return k.indexOf('MAST')===0;}), needF=key.some(function(k){return k.indexOf('FWC')===0;});
     lines.push('The Liquor Board checks permits on site and an expired or missing card is a violation on its own. Sort it this week, then snap the new card on your row under Compliance so it\'s on file.');
     const link=needM&&!needF?{href:'https://lcb.wa.gov/mastrvp/mast-providers-list',label:'Find a MAST class'}:{href:'https://www.foodworkercard.wa.gov/',label:needF&&needM?'Food Worker Card (MAST link is on the protocols page)':'Renew your Food Worker Card'};
     return [{kind:'info',aud:'all',forName:me.name,id:'cardalert-'+(me.id||me.name)+'-'+key.join('|'),showUntil:'2099-12-31',emoji:'\uD83E\uDEAA',title:(mine.length?'Your card has expired':'Your card needs attention'),lines:lines,link:link,note:'Tell Sam or Sully if you think this is wrong.'}];
   }catch(e){ return []; }
+}
+/* EXPIRED-CARD NUDGE (2026-11-12, Sam only). A button on Compliance > Coming Due re-sends the
+   card-alert pop-up to everyone whose FWC or MAST is past its date. It writes board/cardNudge
+   {at,by,names}; annCardAlerts() adds 'nudge:<at>' to the alert id for those names, so a card
+   someone already acked comes back once. Renewing still clears it (no expired card, no stamp). */
+let CNUDGE={at:0,by:'',names:[],loaded:false,loadErr:false,unsub:null,busy:false,err:''};
+function cnRef(){ return fbDb.collection('board').doc('cardNudge'); }
+function cnCan(){ return !!me&&!DEMO&&String(me.name||'').trim()==='Sam West'; }
+function startCardNudgeSync(){
+  if(!(fbReady&&fbDb))return; if(CNUDGE.unsub)CNUDGE.unsub();
+  CNUDGE.unsub=cnRef().onSnapshot(function(d){ const v=(d.exists&&d.data())||{};
+    CNUDGE.at=+v.at||0; CNUDGE.by=v.by||''; CNUDGE.names=Array.isArray(v.names)?v.names:[]; CNUDGE.loaded=true; CNUDGE.loadErr=false;
+    try{ if(compTab==='due'&&$('compBody'))renderCompliance(); }catch(e){}
+    /* the doc can land after the login check ran; give the queue one more look */
+    try{ if(me&&me.contactSet&&!annShownSession&&!tourPending()&&CNUDGE.names.indexOf(me.name)>=0)maybeShowAnnounce(); }catch(e){}
+  },function(){ CNUDGE.loadErr=true; try{ if(compTab==='due'&&$('compBody'))renderCompliance(); }catch(e){} });
+}
+function cnExpiredNames(){ const s={}; compDueList().due.forEach(function(d){ if(d.days<0)s[d.name]=1; }); return Object.keys(s).sort(); }
+function cnSeen(name){ const p=PROFILES[name], tag='|nudge:'+CNUDGE.at;
+  return !!(p&&Array.isArray(p.noticeAcks)&&p.noticeAcks.some(function(a){ a=String(a); return a.indexOf('cardalert-')===0&&a.slice(-tag.length)===tag; })); }
+function cnWhen(ms){ try{ return new Date(ms).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); }catch(e){ return ''; } }
+function cnFirsts(a){ const f=a.map(function(n){return String(n).split(' ')[0];}); return f.length<2?f.join(''):f.slice(0,-1).join(', ')+' and '+f[f.length-1]; }
+function cnSend(){
+  if(!cnCan()||CNUDGE.busy)return; const names=cnExpiredNames(); if(!names.length)return;
+  if(!(fbReady&&fbDb)){ CNUDGE.err='Not connected, nothing was sent. Try again on Wi-Fi.'; renderCompliance(); return; }
+  CNUDGE.busy=true; CNUDGE.err=''; renderCompliance();
+  const doc={at:Date.now(),by:me.name,names:names};
+  cnRef().set(doc).then(function(){ CNUDGE.busy=false; Object.assign(CNUDGE,doc); renderCompliance(); })
+    .catch(function(){ CNUDGE.busy=false; CNUDGE.err='That did not save, nothing was sent. Try again.'; renderCompliance(); });
+}
+function cnPanelHTML(){
+  if(!cnCan())return '';
+  const names=cnExpiredNames();
+  let h='<div class="comp-card" style="padding:14px 15px;margin-bottom:14px;"><div class="comp-name">Expired-card pop-ups</div>';
+  if(names.length){
+    h+='<div class="comp-role" style="margin-top:4px;">'+esc(cnFirsts(names))+' '+(names.length>1?'get':'gets')+' the expired-card pop-up again next time '+'they open'+' the portal, even if they already tapped Got it.</div>';
+    h+='<div style="margin-top:10px;"><button class="ann-link" style="border:0;cursor:pointer;" onclick="cnSend()"'+(CNUDGE.busy?' disabled':'')+'>'+(CNUDGE.busy?'Sending…':'Send pop-ups to '+names.length+(names.length>1?' people':' person'))+'</button></div>';
+  } else h+='<div class="comp-role" style="margin-top:4px;">No one is past the date on file right now.</div>';
+  if(CNUDGE.err)h+='<div class="comp-past" style="margin-top:10px;">'+esc(CNUDGE.err)+'</div>';
+  if(CNUDGE.loadErr)h+='<div class="comp-past" style="margin-top:10px;">Couldn\'t load the last send, so this may not show who has seen it. Pop-ups already sent still go out.</div>';
+  else if(!CNUDGE.loaded)h+='<div class="comp-role" style="margin-top:10px;">Checking the last send…</div>';
+  if(CNUDGE.at&&CNUDGE.names.length){
+    const seen=CNUDGE.names.filter(cnSeen), not=CNUDGE.names.filter(function(n){return !cnSeen(n);});
+    h+='<div class="comp-role" style="margin-top:10px;">Last sent '+esc(cnWhen(CNUDGE.at))+'.'+(seen.length?' Seen: '+esc(cnFirsts(seen))+'.':'')+(not.length?' Not yet: '+esc(cnFirsts(not))+'.':'')+'</div>';
+  }
+  return h+'</div>';
 }
 function annAll(){ const alerts=annCardAlerts(); return alerts.length?ANNOUNCES.slice(0,1).concat(alerts,ANNOUNCES.slice(1)):ANNOUNCES; }
 function annDoneFor(A){ if(!me)return false;
@@ -8552,6 +8601,7 @@ function renderCompliance(){const C=SF.compliance, R=compWithExtras();
   if(compTab==='due'){
     const L=compDueList(), past=L.due.filter(function(d){return d.days<0;});
     let h=`<p class="view-sub" style="margin-bottom:14px;">Read live off the dates on file, FWC and MAST, out to nine months. Renewal means re-taking the class.</p>`;
+    h+=cnPanelHTML();
     if(past.length)h+=`<div class="comp-past">${past.length} card${past.length>1?'s are':' is'} already past the date on file.</div>`;
     h+=`<div class="comp-card">`;
     if(!L.due.length)h+=`<div class="board-empty">Nothing due in the next nine months.</div>`;
@@ -11680,8 +11730,8 @@ function initFirebase(){
     // (fresh storage, e.g. a just-added home-screen app) anonymous auth takes a
     // network round trip; listening before it completes gets permission-denied
     // and a cancelled listener. Auth-gating the start avoids the race.
-    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startKitchenQsSync(); startItemAuthorsSync(); startBarOverlaySync(); startMenuOverlaySync(); startMenuPubSync(); startSpecialsSync(); } });
-    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startKitchenQsSync(); startItemAuthorsSync(); startBarOverlaySync(); startMenuOverlaySync(); startSpecialsSync(); });
+    firebase.auth().onAuthStateChanged(function(u){ if(u){ startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startKitchenQsSync(); startItemAuthorsSync(); startBarOverlaySync(); startCardNudgeSync(); startMenuOverlaySync(); startMenuPubSync(); startSpecialsSync(); } });
+    firebase.auth().signInAnonymously().catch(function(){ fbReady=false; startBoardSync(); startTimeoffSync(); startProfilesSync(); startClaimsSync(); startMenuLiveSync(); startFrontDeskSync(); startMenuEditSync(); startComplianceSync(); startAnnounceGuestsSync(); startCkPrepSync(); startKitchenQsSync(); startItemAuthorsSync(); startBarOverlaySync(); startCardNudgeSync(); startMenuOverlaySync(); startSpecialsSync(); });
   }catch(e){ fbReady=false; }
 }
 function boardDocId(){return todayISO();}
