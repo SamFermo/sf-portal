@@ -201,43 +201,57 @@
      "flags": []
     },
     {
-     "name": "Bruschetta",
-     "desc": "swan house farm peperonata, burrata, micro basil, saba",
-     "price": "20",
+     "name": "Burrata",
+     "desc": "roasted persimmon, speck, frisée, pomegranate molasses, saba, crostini",
+     "price": "18",
      "raw": false,
-     "pron": "broo-SKET-tah",
-     "story": "Sweet Italian peperonata from Swan House Farm: slow-cooked peppers, bright and soft. Burrata melts into it. Micro basil and a drizzle of saba finish it.",
+     "pron": "boo-RAH-tah",
+     "story": "Burrata served with roasted persimmon, sliced speck and frisée, dressed with pomegranate molasses and saba, with crostini on the side. Creamy, sweet, smoky and salty, with a bitter edge from the frisée.",
      "ingredients": [
       {
-       "term": "Peperonata",
-       "note": "Peperonata is a slow-cooked Italian pepper preparation that concentrates the peppers' natural sweetness. Ours is made from Swan House sweet peppers cooked down with onions and garlic in extra-virgin olive oil, along with tomato purée, salt, sugar, vinegar, and black pepper until tender and reduced. It contains onion and garlic.",
-       "pronunciation": "pep-per-NAH-tah"
+       "term": "Burrata",
+       "pronunciation": "boo-RAH-tah",
+       "note": "A fresh cow's-milk cheese from Puglia: a mozzarella shell holding a center of stracciatella (cheese curds) and cream. Cut into it and the middle should flow."
       },
       {
-       "note": "a fresh cow's-milk cheese from Puglia: a mozzarella shell holding a center of stracciatella (cheese curds) and cream. Cut into it and the middle should flow.",
-       "pronunciation": "boo-RAH-tah",
-       "term": "Burrata"
+       "term": "Roasted persimmon",
+       "pronunciation": "per-SIM-mun",
+       "note": "A fall fruit, honey-sweet when ripe. Roasting softens it and deepens the sweetness against the cheese."
+      },
+      {
+       "term": "Speck",
+       "pronunciation": "SHPEK",
+       "note": "Cured, lightly smoked pork leg from Alto Adige in northern Italy, sliced thin. Pork: not vegetarian, and flag it for guests who avoid pork."
+      },
+      {
+       "term": "Frisée",
+       "pronunciation": "free-ZAY",
+       "note": "Curly endive. Crisp and pleasantly bitter, it cuts the richness of the burrata."
+      },
+      {
+       "term": "Pomegranate molasses",
+       "pronunciation": null,
+       "note": "Pomegranate juice cooked down to a thick, tart-sweet syrup."
       },
       {
        "term": "Saba",
        "pronunciation": "SAH-bah",
-       "note": "Cooked-down grape must from Emilia-Romagna, the unaged cousin of balsamic: thick, sweet, a little tart. Just grapes, no allergens of its own. It replaced the tomato leaf oil on this plate on the 10/16 menu."
+       "note": "Cooked-down grape must from Emilia-Romagna, the unaged cousin of balsamic: thick, sweet, a little tart. Just grapes, no allergens of its own."
       },
       {
-       "note": "The bread is a baguette cut on a bias, lightly oiled, seasoned with salt and pepper, and grilled. There is no garlic rubbed on the bread itself. The dish gets its savory foundation from the peperonata and burrata.",
-       "term": "Bruschetta bread",
-       "pronunciation": null
+       "term": "Crostini",
+       "pronunciation": "kroh-STEE-nee",
+       "note": "Toasted slices of bread for spreading the burrata. Gluten."
       }
      ],
      "allergens": [
       "dairy",
-      "gluten",
-      "allium"
+      "gluten"
      ],
      "canModify": [],
-     "allergenNote": "Dairy: the burrata melts into the dish, central and not removable. Gluten: the grilled bread is the base of the bruschetta, not removable. Allium: the peperonata is cooked with onion and garlic and cannot be pulled, so this dish cannot be cleared for an allium allergy. The bread itself is not rubbed with garlic. The saba is just cooked grape must.",
+     "allergenNote": "Dairy: the burrata is the dish, not removable. Gluten: the crostini. Allergens confirmed by Chris 11/13. Contains pork (speck), so not vegetarian as built. The saba is just cooked grape must.",
      "flags": [],
-     "added": "2026-10-16"
+     "added": "2026-11-13"
     },
     {
      "name": "Ribollita",
@@ -325,48 +339,43 @@
      "allergenNote": "No egg in the saffron spaghetti. Dairy: the kitchen can finish it without cream, butter, or Parmigiano — a leaner, brighter ragù. Built in and non-negotiable: allium, the cooked red wine, chili flake, and black pepper."
     },
     {
-     "name": "Rigatoni",
-     "desc": "italian sausage, crimini mushroom, kale, garlic, cream, pecorino romano, aleppo oil",
-     "price": "30",
+     "name": "Ditalini",
+     "desc": "chickpeas, rosemary, chili flake, sherry vinegar, pecorino romano",
+     "price": "28",
      "raw": false,
-     "pron": "ree-gah-TOH-nee",
-     "story": "New build, same name. Extruded rigatoni in a cream sauce built on chicken stock, with coins of Italian sausage, crimini mushroom and kale all cooked down until the sauce is thick and glossy. Finished with a little butter and sherry vinegar, pecorino Romano on top and a drizzle of Aleppo chili oil. Spicy, rich, very savory, with a hit of vinegar cutting through the cream.",
+     "pron": "dee-tah-LEE-nee",
+     "story": "Chickpeas stewed in savory vegetable broth with roasted tomato paste, rosemary, garlic, red chili flake, extra-virgin olive oil and white wine until tender. Half the mixture is puréed for body, then ditalini is folded in with butter and sherry vinegar. Topped with pecorino Romano and cracked black pepper. Thick, savory and warming, with a little heat and a hit of vinegar.",
      "ingredients": [
       {
-       "term": "Rigatoni",
-       "pronunciation": "ree-gah-TOH-nee",
-       "note": "Wide, ridged tube pasta, extruded in-house from semolina and water. No egg in the dough. The ridges and the hollow hold this thick sauce."
+       "term": "Ditalini",
+       "pronunciation": "dee-tah-LEE-nee",
+       "note": "\"Little thimbles\": short, small tubes of pasta, the classic shape for pasta and chickpeas or beans. Gluten."
       },
       {
-       "term": "Italian sausage",
+       "term": "Chickpea sauce",
        "pronunciation": null,
-       "note": "Pork sausage sliced into coins and browned before the sauce comes together. It carries a little heat of its own, so the dish keeps some kick even without the chili oil."
+       "note": "Chickpeas stewed in vegetable broth with roasted tomato paste, rosemary, garlic, red chili flake, olive oil and white wine. Half is puréed so the sauce is thick and coats the pasta. Vegetable broth, not chicken."
       },
       {
-       "term": "Cream sauce",
+       "term": "Sherry vinegar",
        "pronunciation": null,
-       "note": "Chicken stock and cream reduced with the sausage, crimini mushroom and kale until thick and glossy, then finished with butter and a splash of sherry vinegar for brightness. Garlic is in the base."
-      },
-      {
-       "term": "Aleppo chili oil",
-       "pronunciation": "ah-LEP-oh",
-       "note": "House chili oil made with Aleppo pepper, a fruity, moderate-heat Syrian chili. Drizzled on at the end; it can be left off on request."
+       "note": "Stirred in with the butter at the end for brightness."
       },
       {
        "term": "Pecorino Romano",
        "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
-       "note": "Hard, salty sheep's-milk cheese grated over the top. Dairy."
+       "note": "Hard, salty sheep's-milk cheese on top. Dairy."
       }
      ],
      "allergens": [
-      "gluten",
       "dairy",
+      "gluten",
       "allium"
      ],
      "canModify": [],
-     "allergenNote": "Gluten: the rigatoni, built in. Dairy: cream, butter and pecorino are the sauce, so this cannot go dairy-free. Allium: garlic in the base. No egg in the pasta. Vegetarian: yes, per Chris, made without the chicken stock and the sausage, with extra mushroom in their place; ring it in as a modification. The chili oil can come off, but the sausage still carries a little heat on the regular build.",
+     "allergenNote": "Gluten: the ditalini, built in. Dairy: butter in the sauce and pecorino on top. Allium: garlic in the chickpea base, not removable. Vegetarian as built (vegetable broth). Allergens confirmed by Chris 11/13. The wine is cooked in, but mention it to guests who avoid alcohol entirely.",
      "flags": [],
-     "added": "2026-10-16"
+     "added": "2026-11-13"
     },
     {
      "name": "Girella",
@@ -414,44 +423,40 @@
      "added": "2026-10-16"
     },
     {
-     "name": "Cavatelli al Granchio",
-     "desc": "dungeness crab meat, lemon, butter, garlic, chive",
-     "price": "38",
+     "name": "Chitarra",
+     "desc": "manila clams, white wine, garlic, shallot butter, lemon, parsley",
+     "price": "28",
      "raw": false,
-     "pron": "kah-vah-TEL-lee ahl GRAHN-kyoh",
-     "story": "Granchio means crab. Semolina cavatelli finished in a tart lemon butter sauce with garlic, shallot and a little white wine, with three ounces of Dungeness crab meat folded through. Chive batons on top. Bright, briny and rich. Chris wants this one sold hard: the crab price is working in our favor right now, so it makes the house money.",
+     "pron": "kee-TAR-rah",
+     "story": "Manila clams are opened in white wine, and that wine is saved to build the sauce. The clam meat is picked from the shells for ease of eating and tossed with the pasta in the clam wine, garlic, shallot butter, lemon and parsley. Bright, briny, clean.",
      "ingredients": [
       {
-       "term": "Cavatelli",
-       "pronunciation": "kah-vah-TEL-lee",
-       "note": "Small, shell-like pasta with a hollow that catches sauce. Made in-house from semolina and water, no egg."
+       "term": "Chitarra",
+       "pronunciation": "kee-TAR-rah",
+       "note": "Square-edged egg pasta from Abruzzo, named for the guitar-string frame it is traditionally cut on. Egg and gluten."
       },
       {
-       "term": "Dungeness crab",
-       "pronunciation": "DUN-jeh-ness",
-       "note": "Pacific Northwest crab, sweet and delicate. Three ounces of picked meat per plate, warmed in the sauce rather than cooked hard. Shellfish."
-      },
-      {
-       "term": "Lemon butter sauce",
+       "term": "Manila clams",
        "pronunciation": null,
-       "note": "Butter, lemon juice, garlic and shallot, with a splash of white wine. Tart and rich. The wine is cooked in, but mention it to guests who avoid alcohol entirely."
+       "note": "Small, sweet Pacific clams. Steamed open in white wine; the meat is picked out of the shells, so there are no shells in the bowl. Shellfish."
       },
       {
-       "term": "Chive batons",
+       "term": "Shallot butter",
        "pronunciation": null,
-       "note": "Chives cut into short lengths and scattered on top. A member of the allium family."
+       "note": "Butter with shallot, finishing the clam-wine sauce with garlic, lemon and parsley. Dairy and allium."
       }
      ],
      "allergens": [
-      "gluten",
       "dairy",
+      "gluten",
+      "egg",
       "shellfish",
       "allium"
      ],
      "canModify": [],
-     "allergenNote": "Shellfish: Dungeness crab is the dish and cannot come off. Gluten: the cavatelli, built in. Dairy: the butter sauce, built in. Allium: garlic and shallot in the sauce and chives on top, so this cannot be cleared for an allium allergy. No egg in the pasta.",
+     "allergenNote": "Shellfish: the clams are the dish. Egg and gluten: the chitarra dough. Dairy: the shallot butter. Allium: garlic and shallot in the sauce, not removable. Allergens confirmed by Chris 11/13. The wine is cooked in, but mention it to guests who avoid alcohol entirely.",
      "flags": [],
-     "added": "2026-10-16"
+     "added": "2026-11-13"
     },
     {
      "name": "Risotto",
