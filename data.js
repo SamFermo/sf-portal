@@ -8324,9 +8324,9 @@ window.SF = {
      "Thanksgiving, Closed"
     ],
     "coverage": [
-     "MD (Sam R/O)",
      "",
      "",
+     "3:30 serve",
      "",
      "3:30 serve",
      "Sup Server (Brittany R/O)",
@@ -8335,7 +8335,7 @@ window.SF = {
     "covNotes": [
      "",
      "",
-     "",
+     "If picked up Katie can keep her shift or take the night off (her call). If not she is first call off",
      "",
      "",
      "",
@@ -8429,7 +8429,7 @@ window.SF = {
      {
       "name": "Katie",
       "shifts": [
-       "",
+       "MD",
        "",
        "3:30 Bar",
        "",
@@ -19098,5 +19098,5 @@ window.SF = {
    }
   ]
  },
- "build": "1794621570"
+ "build": "1794715548"
 };

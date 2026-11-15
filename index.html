@@ -946,6 +946,7 @@ body.tour-on{padding-bottom:230px;}
 .os-home-ic{font-size:20px;}
 .os-home-txt{font-size:13.5px; font-weight:700; color:#f6e3d6; line-height:1.35;}
 .os-home-txt b{color:var(--gold);}
+.pu-home{cursor:default; flex-wrap:wrap;} .pu-home .os-home-txt{flex:1 1 220px;} .pu-btns{display:flex; gap:8px; flex-wrap:wrap;} .pu-btns button{font-family:inherit; font-size:13px; font-weight:700; border-radius:10px; padding:8px 12px; cursor:pointer; border:1px solid rgba(214,158,46,.6); background:rgba(214,158,46,.18); color:#f6e3d6;} .pu-btns button.pu-off{background:rgba(192,57,43,.25); border-color:rgba(192,57,43,.6);} .pu-btns button:disabled{opacity:.5; cursor:default;} .pu-err{flex-basis:100%; font-size:12.5px; color:#ffb4a8;}
 .cb-home{background:linear-gradient(90deg, rgba(64,84,140,.28), rgba(214,158,46,.14)); border-color:rgba(150,170,220,.5);}
 .cb-card{max-height:88vh; overflow-y:auto; align-items:stretch; text-align:left;} .cb-card .ann-emoji,.cb-card .ann-title{text-align:center;}
 .cb-night{border-top:1px solid rgba(90,58,34,.15); padding:10px 0 6px; display:flex; flex-direction:column; gap:5px;} .cb-night.done .cb-need{color:var(--accent-dark);}
@@ -2358,7 +2359,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794621570';   // stamped by build-data.py at every deploy
+const BUILD='1794715548';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2656,7 +2657,7 @@ function renderHome(){
   const annChip = annChipShow?`<button class="ann-home" onclick="annOpen()"><span class="ann-home-ic">${ANNOUNCE.emoji}</span><span class="ann-home-txt">${annChipTxt}</span></button>`:'';
   let html = isInvestor()
     ? rcCardHTML() + freshCardHTML()
-    : annChip + osHomeChipHTML() + cbHomeChipHTML() + glanceCardHTML()
+    : puChoiceHTML() + annChip + osHomeChipHTML() + cbHomeChipHTML() + glanceCardHTML()
       + (numViews().length>=2 ? numbersCardHTML()
          : (rcCanTab()?rcCardHTML():(lnCanTab()?lnCardHTML():'')) + (typeof scwsCanTab==='function'&&scwsCanTab()?scwsCardHTML():''))
       + freshCardHTML();
@@ -2937,6 +2938,7 @@ function refreshAuthUI(){
   startFrontDeskSync();
   startMenuEditSync();
   startOpenShiftsSync();
+  startPuChoiceSync();
 }
 function renderAccountBar(){
   if(!$('idBar'))return;
@@ -3792,7 +3794,7 @@ const OS_NOTE='We’re short-handed. If you’re free, tap to pick one up — a 
 const OS_MANUAL=[
   /* 2026-09-30: 10/3 (need 2) and 10/4 (need 1) removed on Sam's word; all pickups covered. */
 ];
-let OSCLAIMS={}, osUnsub=null, osLoaded=false, osShownSession=false;
+let OSCLAIMS={}, osUnsub=null, osLoaded=false, osLoadErr=false, osShownSession=false;
 /* Local preview only (serve-local.command on localhost): unlocks the pop-up and the
    pick-up/confirm buttons for whoever is signed in, and suppresses all Firestore writes,
    so Sam can walk the full staff flow before deploy. NEVER true on the deployed site. */
@@ -3860,12 +3862,12 @@ function startOpenShiftsSync(){
   if(fbReady&&fbDb){
     if(osUnsub)osUnsub();
     osUnsub=osDocRef().onSnapshot(function(snap){
-      osIngest(snap.data()); osLoaded=true;
+      osIngest(snap.data()); osLoaded=true; osLoadErr=false;
       if($('home')&&$('home').classList.contains('active'))renderHome();
       if(typeof renderSchedule==='function')renderSchedule();   // grid slots follow pickups
       const m=$('osModal'); if(m&&m.style.display==='flex')osRenderModal();
       if(typeof maybeShowOpenShifts==='function')maybeShowOpenShifts();
-    },function(){ osLoaded=false; });
+    },function(){ osLoaded=false; osLoadErr=true; if($('home')&&$('home').classList.contains('active'))renderHome(); });   // pickup-choice card says so (Odo 11/14)
   }
 }
 /* pickups by ask */
@@ -3924,7 +3926,8 @@ function osTake(askId){
   const ask=osAskById(askId); if(!ask)return;
   if(osMine(askId))return;
   if(cvGridClaims(ask.side,ask.date,ask.shift).length>=ask.need){ alert('Someone already claimed this shift on the schedule.'); osRenderModal(); return; }
-  if(!confirm('Pick up the '+ask.shift+' shift on '+fmtLong(ask.date)+'? A manager still confirms it.'))return;
+  { const pc=puFor(ask.side,ask.date,ask.shift);
+    if(!confirm('Pick up the '+ask.shift+' shift on '+fmtLong(ask.date)+'? A manager still confirms it.'+(pc?'\n\n'+puNote(pc):'')))return; }
   const key=osEntryKey(askId,me.name);
   const entry={key:key, askId:askId, side:ask.side, date:ask.date, shift:ask.shift, by:me.name, at:Date.now(), status:'pending'};
   OSCLAIMS[key]=Object.assign({_id:key},entry); osRenderModal(); renderHome();   // optimistic
@@ -3963,6 +3966,92 @@ function osHomeChipHTML(){
   const txt='<b>'+esc(OS_TITLE)+'</b> — '+parts.join(', ')+'. Tap to '+(openN?'help':'approve')+'.';
   return '<button class="os-home" onclick="osOpen()"><span class="os-home-ic">'+OS_EMOJI+'</span><span class="os-home-txt">'+txt+'</span></button>';
 }
+/* PICKUP CHOICE (2026-11-14, Sam). Some open shifts come with a deal: if someone picks it up, a named
+   person gets to choose whether to keep their own shift that night or take it off. Once the ask has a
+   pickup (Shifts needed or the grid, pending counts), that person gets a card at the top of their home
+   screen. Choice lives in board/pickupChoice {<id>:{choice,at,by,reqId}}. "Take the night off" files an
+   already-approved time-off request with an 'off' effect, so the grid updates through the normal overlay;
+   Sam pre-approved it. Changing back to "keep" deletes that request. Sam sees the answer on his home. */
+const PU_CHOICES=[
+  {id:'katie-2026-11-25', who:'Katie', side:'foh', date:'2026-11-25', ask:'3:30 serve', mine:'3:30 Bar'}
+];
+let PUC={data:{},loaded:false,loadErr:false,unsub:null,busy:false,err:''};
+function puRef(){ return fbDb.collection('board').doc('pickupChoice'); }
+function startPuChoiceSync(){
+  if(!(fbReady&&fbDb))return; if(PUC.unsub)PUC.unsub();
+  const paint=function(){ if($('home')&&$('home').classList.contains('active'))renderHome(); };
+  PUC.unsub=puRef().onSnapshot(function(d){ PUC.data=(d.exists&&d.data())||{}; PUC.loaded=true; PUC.loadErr=false; paint(); },
+    function(){ PUC.loaded=false; PUC.loadErr=true; paint(); });   // loud: the card says it couldn't load
+}
+function puIsMe(c){ return !!me && osMyArea()===c.side && myRowNames().indexOf(String(c.who).toLowerCase())>=0; }
+function puPickers(c){ const a=osAskFor(c.side,c.date,c.ask); const out=[];
+  if(a)osForAsk(a.id).forEach(function(x){ out.push(String(x.by).split(' ')[0]); });
+  cvGridClaims(c.side,c.date,c.ask).forEach(function(x){ out.push(String(x.claimedBy).split(' ')[0]); });
+  return out; }
+/* What the person picking up a deal shift is told (Sam 11/14): it stays the named person's call until that night. */
+function puFor(side,date,shift){ return PU_CHOICES.find(function(c){return c.side===side&&c.date===date&&osSlug(c.ask)===osSlug(shift);})||null; }
+function puNote(c){ return c.who+' has until '+puDayName(c.date)+' to decide whether she keeps her '+c.mine+' or takes the night off. That’s her call, not yours.'; }
+function puMyPickup(c){ const who=currentUserName(); if(!who)return false; const a=osAskFor(c.side,c.date,c.ask);
+  return (a&&osForAsk(a.id).some(function(x){return x.by===who;}))||cvGridClaims(c.side,c.date,c.ask).some(function(x){return x.claimedBy===who;}); }
+function puDayName(iso){ try{ return new Date(iso+'T00:00:00').toLocaleDateString('en-US',{weekday:'long'}); }catch(e){ return fmtShort(iso); } }
+function puChoiceHTML(){
+  if(!me||DEMO||isInvestor())return '';
+  const t=todayISO(); let html='';
+  if(PUC.loadErr||osLoadErr){ PU_CHOICES.forEach(function(c){ if(c.date>=t&&(puIsMe(c)||isAdmin()||puMyPickup(c)))
+    html+='<div class="os-home pu-home"><span class="os-home-ic">🔁</span><span class="os-home-txt"><b>'+esc(puDayName(c.date)+' '+fmtShort(c.date))+'</b> — couldn’t load the pickup choice. Close the portal and open it again.</span></div>'; });
+    return html; }
+  const pickerLine=function(c,day){ return '<div class="os-home pu-home"><span class="os-home-ic">🔁</span><span class="os-home-txt"><b>You picked up '+esc(day)+'’s '+esc(c.ask)+'.</b> '+esc(puNote(c))+'</span></div>'; };
+  if(!PUC.loaded||!osLoaded){   // still loading: a picker the grid already knows still gets the note (Odo 11/14)
+    PU_CHOICES.forEach(function(c){ if(c.date>=t&&!puIsMe(c)&&puMyPickup(c))html+=pickerLine(c,puDayName(c.date)+' '+fmtShort(c.date)); });
+    return html; }
+  PU_CHOICES.forEach(function(c){
+    if(c.date<t)return;
+    const ch=PUC.data[c.id]||null, day=puDayName(c.date)+' '+fmtShort(c.date);
+    if(puIsMe(c)){
+      const pk=puPickers(c);
+      if(!pk.length&&!ch)return;   // nothing to decide until someone picks it up
+      const busy=PUC.busy?' disabled':'';
+      let txt, btns;
+      if(!ch){
+        txt='<b>Your call for '+esc(day)+'</b> — '+esc(pk.join(' and '))+' picked up the '+esc(c.ask)+'. Keep your '+esc(c.mine)+' or take the night off?';
+        btns='<button onclick="puDecide(\''+c.id+'\',\'keep\')"'+busy+'>Keep my shift</button><button class="pu-off" onclick="puDecide(\''+c.id+'\',\'off\')"'+busy+'>Take the night off</button>';
+      } else if(ch.choice==='off'){
+        txt='<b>'+esc(day)+'</b> — you’re taking the night off. Enjoy it.';
+        btns='<button onclick="puDecide(\''+c.id+'\',\'keep\')"'+busy+'>Actually, keep my shift</button>';
+      } else {
+        txt='<b>'+esc(day)+'</b> — you’re keeping your '+esc(c.mine)+'.';
+        btns='<button class="pu-off" onclick="puDecide(\''+c.id+'\',\'off\')"'+busy+'>Actually, take the night off</button>';
+      }
+      html+='<div class="os-home pu-home"><span class="os-home-ic">🔁</span><span class="os-home-txt">'+txt+'</span><span class="pu-btns">'+btns+'</span>'+(PUC.err?'<span class="pu-err">'+esc(PUC.err)+'</span>':'')+'</div>';
+    } else if(puMyPickup(c)){
+      html+=pickerLine(c,day);
+    } else if(isAdmin()&&ch){
+      html+='<div class="os-home pu-home"><span class="os-home-ic">🔁</span><span class="os-home-txt"><b>'+esc(day)+'</b> — '+esc(c.who)+(ch.choice==='off'?' took the night off (her '+esc(c.mine)+' is open).':' is keeping her '+esc(c.mine)+', so the pickup makes you one extra.')+'</span></div>';
+    }
+  });
+  return html;
+}
+function puDecide(id,choice){
+  const c=PU_CHOICES.find(function(x){return x.id===id;}); if(!c||!puIsMe(c)||PUC.busy)return;
+  if(!(fbReady&&fbDb)){ PUC.err='Not connected, nothing saved. Try again on Wi-Fi.'; renderHome(); return; }
+  const prev=PUC.data[id]||null;
+  if(prev&&prev.choice===choice)return;
+  if(choice==='off'&&!confirm('Take '+puDayName(c.date)+' off? Your '+c.mine+' comes off the schedule.'))return;
+  PUC.busy=true; PUC.err=''; renderHome();
+  /* One atomic batch, fixed request id (Odo 11/14): two devices tapping at once can't make two
+     approvals, and the choice and the approval can't disagree after a failed write. */
+  const now=Date.now(), reqRef=fbDb.collection('timeoff').doc('pu-'+id), b=fbDb.batch(), rec={choice:choice,at:now,by:me.name,reqId:choice==='off'?reqRef.id:''}, patch={};
+  patch[id]=rec;
+  if(choice==='off'){
+    b.set(reqRef,{name:me.name,start:c.date,end:c.date,reason:'Took the night off after '+puPickers(c).join(' and ')+' picked up the '+c.ask+' (Sam’s OK).',
+      status:'approved',createdAt:now,decidedBy:'Sam West (pre-approved pickup deal)',decidedAt:now,comments:[],
+      effects:[{kind:'off',name:me.name,side:c.side,date:c.date,cell:c.mine}],puChoice:id});
+  } else { b.delete(reqRef); }
+  b.set(puRef(),patch,{merge:true});
+  const p=b.commit().then(function(){ PUC.data[id]=rec; });
+  p.then(function(){ PUC.busy=false; renderHome(); })
+   .catch(function(){ PUC.busy=false; PUC.err='That did NOT save. Check your connection and tap again.'; renderHome(); });
+}
 /* ---- modal (login pop-up + tap-through) ---- */
 function osSideLabel(s){ return s==='boh'?'Kitchen':'Floor'; }
 function osAskHTML(ask){
@@ -3991,7 +4080,7 @@ function osAskHTML(ask){
     '<div class="os-slot-top"><span class="os-slot-date">'+esc(fmtLong(ask.date))+'</span>'+
     '<span class="os-slot-need'+(filled?' done':'')+'">'+needTxt+'</span></div>'+
     '<div class="os-slot-sub">'+esc(osSideLabel(ask.side))+' · '+esc(ask.shift)+'</div>'+
-    '<div class="os-roster">'+rosterAll+'</div>'+youLine+actions+'</div>';
+    '<div class="os-roster">'+rosterAll+'</div>'+youLine+(puFor(ask.side,ask.date,ask.shift)?'<div class="os-you">'+esc(puNote(puFor(ask.side,ask.date,ask.shift)))+'</div>':'')+actions+'</div>';
 }
 function osCardHTML(){
   const vis=osVisibleAsks();
@@ -6446,10 +6535,10 @@ function startClaimsSync(){
    with no status read as pending — Sam confirms them once. */
 function claimPending(c){ return !!c && c.status!=='confirmed'; }
 function pendingClaimsCount(){ return Object.keys(CLAIMS).reduce(function(n,k){return n+(claimPending(CLAIMS[k])?1:0);},0); }
-function doClaim(k,desc,rec){
+function doClaim(k,desc,rec,note){
   if(!me){openLogin();return;}
   if(CLAIMS[k])return;
-  if(!confirm('Claim '+desc+'? Sam still confirms the final schedule.'))return;
+  if(!confirm('Claim '+desc+'? Sam still confirms the final schedule.'+(note?'\n\n'+note:'')))return;
   rec.claimedBy=me.name; rec.at=Date.now(); rec.status='pending';
   CLAIMS[k]=rec; renderSchedule(); if(typeof updatePendingBadge==='function')updatePendingBadge();
   if(!DEMO){ if(fbReady&&fbDb){ fbDb.collection('claims').doc(k).set(rec).catch(function(){clLsSet();}); } else clLsSet(); }
@@ -6464,7 +6553,8 @@ function approveClaim(k){
 function claimShiftCv(side,date,label,idx){
   const a=osAskFor(side,date,label);
   if(a&&osForAsk(a.id).length+cvGridClaims(side,date,label).length>=a.need){ alert('Someone already picked this shift up in Shifts needed.'); renderSchedule(); return; }
-  doClaim(claimKey(side,date,'cv-'+label+'-'+idx),'the '+label+' shift on '+fmtLong(date),{side:side,date:date,shift:label,slot:idx,kind:'coverage'});
+  const pc=puFor(side,date,label);
+  doClaim(claimKey(side,date,'cv-'+label+'-'+idx),'the '+label+' shift on '+fmtLong(date),{side:side,date:date,shift:label,slot:idx,kind:'coverage'},pc?puNote(pc):'');
 }
 function unclaimByKey(k){
   const c=CLAIMS[k]; if(!c)return;
