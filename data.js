@@ -8149,7 +8149,7 @@ window.SF = {
      "",
      "",
      "",
-     "Sup Server (Brittany R/O)",
+     "",
      ""
     ],
     "covNotes": [
@@ -8290,7 +8290,7 @@ window.SF = {
        "3:30 serve",
        "3:30 serve",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -8326,10 +8326,10 @@ window.SF = {
     "coverage": [
      "",
      "",
-     "3:30 serve",
+     "3:30 serve (Sabba off), 3:30 serve",
      "",
      "3:30 serve",
-     "Sup Server (Brittany R/O)",
+     "",
      ""
     ],
     "covNotes": [
@@ -8467,10 +8467,10 @@ window.SF = {
       "shifts": [
        "3:30 Bar",
        "3:30 serve",
-       "3:30 serve",
+       "",
        "",
        "3:30 Bar",
-       "",
+       "Sup Server",
        "3:30 Bar"
       ]
      },
@@ -19098,5 +19098,5 @@ window.SF = {
    }
   ]
  },
- "build": "1794715548"
+ "build": "1794716022"
 };
