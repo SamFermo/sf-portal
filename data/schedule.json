@@ -13031,11 +13031,11 @@
       "notes": [],
       "coverage": [
         "",
-        "Expo",
-        "Expo",
-        "Admin",
-        "Expo",
-        "Expo",
+        "",
+        "",
+        "",
+        "",
+        "",
         ""
       ],
       "covNotes": [
@@ -13055,8 +13055,8 @@
             "R/O",
             "R/O",
             "R/O",
-            "MD",
-            "MD",
+            "Expo",
+            "Expo",
             "MD"
           ]
         },
@@ -13076,8 +13076,8 @@
           "name": "Jose",
           "shifts": [
             "Expo",
-            "",
-            "1-close",
+            "Expo",
+            "Expo",
             "Expo",
             "",
             "",
@@ -13101,10 +13101,10 @@
           "shifts": [
             "1-close",
             "1-close",
-            "",
-            "",
             "1-close",
             "1-close",
+            "",
+            "",
             ""
           ]
         },
@@ -13127,7 +13127,7 @@
             "1-close",
             "",
             "",
-            "10-8",
+            "1-close",
             "1-close",
             "1-close"
           ]
@@ -13176,7 +13176,7 @@
             "1-close",
             "1-close",
             "1-close",
-            "10-8",
+            "1-close",
             ""
           ]
         },

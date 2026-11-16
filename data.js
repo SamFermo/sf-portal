@@ -16263,11 +16263,11 @@ window.SF = {
     "notes": [],
     "coverage": [
      "",
-     "Expo",
-     "Expo",
-     "Admin",
-     "Expo",
-     "Expo",
+     "",
+     "",
+     "",
+     "",
+     "",
      ""
     ],
     "covNotes": [
@@ -16287,8 +16287,8 @@ window.SF = {
        "R/O",
        "R/O",
        "R/O",
-       "MD",
-       "MD",
+       "Expo",
+       "Expo",
        "MD"
       ]
      },
@@ -16308,8 +16308,8 @@ window.SF = {
       "name": "Jose",
       "shifts": [
        "Expo",
-       "",
-       "1-close",
+       "Expo",
+       "Expo",
        "Expo",
        "",
        "",
@@ -16333,10 +16333,10 @@ window.SF = {
       "shifts": [
        "1-close",
        "1-close",
-       "",
-       "",
        "1-close",
        "1-close",
+       "",
+       "",
        ""
       ]
      },
@@ -16359,7 +16359,7 @@ window.SF = {
        "1-close",
        "",
        "",
-       "10-8",
+       "1-close",
        "1-close",
        "1-close"
       ]
@@ -16408,7 +16408,7 @@ window.SF = {
        "1-close",
        "1-close",
        "1-close",
-       "10-8",
+       "1-close",
        ""
       ]
      },
@@ -19098,5 +19098,5 @@ window.SF = {
    }
   ]
  },
- "build": "1794751696"
+ "build": "1794789243"
 };
