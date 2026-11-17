@@ -2359,7 +2359,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794881606';   // stamped by build-data.py at every deploy
+const BUILD='1794885767';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3974,13 +3974,13 @@ function osOpenForMe(ask){
   return a==='free'||a===null;
 }
 function osAnyOpenForMe(){ return osAsks().some(osOpenForMe); }
-/* what to show in the card/modal: managers see every side's asks; staff see their side's. */
+/* what to show in the card/modal: admins see every side's asks; everyone else (managers too) sees their own side's. */
 function osVisibleAsks(){
   const all=osAsks().slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:(a.side<b.side?-1:1);});
   if(isAdmin())return all;
   const area=osMyArea();
   return all.filter(function(a){ if(osOnlyRule(a.side,a.shift))return osAllowedMe(a.side,a.shift);
-    return isMgr()||a.side===area; });
+    return a.side===area; });   // 2026-11-16 (Sam): BOH sees BOH asks, FOH sees FOH, managers included; only admins see both
 }
 /* ---- pickup / release / confirm (all keyed by askId) ---- */
 function osTake(askId){
