@@ -2359,7 +2359,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794880256';   // stamped by build-data.py at every deploy
+const BUILD='1794881565';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -13965,9 +13965,12 @@ function scwsPaint(all,periods){
       +(anyT?`<td>${scwsMoney(r.tips)}</td>`:'')+`<td><b>${scwsMoney(r.total)}</b></td></tr>`);
     h+=`</tbody><tfoot><tr><td>Total</td><td></td><td>${scwsMoney(t.p)}</td><td>${scwsMoney(t.h)}</td>`
       +(anyT?`<td>${scwsMoney(t.k)}</td>`:'')+`<td><b>${scwsMoney(t.n)}</b></td></tr></tfoot></table>`;
-    h+='<div class="scws-btns"><button class="pri" id="scwsXlsBtn">Download Excel</button>'
+    h+='<div class="scws-btns"><button class="pri" id="scwsTimBtn">Tim\'s worksheet (SCWS)</button>'
+      +'<button id="scwsXlsBtn">Download Excel</button>'
       +'<button id="scwsCsvBtn">Download CSV</button>'
       +'<button id="scwsCopyBtn">Copy for email</button></div>';
+    h+='<p class="scws-foot" style="margin-top:6px"><b>Tim\'s worksheet</b> is the one Krista processes payroll from: '
+      +'his DAILY Payroll Tip Log, one tab per night plus Summary, saved as SCWS M.DD.YY.xlsx. Send it with the payroll email.</p>';
     h+='<p class="scws-foot" style="margin-top:6px">Excel comes as three sheets — by person, by night, '
       +'and every individual payment — so the totals can be traced back without leaving the file.</p>';
   }
@@ -14011,6 +14014,7 @@ function scwsPaint(all,periods){
   body.querySelectorAll('[data-adj]').forEach(b=>{ b.onclick=()=>scwsEdit(b.getAttribute('data-adj')); });
   body.querySelectorAll('[data-appr]').forEach(b=>{ b.onclick=()=>scwsApprove(b.getAttribute('data-appr')); });
   body.querySelectorAll('[data-unappr]').forEach(b=>{ b.onclick=()=>scwsUnapprove(b.getAttribute('data-unappr')); });
+  const tim=$('scwsTimBtn'); if(tim)tim.onclick=()=>scwsDownloadTimSheet(rows,R);
   const xls=$('scwsXlsBtn'); if(xls)xls.onclick=()=>scwsDownloadXlsx(rows,R.label);
   const csv=$('scwsCsvBtn'); if(csv)csv.onclick=()=>scwsDownloadCSV(rows,R.label);
   const cp=$('scwsCopyBtn');  if(cp)cp.onclick=()=>scwsCopyReport(rows,R.label);
@@ -14284,6 +14288,135 @@ function scwsDownloadXlsx(rows,label){
     XLSX.writeFile(wb,'san-fermo-service-charge-'+label.replace(/[^0-9a-zA-Z]+/g,'-').toLowerCase()+'.xlsx');
     reset();
   }).catch(function(){ reset(); alert('Could not load the Excel builder. The CSV has the same figures.'); });
+}
+
+/* ---------- Tim's own worksheet: "SCWS M.DD.YY.xlsx" (added 2026-11-17) ----------
+   Mezzanine (Krista) processes payroll from Tim's DAILY Payroll Tip Log workbook, not from the
+   by-person report: one tab per night ("1st.16th" … "15th.30th", "31st") plus a Summary tab.
+   On 11/16 she asked for "the info like Tim usually sends it". This builds that exact workbook
+   from the same computed nights the report uses, by filling a blank copy of Tim's own file
+   (templates/scws-template.xlsx: his formulas, fonts, widths, untouched).
+   What gets typed in, exactly the way Tim types it:
+     sheet 1 C/D      roster first + last names (other sheets reference sheet 1)
+     each night C2    'M/D'          M6  the night's pool      N6  the card-tip pot
+     K (PM Hours)     5 per pool seat (5 x the multiplier when prorated); his P3 = M6/K4 and
+                      R = P x 0.35 do the split
+     S (MD Commission) a reference to the first pool member's R ('=R7'), the way he writes it;
+                      a typed amount only when the match was prorated
+     N (CC Tips)      the per-head card tip for everyone paid that night; =K*$N$4 elsewhere
+   Rows 7–21 only. Tim's R formula switches to x0.44 below row 21 (METHOD.md "boundary-row
+   landmine"), so more than 15 people refuses rather than silently paying 44%. */
+const SCWS_TIM_TEMPLATE = 'templates/scws-template.xlsx';
+const SCWS_TIM_ORDER = ['Denise','Katie','Sully','Abby','Brittany','Josie','Sabba','Allegra','Jacklynn','Mac','Nam'];
+const SCWS_TIM_LAST = {Jacklynn:'Hanley', Katie:'Kuntz', Sully:'Baker'};
+const SCWS_TIM_FIRST_ROW = 7, SCWS_TIM_LAST_ROW = 21;
+
+function scwsTimRoster(rows, directory){
+  const paid = {};
+  rows.forEach(n => n.splits.concat(n.commissions).forEach(x => { paid[x.name] = 1; }));
+  const last = Object.assign({}, SCWS_TIM_LAST);
+  const foh = (directory && directory.foh) || [];
+  foh.forEach(p => { const parts = String(p.name || '').trim().split(/\s+/);
+    const f = (typeof scwsN === 'function') ? scwsN(parts[0]) : parts[0];
+    if (!last[f] && parts.length > 1) last[f] = parts.slice(1).join(' '); });
+  const never = (typeof SCWS_NEVER !== 'undefined') ? SCWS_NEVER : ['Sam','Tim'];
+  const pool = Object.keys(last).filter(f => never.indexOf(f) < 0 && foh.some(p => {
+      const f2 = String(p.name || '').trim().split(/\s+/)[0];
+      return ((typeof scwsN === 'function') ? scwsN(f2) : f2) === f; }));
+  Object.keys(paid).forEach(f => { if (pool.indexOf(f) < 0) pool.push(f); });
+  const ordered = SCWS_TIM_ORDER.filter(f => pool.indexOf(f) >= 0)
+    .concat(pool.filter(f => SCWS_TIM_ORDER.indexOf(f) < 0).sort());
+  return ordered.map(f => ({first: f, last: last[f] || ''}));
+}
+
+async function scwsBuildTimWorkbook(ExcelJS, templateBuf, rows, range, directory){
+  const problems = [];
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.load(templateBuf);
+  const tabs = wb.worksheets.map(w => w.name);
+  const nightTabs = tabs.slice(0, 16), summary = wb.getWorksheet('Summary');
+  if (nightTabs.length !== 16 || !summary) throw new Error('template does not look like Tim\'s workbook');
+
+  const roster = scwsTimRoster(rows, directory);
+  const cap = SCWS_TIM_LAST_ROW - SCWS_TIM_FIRST_ROW + 1;
+  if (roster.length > cap) throw new Error(roster.length + ' people need a row but Tim\'s sheet only has ' + cap +
+    ' rows at the 35% rate. Nothing was built.');
+  const rowOf = {};
+  const s1 = wb.getWorksheet(nightTabs[0]);
+  for (let i = 0; i < cap; i++) {
+    const r = SCWS_TIM_FIRST_ROW + i, p = roster[i];
+    s1.getCell('C' + r).value = p ? p.first : 'First Name';
+    s1.getCell('D' + r).value = p ? (p.last || 'Last Name') : 'Last Name';
+    if (p) rowOf[p.first] = r;
+  }
+
+  const [y, m, d0] = range.from.split('-').map(Number);
+  const dEnd = +range.to.split('-')[2];
+  const byDate = {}; rows.forEach(n => { byDate[n.date] = n; });
+  for (let t = 0; t < 16; t++) {
+    const ws = wb.getWorksheet(nightTabs[t]);
+    const day = (t === 15) ? 31 : d0 + t;          // tab 16 is the "31st"
+    const iso = y + '-' + String(m).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+    const inRange = day <= dEnd && !(t === 15 && d0 === 1);
+    const n = inRange ? byDate[iso] : null;
+    ws.getCell('C2').value = inRange ? (m + '/' + day) : null;
+    ws.getCell('M6').value = n ? n.pool : null;
+    ws.getCell('N6').value = (n && n.ccPot) ? n.ccPot : null;
+    if (!n) continue;
+    const tip = {};
+    let first = null;
+    n.splits.forEach(x => {
+      const r = rowOf[x.name];
+      if (!r) { problems.push(iso + ': ' + x.name + ' has no row'); return; }
+      const mult = (x.mult != null) ? x.mult : 1;
+      ws.getCell('K' + r).value = Math.round(5 * mult * 10000) / 10000;
+      if (first === null && mult === 1) first = r;
+      tip[r] = x.tip || 0;
+    });
+    n.commissions.forEach(x => {
+      const r = rowOf[x.name];
+      if (!r) { problems.push(iso + ': ' + x.name + ' has no row'); return; }
+      const mult = (x.mult != null) ? x.mult : 1;
+      ws.getCell('S' + r).value = (first !== null && mult === 1) ? {formula: 'R' + first} : x.amt;
+      tip[r] = x.tip || 0;
+    });
+    if (n.ccPot > 0) Object.keys(tip).forEach(r => { ws.getCell('N' + r).value = tip[r]; });
+  }
+  summary.getCell('C2').value = m + '/' + dEnd;
+  wb.calcProperties = Object.assign({}, wb.calcProperties, {fullCalcOnLoad: true});
+  const yy = String(y).slice(2);
+  return {wb: wb, filename: 'SCWS ' + m + '.' + dEnd + '.' + yy + '.xlsx', problems: problems};
+}
+
+let _exceljsLoading = null;
+function scwsLoadExcelJS(){
+  if (window.ExcelJS) return Promise.resolve(window.ExcelJS);
+  if (_exceljsLoading) return _exceljsLoading;
+  _exceljsLoading = new Promise(function(res, rej){
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+    s.onload = function(){ window.ExcelJS ? res(window.ExcelJS) : rej(new Error('exceljs missing')); };
+    s.onerror = function(){ _exceljsLoading = null; rej(new Error('exceljs load failed')); };
+    document.head.appendChild(s);
+  });
+  return _exceljsLoading;
+}
+
+function scwsDownloadTimSheet(rows, R){
+  const btn = $('scwsTimBtn'); if (btn) { btn.disabled = true; btn.textContent = 'Building…'; }
+  const reset = () => { if (btn) { btn.disabled = false; btn.textContent = "Tim's worksheet (SCWS)"; } };
+  Promise.all([scwsLoadExcelJS(), fetch(SCWS_TIM_TEMPLATE, {cache: 'no-cache'}).then(r => {
+      if (!r.ok) throw new Error('template ' + r.status); return r.arrayBuffer(); })])
+    .then(([ExcelJS, buf]) => scwsBuildTimWorkbook(ExcelJS, buf, rows, R, SF.staff && SF.staff.directory))
+    .then(out => out.wb.xlsx.writeBuffer().then(b => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([b], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+      a.download = out.filename; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      reset();
+      if (out.problems.length) alert('Built, but check these before sending:\n' + out.problems.join('\n'));
+    }))
+    .catch(e => { reset(); alert("Could not build Tim's worksheet: " + (e && e.message ? e.message : e) + '\nThe Excel and CSV downloads still work.'); });
 }
 
 function scwsCopyReport(rows,label){
