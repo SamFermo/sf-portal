@@ -2359,7 +2359,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1794879802';   // stamped by build-data.py at every deploy
+const BUILD='1794880256';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3268,6 +3268,21 @@ const ANNOUNCES=[
   lockNote:"Got it unlocks once you've tapped I've read this.",
   note:"All of it is house policy as of November 3."
   },
+  /* BOH December published, 2026-11-16 (Sam). All BOH. */
+  {
+  kind:'info',
+  aud:'boh',
+  id:'boh-december-up-2026-11-16',
+  showUntil:'2026-12-20',
+  emoji:'\uD83D\uDCC5',
+  title:'December is up',
+  lines:[
+    "The December schedule is up, and there are a lot of shifts that need to get picked up. Overtime is approved for them.",
+    "I won't be approving any more time off until these shifts are picked up."
+  ],
+  go:{hash:'schedule/boh',label:'See the kitchen schedule'},
+  note:""
+  },
   /* Schedule changes from the BOH template, 2026-11-08: one card per affected cook (forName). */
   {
   kind:'info',
@@ -3822,7 +3837,22 @@ const OS_NOTE='We’re short-handed. If you’re free, tap to pick one up — a 
    Clear these out when they're no longer needed. */
 const OS_MANUAL=[
   /* 2026-09-30: 10/3 (need 2) and 10/4 (need 1) removed on Sam's word; all pickups covered. */
+  /* 2026-11-16 (Sam: "available to pick up as soon as possible"): December FOH asks shown now,
+     ahead of the 14-day window. Labels match the sheet's Coverage Needs cells exactly. */
+  {side:'foh', date:'2026-12-07', need:1, shift:'MD (Sam on expo)'},
+  {side:'foh', date:'2026-12-08', need:1, shift:'Sup Server (Sully on MD)'},
+  {side:'foh', date:'2026-12-15', need:1, shift:'Sup Server (Sully on MD)'},
+  {side:'foh', date:'2026-12-21', need:1, shift:'MD (Sam on expo)'},
+  {side:'foh', date:'2026-12-22', need:1, shift:'Sup Server (Sully on MD)'},
+  {side:'foh', date:'2026-12-28', need:1, shift:'MD (Sam on expo)'}
 ];
+/* WHO MAY PICK UP (2026-11-16, Sam): an open FOH MD shift is only for Sully, Katie or Tim, wherever
+   it is offered (Shifts needed or the schedule grid). Matched on full name. Sam (admin) can still
+   assign anyone. Everyone else does not see these asks in Shifts needed and gets no claim button. */
+const OS_ONLY=[{side:'foh', re:/^md\b/i, who:['sully baker','katie kuntz','tim baker'], label:'Sully, Katie or Tim'}];
+function osOnlyRule(side,shift){ return OS_ONLY.find(function(o){return o.side===side&&o.re.test(String(shift||'').trim());})||null; }
+function osAllowedMe(side,shift){ const r=osOnlyRule(side,shift); if(!r)return true; if(!me)return false;
+  return r.who.indexOf(String(me.name||'').trim().toLowerCase())>=0; }
 let OSCLAIMS={}, osUnsub=null, osLoaded=false, osLoadErr=false, osShownSession=false;
 /* Local preview only (serve-local.command on localhost): unlocks the pop-up and the
    pick-up/confirm buttons for whoever is signed in, and suppresses all Firestore writes,
@@ -3935,7 +3965,9 @@ function osAvailOn(side,iso){
 }
 /* an ask this person could pick up now: their side, free that day, not theirs, not filled */
 function osOpenForMe(ask){
-  if(osMyArea()!==ask.side)return false;
+  const rule=osOnlyRule(ask.side,ask.shift);
+  if(rule&&!osAllowedMe(ask.side,ask.shift))return false;
+  if(!rule&&osMyArea()!==ask.side)return false;
   if(osFilled(ask))return false;
   if(osMine(ask.id))return false;
   const a=osAvailOn(ask.side,ask.date);
@@ -3945,15 +3977,17 @@ function osAnyOpenForMe(){ return osAsks().some(osOpenForMe); }
 /* what to show in the card/modal: managers see every side's asks; staff see their side's. */
 function osVisibleAsks(){
   const all=osAsks().slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:(a.side<b.side?-1:1);});
-  if(isMgr())return all;
+  if(isAdmin())return all;
   const area=osMyArea();
-  return all.filter(function(a){return a.side===area;});
+  return all.filter(function(a){ if(osOnlyRule(a.side,a.shift))return osAllowedMe(a.side,a.shift);
+    return isMgr()||a.side===area; });
 }
 /* ---- pickup / release / confirm (all keyed by askId) ---- */
 function osTake(askId){
   if(!me){openLogin();return;}
   const ask=osAskById(askId); if(!ask)return;
   if(osMine(askId))return;
+  if(!isAdmin()&&!osAllowedMe(ask.side,ask.shift)){ const r=osOnlyRule(ask.side,ask.shift); alert('This shift is for '+r.label+' only.'); return; }
   if(cvGridClaims(ask.side,ask.date,ask.shift).length>=ask.need){ alert('Someone already claimed this shift on the schedule.'); osRenderModal(); return; }
   { const pc=puFor(ask.side,ask.date,ask.shift);
     if(!confirm('Pick up the '+ask.shift+' shift on '+fmtLong(ask.date)+'? A manager still confirms it.'+(pc?'\n\n'+puNote(pc):'')))return; }
@@ -3981,7 +4015,7 @@ function osConfirm(key){
 /* ---- home chip (landing screen) ---- */
 function osHomeChipHTML(){
   const vis=osVisibleAsks(); if(!vis.length)return '';
-  if(!(osMyArea()==='foh'||osMyArea()==='boh'||isMgr()))return '';
+  if(!(osMyArea()==='foh'||osMyArea()==='boh'||isMgr()||vis.some(function(a){return !!osOnlyRule(a.side,a.shift);})))return '';   // Tim (office) sees MD asks he may take
   /* 2026-09-30 (Sam): no chip until pickups have loaded (it used to flash "N need coverage"
      before the snapshot). Staff: gone once every shift has someone on it, pending or confirmed.
      Managers: stays while any pickup still waits for approval, gone once all are confirmed. */
@@ -4096,7 +4130,7 @@ function osAskHTML(ask){
     return '<span class="'+(claimPending(c)?'os-pend':'os-conf')+'">'+esc(String(c.claimedBy).split(' ')[0])+(claimPending(c)?' · claimed on the schedule':' ✓ on (schedule)')+'</span>'
       +(claimPending(c)&&mgr&&CLAIMS[gk]?' <button class="os-btn confirm" onclick="approveClaim(\''+esc(gk)+'\');osRenderModal();renderHome();">Confirm</button>':''); }).join('<br>');
   const rosterAll=[roster,gridL].filter(Boolean).join('<br>')||'<span style="color:var(--card-mute);font-style:italic">No one yet.</span>';
-  const mine=osMine(ask.id), onMySide=osMyArea()===ask.side, avail=osAvailOn(ask.side,ask.date), working=avail==='working', ro=avail==='ro';
+  const mine=osMine(ask.id), osRule=osOnlyRule(ask.side,ask.shift), onMySide=osRule?(isAdmin()||osAllowedMe(ask.side,ask.shift)):osMyArea()===ask.side, avail=osAvailOn(ask.side,ask.date), working=avail==='working', ro=avail==='ro';
   let youLine='';
   if(mine) youLine='<div class="os-you">You’re down for this '+(mine.status==='confirmed'?'— confirmed ✓':'— pending a manager’s confirm')+'.</div>';
   else if(onMySide && working) youLine='<div class="os-you working">You’re on the schedule this day.</div>';
@@ -4108,7 +4142,7 @@ function osAskHTML(ask){
   return '<div class="os-slot'+(filled?' filled':'')+'">'+
     '<div class="os-slot-top"><span class="os-slot-date">'+esc(fmtLong(ask.date))+'</span>'+
     '<span class="os-slot-need'+(filled?' done':'')+'">'+needTxt+'</span></div>'+
-    '<div class="os-slot-sub">'+esc(osSideLabel(ask.side))+' · '+esc(ask.shift)+'</div>'+
+    '<div class="os-slot-sub">'+esc(osSideLabel(ask.side))+' · '+esc(ask.shift)+(osRule?' · '+esc(osRule.label)+' only':'')+'</div>'+
     '<div class="os-roster">'+rosterAll+'</div>'+youLine+(puFor(ask.side,ask.date,ask.shift)?'<div class="os-you">'+esc(puNote(puFor(ask.side,ask.date,ask.shift)))+'</div>':'')+actions+'</div>';
 }
 function osCardHTML(){
@@ -6580,6 +6614,7 @@ function approveClaim(k){
   if(!DEMO){ if(fbReady&&fbDb){ fbDb.collection('claims').doc(k).update({status:'confirmed',confirmedBy:c.confirmedBy,confirmedAt:c.confirmedAt}).catch(function(){clLsSet();}); } else clLsSet(); }
 }
 function claimShiftCv(side,date,label,idx){
+  if(!isAdmin()&&!osAllowedMe(side,label)){ alert('This shift is for '+osOnlyRule(side,label).label+' only.'); return; }
   const a=osAskFor(side,date,label);
   if(a&&osForAsk(a.id).length+cvGridClaims(side,date,label).length>=a.need){ alert('Someone already picked this shift up in Shifts needed.'); renderSchedule(); return; }
   const pc=puFor(side,date,label);
@@ -6640,6 +6675,7 @@ function weekTableHTML(w,today){
           else if(isAdmin()) inner+=`<span class="ro-claim-pend">${esc(lab)}<small>${nm} · claimed</small><span class="rcp-actions"><button class="rcp-ok" onclick="approveClaim('${k}')">Confirm</button><button class="rcp-x" onclick="unclaimByKey('${k}')">✕</button></span></span>`;
           else inner+=`<span class="ro-claim-pend" onclick="unclaimByKey('${k}')">${esc(lab)}<small>${nm} · awaiting Sam</small></span>`;
         }
+        else if(!isAdmin()&&!osAllowedMe(schedState.side,lab)) inner+=`<span class="ro-claim-pend">${esc(lab)}<small>${esc(osOnlyRule(schedState.side,lab).label)} only</small></span>`;
         else inner+=`<button class="ro-claim" onclick="claimShiftCv('${schedState.side}','${d}','${jq(lab)}',${j})">${esc(lab)}<small>claim</small></button>`;
       });
       h+=`<td class="${d===today?'today':''}">${inner||'<span class="shift off">·</span>'}</td>`;
