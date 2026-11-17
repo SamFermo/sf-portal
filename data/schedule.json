@@ -4934,7 +4934,7 @@
           "name": "Sam",
           "shifts": [
             "MD",
-            "Admin/MD 5-8",
+            "MD",
             "",
             "",
             "Float",
@@ -5271,7 +5271,7 @@
       "notes": [],
       "coverage": [
         "MD (Sam R/O)",
-        "Admin/MD 5-8 (Sam R/O)",
+        "MD (Sam R/O)",
         "",
         "",
         "",
@@ -5295,8 +5295,8 @@
             "R/O",
             "",
             "",
-            "Float",
-            "Float",
+            "Expo",
+            "Expo",
             "Float"
           ]
         },
@@ -5448,8 +5448,8 @@
       "label": "",
       "notes": [],
       "coverage": [
-        "",
-        "",
+        "MD (Sam on expo)",
+        "Sup Server (Sully on MD)",
         "3:30 Bar",
         "3:30 Bar",
         "",
@@ -5469,12 +5469,12 @@
         {
           "name": "Sam",
           "shifts": [
-            "MD",
-            "Admin/MD 5-8",
+            "Expo",
+            "Expo",
             "",
             "",
             "Float",
-            "Float",
+            "Expo",
             "Float"
           ]
         },
@@ -5602,7 +5602,7 @@
           "name": "Sully",
           "shifts": [
             "",
-            "Sup Server",
+            "MD",
             "MD",
             "MD",
             "MD",
@@ -5627,7 +5627,7 @@
       "notes": [],
       "coverage": [
         "",
-        "",
+        "Sup Server (Sully on MD)",
         "",
         "",
         "",
@@ -5648,11 +5648,11 @@
           "name": "Sam",
           "shifts": [
             "MD",
-            "Admin/MD 5-8",
+            "Expo",
             "",
             "",
-            "Float",
-            "Float",
+            "Expo",
+            "Expo",
             "Float"
           ]
         },
@@ -5780,7 +5780,7 @@
           "name": "Sully",
           "shifts": [
             "",
-            "Sup Server",
+            "MD",
             "MD",
             "MD",
             "MD",
@@ -5807,8 +5807,8 @@
         "Christmas, Closed"
       ],
       "coverage": [
-        "",
-        "",
+        "MD (Sam on expo)",
+        "Sup Server (Sully on MD)",
         "",
         "",
         "",
@@ -5828,12 +5828,12 @@
         {
           "name": "Sam",
           "shifts": [
-            "MD",
-            "Admin/MD 5-8",
+            "Expo",
+            "Expo",
             "",
             "",
             "",
-            "Float",
+            "Expo",
             "Float"
           ]
         },
@@ -5961,7 +5961,7 @@
           "name": "Sully",
           "shifts": [
             "",
-            "Sup Server",
+            "MD",
             "MD",
             "",
             "",
@@ -5988,7 +5988,7 @@
         "New Year's Day, Closed"
       ],
       "coverage": [
-        "",
+        "MD (Sam on expo)",
         "",
         "",
         "",
@@ -6009,8 +6009,8 @@
         {
           "name": "Sam",
           "shifts": [
+            "Expo",
             "MD",
-            "Admin/MD 5-8",
             "",
             "",
             "",
@@ -6188,7 +6188,7 @@
           "name": "Sam",
           "shifts": [
             "MD",
-            "Admin/MD 5-8",
+            "MD",
             "",
             "",
             "Float",
@@ -6366,7 +6366,7 @@
           "name": "Sam",
           "shifts": [
             "MD",
-            "Admin/MD 5-8",
+            "MD",
             "",
             "",
             "Float",
@@ -6544,7 +6544,7 @@
           "name": "Sam",
           "shifts": [
             "MD",
-            "Admin/MD 5-8",
+            "MD",
             "",
             "",
             "Float",
@@ -6722,7 +6722,7 @@
           "name": "Sam",
           "shifts": [
             "MD",
-            "Admin/MD 5-8",
+            "MD",
             "",
             "",
             "Float",
@@ -6900,7 +6900,7 @@
           "name": "Sam",
           "shifts": [
             "MD",
-            "Admin/MD 5-8",
+            "MD",
             "",
             "",
             "Float",
@@ -7080,7 +7080,7 @@
           "name": "Sam",
           "shifts": [
             "MD",
-            "Admin/MD 5-8",
+            "MD",
             "",
             "",
             "Float",
@@ -7258,7 +7258,7 @@
           "name": "Sam",
           "shifts": [
             "MD",
-            "Admin/MD 5-8",
+            "MD",
             "",
             "",
             "Float",
@@ -7436,7 +7436,7 @@
           "name": "Sam",
           "shifts": [
             "MD",
-            "Admin/MD 5-8",
+            "MD",
             "",
             "",
             "Float",

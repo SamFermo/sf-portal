@@ -8166,7 +8166,7 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "MD",
-       "Admin/MD 5-8",
+       "MD",
        "",
        "",
        "Float",
@@ -8503,7 +8503,7 @@ window.SF = {
     "notes": [],
     "coverage": [
      "MD (Sam R/O)",
-     "Admin/MD 5-8 (Sam R/O)",
+     "MD (Sam R/O)",
      "",
      "",
      "",
@@ -8527,8 +8527,8 @@ window.SF = {
        "R/O",
        "",
        "",
-       "Float",
-       "Float",
+       "Expo",
+       "Expo",
        "Float"
       ]
      },
@@ -8680,8 +8680,8 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
-     "",
-     "",
+     "MD (Sam on expo)",
+     "Sup Server (Sully on MD)",
      "3:30 Bar",
      "3:30 Bar",
      "",
@@ -8701,12 +8701,12 @@ window.SF = {
      {
       "name": "Sam",
       "shifts": [
-       "MD",
-       "Admin/MD 5-8",
+       "Expo",
+       "Expo",
        "",
        "",
        "Float",
-       "Float",
+       "Expo",
        "Float"
       ]
      },
@@ -8834,7 +8834,7 @@ window.SF = {
       "name": "Sully",
       "shifts": [
        "",
-       "Sup Server",
+       "MD",
        "MD",
        "MD",
        "MD",
@@ -8859,7 +8859,7 @@ window.SF = {
     "notes": [],
     "coverage": [
      "",
-     "",
+     "Sup Server (Sully on MD)",
      "",
      "",
      "",
@@ -8880,11 +8880,11 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "MD",
-       "Admin/MD 5-8",
+       "Expo",
        "",
        "",
-       "Float",
-       "Float",
+       "Expo",
+       "Expo",
        "Float"
       ]
      },
@@ -9012,7 +9012,7 @@ window.SF = {
       "name": "Sully",
       "shifts": [
        "",
-       "Sup Server",
+       "MD",
        "MD",
        "MD",
        "MD",
@@ -9039,8 +9039,8 @@ window.SF = {
      "Christmas, Closed"
     ],
     "coverage": [
-     "",
-     "",
+     "MD (Sam on expo)",
+     "Sup Server (Sully on MD)",
      "",
      "",
      "",
@@ -9060,12 +9060,12 @@ window.SF = {
      {
       "name": "Sam",
       "shifts": [
-       "MD",
-       "Admin/MD 5-8",
+       "Expo",
+       "Expo",
        "",
        "",
        "",
-       "Float",
+       "Expo",
        "Float"
       ]
      },
@@ -9193,7 +9193,7 @@ window.SF = {
       "name": "Sully",
       "shifts": [
        "",
-       "Sup Server",
+       "MD",
        "MD",
        "",
        "",
@@ -9220,7 +9220,7 @@ window.SF = {
      "New Year's Day, Closed"
     ],
     "coverage": [
-     "",
+     "MD (Sam on expo)",
      "",
      "",
      "",
@@ -9241,8 +9241,8 @@ window.SF = {
      {
       "name": "Sam",
       "shifts": [
+       "Expo",
        "MD",
-       "Admin/MD 5-8",
        "",
        "",
        "",
@@ -9420,7 +9420,7 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "MD",
-       "Admin/MD 5-8",
+       "MD",
        "",
        "",
        "Float",
@@ -9598,7 +9598,7 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "MD",
-       "Admin/MD 5-8",
+       "MD",
        "",
        "",
        "Float",
@@ -9776,7 +9776,7 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "MD",
-       "Admin/MD 5-8",
+       "MD",
        "",
        "",
        "Float",
@@ -9954,7 +9954,7 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "MD",
-       "Admin/MD 5-8",
+       "MD",
        "",
        "",
        "Float",
@@ -10132,7 +10132,7 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "MD",
-       "Admin/MD 5-8",
+       "MD",
        "",
        "",
        "Float",
@@ -10312,7 +10312,7 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "MD",
-       "Admin/MD 5-8",
+       "MD",
        "",
        "",
        "Float",
@@ -10490,7 +10490,7 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "MD",
-       "Admin/MD 5-8",
+       "MD",
        "",
        "",
        "Float",
@@ -10668,7 +10668,7 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "MD",
-       "Admin/MD 5-8",
+       "MD",
        "",
        "",
        "Float",
@@ -19098,5 +19098,5 @@ window.SF = {
    }
   ]
  },
- "build": "1794838088"
+ "build": "1794879767"
 };
