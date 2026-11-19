@@ -8859,7 +8859,7 @@ window.SF = {
     "notes": [],
     "coverage": [
      "",
-     "Sup Server (Sully on MD)",
+     "",
      "",
      "",
      "",
@@ -8952,7 +8952,7 @@ window.SF = {
       "name": "Josie",
       "shifts": [
        "3:30 serve",
-       "",
+       "Sup Server",
        "",
        "",
        "",
@@ -19156,6 +19156,19 @@ window.SF = {
     "bottle": 85
    },
    {
+    "key": "felsina-i-sistri-chardonnay-2022",
+    "name": "Felsina \"I Sistri\" Chardonnay, Toscana 2022",
+    "short": "I Sistri Chardonnay",
+    "type": "White",
+    "status": "core-bottle",
+    "vendor": "Elliot Bay",
+    "unit": 12,
+    "rule": "par6",
+    "cost": 21.0,
+    "usual": "keep about 6. Sam 2026-11-18: won the white tasting, takes the Derthona spot. $21 is Todd post-off from $24.50 (11/8 book); confirm on his invoice. Bottle $90 suggested, not confirmed by Sam.",
+    "bottle": 90
+   },
+   {
     "key": "copertino-riserva-negroamaro-2016",
     "name": "Copertino Riserva Negroamaro 2017",
     "short": "Copertino",
@@ -19912,5 +19925,5 @@ window.SF = {
    }
   ]
  },
- "build": "1794885767"
+ "build": "1795097372"
 };
