@@ -1414,8 +1414,8 @@ window.SF = {
    "vintage": "2023",
    "region": "Abruzzo, Italy",
    "type": "white",
-   "glass": "18",
-   "bottle": "75",
+   "glass": "14",
+   "bottle": "55",
    "grapes": "100% Pecorino",
    "pour": "Vivid yellow with green glints. White flowers and fresh apple on the nose; fresh and zesty on the palate, fruit and acidity in balance, with a persistent finish.",
    "producer": "Contesa is Rocco Pasetti's estate in Collecorvino, in the hills above Pescara, with vineyards around Moscufo and Silvi on sandy soils. Pecorino is an old grape of Abruzzo and the Marche that nearly disappeared in the last century and has been revived since; the name is said to come from sheep (pecore) grazing the vineyards. We pour the 2023 Pecorino Abruzzo DOC. The winemaking notes come from the producer's sheet for a different Contesa Pecorino ('Vigna Corvino'), so confirm details with your lead before quoting.",
@@ -1751,7 +1751,7 @@ window.SF = {
   {
    "section": "Red",
    "name": "La Valentina Montepulciano d'Abruzzo Spelt Riserva",
-   "vintage": "2021",
+   "vintage": "2022",
    "region": "Abruzzo, Italy",
    "type": "red",
    "glass": "15",
@@ -2009,7 +2009,7 @@ window.SF = {
   {
    "section": "Red",
    "name": "Franco Molino \"Cascina Rocca\" Barolo DOCG",
-   "vintage": "2019",
+   "vintage": "2020",
    "region": "Piedmont, Italy",
    "type": "red",
    "glass": "",
@@ -2184,7 +2184,7 @@ window.SF = {
   {
    "section": "Red",
    "name": "Voliero Brunello di Montalcino DOCG",
-   "vintage": "2017",
+   "vintage": "2020",
    "region": "Tuscany, Italy",
    "type": "red",
    "glass": "",
@@ -18951,8 +18951,8 @@ window.SF = {
     "rule": "eugenio",
     "cost": 11.93,
     "usual": "1-2 cases",
-    "glass": 18,
-    "bottle": 75
+    "glass": 14,
+    "bottle": 55
    },
    {
     "key": "valle-dell-acate-thymbra-vermentino-2023",
@@ -19030,7 +19030,7 @@ window.SF = {
    },
    {
     "key": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
-    "name": "La Valentina \"Spelt\" Montepulciano d'Abruzzo Riserva 2021",
+    "name": "La Valentina \"Spelt\" Montepulciano d'Abruzzo Riserva 2022",
     "short": "Spelt",
     "type": "Red",
     "status": "core-glass",
@@ -19074,7 +19074,7 @@ window.SF = {
    },
    {
     "key": "albino-rocca-langhe-nebbiolo",
-    "name": "Albino Rocca Langhe Nebbiolo",
+    "name": "Albino Rocca Langhe Nebbiolo 2025",
     "short": "Albino Rocca Nebbiolo",
     "type": "Red",
     "status": "core-glass",
@@ -19126,7 +19126,21 @@ window.SF = {
     "cost": 14.69,
     "usual": "1 case",
     "glass": 15,
-    "bottle": 60
+    "bottle": 60,
+    "hold": "Sam 2026-11-20: being replaced by the Casal di Serra Verdicchio by the glass; pour it down, no reorder."
+   },
+   {
+    "key": "umani-ronchi-casal-di-serra-verdicchio-2023",
+    "name": "Umani Ronchi Casal di Serra Verdicchio dei Castelli di Jesi Classico Superiore 2023",
+    "short": "Casal di Serra Verdicchio",
+    "type": "White",
+    "status": "core-glass",
+    "vendor": "Vehrs",
+    "unit": 12,
+    "rule": "pace",
+    "cost": 15.39,
+    "usual": "1 case. Sam 2026-11-20: replaces the Angelo Negro Arneis by the glass at $16, but only goes on the list once the Arneis sells out (could be a while). First case from Sal Fri 11/20. $15.39 from Sal's book, confirm on the Vehrs invoice. Bottle price not set. No Revel button mapped yet.",
+    "glass": 16
    },
    {
     "key": "rocca-del-principe-fiano-di-avellino",
@@ -19240,7 +19254,7 @@ window.SF = {
    },
    {
     "key": "franco-molino-cascina-rocca-barolo-2019",
-    "name": "Franco Molino \"Cascina Rocca\" Barolo 2019",
+    "name": "Franco Molino \"Cascina Rocca\" Barolo 2020",
     "short": "Franco Molino Barolo",
     "type": "Red",
     "status": "core-bottle",
@@ -19267,7 +19281,7 @@ window.SF = {
    },
    {
     "key": "voliero-brunello-di-montalcino-2017",
-    "name": "Voliero Brunello di Montalcino 2017",
+    "name": "Voliero Brunello di Montalcino 2020",
     "short": "Voliero Brunello",
     "type": "Red",
     "status": "core-bottle",
@@ -19560,7 +19574,7 @@ window.SF = {
     "vendor": "Elliot Bay",
     "phaseOut": true,
     "fridge": true,
-    "bottle": 250
+    "bottle": 240
    },
    {
     "key": "vietti-barolo-ravera-2020",
@@ -19925,5 +19939,5 @@ window.SF = {
    }
   ]
  },
- "build": "1795097372"
+ "build": "1795224307"
 };

@@ -215,8 +215,8 @@
       "rule": "eugenio",
       "cost": 11.93,
       "usual": "1-2 cases",
-      "glass": 18,
-      "bottle": 75
+      "glass": 14,
+      "bottle": 55
     },
     {
       "key": "valle-dell-acate-thymbra-vermentino-2023",
@@ -294,7 +294,7 @@
     },
     {
       "key": "la-valentina-spelt-montepulciano-d-abruzzo-riser",
-      "name": "La Valentina \"Spelt\" Montepulciano d'Abruzzo Riserva 2021",
+      "name": "La Valentina \"Spelt\" Montepulciano d'Abruzzo Riserva 2022",
       "short": "Spelt",
       "type": "Red",
       "status": "core-glass",
@@ -338,7 +338,7 @@
     },
     {
       "key": "albino-rocca-langhe-nebbiolo",
-      "name": "Albino Rocca Langhe Nebbiolo",
+      "name": "Albino Rocca Langhe Nebbiolo 2025",
       "short": "Albino Rocca Nebbiolo",
       "type": "Red",
       "status": "core-glass",
@@ -390,7 +390,21 @@
       "cost": 14.69,
       "usual": "1 case",
       "glass": 15,
-      "bottle": 60
+      "bottle": 60,
+      "hold": "Sam 2026-11-20: being replaced by the Casal di Serra Verdicchio by the glass; pour it down, no reorder."
+    },
+    {
+      "key": "umani-ronchi-casal-di-serra-verdicchio-2023",
+      "name": "Umani Ronchi Casal di Serra Verdicchio dei Castelli di Jesi Classico Superiore 2023",
+      "short": "Casal di Serra Verdicchio",
+      "type": "White",
+      "status": "core-glass",
+      "vendor": "Vehrs",
+      "unit": 12,
+      "rule": "pace",
+      "cost": 15.39,
+      "usual": "1 case. Sam 2026-11-20: replaces the Angelo Negro Arneis by the glass at $16, but only goes on the list once the Arneis sells out (could be a while). First case from Sal Fri 11/20. $15.39 from Sal's book, confirm on the Vehrs invoice. Bottle price not set. No Revel button mapped yet.",
+      "glass": 16
     },
     {
       "key": "rocca-del-principe-fiano-di-avellino",
@@ -504,7 +518,7 @@
     },
     {
       "key": "franco-molino-cascina-rocca-barolo-2019",
-      "name": "Franco Molino \"Cascina Rocca\" Barolo 2019",
+      "name": "Franco Molino \"Cascina Rocca\" Barolo 2020",
       "short": "Franco Molino Barolo",
       "type": "Red",
       "status": "core-bottle",
@@ -531,7 +545,7 @@
     },
     {
       "key": "voliero-brunello-di-montalcino-2017",
-      "name": "Voliero Brunello di Montalcino 2017",
+      "name": "Voliero Brunello di Montalcino 2020",
       "short": "Voliero Brunello",
       "type": "Red",
       "status": "core-bottle",
@@ -824,7 +838,7 @@
       "vendor": "Elliot Bay",
       "phaseOut": true,
       "fridge": true,
-      "bottle": 250
+      "bottle": 240
     },
     {
       "key": "vietti-barolo-ravera-2020",

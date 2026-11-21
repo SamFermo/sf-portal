@@ -2128,6 +2128,7 @@ select.wb-in option{color:#241f15;}
 .wi-adj-btns{display:flex; gap:6px;}
 .wi-adj-btns button{min-width:48px; padding:9px 0; border-radius:10px; border:1.5px solid rgba(230,200,120,.55); background:rgba(230,200,120,.12); color:var(--gold); font-size:15px; font-weight:800; cursor:pointer; font-family:inherit;}
 .wi-adj-btns button:disabled,.wi-adj-act .wi-btn:disabled{opacity:.35; cursor:default;}
+.wi-adj button,.wi-adj input,.wi-adj-cancel,.wi-row{touch-action:manipulation;}
 .wi-adj-v{flex:1; min-width:110px; font-size:13px; color:var(--ink-soft);} .wi-adj-v b{font-size:18px; color:var(--ink);}
 .wi-adj-act{display:flex; align-items:center; gap:8px;}
 .wi-in input{width:64px;}
@@ -2359,7 +2360,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1795097372';   // stamped by build-data.py at every deploy
+const BUILD='1795224307';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5744,7 +5745,13 @@ function wiLoadRevel(force){
     WI.revel=m; WI.revelAt=Date.now(); WI.revelErr=false; wiRefresh(); })
   .catch(function(){ WI.revelPending=false; WI.revelErr=true; WI.revelErrAt=Date.now(); wiRefresh(); });
 }
-function wiRefresh(){ if($('wineinv')&&$('wineinv').classList.contains('active'))wiRender(); if(WI.modal)wiModalRender(); }
+/* 2026-11-20: a background update (a check-in, an order, sales loading) redrew the whole list while the adjust
+   strip was open, so the page jumped under the -1 taps and Sam hit Save early. While the strip is open it is
+   updated in place; every close path redraws the list. */
+function wiRefresh(){ if($('wineinv')&&$('wineinv').classList.contains('active')){ if(WI.adj&&!WI.adj.ask&&$('wiAdjStrip'))wiAdjPaint(); else wiAnchor(wiRender); } if(WI.modal)wiModalRender(); }
+/* keep the open adjust strip at the same place on screen when something above it redraws (2026-11-20) */
+function wiAnchor(fn){ const el=$('wiAdjStrip'), t=(el&&el.getBoundingClientRect)?el.getBoundingClientRect().top:null; fn();
+  if(t==null)return; const n=$('wiAdjStrip'); if(!n||!n.getBoundingClientRect)return; const d=n.getBoundingClientRect().top-t; if(Math.abs(d)>1)window.scrollBy(0,d); }
 
 /* Pure calculation, exported for the test harness: (master, doc, revelByDate) -> state */
 function wiCompute(D,doc,rv){
@@ -5943,6 +5950,7 @@ function wiAdjPaint(){ const A=WI.adj, el=$('wiAdjStrip'); if(!A||!el||!el.query
   if(b[0])b[0].disabled=A.d<=wiAdjFloor(base);
   if(v)v.innerHTML=(s.onHand==null?'Starting count':wiNum(base))+' → <b>'+wiNum(base+A.d)+'</b>';
   const inp=el.querySelector('#wiAdjSet'); if(inp&&document.activeElement!==inp)inp.value=wiNum(base+A.d);
+  const sp=el.querySelector('.wi-adj-set span'); if(sp)sp.textContent=(s.onHand==null?'Starting count':wiNum(base)+' →');
   if(sv){ sv.disabled=!A.d&&!A.typed; } }
 /* lowest change allowed: down to 0 bottles; a wine already below 0 can only go up */
 function wiAdjFloor(base){ return base>0?-base:0; }
@@ -6082,7 +6090,7 @@ function woApplyResolve(od,inv,orderId,key,came,who,now){
 }
 
 function woWatch(){ if(WO.unsub||!(fbReady&&fbDb))return;
-  WO.unsub=woRef().onSnapshot(function(s){ WO.doc=s.exists?(s.data()||{}):{}; WO.loaded=true; woRender(); },
+  WO.unsub=woRef().onSnapshot(function(s){ WO.doc=s.exists?(s.data()||{}):{}; WO.loaded=true; wiAnchor(woRender); },
     function(){ WO.loaded=true; WO.err=true; woRender(); }); }
 /* One transaction over both docs. fn(od, inv) -> {od, inv}; inv may be null when only orders change. */
 function woTx(fn,done){
@@ -6387,7 +6395,7 @@ function woRender(){
 let WR={doc:null,loaded:false,unsub:null,busy:false,arm:false};
 function wrRef(){ return fbDb.collection('board').doc('winerevel'); }
 function wrWatch(){ if(WR.unsub||!(fbReady&&fbDb))return;
-  WR.unsub=wrRef().onSnapshot(function(s){ WR.doc=s.exists?(s.data()||{}):{}; WR.loaded=true; woRender(); },
+  WR.unsub=wrRef().onSnapshot(function(s){ WR.doc=s.exists?(s.data()||{}):{}; WR.loaded=true; wiAnchor(woRender); },
     function(){ WR.loaded=true; WR.err=true; woRender(); }); }
 /* Pure, for the harness: (master, wineinv doc, revel sales by date, winerevel doc) -> [{key,name,n,why,at}] */
 function wrDue(D,doc,rv,wr){
