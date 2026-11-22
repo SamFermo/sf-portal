@@ -2360,7 +2360,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1795312900';   // stamped by build-data.py at every deploy
+const BUILD='1795320844';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -7418,9 +7418,13 @@ function rpNearestDom(anchor,d){var a=rpDate(anchor),best=null;
 function rpNearestDow(anchor,dow,notBefore){var best=null,bestOk=null; for(var k=-6;k<=6;k++){var iso=rpAdd(anchor,k);
     if(rpDate(iso).getDay()!==dow)continue; if(best===null||Math.abs(k)<Math.abs(best))best=k;
     if(notBefore&&iso>=notBefore&&(bestOk===null||Math.abs(k)<Math.abs(bestOk)))bestOk=k;} return rpAdd(anchor,bestOk!==null?bestOk:best);}
+/* negation words (fail-safe cue guard + approval-card warning, 2026-11-21) */
+var RP_NEG=/(?:\b\w+n't\b|\b(?:cannot|cant|wont|dont|didnt|doesnt|isnt|wouldnt|couldnt|shouldnt|not|no|nope|unable|never|refus\w*|declin\w*|backed out|fell through)\b)/;
+/* same length as the text, but the dot after a weekday/month abbreviation that runs into a date ("Tue. 11/24", "Sat. Nov 28") no longer ends a sentence; "on Fri. Bo will..." still does */
+function rpSentText(t){ return t.replace(/\b(mon|tue|tues|wed|thu|thur|thurs|fri|sat|sun|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)\.(?=\s*\(?\s*(?:\d|(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)|the\s+\d))/g,function(m){ return m.slice(0,-1)+' '; }); }
 function rpDates(text,req){var t=text.toLowerCase(),out=[],used=[];
   function push(iso,idx,len,how){ if(!iso)return; for(var i=0;i<used.length;i++){if(idx<used[i][1]&&idx+len>used[i][0])return;}
-    used.push([idx,idx+len]); out.push({iso:iso,idx:idx,how:how}); }
+    used.push([idx,idx+len]); out.push({iso:iso,idx:idx,len:len,how:how}); }
   var m,re;
   re=/\b(\d{1,2})\/(\d{1,2})\b/g; while((m=re.exec(t)))push(rpNearestMD(req.start,+m[1],+m[2]),m.index,m[0].length,'m/d');
   var mon='('+RP_MONTHS.map(function(x){return x+'|'+x.slice(0,3)+(x==='september'?'|sept':'');}).join('|')+')';
@@ -7437,7 +7441,15 @@ function rpDates(text,req){var t=text.toLowerCase(),out=[],used=[];
     push(rpNearestDow(req.start,di,req.createdAt?rpIso(new Date(req.createdAt)):null),m.index,m[0].length,'weekday');}
   /* cue: whose shift is this date? look just left of it. gives = requester's own shift, takes = requester picks it up */
   out.forEach(function(o){ var left=t.slice(Math.max(0,o.idx-34),o.idx);
-    o.cue=/(\bhis\b|\bher\b|\btheir\b|i'?m (?:now )?(?:working|picking up|taking|covering)|\bi\)? am (?:now )?(?:working|picking up|taking|covering)|i'?ll (?:take|work|cover)|i will (?:take|work|cover)|\bi take\b)[^.;,]*$/.test(left)?'takes'
+    var right=t.slice(o.idx+(o.len||0),o.idx+(o.len||0)+30);
+    /* "she's going to work tuesday (12/1) for me" (2026-11-21): "<date> for me" = the partner works it for the requester, who GIVES it */
+    /* FAIL-SAFE negation (Odo 2026-11-21): any negation anywhere in the sentence holding this date ("can't", "cannot",
+       "not", "never"... semicolons do not end it) means the date claims nothing. Worst case the card proposes only the
+       pickup and the manager adds the return shift by hand; it never assigns a shift someone declined. */
+    var ts=rpSentText(t), sentence=ts.slice(0,o.idx).split(/[.!?]/).pop()+ts.slice(o.idx).split(/[.!?]/)[0];
+    if(RP_NEG.test(sentence)){ o.cue=''; return; }
+    o.cue=(/^\)?\s*(?:shift\s+)?for me\b/.test(right)&&!RP_NEG.test(t))?'gives'   /* "<date> for me" only in a note with no negation anywhere */
+         :/(\bhis\b|\bher\b|\btheir\b|i'?m (?:now )?(?:working|picking up|taking|covering)|\bi(?:'?m| am) (?:going to|gonna) (?:work|pick up|take|cover)|\bi\)? am (?:now )?(?:working|picking up|taking|covering)|i'?ll (?:take|work|cover)|i will (?:take|work|cover)|\bi take\b)[^.;,]*$/.test(left)?'takes'
          :/\bmy\b[^.;,]*$/.test(left)?'gives':''; });
   return out.sort(function(a,b){return a.idx-b.idx;});}
 function rpCell(ctx,person,iso){ if(!person)return{state:'unknown'};
@@ -7479,14 +7491,31 @@ function parseRequest(req,ctx){
     if(people.length>1)notes.push('also mentions '+people.slice(1).map(function(p){return p.name;}).join(', '));
     if(type==='cover'&&partner){ var tk=rpTokens(partner).concat(hits[0].fuzzy?[hits[0].fuzzy.toLowerCase()]:[]).join('|');
       /* "Taking Mac's shift" / "I'm covering for Mac": the REQUESTER is the one picking up */
-      reversed=new RegExp("(?:^|\\bi'?m\\s+|\\bi am\\s+|\\bi\\s+)(?:taking|covering|picking up|working)\\s+(?:for\\s+)?(?:"+tk+")\\b",'i').test(text); }
+      reversed=new RegExp("(?:^|\\bi'?m\\s+|\\bi am\\s+|\\bi\\s+)(?:(?:going to|gonna|will)\\s+|'ll\\s+)?(?:taking|covering|picking up|working|take|cover|pick up|work)\\s+(?:for\\s+)?(?:"+tk+")\\b",'i').test(text)
+        ||new RegExp("\\bi(?:'ll|'m going to| will| am going to)\\s+(?:take|cover|pick up|work)\\s+(?:for\\s+)?(?:"+tk+")\\b",'i').test(text); }
   } else if(people.length){ notes.push('mentions '+people.map(function(p){return p.name;}).join(', ')+' with no cover/switch wording'); }
+  if(type!=='timeoff'){ var vm=(swapRe.exec(lo)||coverRe.exec(lo)); if(vm){ var vs=rpSentText(lo), sen=vs.slice(0,vm.index).split(/[.!?]/).pop()+vs.slice(vm.index).split(/[.!?]/)[0];
+      if(RP_NEG.test(sen)){ soft.push('partner'); notes.push('the note says "not" near the swap/cover wording, check it is actually happening before approving'); } } }
   var dates=rpDates(text,req), days=[]; for(var d=req.start;d<=req.end;d=rpAdd(d,1)){days.push(d); if(days.length>60)break;}
-  var outside=dates.filter(function(x){return days.indexOf(x.iso)<0;}), legs=[];
+  var outside=dates.filter(function(x){return days.indexOf(x.iso)<0;}), legs=[]; var swapOut=null, swapFromCover=null;
   if(type==='cover'&&outside.length){
-    var tk2=outside.filter(function(x){return x.cue==='takes';})[0];
-    if(tk2){ type='swap'; reversed=false; notes.push('no "switch" wording, but the note trades two dates'); }
-    else { type='timeoff'; notes.push((partner?partner.name.split(' ')[0]:'someone')+' is named for '+outside[0].iso+', which is outside this request'); partner=null; reversed=false; blanks=blanks.filter(function(b){return b!=='partner';}); } }
+    /* requester gives, partner takes: an outside date the requester TAKES makes it a swap. Requester picks up (reversed):
+       only an outside date they GIVE ("... 12/1 for me") does; another date they also pick up stays a cover (Odo 2026-11-21) */
+    var tk2=reversed?(RP_NEG.test(lo)?null:outside.filter(function(x){return x.cue==='gives';})[0]):outside.filter(function(x){return x.cue==='takes';})[0];   /* pickup->swap promotion never fires in a note that says no/not anywhere */
+    if(tk2&&reversed){ var lz=rpSentText(lo), cs=lz.slice(0,tk2.idx).search(/[^.;!?]*$/), ce=lz.slice(tk2.idx).search(/[.;!?]|$/), rc=lo.slice(cs,tk2.idx+ce);
+      /* "Cy will work 9/14 for me": the return shift goes to Cy, not the partner, so no swap. Whole clause, every mention (Odo 2026-11-21) */
+      var other=roster.some(function(p){ return p!==partner&&p.name!==req.name&&rpTokens(p).some(function(tok){ return new RegExp("\\b"+tok.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+"(?:'s|s')?\\b",'i').test(rc); }); });
+      if(other){ notes.push('someone else is named for '+tk2.iso+'; not added'); tk2=null; }
+      /* the partner has to actually commit to the return shift: named (or he/she/they) with a will/is/can-style verb, and not a question (Odo 2026-11-21) */
+      else { var tkp=rpTokens(partner).map(function(x){ return x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }).join('|'), sentEnd=lz.slice(tk2.idx).search(/[.;!?]|$/), endCh=lz.charAt(tk2.idx+sentEnd);
+        var commits=new RegExp("\\b(?:"+tkp+"|she|he|they)(?:'s|'ll|'re)?\\s+(?:is\\s+|are\\s+|will\\s+|be\\s+|can\\s+|has\\s+|already\\s+|also\\s+|then\\s+)*(?:going to\\s+|gonna\\s+|agreed to\\s+|offered to\\s+)?(?:work|cover|take|pick)(?:s|ing)?\\b",'i').test(rc);
+        var fullSent=lz.slice(tk2.idx).search(/[.!?]|$/), qEnd=lz.charAt(tk2.idx+fullSent)==='?'||/\?/.test(lo);
+        var cond=/\b(?:if|unless|maybe|might|hopefully|probably|possibly|depending|as long as|assuming|i think|i hope)\b/.test(rc+lz.slice(tk2.idx,tk2.idx+fullSent));
+        if(cond&&commits){ notes.push('the return shift on '+tk2.iso+' has a condition on it; not added'); tk2=null; }
+        else if(!commits||endCh==='?'||qEnd){ notes.push(((endCh==='?'||qEnd)?'a question':'no clear yes from '+partner.name.split(' ')[0])+' about '+tk2.iso+'; not added'); tk2=null; } } }
+    if(tk2){ type='swap'; swapFromCover=reversed?'picks':'gives'; reversed=false; swapOut=tk2.iso; notes.push('no "switch" wording, but the note trades two dates'); }
+    else if(reversed){ notes.push('also mentions '+outside.map(function(x){return x.iso;}).join(', ')+', outside this request; not added'); }
+    else if(!reversed){ type='timeoff'; notes.push((partner?partner.name.split(' ')[0]:'someone')+' is named for '+outside[0].iso+', which is outside this request'); partner=null; reversed=false; blanks=blanks.filter(function(b){return b!=='partner';}); } }
   function leg(from,to,iso){ var c=rpCell(ctx,from,iso), l={from:from?from.name:null,to:to?to.name:null,date:iso,shift:c.state==='working'?c.cell:'',check:c.state};
     if(c.state==='off')l.warn=(from?from.name.split(' ')[0]:'?')+" isn't scheduled "+iso; if(c.state==='unknown'&&c.why)l.warn=c.why; legs.push(l); }
   if(type==='timeoff'){ days.forEach(function(iso){ var c=rpCell(ctx,me,iso);
@@ -7495,13 +7524,15 @@ function parseRequest(req,ctx){
   else if(type==='cover'){ days.forEach(function(iso){ reversed?leg(partner,me,iso):leg(me,partner,iso); }); }
   else { /* swap. Default: the request's own date is the shift the requester GIVES; the first date outside it is the one they TAKE.
        Cues in the note override that ("I'm working Tuesday now" = takes; "my 9/18" = gives). Then the schedule gets the last word. */
-    var G=days[0], T=outside[0]?outside[0].iso:null;
+    var G=days[0], T=swapOut||(outside[0]?outside[0].iso:null);
     var cueT=dates.filter(function(x){return x.cue==='takes';})[0], cueG=dates.filter(function(x){return x.cue==='gives';})[0];
-    if(cueT&&cueT.iso===G){ T=G; G=cueG&&cueG.iso!==T?cueG.iso:(outside[0]?outside[0].iso:null); }
+    /* a pickup promoted to a swap keeps the pickup on the request date (Odo 2026-11-21) */
+    if(swapFromCover==='picks'){ T=days[0]; G=swapOut; }
+    else if(cueT&&cueT.iso===G){ T=G; G=cueG&&cueG.iso!==T?cueG.iso:(outside[0]?outside[0].iso:null); }
     else if(cueG&&cueG.iso!==G&&!cueT){ T=G; G=cueG.iso; soft.push('date'); notes.push('the note calls '+G+' "my" shift but the request is dated '+T+', check which is whose'); }
     else if(cueT){ T=cueT.iso; if(cueG&&cueG.iso!==T)G=cueG.iso; }   /* "my 11/1 ... his 10/29": both cues named, so the "my" date wins over the first day of the request */
-    if(G&&T&&partner&&ctx.sched&&!ctx.scheduleAlreadyEdited){ var a=(rpCell(ctx,me,G).state==='working')+(rpCell(ctx,partner,T).state==='working'), b=(rpCell(ctx,me,T).state==='working')+(rpCell(ctx,partner,G).state==='working');
-      if(b===2&&a===0){ var x=G;G=T;T=x; notes.push('flipped to match the schedule: each person is giving the shift they actually hold'); } }
+    if(G&&T&&partner&&ctx.sched&&!ctx.scheduleAlreadyEdited){ var keep=swapFromCover==='picks'; var a=(rpCell(ctx,me,G).state==='working')+(rpCell(ctx,partner,T).state==='working'), b=(rpCell(ctx,me,T).state==='working')+(rpCell(ctx,partner,G).state==='working');
+      if(b===2&&a===0){ if(keep){ soft.push('date'); notes.push('the schedule has these the other way round, check before approving'); } else { var x=G;G=T;T=x; notes.push('flipped to match the schedule: each person is giving the shift they actually hold'); } } }
     if(G)leg(me,partner,G); else{ blanks.push('requesterDate'); legs.push({from:me.name,to:partner?partner.name:null,date:null,shift:'',check:'unknown'}); }
     if(T)leg(partner,me,T); else{ blanks.push('partnerDate'); legs.push({from:partner?partner.name:null,to:me.name,date:null,shift:'',check:'unknown'}); }
     dates.forEach(function(x){ if(x.how==='weekday'&&(x.iso===G||x.iso===T)&&soft.indexOf('date')<0){ soft.push('date'); notes.push('a date was read from a weekday name only, check it'); } }); }
