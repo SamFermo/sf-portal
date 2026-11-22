@@ -179,7 +179,7 @@ window.SF = {
        {
         "term": "Pumpkin delice dressing",
         "pronunciation": "deh-LEES",
-        "note": "A house dressing built on pumpkin, finished with salt and fresh lemon. No egg."
+        "note": "A house dressing built on pumpkin, finished with salt and fresh lemon. No egg. Pumpkin, apple cider vinegar,  water, mustard, shallot, salt, pepper, delice, coriander, honey, extra virgin olive oil."
        },
        {
         "term": "Cornbread pangrattato",
@@ -204,13 +204,12 @@ window.SF = {
       ],
       "allergens": [
        "dairy",
-       "gluten",
        "allium"
       ],
       "canModify": [
        "gluten"
       ],
-      "allergenNote": "Gluten: the cornbread pangrattato has wheat; hold it and the salad is gluten-free. Dairy: pecorino on top and dairy in the pangrattato, plus whatever is in the dressing, so treat dairy as built in. Allium: per Chris, not removable. No egg anywhere, including the dressing. Pancetta is pork: hold it for vegetarians and pork-avoiders. Allergens confirmed by Chris 11/21, wheat and dairy in the pangrattato confirmed by Sam 11/21.",
+      "allergenNote": "Gluten: the cornbread pangrattato has wheat; hold it and the salad is gluten-free. Dairy: pecorino on top and dairy in the pangrattato, plus whatever is in the dressing, so treat dairy as built in. Allium: per Chris, not removable. No egg anywhere, including the dressing. Pancetta is pork: hold it for vegetarians and pork-avoiders. Allergens confirmed by Chris 11/21, wheat and dairy in the pangrattato confirmed by Sam 11/21. Dairy: The pecorino can be removed from the salad to make it dairy free. The cornbread and the dressing also have dairy in it, so it can be made dairy free but heavily modified.",
       "flags": [],
       "added": "2026-11-21"
      },
@@ -8322,7 +8321,7 @@ window.SF = {
        "Sup Server",
        "3:30 serve",
        "",
-       ""
+       "3:30 serve"
       ]
      },
      {
@@ -8334,7 +8333,7 @@ window.SF = {
        "",
        "3:30 serve",
        "3:30 serve",
-       "3:30 serve"
+       ""
       ]
      },
      {
@@ -8675,7 +8674,7 @@ window.SF = {
       "name": "Abby",
       "shifts": [
        "",
-       "3:30 Bar",
+       "",
        "3:30 serve",
        "Sup Server",
        "3:30 serve",
@@ -8687,7 +8686,7 @@ window.SF = {
       "name": "Allegra",
       "shifts": [
        "3:30 serve",
-       "",
+       "3:30 Bar",
        "3:30 serve",
        "3:30 serve",
        "",
@@ -8841,9 +8840,9 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "Expo",
-       "Expo",
-       "",
-       "",
+       "R/O",
+       "R/O",
+       "R/O",
        "Float",
        "Expo",
        "Float"
@@ -8973,9 +8972,9 @@ window.SF = {
       "name": "Sully",
       "shifts": [
        "",
-       "MD",
-       "MD",
-       "MD",
+       "R/O",
+       "R/O",
+       "R/O",
        "MD",
        "MD",
        ""
@@ -16094,7 +16093,7 @@ window.SF = {
        "1-close",
        "",
        "",
-       ""
+       "1-close"
       ]
      },
      {
@@ -16106,7 +16105,7 @@ window.SF = {
        "1-close",
        "1-close",
        "1-close",
-       "1-close"
+       ""
       ]
      },
      {
@@ -16604,7 +16603,7 @@ window.SF = {
     "notes": [],
     "coverage": [
      "",
-     "",
+     "1-close",
      "1-close",
      "1-close",
      "",
@@ -16625,9 +16624,9 @@ window.SF = {
       "name": "Sam",
       "shifts": [
        "Expo",
-       "Expo",
-       "",
-       "",
+       "R/O",
+       "R/O",
+       "R/O",
        "MD",
        "Expo",
        "MD"
@@ -16697,7 +16696,7 @@ window.SF = {
       "name": "Gopala",
       "shifts": [
        "",
-       "1-close",
+       "Expo",
        "",
        "",
        "10-8",
@@ -20087,5 +20086,5 @@ window.SF = {
    }
   ]
  },
- "build": "1795323952"
+ "build": "1795356531"
 };
