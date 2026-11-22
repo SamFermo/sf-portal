@@ -830,16 +830,16 @@ window.SF = {
   },
   {
    "section": "Bubbles",
-   "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara",
-   "vintage": "2024",
-   "region": "Sorbara, Modena, Emilia-Romagna, Italy",
+   "name": "Paltrinieri \"Solco\" Lambrusco di Modena DOC",
+   "vintage": "2025",
+   "region": "Cristo di Sorbara, Bomporto, Modena, Emilia-Romagna, Italy",
    "type": "sparkling",
-   "grapes": "Lambrusco di Sorbara",
    "glass": "15",
    "bottle": "55",
-   "pour": "Vibrant pink with fine, persistent bubbles — fresh raspberry and strawberry, a lift of violet, dry and refreshing with bright acidity. The most delicate style of Lambrusco.",
-   "producer": "Paltrinieri traces its start to 1926 and farms 17 hectares in Cristo di Sorbara, the sandy strip between the Secchia and Panaro rivers north of Modena. The wine is named for St. Agatha, patron saint of Sorbara. Alberto Paltrinieri, who took over in 1998, was among the first to gamble on a mono-varietal Sorbara. (Research puts it at ~11% ABV and notes some bottlings blend in Salomino rather than being 100% Sorbara — confirm the vintage and blend with your lead before quoting.)",
-   "winemaking": "Grapes are gently pressed and vatted for a first fermentation, then a second fermentation by the Martinotti (Charmat) method in pressurized autoclaves, using native yeasts. Bottled at low pressure to preserve the fruit and varietal aromatics.",
+   "grapes": "100% Lambrusco Salamino",
+   "pour": "Deep violet-ruby with a lively, fine fizz. Cherry, strawberry and red currant with a little herb and floral lift. Soft and fresh, with just a touch of fruit sweetness and light tannin, which is why it is so good with salumi, Parmigiano and rich pasta. Lightly sparkling (frizzante), 11%. Serve cold. Darker and fruitier than a Sorbara: if a guest pictures Lambrusco as a red fizz, this is it.",
+   "producer": "Cantina Paltrinieri is a four-generation family estate in Cristo di Sorbara, the sandy strip between the Secchia and Panaro rivers north of Modena, founded in 1926 and run by Alberto Paltrinieri and Barbara Galassi since 1998. Every other Paltrinieri wine is 100% Sorbara. Solco is the odd one out, made from Salamino, the grape traditionally planted among the Sorbara vines to pollinate them. Solco means furrow, for the tie between the land and the wine. Alberto calls it his approachable, joyful Lambrusco.",
+   "winemaking": "Hand-picked Salamino, made like a red with time on the skins. The first fermentation runs cool, 16 to 18°C, in steel. The fizz comes from a second fermentation in pressurized steel tanks (Martinotti or Charmat method), which is stopped by chilling so a little natural grape sugar stays in. Filtered and bottled under pressure. Our bottle's back label reads Lambrusco di Modena DOC; earlier vintages were labelled Lambrusco dell'Emilia IGT.",
    "has_notes": true,
    "specs": [
     {
@@ -850,19 +850,19 @@ window.SF = {
     },
     {
      "label": "Dryness",
-     "rating": 4,
+     "rating": 3,
      "low": "sweet",
      "high": "bone dry"
     },
     {
      "label": "Acidity",
-     "rating": 4,
+     "rating": 3,
      "low": "soft",
      "high": "bright"
     },
     {
      "label": "Tannins",
-     "rating": 1,
+     "rating": 2,
      "low": "none",
      "high": "grippy"
     }
@@ -873,15 +873,19 @@ window.SF = {
      "pron": "pal-tree-nee-EH-ree"
     },
     {
-     "term": "Sant'Agata",
-     "pron": "sahnt-AH-gah-tah"
+     "term": "Solco",
+     "pron": "SOL-koh"
     },
     {
-     "term": "Lambrusco di Sorbara",
-     "pron": "lahm-BROOS-koh dee sor-BAH-rah"
+     "term": "Salamino",
+     "pron": "sah-lah-MEE-noh"
+    },
+    {
+     "term": "Lambrusco di Modena",
+     "pron": "lahm-BROOS-koh dee MOH-deh-nah"
     }
    ],
-   "added": "2026-10-27"
+   "added": "2026-11-21"
   },
   {
    "section": "Bubbles",
@@ -1173,6 +1177,69 @@ window.SF = {
      "pron": "KOR-mohns"
     }
    ]
+  },
+  {
+   "section": "White/Rosé/Orange",
+   "name": "Umani Ronchi \"Casal di Serra\" Verdicchio dei Castelli di Jesi Classico Superiore DOC",
+   "vintage": "2023",
+   "region": "Montecarotto, Castelli di Jesi, Marche, Italy",
+   "type": "white",
+   "glass": "16",
+   "bottle": "65",
+   "grapes": "100% Verdicchio",
+   "pour": "Straw yellow with golden glints. Wildflowers, peach, apricot and golden apple, with the bitter-almond finish Verdicchio is known for. Round and almost velvety in the middle, kept fresh and salty by bright acidity, and dry through a long finish. Steel only, no oak. Great with grilled or roasted fish, roast chicken and fresh cheeses.",
+   "producer": "Umani Ronchi started in 1957 as Gino Umani Ronchi's small farm in Cupramontana, the heart of Verdicchio Classico in the Marche. Roberto Bianchi and his son-in-law Massimo Bernetti bought it in 1968, and Massimo's son Michele Bernetti runs it today. Casal di Serra, first made in 1983, was one of the first single-site Verdicchios: the best grapes from the estate's Montecarotto vineyard, since joined by three other plots. Massimo bottled it lees-aged in a Burgundy bottle at a time when Verdicchio was sold in amphora-shaped novelty bottles. All the estate's vineyards have been certified organic since the 2015 vintage.",
+   "winemaking": "Vines 8 to 30 years old at 200 to 350 meters on both sides of the Esino valley, on deep calcareous clay loam. Hand-picked late September into early October. Light pressing, cold settling, then fermentation in steel at 16 to 18°C for 10 to 15 days, with no malolactic so the acidity stays sharp. About 5 months in steel on its own lees, bottled at the end of April, then rested in bottle. Around 13%. Serve at 12 to 14°C, not ice cold.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 3,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 4,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Umani Ronchi",
+     "pron": "oo-MAH-nee RON-kee"
+    },
+    {
+     "term": "Casal di Serra",
+     "pron": "kah-SAHL dee SEH-rah"
+    },
+    {
+     "term": "Verdicchio",
+     "pron": "vehr-DEE-kyoh"
+    },
+    {
+     "term": "Castelli di Jesi",
+     "pron": "kah-STEL-lee dee YEH-zee"
+    },
+    {
+     "term": "Montecarotto",
+     "pron": "mon-teh-kah-ROT-toh"
+    }
+   ],
+   "added": "2026-11-21"
   },
   {
    "section": "White/Rosé/Orange",
@@ -1532,6 +1599,65 @@ window.SF = {
   },
   {
    "section": "White/Rosé/Orange",
+   "name": "Felsina \"I Sistri\" Chardonnay, Toscana IGT",
+   "vintage": "2022",
+   "region": "Farnetella estate, Tuscany, Italy",
+   "type": "white",
+   "glass": "",
+   "bottle": "90",
+   "grapes": "100% Chardonnay",
+   "pour": "Deep straw yellow. Ripe Chardonnay fruit with a touch of tropical, vanilla and a little spice from the barrel, and a creamy texture from months of lees stirring. Fuller than anything else on the white list, but the acidity keeps it fresh and the finish long. Our richest white: point Chardonnay drinkers and big-white fans here. Porcini risotto, fish mains and white meats.",
+   "producer": "Felsina is the Chianti Classico estate behind our Berardenga, in Castelnuovo Berardenga at the southern end of the zone. In the 1980s the estate planted French Chardonnay clones at Farnetella, its neighbouring property, and I Sistri comes from those 4.7 hectares, at about 370 meters on sandy soil with river pebbles, facing south and south-west. The name comes from the sistrum, a rattle used in ancient temple rites. It is labelled Toscana IGT because Chianti Classico rules do not allow a white.",
+   "winemaking": "Whole clusters are pressed and only the free-run juice, about 60%, is used. Cold-settled, then fermented in 225-litre French oak barriques, mostly used barrels so the oak stays in the background. 10 to 12 months on the fine lees with regular stirring (bâtonnage), then blended and rested about three months before release. 13%, essentially dry.",
+   "has_notes": true,
+   "specs": [
+    {
+     "label": "Body",
+     "rating": 4,
+     "low": "light",
+     "high": "full"
+    },
+    {
+     "label": "Dryness",
+     "rating": 5,
+     "low": "sweet",
+     "high": "bone dry"
+    },
+    {
+     "label": "Acidity",
+     "rating": 3,
+     "low": "soft",
+     "high": "bright"
+    },
+    {
+     "label": "Tannins",
+     "rating": 1,
+     "low": "none",
+     "high": "grippy"
+    }
+   ],
+   "pronguide": [
+    {
+     "term": "Felsina",
+     "pron": "FEL-see-nah"
+    },
+    {
+     "term": "I Sistri",
+     "pron": "ee SEES-tree"
+    },
+    {
+     "term": "Farnetella",
+     "pron": "far-neh-TEL-lah"
+    },
+    {
+     "term": "Berardenga",
+     "pron": "beh-rar-DEN-gah"
+    }
+   ],
+   "added": "2026-11-21"
+  },
+  {
+   "section": "White/Rosé/Orange",
    "name": "Viberti \"Derthona\" Timorasso, Colli Tortonesi DOC",
    "vintage": "2023",
    "region": "Monleale, Colli Tortonesi, Piedmont, Italy",
@@ -1754,8 +1880,8 @@ window.SF = {
    "vintage": "2022",
    "region": "Abruzzo, Italy",
    "type": "red",
-   "glass": "15",
-   "bottle": "60",
+   "glass": "17",
+   "bottle": "70",
    "grapes": "Montepulciano",
    "pour": "Bright cherry fruit on the nose, medium-bodied with vibrant acidity — intense black fruit, grainy velvety tannins, and a focused, long, balanced finish. Better after another year in the cellar.",
    "producer": "La Valentina is based in Spoltore (Abruzzo), a village whose name derives from \"spelt\" — the same wheat that once grew where the winery now stands.",
@@ -19039,8 +19165,8 @@ window.SF = {
     "rule": "cases3",
     "cost": 17.49,
     "usual": "3 cases, it flies",
-    "glass": 15,
-    "bottle": 60
+    "glass": 17,
+    "bottle": 70
    },
    {
     "key": "corte-pavone-rosso-di-montalcino-2023",
@@ -19139,8 +19265,9 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 15.39,
-    "usual": "1 case. Sam 2026-11-20: replaces the Angelo Negro Arneis by the glass at $16, but only goes on the list once the Arneis sells out (could be a while). First case from Sal Fri 11/20. $15.39 from Sal's book, confirm on the Vehrs invoice. Bottle price not set. No Revel button mapped yet.",
-    "glass": 16
+    "usual": "1 case. Sam 2026-11-20: replaces the Angelo Negro Arneis by the glass at $16, but only goes on the list once the Arneis sells out (could be a while). First case from Sal Fri 11/20. $15.39 from Sal's book, confirm on the Vehrs invoice. On the 11/22 print at 16/65. No Revel button mapped yet.",
+    "glass": 16,
+    "bottle": 65
    },
    {
     "key": "rocca-del-principe-fiano-di-avellino",
@@ -19154,7 +19281,8 @@ window.SF = {
     "cost": 16.8,
     "usual": "1 case",
     "glass": 17,
-    "bottle": 70
+    "bottle": 70,
+    "hold": "Sam 2026-11-20: coming off the list at the Sunday reprint; pour it down, no reorder."
    },
    {
     "key": "terre-nere-etna-bianco",
@@ -19179,7 +19307,7 @@ window.SF = {
     "unit": 12,
     "rule": "par6",
     "cost": 21.0,
-    "usual": "keep about 6. Sam 2026-11-18: won the white tasting, takes the Derthona spot. $21 is Todd post-off from $24.50 (11/8 book); confirm on his invoice. Bottle $90 suggested, not confirmed by Sam.",
+    "usual": "keep about 6. Sam 2026-11-18: won the white tasting, takes the Derthona spot. $21 is Todd post-off from $24.50 (11/8 book); confirm on his invoice. Bottle $90 on the 11/22 print.",
     "bottle": 90
    },
    {
@@ -19330,15 +19458,15 @@ window.SF = {
    },
    {
     "key": "paltrinieri-sant-agata-lambrusco-di-sorbara",
-    "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara 2024",
-    "short": "Sant'Agata Lambrusco",
+    "name": "Paltrinieri \"Solco\" Lambrusco di Modena DOC 2025",
+    "short": "Solco Lambrusco",
     "type": "Sparkling",
     "status": "core-glass",
     "vendor": "Petit Monde",
     "unit": 12,
     "rule": "pace",
     "cost": 14.25,
-    "usual": "1 case goes a long way",
+    "usual": "1 case goes a long way. Sam 2026-11-20: the bottle we pour is the Solco (100% Salamino), not the Sant'Agata; key kept. Cost still the Sant'Agata 14.25; Solco is 13.00 in Graham's Oct book, confirm on the swap invoice.",
     "outUntil": "2026-11-18",
     "glass": 15,
     "bottle": 55
@@ -19939,5 +20067,5 @@ window.SF = {
    }
   ]
  },
- "build": "1795224307"
+ "build": "1795308893"
 };

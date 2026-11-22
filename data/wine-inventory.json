@@ -303,8 +303,8 @@
       "rule": "cases3",
       "cost": 17.49,
       "usual": "3 cases, it flies",
-      "glass": 15,
-      "bottle": 60
+      "glass": 17,
+      "bottle": 70
     },
     {
       "key": "corte-pavone-rosso-di-montalcino-2023",
@@ -403,8 +403,9 @@
       "unit": 12,
       "rule": "pace",
       "cost": 15.39,
-      "usual": "1 case. Sam 2026-11-20: replaces the Angelo Negro Arneis by the glass at $16, but only goes on the list once the Arneis sells out (could be a while). First case from Sal Fri 11/20. $15.39 from Sal's book, confirm on the Vehrs invoice. Bottle price not set. No Revel button mapped yet.",
-      "glass": 16
+      "usual": "1 case. Sam 2026-11-20: replaces the Angelo Negro Arneis by the glass at $16, but only goes on the list once the Arneis sells out (could be a while). First case from Sal Fri 11/20. $15.39 from Sal's book, confirm on the Vehrs invoice. On the 11/22 print at 16/65. No Revel button mapped yet.",
+      "glass": 16,
+      "bottle": 65
     },
     {
       "key": "rocca-del-principe-fiano-di-avellino",
@@ -418,7 +419,8 @@
       "cost": 16.8,
       "usual": "1 case",
       "glass": 17,
-      "bottle": 70
+      "bottle": 70,
+      "hold": "Sam 2026-11-20: coming off the list at the Sunday reprint; pour it down, no reorder."
     },
     {
       "key": "terre-nere-etna-bianco",
@@ -443,7 +445,7 @@
       "unit": 12,
       "rule": "par6",
       "cost": 21.0,
-      "usual": "keep about 6. Sam 2026-11-18: won the white tasting, takes the Derthona spot. $21 is Todd post-off from $24.50 (11/8 book); confirm on his invoice. Bottle $90 suggested, not confirmed by Sam.",
+      "usual": "keep about 6. Sam 2026-11-18: won the white tasting, takes the Derthona spot. $21 is Todd post-off from $24.50 (11/8 book); confirm on his invoice. Bottle $90 on the 11/22 print.",
       "bottle": 90
     },
     {
@@ -594,15 +596,15 @@
     },
     {
       "key": "paltrinieri-sant-agata-lambrusco-di-sorbara",
-      "name": "Paltrinieri \"Sant'Agata\" Lambrusco di Sorbara 2024",
-      "short": "Sant'Agata Lambrusco",
+      "name": "Paltrinieri \"Solco\" Lambrusco di Modena DOC 2025",
+      "short": "Solco Lambrusco",
       "type": "Sparkling",
       "status": "core-glass",
       "vendor": "Petit Monde",
       "unit": 12,
       "rule": "pace",
       "cost": 14.25,
-      "usual": "1 case goes a long way",
+      "usual": "1 case goes a long way. Sam 2026-11-20: the bottle we pour is the Solco (100% Salamino), not the Sant'Agata; key kept. Cost still the Sant'Agata 14.25; Solco is 13.00 in Graham's Oct book, confirm on the swap invoice.",
       "outUntil": "2026-11-18",
       "glass": 15,
       "bottle": 55
