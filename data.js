@@ -2759,35 +2759,36 @@ window.SF = {
     ]
    },
    {
-    "name": "Oh My Word!",
-    "build": "gin, aperol, peach and nectarine maceration, lemon, grapefruit bitters",
-    "price": "16",
+    "name": "A Dill With The Devil",
+    "build": "vodka, gin, veso fig leaf vermouth, house pickle brine, bradley's tonic water",
+    "price": "15",
+    "added": "2026-11-22",
     "ingredients": [
+     {
+      "name": "Vodka",
+      "description": "Neutral base spirit."
+     },
      {
       "name": "Gin",
       "description": "Juniper-forward base spirit."
      },
      {
-      "name": "Aperol",
-      "description": "Italian bitter-orange aperitivo: lighter, sweeter and lower in alcohol than Campari, with orange and rhubarb."
+      "name": "Veso fig leaf vermouth",
+      "description": "A fig leaf vermouth from Veso: green, nutty and lightly sweet."
      },
      {
-      "name": "Peach and nectarine maceration",
-      "description": "The composition of this peach and nectarine maceration has not been specified for this prep. Confirm with your bar lead before clearing it for any allergy."
+      "name": "House pickle brine",
+      "description": "The composition of this house pickle brine has not been specified for this prep. Confirm with your bar lead before clearing it for any allergy, especially garlic or other allium."
      },
      {
-      "name": "Lemon",
-      "description": "Fresh lemon."
-     },
-     {
-      "name": "Grapefruit bitters",
-      "description": "Aromatic bitters flavored with grapefruit peel."
+      "name": "Bradley's tonic water",
+      "description": "Tonic topped over the drink for bitterness and fizz."
      }
     ],
     "pronguide": [
      {
-      "term": "Aperol",
-      "pron": "AH-peh-rohl"
+      "term": "vermouth",
+      "pron": "vehr-MOOTH"
      }
     ]
    },
@@ -3000,7 +3001,7 @@ window.SF = {
     "note": "Seattle-born zero-proof spirit: fermented hemp, distilled in copper pots, layered with wormwood, angelica, sage, ginger, and Douglas fir. Reads like an amaro — earthy, bittersweet, crisp — stirred here into a Negroni-style build. No cannabinoids, nothing psychoactive. First poured at Life on Mars in 2021."
    },
    {
-    "name": "Aplos Ginger and Red Shiso \"Sour\"",
+    "name": "Aplos Ginger, Apple and Red Shiso \"Sour\"",
     "price": "13",
     "note": "Zero-proof sour built on Aplos, a hemp-infused alcohol-free spirit, shaken with a red shiso ginger syrup (made from Katie's own red shiso) over lemon. Tart and herbaceous, with a gingery bite and a garden edge from the shiso."
    },
@@ -20086,5 +20087,5 @@ window.SF = {
    }
   ]
  },
- "build": "1795320877"
+ "build": "1795323580"
 };
