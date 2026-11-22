@@ -2360,7 +2360,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1795323580';   // stamped by build-data.py at every deploy
+const BUILD='1795323952';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -5055,7 +5055,12 @@ const CKP_ITEMS=[
  {id:'rose',drink:'San Fermo Negroni',name:'Rose tincture',ings:['Rose tincture'],
   guess:'Dried rose petals steeped in high-proof neutral spirit, then strained.'},
  {id:'bitters',drink:"Oh My Word! · Imaginary Friend · Grandma's Ash Tray",name:'Grapefruit, black lemon and lavender bitters',ings:['Grapefruit bitters','Black lemon bitters','Lavender bitters'],append:true,
-  guess:'All three are bought bottles, not made in-house.'}
+  guess:'All three are bought bottles, not made in-house.'},
+ /* 2026-11-21 (Sam): the two house preps on the 11/22 drink page that were never confirmed */
+ {id:'brine',drink:'A Dill With The Devil',name:'House pickle brine',ings:['House pickle brine'],
+  guess:"Brine from the kitchen's house pickles: vinegar, water, salt and sugar, with dill, garlic and black pepper."},
+ {id:'blueberry',drink:'Ya Sure, You Betcha!',name:'Blueberry and lavender maceration',ings:['Blueberry and lavender maceration'],
+  guess:'Blueberries and dried lavender tossed with sugar and left to macerate, then strained. The syrup goes in the drink.'}
 ];
 let CKP={items:{},loaded:false,shown:false,open:{},tries:0,unsub:null,local:{}};
 function ckpRef(){ return fbDb.collection('board').doc('cocktailPrep'); }
