@@ -162,43 +162,55 @@
      "allergenNote": "Every flag has a path, but fish takes two cuts: the dressing itself has anchovy in it, so pulling the boquerones alone doesn't clear it — omit the boquerones AND swap the dressing for oil and vinegar. Croutons on the side handles gluten. The same oil-and-vinegar swap with cheese on the side covers dairy, egg, and allium. Fully modified it becomes a clean romaine salad with oil and vinegar; tell the guest what they're getting."
     },
     {
-     "name": "Farm House Salad",
-     "desc": "mixed greens, apple, shaved fennel, bread and butter pickled onion, candied almonds, apple vinaigrette",
+     "name": "Chicory Salad",
+     "desc": "local chicories, apple, pecorino romano, cornbread pangrattato, pancetta, fried herbs",
      "price": "18",
      "raw": false,
-     "story": "Mixed baby lettuces with shaved fennel and fresh apple, brightened by crisp bread and butter pickled onions. Candied slivered almonds add sweetness and crunch, and an apple vinaigrette ties the fruit through the dressing.",
+     "pron": "CHIK-or-ee",
+     "story": "Local Roots Farm chicories dressed in a pumpkin delice dressing, seasoned with salt and fresh lemon juice. Finished with apple batons, pecorino Romano, cornbread pangrattato, crispy pancetta, and fried rosemary and sage leaves. Bitter greens, sweet apple, salty cheese and pork, with warm and cold textures together.",
      "ingredients": [
       {
-       "term": "Bread and butter pickled onion",
-       "pronunciation": null,
-       "note": "A sweet-and-tangy pickle style — onions cured in a vinegar brine with sugar and spice. Despite the name there's no bread or butter; it refers to the classic sweet pickle profile. Bright and sharp against the greens."
+       "term": "Chicories",
+       "pronunciation": "CHIK-or-eez",
+       "note": "The bitter, crisp family of greens (radicchio, endive, escarole and their cousins), from Local Roots Farm. Winter is their season; the bitterness is the point, balanced by the sweet dressing and apple."
       },
       {
-       "term": "Shaved fennel",
-       "pronunciation": null,
-       "note": "The crisp anise-scented bulb, shaved thin and raw. Adds a clean, fresh crunch. No allergens of its own."
+       "term": "Pumpkin delice dressing",
+       "pronunciation": "deh-LEES",
+       "note": "A house dressing built on pumpkin, finished with salt and fresh lemon. No egg."
       },
       {
-       "term": "Candied almonds",
-       "pronunciation": null,
-       "note": "Our candied almonds are slivered almonds tossed with powdered sugar and salt — nothing else, so no dairy or egg. Sweet and crisp, a textural contrast in the salad. Guests with tree nut allergies need to know these are here."
+       "term": "Cornbread pangrattato",
+       "pronunciation": "pahn-grah-TAH-toh",
+       "note": "Pangrattato is Italian toasted breadcrumbs, the 'poor man's parmesan.' Ours is made from cornbread, so it is sweet and crunchy. Contains wheat and dairy."
       },
       {
-       "term": "Apple vinaigrette",
+       "term": "Pecorino Romano",
+       "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
+       "note": "Hard, salty sheep's-milk cheese. Dairy."
+      },
+      {
+       "term": "Pancetta",
+       "pronunciation": "pan-CHET-tah",
+       "note": "Cured Italian pork belly, crisped. Pork: the salad is not vegetarian unless it comes off, and flag it for guests who avoid pork."
+      },
+      {
+       "term": "Fried rosemary and sage",
        "pronunciation": null,
-       "note": "Apple cider vinegar and lemon juice blended with green peppercorn, mustard, and shallot, emulsified with canola oil and stabilized with xanthan gum. Carries allium from the shallot, and mustard — which we do not track as a chip, so mention it for a mustard allergy."
+       "note": "Whole leaves flash-fried until crisp. Aromatic and salty."
       }
      ],
      "allergens": [
-      "nuts",
+      "dairy",
+      "gluten",
       "allium"
      ],
      "canModify": [
-      "nuts"
+      "gluten"
      ],
-     "allergenNote": "Tree nuts: the candied almonds come off cleanly for a nut allergy. Allium: the pickled onion and the shallot in the vinaigrette run through the salad, not removable. The vinaigrette also carries mustard, which we do not track as a chip — flag it for a mustard allergy. The candied almonds are just slivered almonds, powdered sugar, and salt — no dairy or egg.",
-     "added": "2026-08-22",
-     "flags": []
+     "allergenNote": "Gluten: the cornbread pangrattato has wheat; hold it and the salad is gluten-free. Dairy: pecorino on top and dairy in the pangrattato, plus whatever is in the dressing, so treat dairy as built in. Allium: per Chris, not removable. No egg anywhere, including the dressing. Pancetta is pork: hold it for vegetarians and pork-avoiders. Allergens confirmed by Chris 11/21, wheat and dairy in the pangrattato confirmed by Sam 11/21.",
+     "flags": [],
+     "added": "2026-11-21"
     },
     {
      "name": "Burrata",
