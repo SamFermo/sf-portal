@@ -2322,7 +2322,7 @@ window.SF = {
   {
    "section": "Red",
    "name": "Voliero Brunello di Montalcino DOCG",
-   "vintage": "2020",
+   "vintage": "2018",
    "region": "Tuscany, Italy",
    "type": "red",
    "glass": "",
@@ -19257,15 +19257,13 @@ window.SF = {
     "name": "Angelo Negro Unfiltered Arneis 2024",
     "short": "Angelo Negro Arneis",
     "type": "White",
-    "status": "core-glass",
+    "status": "cellar",
     "vendor": "Vehrs",
-    "unit": 12,
-    "rule": "pace",
     "cost": 14.69,
-    "usual": "1 case",
     "glass": 15,
     "bottle": 60,
-    "hold": "Sam 2026-11-20: being replaced by the Casal di Serra Verdicchio by the glass; pour it down, no reorder."
+    "hold": "Off the list 2026-11-21 reprint (Verdicchio took its glass spot and Revel buttons). Sell the last bottles as a verbal; no reorder.",
+    "phaseOut": true
    },
    {
     "key": "umani-ronchi-casal-di-serra-verdicchio-2023",
@@ -19277,7 +19275,7 @@ window.SF = {
     "unit": 12,
     "rule": "pace",
     "cost": 15.39,
-    "usual": "1 case. Sam 2026-11-20: replaces the Angelo Negro Arneis by the glass at $16, but only goes on the list once the Arneis sells out (could be a while). First case from Sal Fri 11/20. $15.39 from Sal's book, confirm on the Vehrs invoice. On the 11/22 print at 16/65. No Revel button mapped yet.",
+    "usual": "1 case. Sam 2026-11-20: replaces the Angelo Negro Arneis by the glass at $16, but only goes on the list once the Arneis sells out (could be a while). First case from Sal Fri 11/20. $15.39 from Sal's book, confirm on the Vehrs invoice. On the 11/22 print at 16/65. Revel: GL Verdicchio 16 / Verdicchio Btl. 65 (renamed Arneis buttons 11/21).",
     "glass": 16,
     "bottle": 65
    },
@@ -19421,7 +19419,7 @@ window.SF = {
    },
    {
     "key": "voliero-brunello-di-montalcino-2017",
-    "name": "Voliero Brunello di Montalcino 2020",
+    "name": "Voliero Brunello di Montalcino 2018",
     "short": "Voliero Brunello",
     "type": "Red",
     "status": "core-bottle",
@@ -19477,11 +19475,13 @@ window.SF = {
     "vendor": "Petit Monde",
     "unit": 12,
     "rule": "pace",
-    "cost": 14.25,
-    "usual": "1 case goes a long way. Sam 2026-11-20: the bottle we pour is the Solco (100% Salamino), not the Sant'Agata; key kept. Cost still the Sant'Agata 14.25; Solco is 13.00 in Graham's Oct book, confirm on the swap invoice.",
+    "cost": 13.0,
+    "usual": "1 case goes a long way. Sam 2026-11-20: the bottle we pour is the Solco (100% Salamino), not the Sant'Agata; key kept. Cost set to the Solco 13.00 (Graham Oct book) 11/21; confirm on the swap invoice.",
     "outUntil": "2026-11-18",
     "glass": 15,
-    "bottle": 55
+    "bottle": 55,
+    "was": "2026-11-20: the master said Sant'Agata (Sorbara) but the bottle poured all along is the Solco (Salamino, Lambrusco di Modena DOC). Key unchanged.",
+    "costNote": "Petit Monde Oct 2026 book, Solco $13.00; confirm on the next Graham invoice."
    },
    {
     "key": "folicello-il-rosso-lambrusco-dell-emilia",
@@ -19543,7 +19543,7 @@ window.SF = {
     "key": "viberti-derthona-timorasso-2023",
     "name": "Viberti \"Derthona\" Timorasso 2023",
     "type": "White",
-    "status": "core-bottle",
+    "status": "cellar",
     "vendor": "",
     "phaseOut": true,
     "bottle": 95
@@ -19889,7 +19889,14 @@ window.SF = {
    "Brigaldara Btl": "brigaldara-valpolicella-2024",
    "Valpolicellla Btl.": "brigaldara-valpolicella-2024",
    "Valpolicella Btl.": "brigaldara-valpolicella-2024",
-   "Valpolicella Btl": "brigaldara-valpolicella-2024"
+   "Valpolicella Btl": "brigaldara-valpolicella-2024",
+   "GL Verdicchio": "umani-ronchi-casal-di-serra-verdicchio-2023",
+   "Verdicchio Btl.": "umani-ronchi-casal-di-serra-verdicchio-2023",
+   "Verdicchio Btl": "umani-ronchi-casal-di-serra-verdicchio-2023",
+   "Verdicchio": "umani-ronchi-casal-di-serra-verdicchio-2023",
+   "I Sistri Chardonnay Btl.": "felsina-i-sistri-chardonnay-2022",
+   "I Sistri Chardonnay Btl": "felsina-i-sistri-chardonnay-2022",
+   "I Sistri Btl.": "felsina-i-sistri-chardonnay-2022"
   },
   "ignore": [
    "Corkage",
@@ -20079,5 +20086,5 @@ window.SF = {
    }
   ]
  },
- "build": "1795310642"
+ "build": "1795312900"
 };
