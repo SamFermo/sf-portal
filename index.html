@@ -382,6 +382,9 @@ body.tour-on{padding-bottom:230px;}
 .al-reply input{flex:1 1 auto; min-width:0; padding:9px 12px; border:1px solid rgba(74,63,42,.28); border-radius:999px; background:rgba(255,255,255,.55); font-family:inherit; font-size:13.5px; color:var(--card-ink);}
 .al-reply input::placeholder{color:var(--card-mute);}
 .al-reply button{flex:0 0 auto; padding:9px 16px; border:0; border-radius:999px; background:var(--wood); color:var(--moon-hi); font-family:inherit; font-size:13px; font-weight:800; cursor:pointer;}
+.al-lockmsg{margin-top:14px; text-align:center; font-size:13px; font-weight:700; color:var(--card-mute);}
+.al-later{display:block; margin:8px auto 0; padding:6px 10px; border:0; background:none; color:var(--card-mute); font-family:inherit; font-size:12.5px; text-decoration:underline; cursor:pointer;}
+.ann-answer{width:100%; box-sizing:border-box; min-height:74px; margin-top:12px; padding:10px 12px; border:1px solid rgba(74,63,42,.28); border-radius:12px; background:rgba(255,255,255,.55); font-family:inherit; font-size:14px; color:var(--card-ink); resize:vertical;}
 .al-done{width:100%; margin-top:14px; padding:12px; border:0; border-radius:999px; background:var(--gold); color:#241f15; font-family:inherit; font-size:14px; font-weight:800; letter-spacing:.03em; cursor:pointer;}
 #schedSideTabs .subtab .chip-count{margin-left:5px; padding:0 5px; border-radius:999px; background:var(--rust); color:#fff; font-size:10px; font-weight:800; vertical-align:1px;}
 .sdp-you{margin:2px 0 10px; padding:9px 12px; border-radius:9px; background:rgba(230,200,120,.16); border:1px solid rgba(230,200,120,.4);}
@@ -2373,7 +2376,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1795442788';   // stamped by build-data.py at every deploy
+const BUILD='1795469562';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -2928,6 +2931,7 @@ function onProfiles(){
   /* Coming Due's nudge panel reads noticeAcks off PROFILES for Seen / Not yet (2026-11-12) */
   try{ if(typeof compTab!=='undefined'&&compTab==='due'&&cnCan()&&CNUDGE.at&&$('compBody')&&$('compBody').innerHTML)renderCompliance(); }catch(e){}
   try{ annPolicyRefresh(); }catch(e){}
+  try{ if(cnCan()&&toLoaded){ updatePendingBadge(); maybeShowAlerts(); } }catch(e){}   // MUSTREPLY-2026-11-23
   try{ if(_remyMountPending&&me&&$('orders')&&$('orders').classList.contains('active'))remyMount(); }catch(e){}
 }
 function applyAuthGate(){
@@ -3676,8 +3680,42 @@ function annAcked(){ return !!(me && annDoneFor(ANNOUNCE)); }
 function annPolicyLocked(A){ if(!A||!A.requiresPolicy)return false; if(!me)return true; if(DEMO)return false; const p=PROFILES[me.name]||me; return !(p.policyAcks&&p.policyAcks[A.requiresPolicy]&&p.policyAcks[A.requiresPolicy].at); }
 function annPolicyRefresh(){ try{ if(stdTab==='docs'&&$('docsBody')&&$('docsBody').offsetParent)renderStdDocs(); }catch(e){} const m=$('announceModal'); if(!m||m.style.display!=='flex'||!ANNOUNCE||!ANNOUNCE.requiresPolicy)return;
   const c0=m.querySelector('.ann-card'), y=c0?c0.scrollTop:0; m.innerHTML=annCardHTML(null); const c1=m.querySelector('.ann-card'); if(c1&&y)c1.scrollTop=y; }
+/* MUSTREPLY-2026-11-23: a card with needsAnswer:true has an answer box instead of Got it and
+   won't close until the answer saves. The answer lands on the person's staff doc
+   (noticeReplies.<card id>) and reaches Sam as a message. Admins previewing someone else's
+   aud card keep Got it. */
+function annNeedsAnswer(A){ return !!(A&&A.needsAnswer&&A.kind==='info'&&!A.requiresPolicy&&me&&!DEMO&&(A.forName===me.name||!isAdmin())); }   // MUSTREPLY-ODO: info cards only, never with a policy gate
+let annEscape=false;   // MUSTREPLY-ODO: set when offline or a send failed/stalled; shows Close for now
+function annShownCard(){ const m=$('announceModal'), id=m&&m.getAttribute('data-ann-id'); return (id&&annAll().find(function(x){return x.id===id;}))||ANNOUNCE; }
+function annLater(){ const A=annShownCard(); const m=$('announceModal'); if(m)m.style.display='none'; annEscape=false; try{ setTimeout(maybeShowAlerts,350); }catch(e){} }
+function annSendAnswer(){
+  const A=annShownCard(); if(!me||!annNeedsAnswer(A))return;
+  const box=$('ann-answer'), v=((box&&box.value)||'').trim();
+  if(!v){ if(box)box.focus(); return; }
+  if(!(fbReady&&fbDb&&me.id)||!alertOnline()){ annShowEscape(); alert('Not connected right now. Your answer was NOT sent. It is still in the box; try again in a moment.'); return; }
+  const btn=$('ann-answer-go'); if(btn){btn.disabled=true; btn.textContent='Sending\u2026';}
+  let done=false; setTimeout(function(){ if(!done){ if(btn){btn.disabled=false; btn.textContent='Send';} annShowEscape(); } },8000);   // stalled write: let them out
+  const id=A.id, rec={text:v,at:Date.now()}, patch={noticeAck:id,noticeAcks:firebase.firestore.FieldValue.arrayUnion(id)};
+  patch['noticeReplies.'+id]=rec;
+  fbDb.collection('staff').doc(me.id).update(patch).then(function(){
+    done=true; annEscape=false;
+    me.noticeAck=id; if(!Array.isArray(me.noticeAcks))me.noticeAcks=[]; if(me.noticeAcks.indexOf(id)<0)me.noticeAcks.push(id);
+    me.noticeReplies=Object.assign({},me.noticeReplies||{}); me.noticeReplies[id]=rec;
+    annPick();
+    if(annShouldShow()){ annOpen(); try{ renderHome(); }catch(e){} return; }
+    annClose(); try{ renderHome(); }catch(e){}
+  }).catch(function(err){
+    done=true; if(btn){btn.disabled=false; btn.textContent='Send';} annShowEscape();
+    alert('Your answer did NOT send ('+((err&&err.code)||'connection error')+'). It is still in the box. Tap Send to retry.');
+  });
+}
+function annBackdrop(){ const A=annShownCard(); if(annNeedsAnswer(A)){ if(annEscape||!alertOnline())annLater(); return; } annClose(); }
+function annShowEscape(){ annEscape=true; const el=$('ann-later'); if(el)el.style.display='block'; }
+/* MUSTREPLY-ODO: connection drops while a locked pop-up is up -> show the way out in place */
+try{ window.addEventListener('offline',function(){ annShowEscape(); alertEscape=true; const l=$('al-later'); if(l)l.style.display='block'; }); }catch(e){}
 function annAck(){
   if(annPolicyLocked(ANNOUNCE))return;
+  if(annNeedsAnswer(ANNOUNCE))return;
   if(me){ const _id=ANNOUNCE.id; me.noticeAck=_id;
     if(!Array.isArray(me.noticeAcks))me.noticeAcks=[]; if(me.noticeAcks.indexOf(_id)<0)me.noticeAcks.push(_id);
     if(fbReady&&fbDb&&me.id&&!DEMO)fbDb.collection('staff').doc(me.id).update({noticeAck:_id,noticeAcks:firebase.firestore.FieldValue.arrayUnion(_id)}).catch(function(){}); }
@@ -3732,7 +3770,7 @@ function annFullListHTML(){
 }
 function annOpenFullList(){
   let m=$('announceModal');
-  if(!m){ m=document.createElement('div'); m.id='announceModal'; m.className='comp-modal ann-modal'; m.onclick=function(e){if(e.target===m)annClose();}; document.body.appendChild(m); }
+  if(!m){ m=document.createElement('div'); m.id='announceModal'; m.className='comp-modal ann-modal'; m.onclick=function(e){if(e.target===m)annBackdrop();}; document.body.appendChild(m); }
   m.innerHTML=annFullListHTML(); m.style.display='flex';
 }
 function annInc(d){ annGuests=Math.max(0,Math.min(30,annGuests+d)); const el=$('ann-guests-n'); if(el)el.textContent=annGuests; }
@@ -3747,8 +3785,8 @@ function annOpen(){
   if(!me)return;
   const existing=annMyRsvp(); annGuests=existing?(+existing.guests||0):0;
   let m=$('announceModal');
-  if(!m){ m=document.createElement('div'); m.id='announceModal'; m.className='comp-modal ann-modal'; m.onclick=function(e){if(e.target===m)annClose();}; document.body.appendChild(m); }
-  m.innerHTML=annCardHTML(existing); m.style.display='flex';
+  if(!m){ m=document.createElement('div'); m.id='announceModal'; m.className='comp-modal ann-modal'; m.onclick=function(e){if(e.target===m)annBackdrop();}; document.body.appendChild(m); }
+  m.innerHTML=annCardHTML(existing); m.style.display='flex'; m.setAttribute('data-ann-id',ANNOUNCE.id||'');   // MUSTREPLY-ODO
 }
 /* Multi-night call-off card. Each row is one night's board/calloff-{iso} list, the same list
    the grid chip and Day at a Glance open, so approving on the night works unchanged. */
@@ -3780,7 +3818,7 @@ function annGo(h){ annClose(); if(location.hash==='#'+h)dlApply(true); else loca
 function annClose(){ const m=$('announceModal'); if(m)m.style.display='none';
   /* closing is not acking, but it is 'not now': park this card until the next 3am so a reload
      (swipe-back after an hour, pull-to-refresh) does not bounce it straight back (2026-11-03) */
-  try{ if(ANNOUNCE&&ANNOUNCE.id&&!annDoneFor(ANNOUNCE))localStorage.setItem('sf-announce-'+ANNOUNCE.id,JSON.stringify({exp:next3am(Date.now())})); }catch(e){}
+  try{ if(ANNOUNCE&&ANNOUNCE.id&&!annDoneFor(ANNOUNCE)&&!annNeedsAnswer(ANNOUNCE))localStorage.setItem('sf-announce-'+ANNOUNCE.id,JSON.stringify({exp:next3am(Date.now())})); }catch(e){}
   // alerts deliberately queue behind the announcement rather than stacking on it
   try{ setTimeout(maybeShowAlerts,350); }catch(e){} }
 function annCardHTML(existing){
@@ -3794,7 +3832,9 @@ function annCardHTML(existing){
       ${A.link?`<div class="ann-linkwrap"><a class="ann-link" href="${esc(A.link.href)}" target="_blank" rel="noopener">${esc(A.link.label||'Open')} →</a></div>`:''}
       ${A.go?`<div class="ann-linkwrap"><button class="ann-link" style="border:0;cursor:pointer;" onclick="annGo('${esc(A.go.hash)}')">${esc(A.go.label||'Open')} →</button></div>`:''}
       ${A.note?`<div class="ann-note">${esc(A.note)}</div>`:''}
-      ${annPolicyLocked(A)
+      ${annNeedsAnswer(A)
+        ?`<textarea id="ann-answer" class="ann-answer" placeholder="${esc(A.answerHint||'Your answer')}"></textarea><div class="to-submit"><button class="to-go" id="ann-answer-go" onclick="annSendAnswer()">Send</button></div><div class="ann-more">Sam needs an answer before this closes.</div><button id="ann-later" class="al-later" style="display:${(annEscape||!alertOnline())?'block':'none'}" onclick="annLater()">Not connected. Close for now</button>`
+        :annPolicyLocked(A)
         ?`<div class="to-submit"><button class="to-go" disabled style="opacity:.45;cursor:not-allowed">${esc(A.lockLabel||'Sign the protocols first')}</button></div><div class="ann-more">${esc(A.lockNote||'Got it unlocks once your signature is on file.')}</div>`
         :`<div class="to-submit"><button class="to-go" onclick="annAck()">${annPendingCount()>1?'Got it, next':'Got it'}</button></div>`}
       ${annPendingCount()>1?`<div class="ann-more">${annPendingCount()-1} more after this</div>`:''}
@@ -7228,8 +7268,21 @@ function myAlerts(){
       out.push({kind:'claim',key:'c:'+k+':confirmed:'+c.confirmedAt,claim:c,
         by:c.confirmedBy||'Sam',at:c.confirmedAt});
   });
+  /* MUSTREPLY-2026-11-23: answers to needsAnswer poplogs reach Sam as messages */
+  if(cnCan())Object.keys(PROFILES||{}).forEach(function(n){
+    const p=PROFILES[n], rr=(p&&p.noticeReplies)||{};
+    Object.keys(rr).forEach(function(id){ const r=rr[id]; if(!r||!r.at||!alertFresh(r.at))return;
+      out.push({kind:'answer',key:'a:'+id+':'+n+':'+r.at,annId:id,by:n,text:r.text||'',at:r.at}); });
+  });
   return out.sort(function(a,b){return (b.at||0)-(a.at||0);});
 }
+/* MUSTREPLY-2026-11-23 (Sam): a note from a manager can't be waved off with Got it; the
+   person has to write back. Admins are exempt so staff answering Sam never locks Sam. If the
+   portal can't reach the server, they may close it for now (not acked; it comes back). */
+function alertByMgr(n){ const p=PROFILES[n]; return !!(p&&(p.admin||p.mgr)); }
+function alertNeedsReply(a){ return !!(a&&a.kind==='note'&&!isAdmin()&&alertByMgr(a.by)); }
+let alertEscape=false;   // MUSTREPLY-ODO
+function alertOnline(){ return !!(fbReady&&fbDb)&&!toSyncErr&&navigator.onLine!==false; }
 /* Badge: everything clears on acknowledge ("Got it"), notes included. Replying
    to a note also clears it (your comment becomes the last). A new incoming
    comment carries a new timestamp → new key → badges again. */
@@ -7243,6 +7296,12 @@ function alertLineHTML(a){
       '<div class="al-reply"><input id="alert-reply-'+esc(a.reqId)+'" placeholder="Write back…" '+
       'onkeydown="if(event.key===\'Enter\')alertReply(\''+esc(a.reqId)+'\')">'+
       '<button onclick="alertReply(\''+esc(a.reqId)+'\')">Send</button></div></div>';
+  }
+  if(a.kind==='answer'){
+    const A=ANNOUNCES.find(function(x){return x.id===a.annId;});
+    return '<div class="al-item"><div class="al-meta">'+esc(String(a.by).split(' ')[0])+
+      ' · answered '+esc(A?('\u201c'+A.title+'\u201d'):'your pop-up')+'</div>'+
+      '<div class="al-text">'+esc(a.text)+'</div></div>';
   }
   if(a.kind==='decision'){
     return '<div class="al-item"><div class="al-meta">'+esc(a.by)+'</div>'+
@@ -7259,15 +7318,21 @@ function alertsOpen(list){
   if(!m){ m=document.createElement('div'); m.id='alertModal'; m.className='comp-modal alert-modal';
     m.onclick=function(e){if(e.target===m)alertsDismiss();}; document.body.appendChild(m); }
   m.setAttribute('data-keys',list.map(function(a){return a.key;}).join('|'));
+  const lock=list.some(alertNeedsReply);
+  m.setAttribute('data-lock',lock?'1':'');
   m.innerHTML='<div class="al-card"><div class="al-head serif">'+
     (list.length===1?'You have a message':'You have '+list.length+' messages')+'</div>'+
     list.map(alertLineHTML).join('')+
-    '<button class="al-done" onclick="alertsDismiss()">Got it</button></div>';
+    (lock
+      ?'<div class="al-lockmsg">Write back to close this.</div>'+
+        '<button id="al-later" class="al-later" style="display:'+((alertEscape||!alertOnline())?'block':'none')+'" onclick="alertsClose()">Not connected. Close for now</button>'
+      :'<button class="al-done" onclick="alertsDismiss()">Got it</button>')+'</div>';
   m.style.display='flex';
 }
 function alertsClose(){ const m=$('alertModal'); if(m)m.style.display='none'; }
 function alertsDismiss(){
   const m=$('alertModal');
+  if(m&&m.getAttribute('data-lock')){ if(alertEscape||!alertOnline())alertsClose(); return; }   // MUSTREPLY-2026-11-23
   alertAck(((m&&m.getAttribute('data-keys'))||'').split('|').filter(Boolean));
   alertsClose(); updatePendingBadge();
 }
@@ -7291,8 +7356,9 @@ function alertReply(reqId){
     return;
   }
   const btn=inp.nextElementSibling; if(btn)btn.disabled=true;
+  let sent=false; setTimeout(function(){ if(!sent){ if(btn)btn.disabled=false; alertEscape=true; const l=$('al-later'); if(l)l.style.display='block'; } },8000);   // MUSTREPLY-ODO stalled send
   fbDb.collection('timeoff').doc(reqId).update({comments:firebase.firestore.FieldValue.arrayUnion(c)})
-    .then(function(){
+    .then(function(){ sent=true; alertEscape=false;
       const r0=(toState||[]).find(function(x){return x.id===reqId;});
       if(r0&&!(r0.comments||[]).some(function(x){return x.at===c.at&&x.by===c.by;}))r0.comments=(r0.comments||[]).concat([c]);   // snapshot may already carry it (dup note bug, 2026-10-20)
       inp.value='';
@@ -7302,7 +7368,7 @@ function alertReply(reqId){
       if(schedState.side==='timeoff')renderTimeoff();
     })
     .catch(function(err){
-      if(btn)btn.disabled=false;
+      sent=true; if(btn)btn.disabled=false; alertEscape=true; const l=$('al-later'); if(l)l.style.display='block';
       alert('Your reply did NOT send ('+((err&&err.code)||'connection error')+'). It is still in the box — tap Send to retry.');
     });
 }
