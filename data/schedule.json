@@ -5270,8 +5270,8 @@
       "label": "",
       "notes": [],
       "coverage": [
-        "MD (Sam R/O)",
-        "MD (Sam R/O)",
+        "",
+        "",
         "",
         "",
         "",
@@ -5280,7 +5280,7 @@
       ],
       "covNotes": [
         "",
-        "",
+        "3:30 serve (likely called off)",
         "",
         "",
         "",
@@ -5305,7 +5305,7 @@
           "shifts": [
             "",
             "",
-            "3:30 serve",
+            "3:30 Bar",
             "Sup Server",
             "3:30 serve",
             "",
@@ -5375,9 +5375,9 @@
         {
           "name": "Katie",
           "shifts": [
+            "MD",
             "",
             "",
-            "3:30 Bar",
             "3:30 Bar",
             "Sup Server",
             "3:30 Bar",
@@ -5424,7 +5424,7 @@
           "name": "Sully",
           "shifts": [
             "",
-            "Sup Server",
+            "MD",
             "MD",
             "MD",
             "MD",
@@ -5449,18 +5449,18 @@
       "notes": [],
       "coverage": [
         "MD (Sam on expo)",
-        "Sup Server (Sully on MD)",
-        "3:30 Bar",
-        "3:30 Bar",
+        "",
+        "",
+        "",
         "",
         "",
         ""
       ],
       "covNotes": [
         "",
-        "",
-        "",
-        "",
+        "Sup Server (likely called off)",
+        "Sup Server (likely called off)",
+        "Sup Server (likely called off)",
         "",
         "",
         ""
@@ -5473,9 +5473,9 @@
             "R/O",
             "R/O",
             "R/O",
-            "Float",
+            "MD",
             "Expo",
-            "Float"
+            "R/O"
           ]
         },
         {
@@ -5483,8 +5483,8 @@
           "shifts": [
             "",
             "3:30 Bar",
-            "3:30 serve",
-            "Sup Server",
+            "3:30 Bar",
+            "3:30 Bar",
             "3:30 serve",
             "",
             ""
@@ -5554,10 +5554,10 @@
           "name": "Katie",
           "shifts": [
             "",
+            "MD",
+            "MD",
+            "MD",
             "",
-            "R/O",
-            "R/O",
-            "Sup Server",
             "3:30 Bar",
             "MD"
           ]
@@ -5605,7 +5605,7 @@
             "R/O",
             "R/O",
             "R/O",
-            "MD",
+            "Sup Server",
             "MD",
             ""
           ]
@@ -13233,7 +13233,7 @@
       "notes": [],
       "coverage": [
         "",
-        "1-close",
+        "",
         "1-close",
         "1-close",
         "",
@@ -13259,7 +13259,7 @@
             "R/O",
             "MD",
             "Expo",
-            "MD"
+            "R/O"
           ]
         },
         {
@@ -13278,7 +13278,7 @@
           "name": "Jose",
           "shifts": [
             "R/O",
-            "R/O",
+            "Expo",
             "Expo",
             "Expo",
             "Expo",
@@ -13326,7 +13326,7 @@
           "name": "Gopala",
           "shifts": [
             "",
-            "Expo",
+            "1-close",
             "",
             "",
             "10-8",

@@ -8640,8 +8640,8 @@ window.SF = {
     "label": "",
     "notes": [],
     "coverage": [
-     "MD (Sam R/O)",
-     "MD (Sam R/O)",
+     "",
+     "",
      "",
      "",
      "",
@@ -8650,7 +8650,7 @@ window.SF = {
     ],
     "covNotes": [
      "",
-     "",
+     "3:30 serve (likely called off)",
      "",
      "",
      "",
@@ -8675,7 +8675,7 @@ window.SF = {
       "shifts": [
        "",
        "",
-       "3:30 serve",
+       "3:30 Bar",
        "Sup Server",
        "3:30 serve",
        "",
@@ -8745,9 +8745,9 @@ window.SF = {
      {
       "name": "Katie",
       "shifts": [
+       "MD",
        "",
        "",
-       "3:30 Bar",
        "3:30 Bar",
        "Sup Server",
        "3:30 Bar",
@@ -8794,7 +8794,7 @@ window.SF = {
       "name": "Sully",
       "shifts": [
        "",
-       "Sup Server",
+       "MD",
        "MD",
        "MD",
        "MD",
@@ -8819,18 +8819,18 @@ window.SF = {
     "notes": [],
     "coverage": [
      "MD (Sam on expo)",
-     "Sup Server (Sully on MD)",
-     "3:30 Bar",
-     "3:30 Bar",
+     "",
+     "",
+     "",
      "",
      "",
      ""
     ],
     "covNotes": [
      "",
-     "",
-     "",
-     "",
+     "Sup Server (likely called off)",
+     "Sup Server (likely called off)",
+     "Sup Server (likely called off)",
      "",
      "",
      ""
@@ -8843,9 +8843,9 @@ window.SF = {
        "R/O",
        "R/O",
        "R/O",
-       "Float",
+       "MD",
        "Expo",
-       "Float"
+       "R/O"
       ]
      },
      {
@@ -8853,8 +8853,8 @@ window.SF = {
       "shifts": [
        "",
        "3:30 Bar",
-       "3:30 serve",
-       "Sup Server",
+       "3:30 Bar",
+       "3:30 Bar",
        "3:30 serve",
        "",
        ""
@@ -8924,10 +8924,10 @@ window.SF = {
       "name": "Katie",
       "shifts": [
        "",
+       "MD",
+       "MD",
+       "MD",
        "",
-       "R/O",
-       "R/O",
-       "Sup Server",
        "3:30 Bar",
        "MD"
       ]
@@ -8975,7 +8975,7 @@ window.SF = {
        "R/O",
        "R/O",
        "R/O",
-       "MD",
+       "Sup Server",
        "MD",
        ""
       ]
@@ -16603,7 +16603,7 @@ window.SF = {
     "notes": [],
     "coverage": [
      "",
-     "1-close",
+     "",
      "1-close",
      "1-close",
      "",
@@ -16629,7 +16629,7 @@ window.SF = {
        "R/O",
        "MD",
        "Expo",
-       "MD"
+       "R/O"
       ]
      },
      {
@@ -16648,7 +16648,7 @@ window.SF = {
       "name": "Jose",
       "shifts": [
        "R/O",
-       "R/O",
+       "Expo",
        "Expo",
        "Expo",
        "Expo",
@@ -16696,7 +16696,7 @@ window.SF = {
       "name": "Gopala",
       "shifts": [
        "",
-       "Expo",
+       "1-close",
        "",
        "",
        "10-8",
@@ -20086,5 +20086,5 @@ window.SF = {
    }
   ]
  },
- "build": "1795413483"
+ "build": "1795442788"
 };
