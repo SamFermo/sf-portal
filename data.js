@@ -169,17 +169,22 @@ window.SF = {
       "price": "18",
       "raw": false,
       "pron": "CHIK-or-ee",
-      "story": "Local Roots Farm chicories dressed in a pumpkin delice dressing, seasoned with salt and fresh lemon juice. Finished with apple batons, pecorino Romano, cornbread pangrattato, crispy pancetta, and fried rosemary and sage leaves. Bitter greens, sweet apple, salty cheese and pork, with warm and cold textures together.",
+      "story": "Local Roots Farm chicories dressed in a pumpkin and Délice de Bourgogne dressing, seasoned with salt and fresh lemon juice. Finished with apple batons, pecorino Romano, cornbread pangrattato, crispy pancetta, and fried rosemary and sage leaves. Bitter greens, creamy dressing, sweet apple, salty cheese and pork, with warm and cold textures together.",
       "ingredients": [
        {
         "term": "Chicories",
         "pronunciation": "CHIK-or-eez",
-        "note": "The bitter, crisp family of greens (radicchio, endive, escarole and their cousins), from Local Roots Farm. Winter is their season; the bitterness is the point, balanced by the sweet dressing and apple."
+        "note": "The bitter, crisp family of greens (radicchio, endive, escarole and their cousins), from Local Roots Farm. Winter is their season; the bitterness is the point, balanced by the rich dressing and sweet apple."
        },
        {
-        "term": "Pumpkin delice dressing",
-        "pronunciation": "deh-LEES",
-        "note": "A house dressing built on pumpkin, finished with salt and fresh lemon. No egg. Pumpkin, apple cider vinegar,  water, mustard, shallot, salt, pepper, delice, coriander, honey, extra virgin olive oil."
+        "term": "Pumpkin and Délice dressing",
+        "pronunciation": null,
+        "note": "Pumpkin blended with Délice de Bourgogne, apple cider vinegar, water, mustard, shallot, coriander, honey, salt, pepper and extra-virgin olive oil. Dairy from the cheese, allium from the shallot, and mustard, which we do not track as a chip, so flag it for a mustard allergy. Honey, so not vegan. No egg."
+       },
+       {
+        "term": "Délice de Bourgogne",
+        "pronunciation": "deh-LEES duh boor-GOHN-yuh",
+        "note": "A French triple-cream cow's-milk cheese from Burgundy: rich, buttery and mildly tangy under a soft bloomy rind. It goes into the dressing, which is where the salad gets its creaminess. Dairy."
        },
        {
         "term": "Cornbread pangrattato",
@@ -189,7 +194,7 @@ window.SF = {
        {
         "term": "Pecorino Romano",
         "pronunciation": "peh-koh-REE-noh roh-MAH-noh",
-        "note": "Hard, salty sheep's-milk cheese. Dairy."
+        "note": "Hard, salty sheep's-milk cheese on top. Dairy."
        },
        {
         "term": "Pancetta",
@@ -204,14 +209,16 @@ window.SF = {
       ],
       "allergens": [
        "dairy",
+       "gluten",
        "allium"
       ],
       "canModify": [
-       "gluten"
+       "gluten",
+       "dairy"
       ],
-      "allergenNote": "Gluten: the cornbread pangrattato has wheat; hold it and the salad is gluten-free. Dairy: pecorino on top and dairy in the pangrattato, plus whatever is in the dressing, so treat dairy as built in. Allium: per Chris, not removable. No egg anywhere, including the dressing. Pancetta is pork: hold it for vegetarians and pork-avoiders. Allergens confirmed by Chris 11/21, wheat and dairy in the pangrattato confirmed by Sam 11/21. Dairy: The pecorino can be removed from the salad to make it dairy free. The cornbread and the dressing also have dairy in it, so it can be made dairy free but heavily modified.",
+      "allergenNote": "Dairy: Délice de Bourgogne in the dressing, dairy in the cornbread pangrattato, and pecorino on top. Per Chris it can go dairy-free only heavily modified: no dressing, no pangrattato, no pecorino. Gluten: wheat in the cornbread pangrattato; hold it and the salad is gluten-free. Allium: shallot in the dressing, built in. Mustard in the dressing (not a tracked chip). Honey in the dressing. No egg anywhere. Pancetta is pork: hold it for vegetarians and pork-avoiders.",
       "flags": [],
-      "added": "2026-11-21"
+      "added": "2026-11-23"
      },
      {
       "name": "Burrata",
@@ -20086,5 +20093,5 @@ window.SF = {
    }
   ]
  },
- "build": "1795469562"
+ "build": "1795470030"
 };

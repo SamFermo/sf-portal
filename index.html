@@ -382,6 +382,13 @@ body.tour-on{padding-bottom:230px;}
 .al-reply input{flex:1 1 auto; min-width:0; padding:9px 12px; border:1px solid rgba(74,63,42,.28); border-radius:999px; background:rgba(255,255,255,.55); font-family:inherit; font-size:13.5px; color:var(--card-ink);}
 .al-reply input::placeholder{color:var(--card-mute);}
 .al-reply button{flex:0 0 auto; padding:9px 16px; border:0; border-radius:999px; background:var(--wood); color:var(--moon-hi); font-family:inherit; font-size:13px; font-weight:800; cursor:pointer;}
+.cr-item{padding:12px 0; border-top:1px solid var(--moon-edge);}
+.cr-img{margin:8px 0; min-height:40px; text-align:center; font-size:12.5px; color:var(--card-mute);}
+.cr-img img{max-width:100%; max-height:260px; border-radius:8px;}
+.cr-row{display:flex; gap:7px; align-items:center; flex-wrap:wrap;}
+.cr-row input{flex:1 1 140px; padding:8px 10px; border:1px solid rgba(74,63,42,.28); border-radius:10px; background:rgba(255,255,255,.55); font-family:inherit; font-size:14px;}
+.cr-row button{padding:9px 14px; border:0; border-radius:999px; font-family:inherit; font-size:13px; font-weight:800; cursor:pointer;}
+.cr-ok{background:var(--wood); color:var(--moon-hi);} .cr-x{background:none; color:var(--card-mute); text-decoration:underline; font-weight:600 !important;}
 .al-lockmsg{margin-top:14px; text-align:center; font-size:13px; font-weight:700; color:var(--card-mute);}
 .al-later{display:block; margin:8px auto 0; padding:6px 10px; border:0; background:none; color:var(--card-mute); font-family:inherit; font-size:12.5px; text-decoration:underline; cursor:pointer;}
 .ann-answer{width:100%; box-sizing:border-box; min-height:74px; margin-top:12px; padding:10px 12px; border:1px solid rgba(74,63,42,.28); border-radius:12px; background:rgba(255,255,255,.55); font-family:inherit; font-size:14px; color:var(--card-ink); resize:vertical;}
@@ -2376,7 +2383,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1795469562';   // stamped by build-data.py at every deploy
+const BUILD='1795470030';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3252,6 +3259,7 @@ function afterLogin(){
   // the timeoff snapshot usually gets here first; this covers a login that lands
   // after the data was already synced, when no new snapshot is coming
   setTimeout(maybeShowAlerts,1200);
+  setTimeout(crMaybeShow,2200);   // CARDREVIEW-2026-11-23
   // open-shift pop-up queues behind announce/alerts (maybeShowOpenShifts self-defers if one is up)
   setTimeout(maybeShowOpenShifts,1600);
 }
@@ -3728,7 +3736,7 @@ function annAck(){
 }
 function annShouldShow(){ annPick(); if(!(me && me.contactSet && annActive() && !annDismissedNow()))return false;
   return annIsInfo() ? !annAcked() : !annMyRsvp(); }
-function maybeShowAnnounce(){ setTimeout(ckpMaybeShow,900); setTimeout(kqMaybeShow,1200); if(isInvestor()||isHost())return; if(annShownSession)return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
+function maybeShowAnnounce(){ setTimeout(ckpMaybeShow,900); setTimeout(kqMaybeShow,1200); if(isInvestor()||isHost())return; if(annShownSession)return; if(crOpenNow())return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
 /* Full roster behind the tally: staff (from PROFILES.announceRsvp) plus the
    hand-added external entries in ANNOUNCE_GUESTS. Single source both the compact
    tally and the full list (annOpenFullList) read from, so they can't drift. */
@@ -7375,6 +7383,7 @@ function alertReply(reqId){
 function maybeShowAlerts(){
   if(!me||DEMO||isInvestor()||isHost()||alertsShownSession||!toLoaded)return;
   const am=$('announceModal');
+  if(crOpenNow())return;   // CARDREVIEW: crClose retries alerts
   if(am&&am.style.display==='flex')return;   // never stack on the announcement; annClose retries
   const list=alertsForModal();
   if(!list.length)return;
@@ -8137,6 +8146,7 @@ function startComplianceSync(){
       COMP_UP={}; snap.docs.forEach(function(d){COMP_UP[d.id]=d.data();}); if(!snap.metadata||!snap.metadata.fromCache)COMP_UP_LOADED=true;
       if($('compBody'))renderCompliance();
       if(typeof updateAttn==='function')updateAttn();
+      try{ crMaybeShow(); }catch(e){}   // CARDREVIEW-2026-11-23
     },function(){ COMP_UP=compLsGet(); if($('compBody'))renderCompliance(); });
   } else { COMP_UP=compLsGet(); }
 }
@@ -8341,7 +8351,7 @@ function compVerify(cred,name,expires){
   m.status='verified'; m.reviewedBy=currentUserName()||''; m.reviewedAt=Date.now();
   if(expires)m.expires=expires; else delete m.expires;
   const prevM=COMP_UP[key]; COMP_UP[key]=m;
-  if(fbReady&&fbDb)fbDb.collection('compliance').doc(key).set(m).catch(function(){ COMP_UP[key]=prevM; renderCompliance(); alert('Verification did NOT save. Try again.'); }); else compLsSet();
+  if(fbReady&&fbDb)fbDb.collection('compliance').doc(key).set(m).catch(function(){ COMP_UP[key]=prevM; renderCompliance(); try{ crMaybeShow(); }catch(e){} alert('Verification did NOT save. Try again.'); }); else compLsSet();
   renderCompliance(); if(typeof updateAttn==='function')updateAttn();
 }
 function compRemove(cred,name){
@@ -8373,6 +8383,61 @@ function compShowModal(dataUrl,name,cred){
   m.style.display='flex';
 }
 function compCloseModal(){ const m=$('compModal'); if(m)m.style.display='none'; }
+/* ===== CARD REVIEW POP-UP (CARDREVIEW-2026-11-23) =========================================
+   Sam: Jackie's and Nam's FWC uploads sat a month with only a nav glow. Now, for Sam only,
+   every uploaded card still 'pending' shows in a pop-up with the photo, an expiry box and
+   Verify. No Got it: it closes when nothing is pending (each card verified, or removed as the
+   wrong card). Offline it can be closed for now and comes back next login. Only acts on a
+   server snapshot (COMP_UP_LOADED), never the local cache. ===== */
+let crClosedSession=false, crTimer=null;
+function crCan(){ return cnCan()&&!isInvestor()&&!isHost(); }
+function crOpenNow(){ const m=$('cardRevModal'); return !!(m&&m.style.display==='flex'); }
+function crPending(){ return Object.keys(COMP_UP).filter(function(k){ const u=COMP_UP[k]; return u&&u.status==='pending'&&u.name&&u.cred; })
+  .map(function(k){ const u=COMP_UP[k]; return {key:k,cred:u.cred,name:u.name,at:+u.uploadedAt||0,expires:u.expires||''}; })
+  .sort(function(a,b){ return a.at-b.at; }); }
+function crBusy(){ return document.body.classList.contains('locked')||['announceModal','alertModal','ckpModal','kqModal','compModal'].some(function(id){ const m=$(id); return m&&m.style.display==='flex'; }); }
+function crMaybeShow(){
+  if(!me||DEMO||!crCan()||crClosedSession||!COMP_UP_LOADED)return;
+  const list=crPending(), sig=list.map(function(c){return c.key;}).join(',');
+  if(!list.length){ if(crOpenNow())crClose(); return; }
+  if(crOpenNow()){ if($('cardRevModal').getAttribute('data-sig')!==sig)crRender(list,sig); return; }
+  if(crBusy()){ if(!crTimer)crTimer=setTimeout(function(){ crTimer=null; crMaybeShow(); },2500); return; }
+  crRender(list,sig);
+}
+function crRender(list,sig){
+  let m=$('cardRevModal');
+  if(!m){ m=document.createElement('div'); m.id='cardRevModal'; m.className='comp-modal alert-modal';
+    m.onclick=function(e){ if(e.target===m&&!alertOnline())crLater(); }; document.body.appendChild(m); }
+  const keep={}; list.forEach(function(c){ const el=$('cr-date-'+c.key); if(el)keep[c.key]=el.value; });   // a snapshot must not wipe a typed date
+  m.setAttribute('data-sig',sig);
+  m.innerHTML='<div class="al-card"><div class="al-head serif">'+(list.length===1?'A card to verify':list.length+' cards to verify')+'</div>'+
+    list.map(function(c){
+      const when=c.at?new Date(c.at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+      return '<div class="cr-item"><div class="al-meta">'+esc(String(c.name).split(' ')[0])+' · '+esc(c.cred)+(when?' · uploaded '+esc(when):'')+'</div>'+
+        '<div class="cr-img" id="cr-img-'+esc(c.key)+'">Loading the card\u2026</div>'+
+        '<div class="cr-row"><input type="date" id="cr-date-'+esc(c.key)+'" value="'+esc(keep[c.key]!=null?keep[c.key]:c.expires)+'" aria-label="Expiry date">'+
+        '<button class="cr-ok" onclick="crVerify(\''+esc(c.key)+'\')">Verify</button>'+
+        '<button class="cr-x" onclick="crRemove(\''+esc(c.key)+'\')">Wrong card, remove</button></div>'+
+        '<div class="ann-more" id="cr-msg-'+esc(c.key)+'"></div></div>';
+    }).join('')+
+    '<div class="al-lockmsg">Verify each card to close this.</div>'+
+    '<button id="cr-later" class="al-later" style="display:'+(alertOnline()?'none':'block')+'" onclick="crLater()">Not connected. Close for now</button></div>';
+  m.style.display='flex';
+  list.forEach(function(c){ compGetImage(c.cred,c.name).then(function(url){ const el=$('cr-img-'+c.key); if(!el)return;
+    el.innerHTML=url?'<img src="'+url+'" alt="'+esc(c.cred)+' card">':'Couldn\u2019t load the photo. Open it from Compliance.'; }); });
+}
+function crFind(key){ return crPending().find(function(c){return c.key===key;}); }
+function crVerify(key){
+  const c=crFind(key); if(!c)return; const el=$('cr-date-'+key), exp=(el&&el.value)||'', msg=$('cr-msg-'+key);
+  if(!exp){ if(msg)msg.textContent='Enter the expiry date from the card first.'; if(el&&el.focus)el.focus(); return; }
+  if(!alertOnline()){ if(msg)msg.textContent='Not connected. Nothing saved.'; const l=$('cr-later'); if(l)l.style.display='block'; return; }
+  compVerify(c.cred,c.name,exp); crMaybeShow();
+}
+function crRemove(key){ const c=crFind(key); if(!c)return; compRemove(c.cred,c.name); crMaybeShow(); }
+function crLater(){ crClosedSession=true; crClose(); }
+function crClose(){ const m=$('cardRevModal'); if(m)m.style.display='none';
+  try{ setTimeout(maybeShowAlerts,350); }catch(e){} }
+try{ window.addEventListener('offline',function(){ const l=$('cr-later'); if(l)l.style.display='block'; }); }catch(e){}
 function compPendingSig(){ return Object.keys(COMP_UP).filter(function(k){return COMP_UP[k]&&COMP_UP[k].status==='pending';}).sort().join(','); }
 /* Moved off the Standards key 2026-08-14 when Compliance became its own tab. The old
    'standards' attn key is simply abandoned, so everyone gets one first-open glow. */
