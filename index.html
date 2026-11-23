@@ -801,6 +801,19 @@ body.tour-on{padding-bottom:230px;}
 .chat-send:active{background:rgba(230,200,120,.3);}
 .chat-x{background:transparent; border:0; color:var(--ink-mute); font-size:12px; line-height:1;
   padding:2px 0 2px 8px; cursor:pointer; font-family:inherit;}
+.chat-msg{touch-action:manipulation; position:relative;}
+/* Reactions (2026-11-22): double-tap a message for the picker, one emoji per person */
+.chat-reacts{display:flex; flex-wrap:wrap; gap:5px; margin-top:6px;}
+.chat-rx{display:inline-flex; align-items:center; gap:4px; background:rgba(205,216,244,.08); border:1px solid rgba(205,216,244,.2);
+  border-radius:999px; padding:2px 8px 2px 6px; font-size:11.5px; color:var(--ink-soft); font-family:inherit; cursor:pointer; touch-action:manipulation;}
+.chat-rx .chat-rx-e{font-size:15px; line-height:1.2;}
+.chat-rx.on{background:rgba(230,200,120,.18); border-color:var(--gold); color:var(--gold);}
+.chat-rpick{display:flex; flex-wrap:wrap; gap:2px; margin-top:7px; padding:5px; background:rgba(8,12,26,.92);
+  border:1px solid rgba(230,200,120,.45); border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,.45);}
+.chat-rpick button{background:transparent; border:0; border-radius:10px; width:40px; height:40px; font-size:23px; line-height:1;
+  cursor:pointer; touch-action:manipulation; padding:0;}
+.chat-rpick button.on{background:rgba(230,200,120,.25);}
+.chat-hint{font-size:11px; color:var(--ink-mute); margin-top:6px;}
 .chat-in{flex:1; box-sizing:border-box; min-height:44px; max-height:130px; resize:vertical;
   background:rgba(205,216,244,.06); border:1px solid rgba(205,216,244,.18); border-radius:11px;
   color:var(--ink); padding:11px 12px; font-family:inherit; font-size:14px; line-height:1.4;}
@@ -2360,7 +2373,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1795356531';   // stamped by build-data.py at every deploy
+const BUILD='1795413483';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -12440,6 +12453,7 @@ function atCaptureUI(){
   const a=document.activeElement, body=$('boardBody');
   const st={id:'',val:'',s0:0,s1:0,scroll:0};
   const w=$('chatWrap'); if(w)st.scroll=w.scrollTop;
+  const ci=$('chat-in'); st.chatDraft=ci?ci.value:'';   // keep an unfocused chat draft through redraws (2026-11-22)
   if(a&&a.id&&body&&body.contains(a)&&(a.tagName==='TEXTAREA'||a.tagName==='INPUT')){
     st.id=a.id; st.val=a.value;
     try{st.s0=a.selectionStart;st.s1=a.selectionEnd;}catch(e){}
@@ -12449,6 +12463,7 @@ function atCaptureUI(){
 function atRestoreUI(st){
   const w=$('chatWrap');
   if(w)w.scrollTop=st&&st.scroll?st.scroll:w.scrollHeight;
+  const ci=$('chat-in'); if(ci&&st&&st.chatDraft&&!ci.value)ci.value=st.chatDraft;
   if(!st||!st.id)return;
   const el=$(st.id); if(!el)return;
   if(st.val&&!el.value)el.value=st.val;
@@ -12677,6 +12692,58 @@ function chatUnread(){
   const meN=currentUserName(); if(!meN)return 0;
   return chatList().filter(function(m){return m.by!==meN&&(m.seen||[]).indexOf(meN)<0;}).length;
 }
+/* REACTIONS (2026-11-22) — double-tap a message, pick one of ten. Stored on the message as
+   reacts:{"<name>":"<emoji>"}; each person writes only their own key (FieldPath, so a space
+   in a name is safe). Tap your emoji again, or your chip, to take it back. */
+const CHAT_EMOJI=['👍','✅','👀','🙏','❤️','😂','🔥','😬','🏃','❌'];
+let chatPickFor='', chatTapId='', chatTapAt=0;
+function chatReact(id,emo){
+  const meN=currentUserName(), m=CHAT[id]; chatPickFor='';
+  if(!meN||!m){ renderBoard(); return; }
+  const r=Object.assign({},m.reacts||{}), off=r[meN]===emo;
+  if(off)delete r[meN]; else r[meN]=emo;
+  m.reacts=r; chatLsSet(); renderBoard();
+  if(!DEMO&&fbReady&&fbDb){
+    const fp=new firebase.firestore.FieldPath('reacts',meN);
+    fbDb.collection('chat').doc(id).update(fp,off?firebase.firestore.FieldValue.delete():emo)
+      .catch(function(){ chatSyncErr=true; renderBoard(); });
+  }
+}
+function chatReactsHTML(m){
+  const meN=currentUserName(), r=m.reacts||{}, by={};
+  Object.keys(r).forEach(function(n){ const e=r[n]; if(CHAT_EMOJI.indexOf(e)<0)return; (by[e]=by[e]||[]).push(n); });
+  const keys=CHAT_EMOJI.filter(function(e){return by[e];});
+  let h='';
+  if(keys.length)h+='<div class="chat-reacts">'+keys.map(function(e){
+    const names=by[e], mineOn=names.indexOf(meN)>=0;
+    return '<button class="chat-rx'+(mineOn?' on':'')+'" data-cid="'+esc(m.id)+'" data-emo="'+esc(e)+'">'+
+      '<span class="chat-rx-e">'+e+'</span>'+esc(names.map(function(n){return String(n).split(' ')[0];}).join(', '))+'</button>';
+  }).join('')+'</div>';
+  if(chatPickFor===m.id){
+    const cur=r[meN]||'';
+    h+='<div class="chat-rpick">'+CHAT_EMOJI.map(function(e){
+      return '<button class="'+(cur===e?'on':'')+'" data-cid="'+esc(m.id)+'" data-emo="'+esc(e)+'" aria-label="React '+esc(e)+'">'+e+'</button>';}).join('')+'</div>';
+  }
+  return h;
+}
+/* One delegated listener. Messages re-render on every snapshot, so a double-tap is matched by
+   message id, not by element. Chips and picker buttons carry data-emo. */
+document.addEventListener('click',function(e){
+  const t=e&&e.target&&e.target.closest?e.target:null; if(!t)return;
+  const b=t.closest('[data-emo]');
+  if(b&&b.closest('.chat-wrap')){ e.preventDefault(); chatReact(b.getAttribute('data-cid'),b.getAttribute('data-emo')); return; }
+  const msg=t.closest('.chat-msg[data-cid]');
+  if(!msg||t.closest('button')){ if(chatPickFor&&!t.closest('.chat-rpick')){ chatPickFor=''; renderBoard(); } chatTapId=''; return; }
+  const id=msg.getAttribute('data-cid'), now=Date.now();
+  if(chatTapId===id&&now-chatTapAt<400){
+    chatTapId=''; chatPickFor=(chatPickFor===id)?'':id;
+    try{ const sel=window.getSelection&&window.getSelection(); if(sel)sel.removeAllRanges(); }catch(x){}
+    renderBoard();
+  }else{
+    chatTapId=id; chatTapAt=now;
+    if(chatPickFor&&chatPickFor!==id){ chatPickFor=''; renderBoard(); }
+  }
+},false);
 function chatPaneHTML(){
   const meN=currentUserName(), msgs=chatList();
   let h='';
@@ -12685,7 +12752,7 @@ function chatPaneHTML(){
   if(!msgs.length)h+='<div class="board-empty">Nothing tonight yet.</div>';
   msgs.forEach(function(m){
     const mine=m.by===meN, seen=(m.seen||[]).filter(function(n){return n!==m.by;});
-    h+='<div class="chat-msg'+(mine?' mine':'')+'">'+
+    h+='<div class="chat-msg'+(mine?' mine':'')+'" data-cid="'+esc(m.id)+'">'+
       '<div class="chat-meta"><b>'+esc(String(m.by||'?').split(' ')[0])+'</b>'+
       (m.role==='md'?'<span class="chat-role">MD</span>':'')+
       '<span class="chat-at">'+esc(atStamp(m.at))+'</span>'+
@@ -12693,10 +12760,12 @@ function chatPaneHTML(){
       '<div class="chat-body">'+esc(m.text)+'</div>'+
       (seen.length?'<div class="chat-seen">✓ seen by '+esc(seen.map(function(n){return String(n).split(' ')[0];}).join(', '))+'</div>'
         :(mine?'<div class="chat-seen chat-unseen">not seen yet</div>':''))+
+      chatReactsHTML(m)+
       '</div>';
   });
   h+='</div><div class="chat-input-row"><textarea class="chat-in" id="chat-in" rows="1" placeholder="Message the floor…"></textarea>'+
-    '<button class="chat-send" onclick="chatSend()">Send</button></div>';
+    '<button class="chat-send" onclick="chatSend()">Send</button></div>'+
+    (msgs.length&&currentUserName()?'<div class="chat-hint">Double-tap a message to react</div>':'');
   return h;
 }
 
