@@ -2383,7 +2383,7 @@ select.wb-in option{color:#241f15;}
 </div>
 
 <script>
-const BUILD='1795470030';   // stamped by build-data.py at every deploy
+const BUILD='1795470592';   // stamped by build-data.py at every deploy
 let SF; const $=id=>document.getElementById(id);
 function staleCheck(){
   // iOS home-screen apps cache index.html hard but data.js always loads fresh.
@@ -3040,6 +3040,7 @@ async function submitNewPin(){
   $('loginGate').classList.remove('open'); document.body.classList.remove('locked'); refreshAuthUI(); afterLogin();
 }
 function logout(){ try{ var rf=document.getElementById('remyFrame'); if(rf)rf.remove(); document.querySelectorAll('[id$="Modal"]').forEach(function(m){ m.classList.remove('open'); if(m.style&&m.style.display&&m.style.display!=='none')m.style.display='none'; }); }catch(e){}   // BATCH-B: next person never inherits Farm Order or an open editor
+  crClosedSession=false;   // CARDREVIEW-ODO
   clearSession();me=null;document.body.classList.add('locked');try{if('clearAppBadge' in navigator)navigator.clearAppBadge();}catch(e){}openLogin();}
 
 /* contact-consent wall */
@@ -3736,7 +3737,7 @@ function annAck(){
 }
 function annShouldShow(){ annPick(); if(!(me && me.contactSet && annActive() && !annDismissedNow()))return false;
   return annIsInfo() ? !annAcked() : !annMyRsvp(); }
-function maybeShowAnnounce(){ setTimeout(ckpMaybeShow,900); setTimeout(kqMaybeShow,1200); if(isInvestor()||isHost())return; if(annShownSession)return; if(crOpenNow())return; if(annShouldShow()){ annShownSession=true; annOpen(); } }
+function maybeShowAnnounce(){ setTimeout(ckpMaybeShow,900); setTimeout(kqMaybeShow,1200); if(isInvestor()||isHost())return; if(annShownSession)return; if(crOpenNow())return;   /* CARDREVIEW-ODO: crClose retries this */ if(annShouldShow()){ annShownSession=true; annOpen(); } }
 /* Full roster behind the tally: staff (from PROFILES.announceRsvp) plus the
    hand-added external entries in ANNOUNCE_GUESTS. Single source both the compact
    tally and the full list (annOpenFullList) read from, so they can't drift. */
@@ -4241,7 +4242,7 @@ function maybeShowOpenShifts(){
     if(!osAnyOpenForMe())return;
   }
   const a=$('announceModal'),al=$('alertModal');
-  if((a&&a.style.display==='flex')||(al&&al.style.display==='flex')){ setTimeout(maybeShowOpenShifts,600); return; }
+  if((a&&a.style.display==='flex')||(al&&al.style.display==='flex')||crOpenNow()){ setTimeout(maybeShowOpenShifts,600); return; }
   osShownSession=true; osOpen();
 }
 
@@ -8134,7 +8135,7 @@ function recView(id){const r=REC[id];if(!r)return;
    the resized image lives in `complianceImg` and is fetched on demand (View).
    Self-vs-manager is enforced client-side (same trust model as crew/timeoff —
    the portal uses one shared anonymous auth, not per-user uids). =========== */
-let COMP_UP={}, compUpUnsub=null, COMP_UP_LOADED=false;   /* LOADED gates the missing-card alert (2026-10-17): never claim a card is missing off an empty pre-snapshot map */
+let COMP_UP={}, compUpUnsub=null, COMP_UP_LOADED=false, compSyncErr=false;   /* CARDREVIEW-ODO: compSyncErr */   /* LOADED gates the missing-card alert (2026-10-17): never claim a card is missing off an empty pre-snapshot map */
 function compKey(cred,name){return String(cred).toLowerCase()+'__'+fcSlug(name);}
 function compLsGet(){try{return JSON.parse(localStorage.getItem('sf-compliance')||'{}');}catch(e){return {};}}
 function compLsSet(){try{localStorage.setItem('sf-compliance',JSON.stringify(COMP_UP));}catch(e){}}
@@ -8143,11 +8144,11 @@ function startComplianceSync(){
   if(fbReady&&fbDb){
     if(compUpUnsub)compUpUnsub();
     compUpUnsub=fbDb.collection('compliance').onSnapshot(function(snap){
-      COMP_UP={}; snap.docs.forEach(function(d){COMP_UP[d.id]=d.data();}); if(!snap.metadata||!snap.metadata.fromCache)COMP_UP_LOADED=true;
+      COMP_UP={}; snap.docs.forEach(function(d){COMP_UP[d.id]=d.data();}); if(!snap.metadata||!snap.metadata.fromCache){ COMP_UP_LOADED=true; compSyncErr=false; }
       if($('compBody'))renderCompliance();
       if(typeof updateAttn==='function')updateAttn();
       try{ crMaybeShow(); }catch(e){}   // CARDREVIEW-2026-11-23
-    },function(){ COMP_UP=compLsGet(); if($('compBody'))renderCompliance(); });
+    },function(){ compSyncErr=true; COMP_UP=compLsGet(); if($('compBody'))renderCompliance(); try{ const l=$('cr-later'); if(l)l.style.display='block'; }catch(e){} });
   } else { COMP_UP=compLsGet(); }
 }
 function compClamp(v,a,b){return Math.max(a,Math.min(b,v));}
@@ -8359,7 +8360,7 @@ function compRemove(cred,name){
   if(!confirm('Remove '+cred+' card for '+name+'?'))return;
   const key=compKey(cred,name), pU=COMP_UP[key], pI=COMP_IMG[key]; delete COMP_UP[key]; delete COMP_IMG[key];
   if(fbReady&&fbDb){ const bt=fbDb.batch(); bt.delete(fbDb.collection('compliance').doc(key)); bt.delete(fbDb.collection('complianceImg').doc(key));
-    bt.commit().catch(function(){ if(pU)COMP_UP[key]=pU; if(pI)COMP_IMG[key]=pI; renderCompliance(); alert('The card was NOT removed. Try again.'); }); }
+    bt.commit().catch(function(){ if(pU)COMP_UP[key]=pU; if(pI)COMP_IMG[key]=pI; renderCompliance(); try{ crMaybeShow(); }catch(e){} alert('The card was NOT removed. Try again.'); }); }
   else compLsSet();
   renderCompliance(); if(typeof updateAttn==='function')updateAttn();
 }
@@ -8390,15 +8391,16 @@ function compCloseModal(){ const m=$('compModal'); if(m)m.style.display='none'; 
    wrong card). Offline it can be closed for now and comes back next login. Only acts on a
    server snapshot (COMP_UP_LOADED), never the local cache. ===== */
 let crClosedSession=false, crTimer=null;
+function crOnline(){ return alertOnline()&&!compSyncErr; }
 function crCan(){ return cnCan()&&!isInvestor()&&!isHost(); }
 function crOpenNow(){ const m=$('cardRevModal'); return !!(m&&m.style.display==='flex'); }
-function crPending(){ return Object.keys(COMP_UP).filter(function(k){ const u=COMP_UP[k]; return u&&u.status==='pending'&&u.name&&u.cred; })
+function crPending(){ return Object.keys(COMP_UP).filter(function(k){ const u=COMP_UP[k]; return /^(fwc|mast)__[a-z0-9-]+$/.test(k)&&u&&u.status==='pending'&&u.name&&(u.cred==='FWC'||u.cred==='MAST'); })
   .map(function(k){ const u=COMP_UP[k]; return {key:k,cred:u.cred,name:u.name,at:+u.uploadedAt||0,expires:u.expires||''}; })
   .sort(function(a,b){ return a.at-b.at; }); }
 function crBusy(){ return document.body.classList.contains('locked')||['announceModal','alertModal','ckpModal','kqModal','compModal'].some(function(id){ const m=$(id); return m&&m.style.display==='flex'; }); }
 function crMaybeShow(){
-  if(!me||DEMO||!crCan()||crClosedSession||!COMP_UP_LOADED)return;
-  const list=crPending(), sig=list.map(function(c){return c.key;}).join(',');
+  if(!me||DEMO||!crCan()||crClosedSession||!COMP_UP_LOADED||compSyncErr)return;   // CARDREVIEW-ODO: never act on the cached fallback
+  const list=crPending(), sig=list.map(function(c){return c.key+'@'+c.at;}).join(',');   // CARDREVIEW-ODO: a replacement upload is a new row
   if(!list.length){ if(crOpenNow())crClose(); return; }
   if(crOpenNow()){ if($('cardRevModal').getAttribute('data-sig')!==sig)crRender(list,sig); return; }
   if(crBusy()){ if(!crTimer)crTimer=setTimeout(function(){ crTimer=null; crMaybeShow(); },2500); return; }
@@ -8407,8 +8409,9 @@ function crMaybeShow(){
 function crRender(list,sig){
   let m=$('cardRevModal');
   if(!m){ m=document.createElement('div'); m.id='cardRevModal'; m.className='comp-modal alert-modal';
-    m.onclick=function(e){ if(e.target===m&&!alertOnline())crLater(); }; document.body.appendChild(m); }
-  const keep={}; list.forEach(function(c){ const el=$('cr-date-'+c.key); if(el)keep[c.key]=el.value; });   // a snapshot must not wipe a typed date
+    m.onclick=function(e){ if(e.target===m&&!crOnline())crLater(); }; document.body.appendChild(m); }
+  const old=(m.getAttribute('data-sig')||'').split(','), keep={};
+  list.forEach(function(c){ const el=$('cr-date-'+c.key); if(el&&old.indexOf(c.key+'@'+c.at)>=0)keep[c.key]=el.value; });   // only keep a date typed for this same upload   // a snapshot must not wipe a typed date
   m.setAttribute('data-sig',sig);
   m.innerHTML='<div class="al-card"><div class="al-head serif">'+(list.length===1?'A card to verify':list.length+' cards to verify')+'</div>'+
     list.map(function(c){
@@ -8421,22 +8424,28 @@ function crRender(list,sig){
         '<div class="ann-more" id="cr-msg-'+esc(c.key)+'"></div></div>';
     }).join('')+
     '<div class="al-lockmsg">Verify each card to close this.</div>'+
-    '<button id="cr-later" class="al-later" style="display:'+(alertOnline()?'none':'block')+'" onclick="crLater()">Not connected. Close for now</button></div>';
+    '<button id="cr-later" class="al-later" style="display:'+(crOnline()?'none':'block')+'" onclick="crLater()">Not connected. Close for now</button></div>';
   m.style.display='flex';
-  list.forEach(function(c){ compGetImage(c.cred,c.name).then(function(url){ const el=$('cr-img-'+c.key); if(!el)return;
-    el.innerHTML=url?'<img src="'+url+'" alt="'+esc(c.cred)+' card">':'Couldn\u2019t load the photo. Open it from Compliance.'; }); });
+  list.forEach(function(c){ compGetImage(c.cred,c.name).then(function(url){ const el=$('cr-img-'+c.key), u=COMP_UP[c.key]; if(!el||!u||(+u.uploadedAt||0)!==c.at)return;   // superseded upload: drop it
+    if(typeof url==='string'&&/^data:image\//.test(url)){ const img=document.createElement('img'); img.alt=c.cred+' card'; img.src=url; el.innerHTML=''; el.appendChild(img); }
+    else el.textContent='Couldn\u2019t load the photo. Open it from Compliance.'; }); });
 }
 function crFind(key){ return crPending().find(function(c){return c.key===key;}); }
+function crSameUpload(key){ const m=$('cardRevModal'), c=crFind(key); if(!c)return null;
+  if(((m&&m.getAttribute('data-sig'))||'').split(',').indexOf(key+'@'+c.at)<0){ crRender(crPending(),crPending().map(function(x){return x.key+'@'+x.at;}).join(',')); const msg=$('cr-msg-'+key); if(msg)msg.textContent='A new photo was just uploaded. Check this one.'; return null; }
+  return c; }
 function crVerify(key){
-  const c=crFind(key); if(!c)return; const el=$('cr-date-'+key), exp=(el&&el.value)||'', msg=$('cr-msg-'+key);
+  const c=crSameUpload(key); if(!c)return; const el=$('cr-date-'+key), exp=(el&&el.value)||'', msg=$('cr-msg-'+key);
   if(!exp){ if(msg)msg.textContent='Enter the expiry date from the card first.'; if(el&&el.focus)el.focus(); return; }
-  if(!alertOnline()){ if(msg)msg.textContent='Not connected. Nothing saved.'; const l=$('cr-later'); if(l)l.style.display='block'; return; }
+  if(!crOnline()){ if(msg)msg.textContent='Not connected. Nothing saved.'; const l=$('cr-later'); if(l)l.style.display='block'; return; }
   compVerify(c.cred,c.name,exp); crMaybeShow();
 }
-function crRemove(key){ const c=crFind(key); if(!c)return; compRemove(c.cred,c.name); crMaybeShow(); }
+function crRemove(key){ const c=crSameUpload(key); if(!c)return;
+  if(!crOnline()){ const msg=$('cr-msg-'+key); if(msg)msg.textContent='Not connected. Nothing removed.'; const l=$('cr-later'); if(l)l.style.display='block'; return; }
+  compRemove(c.cred,c.name); crMaybeShow(); }
 function crLater(){ crClosedSession=true; crClose(); }
 function crClose(){ const m=$('cardRevModal'); if(m)m.style.display='none';
-  try{ setTimeout(maybeShowAlerts,350); }catch(e){} }
+  try{ setTimeout(maybeShowAnnounce,300); setTimeout(maybeShowAlerts,700); }catch(e){} }
 try{ window.addEventListener('offline',function(){ const l=$('cr-later'); if(l)l.style.display='block'; }); }catch(e){}
 function compPendingSig(){ return Object.keys(COMP_UP).filter(function(k){return COMP_UP[k]&&COMP_UP[k].status==='pending';}).sort().join(','); }
 /* Moved off the Standards key 2026-08-14 when Compliance became its own tab. The old
